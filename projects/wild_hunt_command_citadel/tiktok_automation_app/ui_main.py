@@ -1253,7 +1253,12 @@ class MainWindow(QMainWindow):
         return box
 
     def _default_core_root(self) -> Path:
-        return Path(__file__).resolve().parents[2] / "active_projects" / "shortform_core"
+        current_app_root = Path(__file__).resolve().parents[1]
+        sibling_core = current_app_root / "shortform_core"
+        if sibling_core.exists():
+            return sibling_core
+        legacy_core = Path(__file__).resolve().parents[2] / "active_projects" / "shortform_core"
+        return legacy_core
 
     def _build_core_box(self) -> QGroupBox:
         box = QGroupBox("Ядро Аналитики (shortform_core)")

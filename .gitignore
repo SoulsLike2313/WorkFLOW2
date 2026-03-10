@@ -22,7 +22,7 @@ startup_trace.log
 
 # Local project data
 %APPDATA%/
-projects/tiktok_automation/tiktok_automation_app/output/
+projects/wild_hunt_command_citadel/tiktok_automation_app/output/
 projects/voice_launcher/appdata_snapshot/
 projects/__pycache__root_snapshot/
 

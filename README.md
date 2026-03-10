@@ -1,52 +1,34 @@
 # WorkFLOW Repository
 
-Репозиторий приведён к структуре «один проект = одна папка».
-
-## Структура
+Current active structure (cleaned):
 
 - `projects/adaptive_trading/`
-  - Алготрейдинг-бот и 3 GUI-варианта (`adaptive_trading_bot.py`, `adaptive_trading_gui*.py`)
-  - Данные/конфиг для демо-тестов (`demo_wallet.json`, `learned_crypto_model_test.json`)
-  - `trading_requirements.txt`
-
 - `projects/voice_launcher/`
-  - Голосовой лаунчер (`voice_launcher.py`)
-  - Сборка/инсталлятор (`VoiceLauncher.spec`, `build/`, `dist/`, `installer/`)
-  - Иконки и утилиты (`assets/`, `dev_tools/`)
-  - Локальные runtime-файлы (`commands.json`, `settings.json`, `startup_trace.log`)
+- `projects/wild_hunt_command_citadel/`
+  - `tiktok_automation_app/`
+  - `shortform_core/`
 
-- `projects/tiktok_automation/tiktok_automation_app/`
-  - Desktop-приложение автоматизации TikTok (GUI + Playwright/CDP)
+## Wild Hunt Command Citadel
 
-- `projects/life_rpg_tracker/`
-  - Трекер-квестов жизни (`life_rpg_tracker.py`)
-  - Данные квестов (`life_rpg_quests.json`)
+Main app:
 
-- `projects/progress_dashboard/`
-  - Streamlit-приложение прогресса (`progress_app.py`)
+- `E:\CVVCODEX\projects\wild_hunt_command_citadel\tiktok_automation_app`
 
-- `projects/razer_area_ui/`
-  - Tkinter + Pygame UI расчёта площади (`razer_style_area_ui.py`)
+Analytics core:
 
-- `projects/march8_turtle/`
-  - Демо-графика `turtle` (`march8_turtle.py`)
+- `E:\CVVCODEX\projects\wild_hunt_command_citadel\shortform_core`
 
-- `docs/`
-  - `CHECKPOINT.md`
-  - `DEV_CONTINUITY.md`
+EXE output:
 
-## Примечания
-
-- `gitignore` настроен так, чтобы не попадали виртуальные окружения, кэши и runtime-артефакты.
-- Внутри каждого проекта сохранены относительные пути, чтобы запуск и сборка не ломались после переноса.
+- `E:\CVVCODEX\projects\wild_hunt_command_citadel\tiktok_automation_app\dist\WitcherCommandDeck.exe`
 
 ## Auto Sync To GitHub
 
-Scripts are in `scripts/`:
+Scripts:
 
-- `scripts/auto_sync.ps1` - one run: pull/rebase, commit local changes, push.
-- `scripts/register_auto_sync_task.ps1` - creates Windows Task Scheduler job.
-- `scripts/unregister_auto_sync_task.ps1` - removes that job.
+- `scripts/auto_sync.ps1` - one run: fetch/pull/rebase, commit local changes, push.
+- `scripts/register_auto_sync_task.ps1` - create Windows Task Scheduler job.
+- `scripts/unregister_auto_sync_task.ps1` - remove the task.
 
 Quick setup (every 15 minutes):
 
