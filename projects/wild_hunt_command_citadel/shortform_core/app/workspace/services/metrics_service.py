@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -93,7 +93,7 @@ class MetricsIngestionService:
                 avg_watch_time=self._as_float_or_none(row.get("avg_watch_time")),
                 completion_rate=self._as_float_or_none(row.get("completion_rate")),
                 publish_time=self._parse_datetime(row.get("publish_time")),
-                collected_at=self._parse_datetime(row.get("collected_at")) or datetime.utcnow(),
+                collected_at=self._parse_datetime(row.get("collected_at")) or datetime.now(timezone.utc),
             )
             normalized = self.formulas.enrich_snapshot(snapshot)
             self.repository.save_metrics_snapshot(normalized)

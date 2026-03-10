@@ -27,6 +27,8 @@ from PySide6.QtWidgets import (
     QPushButton,
     QDoubleSpinBox,
     QScrollArea,
+    QSizePolicy,
+    QSplitter,
     QTableWidget,
     QTableWidgetItem,
     QSpinBox,
@@ -51,226 +53,129 @@ THEME_NAMES = {
     "skellige": "Скеллиге",
 }
 
+def _build_theme_preset(
+    *,
+    accent: str,
+    accent_soft: str,
+    accent_deep: str,
+    accent_text: str,
+    info: str,
+) -> Dict[str, str]:
+    return {
+        "root_bg": "#090c14",
+        "text_base": "#f1f4ff",
+        "label": "#b8bfd7",
+        "header_border": "rgba(170, 182, 240, 0.18)",
+        "header_g1": "#131a2b",
+        "header_g2": "#0f1423",
+        "header_g3": "#0b101c",
+        "title": "#f4f6ff",
+        "subtitle": "#9aa4c8",
+        "status_border": "rgba(154, 125, 255, 0.46)",
+        "status_bg": "rgba(119, 93, 205, 0.18)",
+        "status_text": "#efe9ff",
+        "ready_bg": "rgba(76, 146, 112, 0.22)",
+        "ready_border": "rgba(111, 204, 152, 0.58)",
+        "ready_text": "#d8ffeb",
+        "running_bg": "rgba(138, 108, 255, 0.24)",
+        "running_border": "rgba(179, 153, 255, 0.72)",
+        "running_text": "#f4ecff",
+        "drop_border": "rgba(155, 135, 230, 0.56)",
+        "drop_bg": "rgba(119, 101, 192, 0.11)",
+        "drop_active_border": "rgba(192, 170, 255, 0.92)",
+        "drop_active_bg": "rgba(165, 136, 255, 0.20)",
+        "drop_title": "#e3d7ff",
+        "drop_hint": "#b9aedf",
+        "panel_border": "rgba(145, 157, 214, 0.22)",
+        "panel_g1": "#141c2f",
+        "panel_g2": "#0f1626",
+        "panel_title_bg": "rgba(16, 23, 39, 0.95)",
+        "panel_title_text": "#e4e9ff",
+        "tag_text": "#d4dcff",
+        "tag_border": "rgba(142, 156, 218, 0.32)",
+        "tag_bg": "rgba(67, 82, 130, 0.22)",
+        "input_border": "rgba(138, 149, 203, 0.40)",
+        "input_bg": "#12192b",
+        "input_text": "#f6f8ff",
+        "input_focus_border": accent,
+        "input_focus_bg": "#162039",
+        "checkbox_text": "#cfd6f2",
+        "checkbox_border": "rgba(142, 155, 212, 0.52)",
+        "checkbox_bg": "#0f1423",
+        "checkbox_checked_bg": accent_soft,
+        "checkbox_checked_border": accent,
+        "button_border": "rgba(143, 154, 208, 0.45)",
+        "button_text": "#ecf1ff",
+        "button_g1": "#252f4c",
+        "button_g2": "#1b233b",
+        "button_hover_border": accent,
+        "button_hover_g1": "#2d3a5e",
+        "button_hover_g2": "#212c49",
+        "button_pressed": "#171f34",
+        "button_disabled_text": "#7f88a6",
+        "button_disabled_border": "rgba(95, 103, 136, 0.42)",
+        "button_disabled_bg": "#1a2032",
+        "start_border": "rgba(125, 203, 160, 0.60)",
+        "start_g1": "#234d40",
+        "start_g2": "#1c3d34",
+        "start_hover_border": "rgba(165, 242, 201, 0.88)",
+        "start_hover_g1": "#2d6654",
+        "start_hover_g2": "#245344",
+        "stop_border": "rgba(217, 116, 140, 0.65)",
+        "stop_g1": "#5b2d44",
+        "stop_g2": "#432235",
+        "stop_hover_border": "rgba(255, 154, 178, 0.88)",
+        "stop_hover_g1": "#753451",
+        "stop_hover_g2": "#5d2a43",
+        "log_bg": "#10162a",
+        "log_border": "rgba(134, 148, 206, 0.32)",
+        "log_text": "#e9efff",
+        "medallion_bg": "#141d34",
+        "medallion_border": accent,
+        "medallion_text": accent_text,
+        "sidebar_bg": "#0d1220",
+        "sidebar_border": "rgba(142, 156, 226, 0.24)",
+        "sidebar_item_bg": "rgba(121, 102, 201, 0.14)",
+        "sidebar_item_hover_bg": "rgba(149, 126, 240, 0.24)",
+        "sidebar_item_active_bg": "rgba(174, 147, 255, 0.31)",
+        "sidebar_item_text": "#cfd8f8",
+        "sidebar_caption": "#8d97bf",
+        "elevated_panel": "#151f35",
+        "accent": accent,
+        "accent_soft": accent_soft,
+        "accent_deep": accent_deep,
+        "accent_glow": "rgba(157, 130, 255, 0.34)",
+        "success": "#6dd3a7",
+        "warning": "#eac37b",
+        "danger": "#f188a1",
+        "info": info,
+        "border_subtle": "rgba(137, 149, 204, 0.23)",
+        "border_active": accent,
+    }
+
+
 THEME_PRESETS: Dict[str, Dict[str, str]] = {
-    "wolf": {
-        "root_bg": "#121a24",
-        "text_base": "#f2e8d2",
-        "label": "#f2e7ce",
-        "header_border": "#655334",
-        "header_g1": "#231f19",
-        "header_g2": "#1a1713",
-        "header_g3": "#12100d",
-        "title": "#e4cb8f",
-        "subtitle": "#ccb892",
-        "status_border": "#6a5a3b",
-        "status_bg": "#2e2619",
-        "status_text": "#fff4db",
-        "ready_bg": "#1f3020",
-        "ready_border": "#4f7752",
-        "ready_text": "#cae2be",
-        "running_bg": "#3b2d15",
-        "running_border": "#b58d41",
-        "running_text": "#ffe3ab",
-        "drop_border": "#8b6b35",
-        "drop_bg": "rgba(140, 108, 50, 0.10)",
-        "drop_active_border": "#d4ae67",
-        "drop_active_bg": "rgba(212, 174, 103, 0.22)",
-        "drop_title": "#f2ddad",
-        "drop_hint": "#ead8b3",
-        "panel_border": "#6d5937",
-        "panel_g1": "#1a2431",
-        "panel_g2": "#131b26",
-        "panel_title_bg": "#111a25",
-        "panel_title_text": "#f3cd85",
-        "tag_text": "#a9c298",
-        "tag_border": "#48633c",
-        "tag_bg": "rgba(74, 104, 60, 0.20)",
-        "input_border": "#81683f",
-        "input_bg": "#182434",
-        "input_text": "#fff6e4",
-        "input_focus_border": "#e0b56a",
-        "input_focus_bg": "#1e2e43",
-        "checkbox_text": "#f2e7ce",
-        "checkbox_border": "#6b5c3f",
-        "checkbox_bg": "#0c1015",
-        "checkbox_checked_bg": "#b28d49",
-        "checkbox_checked_border": "#d2b26e",
-        "button_border": "#7a6236",
-        "button_text": "#f0e2c3",
-        "button_g1": "#5b4624",
-        "button_g2": "#3c2f18",
-        "button_hover_border": "#c4a366",
-        "button_hover_g1": "#6a542d",
-        "button_hover_g2": "#483720",
-        "button_pressed": "#2f2413",
-        "button_disabled_text": "#857f71",
-        "button_disabled_border": "#433c31",
-        "button_disabled_bg": "#22252b",
-        "start_border": "#6b7f45",
-        "start_g1": "#3b4f2c",
-        "start_g2": "#2c3c22",
-        "start_hover_border": "#8fb36b",
-        "start_hover_g1": "#466236",
-        "start_hover_g2": "#31482a",
-        "stop_border": "#81524a",
-        "stop_g1": "#5a2f2a",
-        "stop_g2": "#43211d",
-        "stop_hover_border": "#bb6b5f",
-        "stop_hover_g1": "#67332f",
-        "stop_hover_g2": "#4f2521",
-        "log_bg": "#182233",
-        "log_border": "#7b643d",
-        "log_text": "#f5f8ff",
-        "medallion_bg": "#2a3447",
-        "medallion_border": "#d4ae67",
-        "medallion_text": "#fff3d4",
-    },
-    "nilfgaard": {
-        "root_bg": "#14110c",
-        "text_base": "#f3e7c7",
-        "label": "#f5e8c8",
-        "header_border": "#8b6a2d",
-        "header_g1": "#2b2315",
-        "header_g2": "#1d160d",
-        "header_g3": "#0f0b06",
-        "title": "#f0ce7d",
-        "subtitle": "#d3ba84",
-        "status_border": "#8f7138",
-        "status_bg": "#2f2412",
-        "status_text": "#fff1ca",
-        "ready_bg": "#253522",
-        "ready_border": "#5e8552",
-        "ready_text": "#d3edc7",
-        "running_bg": "#4a3614",
-        "running_border": "#cca357",
-        "running_text": "#ffebb8",
-        "drop_border": "#ad8340",
-        "drop_bg": "rgba(162, 122, 53, 0.16)",
-        "drop_active_border": "#efc679",
-        "drop_active_bg": "rgba(224, 177, 93, 0.28)",
-        "drop_title": "#f6dfac",
-        "drop_hint": "#f0daab",
-        "panel_border": "#8a6b37",
-        "panel_g1": "#1f170d",
-        "panel_g2": "#171109",
-        "panel_title_bg": "#120d06",
-        "panel_title_text": "#f1cb7d",
-        "tag_text": "#d6c089",
-        "tag_border": "#715c35",
-        "tag_bg": "rgba(118, 94, 51, 0.26)",
-        "input_border": "#9a7942",
-        "input_bg": "#1e1710",
-        "input_text": "#fff2d2",
-        "input_focus_border": "#f2c978",
-        "input_focus_bg": "#2c2115",
-        "checkbox_text": "#f2e4c3",
-        "checkbox_border": "#886f44",
-        "checkbox_bg": "#15100b",
-        "checkbox_checked_bg": "#c89b4a",
-        "checkbox_checked_border": "#f2cb80",
-        "button_border": "#9a7a42",
-        "button_text": "#fff0c8",
-        "button_g1": "#6b5329",
-        "button_g2": "#4b391d",
-        "button_hover_border": "#e5be70",
-        "button_hover_g1": "#7b6133",
-        "button_hover_g2": "#5b4524",
-        "button_pressed": "#3a2b16",
-        "button_disabled_text": "#9c8f74",
-        "button_disabled_border": "#5a4c34",
-        "button_disabled_bg": "#2a241b",
-        "start_border": "#7d9158",
-        "start_g1": "#465f34",
-        "start_g2": "#344726",
-        "start_hover_border": "#9dbf70",
-        "start_hover_g1": "#547640",
-        "start_hover_g2": "#3f5a2f",
-        "stop_border": "#8a4f4b",
-        "stop_g1": "#6a3430",
-        "stop_g2": "#4f2623",
-        "stop_hover_border": "#c1695f",
-        "stop_hover_g1": "#7c3d39",
-        "stop_hover_g2": "#5c2a26",
-        "log_bg": "#1b140d",
-        "log_border": "#8c6c3a",
-        "log_text": "#fff7e1",
-        "medallion_bg": "#2f2514",
-        "medallion_border": "#f0c677",
-        "medallion_text": "#fff0c8",
-    },
-    "skellige": {
-        "root_bg": "#0f1a2b",
-        "text_base": "#e9f3ff",
-        "label": "#e5f2ff",
-        "header_border": "#4f7ea6",
-        "header_g1": "#1a2e47",
-        "header_g2": "#15253a",
-        "header_g3": "#0d1728",
-        "title": "#b8dcff",
-        "subtitle": "#a9c7e6",
-        "status_border": "#6f9ac0",
-        "status_bg": "#21364f",
-        "status_text": "#e6f5ff",
-        "ready_bg": "#1f4840",
-        "ready_border": "#4d8b79",
-        "ready_text": "#cbf0e7",
-        "running_bg": "#4b3d24",
-        "running_border": "#bda26d",
-        "running_text": "#fff0cb",
-        "drop_border": "#6da3d4",
-        "drop_bg": "rgba(88, 135, 188, 0.18)",
-        "drop_active_border": "#9ccbf2",
-        "drop_active_bg": "rgba(137, 183, 228, 0.28)",
-        "drop_title": "#d5ecff",
-        "drop_hint": "#d3e7fb",
-        "panel_border": "#4c7299",
-        "panel_g1": "#182a42",
-        "panel_g2": "#122036",
-        "panel_title_bg": "#0d1a2c",
-        "panel_title_text": "#9fcbf2",
-        "tag_text": "#c6e2ff",
-        "tag_border": "#4b739a",
-        "tag_bg": "rgba(74, 113, 156, 0.28)",
-        "input_border": "#628eb4",
-        "input_bg": "#1a2f47",
-        "input_text": "#f0f8ff",
-        "input_focus_border": "#9fd2ff",
-        "input_focus_bg": "#223d5d",
-        "checkbox_text": "#e8f3ff",
-        "checkbox_border": "#729ec4",
-        "checkbox_bg": "#14253b",
-        "checkbox_checked_bg": "#6eadda",
-        "checkbox_checked_border": "#a9d8ff",
-        "button_border": "#6289ad",
-        "button_text": "#eef6ff",
-        "button_g1": "#3a5b7b",
-        "button_g2": "#2a435d",
-        "button_hover_border": "#9bc4e8",
-        "button_hover_g1": "#46709a",
-        "button_hover_g2": "#34557a",
-        "button_pressed": "#20384e",
-        "button_disabled_text": "#8d9fb4",
-        "button_disabled_border": "#4c6077",
-        "button_disabled_bg": "#223347",
-        "start_border": "#4a8d73",
-        "start_g1": "#2f6b5a",
-        "start_g2": "#244f43",
-        "start_hover_border": "#74be9f",
-        "start_hover_g1": "#3d8671",
-        "start_hover_g2": "#2e6657",
-        "stop_border": "#91625f",
-        "stop_g1": "#734340",
-        "stop_g2": "#5c3431",
-        "stop_hover_border": "#c1847f",
-        "stop_hover_g1": "#8a5550",
-        "stop_hover_g2": "#6d403b",
-        "log_bg": "#14253a",
-        "log_border": "#5e87b0",
-        "log_text": "#eff8ff",
-        "medallion_bg": "#1b324f",
-        "medallion_border": "#8ec1e8",
-        "medallion_text": "#eaf6ff",
-    },
+    "wolf": _build_theme_preset(
+        accent="#9a7dff",
+        accent_soft="#7d65d8",
+        accent_deep="#5f4cae",
+        accent_text="#efe7ff",
+        info="#8ec1ff",
+    ),
+    "nilfgaard": _build_theme_preset(
+        accent="#b489ff",
+        accent_soft="#8a62d2",
+        accent_deep="#6e4eb0",
+        accent_text="#f4e9ff",
+        info="#a0c8ff",
+    ),
+    "skellige": _build_theme_preset(
+        accent="#8b90ff",
+        accent_soft="#6268d6",
+        accent_deep="#4c53af",
+        accent_text="#e8ebff",
+        info="#8eb8ff",
+    ),
 }
 
 THEME_MEDALLION = {
@@ -425,6 +330,103 @@ class MiniLineChart(QWidget):
             chart_rect.adjusted(0, 0, -2, -2),
             Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignRight,
             f"{int(self.values[-1])}",
+        )
+
+
+class MetricTile(QFrame):
+    def __init__(self, title: str) -> None:
+        super().__init__()
+        self.setObjectName("metricTile")
+        self.setMinimumHeight(118)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(14, 12, 14, 12)
+        layout.setSpacing(4)
+
+        self.title_label = QLabel(title)
+        self.title_label.setObjectName("metricTileTitle")
+        self.value_label = QLabel("—")
+        self.value_label.setObjectName("metricTileValue")
+        self.delta_label = QLabel("—")
+        self.delta_label.setObjectName("metricTileDelta")
+
+        layout.addWidget(self.title_label)
+        layout.addWidget(self.value_label)
+        layout.addWidget(self.delta_label)
+
+    def set_value(self, value: str, delta: str = "—") -> None:
+        self.value_label.setText(value)
+        self.delta_label.setText(delta)
+
+
+class SessionViewportFrame(QWidget):
+    def __init__(self) -> None:
+        super().__init__()
+        self.setObjectName("sessionViewportFrame")
+        self.setMinimumSize(220, 420)
+        self.setMaximumWidth(320)
+        self.is_online = False
+        self.status_text = "Отключено"
+        self.source_text = "Источник не подключен"
+
+    def set_state(self, *, online: bool, status: str, source: str) -> None:
+        self.is_online = online
+        self.status_text = status
+        self.source_text = source
+        self.update()
+
+    def paintEvent(self, event) -> None:  # type: ignore[override]
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        rect = self.rect().adjusted(8, 8, -8, -8)
+
+        painter.setPen(QPen(QColor(126, 136, 170, 78), 1.2))
+        painter.setBrush(QColor(14, 19, 34, 225))
+        painter.drawRoundedRect(rect, 24, 24)
+
+        inner_width = int(rect.height() * (9 / 16))
+        inner_width = min(inner_width, rect.width() - 28)
+        inner_height = int(inner_width * (16 / 9))
+        if inner_height > rect.height() - 28:
+            inner_height = rect.height() - 28
+            inner_width = int(inner_height * (9 / 16))
+
+        inner_x = rect.center().x() - (inner_width // 2)
+        inner_y = rect.center().y() - (inner_height // 2)
+        inner_rect = rect.adjusted(0, 0, 0, 0)
+        inner_rect.setX(inner_x)
+        inner_rect.setY(inner_y)
+        inner_rect.setWidth(inner_width)
+        inner_rect.setHeight(inner_height)
+
+        glow_color = QColor(156, 132, 255, 190 if self.is_online else 95)
+        painter.setPen(QPen(glow_color, 2.0))
+        painter.setBrush(QColor(19, 25, 43, 248))
+        painter.drawRoundedRect(inner_rect, 20, 20)
+
+        screen = inner_rect.adjusted(12, 16, -12, -16)
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(QColor(10, 14, 28))
+        painter.drawRoundedRect(screen, 14, 14)
+
+        painter.setPen(QColor(224, 230, 255))
+        painter.drawText(
+            screen.adjusted(0, 16, 0, -screen.height() + 40),
+            Qt.AlignmentFlag.AlignHCenter,
+            "9:16 Session",
+        )
+        painter.setPen(QColor(150, 162, 198))
+        painter.drawText(
+            screen.adjusted(0, 44, 0, -screen.height() + 66),
+            Qt.AlignmentFlag.AlignHCenter,
+            self.status_text,
+        )
+        painter.setPen(QColor(128, 141, 177))
+        painter.drawText(
+            screen.adjusted(18, 0, -18, -18),
+            Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignHCenter,
+            self.source_text,
         )
 
 

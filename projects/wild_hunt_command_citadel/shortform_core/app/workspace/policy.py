@@ -24,6 +24,8 @@ class PolicyGuard:
         action = action_type.lower().strip()
 
         manual_allowed = {
+            "connect_profile",
+            "disconnect_profile",
             "open_session_window",
             "close_session_window",
             "sync_profile_state",
