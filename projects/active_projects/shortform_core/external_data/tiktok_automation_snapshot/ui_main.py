@@ -1,6 +1,5 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
-import json
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -32,12 +31,12 @@ from PySide6.QtWidgets import (
 
 from profile_parser import parse_profile_payload
 from settings import BotSettings
-from worker import BotWorker, CoreWorker
+from worker import BotWorker
 
 THEME_NAMES = {
-    "wolf": "Волк",
-    "nilfgaard": "Нильфгаард",
-    "skellige": "Скеллиге",
+    "wolf": "Wolf",
+    "nilfgaard": "Nilfgaard",
+    "skellige": "Skellige",
 }
 
 THEME_PRESETS: Dict[str, Dict[str, str]] = {
@@ -263,15 +262,15 @@ THEME_PRESETS: Dict[str, Dict[str, str]] = {
 }
 
 THEME_MEDALLION = {
-    "wolf": "ВОЛК",
-    "nilfgaard": "СОЛН",
-    "skellige": "СКЕЛ",
+    "wolf": "WOLF",
+    "nilfgaard": "SUN",
+    "skellige": "SKELL",
 }
 
 THEME_DROP_TITLE = {
-    "wolf": "ПРИЕМ ШКОЛЫ ВОЛКА",
-    "nilfgaard": "КОМАНДОВАНИЕ НИЛЬФГААРДА",
-    "skellige": "БЕРЕГ СКЕЛЛИГЕ",
+    "wolf": "WOLF SCHOOL INTAKE",
+    "nilfgaard": "NILFGAARD COMMAND",
+    "skellige": "SKELLIGE LONGSHIP BAY",
 }
 
 
@@ -291,13 +290,13 @@ class ProfileDropZone(QFrame):
         layout.setContentsMargins(22, 16, 22, 16)
         layout.setSpacing(5)
 
-        self.title_label = QLabel("ПРИЕМ ШКОЛЫ ВОЛКА")
+        self.title_label = QLabel("WOLF SCHOOL INTAKE")
         self.title_label.setObjectName("dropTitle")
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.title_label.setWordWrap(True)
 
         label = QLabel(
-            "Перетащи JSON/текст профиля из браузера сюда\n"
+            "Перетащи JSON профиля/текст из антидетект браузера сюда\n"
             "или вставь CDP URL в поле ниже."
         )
         label.setObjectName("dropHint")
@@ -341,7 +340,7 @@ class ProfileDropZone(QFrame):
             self.profile_parsed.emit(cdp_url, profile_url or "")
             self.log_signal.emit(f"Профиль распознан. CDP endpoint: {cdp_url}")
         else:
-            self.log_signal.emit("Не удалось извлечь CDP URL из перетаскиваемых данных.")
+            self.log_signal.emit("Не удалось извлечь CDP URL из drop-данных.")
 
         event.acceptProposedAction()
 
@@ -358,17 +357,14 @@ class ProfileDropZone(QFrame):
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("Доска Контрактов Ведьмака | TikTok Ops")
+        self.setWindowTitle("Witcher Command Deck | TikTok Ops")
         self.resize(1260, 860)
         self.setMinimumSize(1080, 760)
         self.worker: Optional[BotWorker] = None
-        self.core_worker: Optional[CoreWorker] = None
-        self.core_root = self._default_core_root()
         self.current_theme_key = "wolf"
         self._build_ui()
         self._apply_theme(self.current_theme_key)
         self._set_running_state(False)
-        self._set_core_running_state(False)
 
     def _build_ui(self) -> None:
         central = QWidget()
@@ -403,7 +399,6 @@ class MainWindow(QMainWindow):
         content_layout.addWidget(self._build_upload_box())
         content_layout.addWidget(self._build_runtime_box())
         content_layout.addWidget(self._build_controls_box())
-        content_layout.addWidget(self._build_core_box())
         content_layout.addWidget(self._build_log_panel())
         content_layout.addStretch(1)
 
@@ -417,7 +412,7 @@ class MainWindow(QMainWindow):
         layout.setContentsMargins(16, 12, 16, 12)
         layout.setSpacing(12)
 
-        self.medallion_badge = QLabel("ВОЛК")
+        self.medallion_badge = QLabel("WOLF")
         self.medallion_badge.setObjectName("medallionBadge")
         self.medallion_badge.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.medallion_badge.setFixedSize(64, 64)
@@ -426,9 +421,9 @@ class MainWindow(QMainWindow):
         title_col = QVBoxLayout()
         title_col.setSpacing(2)
 
-        title = QLabel("ВЕДЬМАК: ДОСКА КОНТРАКТОВ")
+        title = QLabel("THE WITCHER: CONTRACT BOARD")
         title.setObjectName("titleLabel")
-        subtitle = QLabel("Центр управления автоматизацией TikTok-профилей.")
+        subtitle = QLabel("TikTok automation command table for anti-detect browser profiles.")
         subtitle.setObjectName("subtitleLabel")
         title_col.addWidget(title)
         title_col.addWidget(subtitle)
@@ -469,10 +464,10 @@ class MainWindow(QMainWindow):
                 break
         self._apply_theme(self.current_theme_key)
         if hasattr(self, "log_edit"):
-            self._append_log(f"Тема изменена: {display_name}")
+            self._append_log(f"Тема интерфейса: {display_name}")
 
     def _build_log_panel(self) -> QGroupBox:
-        box = QGroupBox("Боевой Журнал")
+        box = QGroupBox("Боевой журнал")
         box.setObjectName("panel")
         box.setMinimumHeight(210)
         layout = QVBoxLayout(box)
@@ -493,7 +488,7 @@ class MainWindow(QMainWindow):
 
         self.log_edit.setReadOnly(True)
         self.log_edit.setObjectName("logOutput")
-        self.log_edit.setPlaceholderText("Здесь появится журнал действий, ошибок и статуса профиля...")
+        self.log_edit.setPlaceholderText("Здесь будет журнал действий, ошибок и статуса профиля...")
         layout.addWidget(self.log_edit, stretch=1)
         return box
 
@@ -518,7 +513,7 @@ class MainWindow(QMainWindow):
         return box
 
     def _build_scenario_box(self) -> QGroupBox:
-        box = QGroupBox("Контракт и Сценарии")
+        box = QGroupBox("Контракт и сценарии")
         box.setObjectName("panel")
         grid = QGridLayout(box)
         grid.setContentsMargins(12, 22, 12, 12)
@@ -537,7 +532,7 @@ class MainWindow(QMainWindow):
         self.collect_stats_checkbox = QCheckBox("Собирать метрики видео")
         self.collect_stats_checkbox.setChecked(True)
 
-        self.monitor_checkbox = QCheckBox("Собирать метрики профиля")
+        self.monitor_checkbox = QCheckBox("Снимать метрики профиля")
         self.monitor_checkbox.setChecked(True)
 
         self.comment_checkbox = QCheckBox("Писать комментарии")
@@ -550,14 +545,14 @@ class MainWindow(QMainWindow):
         self.comments_edit.setPlaceholderText("Один комментарий на строку")
         self.comments_edit.setFixedHeight(120)
 
-        self.visit_profiles_checkbox = QCheckBox("Посещать профили")
+        self.visit_profiles_checkbox = QCheckBox("Открывать профили")
         self.visit_profiles_checkbox.setChecked(False)
         self.profiles_limit_spin = QSpinBox()
         self.profiles_limit_spin.setRange(0, 500)
         self.profiles_limit_spin.setValue(5)
         self.profiles_edit = QPlainTextEdit()
         self.profiles_edit.setObjectName("profilesEdit")
-        self.profiles_edit.setPlaceholderText("URL профиля TikTok, по одному на строку")
+        self.profiles_edit.setPlaceholderText("URL профиля TikTok, по одному в строке")
         self.profiles_edit.setFixedHeight(120)
 
         grid.addWidget(self.watch_checkbox, 0, 0)
@@ -578,7 +573,7 @@ class MainWindow(QMainWindow):
         return box
 
     def _build_upload_box(self) -> QGroupBox:
-        box = QGroupBox("Загрузка Видео")
+        box = QGroupBox("Загрузка видео")
         box.setObjectName("panel")
         form = QFormLayout(box)
         form.setContentsMargins(12, 22, 12, 12)
@@ -601,7 +596,7 @@ class MainWindow(QMainWindow):
         form.addRow("Видео:", row)
 
         self.caption_input = QLineEdit()
-        self.caption_input.setPlaceholderText("Описание к видео")
+        self.caption_input.setPlaceholderText("Описание для видео")
         form.addRow("Описание:", self.caption_input)
 
         self.publish_checkbox = QCheckBox("Публиковать автоматически")
@@ -610,7 +605,7 @@ class MainWindow(QMainWindow):
         return box
 
     def _build_runtime_box(self) -> QGroupBox:
-        box = QGroupBox("Параметры Выполнения")
+        box = QGroupBox("Параметры боя")
         box.setObjectName("panel")
         form = QFormLayout(box)
         form.setContentsMargins(12, 22, 12, 12)
@@ -621,13 +616,13 @@ class MainWindow(QMainWindow):
         self.min_delay_spin.setRange(0.5, 300.0)
         self.min_delay_spin.setValue(3.0)
         self.min_delay_spin.setSingleStep(0.5)
-        form.addRow("Мин. пауза (сек):", self.min_delay_spin)
+        form.addRow("Min пауза (сек):", self.min_delay_spin)
 
         self.max_delay_spin = QDoubleSpinBox()
         self.max_delay_spin.setRange(0.5, 300.0)
         self.max_delay_spin.setValue(8.0)
         self.max_delay_spin.setSingleStep(0.5)
-        form.addRow("Макс. пауза (сек):", self.max_delay_spin)
+        form.addRow("Max пауза (сек):", self.max_delay_spin)
 
         output_row = QWidget()
         output_layout = QHBoxLayout(output_row)
@@ -637,20 +632,20 @@ class MainWindow(QMainWindow):
         output_browse.clicked.connect(self._pick_output_dir)
         output_layout.addWidget(self.output_dir_input)
         output_layout.addWidget(output_browse)
-        form.addRow("Путь вывода:", output_row)
+        form.addRow("Вывод данных:", output_row)
 
         return box
 
     def _build_controls_box(self) -> QGroupBox:
-        box = QGroupBox("Управление Контрактом")
+        box = QGroupBox("Управление контрактом")
         box.setObjectName("panel")
         layout = QHBoxLayout(box)
         layout.setContentsMargins(12, 20, 12, 12)
         layout.setSpacing(8)
 
-        self.start_button = QPushButton("Старт Контракта")
+        self.start_button = QPushButton("Start Contract")
         self.start_button.setObjectName("startButton")
-        self.stop_button = QPushButton("Стоп")
+        self.stop_button = QPushButton("Stop")
         self.stop_button.setObjectName("stopButton")
         self.stop_button.setEnabled(False)
 
@@ -659,42 +654,6 @@ class MainWindow(QMainWindow):
 
         layout.addWidget(self.start_button, stretch=2)
         layout.addWidget(self.stop_button, stretch=1)
-        return box
-
-    def _default_core_root(self) -> Path:
-        return Path(__file__).resolve().parents[2] / "active_projects" / "shortform_core"
-
-    def _build_core_box(self) -> QGroupBox:
-        box = QGroupBox("Ядро Аналитики (shortform_core)")
-        box.setObjectName("panel")
-        layout = QGridLayout(box)
-        layout.setContentsMargins(12, 22, 12, 12)
-        layout.setHorizontalSpacing(10)
-        layout.setVerticalSpacing(8)
-        layout.setColumnStretch(1, 1)
-
-        self.core_root_input = QLineEdit(str(self.core_root))
-        self.core_root_input.setPlaceholderText("Путь к корню shortform_core")
-        root_pick_button = QPushButton("Папка")
-        root_pick_button.clicked.connect(self._pick_core_root)
-        layout.addWidget(QLabel("Корень core:"), 0, 0)
-        layout.addWidget(self.core_root_input, 0, 1)
-        layout.addWidget(root_pick_button, 0, 2)
-
-        self.core_use_live_output = QCheckBox("Использовать текущий TikTok output как источник snapshot")
-        self.core_use_live_output.setChecked(True)
-        layout.addWidget(self.core_use_live_output, 1, 0, 1, 3)
-
-        self.core_bootstrap_button = QPushButton("Инициализация Core v2")
-        self.core_demo_button = QPushButton("Анализ + План Core")
-        self.core_show_plan_button = QPushButton("Показать План Core")
-        self.core_show_plan_button.clicked.connect(self._show_core_plan)
-        self.core_bootstrap_button.clicked.connect(lambda: self._run_core_action("bootstrap"))
-        self.core_demo_button.clicked.connect(lambda: self._run_core_action("demo"))
-
-        layout.addWidget(self.core_bootstrap_button, 2, 0)
-        layout.addWidget(self.core_demo_button, 2, 1)
-        layout.addWidget(self.core_show_plan_button, 2, 2)
         return box
 
     def _apply_theme(self, theme_key: str) -> None:
@@ -1022,98 +981,6 @@ class MainWindow(QMainWindow):
         if path:
             self.output_dir_input.setText(path)
 
-    def _pick_core_root(self) -> None:
-        path = QFileDialog.getExistingDirectory(self, "Выбрать папку shortform_core", str(self.core_root))
-        if path:
-            self.core_root_input.setText(path)
-
-    def _resolve_core_snapshot_dir(self) -> Path:
-        output_dir = Path(self.output_dir_input.text().strip() or "output")
-        if output_dir.name.lower() == "output":
-            return output_dir.parent
-        if (output_dir / "output").exists():
-            return output_dir
-        return output_dir.parent
-
-    def _set_core_running_state(self, running: bool) -> None:
-        self.core_bootstrap_button.setEnabled(not running)
-        self.core_demo_button.setEnabled(not running)
-
-    def _run_core_action(self, action: str) -> None:
-        if self.core_worker and self.core_worker.isRunning():
-            QMessageBox.information(self, "Core Engine", "Команда Core уже выполняется.")
-            return
-
-        core_root = Path(self.core_root_input.text().strip())
-        if not core_root.exists():
-            QMessageBox.warning(self, "Core Engine", f"Корень core не найден:\n{core_root}")
-            return
-
-        snapshot_dir: Optional[Path] = None
-        if self.core_use_live_output.isChecked():
-            snapshot_dir = self._resolve_core_snapshot_dir()
-
-        self.core_worker = CoreWorker(core_root=core_root, action=action, snapshot_dir=snapshot_dir)
-        self.core_worker.log_signal.connect(self._append_log)
-        self.core_worker.done_signal.connect(self._on_core_done)
-        self._set_core_running_state(True)
-        self._append_log(f"[CORE] Старт действия: {action}")
-        self.core_worker.start()
-
-    def _on_core_done(self, success: bool, details: str) -> None:
-        self._set_core_running_state(False)
-        if success:
-            self._append_log(f"[CORE] {details}")
-            self._show_core_plan()
-            return
-        self._append_log(f"[CORE] ОШИБКА: {details}")
-        QMessageBox.critical(self, "Core Engine", details)
-
-    def _show_core_plan(self) -> None:
-        core_root = Path(self.core_root_input.text().strip())
-        plan_path = core_root / "runtime" / "output" / "plan_bundle.json"
-        report_path = core_root / "runtime" / "output" / "analytics_report.json"
-        action_labels = {
-            "collect_data": "сбор_данных",
-            "scale_creative": "масштабирование",
-            "refine_hook": "доработка_хука",
-            "tune_cta": "настройка_cta",
-            "run_ab_test": "ab_тест",
-            "monitor_profile": "мониторинг_профиля",
-            "execute_task": "выполнение_задачи",
-        }
-        label_map = {
-            "high": "высокий",
-            "medium": "средний",
-            "low": "низкий",
-            "insufficient_data": "недостаточно_данных",
-        }
-        if not plan_path.exists():
-            self._append_log(f"[CORE] файл плана не найден: {plan_path}")
-            return
-
-        try:
-            plan_data = json.loads(plan_path.read_text(encoding="utf-8"))
-            self._append_log("[CORE] Сводка плана:")
-            self._append_log(f"bundle_id={plan_data.get('bundle_id')} шагов={len(plan_data.get('steps', []))}")
-            for index, step in enumerate(plan_data.get("steps", [])[:8], start=1):
-                action = action_labels.get(step.get("action_type", "-"), step.get("action_type", "-"))
-                title = step.get("title", "-")
-                priority = step.get("priority", "-")
-                self._append_log(f"  {index}. [{action}] {title} (приоритет={priority})")
-        except Exception as error:
-            self._append_log(f"[CORE] Не удалось прочитать план: {error}")
-
-        if report_path.exists():
-            try:
-                report_data = json.loads(report_path.read_text(encoding="utf-8"))
-                assessment = report_data.get("account_assessment", {})
-                score = assessment.get("health_score", "-")
-                raw_label = assessment.get("label", "-")
-                label = label_map.get(raw_label, raw_label)
-                self._append_log(f"[CORE] Оценка аккаунта: score={score}, label={label}")
-            except Exception as error:
-                self._append_log(f"[CORE] Не удалось прочитать отчет: {error}")
     def _start_worker(self) -> None:
         if self.worker and self.worker.isRunning():
             QMessageBox.warning(self, "Выполнение", "Сценарий уже выполняется.")
@@ -1121,7 +988,7 @@ class MainWindow(QMainWindow):
 
         settings = self._collect_settings()
         if not settings.cdp_url.strip():
-            QMessageBox.warning(self, "CDP URL", "Укажи CDP URL или перетащи профиль браузера.")
+            QMessageBox.warning(self, "CDP URL", "Укажите CDP URL или перетащите профиль.")
             return
 
         self.worker = BotWorker(settings)
@@ -1134,7 +1001,7 @@ class MainWindow(QMainWindow):
     def _stop_worker(self) -> None:
         if self.worker and self.worker.isRunning():
             self.worker.stop()
-            self._append_log("Запрос на остановку отправлен.")
+            self._append_log("Отправлен запрос на остановку.")
 
     def _on_worker_done(self, success: bool, details: str) -> None:
         self._set_running_state(False)
@@ -1148,7 +1015,7 @@ class MainWindow(QMainWindow):
         self.start_button.setEnabled(not running)
         self.stop_button.setEnabled(running)
         self.status_chip.setProperty("state", "running" if running else "ready")
-        self.status_chip.setText("Контракт Активен" if running else "Ожидание")
+        self.status_chip.setText("Контракт активен" if running else "Ожидание")
         self.status_chip.style().unpolish(self.status_chip)
         self.status_chip.style().polish(self.status_chip)
         self.status_chip.update()
@@ -1185,4 +1052,3 @@ class MainWindow(QMainWindow):
     def _append_log(self, message: str) -> None:
         timestamp = datetime.now().strftime("%H:%M:%S")
         self.log_edit.append(f"[{timestamp}] {message}")
-

@@ -1,0 +1,36 @@
+You are building a modular Python project for a short-form content operations agent.
+
+Project purpose:
+This is a decision-support and orchestration core for TikTok / Reels / Shorts style workflows.
+It is not an anti-detection tool and must not implement device masking, IP masking, account evasion, traffic obfuscation, or platform-rule circumvention features.
+
+Build the project with this structure:
+
+app/
+  __init__.py
+  models.py
+  config.py
+  analytics.py
+  registry.py
+  planner.py
+  demo_data.py
+  io_utils.py
+  main.py
+  db.py
+  repository.py
+  schemas.py
+  api.py
+  bootstrap_v2.py
+README.md
+CODEX.md
+PROMPT_FOR_CODEX.txt
+requirements.txt
+
+Requirements:
+- Python 3.11+
+- typed dataclasses or pydantic models
+- modular architecture
+- configurable thresholds
+- machine-readable outputs
+- FastAPI + SQLite ready
+- no anti-detection or evasion features
