@@ -1,55 +1,78 @@
-# Witcher Command Deck (Единая Версия)
+# Witcher Command Deck (Единая версия)
 
-Теперь это одна программа с единым UI:
+Единое десктоп-приложение с двумя слоями:
 
-- слой `TikTok automation` (основной сценарий через Playwright/CDP);
-- слой `shortform_core` (новое аналитическое ядро и планировщик) в том же окне.
+- TikTok automation (UI + Playwright/CDP сценарии)
+- shortform_core (аналитика, bootstrap, план действий)
 
-## Что добавлено
+## Что уже реализовано
 
-В интерфейсе сохранён старый стиль и добавлен блок:
+- Единый Witcher UI на русском языке.
+- Темы: `Волк`, `Нильфгаард`, `Скеллиге`.
+- Мастер первого запуска:
+  - проверка `.venv`
+  - проверка зависимостей
+  - проверка Chromium для Playwright
+  - автонастройка в один клик
+- Профили конфигураций:
+  - сохранение/обновление/удаление
+  - быстрое переключение между профилями
+- Планировщик и очередь:
+  - задания по времени и дням недели
+  - очередь запусков (manual + schedule)
+- Мини-дашборд в UI:
+  - таблица метрик
+  - графики (лайки, подписчики, приоритеты core-плана)
+- Расширенная устойчивость движка:
+  - ретраи
+  - таймауты шагов и селекторов
+  - диагностика селекторов (`selector_diagnostics.jsonl`)
+  - health-check профиля перед контрактом
+- Интеграция с `shortform_core`:
+  - bootstrap
+  - анализ + план
+  - вывод плана прямо в логе UI
 
-- `Ядро Аналитики (shortform_core)`
-- `Core Bootstrap v2`
-- `Core Анализ + План`
-- `Показать Core План`
-
-## Пути
-
-- UI-приложение: `E:\CVVCODEX\projects\tiktok_automation\tiktok_automation_app`
-- Ядро: `E:\CVVCODEX\projects\active_projects\shortform_core`
-
-## Запуск
+## Быстрый запуск
 
 ```powershell
 cd E:\CVVCODEX\projects\tiktok_automation\tiktok_automation_app
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-python -m playwright install chromium
-python app.py
+powershell -ExecutionPolicy Bypass -File .\run_setup.ps1
+.\.venv\Scripts\python.exe .\app.py
 ```
 
-Без консольного окна:
+Запуск без консольного окна:
 
 - `run.bat`
 - `run_silent.vbs`
 
-## Как работать в объединённом режиме
+## One-click EXE сборка
 
-1. При необходимости запусти обычный сценарий через `Старт Контракта`.
-2. В блоке `Ядро Аналитики` оставь галочку `Использовать текущий TikTok output как источник snapshot`.
-3. Нажми `Core Анализ + План`.
-4. В `Боевом Журнале` появятся строки `[CORE]` с результатами.
-5. Нажми `Показать Core План` для повторного вывода плана.
+```powershell
+cd E:\CVVCODEX\projects\tiktok_automation\tiktok_automation_app
+powershell -ExecutionPolicy Bypass -File .\build_exe.ps1 -Clean
+```
 
-## Файлы результатов ядра
+Итоговый файл:
 
-- `E:\CVVCODEX\projects\active_projects\shortform_core\runtime\output\analytics_report.json`
-- `E:\CVVCODEX\projects\active_projects\shortform_core\runtime\output\plan_bundle.json`
-- `E:\CVVCODEX\projects\active_projects\shortform_core\runtime\output\bootstrap_v2.json`
+- `dist\WitcherCommandDeck.exe`
 
-## Важно
+Также можно запустить:
 
-Ядро `shortform_core` — это слой оркестрации и аналитики.  
-Оно не реализует функции обхода правил платформ, маскировки трафика или антидетект-эвазию.
+- `build_exe.bat`
+
+## Основные пути
+
+- UI: `E:\CVVCODEX\projects\tiktok_automation\tiktok_automation_app`
+- Core: `E:\CVVCODEX\projects\active_projects\shortform_core`
+
+## Важные выходные файлы
+
+- TikTok output:
+  - `output\session_events.jsonl`
+  - `output\session_stats.jsonl`
+  - `output\selector_diagnostics.jsonl`
+- Core output:
+  - `E:\CVVCODEX\projects\active_projects\shortform_core\runtime\output\analytics_report.json`
+  - `E:\CVVCODEX\projects\active_projects\shortform_core\runtime\output\plan_bundle.json`
+  - `E:\CVVCODEX\projects\active_projects\shortform_core\runtime\output\bootstrap_v2.json`

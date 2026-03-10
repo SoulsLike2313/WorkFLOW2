@@ -39,3 +39,18 @@
 
 - `gitignore` настроен так, чтобы не попадали виртуальные окружения, кэши и runtime-артефакты.
 - Внутри каждого проекта сохранены относительные пути, чтобы запуск и сборка не ломались после переноса.
+
+## Auto Sync To GitHub
+
+Scripts are in `scripts/`:
+
+- `scripts/auto_sync.ps1` - one run: pull/rebase, commit local changes, push.
+- `scripts/register_auto_sync_task.ps1` - creates Windows Task Scheduler job.
+- `scripts/unregister_auto_sync_task.ps1` - removes that job.
+
+Quick setup (every 15 minutes):
+
+```powershell
+cd E:\CVVCODEX
+powershell -ExecutionPolicy Bypass -File .\scripts\register_auto_sync_task.ps1 -Minutes 15
+```

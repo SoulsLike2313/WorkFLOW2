@@ -34,6 +34,12 @@ class BotSettings:
     min_delay_seconds: float = 3.0
     max_delay_seconds: float = 8.0
 
+    retry_attempts: int = 2
+    action_timeout_seconds: float = 12.0
+    selector_timeout_ms: int = 4500
+    health_check_enabled: bool = True
+    strict_health_check: bool = False
+
     def normalized(self) -> "BotSettings":
         min_delay = max(0.5, self.min_delay_seconds)
         max_delay = max(min_delay, self.max_delay_seconds)
@@ -58,4 +64,9 @@ class BotSettings:
             publish_upload=self.publish_upload,
             min_delay_seconds=min_delay,
             max_delay_seconds=max_delay,
+            retry_attempts=max(1, int(self.retry_attempts)),
+            action_timeout_seconds=max(2.0, float(self.action_timeout_seconds)),
+            selector_timeout_ms=max(500, int(self.selector_timeout_ms)),
+            health_check_enabled=bool(self.health_check_enabled),
+            strict_health_check=bool(self.strict_health_check),
         )

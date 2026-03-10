@@ -6,9 +6,9 @@ import random
 import threading
 from datetime import datetime
 from pathlib import Path
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, List, Optional, Sequence
 
-from playwright.async_api import Browser, Page, async_playwright
+from playwright.async_api import Browser, Locator, Page, async_playwright
 
 from settings import BotSettings
 
@@ -22,16 +22,28 @@ class TikTokAutomationEngine:
         self.log = logger
         self.stats_path = self.settings.output_dir / "session_stats.jsonl"
         self.events_path = self.settings.output_dir / "session_events.jsonl"
+        self.diagnostics_path = self.settings.output_dir / "selector_diagnostics.jsonl"
+        self._stop_logged = False
+
+    @property
+    def action_timeout_ms(self) -> int:
+        return int(self.settings.action_timeout_seconds * 1000)
 
     async def run(self) -> None:
         self.settings.output_dir.mkdir(parents=True, exist_ok=True)
         self.log(f"Подключение к CDP: {self.settings.cdp_url}")
 
         async with async_playwright() as playwright:
-            browser = await playwright.chromium.connect_over_cdp(self.settings.cdp_url)
+            browser = await self._connect_browser(playwright)
             try:
                 page = await self._get_or_create_page(browser)
                 await self._ensure_tiktok_open(page)
+
+                if self.settings.health_check_enabled:
+                    health_ok = await self._run_health_check(page)
+                    if not health_ok and self.settings.strict_health_check:
+                        self.log("Контракт остановлен: health-check профиля не пройден.")
+                        return
 
                 if self.settings.watch_enabled:
                     await self.watch_feed(page)
@@ -51,6 +63,23 @@ class TikTokAutomationEngine:
                 await browser.close()
                 self.log("CDP-сессия закрыта.")
 
+    async def _connect_browser(self, playwright) -> Browser:
+        last_error: Exception | None = None
+        for attempt in range(1, self.settings.retry_attempts + 1):
+            if self._should_stop():
+                raise RuntimeError("Остановка по запросу пользователя.")
+            try:
+                return await playwright.chromium.connect_over_cdp(
+                    self.settings.cdp_url,
+                    timeout=self.action_timeout_ms,
+                )
+            except Exception as error:
+                last_error = error
+                self.log(f"Ошибка подключения к CDP (попытка {attempt}/{self.settings.retry_attempts}): {error}")
+                if attempt < self.settings.retry_attempts:
+                    await self._sleep_with_stop(1.3 * attempt)
+        raise RuntimeError(f"Не удалось подключиться к CDP: {last_error}")
+
     async def _get_or_create_page(self, browser: Browser) -> Page:
         if browser.contexts:
             context = browser.contexts[0]
@@ -67,15 +96,57 @@ class TikTokAutomationEngine:
 
     async def _ensure_tiktok_open(self, page: Page) -> None:
         current_url = page.url or ""
-        if "tiktok.com" not in current_url:
-            self.log("Открываю TikTok.")
-            await page.goto("https://www.tiktok.com", wait_until="domcontentloaded")
-            await self._sleep_with_stop(3.0)
+        if "tiktok.com" in current_url:
+            return
+        self.log("Открываю TikTok.")
+        await self._goto_with_retry(page, "https://www.tiktok.com", context="open_tiktok")
+        await self._sleep_with_stop(2.0)
+
+    async def _run_health_check(self, page: Page) -> bool:
+        self.log("Health-check профиля...")
+        checks: Dict[str, object] = {
+            "timestamp": self._timestamp(),
+            "event": "health_check",
+            "url": page.url,
+        }
+
+        try:
+            title = await page.title()
+        except Exception:
+            title = ""
+        checks["title"] = title
+
+        checks["is_tiktok"] = "tiktok.com" in (page.url or "")
+        checks["title_ok"] = bool(title.strip())
+
+        auth_markers = [
+            "[data-e2e='profile-icon']",
+            "[data-e2e='nav-profile']",
+            "a[href*='@'] img",
+        ]
+        auth_detected = False
+        for selector in auth_markers:
+            try:
+                if await page.locator(selector).count() > 0:
+                    auth_detected = True
+                    break
+            except Exception:
+                continue
+        checks["auth_marker"] = auth_detected
+
+        passed = bool(checks["is_tiktok"] and checks["title_ok"])
+        checks["passed"] = passed
+        self._append_jsonl(self.events_path, checks)
+        if passed:
+            self.log("Health-check пройден.")
+        else:
+            self.log("Health-check выявил проблемы. Смотри session_events.jsonl.")
+        return passed
 
     async def watch_feed(self, page: Page) -> None:
         self.log(f"Сценарий: просмотр {self.settings.watch_videos} видео.")
-        await page.goto(self.settings.for_you_url, wait_until="domcontentloaded")
-        await self._sleep_with_stop(4.0)
+        await self._goto_with_retry(page, self.settings.for_you_url, context="watch_feed_open")
+        await self._sleep_with_stop(3.0)
 
         for index in range(self.settings.watch_videos):
             if self._should_stop():
@@ -92,12 +163,23 @@ class TikTokAutomationEngine:
                 stats = await self._extract_video_stats(page)
                 entry["video_stats"] = stats
                 self._append_jsonl(self.stats_path, stats)
-                self.log(f"[Лента {index + 1}] {stats.get('author', '-')}, лайки: {stats.get('likes', '-')}")
+                self.log(
+                    f"[Лента {index + 1}] {stats.get('author', '-')}, "
+                    f"лайки: {stats.get('likes', '-')}, комменты: {stats.get('comments', '-')}"
+                )
             else:
                 self.log(f"[Лента {index + 1}] просмотр.")
 
             self._append_jsonl(self.events_path, entry)
-            await page.keyboard.press("PageDown")
+            try:
+                await page.keyboard.press("PageDown")
+            except Exception as error:
+                await self._record_selector_diagnostic(
+                    context="watch_feed_scroll",
+                    selectors=["keyboard:PageDown"],
+                    page=page,
+                    error=error,
+                )
             await self._random_delay()
 
     async def write_comments(self, page: Page) -> None:
@@ -109,7 +191,7 @@ class TikTokAutomationEngine:
         self.log(f"Сценарий: комментарии, максимум {max_comments}.")
         if "/video/" not in page.url:
             await self._open_video_from_feed(page)
-        await self._sleep_with_stop(2.0)
+        await self._sleep_with_stop(1.8)
 
         for index, comment in enumerate(self.settings.comments[:max_comments]):
             if self._should_stop():
@@ -145,7 +227,7 @@ class TikTokAutomationEngine:
                 return
 
             target = self._normalize_profile_url(raw_url)
-            await page.goto(target, wait_until="domcontentloaded")
+            await self._goto_with_retry(page, target, context="visit_profile")
             self._append_jsonl(
                 self.events_path,
                 {
@@ -165,18 +247,24 @@ class TikTokAutomationEngine:
             return
 
         self.log("Сценарий: загрузка видео.")
-        await page.goto("https://www.tiktok.com/upload?lang=en", wait_until="domcontentloaded")
-        await self._sleep_with_stop(4.0)
+        await self._goto_with_retry(page, "https://www.tiktok.com/upload?lang=en", context="upload_open")
+        await self._sleep_with_stop(3.0)
 
-        input_selector = "input[type='file']"
-        file_input = page.locator(input_selector).first
-        if await file_input.count() == 0:
-            self.log("Не найден input[type=file]. Проверьте, открыта ли страница загрузки в авторизованном профиле.")
+        selectors = ["input[type='file']", "input[accept*='video']"]
+        file_input, selected = await self._find_first_selector(page, selectors, context="upload_file_input")
+        if file_input is None:
+            self.log("Не найден input[type=file]. Проверь страницу загрузки в авторизованном профиле.")
             return
 
-        await file_input.set_input_files(str(upload_file))
+        try:
+            await file_input.set_input_files(str(upload_file), timeout=self.action_timeout_ms)
+        except Exception as error:
+            await self._record_selector_diagnostic("upload_set_file", [selected], page, error)
+            self.log("Не удалось указать файл для загрузки.")
+            return
+
         self.log(f"Видео выбрано: {upload_file}")
-        await self._sleep_with_stop(6.0)
+        await self._sleep_with_stop(5.0)
 
         if self.settings.upload_caption:
             await self._fill_caption(page, self.settings.upload_caption)
@@ -190,6 +278,7 @@ class TikTokAutomationEngine:
                     "button:has-text('Post')",
                     "button:has-text('Опубликовать')",
                 ],
+                context="upload_publish",
             )
             self.log("Видео отправлено на публикацию." if success else "Кнопка публикации не найдена.")
         else:
@@ -213,8 +302,8 @@ class TikTokAutomationEngine:
             return
 
         self.log(f"Сценарий: мониторинг профиля {profile_url}")
-        await page.goto(profile_url, wait_until="domcontentloaded")
-        await self._sleep_with_stop(3.0)
+        await self._goto_with_retry(page, profile_url, context="monitor_profile_open")
+        await self._sleep_with_stop(2.0)
 
         metrics = {
             "event": "profile_metrics",
@@ -225,7 +314,8 @@ class TikTokAutomationEngine:
             "likes": await self._text_or_none(page, "[data-e2e='likes-count']"),
         }
 
-        posts = await page.evaluate(
+        posts = await self._safe_eval(
+            page,
             """
             () => {
               const links = Array.from(document.querySelectorAll("a[href*='/video/']")).slice(0, 12);
@@ -234,7 +324,9 @@ class TikTokAutomationEngine:
                 return { url: a.href, views };
               });
             }
-            """
+            """,
+            fallback=[],
+            context="monitor_profile_posts",
         )
         metrics["posts"] = posts
 
@@ -245,22 +337,43 @@ class TikTokAutomationEngine:
             f"лайки={metrics.get('likes', '-')}, постов={len(posts)}"
         )
 
+    async def _goto_with_retry(self, page: Page, url: str, context: str) -> None:
+        last_error: Exception | None = None
+        for attempt in range(1, self.settings.retry_attempts + 1):
+            if self._should_stop():
+                return
+            try:
+                await page.goto(url, wait_until="domcontentloaded", timeout=self.action_timeout_ms)
+                return
+            except Exception as error:
+                last_error = error
+                self.log(
+                    f"Навигация не удалась ({context}) "
+                    f"попытка {attempt}/{self.settings.retry_attempts}: {error}"
+                )
+                await self._record_selector_diagnostic(context, [url], page, error)
+                if attempt < self.settings.retry_attempts:
+                    await self._sleep_with_stop(1.0 * attempt)
+        raise RuntimeError(f"Навигация не удалась ({context}): {last_error}")
+
     async def _open_video_from_feed(self, page: Page) -> None:
         candidates = [
             "a[href*='/video/']",
             "[data-e2e='recommend-list-item-container'] a",
         ]
-        for selector in candidates:
-            locator = page.locator(selector).first
-            if await locator.count() == 0:
+        for _attempt in range(self.settings.retry_attempts):
+            locator, _ = await self._find_first_selector(page, candidates, context="open_video_from_feed")
+            if locator is None:
+                await self._sleep_with_stop(1.0)
                 continue
             try:
-                await locator.click(timeout=3000)
-                await self._sleep_with_stop(2.0)
+                await locator.click(timeout=self.action_timeout_ms)
+                await self._sleep_with_stop(1.4)
                 if "/video/" in page.url:
                     return
-            except Exception:
-                continue
+            except Exception as error:
+                await self._record_selector_diagnostic("open_video_from_feed_click", candidates, page, error)
+        self.log("Не удалось открыть видео из ленты.")
 
     async def _submit_comment(self, page: Page, comment: str) -> bool:
         input_selectors = [
@@ -269,28 +382,28 @@ class TikTokAutomationEngine:
             "textarea[placeholder*='comment']",
             "textarea[placeholder*='комментарий']",
         ]
+        field, selected = await self._find_first_selector(page, input_selectors, context="comment_input")
+        if field is None:
+            return False
 
-        for selector in input_selectors:
-            field = page.locator(selector).first
-            if await field.count() == 0:
-                continue
-            try:
-                await field.click()
-                await field.fill("")
-                await field.type(comment, delay=35)
-                posted = await self._click_first(
-                    page,
-                    [
-                        "button[data-e2e='comment-post']",
-                        "button:has-text('Post')",
-                        "button:has-text('Опубликовать')",
-                    ],
-                )
-                return posted
-            except Exception:
-                continue
+        try:
+            await field.click(timeout=self.action_timeout_ms)
+            await field.press("Control+A")
+            await field.press("Backspace")
+            await field.type(comment, delay=35, timeout=self.action_timeout_ms)
+        except Exception as error:
+            await self._record_selector_diagnostic("comment_type", [selected], page, error)
+            return False
 
-        return False
+        return await self._click_first(
+            page,
+            [
+                "button[data-e2e='comment-post']",
+                "button:has-text('Post')",
+                "button:has-text('Опубликовать')",
+            ],
+            context="comment_submit",
+        )
 
     async def _fill_caption(self, page: Page, caption: str) -> None:
         selectors = [
@@ -298,17 +411,18 @@ class TikTokAutomationEngine:
             "textarea[placeholder*='Describe']",
             "textarea[maxlength]",
         ]
-        for selector in selectors:
-            field = page.locator(selector).first
-            if await field.count() == 0:
-                continue
-            try:
-                await field.click()
-                await field.fill("")
-                await field.type(caption, delay=25)
-                return
-            except Exception:
-                continue
+        field, selected = await self._find_first_selector(page, selectors, context="upload_caption")
+        if field is None:
+            self.log("Поле описания не найдено.")
+            return
+
+        try:
+            await field.click(timeout=self.action_timeout_ms)
+            await field.press("Control+A")
+            await field.press("Backspace")
+            await field.type(caption, delay=25, timeout=self.action_timeout_ms)
+        except Exception as error:
+            await self._record_selector_diagnostic("upload_caption_type", [selected], page, error)
 
     async def _extract_video_stats(self, page: Page) -> Dict[str, Optional[str]]:
         return {
@@ -325,24 +439,65 @@ class TikTokAutomationEngine:
     async def _text_or_none(self, page: Page, selector: str) -> Optional[str]:
         try:
             locator = page.locator(selector).first
-            if await locator.count() == 0:
-                return None
-            text = await locator.inner_text()
+            await locator.wait_for(state="visible", timeout=self.settings.selector_timeout_ms)
+            text = await locator.inner_text(timeout=self.action_timeout_ms)
             return text.strip() if text else None
         except Exception:
             return None
 
-    async def _click_first(self, page: Page, selectors: List[str]) -> bool:
-        for selector in selectors:
+    async def _click_first(self, page: Page, selectors: Sequence[str], context: str) -> bool:
+        for _attempt in range(self.settings.retry_attempts):
+            locator, selected = await self._find_first_selector(page, selectors, context=context)
+            if locator is None:
+                await self._sleep_with_stop(0.8)
+                continue
             try:
-                button = page.locator(selector).first
-                if await button.count() == 0:
-                    continue
-                await button.click(timeout=3000)
+                await locator.click(timeout=self.action_timeout_ms)
                 return True
+            except Exception as error:
+                await self._record_selector_diagnostic(f"{context}_click", [selected], page, error)
+                await self._sleep_with_stop(0.8)
+        return False
+
+    async def _find_first_selector(
+        self,
+        page: Page,
+        selectors: Sequence[str],
+        context: str,
+    ) -> tuple[Locator | None, str]:
+        for selector in selectors:
+            locator = page.locator(selector).first
+            try:
+                await locator.wait_for(state="visible", timeout=self.settings.selector_timeout_ms)
+                return locator, selector
             except Exception:
                 continue
-        return False
+        await self._record_selector_diagnostic(context, selectors, page, None)
+        return None, ""
+
+    async def _safe_eval(self, page: Page, script: str, fallback, context: str):
+        try:
+            return await page.evaluate(script)
+        except Exception as error:
+            await self._record_selector_diagnostic(context, ["page.evaluate(...)"], page, error)
+            return fallback
+
+    async def _record_selector_diagnostic(
+        self,
+        context: str,
+        selectors: Sequence[str],
+        page: Page | None,
+        error: Exception | None,
+    ) -> None:
+        payload: Dict[str, object] = {
+            "timestamp": self._timestamp(),
+            "context": context,
+            "selectors": list(selectors),
+            "url": page.url if page else None,
+        }
+        if error:
+            payload["error"] = str(error)
+        self._append_jsonl(self.diagnostics_path, payload)
 
     def _append_jsonl(self, path: Path, payload: Dict[str, object]) -> None:
         data = dict(payload)
@@ -355,7 +510,7 @@ class TikTokAutomationEngine:
         await self._sleep_with_stop(value)
 
     async def _sleep_with_stop(self, seconds: float) -> None:
-        remaining = float(seconds)
+        remaining = float(max(0.0, seconds))
         while remaining > 0:
             if self._should_stop():
                 return
@@ -380,6 +535,8 @@ class TikTokAutomationEngine:
 
     def _should_stop(self) -> bool:
         if self.stop_event.is_set():
-            self.log("Остановка по запросу пользователя.")
+            if not self._stop_logged:
+                self.log("Остановка по запросу пользователя.")
+                self._stop_logged = True
             return True
         return False
