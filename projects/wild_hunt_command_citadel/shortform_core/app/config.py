@@ -25,6 +25,25 @@ class PlannerConfig(BaseModel):
     max_steps: int = Field(default=8, ge=1, le=100)
 
 
+class AnalyticsWeightsConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    views_weight: float = Field(default=0.05, ge=0.0)
+    likes_weight: float = Field(default=1.0, ge=0.0)
+    comments_weight: float = Field(default=2.5, ge=0.0)
+    shares_weight: float = Field(default=3.0, ge=0.0)
+    favorites_weight: float = Field(default=1.5, ge=0.0)
+    watch_time_weight: float = Field(default=0.5, ge=0.0)
+    completion_weight: float = Field(default=1.0, ge=0.0)
+
+
+class WorkspaceConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    max_profiles: int = Field(default=10, ge=1, le=100)
+    analytics_weights: AnalyticsWeightsConfig = Field(default_factory=AnalyticsWeightsConfig)
+
+
 class StorageConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -40,6 +59,7 @@ class AppConfig(BaseModel):
     thresholds: Thresholds = Field(default_factory=Thresholds)
     planner: PlannerConfig = Field(default_factory=PlannerConfig)
     storage: StorageConfig = Field(default_factory=StorageConfig)
+    workspace: WorkspaceConfig = Field(default_factory=WorkspaceConfig)
     api_host: str = "127.0.0.1"
     api_port: int = Field(default=8000, ge=1, le=65535)
 
@@ -85,6 +105,19 @@ def load_config(env: Mapping[str, str] | None = None) -> AppConfig:
         max_steps=_env_int(source, "SFCO_MAX_PLAN_STEPS", 8),
     )
 
+    workspace = WorkspaceConfig(
+        max_profiles=_env_int(source, "SFCO_MAX_PROFILES", 10),
+        analytics_weights=AnalyticsWeightsConfig(
+            views_weight=_env_float(source, "SFCO_VIEWS_WEIGHT", 0.05),
+            likes_weight=_env_float(source, "SFCO_LIKES_WEIGHT", 1.0),
+            comments_weight=_env_float(source, "SFCO_COMMENTS_WEIGHT", 2.5),
+            shares_weight=_env_float(source, "SFCO_SHARES_WEIGHT", 3.0),
+            favorites_weight=_env_float(source, "SFCO_FAVORITES_WEIGHT", 1.5),
+            watch_time_weight=_env_float(source, "SFCO_WATCH_TIME_WEIGHT", 0.5),
+            completion_weight=_env_float(source, "SFCO_COMPLETION_WEIGHT", 1.0),
+        ),
+    )
+
     storage = StorageConfig(
         project_root=_env_path(source, "SFCO_PROJECT_ROOT", PROJECT_ROOT),
         database_path=_env_path(source, "SFCO_DATABASE_PATH", PROJECT_ROOT / "runtime" / "shortform_core.db"),
@@ -103,6 +136,7 @@ def load_config(env: Mapping[str, str] | None = None) -> AppConfig:
         thresholds=thresholds,
         planner=planner,
         storage=storage,
+        workspace=workspace,
         api_host=source.get("SFCO_API_HOST", "127.0.0.1"),
         api_port=_env_int(source, "SFCO_API_PORT", 8000),
     )

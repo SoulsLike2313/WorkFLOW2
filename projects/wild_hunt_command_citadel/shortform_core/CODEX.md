@@ -1,58 +1,79 @@
 # CODEX.md
 
-## Project identity
+## Project Identity
 
-This repository is a modular Python core for short-form content operations.
-It is designed as a decision-support and orchestration base for TikTok / Reels / Shorts style workflows.
+`shortform_core` is a modular decision-support workspace for short-form content operations.
 
-This project is not an anti-detection tool, not a traffic obfuscation system, and not a platform evasion framework.
+Primary direction:
+- multi-profile workspace
+- content intelligence
+- analytics-driven planning
+- AI assist mode for analysis and creative briefing
 
-Repository location (current structure):
+Safety and compliance scope:
+- not anti-detect software
+- no stealth/evasion patterns
+- no hidden human-like mass automation
+- use provider abstractions for future official integrations
+
+Project root:
 - `projects/wild_hunt_command_citadel/shortform_core`
 
 Path policy:
-- use relative paths from the `shortform_core` root
-- avoid hard-coded absolute Windows paths in docs and scripts
+- use paths relative to this root
+- avoid absolute machine-specific paths in docs/scripts/code
 
-Its purpose is to:
-- track account and content state
-- store creatives, metrics, hypotheses, references, and tasks
-- evaluate creatives with structured logic
-- generate action plans
-- remain easy to extend into API, UI, persistence, and agent runtime layers
-
-## Expected structure
-
-app/
-  __init__.py
-  models.py
-  config.py
-  analytics.py
-  registry.py
-  planner.py
-  demo_data.py
-  io_utils.py
-  main.py
-  db.py
-  repository.py
-  schemas.py
-  api.py
-  bootstrap_v2.py
-README.md
-CODEX.md
-PROMPT_FOR_CODEX.txt
-requirements.txt
-
-## Design rules
+## Architecture Contract
 
 Keep these layers separated:
-- data models
-- config
-- analytics / decision logic
-- state storage
-- planning
-- I/O and serialization
-- transport / API
-- UI
+- domain models (`app/workspace/models.py`)
+- provider contracts (`app/workspace/contracts.py`)
+- connectors/providers/adapters (`connectors.py`, `device_providers.py`, `metrics_providers.py`, `video_generator.py`)
+- repositories/state (`app/workspace/repository.py`)
+- policy guard (`app/workspace/policy.py`)
+- services (`app/workspace/services/*`)
+- transport (`app/workspace/api.py`, `app/api.py`)
 
-Do not mix business logic with UI, transport, or persistence code.
+Do not place domain logic in UI/transport code.
+
+## Workspace Design Constraints
+
+- `Profile.connection_type` and `Profile.management_mode` are independent dimensions.
+- profile limit is checked in service layer (`ProfileService`) and configured by `SFCO_MAX_PROFILES` (default `10`).
+- all state-changing actions pass through `PolicyGuard`.
+- analytics formulas must be explainable and testable.
+- AI services are assistive, explainable, and policy-bound.
+
+## Current Module Map
+
+```text
+app/workspace/
+  api.py
+  connectors.py
+  contracts.py
+  device_providers.py
+  errors.py
+  metrics_providers.py
+  models.py
+  policy.py
+  repository.py
+  runtime.py
+  schemas.py
+  video_generator.py
+  services/
+    ai_services.py
+    analytics_services.py
+    audit_service.py
+    content_service.py
+    metrics_service.py
+    profile_service.py
+    session_service.py
+    video_generation_service.py
+```
+
+## Extension Rules
+
+- When adding a new external integration, first define/extend contract interfaces.
+- Keep stubs honest with explicit `not_implemented` states.
+- Preserve deterministic fallback behavior for local testing.
+- Keep docs and run scripts aligned with current repository path.

@@ -17,22 +17,29 @@ from .schemas import (
     IngestMetricsResponse,
     LoadDemoResponse,
 )
+from .workspace.api import build_workspace_router
+from .workspace.runtime import WorkspaceRuntime, build_workspace_runtime
 
 
-def _build_runtime() -> tuple[AppConfig, SQLiteRepository]:
+def _build_runtime() -> tuple[AppConfig, SQLiteRepository, WorkspaceRuntime]:
     config = load_config()
     repository = SQLiteRepository(config.storage.database_path)
     repository.init_schema()
-    return config, repository
+    workspace_runtime = build_workspace_runtime(
+        max_profiles=config.workspace.max_profiles,
+        analytics_weights=config.workspace.analytics_weights.model_dump(),
+    )
+    return config, repository, workspace_runtime
 
 
-CONFIG, REPOSITORY = _build_runtime()
+CONFIG, REPOSITORY, WORKSPACE = _build_runtime()
 
 app = FastAPI(
     title="Ядро Shortform Content Ops",
     description="API для оркестрации и поддержки решений в short-form workflow.",
     version="0.1.0",
 )
+app.include_router(build_workspace_router(WORKSPACE))
 
 
 @app.get("/health", response_model=HealthResponse)

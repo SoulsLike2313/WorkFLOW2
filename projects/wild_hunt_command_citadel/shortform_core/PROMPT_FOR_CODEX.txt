@@ -26,6 +26,28 @@ app/
   schemas.py
   api.py
   bootstrap_v2.py
+  workspace/
+    api.py
+    connectors.py
+    contracts.py
+    device_providers.py
+    errors.py
+    metrics_providers.py
+    models.py
+    policy.py
+    repository.py
+    runtime.py
+    schemas.py
+    video_generator.py
+    services/
+      ai_services.py
+      analytics_services.py
+      audit_service.py
+      content_service.py
+      metrics_service.py
+      profile_service.py
+      session_service.py
+      video_generation_service.py
 README.md
 CODEX.md
 PROMPT_FOR_CODEX.txt
