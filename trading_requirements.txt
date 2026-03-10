@@ -1,0 +1,4 @@
+﻿numpy>=1.26
+pandas>=2.2
+yfinance>=0.2.50
+ccxt>=4.4.0

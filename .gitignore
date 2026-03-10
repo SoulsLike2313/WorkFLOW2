@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+
+# Build / packaging artifacts
+build/
+dist/
+installer/output/
+*.pkg
+*.exe
+
+# Logs and runtime output
+*.log
+dev_logs/
+startup_trace.log
+
+# Local project data
+%APPDATA%/
+tiktok_automation_app/output/
+
+# IDE / OS files
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store

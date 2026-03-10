@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "updated_at": "2026-03-10T01:22:34.463319+00:00",
+    "exchange": "binance",
+    "interval": "5m",
+    "strategy_pack": "max",
+    "selection_mode": "winrate",
+    "quote_currency": "USDT",
+    "train_all_symbols": true,
+    "symbols_total": 3,
+    "symbols_trained": 3,
+    "symbols_skipped": 0,
+    "symbols_failed": 0
+  },
+  "symbols": {
+    "0G/USDT": {
+      "name": "SMA_CROSS",
+      "strategy": "SMA_CROSS",
+      "params": {
+        "fast": 13,
+        "slow": 150
+      },
+      "score": 0.0,
+      "test": {
+        "return": 0.0,
+        "win": 0.0,
+        "dd": 0.0,
+        "sharpe": 0.0,
+        "trades": 0,
+        "pf": 0.0
+      },
+      "trained_at": "2026-03-10T01:22:06.818976+00:00",
+      "source": "optimized",
+      "matched_target": false
+    },
+    "1000CAT/USDT": {
+      "name": "RSI_REVERSION",
+      "strategy": "RSI_REVERSION",
+      "params": {
+        "period": 5,
+        "buy": 25,
+        "sell": 65
+      },
+      "score": -0.15007154570952083,
+      "test": {
+        "return": -0.41665046567757047,
+        "win": 50.0,
+        "dd": -0.6741477233934479,
+        "sharpe": -4.885545605240801,
+        "trades": 2,
+        "pf": 0.21350121930371746
+      },
+      "trained_at": "2026-03-10T01:22:20.578558+00:00",
+      "source": "optimized",
+      "matched_target": false
+    },
+    "1000CHEEMS/USDT": {
+      "name": "CCI_REVERSION",
+      "strategy": "CCI_REVERSION",
+      "params": {
+        "period": 30,
+        "buy": -150,
+        "sell": 100
+      },
+      "score": 0.44926029502298903,
+      "test": {
+        "return": 0.2690466835271632,
+        "win": 100.0,
+        "dd": -0.11892237827720864,
+        "sharpe": 14.197191621870443,
+        "trades": 1,
+        "pf": Infinity
+      },
+      "trained_at": "2026-03-10T01:22:34.461813+00:00",
+      "source": "success_fallback",
+      "matched_target": false
+    }
+  }
+}
