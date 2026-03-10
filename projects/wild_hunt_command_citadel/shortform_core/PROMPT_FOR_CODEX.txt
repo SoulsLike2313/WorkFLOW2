@@ -1,5 +1,10 @@
 You are building a modular Python project for a short-form content operations agent.
 
+Repository location note:
+- this project root is `projects/wild_hunt_command_citadel/shortform_core`
+- all commands/examples should be written relative to this project root
+- avoid absolute machine-specific Windows paths
+
 Project purpose:
 This is a decision-support and orchestration core for TikTok / Reels / Shorts style workflows.
 It is not an anti-detection tool and must not implement device masking, IP masking, account evasion, traffic obfuscation, or platform-rule circumvention features.

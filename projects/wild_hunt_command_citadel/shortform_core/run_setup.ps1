@@ -17,5 +17,5 @@ $pythonExe = Join-Path $projectRoot ".venv\Scripts\python.exe"
 
 $uvicornCommand = ".\.venv\Scripts\python.exe -m uvicorn app.api:app --host 127.0.0.1 --port 8000 --reload"
 Write-Host ""
-Write-Host "Команда запуска Uvicorn:"
+Write-Host "Uvicorn launch command:"
 Write-Host $uvicornCommand

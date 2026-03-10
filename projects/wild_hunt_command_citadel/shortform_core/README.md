@@ -33,6 +33,12 @@ external_data/
 run_setup.ps1
 ```
 
+## Рабочая директория
+
+Все команды ниже выполняются из папки:
+
+`projects/wild_hunt_command_citadel/shortform_core`
+
 ## Совместимость с TikTok automation
 
 Адаптер snapshot читает данные из:
@@ -44,14 +50,14 @@ run_setup.ps1
 ## Быстрый старт (Windows)
 
 ```powershell
-cd E:\CVVCODEX\projects\active_projects\shortform_core
-.\run_setup.ps1
+cd projects/wild_hunt_command_citadel/shortform_core
+powershell -ExecutionPolicy Bypass -File .\run_setup.ps1
 ```
 
 ## Ручной запуск
 
 ```powershell
-cd E:\CVVCODEX\projects\active_projects\shortform_core
+cd projects/wild_hunt_command_citadel/shortform_core
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
@@ -61,7 +67,7 @@ python -m app.bootstrap_v2
 python -m uvicorn app.api:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-## API-эндпоинты
+## API-эндпойнты
 
 - `GET /health`
 - `POST /bootstrap/load-demo`

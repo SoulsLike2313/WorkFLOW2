@@ -7,6 +7,13 @@ It is designed as a decision-support and orchestration base for TikTok / Reels /
 
 This project is not an anti-detection tool, not a traffic obfuscation system, and not a platform evasion framework.
 
+Repository location (current structure):
+- `projects/wild_hunt_command_citadel/shortform_core`
+
+Path policy:
+- use relative paths from the `shortform_core` root
+- avoid hard-coded absolute Windows paths in docs and scripts
+
 Its purpose is to:
 - track account and content state
 - store creatives, metrics, hypotheses, references, and tasks
