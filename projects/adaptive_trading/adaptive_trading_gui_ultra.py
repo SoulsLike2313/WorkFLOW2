@@ -13,6 +13,9 @@ from tkinter import messagebox, scrolledtext, ttk
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BOT_PATH = os.path.join(BASE_DIR, "adaptive_trading_bot.py")
+RUNTIME_DIR = os.getenv("ADAPTIVE_TRADING_RUNTIME_DIR", BASE_DIR)
+os.makedirs(RUNTIME_DIR, exist_ok=True)
+DEFAULT_MODEL_PATH = os.path.join(RUNTIME_DIR, "learned_crypto_model.json")
 
 TOP_COINS = [
     "BTC/USDT",
@@ -96,7 +99,7 @@ class UltraSimpleGUI(tk.Tk):
         self.hold_minutes_var = tk.StringVar(value="5")
         self.train_all_var = tk.BooleanVar(value=True)
         self.train_max_symbols_var = tk.StringVar(value="0")
-        self.learned_model_path_var = tk.StringVar(value="learned_crypto_model.json")
+        self.learned_model_path_var = tk.StringVar(value=DEFAULT_MODEL_PATH)
         self.success_scan_var = tk.BooleanVar(value=True)
         self.success_fallback_var = tk.BooleanVar(value=True)
         self.success_win_min_var = tk.StringVar(value="55")

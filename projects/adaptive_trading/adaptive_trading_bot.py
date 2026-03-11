@@ -34,6 +34,16 @@ CCXT_TF = {
     "1d": "1d",
 }
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+RUNTIME_DIR = os.getenv("ADAPTIVE_TRADING_RUNTIME_DIR", BASE_DIR)
+LOG_DIR = os.getenv("ADAPTIVE_TRADING_LOG_DIR", os.path.join(RUNTIME_DIR, "logs"))
+os.makedirs(RUNTIME_DIR, exist_ok=True)
+os.makedirs(LOG_DIR, exist_ok=True)
+
+
+def runtime_file(name: str) -> str:
+    return os.path.join(RUNTIME_DIR, name)
+
 
 def rsi(s, p=14):
     d = s.diff()
@@ -1681,7 +1691,7 @@ def read_cfg(path):
         "trade_frequency": "frequent",
         "simple_mode": False,
         "hold_minutes": 0,
-        "learned_model_path": "learned_crypto_model.json",
+        "learned_model_path": runtime_file("learned_crypto_model.json"),
         "use_learned_model": True,
         "prefer_learned_model": True,
         "learned_ignore_win_range": False,
@@ -1735,7 +1745,18 @@ def save_example(path):
 
 
 def main():
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
+    log_handlers = [logging.StreamHandler()]
+    log_file = os.path.join(LOG_DIR, "adaptive_trading_runtime.log")
+    try:
+        log_handlers.append(logging.FileHandler(log_file, encoding="utf-8"))
+    except Exception:
+        pass
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)s | %(message)s",
+        handlers=log_handlers,
+    )
+    LOG.info("Runtime isolation active: runtime_dir=%s log_dir=%s", RUNTIME_DIR, LOG_DIR)
     p = argparse.ArgumentParser(description="Adaptive trading bot: real-time scan + auto strategy selection + paper trading")
     p.add_argument("--config", type=str, default=None)
     p.add_argument("--init-config", type=str, default=None)
@@ -1864,7 +1885,11 @@ def main():
     cfg["selection_mode"] = str(cfg.get("selection_mode", "score") or "score").strip().lower()
     if cfg["selection_mode"] not in {"score", "winrate"}:
         cfg["selection_mode"] = "score"
-    cfg["learned_model_path"] = str(cfg.get("learned_model_path", "learned_crypto_model.json") or "learned_crypto_model.json").strip()
+    cfg["learned_model_path"] = str(
+        cfg.get("learned_model_path", runtime_file("learned_crypto_model.json")) or runtime_file("learned_crypto_model.json")
+    ).strip()
+    if not os.path.isabs(cfg["learned_model_path"]):
+        cfg["learned_model_path"] = runtime_file(cfg["learned_model_path"])
     cfg["use_learned_model"] = bool(cfg.get("use_learned_model", True))
     cfg["prefer_learned_model"] = bool(cfg.get("prefer_learned_model", True))
     cfg["learned_ignore_win_range"] = bool(cfg.get("learned_ignore_win_range", False))

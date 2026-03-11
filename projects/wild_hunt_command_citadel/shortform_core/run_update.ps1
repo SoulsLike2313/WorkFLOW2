@@ -3,6 +3,8 @@ $ErrorActionPreference = "Stop"
 param(
     [ValidateSet("check", "apply", "post-verify")]
     [string]$Mode = "check",
+    [ValidateSet("fixed", "auto")]
+    [string]$PortMode = "fixed",
     [string]$ManifestPath = "",
     [string]$BundlePath = "",
     [string]$TargetVersion = ""
@@ -16,7 +18,18 @@ if (-not (Test-Path ".venv\Scripts\python.exe")) {
 }
 
 $pythonExe = Join-Path $projectRoot ".venv\Scripts\python.exe"
-$outputDir = Join-Path $projectRoot "runtime\output"
+$startupScript = Resolve-Path (Join-Path $projectRoot "..\..\..\scripts\project_startup.py")
+$startupRaw = & $pythonExe $startupScript prepare --project-slug shortform_core --startup-kind update --port-mode $PortMode
+if ($LASTEXITCODE -ne 0) {
+    throw "Startup preflight failed for shortform_core update mode."
+}
+
+$startup = $startupRaw | ConvertFrom-Json
+$startup.env.PSObject.Properties | ForEach-Object {
+    Set-Item -Path ("Env:" + $_.Name) -Value ([string]$_.Value)
+}
+
+$outputDir = [string]$startup.runtime_paths.data_dir
 New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
 
 if ($Mode -eq "check") {

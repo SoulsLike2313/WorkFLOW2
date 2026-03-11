@@ -1,5 +1,5 @@
-﻿{
-  "schema_version": "2.0.0",
+{
+  "schema_version": "2.1.0",
   "name": "TikTok Automation App",
   "slug": "tiktok_automation_app",
   "description": "Legacy desktop implementation retained for migration reference and historical compatibility.",
@@ -9,30 +9,71 @@
   "priority": 4,
   "root_path": "projects/wild_hunt_command_citadel/tiktok_automation_app",
   "readme_path": "projects/wild_hunt_command_citadel/tiktok_automation_app/README.md",
+  "runtime_namespace": "tiktok_automation_app",
+  "port_range": {
+    "start": 8300,
+    "end": 8399
+  },
+  "port_mode_default": "fixed",
+  "service_ports": {
+    "api_port": 8300,
+    "ui_bridge_port": 8310,
+    "update_port": 8320,
+    "health_port": 8330
+  },
+  "runtime_paths": {
+    "runtime_dir": "runtime/projects/tiktok_automation_app",
+    "log_dir": "runtime/projects/tiktok_automation_app/logs",
+    "data_dir": "runtime/projects/tiktok_automation_app/data",
+    "cache_dir": "runtime/projects/tiktok_automation_app/cache",
+    "temp_dir": "runtime/projects/tiktok_automation_app/temp",
+    "diagnostics_dir": "runtime/projects/tiktok_automation_app/diagnostics",
+    "update_artifacts_dir": "runtime/projects/tiktok_automation_app/update_artifacts",
+    "verification_dir": "runtime/projects/tiktok_automation_app/verification"
+  },
+  "state_paths": {
+    "db_path": "runtime/projects/tiktok_automation_app/db/tiktok_automation_app.db",
+    "state_path": "runtime/projects/tiktok_automation_app/state/runtime_state.json"
+  },
+  "health_path": "/health",
+  "env_overrides": {
+    "TIKTOK_AUTOMATION_RUNTIME_DIR": "{runtime_paths.runtime_dir}",
+    "TIKTOK_AUTOMATION_LOG_DIR": "{runtime_paths.log_dir}",
+    "TIKTOK_AUTOMATION_DATA_DIR": "{runtime_paths.data_dir}",
+    "TIKTOK_AUTOMATION_CACHE_DIR": "{runtime_paths.cache_dir}",
+    "TIKTOK_AUTOMATION_TEMP_DIR": "{runtime_paths.temp_dir}"
+  },
   "main_entrypoints": [
-    "python app.py",
-    "python app.pyw"
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode user -PortMode fixed",
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode developer -PortMode fixed",
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -PortMode fixed"
   ],
   "verification_entrypoints": [
     "python -m py_compile app.py automation_engine.py ui_main.py"
   ],
-  "user_mode_entrypoint": "python app.py",
-  "developer_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_setup.ps1",
+  "user_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode user -PortMode fixed",
+  "developer_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode developer -PortMode fixed",
   "update_entrypoint": "not_applicable",
   "config_files": [
     "requirements.txt",
     "settings.py"
   ],
   "runtime_dirs": [
-    "runtime",
-    "build",
-    "dist"
+    "runtime/projects/tiktok_automation_app",
+    "runtime/projects/tiktok_automation_app/logs",
+    "runtime/projects/tiktok_automation_app/data",
+    "runtime/projects/tiktok_automation_app/cache",
+    "runtime/projects/tiktok_automation_app/temp",
+    "runtime/projects/tiktok_automation_app/diagnostics",
+    "runtime/projects/tiktok_automation_app/update_artifacts",
+    "runtime/projects/tiktok_automation_app/verification"
   ],
   "log_dirs": [
-    "runtime"
+    "runtime/projects/tiktok_automation_app/logs",
+    "runtime/projects/tiktok_automation_app/diagnostics"
   ],
   "data_dirs": [
-    "runtime"
+    "runtime/projects/tiktok_automation_app/data"
   ],
   "dependencies_file": "requirements.txt",
   "owner": "legacy-owner",
@@ -44,6 +85,6 @@
   ],
   "notes": [
     "Legacy project: no new feature development planned.",
-    "Active migration target is shortform_core."
+    "Runtime namespace and ports are isolated by workspace startup preflight."
   ]
 }

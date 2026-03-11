@@ -78,3 +78,18 @@
 - Added premium quick-status card and improved command mode column layout.
 - Diagnostics now includes event history and recent backups/snapshots.
 - New tests added for audio device service, theme helpers, and event history.
+
+## Workspace Isolation Startup
+
+Use project startup preflight to enforce runtime namespace and port isolation:
+
+```powershell
+cd projects/voice_launcher
+powershell -ExecutionPolicy Bypass -File .\run_project.ps1 -Mode user -PortMode fixed
+```
+
+Optional auto fallback mode (only inside project range `8100-8199`):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run_project.ps1 -Mode user -PortMode auto
+```

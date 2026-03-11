@@ -29,9 +29,11 @@ Integrated core lives in:
 
 ```powershell
 cd E:\CVVCODEX\projects\wild_hunt_command_citadel\tiktok_automation_app
-powershell -ExecutionPolicy Bypass -File .\run_setup.ps1
-.\.venv\Scripts\python.exe .\app.py
+powershell -ExecutionPolicy Bypass -File .\run_project.ps1 -Mode developer -PortMode fixed
+powershell -ExecutionPolicy Bypass -File .\run_project.ps1 -Mode user -PortMode fixed
 ```
+
+`auto` mode allows fallback only inside project range `8300-8399`.
 
 Run without console:
 

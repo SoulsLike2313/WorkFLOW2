@@ -21,8 +21,10 @@ SELL_RE = re.compile(
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BOT_SCRIPT = os.path.join(BASE_DIR, "adaptive_trading_bot.py")
-PROFILE_FILE = os.path.join(BASE_DIR, "bot_profiles_easy.json")
-WALLET_FILE = os.path.join(BASE_DIR, "demo_wallet.json")
+RUNTIME_DIR = os.getenv("ADAPTIVE_TRADING_RUNTIME_DIR", BASE_DIR)
+os.makedirs(RUNTIME_DIR, exist_ok=True)
+PROFILE_FILE = os.path.join(RUNTIME_DIR, "bot_profiles_easy.json")
+WALLET_FILE = os.path.join(RUNTIME_DIR, "demo_wallet.json")
 
 STRATEGY_OPTIONS = {
     "Авто (лучший вариант)": "AUTO",

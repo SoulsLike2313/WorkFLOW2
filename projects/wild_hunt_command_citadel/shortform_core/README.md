@@ -97,10 +97,11 @@ run_update.ps1
 
 ```powershell
 cd projects/wild_hunt_command_citadel/shortform_core
-powershell -ExecutionPolicy Bypass -File .\run_user.ps1
+powershell -ExecutionPolicy Bypass -File .\run_user.ps1 -PortMode fixed
 ```
 
 What happens:
+- startup preflight is executed first (`scripts/project_startup.py prepare`)
 - machine verification gate is executed first (`python -m app.verify`)
 - if gate is `PASS`, desktop app opens
 - backend API is started automatically in the background and managed by launcher
@@ -113,14 +114,14 @@ Setup and show developer commands:
 
 ```powershell
 cd projects/wild_hunt_command_citadel/shortform_core
-powershell -ExecutionPolicy Bypass -File .\run_developer.ps1
+powershell -ExecutionPolicy Bypass -File .\run_developer.ps1 -PortMode fixed
 ```
 
 Direct developer commands:
 
 ```powershell
-.\.venv\Scripts\python.exe -m app.launcher developer backend --host 127.0.0.1 --port 8000
-.\.venv\Scripts\python.exe -m app.launcher developer ui --api-base-url http://127.0.0.1:8000
+.\.venv\Scripts\python.exe -m app.launcher developer backend --host 127.0.0.1 --port $env:SFCO_API_PORT
+.\.venv\Scripts\python.exe -m app.launcher developer ui --api-base-url http://127.0.0.1:$env:SFCO_API_PORT
 .\.venv\Scripts\python.exe -m app.verify
 ```
 
@@ -188,19 +189,19 @@ cd projects/wild_hunt_command_citadel/shortform_core
 1) Check manifest compatibility:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode check -ManifestPath .\runtime\verification\<run_id>\manifest.json
+powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode check -PortMode fixed -ManifestPath .\runtime\verification\<run_id>\manifest.json
 ```
 
 2) Apply local patch bundle:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode apply -BundlePath .\runtime\verification\<run_id>\patch_bundle.zip -TargetVersion 0.4.1
+powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode apply -PortMode fixed -BundlePath .\runtime\verification\<run_id>\patch_bundle.zip -TargetVersion 0.4.1
 ```
 
 3) Run post-update verification:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode post-verify
+powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode post-verify -PortMode fixed
 ```
 
 Script outputs:
@@ -268,7 +269,7 @@ runtime/
 
 - `SFCO_MAX_PROFILES` (default: `10`)
 - `SFCO_API_HOST` (default: `127.0.0.1`)
-- `SFCO_API_PORT` (default: `8000`)
+- `SFCO_API_PORT` (selected from `shortform_core` range `8000-8099`, default `8000` in fixed mode)
 - `SFCO_DATABASE_PATH`
 - `SFCO_WORKSPACE_STATE_PATH`
 - `SFCO_OUTPUT_DIR`

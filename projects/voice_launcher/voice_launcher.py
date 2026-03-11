@@ -161,6 +161,7 @@ event_history = EventHistory(limit=40)
 recent_heard_phrases = event_history.heard
 recent_actions = event_history.actions
 ui_controller = None
+live_test_dialog = None
 
 
 # ======================= Utils =======================
@@ -1325,7 +1326,8 @@ def recognize_candidates(recognizer, audio, command_hint=False, prefer_all_engin
         except Exception as exc:
             now = time.time()
             if now - last_asr_error_ts > 3.0:
-                set_status(f"Whisper недоступен, fallback на Google ({exc})")
+                set_status("Whisper недоступен: используем Google")
+                log_asr(f"Whisper fallback reason: {exc}")
                 last_asr_error_ts = now
             set_asr_status("ASR: Google (fallback после ошибки Whisper)")
 
@@ -2135,8 +2137,152 @@ def calibrate_mic():
 
 
 def test_recognition_once():
-    # Оставлено для совместимости со старыми привязками кнопок.
-    check_microphone()
+    if monitor_active_event.is_set():
+        set_status("Сначала выключите мониторинг")
+        show_warning("Тест распознавания", "Сначала выключите мониторинг и попробуйте снова.")
+        return
+
+    set_status("Тест распознавания: слушаю...")
+    pause_listen_event.set()
+    restart_listen_event.set()
+
+    def worker():
+        try:
+            recognizer = build_recognizer()
+            mic_index = get_selected_mic_index()
+            with sr.Microphone(device_index=mic_index) as source:
+                audio = recognizer.listen(
+                    source,
+                    timeout=max(1.0, float(settings.get("listen_timeout", 1.8))),
+                    phrase_time_limit=max(2.0, min(6.0, float(settings.get("listen_phrase_limit", 5.0)))),
+                )
+
+            level = get_audio_level_percent(audio)
+            candidates = recognize_candidates(recognizer, audio, prefer_all_engines=True)
+            if candidates:
+                preview = " / ".join(candidates[:3])
+                set_status(f"Тест речи OK | Уровень {level}% | '{candidates[0]}'")
+                set_last_phrase(candidates[0])
+                show_info("Тест распознавания", f"Распознано:\n{preview}\n\nУровень сигнала: {level}%")
+            else:
+                set_status(f"Тест речи: не распознано | Уровень {level}%")
+                show_warning(
+                    "Тест распознавания",
+                    f"Речь не распознана.\nУровень сигнала: {level}%\n\n"
+                    "Попробуйте говорить чуть медленнее и ближе к микрофону.",
+                )
+        except sr.WaitTimeoutError:
+            set_status("Тест речи: тишина")
+            show_warning("Тест распознавания", "Не услышал речь в течение ожидания.")
+        except Exception as exc:
+            message = friendly_audio_error(exc)
+            set_status(f"Тест речи: ошибка ({message})")
+            show_warning("Тест распознавания", f"Ошибка микрофона:\n{message}")
+        finally:
+            pause_listen_event.clear()
+
+    threading.Thread(target=worker, daemon=True).start()
+
+
+def open_live_test_window():
+    global live_test_dialog
+
+    if live_test_dialog is not None:
+        try:
+            if live_test_dialog.winfo_exists():
+                live_test_dialog.lift()
+                live_test_dialog.focus_force()
+                return
+        except Exception:
+            pass
+
+    dialog = tk.Toplevel(root)
+    live_test_dialog = dialog
+    dialog.title("Live-тест микрофона")
+    dialog.geometry("640x360")
+    dialog.minsize(560, 320)
+    dialog.configure(bg=PALETTE["card"])
+    dialog.transient(root)
+
+    run_event = threading.Event()
+    level_var = tk.IntVar(value=0)
+    heard_var = tk.StringVar(value="Распознанная фраза: —")
+    state_var = tk.StringVar(value="Статус: готово")
+    monitor_var = tk.StringVar(value="Эхо: OFF")
+
+    frame = ttk.Frame(dialog, style="Card.TFrame", padding=12)
+    frame.pack(fill="both", expand=True)
+
+    mic_text = mic_var.get() or "не выбран"
+    out_text = out_var.get() or "не выбран"
+    ttk.Label(frame, text=f"Микрофон: {mic_text}", style="Sub.TLabel").pack(anchor="w")
+    ttk.Label(frame, text=f"Вывод (эхо): {out_text}", style="Sub.TLabel").pack(anchor="w", pady=(2, 8))
+
+    ttk.Progressbar(frame, variable=level_var, maximum=100).pack(fill="x")
+    ttk.Label(frame, textvariable=state_var, style="Sub.TLabel").pack(anchor="w", pady=(8, 2))
+    ttk.Label(frame, textvariable=heard_var, style="Sub.TLabel").pack(anchor="w")
+
+    controls = ttk.Frame(frame, style="Card.TFrame")
+    controls.pack(fill="x", pady=(12, 0))
+
+    def sync_monitor_caption():
+        monitor_var.set("Эхо: ON" if monitor_active_event.is_set() else "Эхо: OFF")
+
+    def toggle_echo():
+        toggle_monitoring()
+        dialog.after(250, sync_monitor_caption)
+
+    def stop_live():
+        run_event.clear()
+        pause_listen_event.clear()
+
+    def start_live():
+        if run_event.is_set():
+            return
+        run_event.set()
+
+        def worker():
+            pause_listen_event.set()
+            restart_listen_event.set()
+            while run_event.is_set():
+                try:
+                    recognizer = build_recognizer()
+                    mic_index = get_selected_mic_index()
+                    with sr.Microphone(device_index=mic_index) as source:
+                        audio = recognizer.listen(source, timeout=1.2, phrase_time_limit=2.2)
+                    level = get_audio_level_percent(audio)
+                    candidates = recognize_candidates(recognizer, audio, prefer_all_engines=True)
+                    heard = candidates[0] if candidates else "не распознано"
+                    dialog.after(0, lambda lvl=level, txt=heard: level_var.set(lvl))
+                    dialog.after(0, lambda txt=heard: heard_var.set(f"Распознанная фраза: {txt}"))
+                    dialog.after(0, lambda lvl=level: state_var.set(f"Статус: слушаю | уровень {lvl}%"))
+                except sr.WaitTimeoutError:
+                    dialog.after(0, lambda: level_var.set(0))
+                    dialog.after(0, lambda: state_var.set("Статус: тишина"))
+                except Exception as exc:
+                    message = friendly_audio_error(exc)
+                    dialog.after(0, lambda m=message: state_var.set(f"Статус: ошибка ({m})"))
+                    break
+            pause_listen_event.clear()
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    ttk.Button(controls, text="Старт Live", command=start_live, style="Primary.TButton").pack(side="left")
+    ttk.Button(controls, text="Стоп", command=stop_live, style="Soft.TButton").pack(side="left", padx=(8, 0))
+    ttk.Button(controls, textvariable=monitor_var, command=toggle_echo, style="Soft.TButton").pack(side="left", padx=(8, 0))
+    ttk.Button(controls, text="Закрыть", command=dialog.destroy, style="Danger.TButton").pack(side="right")
+
+    sync_monitor_caption()
+
+    def on_close():
+        global live_test_dialog
+        stop_live()
+        if monitor_active_event.is_set():
+            stop_monitoring()
+        live_test_dialog = None
+        dialog.destroy()
+
+    dialog.protocol("WM_DELETE_WINDOW", on_close)
 
 
 def stop_monitoring():
@@ -2517,6 +2663,17 @@ def toggle_ui_mode():
     ui_controller.toggle_mode()
 
 
+def open_audio_panel():
+    if ui_controller is None:
+        return
+    if bool(settings.get("simple_mode", True)):
+        settings["simple_mode"] = False
+        save_settings()
+        ui_controller.apply_mode()
+    notebook.select(audio_tab)
+    set_status("Открыта аудио-панель: выберите Микрофон и Вывод")
+
+
 ttk.Button(mode_strip, textvariable=simple_mode_text, command=toggle_ui_mode, style="Soft.TButton").pack(
     side="right"
 )
@@ -2712,20 +2869,25 @@ toolbar.pack(fill="x", pady=(2, 10), padx=6)
 
 toolbar_main = ttk.Frame(toolbar, style="Card.TFrame")
 toolbar_main.pack(fill="x")
-toolbar_tools = ttk.Frame(toolbar, style="Card.TFrame")
-toolbar_tools.pack(fill="x", pady=(8, 0))
+toolbar_audio = ttk.Frame(toolbar, style="Card.TFrame")
+toolbar_audio.pack(fill="x", pady=(8, 0))
+toolbar_data = ttk.Frame(toolbar, style="Card.TFrame")
+toolbar_data.pack(fill="x", pady=(8, 0))
 
 ttk.Button(toolbar_main, text="Добавить вручную", command=add_file_manual, style="Primary.TButton").pack(side="left")
 ttk.Button(toolbar_main, text="Добавить голосом", command=open_voice_capture_dialog, style="Soft.TButton").pack(side="left", padx=8)
 ttk.Button(toolbar_main, text="Проверить", command=test_selected, style="Soft.TButton").pack(side="left", padx=(0, 8))
 ttk.Button(toolbar_main, text="Удалить", command=remove_selected, style="Danger.TButton").pack(side="right")
 
-ttk.Button(toolbar_tools, text="Проверить микрофон", command=check_microphone, style="Soft.TButton").pack(side="left")
-ttk.Button(toolbar_tools, text="Тест распознавания", command=test_recognition_once, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar_tools, text="Открыть логи", command=open_logs_folder, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar_tools, text="Экспорт профиля", command=export_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar_tools, text="Импорт профиля", command=import_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar_tools, text="Диагностика", command=collect_diagnostics_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_audio, text="Аудио панель", command=open_audio_panel, style="Soft.TButton").pack(side="left")
+ttk.Button(toolbar_audio, text="Проверить микрофон", command=check_microphone, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_audio, text="Разовый тест", command=test_recognition_once, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_audio, text="Live-тест", command=open_live_test_window, style="Soft.TButton").pack(side="left", padx=(8, 0))
+
+ttk.Button(toolbar_data, text="Открыть логи", command=open_logs_folder, style="Soft.TButton").pack(side="left")
+ttk.Button(toolbar_data, text="Экспорт", command=export_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_data, text="Импорт", command=import_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_data, text="Диагностика", command=collect_diagnostics_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
 
 table_wrap = ttk.Frame(commands_tab, style="Panel.TFrame", padding=6)
 table_wrap.pack(fill="both", expand=True)

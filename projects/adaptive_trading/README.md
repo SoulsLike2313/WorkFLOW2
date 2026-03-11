@@ -10,9 +10,12 @@ Experimental trading project with script and GUI prototypes.
 
 ## Entry points
 ```powershell
-python adaptive_trading_bot.py
-python adaptive_trading_gui.py
+powershell -ExecutionPolicy Bypass -File .\run_project.ps1 -Mode user -PortMode fixed
+powershell -ExecutionPolicy Bypass -File .\run_project.ps1 -Mode developer -PortMode fixed
+powershell -ExecutionPolicy Bypass -File .\run_project.ps1 -Mode train -PortMode fixed
 ```
+
+`auto` mode allows fallback only inside project range `8200-8299`.
 
 ## Dependencies
 ```powershell

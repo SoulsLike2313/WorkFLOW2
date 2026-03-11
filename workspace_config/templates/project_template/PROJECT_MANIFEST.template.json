@@ -1,5 +1,5 @@
-﻿{
-  "schema_version": "2.0.0",
+{
+  "schema_version": "2.1.0",
   "name": "{{NAME}}",
   "slug": "{{SLUG}}",
   "description": "{{DESCRIPTION}}",
@@ -9,6 +9,34 @@
   "priority": {{PRIORITY}},
   "root_path": "{{ROOT_PATH}}",
   "readme_path": "{{README_PATH}}",
+  "runtime_namespace": "{{RUNTIME_NAMESPACE}}",
+  "port_range": {
+    "start": {{PORT_RANGE_START}},
+    "end": {{PORT_RANGE_END}}
+  },
+  "port_mode_default": "{{PORT_MODE_DEFAULT}}",
+  "service_ports": {
+    "api_port": {{API_PORT}},
+    "ui_bridge_port": {{UI_BRIDGE_PORT}},
+    "update_port": {{UPDATE_PORT}},
+    "health_port": {{HEALTH_PORT}}
+  },
+  "runtime_paths": {
+    "runtime_dir": "{{RUNTIME_DIR}}",
+    "log_dir": "{{LOG_DIR}}",
+    "data_dir": "{{DATA_DIR}}",
+    "cache_dir": "{{CACHE_DIR}}",
+    "temp_dir": "{{TEMP_DIR}}",
+    "diagnostics_dir": "{{DIAGNOSTICS_DIR}}",
+    "update_artifacts_dir": "{{UPDATE_ARTIFACTS_DIR}}",
+    "verification_dir": "{{VERIFICATION_DIR}}"
+  },
+  "state_paths": {
+    "db_path": "{{DB_PATH}}",
+    "state_path": "{{STATE_PATH}}"
+  },
+  "health_path": "/health",
+  "env_overrides": {},
   "main_entrypoints": [
     "{{MAIN_ENTRYPOINT}}"
   ],

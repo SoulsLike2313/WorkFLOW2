@@ -36,7 +36,9 @@
     "workspace_config/PROJECT_RULES.md",
     "scripts/bootstrap_workspace.ps1",
     "scripts/validate_workspace.py",
-    "scripts/new_project.py"
+    "scripts/new_project.py",
+    "scripts/project_startup.py",
+    "scripts/run_project.ps1"
   ],
   "required_active_project_files": [
     "projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json",

@@ -20,7 +20,10 @@ SELL_RE = re.compile(
 )
 
 
-PROFILE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bot_profiles.json")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+RUNTIME_DIR = os.getenv("ADAPTIVE_TRADING_RUNTIME_DIR", BASE_DIR)
+os.makedirs(RUNTIME_DIR, exist_ok=True)
+PROFILE_FILE = os.path.join(RUNTIME_DIR, "bot_profiles.json")
 DEFAULT_PROFILES = {
     "Target 70-75 (Recommended)": {
         "mode": "demo",

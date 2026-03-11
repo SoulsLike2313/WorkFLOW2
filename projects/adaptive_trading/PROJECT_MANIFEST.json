@@ -1,5 +1,5 @@
-﻿{
-  "schema_version": "2.0.0",
+{
+  "schema_version": "2.1.0",
   "name": "Adaptive Trading",
   "slug": "adaptive_trading",
   "description": "Experimental trading scripts and GUI prototypes for research workflows.",
@@ -9,26 +9,72 @@
   "priority": 3,
   "root_path": "projects/adaptive_trading",
   "readme_path": "projects/adaptive_trading/README.md",
+  "runtime_namespace": "adaptive_trading",
+  "port_range": {
+    "start": 8200,
+    "end": 8299
+  },
+  "port_mode_default": "fixed",
+  "service_ports": {
+    "api_port": 8200,
+    "ui_bridge_port": 8210,
+    "update_port": 8220,
+    "health_port": 8230
+  },
+  "runtime_paths": {
+    "runtime_dir": "runtime/projects/adaptive_trading",
+    "log_dir": "runtime/projects/adaptive_trading/logs",
+    "data_dir": "runtime/projects/adaptive_trading/data",
+    "cache_dir": "runtime/projects/adaptive_trading/cache",
+    "temp_dir": "runtime/projects/adaptive_trading/temp",
+    "diagnostics_dir": "runtime/projects/adaptive_trading/diagnostics",
+    "update_artifacts_dir": "runtime/projects/adaptive_trading/update_artifacts",
+    "verification_dir": "runtime/projects/adaptive_trading/verification"
+  },
+  "state_paths": {
+    "db_path": "runtime/projects/adaptive_trading/db/adaptive_trading.db",
+    "state_path": "runtime/projects/adaptive_trading/state/runtime_state.json"
+  },
+  "health_path": "/health",
+  "env_overrides": {
+    "ADAPTIVE_TRADING_RUNTIME_DIR": "{runtime_paths.runtime_dir}",
+    "ADAPTIVE_TRADING_LOG_DIR": "{runtime_paths.log_dir}",
+    "ADAPTIVE_TRADING_DATA_DIR": "{runtime_paths.data_dir}",
+    "ADAPTIVE_TRADING_CACHE_DIR": "{runtime_paths.cache_dir}",
+    "ADAPTIVE_TRADING_TEMP_DIR": "{runtime_paths.temp_dir}",
+    "ADAPTIVE_TRADING_DB_PATH": "{state_paths.db_path}",
+    "ADAPTIVE_TRADING_STATE_PATH": "{state_paths.state_path}"
+  },
   "main_entrypoints": [
-    "python adaptive_trading_bot.py",
-    "python adaptive_trading_gui.py"
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode user -PortMode fixed",
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode developer -PortMode fixed",
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -PortMode fixed"
   ],
   "verification_entrypoints": [
     "python -m py_compile adaptive_trading_bot.py adaptive_trading_gui.py adaptive_trading_gui_easy.py adaptive_trading_gui_ultra.py"
   ],
-  "user_mode_entrypoint": "python adaptive_trading_gui.py",
-  "developer_mode_entrypoint": "python adaptive_trading_bot.py",
+  "user_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode user -PortMode fixed",
+  "developer_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode developer -PortMode fixed",
   "update_entrypoint": "not_applicable",
   "config_files": [
     "trading_requirements.txt"
   ],
   "runtime_dirs": [
-    "__pycache__"
+    "runtime/projects/adaptive_trading",
+    "runtime/projects/adaptive_trading/logs",
+    "runtime/projects/adaptive_trading/data",
+    "runtime/projects/adaptive_trading/cache",
+    "runtime/projects/adaptive_trading/temp",
+    "runtime/projects/adaptive_trading/diagnostics",
+    "runtime/projects/adaptive_trading/update_artifacts",
+    "runtime/projects/adaptive_trading/verification"
   ],
-  "log_dirs": [],
+  "log_dirs": [
+    "runtime/projects/adaptive_trading/logs",
+    "runtime/projects/adaptive_trading/diagnostics"
+  ],
   "data_dirs": [
-    "demo_wallet.json",
-    "learned_crypto_model_test.json"
+    "runtime/projects/adaptive_trading/data"
   ],
   "dependencies_file": "trading_requirements.txt",
   "owner": "trading-research-owner",
@@ -40,6 +86,6 @@
   ],
   "notes": [
     "Experimental scope; excluded from active release gate.",
-    "Promotion requires status/category update in workspace manifest."
+    "Startup preflight enforces isolated runtime namespace and project port range."
   ]
 }

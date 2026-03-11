@@ -10,4 +10,9 @@ Generator applies one of preset structures:
 - `prototype`
 - `library`
 
+Every generated project gets:
+- unique runtime namespace
+- unique port range
+- project-scoped runtime/state paths
+
 Do not create ad-hoc projects outside generator + validator workflow.

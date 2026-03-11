@@ -20,6 +20,7 @@ Operational scripts:
 - `scripts/bootstrap_workspace.ps1`
 - `scripts/validate_workspace.py`
 - `scripts/new_project.py`
+- `scripts/project_startup.py`
 
 ## Active project
 Current active project:
@@ -47,6 +48,12 @@ Registry is authoritative in:
 Each registered project must contain:
 - `README.md`
 - `PROJECT_MANIFEST.json`
+
+Each registered project must also define:
+- unique `runtime_namespace`
+- unique project `port_range`
+- project `service_ports`
+- project-scoped `runtime_paths` and `state_paths`
 
 ## Verification proof model
 Active verification entrypoint:
@@ -79,6 +86,11 @@ powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap_workspace.ps1
 Workspace validation:
 ```powershell
 python scripts/validate_workspace.py
+```
+
+Startup preflight (example):
+```powershell
+python scripts/project_startup.py prepare --project-slug shortform_core --port-mode fixed
 ```
 
 Validation artifacts:

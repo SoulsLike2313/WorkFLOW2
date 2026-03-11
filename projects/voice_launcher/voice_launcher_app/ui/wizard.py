@@ -53,8 +53,8 @@ class CommandWizardDeps:
 def open_command_wizard(deps: CommandWizardDeps) -> None:
     dialog = tk.Toplevel(deps.root)
     dialog.title("Мастер добавления команды")
-    dialog.geometry("700x500")
-    dialog.minsize(640, 440)
+    dialog.geometry("760x620")
+    dialog.minsize(680, 480)
     dialog.configure(bg=deps.card_color)
     dialog.transient(deps.root)
     dialog.grab_set()
@@ -73,8 +73,49 @@ def open_command_wizard(deps: CommandWizardDeps) -> None:
     status_local = tk.StringVar(value="1) Выберите файл  2) Запишите фразу")
     candidates_var = tk.StringVar(value=[])
 
-    body = ttk.Frame(dialog, style="Card.TFrame", padding=12)
-    body.pack(fill="both", expand=True)
+    scroll_host = ttk.Frame(dialog, style="Card.TFrame")
+    scroll_host.pack(fill="both", expand=True)
+
+    canvas = tk.Canvas(
+        scroll_host,
+        bg=deps.card_color,
+        highlightthickness=0,
+        bd=0,
+        takefocus=0,
+    )
+    v_scroll = ttk.Scrollbar(scroll_host, orient="vertical", command=canvas.yview)
+    canvas.configure(yscrollcommand=v_scroll.set)
+    canvas.pack(side="left", fill="both", expand=True)
+    v_scroll.pack(side="right", fill="y")
+
+    body = ttk.Frame(canvas, style="Card.TFrame", padding=12)
+    body_window = canvas.create_window((0, 0), window=body, anchor="nw")
+
+    def update_scroll_region(_event=None):
+        canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def fit_body_width(event):
+        canvas.itemconfigure(body_window, width=event.width)
+
+    body.bind("<Configure>", update_scroll_region)
+    canvas.bind("<Configure>", fit_body_width)
+
+    def on_mouse_wheel(event):
+        delta = int(-event.delta / 120) if getattr(event, "delta", 0) else 0
+        if delta:
+            canvas.yview_scroll(delta, "units")
+
+    def on_scroll_up(_event):
+        canvas.yview_scroll(-1, "units")
+
+    def on_scroll_down(_event):
+        canvas.yview_scroll(1, "units")
+
+    dialog.bind("<MouseWheel>", on_mouse_wheel)
+    body.bind("<MouseWheel>", on_mouse_wheel)
+    canvas.bind("<MouseWheel>", on_mouse_wheel)
+    dialog.bind("<Button-4>", on_scroll_up)
+    dialog.bind("<Button-5>", on_scroll_down)
 
     ttk.Label(body, text="Шаг 1/5. Выберите файл", style="Sub.TLabel").pack(anchor="w")
     row = ttk.Frame(body, style="Card.TFrame")
@@ -161,13 +202,21 @@ def open_command_wizard(deps: CommandWizardDeps) -> None:
         width=6,
     ).pack(side="left")
 
+    step5_section = ttk.Frame(body, style="Card.TFrame")
+    step5_section.pack(fill="x")
+    ttk.Label(step5_section, text="Шаг 5/5. Тест и сохранение", style="Sub.TLabel").pack(anchor="w", pady=(4, 2))
+    ttk.Label(step5_section, textvariable=status_local, style="Sub.TLabel").pack(anchor="w", pady=(0, 10))
+
+    controls = ttk.Frame(step5_section, style="Card.TFrame")
+    controls.pack(fill="x")
+
     def sync_mode(*_args):
         if admin_var.get() and launcher_play_var.get():
             launcher_play_var.set(False)
         if admin_var.get():
             status_local.set("Админ-режим: автонажатие лаунчера отключено")
         elif launcher_play_var.get():
-            launcher_details.pack(fill="x", pady=(0, 8))
+            launcher_details.pack(fill="x", pady=(0, 8), before=step5_section)
             status_local.set("Режим лаунчера: безопасная верификация окна и кнопки")
         else:
             launcher_details.pack_forget()
@@ -176,12 +225,6 @@ def open_command_wizard(deps: CommandWizardDeps) -> None:
     admin_var.trace_add("write", sync_mode)
     launcher_play_var.trace_add("write", sync_mode)
     sync_mode()
-
-    ttk.Label(body, text="Шаг 5/5. Тест и сохранение", style="Sub.TLabel").pack(anchor="w", pady=(4, 2))
-    ttk.Label(body, textvariable=status_local, style="Sub.TLabel").pack(anchor="w", pady=(0, 10))
-
-    controls = ttk.Frame(body, style="Card.TFrame")
-    controls.pack(fill="x")
 
     def do_record():
         def ui(text):
