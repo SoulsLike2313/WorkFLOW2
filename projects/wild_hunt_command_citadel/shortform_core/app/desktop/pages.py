@@ -218,12 +218,15 @@ class DashboardPage(BasePage):
         row1_caption.setObjectName("DashboardRowCaption")
         row2_caption = QLabel("Планирование и контроль")
         row2_caption.setObjectName("DashboardRowCaption")
+        quick_hint = QLabel("Рекомендуемый порядок: профиль -> сессия -> метрики -> план -> AI.")
+        quick_hint.setObjectName("SectionHint")
+        quick_hint.setWordWrap(True)
 
         actions = [
-            ("Добавить профиль", "add_profile", "secondary"),
+            ("Добавить профиль", "add_profile", "primary"),
             ("Открыть сессию", "open_session", "secondary"),
             ("Загрузить метрики", "import_metrics", "outline"),
-            ("Собрать контент-план", "generate_plan", "primary"),
+            ("Собрать контент-план", "generate_plan", "secondary"),
             ("Открыть AI-студию", "open_ai_studio", "secondary"),
             ("Проверить апдейты", "check_updates", "outline"),
         ]
@@ -245,6 +248,7 @@ class DashboardPage(BasePage):
         quick_layout.addLayout(row1)
         quick_layout.addWidget(row2_caption)
         quick_layout.addLayout(row2)
+        quick_layout.addWidget(quick_hint)
         layout.addWidget(quick_card)
 
         split = QSplitter(Qt.Orientation.Horizontal)
@@ -389,13 +393,12 @@ class ProfilesPage(BasePage):
             btn.setMinimumHeight(ACTION_BUTTON_HEIGHT)
             btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
             btn.clicked.connect(lambda _=False, a=action: self.action_requested.emit(a, self.selected_profile_id()))
-            row = idx // 3
-            col = idx % 3
+            row = idx // 2
+            col = idx % 2
             actions_grid.addWidget(btn, row, col)
 
         actions_grid.setColumnStretch(0, 1)
         actions_grid.setColumnStretch(1, 1)
-        actions_grid.setColumnStretch(2, 1)
         actions_layout.addLayout(actions_grid)
         layout.addWidget(actions_card)
 
@@ -469,11 +472,14 @@ class ProfilesPage(BasePage):
         open_analytics.clicked.connect(lambda: self.action_requested.emit("open_analytics", self.selected_profile_id()))
         selected_actions.addWidget(connect_selected, 0, 0)
         selected_actions.addWidget(open_session, 0, 1)
-        selected_actions.addWidget(open_analytics, 0, 2)
+        selected_actions.addWidget(open_analytics, 1, 0, 1, 2)
         selected_actions.setColumnStretch(0, 1)
         selected_actions.setColumnStretch(1, 1)
-        selected_actions.setColumnStretch(2, 1)
         identity_layout.addLayout(selected_actions)
+        selected_hint = QLabel("Поток действий: подключение -> открытие сессии -> переход в аналитику.")
+        selected_hint.setObjectName("SectionHint")
+        selected_hint.setWordWrap(True)
+        identity_layout.addWidget(selected_hint)
         layout.addWidget(identity_card)
 
         self.table = QTableWidget(0, 8)
@@ -761,6 +767,16 @@ class SessionsPage(BasePage):
         self.session_preview.setWordWrap(True)
         frame_layout.addWidget(self.session_preview)
 
+        self.session_telemetry = QLabel("Телеметрия: синхронизация — | ввод — | поток —")
+        self.session_telemetry.setObjectName("SectionHint")
+        self.session_telemetry.setWordWrap(True)
+        frame_layout.addWidget(self.session_telemetry)
+
+        self.session_activity = QLabel("Активность: ожидается выбор профиля и запуск сессии.")
+        self.session_activity.setObjectName("SectionHint")
+        self.session_activity.setWordWrap(True)
+        frame_layout.addWidget(self.session_activity)
+
         context_block = QWidget()
         context_block.setObjectName("SessionContextBlock")
         context_layout = QVBoxLayout(context_block)
@@ -875,20 +891,28 @@ class SessionsPage(BasePage):
                 f"АКТИВНАЯ СЕССИЯ 9:16\n\n{profile_name}\n\n"
                 f"Состояние: {runtime_state}\n"
                 f"Пресет: {viewport_label}\n"
-                f"Источник: {source_label}"
+                f"Источник: {source_label}\n\n"
+                "Контур готов к рабочим действиям в режиме управления."
             )
+            self.session_telemetry.setText("Телеметрия: синхронизация стабильна | ввод доступен | поток 9:16 активен")
+            self.session_activity.setText("Активность: окно открыто, источник привязан, рабочая сессия готова к контентным операциям.")
             self.frame_context.setText("Сессия активна и синхронизирована с профилем. Можно переходить к контенту и аналитике.")
             self.frame_next_step.setText("Следующий шаг: откройте «Контент» для очереди публикаций или «Аналитику» для оценки динамики.")
         else:
             self.session_preview.setText(
                 "ПРЕВЬЮ СЕССИИ 9:16\n\n"
                 "Сессия не открыта.\n"
-                "Выберите профиль в реестре и нажмите «Открыть сессию»."
+                "Выберите профиль в реестре и нажмите «Открыть сессию».\n\n"
+                "Рамка подготовлена и ожидает подключение источника."
             )
             if selected_profile_id:
+                self.session_telemetry.setText("Телеметрия: синхронизация отсутствует | ввод недоступен | поток остановлен")
+                self.session_activity.setText("Активность: профиль выбран, система ожидает запуск окна сессии.")
                 self.frame_context.setText("Профиль выбран, но рабочее окно сессии ещё не запущено.")
                 self.frame_next_step.setText("Следующий шаг: задайте пресет окна и нажмите «Открыть сессию».")
             else:
+                self.session_telemetry.setText("Телеметрия: синхронизация — | ввод — | поток —")
+                self.session_activity.setText("Активность: ожидается выбор профиля и запуск сессии.")
                 self.frame_context.setText("Сессионная зона ожидает выбор профиля в реестре.")
                 self.frame_next_step.setText("Следующий шаг: выберите профиль слева, затем откройте сессию 9:16.")
         self.frame_footer.setText("Сессионная зона связана со статусом профиля, источником и текущим пресетом окна.")
@@ -918,8 +942,11 @@ class ContentPage(BasePage):
         actions = QGridLayout()
         actions.setHorizontalSpacing(GRID_GAP)
         actions.setVerticalSpacing(GRID_GAP)
+        actions_caption = QLabel("Операции контента")
+        actions_caption.setObjectName("DashboardRowCaption")
+        layout.addWidget(actions_caption)
         add_btn = MotionButton("Добавить демо-контент")
-        add_btn.setObjectName("PrimaryCTA")
+        add_btn.setObjectName("OutlineCTA")
         add_btn.setMinimumHeight(ACTION_BUTTON_HEIGHT)
         add_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         add_btn.clicked.connect(lambda: self.action_requested.emit("add_placeholder_content", None))
@@ -929,7 +956,7 @@ class ContentPage(BasePage):
         validate_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         validate_btn.clicked.connect(lambda: self.action_requested.emit("validate_content", self.selected_content_id()))
         queue_btn = MotionButton("Поставить в очередь")
-        queue_btn.setObjectName("OutlineCTA")
+        queue_btn.setObjectName("PrimaryCTA")
         queue_btn.setMinimumHeight(ACTION_BUTTON_HEIGHT)
         queue_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         queue_btn.clicked.connect(lambda: self.action_requested.emit("queue_content", self.selected_content_id()))
@@ -940,6 +967,10 @@ class ContentPage(BasePage):
         actions.setColumnStretch(1, 1)
         actions.setColumnStretch(2, 1)
         layout.addLayout(actions)
+        self.content_hint = QLabel("Подсказка: сначала валидация, затем постановка в очередь публикации.")
+        self.content_hint.setObjectName("SectionHint")
+        self.content_hint.setWordWrap(True)
+        layout.addWidget(self.content_hint)
 
         self.table = QTableWidget(0, 7)
         self.table.setHorizontalHeaderLabels(["ID", "Название", "Статус", "Валидация", "Длительность", "Тема", "Обновлено"])
@@ -991,6 +1022,14 @@ class ContentPage(BasePage):
         self.card_queue.set_data(str(queued), "состояние очереди")
         self.card_ready.set_data(str(ready), "можно публиковать")
         self.card_invalid.set_data(str(invalid), "нужна ручная проверка")
+        if not items:
+            self.content_hint.setText("Добавьте контент и выполните валидацию перед постановкой в очередь.")
+        elif invalid > 0:
+            self.content_hint.setText("Обнаружены риски: исправьте проблемные элементы до публикации.")
+        elif queued > 0:
+            self.content_hint.setText("Очередь сформирована. Проверьте готовность профиля перед запуском публикаций.")
+        else:
+            self.content_hint.setText("Контент готов. Следующий шаг: поставьте выбранные элементы в очередь.")
 
 class AnalyticsPage(BasePage):
     def __init__(self) -> None:
@@ -1032,6 +1071,11 @@ class AnalyticsPage(BasePage):
         self.story_subline.setObjectName("AnalyticsStorySubline")
         self.story_subline.setWordWrap(True)
         story_layout.addWidget(self.story_subline)
+
+        self.story_signals = QLabel("Ключевые сигналы:\n• ожидаем метрики\n• ожидаем паттерны\n• ожидаем action plan")
+        self.story_signals.setObjectName("SectionHint")
+        self.story_signals.setWordWrap(True)
+        story_layout.addWidget(self.story_signals)
 
         cues_grid = QGridLayout()
         cues_grid.setHorizontalSpacing(GRID_GAP)
@@ -1201,6 +1245,14 @@ class AnalyticsPage(BasePage):
         self._set_cue_chip(self.quality_chip, quality_text, quality_level)
         self._set_cue_chip(self.stability_chip, stability_text, stability_level)
         self._set_cue_chip(self.action_chip, action_text, action_level)
+        signal_lines = [
+            f"• Моментум: {momentum:.2f}",
+            f"• Средний top-score: {avg_top_score:.2f}",
+            f"• Доля слабых роликов: {weak_ratio * 100:.0f}%",
+        ]
+        if plan_steps:
+            signal_lines.append(f"• Следующий шаг: {plan_steps[0]}")
+        self.story_signals.setText("Ключевые сигналы:\n" + "\n".join(signal_lines))
 
         self.top_list.clear()
         for idx, item in enumerate(top[:10], start=1):
@@ -1273,8 +1325,9 @@ class AnalyticsPage(BasePage):
             title = str(rec.get("title", rec.get("recommendation_type", "Рекомендация")))
             rationale = str(rec.get("rationale", "Обоснование не указано"))
             priority = rec.get("priority", "-")
+            next_action = str(rec.get("suggested_action", "без явного действия"))
             self.recommendations_list.addItem(
-                f"#{idx} · приоритет {priority}\n{title}\n{rationale}"
+                f"#{idx} · приоритет {priority}\n{title}\n{rationale}\nШаг: {next_action}"
             )
         if self.recommendations_list.count() == 0:
             self.recommendations_list.addItem("Рекомендации появятся после генерации action plan и обновления метрик.")
@@ -1334,6 +1387,10 @@ class AIStudioPage(BasePage):
         action_row.setColumnStretch(0, 1)
         action_row.setColumnStretch(1, 1)
         action_card_layout.addLayout(action_row)
+        self.ai_operator_hint = QLabel("Поток: сначала рекомендации, затем сбор пакета генерации.")
+        self.ai_operator_hint.setObjectName("SectionHint")
+        self.ai_operator_hint.setWordWrap(True)
+        action_card_layout.addWidget(self.ai_operator_hint)
         layout.addWidget(action_card)
 
         split = QSplitter(Qt.Orientation.Horizontal)
@@ -1399,6 +1456,12 @@ class AIStudioPage(BasePage):
         self.learning_card.set_data(str(learning_count), "зафиксированных исходов")
         self.bundle_card.set_data(str(len(bundles)), "сохранённых пакетов")
         self.confidence_card.set_data(f"{conf_avg:.2f}", "средняя уверенность")
+        if recs and not bundles:
+            self.ai_operator_hint.setText("Рекомендации готовы. Следующий шаг: собрать пакет генерации для выбранной идеи.")
+        elif bundles:
+            self.ai_operator_hint.setText("Пакеты генерации готовы. Проверьте качество и запустите публикационный сценарий.")
+        else:
+            self.ai_operator_hint.setText("Сначала сформируйте рекомендации, затем соберите пакет генерации.")
 
         self.recommendations.clear()
         for item in recs[:16]:

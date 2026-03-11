@@ -19,12 +19,8 @@ python -m app.main
 
 ## 4) Run first pipeline
 1. `Project` tab -> choose fixture path -> `Create/Select Project`
-2. `Scan` tab -> `Run Scan` -> `Extract Strings`
-3. `Entries` tab -> `Detect Language`
-4. `Translation` tab -> `Translate to Russian`
-5. `Voice` tab -> `Generate Demo Voice Attempts`
-6. `QA` tab -> `Run QA Checks`
-7. `Export` tab -> `Export Patch Output`
+2. Quick path: `Run Full Demo Pipeline` button in `Project` tab
+3. Manual path: `Scan` -> `Extract Strings` -> `Detect Language` -> `Translate to Russian` -> `Generate Demo Voice Attempts` -> `Run QA Checks` -> `Export Patch Output`
 
 ## 5) Live mode
 - Open `Live Demo` tab

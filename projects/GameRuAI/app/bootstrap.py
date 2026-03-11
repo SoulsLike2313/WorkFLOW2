@@ -88,6 +88,11 @@ class AppServices:
             records = []
             for row in self.repo.list_scanned_files(project_id):
                 rel_path = row["file_path"]
+                file_type = str(row.get("file_type", ""))
+                if file_type not in {"text", "config"}:
+                    continue
+                if rel_path.startswith("metadata/"):
+                    continue
                 path = game_root / rel_path
                 extractor = self.extractors.get_for_path(path)
                 if not extractor:

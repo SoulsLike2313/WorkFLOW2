@@ -332,7 +332,7 @@ class TopStatusBar(GlowCard):
     def __init__(self) -> None:
         super().__init__(elevated=False)
         self.setObjectName("TopStatusBar")
-        self.setMinimumHeight(88)
+        self.setMinimumHeight(124)
         self._is_loading = False
 
         layout = QHBoxLayout(self)
@@ -353,11 +353,15 @@ class TopStatusBar(GlowCard):
         pill_grid.setVerticalSpacing(8)
         order = ["profiles", "sessions", "queue", "verification", "ai", "runtime", "alerts"]
         for idx, key in enumerate(order):
-            row = 0 if idx < 4 else 1
-            col = idx if idx < 4 else idx - 4
-            self.pills[key].setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+            # Use 3 columns to preserve readable pill widths on 125%/150% scaling.
+            row = idx // 3
+            col = idx % 3
+            self.pills[key].setMinimumWidth(110)
+            self.pills[key].setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
             pill_grid.addWidget(self.pills[key], row, col)
-        pill_grid.setColumnStretch(3, 1)
+        pill_grid.setColumnStretch(0, 1)
+        pill_grid.setColumnStretch(1, 1)
+        pill_grid.setColumnStretch(2, 1)
         layout.addLayout(pill_grid, stretch=1)
 
         self.refresh_button = MotionButton("Обновить данные")
@@ -411,9 +415,16 @@ class TopStatusBar(GlowCard):
             verification_level,
         )
 
-        self.pills["ai"].set_state(f"AI: {ai_map.get(ai_state, ai_state)}", "info" if ai_state != "ready" else "ok")
+        ai_view = ai_map.get(ai_state)
+        if ai_view is None:
+            ai_view = "огр." if ai_state else "н/д"
+        self.pills["ai"].set_state(f"AI: {ai_view}", "info" if ai_state != "ready" else "ok")
+
+        runtime_view = runtime_map.get(runtime_state)
+        if runtime_view is None:
+            runtime_view = "огр." if runtime_state else "н/д"
         self.pills["runtime"].set_state(
-            f"система: {runtime_map.get(runtime_state, runtime_state)}",
+            f"система: {runtime_view}",
             "ok" if runtime_state == "ready" else "warn",
         )
         self.pills["alerts"].set_state(f"сигналы: {alerts_count}", "danger" if alerts_count > 0 else "ok")

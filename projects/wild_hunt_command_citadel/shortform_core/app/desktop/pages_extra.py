@@ -109,6 +109,10 @@ class AuditPage(BasePage):
         timeline_layout.setContentsMargins(*CARD_INSET)
         timeline_layout.setSpacing(ROW_GAP)
         timeline_layout.addWidget(SectionHeader("Таймлайн событий", "События системы, AI, обновлений и рабочего цикла"))
+        self.audit_summary = QLabel("События: 0 | Ошибки: 0 | Фильтр: все")
+        self.audit_summary.setObjectName("SectionHint")
+        self.audit_summary.setWordWrap(True)
+        timeline_layout.addWidget(self.audit_summary)
 
         self.table = QTableWidget(0, 6)
         self.table.setHorizontalHeaderLabels(["Время", "Источник", "Действие", "Результат", "Профиль", "Канал"])
@@ -151,6 +155,7 @@ class AuditPage(BasePage):
         errors = _safe_list(snapshot.get("error_log"))
 
         self.table.setRowCount(0)
+        shown_count = 0
         for event in items:
             result = str(event.get("result", "-")).lower()
             level = "info"
@@ -164,6 +169,7 @@ class AuditPage(BasePage):
 
             row = self.table.rowCount()
             self.table.insertRow(row)
+            shown_count += 1
             self.table.setItem(row, 0, QTableWidgetItem(_fmt_ts(event.get("created_at"))))
             self.table.setItem(row, 1, QTableWidgetItem(str(event.get("actor_type", "system"))))
             self.table.setItem(row, 2, QTableWidgetItem(str(event.get("action_type", "-"))))
@@ -178,6 +184,8 @@ class AuditPage(BasePage):
             )
         if self.errors.count() == 0:
             self.errors.addItem("Критичных ошибок пока нет.")
+        filter_name = selected_label.lower()
+        self.audit_summary.setText(f"События: {shown_count} | Ошибки: {len(errors)} | Фильтр: {filter_name}")
 
 
 class UpdatesPage(BasePage):
@@ -220,6 +228,10 @@ class UpdatesPage(BasePage):
         actions.setColumnStretch(0, 1)
         actions.setColumnStretch(1, 1)
         layout.addLayout(actions)
+        self.user_flow_hint = QLabel("Пользовательский поток: проверить апдейты -> применить патч -> дождаться пост-проверки PASS.")
+        self.user_flow_hint.setObjectName("SectionHint")
+        self.user_flow_hint.setWordWrap(True)
+        layout.addWidget(self.user_flow_hint)
 
         details_card = GlowCard(elevated=False)
         details_card.setObjectName("UpdatesDiagnosticsBlock")
@@ -252,6 +264,14 @@ class UpdatesPage(BasePage):
 
         post_status = str(post.get("status") or updates.get("post_verify_status") or "unknown")
         self.post_verify.set_data(_ru_gate(post_status), "ручное тестирование доступно только при PASS")
+        if post_status == "PASS":
+            self.user_flow_hint.setText("Пост-проверка PASS: можно переходить к ручному тесту интерфейса.")
+        elif post_status == "PASS_WITH_WARNINGS":
+            self.user_flow_hint.setText("Пост-проверка PASS+: проверьте предупреждения перед ручным прогоном.")
+        elif post_status == "FAIL":
+            self.user_flow_hint.setText("Пост-проверка FAIL: ручной тест заблокирован до исправлений.")
+        else:
+            self.user_flow_hint.setText("Проверьте апдейты и выполните пост-проверку для подтверждения готовности.")
 
         lines = [
             f"Проверено: {_fmt_ts(datetime.now().isoformat())}",
@@ -324,6 +344,10 @@ class SettingsPage(BasePage):
         form.addRow(db_label, self.db_path)
         form.addRow(verification_label, self.verification_state)
 
+        self.settings_hint = QLabel("Базовый режим: используйте эти параметры для контроля среды без ручного запуска серверных команд.")
+        self.settings_hint.setObjectName("SectionHint")
+        self.settings_hint.setWordWrap(True)
+        card_layout.addWidget(self.settings_hint)
         card_layout.addLayout(form)
 
         actions = QGridLayout()

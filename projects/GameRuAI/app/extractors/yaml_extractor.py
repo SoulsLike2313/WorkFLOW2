@@ -14,6 +14,7 @@ class YamlExtractor(BaseExtractor):
     def extract(self, path: Path, *, project_id: int, rel_path: str):
         payload = yaml.safe_load(path.read_text(encoding="utf-8-sig"))
         records: list[Any] = []
+        structured_mode = self._has_structured_text_nodes(payload)
 
         def walk(node: Any, breadcrumb: str) -> None:
             if isinstance(node, dict):
@@ -39,7 +40,7 @@ class YamlExtractor(BaseExtractor):
             elif isinstance(node, list):
                 for idx, value in enumerate(node):
                     walk(value, f"{breadcrumb}/{idx}")
-            elif isinstance(node, str):
+            elif isinstance(node, str) and not structured_mode:
                 stripped = node.strip()
                 if stripped:
                     records.append(
@@ -54,3 +55,12 @@ class YamlExtractor(BaseExtractor):
 
         walk(payload, path.stem)
         return records
+
+    def _has_structured_text_nodes(self, node: Any) -> bool:
+        if isinstance(node, dict):
+            if isinstance(node.get("text"), str) and node["text"].strip():
+                return True
+            return any(self._has_structured_text_nodes(value) for value in node.values())
+        if isinstance(node, list):
+            return any(self._has_structured_text_nodes(value) for value in node)
+        return False
