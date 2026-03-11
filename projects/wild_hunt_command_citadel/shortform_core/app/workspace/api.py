@@ -67,6 +67,23 @@ def build_workspace_router(runtime: WorkspaceRuntime) -> APIRouter:
             "metrics_providers": runtime.metrics_provider_registry.list_capabilities(),
         }
 
+    @router.get("/readiness")
+    def workspace_readiness() -> dict[str, Any]:
+        persistence_health = runtime.persistence.health_check() if runtime.persistence is not None else {"status": "in_memory"}
+        items = {
+            "repository_ready": runtime.repository is not None,
+            "workspace_ready": runtime.profiles is not None and runtime.sessions is not None,
+            "analytics_ready": runtime.metrics is not None and runtime.formulas is not None,
+            "ai_ready": runtime.ai_perception is not None and runtime.ai_recommendation is not None,
+            "update_ready": True,
+            "ui_bridge_ready": True,
+        }
+        return {
+            "status": "ready" if all(items.values()) else "degraded",
+            "items": items,
+            "persistence": persistence_health,
+        }
+
     # Profiles
     @router.post("/profiles")
     def create_profile(request: CreateProfileRequest):

@@ -1,5 +1,11 @@
 $ErrorActionPreference = "Stop"
 
+param(
+    [ValidateSet("user", "developer")]
+    [string]$Mode = "user",
+    [switch]$SkipVerify
+)
+
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $projectRoot
 
@@ -12,10 +18,20 @@ $pythonExe = Join-Path $projectRoot ".venv\Scripts\python.exe"
 & $pythonExe -m pip install --upgrade pip
 & $pythonExe -m pip install -r requirements.txt
 
-& $pythonExe -m app.main
-& $pythonExe -m app.bootstrap_v2
+if (-not $SkipVerify) {
+    & $pythonExe -m app.verify --skip-install
+    if ($LASTEXITCODE -ne 0) {
+        throw "Machine Verification Gate did not pass. Fix issues before user-mode manual testing."
+    }
+}
 
-$uvicornCommand = ".\.venv\Scripts\python.exe -m uvicorn app.api:app --host 127.0.0.1 --port 8000 --reload"
+if ($Mode -eq "user") {
+    & $pythonExe -m app.launcher user
+    exit $LASTEXITCODE
+}
+
 Write-Host ""
-Write-Host "Uvicorn launch command:"
-Write-Host $uvicornCommand
+Write-Host "Developer mode commands:"
+Write-Host "  Backend: .\.venv\Scripts\python.exe -m app.launcher developer backend --host 127.0.0.1 --port 8000"
+Write-Host "  UI only: .\.venv\Scripts\python.exe -m app.launcher developer ui --api-base-url http://127.0.0.1:8000"
+Write-Host "  Verify:  .\.venv\Scripts\python.exe -m app.launcher developer verify"

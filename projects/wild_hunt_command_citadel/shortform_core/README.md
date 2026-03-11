@@ -26,8 +26,25 @@ Run all commands from:
 
 ```text
 app/
-  analytics.py
   api.py
+  launcher.py
+  readiness.py
+  startup_manager.py
+  verify.py
+  version.py
+  update/
+    models.py
+    services.py
+  desktop/
+    main.py
+    user_window.py
+  tests_pytest/
+    *.py
+  tests/
+    unit/
+    integration/
+    smoke/
+  analytics.py
   bootstrap_v2.py
   config.py
   db.py
@@ -40,7 +57,12 @@ app/
   repository.py
   schemas.py
   workspace/
+    persistence.py
+    demo_seed.py
+    diagnostics.py
     api.py
+    ai_contracts.py
+    ai_providers.py
     connectors.py
     contracts.py
     device_providers.py
@@ -57,6 +79,7 @@ app/
       analytics_services.py
       audit_service.py
       content_service.py
+      generation_prep_service.py
       metrics_service.py
       profile_service.py
       session_service.py
@@ -65,6 +88,8 @@ CODEX.md
 PROMPT_FOR_CODEX.txt
 requirements.txt
 run_setup.ps1
+run_user.ps1
+run_developer.ps1
 ```
 
 ## Quick Start (Windows)

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi import FastAPI, HTTPException
 
 from .analytics import run_analytics
@@ -7,7 +9,9 @@ from .config import AppConfig, load_config
 from .demo_data import build_demo_bundle
 from .models import MetricSnapshot
 from .planner import generate_plan
+from .readiness import ReadinessService
 from .repository import SQLiteRepository
+from .update import PatchBundle, UpdateService
 from .schemas import (
     AccountSnapshotResponse,
     GeneratePlanRequest,
@@ -36,6 +40,8 @@ def _build_runtime() -> tuple[AppConfig, SQLiteRepository, WorkspaceRuntime]:
 
 
 CONFIG, REPOSITORY, WORKSPACE = _build_runtime()
+READINESS = ReadinessService()
+UPDATES = UpdateService(CONFIG)
 
 app = FastAPI(
     title="Ядро Shortform Content Ops",
@@ -52,6 +58,35 @@ def health() -> HealthResponse:
         database_path=str(CONFIG.storage.database_path),
         snapshot_dir=str(CONFIG.storage.tiktok_snapshot_dir),
     )
+
+
+@app.get("/readiness")
+def readiness() -> dict[str, object]:
+    payload = READINESS.evaluate_local(config=CONFIG, workspace_runtime=WORKSPACE)
+    api_check = READINESS.evaluate_api(base_url=f"http://{CONFIG.api_host}:{CONFIG.api_port}")
+    payload["api_ready"] = {"ready": api_check.ready, "reason": api_check.reason}
+    return payload
+
+
+@app.get("/updates/version")
+def updates_version() -> dict[str, object]:
+    return {"version": UPDATES.get_current_version().model_dump(mode="json")}
+
+
+@app.post("/updates/check")
+def updates_check(manifest_path: str) -> dict[str, object]:
+    return UPDATES.check_for_update(Path(manifest_path))
+
+
+@app.post("/updates/apply-local")
+def updates_apply_local(bundle_path: str, target_version: str) -> dict[str, object]:
+    bundle = PatchBundle(bundle_path=Path(bundle_path), target_version=target_version)
+    return {"result": UPDATES.apply_local_patch(bundle).model_dump(mode="json")}
+
+
+@app.get("/updates/post-verify")
+def updates_post_verify() -> dict[str, object]:
+    return UPDATES.post_update_verification()
 
 
 @app.post("/bootstrap/load-demo", response_model=LoadDemoResponse)
