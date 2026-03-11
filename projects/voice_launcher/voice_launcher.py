@@ -18,7 +18,9 @@ from tkinter import filedialog, messagebox, simpledialog, ttk
 import pystray
 import speech_recognition as sr
 from PIL import Image, ImageDraw
+from voice_launcher_app.actions.launcher_runner import LauncherRunnerDeps, run_launcher_play
 from voice_launcher_app.actions.launcher_safety import LauncherTarget, SafeLauncherAutomation
+from voice_launcher_app.core.command_manager import save_command_definition
 from voice_launcher_app.core.matching import find_best_command as modular_find_best_command
 from voice_launcher_app.diagnostics.bundle import collect_diagnostics
 from voice_launcher_app.profiles.profile_io import export_profile, import_profile
@@ -1511,24 +1513,6 @@ def find_best_command(candidates):
 
 
 # ======================= Command actions =======================
-def detect_phrase_conflict(phrase, ignore_phrase=""):
-    check_phrase = normalize_phrase(phrase or "")
-    if not check_phrase:
-        return "", 0.0
-    ignore_norm = normalize_phrase(ignore_phrase or "")
-    best_phrase = ""
-    best_score = 0.0
-    for existing in commands.keys():
-        existing_norm = normalize_phrase(existing)
-        if not existing_norm or existing_norm == ignore_norm:
-            continue
-        score = command_match_score(check_phrase, existing_norm)
-        if score > best_score:
-            best_phrase = existing_norm
-            best_score = score
-    return best_phrase, best_score
-
-
 def save_mapping(
     phrase,
     path,
@@ -1544,45 +1528,37 @@ def save_mapping(
     min_window_confidence=0.90,
     replacing_phrase="",
 ):
-    phrase = normalize_phrase(phrase)
-    if not phrase:
-        messagebox.showinfo("Пустая фраза", "Введите непустую фразу.")
-        return False
-    if not path:
-        messagebox.showinfo("Файл", "Выберите файл.")
-        return False
-    if not os.path.exists(path):
-        messagebox.showwarning("Файл", f"Путь не найден:\n{path}")
+    result = save_command_definition(
+        commands=commands,
+        phrase=phrase,
+        path=path,
+        use_admin=use_admin,
+        launcher_play=launcher_play,
+        play_text=play_text,
+        window_title=window_title,
+        wait_timeout=int(wait_timeout) if str(wait_timeout).strip() else 240,
+        single_instance=bool(single_instance),
+        debounce_seconds=max(0.8, min(30.0, float(debounce_seconds))),
+        launcher_dry_run=bool(launcher_dry_run),
+        launcher_highlight=bool(launcher_highlight),
+        min_window_confidence=float(min_window_confidence),
+        build_task_name=build_task_name,
+        score_func=command_match_score,
+        path_exists=os.path.exists,
+        ignore_phrase=replacing_phrase,
+    )
+    if not result.ok:
+        if result.code == "phrase_conflict":
+            messagebox.showwarning("Похожая команда", result.message)
+        elif result.code in ("empty_phrase", "empty_path"):
+            messagebox.showinfo("Сохранение команды", result.message)
+        else:
+            messagebox.showwarning("Сохранение команды", result.message)
         return False
 
-    conflict_phrase, conflict_score = detect_phrase_conflict(phrase, ignore_phrase=replacing_phrase)
-    if conflict_phrase and conflict_score >= 0.90:
-        messagebox.showwarning(
-            "Похожая команда",
-            f"Найдена слишком похожая команда: '{conflict_phrase}' (score {conflict_score:.2f}).\n"
-            "Измените фразу, чтобы снизить риск ложных срабатываний.",
-        )
-        return False
-
-    entry = {
-        "mode": "normal",
-        "path": path,
-        "task_name": "",
-        "play_text": play_text or "Играть",
-        "window_title": window_title or "",
-        "wait_timeout": int(wait_timeout) if str(wait_timeout).strip() else 240,
-        "single_instance": bool(single_instance),
-        "debounce_seconds": max(0.8, min(30.0, float(debounce_seconds))),
-        "launcher_dry_run": bool(launcher_dry_run),
-        "launcher_highlight": bool(launcher_highlight),
-        "min_window_confidence": 0.90,
-    }
-    try:
-        entry["min_window_confidence"] = max(0.65, min(0.99, float(min_window_confidence)))
-    except Exception:
-        entry["min_window_confidence"] = 0.90
-    if use_admin:
-        entry = {"mode": "admin_task", "path": path, "task_name": build_task_name(path)}
+    entry = result.entry or {}
+    phrase = result.phrase or normalize_phrase(phrase)
+    if entry.get("mode") == "admin_task":
         ok, error = ensure_admin_task(entry)
         if not ok:
             messagebox.showwarning(
@@ -1591,11 +1567,10 @@ def save_mapping(
                 "Запустите лаунчер от имени администратора и повторите.\n\n"
                 f"{error}",
             )
+            if phrase in commands:
+                del commands[phrase]
             return False
-    elif launcher_play:
-        entry["mode"] = "launcher_play"
 
-    commands[phrase] = entry
     save_commands()
     refresh_table()
     set_status(f"Сохранено: '{phrase}' ({get_entry_mode_label(entry)})")
