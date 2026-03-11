@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 from .connectors import ConnectorRegistry
+from .diagnostics import configure_diagnostics
 from .device_providers import DeviceProviderRegistry
 from .metrics_providers import MetricsProviderRegistry
 from .policy import PolicyGuard
@@ -51,7 +53,16 @@ class WorkspaceRuntime:
     metrics_provider_registry: MetricsProviderRegistry
 
 
-def build_workspace_runtime(*, max_profiles: int = 10, analytics_weights: dict[str, float] | None = None) -> WorkspaceRuntime:
+def build_workspace_runtime(
+    *,
+    max_profiles: int = 10,
+    analytics_weights: dict[str, float] | None = None,
+    log_dir: Path | None = None,
+    debug_logs: bool = False,
+) -> WorkspaceRuntime:
+    if log_dir is not None:
+        configure_diagnostics(log_dir, debug=debug_logs)
+
     repository = WorkspaceRepository()
     policy_guard = PolicyGuard()
     audit = AuditService(repository)

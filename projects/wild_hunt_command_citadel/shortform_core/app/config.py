@@ -41,6 +41,7 @@ class WorkspaceConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     max_profiles: int = Field(default=10, ge=1, le=100)
+    debug_logs: bool = False
     analytics_weights: AnalyticsWeightsConfig = Field(default_factory=AnalyticsWeightsConfig)
 
 
@@ -50,6 +51,8 @@ class StorageConfig(BaseModel):
     project_root: Path = PROJECT_ROOT
     database_path: Path = PROJECT_ROOT / "runtime" / "shortform_core.db"
     output_dir: Path = PROJECT_ROOT / "runtime" / "output"
+    logs_dir: Path = PROJECT_ROOT / "runtime" / "logs"
+    verification_dir: Path = PROJECT_ROOT / "runtime" / "verification"
     tiktok_snapshot_dir: Path = PROJECT_ROOT / "external_data" / "tiktok_automation_snapshot"
 
 
@@ -107,6 +110,7 @@ def load_config(env: Mapping[str, str] | None = None) -> AppConfig:
 
     workspace = WorkspaceConfig(
         max_profiles=_env_int(source, "SFCO_MAX_PROFILES", 10),
+        debug_logs=source.get("SFCO_DEBUG_LOGS", "0").strip().lower() in {"1", "true", "yes", "on"},
         analytics_weights=AnalyticsWeightsConfig(
             views_weight=_env_float(source, "SFCO_VIEWS_WEIGHT", 0.05),
             likes_weight=_env_float(source, "SFCO_LIKES_WEIGHT", 1.0),
@@ -122,6 +126,8 @@ def load_config(env: Mapping[str, str] | None = None) -> AppConfig:
         project_root=_env_path(source, "SFCO_PROJECT_ROOT", PROJECT_ROOT),
         database_path=_env_path(source, "SFCO_DATABASE_PATH", PROJECT_ROOT / "runtime" / "shortform_core.db"),
         output_dir=_env_path(source, "SFCO_OUTPUT_DIR", PROJECT_ROOT / "runtime" / "output"),
+        logs_dir=_env_path(source, "SFCO_LOGS_DIR", PROJECT_ROOT / "runtime" / "logs"),
+        verification_dir=_env_path(source, "SFCO_VERIFICATION_DIR", PROJECT_ROOT / "runtime" / "verification"),
         tiktok_snapshot_dir=_env_path(
             source,
             "SFCO_TIKTOK_SNAPSHOT_DIR",
@@ -131,6 +137,8 @@ def load_config(env: Mapping[str, str] | None = None) -> AppConfig:
 
     storage.database_path.parent.mkdir(parents=True, exist_ok=True)
     storage.output_dir.mkdir(parents=True, exist_ok=True)
+    storage.logs_dir.mkdir(parents=True, exist_ok=True)
+    storage.verification_dir.mkdir(parents=True, exist_ok=True)
 
     return AppConfig(
         thresholds=thresholds,

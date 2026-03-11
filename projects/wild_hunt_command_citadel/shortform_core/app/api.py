@@ -28,6 +28,8 @@ def _build_runtime() -> tuple[AppConfig, SQLiteRepository, WorkspaceRuntime]:
     workspace_runtime = build_workspace_runtime(
         max_profiles=config.workspace.max_profiles,
         analytics_weights=config.workspace.analytics_weights.model_dump(),
+        log_dir=config.storage.logs_dir,
+        debug_logs=config.workspace.debug_logs,
     )
     return config, repository, workspace_runtime
 

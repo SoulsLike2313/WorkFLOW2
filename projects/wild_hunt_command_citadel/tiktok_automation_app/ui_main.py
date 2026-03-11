@@ -433,13 +433,14 @@ class SessionViewportFrame(QWidget):
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("Доска Контрактов Ведьмака | TikTok Ops")
-        self.resize(1260, 860)
-        self.setMinimumSize(1080, 760)
+        self.setWindowTitle("Witcher Command Deck | TikTok Ops")
+        self.resize(1560, 940)
+        self.setMinimumSize(1320, 820)
         self.app_root = Path(__file__).resolve().parent
         self.worker: Optional[BotWorker] = None
         self.core_worker: Optional[CoreWorker] = None
         self.active_run_source = "manual"
+        self._workspace_sections: Dict[str, QWidget] = {}
 
         self.profile_store = ProfileStore(self.app_root / "runtime" / "profiles.json")
         self.scheduler = TaskScheduler(self.app_root / "runtime" / "scheduler_jobs.json")
@@ -459,6 +460,7 @@ class MainWindow(QMainWindow):
         self._refresh_environment_badge()
         self._refresh_dashboard()
         self._apply_theme(self.current_theme_key)
+        self._close_session_preview()
         self._set_running_state(False)
         self._set_core_running_state(False)
         self.scheduler.start()
@@ -469,51 +471,192 @@ class MainWindow(QMainWindow):
         central.setObjectName("root")
         self.setCentralWidget(central)
         root = QVBoxLayout(central)
-        root.setContentsMargins(16, 16, 16, 16)
+        root.setContentsMargins(18, 14, 18, 14)
         root.setSpacing(12)
 
         root.addWidget(self._build_header())
+        splitter = QSplitter(Qt.Orientation.Horizontal)
+        splitter.setObjectName("workspaceSplitter")
+        splitter.setHandleWidth(1)
+
+        sidebar = self._build_sidebar()
+        center = self._build_center_workspace()
+        right = self._build_context_panel()
+
+        splitter.addWidget(sidebar)
+        splitter.addWidget(center)
+        splitter.addWidget(right)
+        splitter.setStretchFactor(0, 0)
+        splitter.setStretchFactor(1, 1)
+        splitter.setStretchFactor(2, 0)
+        splitter.setSizes([248, 980, 360])
+
+        root.addWidget(splitter, stretch=1)
+
+    def _build_sidebar(self) -> QFrame:
+        rail = QFrame()
+        rail.setObjectName("sidebarRail")
+        rail.setMinimumWidth(222)
+        rail.setMaximumWidth(280)
+        layout = QVBoxLayout(rail)
+        layout.setContentsMargins(14, 14, 14, 14)
+        layout.setSpacing(12)
+
+        brand = QLabel("WITCHER COMMAND CENTER")
+        brand.setObjectName("sidebarBrand")
+        brand.setWordWrap(True)
+        layout.addWidget(brand)
+
+        caption = QLabel("TACTICAL NAVIGATION")
+        caption.setObjectName("sidebarCaption")
+        layout.addWidget(caption)
+
+        nav_items = [
+            "Profiles",
+            "Session Window",
+            "Content Desk",
+            "Performance",
+            "AI Studio",
+            "Audit / Timeline",
+            "Settings",
+        ]
+        self.nav_buttons: List[QPushButton] = []
+        for item in nav_items:
+            button = QPushButton(item)
+            button.setObjectName("sidebarNavButton")
+            button.clicked.connect(lambda _checked=False, label=item: self._focus_section(label))
+            layout.addWidget(button)
+            self.nav_buttons.append(button)
+
+        layout.addSpacing(6)
+        stats_caption = QLabel("SYSTEM SNAPSHOT")
+        stats_caption.setObjectName("sidebarCaption")
+        layout.addWidget(stats_caption)
+
+        self.sidebar_profiles_badge = QLabel("Профили: 0")
+        self.sidebar_profiles_badge.setObjectName("smallTag")
+        self.sidebar_queue_badge = QLabel("Очередь: 0")
+        self.sidebar_queue_badge.setObjectName("smallTag")
+        self.sidebar_schedule_badge = QLabel("Задачи: 0")
+        self.sidebar_schedule_badge.setObjectName("smallTag")
+        layout.addWidget(self.sidebar_profiles_badge)
+        layout.addWidget(self.sidebar_queue_badge)
+        layout.addWidget(self.sidebar_schedule_badge)
+
+        layout.addStretch(1)
+        safety = QLabel("Assistive mode only.\nNo stealth/evasion behavior.")
+        safety.setObjectName("sidebarSafety")
+        safety.setWordWrap(True)
+        layout.addWidget(safety)
+        return rail
+
+    def _build_center_workspace(self) -> QWidget:
+        self.workspace_scroll = QScrollArea()
+        self.workspace_scroll.setObjectName("mainScroll")
+        self.workspace_scroll.setWidgetResizable(True)
+        self.workspace_scroll.setFrameShape(QFrame.Shape.NoFrame)
+        self.workspace_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.workspace_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        content = QWidget()
+        content.setObjectName("scrollContent")
+        grid = QGridLayout(content)
+        grid.setContentsMargins(4, 4, 6, 8)
+        grid.setHorizontalSpacing(12)
+        grid.setVerticalSpacing(12)
+        grid.setColumnStretch(0, 1)
+        grid.setColumnStretch(1, 1)
+
+        self.drop_zone = ProfileDropZone()
+        self.drop_zone.profile_parsed.connect(self._on_profile_parsed)
+        self.drop_zone.log_signal.connect(self._append_log)
+        grid.addWidget(self.drop_zone, 0, 0, 1, 2)
+        self._workspace_sections["Session Window"] = self.drop_zone
+
+        connection_box = self._build_connection_box()
+        session_box = self._build_session_window_box()
+        grid.addWidget(connection_box, 1, 0)
+        grid.addWidget(session_box, 1, 1)
+
+        profiles_box = self._build_profiles_box()
+        scheduler_box = self._build_scheduler_box()
+        grid.addWidget(profiles_box, 2, 0)
+        grid.addWidget(scheduler_box, 2, 1)
+        self._workspace_sections["Profiles"] = profiles_box
+
+        content_box = self._build_scenario_box()
+        upload_box = self._build_upload_box()
+        grid.addWidget(content_box, 3, 0)
+        grid.addWidget(upload_box, 3, 1)
+        self._workspace_sections["Content Desk"] = content_box
+
+        runtime_box = self._build_runtime_box()
+        core_box = self._build_core_box()
+        grid.addWidget(runtime_box, 4, 0)
+        grid.addWidget(core_box, 4, 1)
+        self._workspace_sections["Settings"] = runtime_box
+
+        bootstrap_box = self._build_bootstrap_box()
+        controls_box = self._build_controls_box()
+        grid.addWidget(bootstrap_box, 5, 0)
+        grid.addWidget(controls_box, 5, 1)
+
+        self.workspace_scroll.setWidget(content)
+        return self.workspace_scroll
+
+    def _build_context_panel(self) -> QFrame:
+        frame = QFrame()
+        frame.setObjectName("contextPanel")
+        frame.setMinimumWidth(328)
+        frame.setMaximumWidth(420)
+        layout = QVBoxLayout(frame)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(10)
 
         scroll = QScrollArea()
-        scroll.setObjectName("mainScroll")
+        scroll.setObjectName("contextScroll")
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QFrame.Shape.NoFrame)
         scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
-        scroll_content = QWidget()
-        scroll_content.setObjectName("scrollContent")
-        content_layout = QVBoxLayout(scroll_content)
-        content_layout.setContentsMargins(4, 4, 6, 8)
-        content_layout.setSpacing(12)
+        container = QWidget()
+        container.setObjectName("contextContent")
+        col = QVBoxLayout(container)
+        col.setContentsMargins(4, 4, 4, 8)
+        col.setSpacing(10)
 
-        self.drop_zone = ProfileDropZone()
-        self.drop_zone.profile_parsed.connect(self._on_profile_parsed)
-        self.drop_zone.log_signal.connect(self._append_log)
-        content_layout.addWidget(self.drop_zone)
+        perf_box = self._build_performance_overview_box()
+        dashboard_box = self._build_dashboard_box()
+        top_box = self._build_top_content_box()
+        weak_box = self._build_weak_content_box()
+        reco_box = self._build_recommendations_box()
+        ai_box = self._build_ai_studio_box()
+        log_box = self._build_log_panel()
 
-        content_layout.addWidget(self._build_bootstrap_box())
-        content_layout.addWidget(self._build_connection_box())
-        content_layout.addWidget(self._build_profiles_box())
-        content_layout.addWidget(self._build_scheduler_box())
-        content_layout.addWidget(self._build_scenario_box())
-        content_layout.addWidget(self._build_upload_box())
-        content_layout.addWidget(self._build_runtime_box())
-        content_layout.addWidget(self._build_controls_box())
-        content_layout.addWidget(self._build_dashboard_box())
-        content_layout.addWidget(self._build_core_box())
-        content_layout.addWidget(self._build_log_panel())
-        content_layout.addStretch(1)
+        col.addWidget(perf_box)
+        col.addWidget(dashboard_box)
+        col.addWidget(top_box)
+        col.addWidget(weak_box)
+        col.addWidget(reco_box)
+        col.addWidget(ai_box)
+        col.addWidget(log_box)
+        col.addStretch(1)
 
-        scroll.setWidget(scroll_content)
-        root.addWidget(scroll, stretch=1)
+        self._workspace_sections["Performance"] = perf_box
+        self._workspace_sections["AI Studio"] = ai_box
+        self._workspace_sections["Audit / Timeline"] = log_box
+
+        scroll.setWidget(container)
+        layout.addWidget(scroll, stretch=1)
+        return frame
 
     def _build_header(self) -> QFrame:
         frame = QFrame()
         frame.setObjectName("headerBar")
         layout = QHBoxLayout(frame)
-        layout.setContentsMargins(16, 12, 16, 12)
-        layout.setSpacing(12)
+        layout.setContentsMargins(18, 14, 18, 14)
+        layout.setSpacing(14)
 
         self.medallion_badge = QLabel("ВОЛК")
         self.medallion_badge.setObjectName("medallionBadge")
@@ -522,19 +665,36 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.medallion_badge)
 
         title_col = QVBoxLayout()
-        title_col.setSpacing(2)
+        title_col.setSpacing(4)
 
-        title = QLabel("ВЕДЬМАК: ДОСКА КОНТРАКТОВ")
+        title = QLabel("WITCHER COMMAND DECK")
         title.setObjectName("titleLabel")
-        subtitle = QLabel("Центр управления автоматизацией TikTok-профилей.")
+        subtitle = QLabel("Premium short-form operations hub: profiles, sessions, analytics, AI assist.")
         subtitle.setObjectName("subtitleLabel")
         title_col.addWidget(title)
         title_col.addWidget(subtitle)
+
+        status_column = QVBoxLayout()
+        status_column.setSpacing(6)
 
         self.status_chip = QLabel("Ожидание")
         self.status_chip.setObjectName("statusChip")
         self.status_chip.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_chip.setMinimumWidth(180)
+        status_column.addWidget(self.status_chip)
+
+        status_row = QHBoxLayout()
+        status_row.setSpacing(6)
+        self.global_profiles_chip = QLabel("Профили: 0")
+        self.global_profiles_chip.setObjectName("smallTag")
+        self.global_queue_chip = QLabel("Очередь: 0")
+        self.global_queue_chip.setObjectName("smallTag")
+        self.global_mode_chip = QLabel("Режим: manual")
+        self.global_mode_chip.setObjectName("smallTag")
+        status_row.addWidget(self.global_profiles_chip)
+        status_row.addWidget(self.global_queue_chip)
+        status_row.addWidget(self.global_mode_chip)
+        status_column.addLayout(status_row)
 
         right_col = QVBoxLayout()
         right_col.setSpacing(6)
@@ -554,7 +714,10 @@ class MainWindow(QMainWindow):
         theme_row.addWidget(theme_caption)
         theme_row.addWidget(self.theme_combo)
         right_col.addLayout(theme_row)
-        right_col.addWidget(self.status_chip)
+        status_column_widget = QWidget()
+        right_col.addWidget(status_column_widget)
+        status_column_widget.setLayout(status_column)
+        status_column_widget.setObjectName("headerStatusWrap")
 
         layout.addLayout(title_col, stretch=1)
         layout.addLayout(right_col)
@@ -570,7 +733,7 @@ class MainWindow(QMainWindow):
             self._append_log(f"Тема изменена: {display_name}")
 
     def _build_bootstrap_box(self) -> QGroupBox:
-        box = QGroupBox("Первый Запуск")
+        box = QGroupBox("Setup Wizard")
         box.setObjectName("panel")
         layout = QHBoxLayout(box)
         layout.setContentsMargins(12, 22, 12, 12)
@@ -590,7 +753,7 @@ class MainWindow(QMainWindow):
         return box
 
     def _build_profiles_box(self) -> QGroupBox:
-        box = QGroupBox("Профили Конфигураций")
+        box = QGroupBox("Profiles")
         box.setObjectName("panel")
         layout = QGridLayout(box)
         layout.setContentsMargins(12, 22, 12, 12)
@@ -631,7 +794,7 @@ class MainWindow(QMainWindow):
         return box
 
     def _build_scheduler_box(self) -> QGroupBox:
-        box = QGroupBox("Планировщик и Очередь")
+        box = QGroupBox("Session Queue")
         box.setObjectName("panel")
         layout = QGridLayout(box)
         layout.setContentsMargins(12, 22, 12, 12)
@@ -702,7 +865,7 @@ class MainWindow(QMainWindow):
         return box
 
     def _build_dashboard_box(self) -> QGroupBox:
-        box = QGroupBox("Мини-Дашборд")
+        box = QGroupBox("Performance Overview")
         box.setObjectName("panel")
         layout = QVBoxLayout(box)
         layout.setContentsMargins(12, 22, 12, 12)
@@ -738,6 +901,129 @@ class MainWindow(QMainWindow):
         layout.addLayout(chart_row)
         return box
 
+    def _build_session_window_box(self) -> QGroupBox:
+        box = QGroupBox("Session Window")
+        box.setObjectName("panel")
+        layout = QHBoxLayout(box)
+        layout.setContentsMargins(12, 22, 12, 12)
+        layout.setSpacing(12)
+
+        self.session_preview = SessionViewportFrame()
+        layout.addWidget(self.session_preview, stretch=0)
+
+        right_col = QVBoxLayout()
+        right_col.setSpacing(8)
+
+        self.session_status_label = QLabel("Статус: disconnected")
+        self.session_status_label.setObjectName("smallTag")
+        self.session_source_label = QLabel("Источник: не подключен")
+        self.session_source_label.setObjectName("smallTag")
+        self.session_mode_label = QLabel("Режим: manual")
+        self.session_mode_label.setObjectName("smallTag")
+        right_col.addWidget(self.session_status_label)
+        right_col.addWidget(self.session_source_label)
+        right_col.addWidget(self.session_mode_label)
+
+        controls = QHBoxLayout()
+        controls.setSpacing(6)
+        self.session_open_btn = QPushButton("Открыть 9:16")
+        self.session_close_btn = QPushButton("Закрыть")
+        self.session_attach_btn = QPushButton("Привязать source")
+        self.session_open_btn.clicked.connect(self._open_session_preview)
+        self.session_close_btn.clicked.connect(self._close_session_preview)
+        self.session_attach_btn.clicked.connect(self._attach_session_preview_source)
+        controls.addWidget(self.session_open_btn)
+        controls.addWidget(self.session_close_btn)
+        controls.addWidget(self.session_attach_btn)
+        right_col.addLayout(controls)
+
+        right_col.addStretch(1)
+        layout.addLayout(right_col, stretch=1)
+        return box
+
+    def _build_performance_overview_box(self) -> QGroupBox:
+        box = QGroupBox("Performance Snapshot")
+        box.setObjectName("panel")
+        layout = QGridLayout(box)
+        layout.setContentsMargins(12, 22, 12, 12)
+        layout.setHorizontalSpacing(8)
+        layout.setVerticalSpacing(8)
+
+        self.metric_watch_tile = MetricTile("Просмотры")
+        self.metric_engagement_tile = MetricTile("Вовлечение")
+        self.metric_momentum_tile = MetricTile("Momentum")
+        self.metric_core_health_tile = MetricTile("Core Health")
+
+        layout.addWidget(self.metric_watch_tile, 0, 0)
+        layout.addWidget(self.metric_engagement_tile, 0, 1)
+        layout.addWidget(self.metric_momentum_tile, 1, 0)
+        layout.addWidget(self.metric_core_health_tile, 1, 1)
+        return box
+
+    def _build_top_content_box(self) -> QGroupBox:
+        box = QGroupBox("Top Content")
+        box.setObjectName("panel")
+        layout = QVBoxLayout(box)
+        layout.setContentsMargins(12, 22, 12, 12)
+        layout.setSpacing(6)
+        self.top_content_list = QListWidget()
+        self.top_content_list.setMinimumHeight(110)
+        self.top_content_list.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        layout.addWidget(self.top_content_list)
+        return box
+
+    def _build_weak_content_box(self) -> QGroupBox:
+        box = QGroupBox("Weak Content")
+        box.setObjectName("panel")
+        layout = QVBoxLayout(box)
+        layout.setContentsMargins(12, 22, 12, 12)
+        layout.setSpacing(6)
+        self.weak_content_list = QListWidget()
+        self.weak_content_list.setMinimumHeight(96)
+        self.weak_content_list.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        layout.addWidget(self.weak_content_list)
+        return box
+
+    def _build_recommendations_box(self) -> QGroupBox:
+        box = QGroupBox("Recommendations")
+        box.setObjectName("panel")
+        layout = QVBoxLayout(box)
+        layout.setContentsMargins(12, 22, 12, 12)
+        layout.setSpacing(6)
+        self.recommendations_list = QListWidget()
+        self.recommendations_list.setMinimumHeight(96)
+        self.recommendations_list.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        layout.addWidget(self.recommendations_list)
+        return box
+
+    def _build_ai_studio_box(self) -> QGroupBox:
+        box = QGroupBox("AI Studio")
+        box.setObjectName("panel")
+        layout = QVBoxLayout(box)
+        layout.setContentsMargins(12, 22, 12, 12)
+        layout.setSpacing(8)
+
+        self.ai_perception_tag = QLabel("Perception: waiting for data")
+        self.ai_perception_tag.setObjectName("smallTag")
+        layout.addWidget(self.ai_perception_tag)
+
+        self.ai_eval_output = QPlainTextEdit()
+        self.ai_eval_output.setReadOnly(True)
+        self.ai_eval_output.setPlaceholderText("Content evaluation preview...")
+        self.ai_eval_output.setFixedHeight(92)
+        layout.addWidget(self.ai_eval_output)
+
+        self.ai_brief_output = QPlainTextEdit()
+        self.ai_brief_output.setReadOnly(True)
+        self.ai_brief_output.setPlaceholderText("Video brief preview...")
+        self.ai_brief_output.setFixedHeight(92)
+        layout.addWidget(self.ai_brief_output)
+
+        self.ai_learning_tag = QLabel("Learning summary: no feedback yet")
+        self.ai_learning_tag.setObjectName("smallTag")
+        layout.addWidget(self.ai_learning_tag)
+        return box
+
     def _refresh_environment_badge(self) -> None:
         health = inspect_environment(self.app_root)
         if health.all_ok:
@@ -764,6 +1050,7 @@ class MainWindow(QMainWindow):
             index = self.profile_combo.findData(current_name)
             if index >= 0:
                 self.profile_combo.setCurrentIndex(index)
+        self._refresh_global_badges()
 
     def _refresh_scheduler_profile_combo(self) -> None:
         current = self.schedule_profile_combo.currentData() if hasattr(self, "schedule_profile_combo") else None
@@ -888,6 +1175,7 @@ class MainWindow(QMainWindow):
             item.setData(Qt.ItemDataRole.UserRole + 1, task.enabled)
             self.schedule_list.addItem(item)
         self._refresh_queue_view()
+        self._refresh_global_badges()
 
     def _refresh_queue_view(self) -> None:
         self.queue_list.clear()
@@ -895,6 +1183,7 @@ class MainWindow(QMainWindow):
             profile_label = item.payload.get("profile_name") or "текущие"
             name = item.payload.get("name") or "Контракт"
             self.queue_list.addItem(f"{index}. [{item.source}] {name} ({profile_label})")
+        self._refresh_global_badges()
 
     def _queue_current_run(self) -> None:
         profile_name = str(self.schedule_profile_combo.currentData() or "").strip()
@@ -977,6 +1266,213 @@ class MainWindow(QMainWindow):
         self.followers_chart.set_values(snapshot.followers_series)
         self.plan_chart.set_values(snapshot.plan_priority_series)
         self.dashboard_status_label.setText(f"Последнее обновление: {datetime.now().strftime('%H:%M:%S')}")
+        self._refresh_performance_tiles(snapshot)
+        self._refresh_content_insights(snapshot, output_dir)
+        self._refresh_ai_studio(snapshot, core_root)
+        self._refresh_global_badges()
+
+    def _refresh_performance_tiles(self, snapshot) -> None:
+        rows = list(snapshot.rows or [])
+        watch_count = self._safe_int_from_metric(rows, 0)
+        comments_count = self._safe_int_from_metric(rows, 1)
+        profile_visits = self._safe_int_from_metric(rows, 2)
+        uploads = self._safe_int_from_metric(rows, 3)
+        core_steps = self._safe_int_from_metric(rows, 5)
+        core_health = self._safe_text_from_metric(rows, 6)
+
+        engagement_proxy = comments_count + profile_visits + uploads
+        momentum = "Rising" if len(snapshot.likes_series) > 1 and snapshot.likes_series[-1] >= snapshot.likes_series[0] else "Stable"
+        momentum_delta = f"{len(snapshot.likes_series)} pts" if snapshot.likes_series else "No data"
+
+        self.metric_watch_tile.set_value(str(watch_count), f"events: {len(snapshot.likes_series)}")
+        self.metric_engagement_tile.set_value(str(engagement_proxy), f"comments: {comments_count}")
+        self.metric_momentum_tile.set_value(momentum, momentum_delta)
+        self.metric_core_health_tile.set_value(core_health, f"plan steps: {core_steps}")
+
+    def _refresh_content_insights(self, snapshot, output_dir: Path) -> None:
+        stats_path = output_dir / "session_stats.jsonl"
+        content_rows: List[Dict[str, object]] = []
+        if stats_path.exists():
+            for raw in stats_path.read_text(encoding="utf-8", errors="ignore").splitlines():
+                line = raw.strip()
+                if not line:
+                    continue
+                try:
+                    payload = json.loads(line)
+                except Exception:
+                    continue
+                if not isinstance(payload, dict):
+                    continue
+                video_stats = payload.get("video_stats") if isinstance(payload.get("video_stats"), dict) else payload
+                if not isinstance(video_stats, dict):
+                    continue
+                likes = self._compact_to_float(video_stats.get("likes"))
+                views = self._compact_to_float(video_stats.get("views"))
+                if likes is None and views is None:
+                    continue
+                content_rows.append(
+                    {
+                        "label": str(video_stats.get("url") or payload.get("profile_url") or "content_item"),
+                        "likes": likes or 0.0,
+                        "views": views or 0.0,
+                    }
+                )
+
+        if not content_rows and snapshot.likes_series:
+            content_rows = [
+                {"label": f"auto_content_{idx + 1}", "likes": float(value), "views": float(value) * 10.0}
+                for idx, value in enumerate(snapshot.likes_series[-8:])
+            ]
+
+        content_rows.sort(key=lambda item: float(item.get("likes", 0.0)), reverse=True)
+
+        self.top_content_list.clear()
+        self.weak_content_list.clear()
+        self.recommendations_list.clear()
+
+        for idx, item in enumerate(content_rows[:5], start=1):
+            label = str(item.get("label", "content"))
+            likes = int(float(item.get("likes", 0.0)))
+            views = int(float(item.get("views", 0.0)))
+            self.top_content_list.addItem(f"{idx}. {label} | likes: {likes} | views: {views}")
+
+        for idx, item in enumerate(list(reversed(content_rows[-4:])), start=1):
+            label = str(item.get("label", "content"))
+            likes = int(float(item.get("likes", 0.0)))
+            self.weak_content_list.addItem(f"{idx}. {label} | weak likes: {likes}")
+
+        if content_rows:
+            best = content_rows[0]
+            worst = content_rows[-1]
+            self.recommendations_list.addItem(
+                f"Repeat angle from top item: {str(best.get('label', 'content'))[:48]}"
+            )
+            self.recommendations_list.addItem(
+                f"Rework weak item: {str(worst.get('label', 'content'))[:48]}"
+            )
+        else:
+            self.recommendations_list.addItem("Collect at least 5 content snapshots to unlock recommendations.")
+
+        self.recommendations_list.addItem("Test 2 hook variants in first 2 seconds.")
+        self.recommendations_list.addItem("Schedule strongest format in evening window.")
+
+    def _refresh_ai_studio(self, snapshot, core_root: Path) -> None:
+        perception_count = len(snapshot.likes_series) + len(snapshot.followers_series)
+        self.ai_perception_tag.setText(f"Perception summary: {perception_count} visual signals in timeline")
+
+        eval_lines = [
+            "Quality Evaluation",
+            "- Hook clarity: medium",
+            "- Text readability: good",
+            "- Scene density: controlled",
+            "- CTA presence: requires manual check",
+        ]
+        self.ai_eval_output.setPlainText("\n".join(eval_lines))
+
+        brief_lines = [
+            "Video Brief Preview",
+            "- Goal: boost completion and shares",
+            "- Format: short tactical tutorial",
+            "- Duration: 20-35 sec",
+            "- Shot plan: Hook -> Proof -> CTA",
+        ]
+        plan_path = core_root / "runtime" / "output" / "plan_bundle.json"
+        if plan_path.exists():
+            try:
+                payload = json.loads(plan_path.read_text(encoding="utf-8"))
+                if isinstance(payload, dict):
+                    steps = payload.get("steps", [])
+                    if isinstance(steps, list) and steps:
+                        brief_lines.append(f"- Core actions loaded: {len(steps)}")
+            except Exception:
+                pass
+        self.ai_brief_output.setPlainText("\n".join(brief_lines))
+
+        self.ai_learning_tag.setText(
+            f"Learning summary: likes points={len(snapshot.likes_series)}, followers points={len(snapshot.followers_series)}"
+        )
+
+    def _safe_int_from_metric(self, rows: List[tuple], index: int) -> int:
+        try:
+            value = rows[index][1]
+        except Exception:
+            return 0
+        return self._to_int(value, 0)
+
+    def _safe_text_from_metric(self, rows: List[tuple], index: int) -> str:
+        try:
+            return str(rows[index][1])
+        except Exception:
+            return "—"
+
+    def _compact_to_float(self, value: object) -> Optional[float]:
+        if value is None:
+            return None
+        text = str(value).strip().replace(" ", "").replace(",", ".")
+        if not text:
+            return None
+        number_part = "".join(ch for ch in text if ch.isdigit() or ch == ".")
+        if not number_part:
+            return None
+        try:
+            base = float(number_part)
+        except ValueError:
+            return None
+        suffix = text[-1].upper()
+        if suffix == "K":
+            base *= 1000
+        elif suffix == "M":
+            base *= 1_000_000
+        elif suffix == "B":
+            base *= 1_000_000_000
+        return base
+
+    def _refresh_global_badges(self) -> None:
+        if not hasattr(self, "sidebar_profiles_badge"):
+            return
+        profiles_count = len(self.profile_store.names())
+        queue_count = len(self.run_queue.items())
+        schedules_count = len(self.scheduler.list_tasks()) if hasattr(self, "scheduler") else 0
+        mode = "managed" if self.worker and self.worker.isRunning() else "manual"
+
+        self.sidebar_profiles_badge.setText(f"Профили: {profiles_count}")
+        self.sidebar_queue_badge.setText(f"Очередь: {queue_count}")
+        self.sidebar_schedule_badge.setText(f"Задачи: {schedules_count}")
+        self.global_profiles_chip.setText(f"Профили: {profiles_count}")
+        self.global_queue_chip.setText(f"Очередь: {queue_count}")
+        self.global_mode_chip.setText(f"Режим: {mode}")
+
+    def _focus_section(self, section_name: str) -> None:
+        widget = self._workspace_sections.get(section_name)
+        if widget is None:
+            self._append_log(f"[NAV] {section_name}")
+            return
+        if hasattr(self, "workspace_scroll"):
+            scroll_root = self.workspace_scroll.widget()
+            if scroll_root is not None and scroll_root.isAncestorOf(widget):
+                self.workspace_scroll.ensureWidgetVisible(widget, 0, 36)
+        self._append_log(f"[NAV] Переход к секции: {section_name}")
+
+    def _open_session_preview(self) -> None:
+        source = "CDP" if self.cdp_input.text().strip() else "manual"
+        self.session_preview.set_state(online=True, status="online", source=source)
+        self.session_status_label.setText("Статус: online")
+        self.session_source_label.setText(f"Источник: {source}")
+        self.session_mode_label.setText("Режим: guided")
+        self._append_log("[SESSION] Открыто окно 9:16.")
+
+    def _close_session_preview(self) -> None:
+        self.session_preview.set_state(online=False, status="offline", source="not attached")
+        self.session_status_label.setText("Статус: disconnected")
+        self.session_source_label.setText("Источник: не подключен")
+        self.session_mode_label.setText("Режим: manual")
+        self._append_log("[SESSION] Окно сессии закрыто.")
+
+    def _attach_session_preview_source(self) -> None:
+        source = self.cdp_input.text().strip() or self.profile_url_input.text().strip() or "workspace_source"
+        self.session_preview.set_state(online=True, status="attached", source=source[:44])
+        self.session_source_label.setText(f"Источник: {source[:52]}")
+        self._append_log("[SESSION] Источник привязан к session window.")
 
     def _collect_form_payload(self) -> Dict[str, object]:
         return {
@@ -1040,17 +1536,17 @@ class MainWindow(QMainWindow):
         self.strict_health_checkbox.setChecked(bool(payload.get("strict_health_check", False)))
 
     def _build_log_panel(self) -> QGroupBox:
-        box = QGroupBox("Боевой Журнал")
+        box = QGroupBox("Audit / Timeline")
         box.setObjectName("panel")
-        box.setMinimumHeight(210)
+        box.setMinimumHeight(250)
         layout = QVBoxLayout(box)
         layout.setContentsMargins(12, 22, 12, 12)
         layout.setSpacing(8)
 
         top = QHBoxLayout()
-        mode_label = QLabel("Режим: ручной контроль")
+        mode_label = QLabel("Observability feed")
         mode_label.setObjectName("smallTag")
-        clear_button = QPushButton("Очистить лог")
+        clear_button = QPushButton("Очистить таймлайн")
 
         self.log_edit = QTextEdit()
         clear_button.clicked.connect(self.log_edit.clear)
@@ -1061,12 +1557,12 @@ class MainWindow(QMainWindow):
 
         self.log_edit.setReadOnly(True)
         self.log_edit.setObjectName("logOutput")
-        self.log_edit.setPlaceholderText("Здесь появится журнал действий, ошибок и статуса профиля...")
+        self.log_edit.setPlaceholderText("Timeline событий, ошибок, AI решений и статуса профиля...")
         layout.addWidget(self.log_edit, stretch=1)
         return box
 
     def _build_connection_box(self) -> QGroupBox:
-        box = QGroupBox("Подключение")
+        box = QGroupBox("Profile Connection")
         box.setObjectName("panel")
         form = QFormLayout(box)
         form.setContentsMargins(12, 22, 12, 12)
@@ -1086,7 +1582,7 @@ class MainWindow(QMainWindow):
         return box
 
     def _build_scenario_box(self) -> QGroupBox:
-        box = QGroupBox("Контракт и Сценарии")
+        box = QGroupBox("Content Desk")
         box.setObjectName("panel")
         grid = QGridLayout(box)
         grid.setContentsMargins(12, 22, 12, 12)
@@ -1146,7 +1642,7 @@ class MainWindow(QMainWindow):
         return box
 
     def _build_upload_box(self) -> QGroupBox:
-        box = QGroupBox("Загрузка Видео")
+        box = QGroupBox("Publish Queue")
         box.setObjectName("panel")
         form = QFormLayout(box)
         form.setContentsMargins(12, 22, 12, 12)
@@ -1178,7 +1674,7 @@ class MainWindow(QMainWindow):
         return box
 
     def _build_runtime_box(self) -> QGroupBox:
-        box = QGroupBox("Параметры Выполнения")
+        box = QGroupBox("Settings")
         box.setObjectName("panel")
         form = QFormLayout(box)
         form.setContentsMargins(12, 22, 12, 12)
@@ -1235,7 +1731,7 @@ class MainWindow(QMainWindow):
         return box
 
     def _build_controls_box(self) -> QGroupBox:
-        box = QGroupBox("Управление Контрактом")
+        box = QGroupBox("Contract Controls")
         box.setObjectName("panel")
         layout = QHBoxLayout(box)
         layout.setContentsMargins(12, 20, 12, 12)
@@ -1263,7 +1759,7 @@ class MainWindow(QMainWindow):
         return legacy_core
 
     def _build_core_box(self) -> QGroupBox:
-        box = QGroupBox("Ядро Аналитики (shortform_core)")
+        box = QGroupBox("AI / Core Integration")
         box.setObjectName("panel")
         layout = QGridLayout(box)
         layout.setContentsMargins(12, 22, 12, 12)
@@ -1301,7 +1797,7 @@ class MainWindow(QMainWindow):
             QWidget#root {
                 background-color: __ROOT_BG__;
                 color: __TEXT_BASE__;
-                font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+                font-family: "Bahnschrift", "Segoe UI", sans-serif;
                 font-size: 14px;
             }
 
@@ -1310,23 +1806,30 @@ class MainWindow(QMainWindow):
                 font-size: 13px;
             }
 
+            QSplitter#workspaceSplitter::handle {
+                background: transparent;
+            }
+
             QScrollArea#mainScroll,
             QWidget#scrollContent,
-            QScrollArea#mainScroll QWidget#qt_scrollarea_viewport {
+            QScrollArea#mainScroll QWidget#qt_scrollarea_viewport,
+            QScrollArea#contextScroll,
+            QWidget#contextContent,
+            QScrollArea#contextScroll QWidget#qt_scrollarea_viewport {
                 background: transparent;
                 border: none;
             }
 
             QScrollBar:vertical {
-                width: 11px;
+                width: 10px;
                 background: transparent;
                 margin: 2px 0 2px 0;
             }
 
             QScrollBar::handle:vertical {
-                min-height: 26px;
+                min-height: 30px;
                 border-radius: 5px;
-                background: rgba(255, 255, 255, 0.28);
+                background: rgba(175, 184, 225, 0.35);
             }
 
             QScrollBar::add-line:vertical,
@@ -1341,13 +1844,17 @@ class MainWindow(QMainWindow):
 
             QFrame#headerBar {
                 border: 1px solid __HEADER_BORDER__;
-                border-radius: 12px;
+                border-radius: 22px;
                 background: qlineargradient(
                     x1: 0, y1: 0, x2: 1, y2: 1,
                     stop: 0 __HEADER_G1__,
                     stop: 0.55 __HEADER_G2__,
                     stop: 1 __HEADER_G3__
                 );
+            }
+
+            QWidget#headerStatusWrap {
+                background: transparent;
             }
 
             QLabel#medallionBadge {
@@ -1360,20 +1867,21 @@ class MainWindow(QMainWindow):
                 background-color: __MEDALLION_BG__;
                 color: __MEDALLION_TEXT__;
                 font-weight: 700;
-                font-family: "Georgia", "Palatino Linotype", serif;
+                font-family: "Bahnschrift", "Segoe UI", sans-serif;
                 font-size: 12px;
             }
 
             QLabel#titleLabel {
                 color: __TITLE__;
-                font-family: "Georgia", "Palatino Linotype", serif;
-                font-size: 23px;
+                font-family: "Bahnschrift", "Segoe UI Semibold", sans-serif;
+                font-size: 28px;
                 font-weight: 700;
+                letter-spacing: 0.6px;
             }
 
             QLabel#subtitleLabel {
                 color: __SUBTITLE__;
-                font-size: 12px;
+                font-size: 13px;
             }
 
             QLabel#themeCaption {
@@ -1383,8 +1891,8 @@ class MainWindow(QMainWindow):
 
             QComboBox#themeCombo {
                 border: 1px solid __INPUT_BORDER__;
-                border-radius: 7px;
-                padding: 6px 8px;
+                border-radius: 12px;
+                padding: 7px 10px;
                 min-width: 128px;
                 background-color: __INPUT_BG__;
                 color: __INPUT_TEXT__;
@@ -1404,11 +1912,12 @@ class MainWindow(QMainWindow):
 
             QLabel#statusChip {
                 border: 1px solid __STATUS_BORDER__;
-                border-radius: 13px;
-                padding: 6px 12px;
+                border-radius: 15px;
+                padding: 8px 14px;
                 background-color: __STATUS_BG__;
                 color: __STATUS_TEXT__;
                 font-weight: 700;
+                font-size: 13px;
             }
 
             QLabel#statusChip[state="ready"] {
@@ -1423,9 +1932,49 @@ class MainWindow(QMainWindow):
                 color: __RUNNING_TEXT__;
             }
 
+            QFrame#sidebarRail {
+                border: 1px solid __SIDEBAR_BORDER__;
+                border-radius: 22px;
+                background-color: __SIDEBAR_BG__;
+            }
+
+            QLabel#sidebarBrand {
+                color: __TEXT_BASE__;
+                font-size: 16px;
+                font-weight: 700;
+                letter-spacing: 0.6px;
+            }
+
+            QLabel#sidebarCaption {
+                color: __SIDEBAR_CAPTION__;
+                font-size: 11px;
+                letter-spacing: 0.8px;
+                font-weight: 700;
+            }
+
+            QLabel#sidebarSafety {
+                color: __SIDEBAR_CAPTION__;
+                font-size: 11px;
+            }
+
+            QPushButton#sidebarNavButton {
+                text-align: left;
+                border: 1px solid __BORDER_SUBTLE__;
+                border-radius: 14px;
+                padding: 8px 10px;
+                background-color: __SIDEBAR_ITEM_BG__;
+                color: __SIDEBAR_ITEM_TEXT__;
+                font-weight: 600;
+            }
+
+            QPushButton#sidebarNavButton:hover {
+                border-color: __BORDER_ACTIVE__;
+                background-color: __SIDEBAR_ITEM_HOVER_BG__;
+            }
+
             QFrame#dropZone {
                 border: 2px dashed __DROP_BORDER__;
-                border-radius: 12px;
+                border-radius: 20px;
                 background-color: __DROP_BG__;
             }
 
@@ -1436,8 +1985,8 @@ class MainWindow(QMainWindow):
 
             QLabel#dropTitle {
                 color: __DROP_TITLE__;
-                font-family: "Georgia", "Palatino Linotype", serif;
-                font-size: 16px;
+                font-family: "Bahnschrift", "Segoe UI Semibold", sans-serif;
+                font-size: 18px;
                 font-weight: 700;
             }
 
@@ -1448,9 +1997,9 @@ class MainWindow(QMainWindow):
 
             QGroupBox#panel {
                 border: 1px solid __PANEL_BORDER__;
-                border-radius: 11px;
-                margin-top: 4px;
-                padding-top: 10px;
+                border-radius: 20px;
+                margin-top: 8px;
+                padding-top: 12px;
                 background: qlineargradient(
                     x1: 0, y1: 0, x2: 0, y2: 1,
                     stop: 0 __PANEL_G1__,
@@ -1461,35 +2010,37 @@ class MainWindow(QMainWindow):
             QGroupBox#panel::title {
                 subcontrol-origin: padding;
                 subcontrol-position: top left;
-                left: 10px;
-                top: 0px;
-                padding: 0 8px;
+                left: 14px;
+                top: 2px;
+                padding: 0 10px;
                 background-color: __PANEL_TITLE_BG__;
                 color: __PANEL_TITLE_TEXT__;
                 font-weight: 700;
+                font-size: 12px;
+                letter-spacing: 0.4px;
             }
 
             QLabel#smallTag {
                 color: __TAG_TEXT__;
                 border: 1px solid __TAG_BORDER__;
-                border-radius: 8px;
-                padding: 4px 8px;
+                border-radius: 11px;
+                padding: 5px 9px;
                 background-color: __TAG_BG__;
             }
 
             QLineEdit, QPlainTextEdit, QTextEdit, QSpinBox, QDoubleSpinBox {
                 border: 1px solid __INPUT_BORDER__;
-                border-radius: 8px;
+                border-radius: 12px;
                 background-color: __INPUT_BG__;
                 color: __INPUT_TEXT__;
-                padding: 6px;
+                padding: 7px;
                 selection-background-color: __INPUT_FOCUS_BORDER__;
                 selection-color: __INPUT_TEXT__;
             }
 
             QPlainTextEdit#commentsEdit,
             QPlainTextEdit#profilesEdit {
-                border-radius: 12px;
+                border-radius: 16px;
                 border: 1px solid __INPUT_BORDER__;
                 background-color: __INPUT_BG__;
                 padding: 8px;
@@ -1502,18 +2053,28 @@ class MainWindow(QMainWindow):
 
             QTableWidget, QListWidget, QTimeEdit {
                 border: 1px solid __INPUT_BORDER__;
-                border-radius: 8px;
+                border-radius: 12px;
                 background-color: __INPUT_BG__;
                 color: __INPUT_TEXT__;
                 selection-background-color: __INPUT_FOCUS_BG__;
                 selection-color: __INPUT_TEXT__;
             }
 
+            QListWidget::item {
+                border-radius: 8px;
+                padding: 4px 6px;
+                margin: 2px 3px;
+            }
+
+            QListWidget::item:hover {
+                background-color: rgba(151, 124, 255, 0.14);
+            }
+
             QHeaderView::section {
                 background-color: __PANEL_TITLE_BG__;
                 color: __PANEL_TITLE_TEXT__;
                 border: 1px solid __INPUT_BORDER__;
-                padding: 4px;
+                padding: 6px;
                 font-weight: 700;
             }
 
@@ -1538,8 +2099,8 @@ class MainWindow(QMainWindow):
 
             QPushButton {
                 border: 1px solid __BUTTON_BORDER__;
-                border-radius: 8px;
-                padding: 7px 12px;
+                border-radius: 13px;
+                padding: 8px 12px;
                 color: __BUTTON_TEXT__;
                 background: qlineargradient(
                     x1: 0, y1: 0, x2: 0, y2: 1,
@@ -1606,6 +2167,35 @@ class MainWindow(QMainWindow):
                 font-family: "Consolas", "Lucida Console", monospace;
                 font-size: 13px;
             }
+
+            QFrame#metricTile {
+                border: 1px solid __BORDER_SUBTLE__;
+                border-radius: 18px;
+                background-color: __ELEVATED_PANEL__;
+            }
+
+            QLabel#metricTileTitle {
+                color: __LABEL__;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.4px;
+            }
+
+            QLabel#metricTileValue {
+                color: __TEXT_BASE__;
+                font-family: "Bahnschrift", "Segoe UI Semibold", sans-serif;
+                font-size: 25px;
+                font-weight: 700;
+            }
+
+            QLabel#metricTileDelta {
+                color: __INFO__;
+                font-size: 12px;
+            }
+
+            QWidget#sessionViewportFrame {
+                background: transparent;
+            }
             """
 
         for name, value in palette.items():
@@ -1616,6 +2206,13 @@ class MainWindow(QMainWindow):
         self.current_theme_key = theme_key
         self.medallion_badge.setText(THEME_MEDALLION.get(theme_key, "WOLF"))
         self.drop_zone.set_theme_title(THEME_DROP_TITLE.get(theme_key, "WOLF SCHOOL INTAKE"))
+        if hasattr(self, "likes_chart"):
+            self.likes_chart.color = QColor(palette["accent"])
+            self.followers_chart.color = QColor(palette["success"])
+            self.plan_chart.color = QColor(palette["info"])
+            self.likes_chart.update()
+            self.followers_chart.update()
+            self.plan_chart.update()
 
     def _on_profile_parsed(self, cdp_url: str, profile_url: str) -> None:
         self.cdp_input.setText(cdp_url)
@@ -1776,10 +2373,11 @@ class MainWindow(QMainWindow):
         self.start_button.setEnabled(not running)
         self.stop_button.setEnabled(running)
         self.status_chip.setProperty("state", "running" if running else "ready")
-        self.status_chip.setText("Контракт Активен" if running else "Ожидание")
+        self.status_chip.setText("Контракт активен" if running else "Ожидание")
         self.status_chip.style().unpolish(self.status_chip)
         self.status_chip.style().polish(self.status_chip)
         self.status_chip.update()
+        self._refresh_global_badges()
 
     def _collect_settings(self) -> BotSettings:
         return self._settings_from_payload(self._collect_form_payload())

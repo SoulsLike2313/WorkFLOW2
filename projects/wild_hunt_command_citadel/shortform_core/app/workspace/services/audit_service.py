@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..diagnostics import diag_log
 from ..models import ActionResult, ActorType, AuditLog, ErrorLog
 from ..repository import WorkspaceRepository
 
@@ -29,6 +30,17 @@ class AuditService:
             error_text=error_text,
         )
         self.repository.append_audit(event)
+        diag_log(
+            "audit_logs",
+            "audit_action",
+            payload={
+                "action_type": action_type,
+                "profile_id": profile_id,
+                "actor_type": actor_type.value,
+                "result": result.value,
+                "error_text": error_text,
+            },
+        )
         if error_text:
             self.repository.append_error(
                 ErrorLog(
@@ -37,6 +49,16 @@ class AuditService:
                     message=error_text,
                     details=action_payload or {},
                 )
+            )
+            diag_log(
+                "runtime_logs",
+                "audit_action_error",
+                level="ERROR",
+                payload={
+                    "action_type": action_type,
+                    "profile_id": profile_id,
+                    "error_text": error_text,
+                },
             )
         return event
 
@@ -50,6 +72,12 @@ class AuditService:
     ) -> ErrorLog:
         event = ErrorLog(profile_id=profile_id, source=source, message=message, details=details or {})
         self.repository.append_error(event)
+        diag_log(
+            "error_logs",
+            "error",
+            level="ERROR",
+            payload={"source": source, "profile_id": profile_id, "message": message, "details": details or {}},
+        )
         self.repository.append_audit(
             AuditLog(
                 profile_id=profile_id,
