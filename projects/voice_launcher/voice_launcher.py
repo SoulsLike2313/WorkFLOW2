@@ -1003,6 +1003,10 @@ def get_entry_mode_label(entry):
     if isinstance(entry, dict) and entry.get("mode") == "admin_task":
         return "Админ-запуск"
     if isinstance(entry, dict) and entry.get("mode") == "launcher_play":
+        if bool(entry.get("launcher_highlight", False)):
+            return "Лаунчер (preview)"
+        if bool(entry.get("launcher_dry_run", False)):
+            return "Лаунчер (dry-run)"
         return "Лаунчер + Play"
     return "Обычный"
 
