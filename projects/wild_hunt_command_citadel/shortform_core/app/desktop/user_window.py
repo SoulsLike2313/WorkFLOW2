@@ -44,7 +44,7 @@ class UserWorkspaceWindow(QMainWindow):
     def __init__(self, *, api_base_url: str) -> None:
         super().__init__()
         self.api_base_url = api_base_url.rstrip("/")
-        self.setWindowTitle("Shortform Multi-Profile Workspace")
+        self.setWindowTitle("Shortform: мультипрофильный центр")
         self.resize(1540, 920)
         self.setMinimumSize(1260, 760)
 
@@ -78,31 +78,31 @@ class UserWorkspaceWindow(QMainWindow):
 
         sidebar = QWidget()
         sidebar.setObjectName("Sidebar")
-        sidebar.setFixedWidth(252)
+        sidebar.setFixedWidth(274)
         sidebar_layout = QVBoxLayout(sidebar)
         sidebar_layout.setContentsMargins(14, 16, 14, 16)
         sidebar_layout.setSpacing(10)
 
-        app_title = QLabel("WILD HUNT COMMAND")
+        app_title = QLabel("ЦИТАДЕЛЬ ДИКОЙ ОХОТЫ")
         app_title.setObjectName("AppTitle")
-        app_subtitle = QLabel("Premium workspace for profiles, sessions, analytics and AI.")
+        app_subtitle = QLabel("Премиальный центр управления профилями, сессиями, аналитикой и AI.")
         app_subtitle.setObjectName("AppSubtitle")
         app_subtitle.setWordWrap(True)
         sidebar_layout.addWidget(app_title)
         sidebar_layout.addWidget(app_subtitle)
 
-        self._register_nav_button(sidebar_layout, "dashboard", "Dashboard")
-        self._register_nav_button(sidebar_layout, "profiles", "Profiles")
-        self._register_nav_button(sidebar_layout, "sessions", "Sessions")
-        self._register_nav_button(sidebar_layout, "content", "Content")
-        self._register_nav_button(sidebar_layout, "analytics", "Analytics")
-        self._register_nav_button(sidebar_layout, "ai_studio", "AI Studio")
-        self._register_nav_button(sidebar_layout, "audit", "Audit")
-        self._register_nav_button(sidebar_layout, "updates", "Updates")
-        self._register_nav_button(sidebar_layout, "settings", "Settings")
+        self._register_nav_button(sidebar_layout, "dashboard", "Обзор")
+        self._register_nav_button(sidebar_layout, "profiles", "Профили")
+        self._register_nav_button(sidebar_layout, "sessions", "Сессии")
+        self._register_nav_button(sidebar_layout, "content", "Контент")
+        self._register_nav_button(sidebar_layout, "analytics", "Аналитика")
+        self._register_nav_button(sidebar_layout, "ai_studio", "AI-студия")
+        self._register_nav_button(sidebar_layout, "audit", "Журнал")
+        self._register_nav_button(sidebar_layout, "updates", "Обновления")
+        self._register_nav_button(sidebar_layout, "settings", "Настройки")
         sidebar_layout.addStretch(1)
 
-        self.sidebar_status = QLabel("Runtime: initializing")
+        self.sidebar_status = QLabel("Система: инициализация")
         self.sidebar_status.setObjectName("SectionHint")
         self.sidebar_status.setWordWrap(True)
         sidebar_layout.addWidget(self.sidebar_status)
@@ -197,33 +197,33 @@ class UserWorkspaceWindow(QMainWindow):
             with self._client() as client:
                 root_health, err = self._request_json(client, "GET", "/health")
                 if err:
-                    api_errors.append(f"/health: {err}")
+                    api_errors.append(f"Ошибка /health: {err}")
                 workspace_health, err = self._request_json(client, "GET", "/workspace/health")
                 if err:
-                    api_errors.append(f"/workspace/health: {err}")
+                    api_errors.append(f"Ошибка /workspace/health: {err}")
                 readiness, err = self._request_json(client, "GET", "/workspace/readiness")
                 if err:
-                    api_errors.append(f"/workspace/readiness: {err}")
+                    api_errors.append(f"Ошибка /workspace/readiness: {err}")
                 profiles_payload, err = self._request_json(client, "GET", "/workspace/profiles")
                 if err:
-                    api_errors.append(f"/workspace/profiles: {err}")
+                    api_errors.append(f"Ошибка /workspace/profiles: {err}")
                 audit_payload, err = self._request_json(client, "GET", "/workspace/audit/log", params={"limit": 80})
                 if err:
-                    api_errors.append(f"/workspace/audit/log: {err}")
+                    api_errors.append(f"Ошибка /workspace/audit/log: {err}")
                 error_payload, err = self._request_json(client, "GET", "/workspace/audit/errors", params={"limit": 80})
                 if err:
-                    api_errors.append(f"/workspace/audit/errors: {err}")
+                    api_errors.append(f"Ошибка /workspace/audit/errors: {err}")
                 content_payload, err = self._request_json(client, "GET", "/workspace/content")
                 if err:
-                    api_errors.append(f"/workspace/content: {err}")
+                    api_errors.append(f"Ошибка /workspace/content: {err}")
                 updates_version, err = self._request_json(client, "GET", "/updates/version")
                 if err:
-                    api_errors.append(f"/updates/version: {err}")
+                    api_errors.append(f"Ошибка /updates/version: {err}")
                 updates_post_verify, err = self._request_json(client, "GET", "/updates/post-verify")
                 if err:
-                    api_errors.append(f"/updates/post-verify: {err}")
+                    api_errors.append(f"Ошибка /updates/post-verify: {err}")
         except Exception as exc:
-            self.sidebar_status.setText(f"Runtime: connection error | {exc}")
+            self.sidebar_status.setText(f"Система: ошибка подключения | {exc}")
             diag_log("runtime_logs", "desktop_refresh_exception", level="ERROR", payload={"error": str(exc)})
             return
 
@@ -263,7 +263,7 @@ class UserWorkspaceWindow(QMainWindow):
                         params={"window": "30d"},
                     )
                     if err:
-                        api_errors.append(f"analytics/performance: {err}")
+                        api_errors.append(f"Ошибка analytics/performance: {err}")
                     analytics_performance = _safe_dict(perf_payload).get("snapshot", {}) or _safe_dict(perf_payload)
 
                     top_payload, err = self._request_json(
@@ -273,7 +273,7 @@ class UserWorkspaceWindow(QMainWindow):
                         params={"window": "30d", "limit": 10},
                     )
                     if err:
-                        api_errors.append(f"analytics/top-content: {err}")
+                        api_errors.append(f"Ошибка analytics/top-content: {err}")
                     analytics_top = _safe_list(_safe_dict(top_payload).get("items"))
 
                     patterns_payload, err = self._request_json(
@@ -283,7 +283,7 @@ class UserWorkspaceWindow(QMainWindow):
                         params={"window": "30d"},
                     )
                     if err:
-                        api_errors.append(f"analytics/patterns: {err}")
+                        api_errors.append(f"Ошибка analytics/patterns: {err}")
                     analytics_patterns = _safe_list(_safe_dict(patterns_payload).get("items"))
 
                     rec_payload, err = self._request_json(
@@ -293,7 +293,7 @@ class UserWorkspaceWindow(QMainWindow):
                         params={"limit": 12},
                     )
                     if err:
-                        api_errors.append(f"analytics/recommendations/latest: {err}")
+                        api_errors.append(f"Ошибка analytics/recommendations/latest: {err}")
                     analytics_recommendations = _safe_list(_safe_dict(rec_payload).get("items"))
 
                     ai_rec_payload, err = self._request_json(
@@ -303,7 +303,7 @@ class UserWorkspaceWindow(QMainWindow):
                         params={"limit": 16},
                     )
                     if err:
-                        api_errors.append(f"ai/recommendations: {err}")
+                        api_errors.append(f"Ошибка ai/recommendations: {err}")
                     ai_recommendations = _safe_list(_safe_dict(ai_rec_payload).get("items"))
 
                     ai_learning_payload, err = self._request_json(
@@ -312,7 +312,7 @@ class UserWorkspaceWindow(QMainWindow):
                         f"/workspace/profiles/{self._selected_profile_id}/ai/learnings",
                     )
                     if err:
-                        api_errors.append(f"ai/learnings: {err}")
+                        api_errors.append(f"Ошибка ai/learnings: {err}")
                     ai_learning_summary = _safe_dict(ai_learning_payload)
 
                     bundles_payload, err = self._request_json(
@@ -322,10 +322,10 @@ class UserWorkspaceWindow(QMainWindow):
                         params={"limit": 20},
                     )
                     if err:
-                        api_errors.append(f"generation/bundles: {err}")
+                        api_errors.append(f"Ошибка generation/bundles: {err}")
                     generation_bundles = _safe_list(_safe_dict(bundles_payload).get("items"))
         except Exception as exc:
-            api_errors.append(f"profile-scoped fetch: {exc}")
+            api_errors.append(f"Ошибка загрузки данных профиля: {exc}")
 
         workspace_health_data = _safe_dict(workspace_health)
         workspace_summary = _safe_dict(workspace_health_data.get("summary"))
@@ -337,7 +337,7 @@ class UserWorkspaceWindow(QMainWindow):
         selected_profile_name = (
             str(selected_profile.get("display_name"))
             if isinstance(selected_profile, dict) and selected_profile.get("display_name")
-            else "No profile selected"
+            else "Профиль не выбран"
         )
         verification_state = str(updates_post_data.get("status", "UNKNOWN")).upper()
         if verification_state not in {"PASS", "PASS_WITH_WARNINGS", "FAIL"}:
@@ -348,7 +348,7 @@ class UserWorkspaceWindow(QMainWindow):
             alerts.extend(api_errors[:4])
         for name, ready in _safe_dict(readiness_data.get("items")).items():
             if not bool(ready):
-                alerts.append(f"{name} is not ready")
+                alerts.append(f"{name} не готов")
 
         runtime_config = {
             "mode": "user",
@@ -391,11 +391,16 @@ class UserWorkspaceWindow(QMainWindow):
 
         self._push_snapshot()
         elapsed_ms = int((datetime.now() - started).total_seconds() * 1000)
+        runtime_status_map = {
+            "ready": "готова",
+            "degraded": "ограничена",
+        }
+        runtime_status = str(readiness_data.get("status", "degraded"))
         self.sidebar_status.setText(
-            "Runtime: "
-            f"{readiness_data.get('status', 'degraded')} | "
-            f"updated={datetime.now().strftime('%H:%M:%S')} | "
-            f"fetch={elapsed_ms}ms"
+            "Система: "
+            f"{runtime_status_map.get(runtime_status, runtime_status)} | "
+            f"обновлено={datetime.now().strftime('%H:%M:%S')} | "
+            f"запрос={elapsed_ms}мс"
         )
         diag_log(
             "runtime_logs",
@@ -443,30 +448,30 @@ class UserWorkspaceWindow(QMainWindow):
         profile = next((item for item in profiles if item.get("id") == selected_id), None)
 
         if isinstance(profile, dict):
-            profile_name = str(profile.get("display_name", "Profile"))
+            profile_name = str(profile.get("display_name", "Профиль"))
             profile_meta = (
-                f"connection={profile.get('connection_type', '-')} | "
-                f"mode={profile.get('management_mode', '-')} | "
-                f"health={profile.get('health_state', '-')}"
+                f"подключение={profile.get('connection_type', '-')} | "
+                f"режим={profile.get('management_mode', '-')} | "
+                f"состояние={profile.get('health_state', '-')}"
             )
         else:
-            profile_name = "No profile selected"
-            profile_meta = "Choose a profile in the Profiles section."
+            profile_name = "Профиль не выбран"
+            profile_meta = "Выберите профиль в разделе «Профили»."
 
         recs = _safe_list(self._snapshot.get("ai_recommendations")) or _safe_list(
             self._snapshot.get("analytics_recommendations")
         )
         rec_hint = (
-            str(recs[0].get("title", recs[0].get("recommendation_type", "No recommendation yet")))
+            str(recs[0].get("title", recs[0].get("recommendation_type", "Пока без рекомендации")))
             if recs
-            else "Generate recommendations after metrics ingestion."
+            else "Сформируйте рекомендации после загрузки метрик."
         )
 
-        next_actions = "1) Add profile 2) Open session 3) Add content 4) Ingest metrics 5) Generate plan"
+        next_actions = "1) Добавить профиль 2) Открыть сессию 3) Добавить контент 4) Загрузить метрики 5) Сформировать план"
         if profiles and not self._snapshot.get("selected_session"):
-            next_actions = "Open a session for selected profile, then switch to Content or AI Studio."
+            next_actions = "Откройте сессию для выбранного профиля, затем перейдите в «Контент» или «AI-студию»."
         if self._snapshot.get("verification_state") != "PASS":
-            next_actions = "Verification gate is not PASS. Keep controlled mode and review updates/diagnostics."
+            next_actions = "Гейт верификации не PASS. Работайте в контролируемом режиме и проверьте обновления/диагностику."
 
         self.context_panel.update_context(
             profile_name=profile_name,
@@ -478,11 +483,11 @@ class UserWorkspaceWindow(QMainWindow):
 
     def create_demo_profile(self) -> None:
         payload = {
-            "display_name": f"Desktop Demo {datetime.now().strftime('%H:%M:%S')}",
+            "display_name": f"Демо-профиль {datetime.now().strftime('%H:%M:%S')}",
             "platform": "tiktok",
             "connection_type": "cdp",
             "management_mode": "guided",
-            "notes": "Created from desktop user mode.",
+            "notes": "Создано из пользовательского десктоп-режима.",
             "tags": ["desktop", "user_mode"],
         }
         try:
@@ -492,7 +497,7 @@ class UserWorkspaceWindow(QMainWindow):
             self.refresh_workspace()
             diag_log("runtime_logs", "desktop_profile_created", payload={"display_name": payload["display_name"]})
         except Exception as exc:
-            QMessageBox.critical(self, "Profile creation failed", str(exc))
+            QMessageBox.critical(self, "Не удалось создать профиль", str(exc))
 
     def check_api_health(self) -> None:
         try:
@@ -502,11 +507,11 @@ class UserWorkspaceWindow(QMainWindow):
             body = response.json()
             QMessageBox.information(
                 self,
-                "API Health",
-                f"status={body.get('status')}\ndatabase={body.get('database_path')}",
+                "Состояние API",
+                f"статус={body.get('status')}\nбаза={body.get('database_path')}",
             )
         except Exception as exc:
-            QMessageBox.critical(self, "API unavailable", str(exc))
+            QMessageBox.critical(self, "API недоступен", str(exc))
 
     def _on_page_action(self, action: str, payload: object) -> None:
         if action == "refresh":
@@ -567,22 +572,22 @@ class UserWorkspaceWindow(QMainWindow):
         if action == "open_diagnostics":
             QMessageBox.information(
                 self,
-                "Diagnostics",
-                "Diagnostics and verification artifacts are stored under runtime/.",
+                "Диагностика",
+                "Артефакты диагностики и верификации лежат в каталоге runtime/.",
             )
             return
 
     def _selected_profile_or_warn(self) -> str | None:
         if self._selected_profile_id:
             return self._selected_profile_id
-        QMessageBox.warning(self, "Profile required", "Select a profile in the Profiles panel first.")
+        QMessageBox.warning(self, "Требуется профиль", "Сначала выберите профиль на экране «Профили».")
         return None
 
     def _connect_profile(self, payload: object) -> None:
         profile_id = str(payload) if payload else self._selected_profile_or_warn()
         if not profile_id:
             return
-        cdp_url, ok = QInputDialog.getText(self, "Connect Profile", "CDP URL:", text="http://127.0.0.1:9222")
+        cdp_url, ok = QInputDialog.getText(self, "Подключение профиля", "CDP URL:", text="http://127.0.0.1:9222")
         if not ok or not cdp_url.strip():
             return
         try:
@@ -594,7 +599,7 @@ class UserWorkspaceWindow(QMainWindow):
             response.raise_for_status()
             self.refresh_workspace()
         except Exception as exc:
-            QMessageBox.critical(self, "Connect failed", str(exc))
+            QMessageBox.critical(self, "Не удалось подключить профиль", str(exc))
 
     def _open_session(self, payload: object) -> None:
         profile_id = self._selected_profile_or_warn()
@@ -614,7 +619,7 @@ class UserWorkspaceWindow(QMainWindow):
             response.raise_for_status()
             self.refresh_workspace()
         except Exception as exc:
-            QMessageBox.critical(self, "Open session failed", str(exc))
+            QMessageBox.critical(self, "Не удалось открыть сессию", str(exc))
 
     def _close_session(self, payload: object) -> None:
         profile_id = self._selected_profile_or_warn()
@@ -628,12 +633,12 @@ class UserWorkspaceWindow(QMainWindow):
             response.raise_for_status()
             self.refresh_workspace()
         except Exception as exc:
-            QMessageBox.critical(self, "Close session failed", str(exc))
+            QMessageBox.critical(self, "Не удалось закрыть сессию", str(exc))
 
     def _validate_content(self, payload: object) -> None:
         content_id = str(payload) if payload else ""
         if not content_id:
-            QMessageBox.warning(self, "Content required", "Select a content item first.")
+            QMessageBox.warning(self, "Требуется контент", "Сначала выберите элемент контента.")
             return
         try:
             with self._client() as client:
@@ -641,12 +646,12 @@ class UserWorkspaceWindow(QMainWindow):
             response.raise_for_status()
             self.refresh_workspace()
         except Exception as exc:
-            QMessageBox.critical(self, "Validation failed", str(exc))
+            QMessageBox.critical(self, "Ошибка валидации", str(exc))
 
     def _queue_content(self, payload: object) -> None:
         content_id = str(payload) if payload else ""
         if not content_id:
-            QMessageBox.warning(self, "Content required", "Select a content item first.")
+            QMessageBox.warning(self, "Требуется контент", "Сначала выберите элемент контента.")
             return
         try:
             with self._client() as client:
@@ -657,7 +662,7 @@ class UserWorkspaceWindow(QMainWindow):
             response.raise_for_status()
             self.refresh_workspace()
         except Exception as exc:
-            QMessageBox.critical(self, "Queue failed", str(exc))
+            QMessageBox.critical(self, "Не удалось поставить в очередь", str(exc))
 
     def _add_placeholder_content(self) -> None:
         profile_id = self._selected_profile_or_warn()
@@ -667,8 +672,8 @@ class UserWorkspaceWindow(QMainWindow):
         payload = {
             "profile_id": profile_id,
             "local_path": f"runtime/assets/demo_{stamp}.mp4",
-            "title": f"Demo clip {stamp}",
-            "caption": "Desktop quick-add content item.",
+            "title": f"Демо-клип {stamp}",
+            "caption": "Быстро добавленный контент из десктоп-интерфейса.",
             "hashtags": ["shortform", "workspace", "demo"],
             "duration": 17.0,
             "format_label": "talking_head",
@@ -683,7 +688,7 @@ class UserWorkspaceWindow(QMainWindow):
             self._switch_page("content")
             self.refresh_workspace()
         except Exception as exc:
-            QMessageBox.critical(self, "Add content failed", str(exc))
+            QMessageBox.critical(self, "Не удалось добавить контент", str(exc))
 
     def _ingest_demo_metrics(self) -> None:
         profile_id = self._selected_profile_or_warn()
@@ -691,7 +696,7 @@ class UserWorkspaceWindow(QMainWindow):
             return
         items = [item for item in _safe_list(self._snapshot.get("content_items")) if item.get("profile_id") == profile_id]
         if not items:
-            QMessageBox.warning(self, "No content", "Add content before importing metrics.")
+            QMessageBox.warning(self, "Нет контента", "Добавьте контент перед загрузкой метрик.")
             return
         content_id = str(items[0].get("id"))
         payload = {
@@ -711,7 +716,7 @@ class UserWorkspaceWindow(QMainWindow):
             response.raise_for_status()
             self.refresh_workspace()
         except Exception as exc:
-            QMessageBox.critical(self, "Metrics ingest failed", str(exc))
+            QMessageBox.critical(self, "Не удалось загрузить метрики", str(exc))
 
     def _generate_action_plan(self) -> None:
         profile_id = self._selected_profile_or_warn()
@@ -731,7 +736,7 @@ class UserWorkspaceWindow(QMainWindow):
             self._switch_page("analytics")
             self.refresh_workspace()
         except Exception as exc:
-            QMessageBox.critical(self, "Generate plan failed", str(exc))
+            QMessageBox.critical(self, "Не удалось сформировать план", str(exc))
 
     def _generate_ai_recommendations(self) -> None:
         profile_id = self._selected_profile_or_warn()
@@ -743,15 +748,15 @@ class UserWorkspaceWindow(QMainWindow):
             response.raise_for_status()
             self.refresh_workspace()
         except Exception as exc:
-            QMessageBox.critical(self, "AI recommendation failed", str(exc))
+            QMessageBox.critical(self, "Не удалось получить AI-рекомендации", str(exc))
 
     def _build_generation_bundle(self) -> None:
         profile_id = self._selected_profile_or_warn()
         if not profile_id:
             return
         payload = {
-            "content_goal": "Increase completion rate in next 5 posts",
-            "creative_angle": "high-intent hook and clear scene progression",
+            "content_goal": "Повысить досмотры в следующих 5 публикациях",
+            "creative_angle": "сильный хук в начале и чёткая прогрессия сцен",
             "format_target": "short_talking_head_with_overlay",
             "duration_target": "15-20s",
         }
@@ -761,13 +766,13 @@ class UserWorkspaceWindow(QMainWindow):
             response.raise_for_status()
             self.refresh_workspace()
         except Exception as exc:
-            QMessageBox.critical(self, "Generation bundle failed", str(exc))
+            QMessageBox.critical(self, "Не удалось собрать пакет генерации", str(exc))
 
     def _refresh_updates(self, *, force_post_verify: bool = False) -> None:
         manifest_path, ok = QInputDialog.getText(
             self,
-            "Update Manifest",
-            "Optional local manifest path for update check:",
+            "Манифест обновления",
+            "Необязательный путь к локальному манифесту для проверки:",
             text="",
         )
         if not ok:
@@ -787,4 +792,4 @@ class UserWorkspaceWindow(QMainWindow):
             self._switch_page("updates")
             self.refresh_workspace()
         except Exception as exc:
-            QMessageBox.critical(self, "Update check failed", str(exc))
+            QMessageBox.critical(self, "Не удалось проверить обновления", str(exc))

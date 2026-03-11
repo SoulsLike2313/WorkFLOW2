@@ -45,6 +45,62 @@ def _safe_list(value: Any) -> list[Any]:
     return value if isinstance(value, list) else []
 
 
+def _ru_gate(value: str) -> str:
+    mapping = {
+        "PASS": "PASS",
+        "PASS_WITH_WARNINGS": "PASS с предупреждениями",
+        "FAIL": "FAIL",
+        "UNKNOWN": "неизвестно",
+        "unknown": "неизвестно",
+    }
+    return mapping.get(value, value)
+
+
+def _ru_runtime_state(value: str) -> str:
+    mapping = {
+        "ready": "готово",
+        "degraded": "ограничено",
+        "open": "открыта",
+        "closed": "закрыта",
+        "active": "активна",
+        "idle": "ожидание",
+        "running": "в работе",
+        "error": "ошибка",
+    }
+    return mapping.get(value, value)
+
+
+def _ru_content_status(value: str) -> str:
+    mapping = {
+        "draft": "черновик",
+        "ready": "готово",
+        "queued": "в очереди",
+        "posted": "опубликовано",
+        "failed": "ошибка",
+    }
+    return mapping.get(value, value)
+
+
+def _ru_validation_state(value: str) -> str:
+    mapping = {
+        "pending": "ожидает",
+        "valid": "валидно",
+        "warning": "предупреждение",
+        "invalid": "невалидно",
+    }
+    return mapping.get(value, value)
+
+
+def _ru_viewport_preset(value: str) -> str:
+    mapping = {
+        "smartphone_default": "Смартфон (по умолчанию)",
+        "android_tall": "Android (высокий)",
+        "iphone_like": "iPhone-стиль",
+        "custom": "Пользовательский",
+    }
+    return mapping.get(value, value)
+
+
 class BasePage(QWidget):
     action_requested = Signal(str, object)
 
@@ -60,19 +116,19 @@ class DashboardPage(BasePage):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
 
-        layout.addWidget(SectionHeader("Dashboard", "Workspace overview and fast actions"))
+        layout.addWidget(SectionHeader("Обзор", "Сводка рабочего пространства и быстрые действия"))
 
         metrics_grid = QGridLayout()
         metrics_grid.setHorizontalSpacing(10)
         metrics_grid.setVerticalSpacing(10)
 
         self.cards = {
-            "profiles": MetricCard("Active Profiles", "0", "registered"),
-            "sessions": MetricCard("Connected Sessions", "0", "open windows"),
-            "queue": MetricCard("Queue State", "0", "items waiting"),
-            "verify": MetricCard("Verification", "--", "gate status"),
-            "ai": MetricCard("AI State", "--", "runtime readiness"),
-            "updates": MetricCard("Update State", "--", "post-verify"),
+            "profiles": MetricCard("Активные профили", "0", "зарегистрировано"),
+            "sessions": MetricCard("Подключённые сессии", "0", "открытые окна"),
+            "queue": MetricCard("Состояние очереди", "0", "элементов в ожидании"),
+            "verify": MetricCard("Верификация", "--", "статус гейта"),
+            "ai": MetricCard("Состояние AI", "--", "готовность модулей"),
+            "updates": MetricCard("Состояние обновлений", "--", "post-verify"),
         }
 
         order = ["profiles", "sessions", "queue", "verify", "ai", "updates"]
@@ -87,17 +143,17 @@ class DashboardPage(BasePage):
         quick_layout = QVBoxLayout(quick_card)
         quick_layout.setContentsMargins(12, 10, 12, 10)
         quick_layout.setSpacing(8)
-        quick_layout.addWidget(SectionHeader("Quick Actions", "Primary product flow shortcuts"))
+        quick_layout.addWidget(SectionHeader("Быстрые действия", "Ключевые шаги рабочего сценария"))
 
         row1 = QHBoxLayout()
         row2 = QHBoxLayout()
         actions = [
-            ("Add Profile", "add_profile"),
-            ("Open Session", "open_session"),
-            ("Import Metrics", "import_metrics"),
-            ("Generate Content Plan", "generate_plan"),
-            ("Open AI Studio", "open_ai_studio"),
-            ("Check Updates", "check_updates"),
+            ("Добавить профиль", "add_profile"),
+            ("Открыть сессию", "open_session"),
+            ("Загрузить метрики", "import_metrics"),
+            ("Сформировать контент-план", "generate_plan"),
+            ("Открыть AI-студию", "open_ai_studio"),
+            ("Проверить обновления", "check_updates"),
         ]
         for idx, (title, action) in enumerate(actions):
             button = QPushButton(title)
@@ -117,7 +173,7 @@ class DashboardPage(BasePage):
         audit_layout = QVBoxLayout(audit_card)
         audit_layout.setContentsMargins(12, 10, 12, 10)
         audit_layout.setSpacing(8)
-        audit_layout.addWidget(SectionHeader("Recent Audit Events", "Latest workspace timeline"))
+        audit_layout.addWidget(SectionHeader("Последние события журнала", "Актуальная лента действий"))
         self.audit_list = QListWidget()
         audit_layout.addWidget(self.audit_list)
 
@@ -125,7 +181,7 @@ class DashboardPage(BasePage):
         rec_layout = QVBoxLayout(rec_card)
         rec_layout.setContentsMargins(12, 10, 12, 10)
         rec_layout.setSpacing(8)
-        rec_layout.addWidget(SectionHeader("AI Recommendations Summary", "Top suggestions by priority"))
+        rec_layout.addWidget(SectionHeader("Сводка рекомендаций AI", "Приоритетные предложения"))
         self.rec_list = QListWidget()
         rec_layout.addWidget(self.rec_list)
 
@@ -139,36 +195,36 @@ class DashboardPage(BasePage):
         readiness = snapshot.get("workspace_readiness", {})
         updates = snapshot.get("updates", {})
 
-        self.cards["profiles"].set_data(str(summary.get("active_profiles", 0)), f"{summary.get('profile_count', 0)} total")
-        self.cards["sessions"].set_data(str(summary.get("open_session_windows", 0)), "9:16 session windows")
-        self.cards["queue"].set_data(str(summary.get("queued_content_items", 0)), "content items")
+        self.cards["profiles"].set_data(str(summary.get("active_profiles", 0)), f"{summary.get('profile_count', 0)} всего")
+        self.cards["sessions"].set_data(str(summary.get("open_session_windows", 0)), "окна формата 9:16")
+        self.cards["queue"].set_data(str(summary.get("queued_content_items", 0)), "контент-элементов")
 
         verify = str(snapshot.get("verification_state", "--"))
-        self.cards["verify"].set_data(verify, "PASS required for manual test")
+        self.cards["verify"].set_data(_ru_gate(verify), "ручной тест только при PASS")
 
         ai_ready = readiness.get("items", {}).get("ai_ready", False) if isinstance(readiness.get("items"), dict) else False
-        self.cards["ai"].set_data("ready" if ai_ready else "degraded", "assistive intelligence")
+        self.cards["ai"].set_data("готово" if ai_ready else "ограничено", "ассистивный интеллект")
 
         post_status = str(updates.get("post_verify_status", "unknown"))
-        self.cards["updates"].set_data(post_status, str(updates.get("version_label", "version unknown")))
+        self.cards["updates"].set_data(_ru_gate(post_status), str(updates.get("version_label", "версия не определена")))
 
         self.audit_list.clear()
         for item in _safe_list(snapshot.get("audit_log"))[:16]:
             self.audit_list.addItem(f"{_fmt_ts(item.get('created_at'))} | {item.get('action_type', '-') } | {item.get('result', '-')}")
         if self.audit_list.count() == 0:
-            self.audit_list.addItem("No audit events yet.")
+            self.audit_list.addItem("Событий в журнале пока нет.")
 
         self.rec_list.clear()
         recs = _safe_list(snapshot.get("analytics_recommendations"))
         ai_recs = _safe_list(snapshot.get("ai_recommendations"))
         merged = recs[:6] + ai_recs[:6]
         for item in merged[:10]:
-            title = str(item.get("title", item.get("recommendation_type", "Recommendation")))
-            rationale = str(item.get("rationale", "No rationale"))
+            title = str(item.get("title", item.get("recommendation_type", "Рекомендация")))
+            rationale = str(item.get("rationale", "Обоснование не указано"))
             confidence = item.get("confidence", "-")
-            self.rec_list.addItem(f"{title} | confidence={confidence}\n{rationale}")
+            self.rec_list.addItem(f"{title} | уверенность={confidence}\n{rationale}")
         if self.rec_list.count() == 0:
-            self.rec_list.addItem("Recommendations will appear after profile metrics are available.")
+            self.rec_list.addItem("Рекомендации появятся после загрузки метрик профиля.")
 
 
 class ProfilesPage(BasePage):
@@ -179,16 +235,16 @@ class ProfilesPage(BasePage):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
 
-        layout.addWidget(SectionHeader("Profiles", "Connection types, modes, health and quick actions"))
+        layout.addWidget(SectionHeader("Профили", "Тип подключения, режим управления, состояние и быстрые действия"))
 
         action_row = QHBoxLayout()
         for title, action, primary in [
-            ("Create Profile", "add_profile", True),
-            ("Connect Profile", "connect_profile", False),
-            ("Open Session", "open_session", True),
-            ("View Metrics", "open_analytics", False),
-            ("Open Content", "open_content", False),
-            ("Open AI", "open_ai_studio", False),
+            ("Создать профиль", "add_profile", True),
+            ("Подключить профиль", "connect_profile", False),
+            ("Открыть сессию", "open_session", True),
+            ("Открыть аналитику", "open_analytics", False),
+            ("Открыть контент", "open_content", False),
+            ("Открыть AI", "open_ai_studio", False),
         ]:
             btn = QPushButton(title)
             if primary:
@@ -199,7 +255,7 @@ class ProfilesPage(BasePage):
         layout.addLayout(action_row)
 
         self.table = QTableWidget(0, 7)
-        self.table.setHorizontalHeaderLabels(["Profile", "Platform", "Connection", "Mode", "Status", "Health", "Updated"])
+        self.table.setHorizontalHeaderLabels(["Профиль", "Платформа", "Подключение", "Режим", "Статус", "Состояние", "Обновлено"])
         self.table.verticalHeader().setVisible(False)
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
@@ -231,7 +287,7 @@ class ProfilesPage(BasePage):
         self.table.setRowCount(0)
         for row, profile in enumerate(items):
             self.table.insertRow(row)
-            name_item = QTableWidgetItem(str(profile.get("display_name", "Unknown")))
+            name_item = QTableWidgetItem(str(profile.get("display_name", "Без имени")))
             name_item.setData(Qt.ItemDataRole.UserRole, profile.get("id"))
 
             self.table.setItem(row, 0, name_item)
@@ -253,18 +309,21 @@ class SessionsPage(BasePage):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
 
-        layout.addWidget(SectionHeader("Sessions", "Premium 9:16 frame with runtime controls and health"))
+        layout.addWidget(SectionHeader("Сессии", "Премиальное окно 9:16 с управлением и статусом"))
 
         controls = QHBoxLayout()
         self.viewport = QComboBox()
-        self.viewport.addItems(["smartphone_default", "android_tall", "iphone_like", "custom"])
-        controls.addWidget(QLabel("Viewport:"))
+        self.viewport.addItem("Смартфон (по умолчанию)", "smartphone_default")
+        self.viewport.addItem("Android (высокий)", "android_tall")
+        self.viewport.addItem("iPhone-стиль", "iphone_like")
+        self.viewport.addItem("Пользовательский", "custom")
+        controls.addWidget(QLabel("Пресет окна:"))
         controls.addWidget(self.viewport)
 
-        open_btn = QPushButton("Open Session")
+        open_btn = QPushButton("Открыть сессию")
         open_btn.setObjectName("PrimaryCTA")
         open_btn.clicked.connect(lambda: self.action_requested.emit("open_session", self._payload()))
-        close_btn = QPushButton("Close Session")
+        close_btn = QPushButton("Закрыть сессию")
         close_btn.setObjectName("DangerCTA")
         close_btn.clicked.connect(lambda: self.action_requested.emit("close_session", self._payload()))
 
@@ -279,7 +338,7 @@ class SessionsPage(BasePage):
         left_layout = QVBoxLayout(left_card)
         left_layout.setContentsMargins(12, 12, 12, 12)
         left_layout.setSpacing(8)
-        left_layout.addWidget(SectionHeader("Session Registry", "Per-profile runtime state"))
+        left_layout.addWidget(SectionHeader("Реестр сессий", "Состояние выполнения по каждому профилю"))
         self.session_list = QListWidget()
         self.session_list.itemClicked.connect(self._session_clicked)
         left_layout.addWidget(self.session_list)
@@ -296,20 +355,20 @@ class SessionsPage(BasePage):
         frame_layout.setContentsMargins(14, 16, 14, 16)
         frame_layout.setSpacing(8)
 
-        self.frame_title = QLabel("9:16 Session Window")
+        self.frame_title = QLabel("Окно сессии 9:16")
         self.frame_title.setObjectName("SectionTitle")
         frame_layout.addWidget(self.frame_title)
 
-        self.frame_runtime = QLabel("No active session")
+        self.frame_runtime = QLabel("Активной сессии нет")
         self.frame_runtime.setObjectName("SectionHint")
         self.frame_runtime.setWordWrap(True)
         frame_layout.addWidget(self.frame_runtime)
 
-        self.frame_source = QLabel("source: not attached")
+        self.frame_source = QLabel("источник: не привязан")
         self.frame_source.setObjectName("SectionHint")
         frame_layout.addWidget(self.frame_source)
 
-        dummy_phone = QLabel("Mobile viewport canvas\n(9:16 preview frame)")
+        dummy_phone = QLabel("Холст мобильной сессии\n(превью 9:16)")
         dummy_phone.setAlignment(Qt.AlignmentFlag.AlignCenter)
         dummy_phone.setMinimumSize(280, 500)
         dummy_phone.setStyleSheet(
@@ -327,7 +386,7 @@ class SessionsPage(BasePage):
     def _payload(self) -> dict[str, Any]:
         return {
             "profile_id": self.property("selected_profile_id"),
-            "viewport_preset": self.viewport.currentText(),
+            "viewport_preset": self.viewport.currentData() or self.viewport.currentText(),
         }
 
     def _session_clicked(self, item: QListWidgetItem) -> None:
@@ -347,9 +406,9 @@ class SessionsPage(BasePage):
             profile_id = profile.get("id")
             session = sessions_by_profile.get(profile_id) or {}
             line = (
-                f"{profile.get('display_name', 'Unknown')} | "
-                f"state={session.get('runtime_state', 'closed')} | "
-                f"open={session.get('is_open', False)}"
+                f"{profile.get('display_name', 'Без имени')} | "
+                f"состояние={_ru_runtime_state(str(session.get('runtime_state', 'closed')))} | "
+                f"открыта={'да' if session.get('is_open', False) else 'нет'}"
             )
             item = QListWidgetItem(line)
             item.setData(Qt.ItemDataRole.UserRole, profile_id)
@@ -358,15 +417,15 @@ class SessionsPage(BasePage):
                 self.session_list.setCurrentItem(item)
 
         selected_session = snapshot.get("selected_session") or {}
-        profile_name = snapshot.get("selected_profile_name", "No profile selected")
-        self.frame_title.setText(f"9:16 Session | {profile_name}")
+        profile_name = snapshot.get("selected_profile_name", "Профиль не выбран")
+        self.frame_title.setText(f"Сессия 9:16 | {profile_name}")
         self.frame_runtime.setText(
-            f"runtime={selected_session.get('runtime_state', 'closed')} | "
-            f"is_open={selected_session.get('is_open', False)} | "
-            f"preset={selected_session.get('viewport_preset', '-') }"
+            f"состояние={_ru_runtime_state(str(selected_session.get('runtime_state', 'closed')))} | "
+            f"открыта={'да' if selected_session.get('is_open', False) else 'нет'} | "
+            f"пресет={_ru_viewport_preset(str(selected_session.get('viewport_preset', '-')))}"
         )
         self.frame_source.setText(
-            f"source={selected_session.get('attached_source_type', 'none')} "
+            f"источник={selected_session.get('attached_source_type', 'none')} "
             f"id={selected_session.get('attached_source_id', '-') }"
         )
 
@@ -378,13 +437,13 @@ class ContentPage(BasePage):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
-        layout.addWidget(SectionHeader("Content Desk", "Library, queue, validation and publish readiness"))
+        layout.addWidget(SectionHeader("Контент", "Библиотека, очередь, валидация и готовность к публикации"))
 
         summary = QHBoxLayout()
-        self.card_total = MetricCard("Library", "0", "items")
-        self.card_queue = MetricCard("Queued", "0", "ready to post")
-        self.card_ready = MetricCard("Ready", "0", "validated")
-        self.card_invalid = MetricCard("Warnings/Invalid", "0", "manual review")
+        self.card_total = MetricCard("Библиотека", "0", "элементов")
+        self.card_queue = MetricCard("В очереди", "0", "готово к постингу")
+        self.card_ready = MetricCard("Готово", "0", "прошло валидацию")
+        self.card_invalid = MetricCard("Предупр./ошибки", "0", "требует проверки")
         summary.addWidget(self.card_total)
         summary.addWidget(self.card_queue)
         summary.addWidget(self.card_ready)
@@ -392,12 +451,12 @@ class ContentPage(BasePage):
         layout.addLayout(summary)
 
         actions = QHBoxLayout()
-        add_btn = QPushButton("Add Placeholder Content")
+        add_btn = QPushButton("Добавить демо-контент")
         add_btn.setObjectName("PrimaryCTA")
         add_btn.clicked.connect(lambda: self.action_requested.emit("add_placeholder_content", None))
-        validate_btn = QPushButton("Validate Selected")
+        validate_btn = QPushButton("Проверить выбранное")
         validate_btn.clicked.connect(lambda: self.action_requested.emit("validate_content", self.selected_content_id()))
-        queue_btn = QPushButton("Queue Selected")
+        queue_btn = QPushButton("Поставить в очередь")
         queue_btn.clicked.connect(lambda: self.action_requested.emit("queue_content", self.selected_content_id()))
         actions.addWidget(add_btn)
         actions.addWidget(validate_btn)
@@ -406,7 +465,7 @@ class ContentPage(BasePage):
         layout.addLayout(actions)
 
         self.table = QTableWidget(0, 7)
-        self.table.setHorizontalHeaderLabels(["ID", "Title", "Status", "Validation", "Duration", "Topic", "Updated"])
+        self.table.setHorizontalHeaderLabels(["ID", "Название", "Статус", "Валидация", "Длительность", "Тема", "Обновлено"])
         self.table.verticalHeader().setVisible(False)
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
@@ -432,11 +491,11 @@ class ContentPage(BasePage):
         for row, item in enumerate(items):
             self.table.insertRow(row)
             self.table.setItem(row, 0, QTableWidgetItem(str(item.get("id", "-"))))
-            self.table.setItem(row, 1, QTableWidgetItem(str(item.get("title", "untitled"))))
+            self.table.setItem(row, 1, QTableWidgetItem(str(item.get("title", "без названия"))))
             status = str(item.get("status", "draft"))
             validation = str(item.get("validation_state", "pending"))
-            self.table.setItem(row, 2, QTableWidgetItem(status))
-            self.table.setItem(row, 3, QTableWidgetItem(validation))
+            self.table.setItem(row, 2, QTableWidgetItem(_ru_content_status(status)))
+            self.table.setItem(row, 3, QTableWidgetItem(_ru_validation_state(validation)))
             self.table.setItem(row, 4, QTableWidgetItem(str(item.get("duration", "-"))))
             self.table.setItem(row, 5, QTableWidgetItem(str(item.get("topic_label", "-"))))
             self.table.setItem(row, 6, QTableWidgetItem(_fmt_ts(item.get("updated_at"))))
@@ -448,10 +507,10 @@ class ContentPage(BasePage):
             if validation in {"warning", "invalid"}:
                 invalid += 1
 
-        self.card_total.set_data(str(len(items)), "content library")
-        self.card_queue.set_data(str(queued), "queue status")
-        self.card_ready.set_data(str(ready), "ready to publish")
-        self.card_invalid.set_data(str(invalid), "needs review")
+        self.card_total.set_data(str(len(items)), "контент-библиотека")
+        self.card_queue.set_data(str(queued), "состояние очереди")
+        self.card_ready.set_data(str(ready), "можно публиковать")
+        self.card_invalid.set_data(str(invalid), "нужна ручная проверка")
 
 class AnalyticsPage(BasePage):
     def __init__(self) -> None:
@@ -460,13 +519,13 @@ class AnalyticsPage(BasePage):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
-        layout.addWidget(SectionHeader("Analytics", "Performance, top content, weak signals and action plan"))
+        layout.addWidget(SectionHeader("Аналитика", "Результативность, топ-контент, слабые сигналы и план действий"))
 
         row = QHBoxLayout()
-        self.views_card = MetricCard("Views Window", "0", "profile performance")
-        self.engagement_card = MetricCard("Engagement", "0", "total engagement window")
-        self.momentum_card = MetricCard("Momentum", "0", "profile momentum score")
-        self.top_card = MetricCard("Top Content", "0", "ranked by weighted score")
+        self.views_card = MetricCard("Окно просмотров", "0", "результат профиля")
+        self.engagement_card = MetricCard("Вовлечённость", "0", "суммарно за окно")
+        self.momentum_card = MetricCard("Моментум", "0", "оценка динамики")
+        self.top_card = MetricCard("Топ-контент", "0", "ранжирование по весам")
         row.addWidget(self.views_card)
         row.addWidget(self.engagement_card)
         row.addWidget(self.momentum_card)
@@ -479,11 +538,11 @@ class AnalyticsPage(BasePage):
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(12, 10, 12, 10)
         left_layout.setSpacing(8)
-        left_layout.addWidget(SectionHeader("Top Content", "Best performers and outliers"))
+        left_layout.addWidget(SectionHeader("Топ-контент", "Лучшие ролики и выбросы"))
         self.top_list = QListWidget()
         left_layout.addWidget(self.top_list)
 
-        weak_header = SectionHeader("Weak Content Signals", "Likely causes and stop-testing candidates")
+        weak_header = SectionHeader("Слабые сигналы", "Вероятные причины и кандидаты на остановку")
         left_layout.addWidget(weak_header)
         self.weak_list = QListWidget()
         left_layout.addWidget(self.weak_list)
@@ -492,11 +551,11 @@ class AnalyticsPage(BasePage):
         right_layout = QVBoxLayout(right)
         right_layout.setContentsMargins(12, 10, 12, 10)
         right_layout.setSpacing(8)
-        right_layout.addWidget(SectionHeader("Content Patterns", "Topic, format, hooks, posting windows"))
+        right_layout.addWidget(SectionHeader("Паттерны контента", "Темы, форматы, хуки и окна публикации"))
         self.patterns_list = QListWidget()
         right_layout.addWidget(self.patterns_list)
 
-        right_layout.addWidget(SectionHeader("Action Plan Summary", "Repeat, test, stop, and next rollout"))
+        right_layout.addWidget(SectionHeader("Сводка плана действий", "Что повторить, протестировать и остановить"))
         self.plan_text = QTextEdit()
         self.plan_text.setReadOnly(True)
         right_layout.addWidget(self.plan_text)
@@ -508,21 +567,21 @@ class AnalyticsPage(BasePage):
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:
         perf = snapshot.get("analytics_performance", {}) or {}
-        self.views_card.set_data(_fmt_num(perf.get("total_views_window", 0)), perf.get("snapshot_window", "window"))
-        self.engagement_card.set_data(f"{float(perf.get('total_engagement_window', 0.0)):.2f}", "engagement window")
-        self.momentum_card.set_data(f"{float(perf.get('momentum_score', 0.0)):.2f}", "momentum score")
+        self.views_card.set_data(_fmt_num(perf.get("total_views_window", 0)), perf.get("snapshot_window", "период"))
+        self.engagement_card.set_data(f"{float(perf.get('total_engagement_window', 0.0)):.2f}", "вовлечённость за период")
+        self.momentum_card.set_data(f"{float(perf.get('momentum_score', 0.0)):.2f}", "оценка динамики")
 
         top = _safe_list(snapshot.get("analytics_top_content"))
-        self.top_card.set_data(str(len(top)), "top entries")
+        self.top_card.set_data(str(len(top)), "позиций")
 
         self.top_list.clear()
         for item in top[:10]:
             self.top_list.addItem(
-                f"{item.get('content_id', '-') } | score={float(item.get('weighted_engagement_score', 0.0)):.2f} "
-                f"| views={item.get('views', 0)}"
+                f"{item.get('content_id', '-') } | оценка={float(item.get('weighted_engagement_score', 0.0)):.2f} "
+                f"| просмотры={item.get('views', 0)}"
             )
         if self.top_list.count() == 0:
-            self.top_list.addItem("No top-content data yet.")
+            self.top_list.addItem("Пока нет данных по топ-контенту.")
 
         weak_items = []
         for item in top:
@@ -532,38 +591,38 @@ class AnalyticsPage(BasePage):
         self.weak_list.clear()
         for item in weak_items[:10]:
             self.weak_list.addItem(
-                f"{item.get('content_id', '-') } | weak score={float(item.get('weighted_engagement_score', 0.0)):.2f}"
+                f"{item.get('content_id', '-') } | слабая оценка={float(item.get('weighted_engagement_score', 0.0)):.2f}"
             )
         if self.weak_list.count() == 0:
-            self.weak_list.addItem("Weak content set is empty for current profile window.")
+            self.weak_list.addItem("Для выбранного профиля слабых роликов не найдено.")
 
         patterns = _safe_list(snapshot.get("analytics_patterns"))
         self.patterns_list.clear()
         for pattern in patterns[:12]:
             self.patterns_list.addItem(
                 f"{pattern.get('pattern_type', '-') } | {pattern.get('label', '-') } "
-                f"| confidence={float(pattern.get('confidence', 0.0)):.2f}"
+                f"| уверенность={float(pattern.get('confidence', 0.0)):.2f}"
             )
         if self.patterns_list.count() == 0:
-            self.patterns_list.addItem("Pattern extraction has not produced entries yet.")
+            self.patterns_list.addItem("Паттерны пока не выявлены.")
 
         plan = snapshot.get("analytics_action_plan")
         if isinstance(plan, dict):
             lines = [
-                f"Performance: {plan.get('performance_summary', '-')}",
+                f"Результативность: {plan.get('performance_summary', '-')}",
                 "",
-                "What worked:",
+                "Что сработало:",
             ]
             lines.extend([f"- {item}" for item in _safe_list(plan.get("top_content_findings"))])
             lines.append("")
-            lines.append("What did not work:")
+            lines.append("Что не сработало:")
             lines.extend([f"- {item}" for item in _safe_list(plan.get("weak_content_findings"))])
             lines.append("")
-            lines.append("Next actions:")
+            lines.append("Следующие шаги:")
             lines.extend([f"- {item}" for item in _safe_list(plan.get("next_actions"))])
             self.plan_text.setPlainText("\n".join(lines).strip())
         else:
-            self.plan_text.setPlainText("Action plan not generated yet. Use 'Generate Content Plan' quick action.")
+            self.plan_text.setPlainText("План действий ещё не сформирован. Используйте кнопку «Сформировать контент-план».")
 
 
 class AIStudioPage(BasePage):
@@ -574,13 +633,13 @@ class AIStudioPage(BasePage):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
 
-        layout.addWidget(SectionHeader("AI Studio", "Perception, recommendations, learning and creative briefing"))
+        layout.addWidget(SectionHeader("AI-студия", "Восприятие, рекомендации, обучение и креативные брифы"))
 
         cards = QHBoxLayout()
-        self.rec_count_card = MetricCard("Recommendations", "0", "active list")
-        self.learning_card = MetricCard("Learning Records", "0", "feedback loop")
-        self.bundle_card = MetricCard("Generation Bundles", "0", "brief pipeline")
-        self.confidence_card = MetricCard("Confidence Avg", "0.00", "recommendation confidence")
+        self.rec_count_card = MetricCard("Рекомендации", "0", "активный список")
+        self.learning_card = MetricCard("Записи обучения", "0", "feedback-цикл")
+        self.bundle_card = MetricCard("Пакеты генерации", "0", "конвейер брифов")
+        self.confidence_card = MetricCard("Средняя уверенность", "0.00", "доверие к рекомендациям")
         cards.addWidget(self.rec_count_card)
         cards.addWidget(self.learning_card)
         cards.addWidget(self.bundle_card)
@@ -588,10 +647,10 @@ class AIStudioPage(BasePage):
         layout.addLayout(cards)
 
         action_row = QHBoxLayout()
-        gen_btn = QPushButton("Generate Recommendations")
+        gen_btn = QPushButton("Сгенерировать рекомендации")
         gen_btn.setObjectName("PrimaryCTA")
         gen_btn.clicked.connect(lambda: self.action_requested.emit("generate_ai_recommendations", None))
-        bundle_btn = QPushButton("Build Generation Bundle")
+        bundle_btn = QPushButton("Собрать пакет генерации")
         bundle_btn.clicked.connect(lambda: self.action_requested.emit("build_generation_bundle", None))
         action_row.addWidget(gen_btn)
         action_row.addWidget(bundle_btn)
@@ -604,7 +663,7 @@ class AIStudioPage(BasePage):
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(12, 10, 12, 10)
         left_layout.setSpacing(8)
-        left_layout.addWidget(SectionHeader("Recommendations", "Rationale, confidence, alternatives"))
+        left_layout.addWidget(SectionHeader("Рекомендации", "Обоснование, уверенность, альтернативы"))
         self.recommendations = QListWidget()
         left_layout.addWidget(self.recommendations)
 
@@ -612,12 +671,12 @@ class AIStudioPage(BasePage):
         right_layout = QVBoxLayout(right)
         right_layout.setContentsMargins(12, 10, 12, 10)
         right_layout.setSpacing(8)
-        right_layout.addWidget(SectionHeader("Learning Summary", "What the system learned from outcomes"))
+        right_layout.addWidget(SectionHeader("Сводка обучения", "Что система узнала по результатам"))
         self.learning_summary = QTextEdit()
         self.learning_summary.setReadOnly(True)
         right_layout.addWidget(self.learning_summary)
 
-        right_layout.addWidget(SectionHeader("Generation Bundle Preview", "Video/audio/script/text preparation"))
+        right_layout.addWidget(SectionHeader("Превью пакета генерации", "Подготовка видео, аудио, сценария и текста"))
         self.bundle_list = QListWidget()
         right_layout.addWidget(self.bundle_list)
 
@@ -634,46 +693,46 @@ class AIStudioPage(BasePage):
         conf_values = [float(item.get("confidence", 0.0)) for item in recs if item.get("confidence") is not None]
         conf_avg = sum(conf_values) / len(conf_values) if conf_values else 0.0
 
-        self.rec_count_card.set_data(str(len(recs)), "ranked items")
+        self.rec_count_card.set_data(str(len(recs)), "ранжированных элементов")
         learning_count = 0
         if isinstance(learn, dict):
             learning_count = int(learn.get("record_count", 0))
-        self.learning_card.set_data(str(learning_count), "recorded outcomes")
-        self.bundle_card.set_data(str(len(bundles)), "stored bundles")
-        self.confidence_card.set_data(f"{conf_avg:.2f}", "mean confidence")
+        self.learning_card.set_data(str(learning_count), "зафиксированных исходов")
+        self.bundle_card.set_data(str(len(bundles)), "сохранённых пакетов")
+        self.confidence_card.set_data(f"{conf_avg:.2f}", "средняя уверенность")
 
         self.recommendations.clear()
         for item in recs[:16]:
             self.recommendations.addItem(
-                f"{item.get('title', item.get('recommendation_type', 'Recommendation'))} | "
-                f"priority={item.get('priority', '-') } | confidence={float(item.get('confidence', 0.0)):.2f}\n"
-                f"{item.get('rationale', 'No rationale') }"
+                f"{item.get('title', item.get('recommendation_type', 'Рекомендация'))} | "
+                f"приоритет={item.get('priority', '-') } | уверенность={float(item.get('confidence', 0.0)):.2f}\n"
+                f"{item.get('rationale', 'Обоснование не указано') }"
             )
         if self.recommendations.count() == 0:
-            self.recommendations.addItem("No AI recommendations yet. Generate recommendations for selected profile.")
+            self.recommendations.addItem("Пока нет AI-рекомендаций. Сформируйте их для выбранного профиля.")
 
         if isinstance(learn, dict):
             lines = [
-                f"Profile: {learn.get('profile_id', '-')}",
-                f"Record count: {learn.get('record_count', 0)}",
+                f"Профиль: {learn.get('profile_id', '-')}",
+                f"Количество записей: {learn.get('record_count', 0)}",
                 "",
-                "Outcome labels:",
+                "Метки исходов:",
             ]
             for key, value in dict(learn.get("outcome_breakdown", {})).items():
                 lines.append(f"- {key}: {value}")
             lines.append("")
-            lines.append("Top learnings:")
+            lines.append("Ключевые выводы:")
             for item in _safe_list(learn.get("recent_highlights"))[:8]:
                 lines.append(f"- {item}")
             self.learning_summary.setPlainText("\n".join(lines))
         else:
-            self.learning_summary.setPlainText("Learning summary unavailable for selected profile.")
+            self.learning_summary.setPlainText("Для выбранного профиля сводка обучения пока недоступна.")
 
         self.bundle_list.clear()
         for bundle in bundles[:12]:
             self.bundle_list.addItem(
-                f"{bundle.get('id', '-') } | goal={bundle.get('content_goal', '-') } | "
-                f"ready={bundle.get('generation_ready_flag', False)}"
+                f"{bundle.get('id', '-') } | цель={bundle.get('content_goal', '-') } | "
+                f"готово={'да' if bundle.get('generation_ready_flag', False) else 'нет'}"
             )
         if self.bundle_list.count() == 0:
-            self.bundle_list.addItem("No generation bundles yet.")
+            self.bundle_list.addItem("Пакеты генерации пока отсутствуют.")

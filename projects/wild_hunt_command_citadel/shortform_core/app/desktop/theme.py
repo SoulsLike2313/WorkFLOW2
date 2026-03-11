@@ -114,8 +114,9 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         text-align: left;
         padding: 12px 14px 12px 16px;
         border-radius: {r['lg']}px;
-        border: 1px solid rgba(154, 116, 255, 0.06);
-        background: rgba(255, 255, 255, 0.01);
+        border: 1px solid rgba(154, 116, 255, 0.10);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(255,255,255,0.02), stop:1 rgba(255,255,255,0.00));
         color: {c['secondary_text']};
         font-family: '{tokens.typography['title']}';
         font-size: 13px;
@@ -124,22 +125,32 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
 
     QPushButton[navButton='true']:hover {{
         background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-            stop:0 rgba(154, 116, 255, 0.20), stop:1 rgba(154, 116, 255, 0.10));
-        border-color: rgba(154, 116, 255, 0.52);
+            stop:0 rgba(154, 116, 255, 0.24), stop:1 rgba(154, 116, 255, 0.11));
+        border-color: rgba(184, 149, 255, 0.58);
         color: {c['primary_text']};
     }}
 
     QPushButton[navButton='true']:checked {{
         background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-            stop:0 rgba(154, 116, 255, 0.30), stop:1 rgba(154, 116, 255, 0.14));
+            stop:0 rgba(154, 116, 255, 0.34), stop:1 rgba(154, 116, 255, 0.15));
         border-color: {c['border_active']};
-        border-left: 2px solid rgba(208, 186, 255, 0.95);
+        border-left: 2px solid rgba(208, 186, 255, 0.88);
         color: {c['primary_text']};
         padding-left: 18px;
     }}
 
     QPushButton[navButton='true']:pressed {{
-        background: rgba(154, 116, 255, 0.28);
+        background: rgba(154, 116, 255, 0.22);
+    }}
+
+    QPushButton[navButton='true']:focus {{
+        border-color: rgba(201, 179, 255, 0.78);
+    }}
+
+    QPushButton[navButton='true']:disabled {{
+        color: rgba(193, 202, 228, 0.45);
+        border-color: rgba(154, 116, 255, 0.08);
+        background: rgba(255, 255, 255, 0.01);
     }}
 
     QWidget#TopStatusBar {{
@@ -202,46 +213,99 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     }}
 
     QPushButton {{
-        padding: 10px 14px;
-        border-radius: {r['md']}px;
-        border: 1px solid rgba(154, 116, 255, 0.22);
+        min-height: 36px;
+        padding: 8px 14px;
+        border-radius: 13px;
+        border: 1px solid rgba(154, 116, 255, 0.20);
         background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-            stop:0 #1A2439, stop:1 #131C2E);
+            stop:0 rgba(35, 49, 77, 0.94), stop:1 rgba(21, 30, 49, 0.95));
         color: {c['primary_text']};
         font-size: 12px;
         font-weight: 600;
     }}
 
     QPushButton:hover {{
-        border-color: rgba(192, 167, 255, 0.74);
+        border-color: rgba(192, 167, 255, 0.62);
         background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-            stop:0 rgba(154, 116, 255, 0.36), stop:1 rgba(154, 116, 255, 0.18));
+            stop:0 rgba(153, 121, 235, 0.30), stop:1 rgba(118, 89, 196, 0.22));
     }}
 
     QPushButton:pressed {{
-        background: rgba(154, 116, 255, 0.25);
-        padding-top: 11px;
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(115, 88, 191, 0.34), stop:1 rgba(93, 68, 158, 0.28));
+        border-color: rgba(181, 151, 255, 0.62);
+        padding-top: 9px;
+        padding-bottom: 7px;
+    }}
+
+    QPushButton:focus {{
+        border-color: rgba(205, 186, 255, 0.78);
+    }}
+
+    QPushButton:disabled {{
+        color: rgba(238, 242, 255, 0.46);
+        border-color: rgba(154, 116, 255, 0.10);
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(28, 35, 52, 0.70), stop:1 rgba(19, 24, 37, 0.74));
     }}
 
     QPushButton#PrimaryCTA {{
-        border-color: rgba(192, 167, 255, 0.88);
+        border-color: rgba(201, 179, 255, 0.84);
         background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-            stop:0 rgba(118, 84, 223, 0.96), stop:1 rgba(157, 121, 255, 0.98));
+            stop:0 rgba(120, 88, 214, 0.96), stop:1 rgba(163, 126, 248, 0.96));
         color: #FCF9FF;
         font-family: '{tokens.typography['title']}';
         font-weight: 600;
     }}
 
     QPushButton#PrimaryCTA:hover {{
-        border-color: rgba(208, 186, 255, 0.96);
+        border-color: rgba(212, 191, 255, 0.90);
         background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-            stop:0 rgba(132, 95, 235, 1.0), stop:1 rgba(172, 137, 255, 1.0));
+            stop:0 rgba(133, 99, 228, 0.98), stop:1 rgba(176, 139, 255, 0.98));
+    }}
+
+    QPushButton#PrimaryCTA:pressed {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 rgba(100, 73, 178, 0.98), stop:1 rgba(140, 108, 219, 0.98));
+    }}
+
+    QPushButton#SecondaryCTA {{
+        border-color: rgba(154, 116, 255, 0.22);
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(34, 47, 74, 0.94), stop:1 rgba(20, 29, 48, 0.94));
+        color: {c['secondary_text']};
+    }}
+
+    QPushButton#SecondaryCTA:hover {{
+        border-color: rgba(188, 160, 255, 0.62);
+        color: {c['primary_text']};
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(70, 56, 108, 0.52), stop:1 rgba(45, 36, 77, 0.40));
+    }}
+
+    QPushButton#OutlineCTA {{
+        border-color: rgba(172, 140, 255, 0.54);
+        background: rgba(22, 30, 47, 0.42);
+        color: #D8C8FF;
+    }}
+
+    QPushButton#OutlineCTA:hover {{
+        border-color: rgba(202, 177, 255, 0.80);
+        background: rgba(98, 74, 168, 0.24);
+        color: #F4EDFF;
     }}
 
     QPushButton#DangerCTA {{
         border-color: rgba(255, 110, 138, 0.65);
-        background: rgba(255, 110, 138, 0.16);
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(121, 50, 73, 0.35), stop:1 rgba(70, 31, 43, 0.32));
         color: {c['danger']};
+    }}
+
+    QPushButton#DangerCTA:hover {{
+        border-color: rgba(255, 146, 170, 0.76);
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(146, 64, 90, 0.42), stop:1 rgba(86, 38, 55, 0.36));
     }}
 
     QListWidget, QTableWidget, QTextEdit, QPlainTextEdit, QComboBox, QLineEdit {{
@@ -281,7 +345,7 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         padding: 5px 10px;
         font-size: 11px;
         font-weight: 600;
-        min-width: 84px;
+        min-width: 102px;
         border: 1px solid rgba(154, 116, 255, 0.22);
         background: rgba(255, 255, 255, 0.04);
     }}

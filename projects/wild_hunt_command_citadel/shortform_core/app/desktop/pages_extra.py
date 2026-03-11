@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from datetime import datetime
 from typing import Any
@@ -37,6 +37,29 @@ def _safe_dict(value: Any) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
+def _ru_gate(value: str) -> str:
+    mapping = {
+        "PASS": "PASS",
+        "PASS_WITH_WARNINGS": "PASS с предупреждениями",
+        "FAIL": "FAIL",
+        "unknown": "неизвестно",
+        "UNKNOWN": "неизвестно",
+    }
+    return mapping.get(value, value)
+
+
+def _ru_patch_status(value: str) -> str:
+    mapping = {
+        "applied": "применён",
+        "failed": "ошибка",
+        "rolled_back": "откачен",
+        "skipped": "пропущен",
+        "idle": "ожидание",
+        "unknown": "неизвестно",
+    }
+    return mapping.get(value, value)
+
+
 class AuditPage(BasePage):
     def __init__(self) -> None:
         super().__init__()
@@ -45,27 +68,27 @@ class AuditPage(BasePage):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
 
-        layout.addWidget(SectionHeader("Audit / Timeline", "Typed event stream for workspace, AI and updates"))
+        layout.addWidget(SectionHeader("Журнал / Таймлайн", "Типизированная лента событий рабочего пространства, AI и обновлений"))
 
         actions = QHBoxLayout()
-        refresh_btn = QPushButton("Refresh Timeline")
+        refresh_btn = QPushButton("Обновить таймлайн")
         refresh_btn.setObjectName("PrimaryCTA")
         refresh_btn.clicked.connect(lambda: self.action_requested.emit("refresh", None))
 
         self.level_filter = QComboBox()
-        self.level_filter.addItems(["all", "info", "warning", "error"])
+        self.level_filter.addItems(["Все", "Инфо", "Предупреждение", "Ошибка"])
         self.level_filter.currentTextChanged.connect(
             lambda _: self.action_requested.emit("refresh", None)
         )
 
         actions.addWidget(refresh_btn)
-        actions.addWidget(QLabel("Severity:"))
+        actions.addWidget(QLabel("Уровень:"))
         actions.addWidget(self.level_filter)
         actions.addStretch(1)
         layout.addLayout(actions)
 
         self.table = QTableWidget(0, 6)
-        self.table.setHorizontalHeaderLabels(["Time", "Actor", "Action", "Result", "Profile", "Source"])
+        self.table.setHorizontalHeaderLabels(["Время", "Источник", "Действие", "Результат", "Профиль", "Канал"])
         self.table.verticalHeader().setVisible(False)
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
@@ -76,11 +99,18 @@ class AuditPage(BasePage):
 
         self.errors = QListWidget()
         self.errors.setMinimumHeight(120)
-        layout.addWidget(SectionHeader("Recent Failures", "Error log and policy denials"))
+        layout.addWidget(SectionHeader("Последние сбои", "Ошибки и события запрета политик"))
         layout.addWidget(self.errors)
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:
-        selected = self.level_filter.currentText()
+        selected_label = self.level_filter.currentText()
+        selected_map = {
+            "Все": "all",
+            "Инфо": "info",
+            "Предупреждение": "warning",
+            "Ошибка": "error",
+        }
+        selected = selected_map.get(selected_label, "all")
         items = _safe_list(snapshot.get("audit_log"))
         errors = _safe_list(snapshot.get("error_log"))
 
@@ -88,9 +118,9 @@ class AuditPage(BasePage):
         for event in items:
             result = str(event.get("result", "-")).lower()
             level = "info"
-            if "error" in result or "denied" in result or "failed" in result:
+            if "error" in result or "ошиб" in result or "denied" in result or "failed" in result:
                 level = "error"
-            elif "warn" in result:
+            elif "warn" in result or "предупр" in result:
                 level = "warning"
 
             if selected != "all" and selected != level:
@@ -111,7 +141,7 @@ class AuditPage(BasePage):
                 f"{_fmt_ts(err.get('created_at'))} | {err.get('action_type', '-')} | {err.get('error_text', '-') }"
             )
         if self.errors.count() == 0:
-            self.errors.addItem("No recent failures.")
+            self.errors.addItem("Критичных ошибок пока нет.")
 
 
 class UpdatesPage(BasePage):
@@ -122,13 +152,13 @@ class UpdatesPage(BasePage):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
 
-        layout.addWidget(SectionHeader("Updates", "Version state, patch status and post-update verification"))
+        layout.addWidget(SectionHeader("Обновления", "Версия, состояние патча и проверка после обновления"))
 
         cards = QHBoxLayout()
-        self.current_version = MetricCard("Current Version", "-", "runtime")
-        self.available_version = MetricCard("Available", "-", "manifest")
-        self.patch_status = MetricCard("Patch Status", "-", "local patch flow")
-        self.post_verify = MetricCard("Post Verify", "-", "machine gate")
+        self.current_version = MetricCard("Текущая версия", "-", "runtime")
+        self.available_version = MetricCard("Доступно", "-", "manifest")
+        self.patch_status = MetricCard("Статус патча", "-", "локальный цикл патча")
+        self.post_verify = MetricCard("Пост-проверка", "-", "машинный гейт")
         cards.addWidget(self.current_version)
         cards.addWidget(self.available_version)
         cards.addWidget(self.patch_status)
@@ -136,10 +166,10 @@ class UpdatesPage(BasePage):
         layout.addLayout(cards)
 
         actions = QHBoxLayout()
-        check_btn = QPushButton("Check Updates")
+        check_btn = QPushButton("Проверить обновления")
         check_btn.setObjectName("PrimaryCTA")
         check_btn.clicked.connect(lambda: self.action_requested.emit("check_updates", None))
-        post_btn = QPushButton("Run Post-Verify")
+        post_btn = QPushButton("Запустить пост-проверку")
         post_btn.clicked.connect(lambda: self.action_requested.emit("run_post_verify", None))
         actions.addWidget(check_btn)
         actions.addWidget(post_btn)
@@ -150,7 +180,7 @@ class UpdatesPage(BasePage):
         details_layout = QVBoxLayout(details_card)
         details_layout.setContentsMargins(12, 10, 12, 10)
         details_layout.setSpacing(8)
-        details_layout.addWidget(SectionHeader("Update Diagnostics", "Machine-readable summary reflected for operators"))
+        details_layout.addWidget(SectionHeader("Диагностика обновлений", "Машиночитаемая сводка для оператора"))
 
         self.details = QTextEdit()
         self.details.setReadOnly(True)
@@ -165,27 +195,27 @@ class UpdatesPage(BasePage):
         patch = _safe_dict(updates.get("patch_result"))
         post = _safe_dict(updates.get("post_verify"))
 
-        current_label = str(ver.get("version_label") or ver.get("version") or "unknown")
+        current_label = str(ver.get("version_label") or ver.get("version") or "неизвестно")
         self.current_version.set_data(current_label, f"build={ver.get('build', '-')}")
 
-        avail = str(check.get("available_version") or check.get("available") or "n/a")
-        self.available_version.set_data(avail, "compat" if check.get("is_compatible") else "no manifest")
+        avail = str(check.get("available_version") or check.get("available") or "н/д")
+        self.available_version.set_data(avail, "совместимо" if check.get("is_compatible") else "манифест не найден")
 
         patch_status = str(patch.get("status") or updates.get("patch_status") or "idle")
-        self.patch_status.set_data(patch_status, str(patch.get("message", "local patch flow")))
+        self.patch_status.set_data(_ru_patch_status(patch_status), str(patch.get("message", "локальный цикл патча")))
 
         post_status = str(post.get("status") or updates.get("post_verify_status") or "unknown")
-        self.post_verify.set_data(post_status, "manual test allowed only when PASS")
+        self.post_verify.set_data(_ru_gate(post_status), "ручной тест только при PASS")
 
         lines = [
-            f"Checked at: {_fmt_ts(datetime.now().isoformat())}",
-            f"Current version: {current_label}",
-            f"Available version: {avail}",
-            f"Compatibility: {check.get('is_compatible', False)}",
-            f"Patch status: {patch_status}",
-            f"Post-verify status: {post_status}",
+            f"Проверено: {_fmt_ts(datetime.now().isoformat())}",
+            f"Текущая версия: {current_label}",
+            f"Доступная версия: {avail}",
+            f"Совместимость: {check.get('is_compatible', False)}",
+            f"Статус патча: {_ru_patch_status(patch_status)}",
+            f"Статус пост-проверки: {_ru_gate(post_status)}",
             "",
-            "Patch notes:",
+            "Примечания к патчу:",
         ]
 
         for note in _safe_list(check.get("patch_notes"))[:10]:
@@ -194,7 +224,7 @@ class UpdatesPage(BasePage):
         details = post.get("details")
         if isinstance(details, dict):
             lines.append("")
-            lines.append("Post-verify details:")
+            lines.append("Детали пост-проверки:")
             for key, value in details.items():
                 lines.append(f"- {key}: {value}")
 
@@ -209,7 +239,7 @@ class SettingsPage(BasePage):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
 
-        layout.addWidget(SectionHeader("Settings", "Workspace/runtime settings and diagnostics references"))
+        layout.addWidget(SectionHeader("Настройки", "Параметры рабочего пространства/runtime и ссылки на диагностику"))
 
         card = GlowCard(elevated=False)
         card_layout = QVBoxLayout(card)
@@ -227,19 +257,19 @@ class SettingsPage(BasePage):
         self.db_path = QLabel("-")
         self.verification_state = QLabel("-")
 
-        form.addRow("Mode:", self.mode)
-        form.addRow("API base:", self.api_base)
-        form.addRow("Data directory:", self.data_dir)
-        form.addRow("Logs directory:", self.logs_dir)
-        form.addRow("Database path:", self.db_path)
-        form.addRow("Verification gate:", self.verification_state)
+        form.addRow("Режим:", self.mode)
+        form.addRow("Базовый URL API:", self.api_base)
+        form.addRow("Каталог данных:", self.data_dir)
+        form.addRow("Каталог логов:", self.logs_dir)
+        form.addRow("Путь к БД:", self.db_path)
+        form.addRow("Гейт верификации:", self.verification_state)
 
         card_layout.addLayout(form)
 
         actions = QHBoxLayout()
-        diagnostics_btn = QPushButton("Open Diagnostics Guide")
+        diagnostics_btn = QPushButton("Открыть диагностику")
         diagnostics_btn.clicked.connect(lambda: self.action_requested.emit("open_diagnostics", None))
-        reload_btn = QPushButton("Reload Settings")
+        reload_btn = QPushButton("Обновить настройки")
         reload_btn.setObjectName("PrimaryCTA")
         reload_btn.clicked.connect(lambda: self.action_requested.emit("refresh", None))
         actions.addWidget(diagnostics_btn)
@@ -252,7 +282,8 @@ class SettingsPage(BasePage):
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:
         config = _safe_dict(snapshot.get("runtime_config"))
-        self.mode.setText(str(config.get("mode", "user")))
+        mode = str(config.get("mode", "user"))
+        self.mode.setText("Пользовательский" if mode == "user" else mode)
         self.api_base.setText(str(snapshot.get("api_base_url", "-")))
         self.data_dir.setText(str(config.get("data_dir", "runtime/data")))
         self.logs_dir.setText(str(config.get("logs_dir", "runtime/logs")))
@@ -271,7 +302,7 @@ class PlaceholderPage(BasePage):
         card_layout = QVBoxLayout(card)
         card_layout.setContentsMargins(16, 14, 16, 14)
         card_layout.setSpacing(8)
-        label = QLabel("Screen module is being connected to live data.")
+        label = QLabel("Модуль экрана подключается к живым данным.")
         label.setWordWrap(True)
         card_layout.addWidget(label)
         layout.addWidget(card)

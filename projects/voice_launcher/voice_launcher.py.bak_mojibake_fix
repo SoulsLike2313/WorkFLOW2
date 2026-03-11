@@ -71,8 +71,8 @@ except Exception:
 
 
 def get_storage_dir():
-    # Runtime-данные всегда в AppData (и для исходников, и для exe).
-    # При необходимости можно переопределить через VOICE_LAUNCHER_STORAGE_DIR.
+    # Runtime-РґР°РЅРЅС‹Рµ РІСЃРµРіРґР° РІ AppData (Рё РґР»СЏ РёСЃС…РѕРґРЅРёРєРѕРІ, Рё РґР»СЏ exe).
+    # РџСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РјРѕР¶РЅРѕ РїРµСЂРµРѕРїСЂРµРґРµР»РёС‚СЊ С‡РµСЂРµР· VOICE_LAUNCHER_STORAGE_DIR.
     env_override = os.getenv("VOICE_LAUNCHER_STORAGE_DIR", "").strip()
     if env_override:
         base = env_override
@@ -177,7 +177,7 @@ def focus_existing_app_window():
                 title = ""
             if not title:
                 continue
-            if "голосовой запускатор" in title or "voice launcher" in title:
+            if "РіРѕР»РѕСЃРѕРІРѕР№ Р·Р°РїСѓСЃРєР°С‚РѕСЂ" in title or "voice launcher" in title:
                 try:
                     if hasattr(win, "is_minimized") and win.is_minimized():
                         win.restore()
@@ -237,7 +237,7 @@ def set_last_phrase(text):
         return
     event_history.add_heard(text)
     if "last_phrase_var" in globals():
-        root.after(0, lambda: last_phrase_var.set(f"Последняя фраза: {text}"))
+        root.after(0, lambda: last_phrase_var.set(f"РџРѕСЃР»РµРґРЅСЏСЏ С„СЂР°Р·Р°: {text}"))
     if "refresh_events_panel" in globals():
         root.after(0, refresh_events_panel)
 
@@ -248,7 +248,7 @@ def set_last_action(text):
         return
     event_history.add_action(text)
     if "last_action_var" in globals():
-        root.after(0, lambda: last_action_var.set(f"Последнее действие: {text}"))
+        root.after(0, lambda: last_action_var.set(f"РџРѕСЃР»РµРґРЅРµРµ РґРµР№СЃС‚РІРёРµ: {text}"))
     if "refresh_events_panel" in globals():
         root.after(0, refresh_events_panel)
 
@@ -276,7 +276,7 @@ def append_rotating_log(path, text, lock, max_bytes=1_800_000, backups=4):
         with lock:
             try:
                 if os.path.exists(path) and os.path.getsize(path) > max_bytes:
-                    # Простейшая ротация: runtime.log -> runtime.log.1 -> ... -> runtime.log.4
+                    # РџСЂРѕСЃС‚РµР№С€Р°СЏ СЂРѕС‚Р°С†РёСЏ: runtime.log -> runtime.log.1 -> ... -> runtime.log.4
                     oldest = f"{path}.{backups}"
                     if os.path.exists(oldest):
                         os.remove(oldest)
@@ -351,16 +351,16 @@ def friendly_audio_error(exc):
     raw = str(exc or "").strip()
     low = raw.lower()
     if "could not find pyaudio" in low:
-        return "PyAudio не установлен. Установите `pyaudio` и перезапустите лаунчер."
+        return "PyAudio РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ. РЈСЃС‚Р°РЅРѕРІРёС‚Рµ `pyaudio` Рё РїРµСЂРµР·Р°РїСѓСЃС‚РёС‚Рµ Р»Р°СѓРЅС‡РµСЂ."
     if "no default input device available" in low:
-        return "В системе не выбран микрофон по умолчанию."
+        return "Р’ СЃРёСЃС‚РµРјРµ РЅРµ РІС‹Р±СЂР°РЅ РјРёРєСЂРѕС„РѕРЅ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ."
     if "invalid input device" in low:
-        return "Выбранный микрофон недоступен. Обновите список устройств и выберите рабочий."
+        return "Р’С‹Р±СЂР°РЅРЅС‹Р№ РјРёРєСЂРѕС„РѕРЅ РЅРµРґРѕСЃС‚СѓРїРµРЅ. РћР±РЅРѕРІРёС‚Рµ СЃРїРёСЃРѕРє СѓСЃС‚СЂРѕР№СЃС‚РІ Рё РІС‹Р±РµСЂРёС‚Рµ СЂР°Р±РѕС‡РёР№."
     if "unanticipated host error" in low or "device unavailable" in low:
-        return "Микрофон временно недоступен. Проверьте, не занят ли он другим приложением."
+        return "РњРёРєСЂРѕС„РѕРЅ РІСЂРµРјРµРЅРЅРѕ РЅРµРґРѕСЃС‚СѓРїРµРЅ. РџСЂРѕРІРµСЂСЊС‚Рµ, РЅРµ Р·Р°РЅСЏС‚ Р»Рё РѕРЅ РґСЂСѓРіРёРј РїСЂРёР»РѕР¶РµРЅРёРµРј."
     if raw:
         return raw
-    return "Неизвестная ошибка аудиоустройства."
+    return "РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР° Р°СѓРґРёРѕСѓСЃС‚СЂРѕР№СЃС‚РІР°."
 
 
 def audio_rms(raw_data, sample_width):
@@ -475,14 +475,14 @@ def apply_mic_gain(audio):
 
 
 def normalize_audio_for_asr(audio):
-    # Держим уровень входа в "рабочем" диапазоне: не тихо, но и без клиппинга.
+    # Р”РµСЂР¶РёРј СѓСЂРѕРІРµРЅСЊ РІС…РѕРґР° РІ "СЂР°Р±РѕС‡РµРј" РґРёР°РїР°Р·РѕРЅРµ: РЅРµ С‚РёС…Рѕ, РЅРѕ Рё Р±РµР· РєР»РёРїРїРёРЅРіР°.
     processed = apply_mic_gain(audio)
     raw16 = processed.get_raw_data(convert_width=2)
 
     try:
         rms = audio_rms(raw16, 2)
         if rms > 0:
-            target_rms = 4400  # примерно 13% от full-scale для int16
+            target_rms = 4400  # РїСЂРёРјРµСЂРЅРѕ 13% РѕС‚ full-scale РґР»СЏ int16
             auto_gain = min(3.2, max(1.0, target_rms / float(rms)))
             raw16 = apply_safe_gain(raw16, 2, auto_gain)
     except Exception:
@@ -509,7 +509,7 @@ def build_commands_prompt(max_chars=260):
 
     if not picked:
         return ""
-    return "Ключевые команды: " + ", ".join(picked)
+    return "РљР»СЋС‡РµРІС‹Рµ РєРѕРјР°РЅРґС‹: " + ", ".join(picked)
 
 
 def get_whisper_audio_source(audio):
@@ -536,18 +536,18 @@ def maybe_fix_mojibake(text):
     # РСЃРїСЂР°РІР»СЏРµС‚ С‚РёРїРёС‡РЅС‹Рµ СЃР»СѓС‡Р°Рё "Р СџРЎ..." (UTF-8, РѕС€РёР±РѕС‡РЅРѕ РїСЂРѕС‡РёС‚Р°РЅРЅС‹Р№ РєР°Рє cp1251/latin1).
     if not isinstance(text, str):
         return str(text)
-    if not any(marker in text for marker in ("Р", "С", "Ð", "Ñ")):
+    if not any(marker in text for marker in ("Р ", "РЎ", "Гђ", "Г‘")):
         return text
 
     def score(candidate):
         if not candidate:
             return 0.0
-        cyr = sum(1 for ch in candidate if "а" <= ch.lower() <= "я" or ch in "ёЁ")
+        cyr = sum(1 for ch in candidate if "Р°" <= ch.lower() <= "СЏ" or ch in "С‘РЃ")
         bad = (
             candidate.count("Р ")
-            + candidate.count("С")
-            + candidate.count("Ð")
-            + candidate.count("Ñ")
+            + candidate.count("РЎ")
+            + candidate.count("Гђ")
+            + candidate.count("Г‘")
         )
         qmarks = candidate.count("?")
         controls = sum(1 for ch in candidate if ord(ch) < 32 and ch not in "\r\n\t")
@@ -624,12 +624,12 @@ def save_json(path, data):
 def load_json(path):
     if not os.path.exists(path):
         return None
-    # utf-8-sig безопасно читает и обычный UTF-8, и UTF-8 с BOM.
+    # utf-8-sig Р±РµР·РѕРїР°СЃРЅРѕ С‡РёС‚Р°РµС‚ Рё РѕР±С‹С‡РЅС‹Р№ UTF-8, Рё UTF-8 СЃ BOM.
     try:
         with open(path, "r", encoding="utf-8-sig") as file:
             return json.load(file)
     except json.JSONDecodeError:
-        # Если JSON поврежден, сохраняем копию и не падаем.
+        # Р•СЃР»Рё JSON РїРѕРІСЂРµР¶РґРµРЅ, СЃРѕС…СЂР°РЅСЏРµРј РєРѕРїРёСЋ Рё РЅРµ РїР°РґР°РµРј.
         try:
             stamp = time.strftime("%Y%m%d_%H%M%S")
             base_name = os.path.basename(path)
@@ -653,7 +653,7 @@ def load_settings():
             if key in loaded:
                 merged[key] = loaded[key]
 
-        # Мягкая миграция со старого "агрессивного по обрезанию" профиля.
+        # РњСЏРіРєР°СЏ РјРёРіСЂР°С†РёСЏ СЃРѕ СЃС‚Р°СЂРѕРіРѕ "Р°РіСЂРµСЃСЃРёРІРЅРѕРіРѕ РїРѕ РѕР±СЂРµР·Р°РЅРёСЋ" РїСЂРѕС„РёР»СЏ.
         if int(merged.get("settings_version", 0)) < 2:
             legacy_match = all(merged.get(k) == v for k, v in LEGACY_PRESET.items())
             if legacy_match:
@@ -666,7 +666,7 @@ def load_settings():
             merged["settings_version"] = 2
             changed = True
 
-        # Миграция anti-clipping: слишком высокий gain снижает разборчивость.
+        # РњРёРіСЂР°С†РёСЏ anti-clipping: СЃР»РёС€РєРѕРј РІС‹СЃРѕРєРёР№ gain СЃРЅРёР¶Р°РµС‚ СЂР°Р·Р±РѕСЂС‡РёРІРѕСЃС‚СЊ.
         if int(merged.get("settings_version", 0)) < 3:
             if float(merged.get("mic_gain", 1.4)) > 1.8:
                 merged["mic_gain"] = 1.4
@@ -677,7 +677,7 @@ def load_settings():
             merged["settings_version"] = 3
             changed = True
 
-        # Миграция 4: убираем слишком "жесткие" параметры, которые режут короткие фразы.
+        # РњРёРіСЂР°С†РёСЏ 4: СѓР±РёСЂР°РµРј СЃР»РёС€РєРѕРј "Р¶РµСЃС‚РєРёРµ" РїР°СЂР°РјРµС‚СЂС‹, РєРѕС‚РѕСЂС‹Рµ СЂРµР¶СѓС‚ РєРѕСЂРѕС‚РєРёРµ С„СЂР°Р·С‹.
         if int(merged.get("settings_version", 0)) < 4:
             if float(merged.get("listen_timeout", 1.8)) < 1.0:
                 merged["listen_timeout"] = 1.1
@@ -691,18 +691,18 @@ def load_settings():
             merged["settings_version"] = 4
             changed = True
 
-        # Миграция 5: добавлен safe launcher режим (dry-run/highlight) и структурные каталоги.
+        # РњРёРіСЂР°С†РёСЏ 5: РґРѕР±Р°РІР»РµРЅ safe launcher СЂРµР¶РёРј (dry-run/highlight) Рё СЃС‚СЂСѓРєС‚СѓСЂРЅС‹Рµ РєР°С‚Р°Р»РѕРіРё.
         if int(merged.get("settings_version", 0)) < 5:
             merged["settings_version"] = 5
             changed = True
 
-        # Миграция 6: режим интерфейса (simple/advanced).
+        # РњРёРіСЂР°С†РёСЏ 6: СЂРµР¶РёРј РёРЅС‚РµСЂС„РµР№СЃР° (simple/advanced).
         if int(merged.get("settings_version", 0)) < 6:
             merged["simple_mode"] = bool(merged.get("simple_mode", True))
             merged["settings_version"] = 6
             changed = True
 
-        # Санитизация значений (совместимость и устойчивость).
+        # РЎР°РЅРёС‚РёР·Р°С†РёСЏ Р·РЅР°С‡РµРЅРёР№ (СЃРѕРІРјРµСЃС‚РёРјРѕСЃС‚СЊ Рё СѓСЃС‚РѕР№С‡РёРІРѕСЃС‚СЊ).
         fixed_mic_name = maybe_fix_mojibake(str(merged.get("microphone_name", ""))).strip()
         if fixed_mic_name != str(merged.get("microphone_name", "")):
             merged["microphone_name"] = fixed_mic_name
@@ -863,7 +863,7 @@ def normalize_command_entry(value):
         return None
     if mode not in ("admin_task", "launcher_play"):
         mode = "normal"
-    if play_text.lower() == "грать":
+    if play_text.lower() == "РіСЂР°С‚СЊ":
         play_text = "РРіСЂР°С‚СЊ"
     wait_timeout = max(30, min(900, wait_timeout))
     debounce_seconds = max(0.8, min(30.0, debounce_seconds))
@@ -888,14 +888,14 @@ def normalize_command_entry(value):
 
 def get_entry_mode_label(entry):
     if isinstance(entry, dict) and entry.get("mode") == "admin_task":
-        return "Админ"
+        return "РђРґРјРёРЅ"
     if isinstance(entry, dict) and entry.get("mode") == "launcher_play":
         if bool(entry.get("launcher_highlight", False)):
-            return "Лаунчер: preview"
+            return "Р›Р°СѓРЅС‡РµСЂ: preview"
         if bool(entry.get("launcher_dry_run", False)):
-            return "Лаунчер: dry-run"
-        return "Лаунчер+Play"
-    return "Обычный"
+            return "Р›Р°СѓРЅС‡РµСЂ: dry-run"
+        return "Р›Р°СѓРЅС‡РµСЂ+Play"
+    return "РћР±С‹С‡РЅС‹Р№"
 
 
 def run_schtasks(args):
@@ -917,7 +917,7 @@ def extract_error_text(result):
 def ensure_admin_task(entry):
     path = entry.get("path", "").strip()
     if not path:
-        return False, "Пустой путь к файлу"
+        return False, "РџСѓСЃС‚РѕР№ РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ"
 
     task_name = entry.get("task_name", "").strip()
     if not task_name:
@@ -941,7 +941,7 @@ def ensure_admin_task(entry):
     ]
     result = run_schtasks(command)
     if result.returncode != 0:
-        return False, extract_error_text(result) or "Не удалось создать задачу"
+        return False, extract_error_text(result) or "РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ Р·Р°РґР°С‡Сѓ"
     return True, ""
 
 
@@ -950,36 +950,36 @@ def run_admin_task(entry):
     if not task_name:
         ok, error = ensure_admin_task(entry)
         if not ok:
-            set_status("Админ-запуск не настроен")
+            set_status("РђРґРјРёРЅ-Р·Р°РїСѓСЃРє РЅРµ РЅР°СЃС‚СЂРѕРµРЅ")
             if error:
-                print("Админ-запуск:", error)
+                print("РђРґРјРёРЅ-Р·Р°РїСѓСЃРє:", error)
             return False
         task_name = entry.get("task_name", "").strip()
 
     run_result = run_schtasks(["schtasks", "/run", "/tn", task_name])
     if run_result.returncode == 0:
-        set_status(f"Запущено как админ: {os.path.basename(entry.get('path', ''))}")
-        set_last_action(f"Админ-запуск: {os.path.basename(entry.get('path', ''))}")
+        set_status(f"Р—Р°РїСѓС‰РµРЅРѕ РєР°Рє Р°РґРјРёРЅ: {os.path.basename(entry.get('path', ''))}")
+        set_last_action(f"РђРґРјРёРЅ-Р·Р°РїСѓСЃРє: {os.path.basename(entry.get('path', ''))}")
         return True
 
-    # Фолбэк: если задача отсутствует, пересоздаем и пробуем еще раз.
+    # Р¤РѕР»Р±СЌРє: РµСЃР»Рё Р·Р°РґР°С‡Р° РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚, РїРµСЂРµСЃРѕР·РґР°РµРј Рё РїСЂРѕР±СѓРµРј РµС‰Рµ СЂР°Р·.
     ok, error = ensure_admin_task(entry)
     if not ok:
-        set_status("Не удалось создать админ-задачу")
+        set_status("РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ Р°РґРјРёРЅ-Р·Р°РґР°С‡Сѓ")
         if error:
-            print("Админ-запуск:", error)
+            print("РђРґРјРёРЅ-Р·Р°РїСѓСЃРє:", error)
         return False
 
     retry_result = run_schtasks(["schtasks", "/run", "/tn", entry["task_name"]])
     if retry_result.returncode == 0:
-        set_status(f"Запущено как админ: {os.path.basename(entry.get('path', ''))}")
-        set_last_action(f"Админ-запуск: {os.path.basename(entry.get('path', ''))}")
+        set_status(f"Р—Р°РїСѓС‰РµРЅРѕ РєР°Рє Р°РґРјРёРЅ: {os.path.basename(entry.get('path', ''))}")
+        set_last_action(f"РђРґРјРёРЅ-Р·Р°РїСѓСЃРє: {os.path.basename(entry.get('path', ''))}")
         return True
 
-    err_text = extract_error_text(retry_result) or "Не удалось запустить задачу"
-    set_status("Ошибка админ-запуска (см. консоль)")
-    set_last_action("Ошибка админ-запуска")
-    print("Админ-запуск:", err_text)
+    err_text = extract_error_text(retry_result) or "РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РїСѓСЃС‚РёС‚СЊ Р·Р°РґР°С‡Сѓ"
+    set_status("РћС€РёР±РєР° Р°РґРјРёРЅ-Р·Р°РїСѓСЃРєР° (СЃРј. РєРѕРЅСЃРѕР»СЊ)")
+    set_last_action("РћС€РёР±РєР° Р°РґРјРёРЅ-Р·Р°РїСѓСЃРєР°")
+    print("РђРґРјРёРЅ-Р·Р°РїСѓСЃРє:", err_text)
     return False
 
 
@@ -1019,35 +1019,35 @@ def open_logs_folder():
             os.startfile(LOGS_DIR)
         else:
             subprocess.Popen(["xdg-open", LOGS_DIR])  # noqa: S603,S607
-        set_status("Открыта папка логов")
+        set_status("РћС‚РєСЂС‹С‚Р° РїР°РїРєР° Р»РѕРіРѕРІ")
     except Exception as exc:
-        show_warning("Логи", f"Не удалось открыть папку логов:\n{exc}")
+        show_warning("Р›РѕРіРё", f"РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ РїР°РїРєСѓ Р»РѕРіРѕРІ:\n{exc}")
 
 
 def export_profile_dialog():
     default_name = f"voice_launcher_profile_{time.strftime('%Y%m%d_%H%M%S')}.json"
     path = filedialog.asksaveasfilename(
-        title="Экспорт профиля",
+        title="Р­РєСЃРїРѕСЂС‚ РїСЂРѕС„РёР»СЏ",
         defaultextension=".json",
         initialdir=SNAPSHOTS_DIR,
         initialfile=default_name,
-        filetypes=[("JSON", "*.json"), ("Все файлы", "*.*")],
+        filetypes=[("JSON", "*.json"), ("Р’СЃРµ С„Р°Р№Р»С‹", "*.*")],
     )
     if not path:
         return
     try:
         export_profile(Path(path), commands=commands, settings=settings)
-        set_status("Профиль экспортирован")
-        set_last_action(f"Экспорт профиля: {path}")
-        show_info("Экспорт профиля", f"Профиль сохранен:\n{path}")
+        set_status("РџСЂРѕС„РёР»СЊ СЌРєСЃРїРѕСЂС‚РёСЂРѕРІР°РЅ")
+        set_last_action(f"Р­РєСЃРїРѕСЂС‚ РїСЂРѕС„РёР»СЏ: {path}")
+        show_info("Р­РєСЃРїРѕСЂС‚ РїСЂРѕС„РёР»СЏ", f"РџСЂРѕС„РёР»СЊ СЃРѕС…СЂР°РЅРµРЅ:\n{path}")
     except Exception as exc:
-        show_warning("Экспорт профиля", f"Ошибка экспорта:\n{exc}")
+        show_warning("Р­РєСЃРїРѕСЂС‚ РїСЂРѕС„РёР»СЏ", f"РћС€РёР±РєР° СЌРєСЃРїРѕСЂС‚Р°:\n{exc}")
 
 
 def import_profile_dialog():
     path = filedialog.askopenfilename(
         title="РРјРїРѕСЂС‚ РїСЂРѕС„РёР»СЏ",
-        filetypes=[("JSON", "*.json"), ("Все файлы", "*.*")],
+        filetypes=[("JSON", "*.json"), ("Р’СЃРµ С„Р°Р№Р»С‹", "*.*")],
     )
     if not path:
         return
@@ -1059,12 +1059,12 @@ def import_profile_dialog():
 
     replace_mode = messagebox.askyesno(
         "РРјРїРѕСЂС‚ РїСЂРѕС„РёР»СЏ",
-        "Полностью заменить текущие команды импортированными?\n\n"
-        "Да = заменить все\nНет = объединить",
+        "РџРѕР»РЅРѕСЃС‚СЊСЋ Р·Р°РјРµРЅРёС‚СЊ С‚РµРєСѓС‰РёРµ РєРѕРјР°РЅРґС‹ РёРјРїРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹РјРё?\n\n"
+        "Р”Р° = Р·Р°РјРµРЅРёС‚СЊ РІСЃРµ\nРќРµС‚ = РѕР±СЉРµРґРёРЅРёС‚СЊ",
     )
     apply_settings = messagebox.askyesno(
         "РРјРїРѕСЂС‚ РїСЂРѕС„РёР»СЏ",
-        "Применить аудио/ASR настройки из профиля?",
+        "РџСЂРёРјРµРЅРёС‚СЊ Р°СѓРґРёРѕ/ASR РЅР°СЃС‚СЂРѕР№РєРё РёР· РїСЂРѕС„РёР»СЏ?",
     )
 
     if replace_mode:
@@ -1090,7 +1090,7 @@ def import_profile_dialog():
 
 
 def collect_diagnostics_dialog():
-    out_dir = filedialog.askdirectory(title="Куда сохранить диагностику?", initialdir=STORAGE_DIR)
+    out_dir = filedialog.askdirectory(title="РљСѓРґР° СЃРѕС…СЂР°РЅРёС‚СЊ РґРёР°РіРЅРѕСЃС‚РёРєСѓ?", initialdir=STORAGE_DIR)
     if not out_dir:
         return
     try:
@@ -1106,11 +1106,11 @@ def collect_diagnostics_dialog():
             app_version="1.1.0-dev",
             history=event_history.snapshot(tail=35),
         )
-        set_status("Диагностика собрана")
-        set_last_action(f"Диагностика: {bundle_path}")
-        show_info("Диагностика", f"Диагностический пакет создан:\n{bundle_path}")
+        set_status("Р”РёР°РіРЅРѕСЃС‚РёРєР° СЃРѕР±СЂР°РЅР°")
+        set_last_action(f"Р”РёР°РіРЅРѕСЃС‚РёРєР°: {bundle_path}")
+        show_info("Р”РёР°РіРЅРѕСЃС‚РёРєР°", f"Р”РёР°РіРЅРѕСЃС‚РёС‡РµСЃРєРёР№ РїР°РєРµС‚ СЃРѕР·РґР°РЅ:\n{bundle_path}")
     except Exception as exc:
-        show_warning("Диагностика", f"Ошибка сбора диагностики:\n{exc}")
+        show_warning("Р”РёР°РіРЅРѕСЃС‚РёРєР°", f"РћС€РёР±РєР° СЃР±РѕСЂР° РґРёР°РіРЅРѕСЃС‚РёРєРё:\n{exc}")
 
 
 def refresh_table():
@@ -1141,7 +1141,7 @@ def asr_engine():
 def get_whisper_model():
     global whisper_model
     if WhisperModel is None:
-        raise RuntimeError("Whisper модуль не установлен")
+        raise RuntimeError("Whisper РјРѕРґСѓР»СЊ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ")
 
     if whisper_model is not None:
         return whisper_model
@@ -1151,9 +1151,9 @@ def get_whisper_model():
             return whisper_model
 
         model_size = str(settings.get("whisper_model_size", "small")).strip() or "small"
-        set_status(f"Загрузка Whisper ({model_size})... первый запуск может занять время")
+        set_status(f"Р—Р°РіСЂСѓР·РєР° Whisper ({model_size})... РїРµСЂРІС‹Р№ Р·Р°РїСѓСЃРє РјРѕР¶РµС‚ Р·Р°РЅСЏС‚СЊ РІСЂРµРјСЏ")
         whisper_model = WhisperModel(model_size, device="cpu", compute_type="int8")
-        set_status("Whisper готов")
+        set_status("Whisper РіРѕС‚РѕРІ")
         return whisper_model
 
 
@@ -1193,7 +1193,7 @@ def recognize_with_whisper(audio, command_hint=False):
         if primary:
             candidates.append(primary)
 
-        # Если распознано слишком коротко ("т", "то"), делаем вторую попытку без VAD.
+        # Р•СЃР»Рё СЂР°СЃРїРѕР·РЅР°РЅРѕ СЃР»РёС€РєРѕРј РєРѕСЂРѕС‚РєРѕ ("С‚", "С‚Рѕ"), РґРµР»Р°РµРј РІС‚РѕСЂСѓСЋ РїРѕРїС‹С‚РєСѓ Р±РµР· VAD.
         if not primary or len(primary) <= 2:
             retry = whisper_decode(
                 model,
@@ -1219,7 +1219,7 @@ def recognize_with_google(recognizer, audio):
     boosted = normalize_audio_for_asr(audio)
     candidates = []
 
-    # Сначала берем список альтернатив распознавания.
+    # РЎРЅР°С‡Р°Р»Р° Р±РµСЂРµРј СЃРїРёСЃРѕРє Р°Р»СЊС‚РµСЂРЅР°С‚РёРІ СЂР°СЃРїРѕР·РЅР°РІР°РЅРёСЏ.
     try:
         payload = recognizer.recognize_google(boosted, language="ru-RU", show_all=True)
         if isinstance(payload, dict):
@@ -1232,7 +1232,7 @@ def recognize_with_google(recognizer, audio):
     except Exception:
         pass
 
-    # Фолбэк на обычный режим, если альтернатив не пришло.
+    # Р¤РѕР»Р±СЌРє РЅР° РѕР±С‹С‡РЅС‹Р№ СЂРµР¶РёРј, РµСЃР»Рё Р°Р»СЊС‚РµСЂРЅР°С‚РёРІ РЅРµ РїСЂРёС€Р»Рѕ.
     if not candidates:
         try:
             text = normalize_phrase(recognizer.recognize_google(boosted, language="ru-RU"))
@@ -1259,7 +1259,7 @@ def warmup_asr_async():
         try:
             get_whisper_model()
         except Exception as exc:
-            set_status(f"Whisper не загрузился, используется Google ({exc})")
+            set_status(f"Whisper РЅРµ Р·Р°РіСЂСѓР·РёР»СЃСЏ, РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ Google ({exc})")
         finally:
             whisper_warmup_in_progress = False
 
@@ -1304,20 +1304,20 @@ def recognize_candidates(recognizer, audio, command_hint=False, prefer_all_engin
     whisper_candidates = []
     google_candidates = []
 
-    # Холодный старт Whisper не должен "вешать" первые команды.
+    # РҐРѕР»РѕРґРЅС‹Р№ СЃС‚Р°СЂС‚ Whisper РЅРµ РґРѕР»Р¶РµРЅ "РІРµС€Р°С‚СЊ" РїРµСЂРІС‹Рµ РєРѕРјР°РЅРґС‹.
     if engine == "whisper" and whisper_model is None and not prefer_all_engines:
         if not whisper_warmup_in_progress:
             warmup_asr_async()
         google_candidates = recognize_with_google(recognizer, audio)
         if google_candidates:
             log_asr("cold-start fallback: used Google while Whisper warms up")
-            set_asr_status("ASR: Google (Whisper прогревается)")
+            set_asr_status("ASR: Google (Whisper РїСЂРѕРіСЂРµРІР°РµС‚СЃСЏ)")
             return google_candidates
         if whisper_warmup_in_progress:
-            set_asr_status("ASR: ожидание Whisper...")
+            set_asr_status("ASR: РѕР¶РёРґР°РЅРёРµ Whisper...")
             return []
 
-    # Основной движок.
+    # РћСЃРЅРѕРІРЅРѕР№ РґРІРёР¶РѕРє.
     if engine == "whisper" or prefer_all_engines:
         try:
             whisper_candidates = recognize_with_whisper(audio, command_hint=command_hint)
@@ -1327,10 +1327,10 @@ def recognize_candidates(recognizer, audio, command_hint=False, prefer_all_engin
         except Exception as exc:
             now = time.time()
             if now - last_asr_error_ts > 3.0:
-                set_status("Whisper недоступен: используем Google")
+                set_status("Whisper РЅРµРґРѕСЃС‚СѓРїРµРЅ: РёСЃРїРѕР»СЊР·СѓРµРј Google")
                 log_asr(f"Whisper fallback reason: {exc}")
                 last_asr_error_ts = now
-            set_asr_status("ASR: Google (fallback после ошибки Whisper)")
+            set_asr_status("ASR: Google (fallback РїРѕСЃР»Рµ РѕС€РёР±РєРё Whisper)")
 
     google_candidates = recognize_with_google(recognizer, audio)
     if google_candidates and engine == "google" and not prefer_all_engines:
@@ -1347,7 +1347,7 @@ def recognize_candidates(recognizer, audio, command_hint=False, prefer_all_engin
 
 
 def consonant_skeleton(text):
-    vowels = set("аеёиоуыэюяьъ ")
+    vowels = set("Р°РµС‘РёРѕСѓС‹СЌСЋСЏСЊСЉ ")
     return "".join(ch for ch in text if ch not in vowels)
 
 
@@ -1371,13 +1371,13 @@ def command_match_score(candidate, key):
     if candidate in key or key in candidate:
         score = max(score, 0.60 + 0.34 * overlap)
 
-    # Для случаев "та" -> "танки", "з" -> "запрет".
+    # Р”Р»СЏ СЃР»СѓС‡Р°РµРІ "С‚Р°" -> "С‚Р°РЅРєРё", "Р·" -> "Р·Р°РїСЂРµС‚".
     if len(candidate) <= 2 and key.startswith(candidate):
         score = max(score, 0.78)
     elif len(candidate) <= 2 and candidate in key:
         score = max(score, 0.66)
 
-    # Фонетический фолбэк по "скелету" согласных.
+    # Р¤РѕРЅРµС‚РёС‡РµСЃРєРёР№ С„РѕР»Р±СЌРє РїРѕ "СЃРєРµР»РµС‚Сѓ" СЃРѕРіР»Р°СЃРЅС‹С….
     c_skel = consonant_skeleton(candidate)
     k_skel = consonant_skeleton(key)
     if c_skel and k_skel:
@@ -1386,7 +1386,7 @@ def command_match_score(candidate, key):
         if len(c_skel) <= 2 and k_skel.startswith(c_skel):
             score = max(score, 0.74)
 
-    # Для очень коротких кусков усиливаем штраф, если первая буква не совпадает.
+    # Р”Р»СЏ РѕС‡РµРЅСЊ РєРѕСЂРѕС‚РєРёС… РєСѓСЃРєРѕРІ СѓСЃРёР»РёРІР°РµРј С€С‚СЂР°С„, РµСЃР»Рё РїРµСЂРІР°СЏ Р±СѓРєРІР° РЅРµ СЃРѕРІРїР°РґР°РµС‚.
     if candidate and key and len(candidate) <= 2 and candidate[0] != key[0]:
         score *= 0.62
 
@@ -1441,11 +1441,11 @@ def save_mapping(
     )
     if not result.ok:
         if result.code == "phrase_conflict":
-            messagebox.showwarning("Похожая команда", result.message)
+            messagebox.showwarning("РџРѕС…РѕР¶Р°СЏ РєРѕРјР°РЅРґР°", result.message)
         elif result.code in ("empty_phrase", "empty_path"):
-            messagebox.showinfo("Сохранение команды", result.message)
+            messagebox.showinfo("РЎРѕС…СЂР°РЅРµРЅРёРµ РєРѕРјР°РЅРґС‹", result.message)
         else:
-            messagebox.showwarning("Сохранение команды", result.message)
+            messagebox.showwarning("РЎРѕС…СЂР°РЅРµРЅРёРµ РєРѕРјР°РЅРґС‹", result.message)
         return False
 
     entry = result.entry or {}
@@ -1454,9 +1454,9 @@ def save_mapping(
         ok, error = ensure_admin_task(entry)
         if not ok:
             messagebox.showwarning(
-                "Админ-запуск",
-                "Не удалось создать задачу с повышенными правами.\n"
-                "Запустите лаунчер от имени администратора и повторите.\n\n"
+                "РђРґРјРёРЅ-Р·Р°РїСѓСЃРє",
+                "РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ Р·Р°РґР°С‡Сѓ СЃ РїРѕРІС‹С€РµРЅРЅС‹РјРё РїСЂР°РІР°РјРё.\n"
+                "Р—Р°РїСѓСЃС‚РёС‚Рµ Р»Р°СѓРЅС‡РµСЂ РѕС‚ РёРјРµРЅРё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР° Рё РїРѕРІС‚РѕСЂРёС‚Рµ.\n\n"
                 f"{error}",
             )
             if phrase in commands:
@@ -1465,24 +1465,24 @@ def save_mapping(
 
     save_commands()
     refresh_table()
-    set_status(f"Сохранено: '{phrase}' ({get_entry_mode_label(entry)})")
-    set_last_action(f"Сохранена команда: {phrase}")
+    set_status(f"РЎРѕС…СЂР°РЅРµРЅРѕ: '{phrase}' ({get_entry_mode_label(entry)})")
+    set_last_action(f"РЎРѕС…СЂР°РЅРµРЅР° РєРѕРјР°РЅРґР°: {phrase}")
     log_runtime(f"Command added/updated: phrase='{phrase}' mode={entry.get('mode')} path='{path}'")
     return True
 
 
 def add_file_manual():
-    path = filedialog.askopenfilename(title="Выберите файл")
+    path = filedialog.askopenfilename(title="Р’С‹Р±РµСЂРёС‚Рµ С„Р°Р№Р»")
     if not path:
         return
 
-    phrase = simpledialog.askstring("Фраза", "Введите ключевую фразу:")
+    phrase = simpledialog.askstring("Р¤СЂР°Р·Р°", "Р’РІРµРґРёС‚Рµ РєР»СЋС‡РµРІСѓСЋ С„СЂР°Р·Сѓ:")
     if phrase is None:
         return
 
     use_admin = messagebox.askyesno(
-        "Режим запуска",
-        "Запускать эту команду как администратор (через Планировщик задач)?",
+        "Р РµР¶РёРј Р·Р°РїСѓСЃРєР°",
+        "Р—Р°РїСѓСЃРєР°С‚СЊ СЌС‚Сѓ РєРѕРјР°РЅРґСѓ РєР°Рє Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ (С‡РµСЂРµР· РџР»Р°РЅРёСЂРѕРІС‰РёРє Р·Р°РґР°С‡)?",
     )
 
     launcher_play = False
@@ -1495,29 +1495,29 @@ def add_file_manual():
 
     if not use_admin:
         launcher_play = messagebox.askyesno(
-            "Лаунчер игры",
+            "Р›Р°СѓРЅС‡РµСЂ РёРіСЂС‹",
             "Р­С‚Рѕ Р»Р°СѓРЅС‡РµСЂ? Р–РґР°С‚СЊ Р°РєС‚РёРІРЅСѓСЋ РєРЅРѕРїРєСѓ 'РРіСЂР°С‚СЊ' Рё РЅР°Р¶РёРјР°С‚СЊ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё?",
         )
         if launcher_play:
             custom_play = simpledialog.askstring(
-                "Текст кнопки",
-                "Текст кнопки запуска в лаунчере:",
+                "РўРµРєСЃС‚ РєРЅРѕРїРєРё",
+                "РўРµРєСЃС‚ РєРЅРѕРїРєРё Р·Р°РїСѓСЃРєР° РІ Р»Р°СѓРЅС‡РµСЂРµ:",
                 initialvalue="РРіСЂР°С‚СЊ",
             )
             if custom_play and custom_play.strip():
                 play_text = custom_play.strip()
 
             custom_title = simpledialog.askstring(
-                "Окно лаунчера",
-                "Часть заголовка окна (необязательно, для точности):",
+                "РћРєРЅРѕ Р»Р°СѓРЅС‡РµСЂР°",
+                "Р§Р°СЃС‚СЊ Р·Р°РіРѕР»РѕРІРєР° РѕРєРЅР° (РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ, РґР»СЏ С‚РѕС‡РЅРѕСЃС‚Рё):",
                 initialvalue="",
             )
             if custom_title:
                 window_title = custom_title.strip()
 
             custom_wait = simpledialog.askinteger(
-                "Ожидание (сек)",
-                "Сколько максимум ждать активации кнопки?",
+                "РћР¶РёРґР°РЅРёРµ (СЃРµРє)",
+                "РЎРєРѕР»СЊРєРѕ РјР°РєСЃРёРјСѓРј Р¶РґР°С‚СЊ Р°РєС‚РёРІР°С†РёРё РєРЅРѕРїРєРё?",
                 initialvalue=240,
                 minvalue=30,
                 maxvalue=900,
@@ -1526,12 +1526,12 @@ def add_file_manual():
                 wait_timeout = int(custom_wait)
 
             launcher_dry_run = messagebox.askyesno(
-                "Безопасный режим",
-                "Включить dry-run (проверка без клика) для этой команды?",
+                "Р‘РµР·РѕРїР°СЃРЅС‹Р№ СЂРµР¶РёРј",
+                "Р’РєР»СЋС‡РёС‚СЊ dry-run (РїСЂРѕРІРµСЂРєР° Р±РµР· РєР»РёРєР°) РґР»СЏ СЌС‚РѕР№ РєРѕРјР°РЅРґС‹?",
             )
             launcher_highlight = messagebox.askyesno(
-                "Подсветка",
-                "Включить режим подсветки окна/кнопки вместо клика?",
+                "РџРѕРґСЃРІРµС‚РєР°",
+                "Р’РєР»СЋС‡РёС‚СЊ СЂРµР¶РёРј РїРѕРґСЃРІРµС‚РєРё РѕРєРЅР°/РєРЅРѕРїРєРё РІРјРµСЃС‚Рѕ РєР»РёРєР°?",
             )
 
     save_mapping(
@@ -1551,7 +1551,7 @@ def add_file_manual():
 def remove_selected():
     selected = tree.selection()
     if not selected:
-        messagebox.showinfo("Удаление", "Выберите запись в таблице.")
+        messagebox.showinfo("РЈРґР°Р»РµРЅРёРµ", "Р’С‹Р±РµСЂРёС‚Рµ Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Рµ.")
         return
 
     phrase = selected[0]
@@ -1561,8 +1561,8 @@ def remove_selected():
         del commands[phrase]
         save_commands()
         refresh_table()
-        set_status(f"Удалено: '{phrase}'")
-        set_last_action(f"Удалена команда: {phrase}")
+        set_status(f"РЈРґР°Р»РµРЅРѕ: '{phrase}'")
+        set_last_action(f"РЈРґР°Р»РµРЅР° РєРѕРјР°РЅРґР°: {phrase}")
         log_runtime(f"Command removed: phrase='{phrase}'")
 
 
@@ -1762,7 +1762,7 @@ def build_hint_variants(text):
         return variants
 
     add(raw)
-    spaced = re.sub(r"([a-zа-я0-9])([A-ZА-Я])", r"\1 \2", raw)
+    spaced = re.sub(r"([a-zР°-СЏ0-9])([A-ZРђ-РЇ])", r"\1 \2", raw)
     spaced = re.sub(r"[_\-]+", " ", spaced)
     add(spaced)
     compact = normalize_phrase(spaced).replace(" ", "")
@@ -1800,11 +1800,11 @@ def activate_window(window_wrapper):
 def find_play_control(window_wrapper, play_text):
     target = normalize_phrase((play_text or "РРіСЂР°С‚СЊ").strip())
     if not target:
-        target = "играть"
+        target = "РёРіСЂР°С‚СЊ"
 
     targets = [target]
-    if "игр" not in target:
-        targets.append("играть")
+    if "РёРіСЂ" not in target:
+        targets.append("РёРіСЂР°С‚СЊ")
     for extra in ("play", "start", "launch"):
         if extra not in targets:
             targets.append(extra)
@@ -1854,8 +1854,8 @@ def find_play_control(window_wrapper, play_text):
                         score = max(score, 0.72)
 
             if score <= 0:
-                # Безопасный геометрический fallback для лаунчеров, где текст кнопки
-                # недоступен в UIA, но сама кнопка "Play" обычно крупная и справа внизу.
+                # Р‘РµР·РѕРїР°СЃРЅС‹Р№ РіРµРѕРјРµС‚СЂРёС‡РµСЃРєРёР№ fallback РґР»СЏ Р»Р°СѓРЅС‡РµСЂРѕРІ, РіРґРµ С‚РµРєСЃС‚ РєРЅРѕРїРєРё
+                # РЅРµРґРѕСЃС‚СѓРїРµРЅ РІ UIA, РЅРѕ СЃР°РјР° РєРЅРѕРїРєР° "Play" РѕР±С‹С‡РЅРѕ РєСЂСѓРїРЅР°СЏ Рё СЃРїСЂР°РІР° РІРЅРёР·Сѓ.
                 if ctype in ("Button", "Custom") and win_rect is not None and win_w > 0 and win_h > 0:
                     try:
                         rect = ctrl.rectangle()
@@ -2093,7 +2093,7 @@ def play_control_is_ready(window_wrapper, play_text):
 
 def launch_with_launcher_play(entry, on_finish=None):
     if Desktop is None:
-        set_status("Режим лаунчера: установите pywinauto (`pip install pywinauto`)")
+        set_status("Р РµР¶РёРј Р»Р°СѓРЅС‡РµСЂР°: СѓСЃС‚Р°РЅРѕРІРёС‚Рµ pywinauto (`pip install pywinauto`)")
         launch_target(entry.get("path", ""))
         if callable(on_finish):
             try:
@@ -2137,23 +2137,23 @@ def launch_with_launcher_play(entry, on_finish=None):
 def launch_command(entry):
     normalized = normalize_command_entry(entry)
     if not normalized:
-        set_status("Некорректная команда")
+        set_status("РќРµРєРѕСЂСЂРµРєС‚РЅР°СЏ РєРѕРјР°РЅРґР°")
         return
 
     can_launch, reason, payload = can_launch_entry(normalized)
     if not can_launch:
         if reason == "cooldown":
-            set_status(f"Антидубль: подождите {float(payload):.1f} сек")
+            set_status(f"РђРЅС‚РёРґСѓР±Р»СЊ: РїРѕРґРѕР¶РґРёС‚Рµ {float(payload):.1f} СЃРµРє")
             log_runtime(
                 f"Launch blocked by cooldown: path='{normalized.get('path', '')}' wait={float(payload):.2f}s"
             )
         elif reason == "inflight":
-            set_status(f"Запуск уже выполняется: подождите {float(payload):.1f} сек")
+            set_status(f"Р—Р°РїСѓСЃРє СѓР¶Рµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ: РїРѕРґРѕР¶РґРёС‚Рµ {float(payload):.1f} СЃРµРє")
             log_runtime(
                 f"Launch blocked by inflight-guard: key='{command_launch_key(normalized)}' wait={float(payload):.2f}s"
             )
         elif reason == "already_running":
-            set_status(f"Уже запущено: {payload}")
+            set_status(f"РЈР¶Рµ Р·Р°РїСѓС‰РµРЅРѕ: {payload}")
             log_runtime(
                 f"Launch blocked because process is running: path='{normalized.get('path', '')}' proc='{payload}'"
             )
@@ -2188,7 +2188,7 @@ def launch_command(entry):
 def test_selected():
     selected = tree.selection()
     if not selected:
-        messagebox.showinfo("Проверка", "Выберите запись в таблице.")
+        messagebox.showinfo("РџСЂРѕРІРµСЂРєР°", "Р’С‹Р±РµСЂРёС‚Рµ Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Рµ.")
         return
     phrase = selected[0]
     if phrase not in commands:
@@ -2198,17 +2198,17 @@ def test_selected():
 
 def check_microphone():
     if monitor_active_event.is_set():
-        set_status("Сначала выключите мониторинг")
-        show_warning("Проверка микрофона", "Сначала выключите мониторинг и попробуйте снова.")
+        set_status("РЎРЅР°С‡Р°Р»Р° РІС‹РєР»СЋС‡РёС‚Рµ РјРѕРЅРёС‚РѕСЂРёРЅРі")
+        show_warning("РџСЂРѕРІРµСЂРєР° РјРёРєСЂРѕС„РѕРЅР°", "РЎРЅР°С‡Р°Р»Р° РІС‹РєР»СЋС‡РёС‚Рµ РјРѕРЅРёС‚РѕСЂРёРЅРі Рё РїРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°.")
         return
 
-    set_status("Проверка микрофона...")
+    set_status("РџСЂРѕРІРµСЂРєР° РјРёРєСЂРѕС„РѕРЅР°...")
     pause_listen_event.set()
     restart_listen_event.set()
 
     def worker():
         try:
-            set_status("Тишина 1 сек для авто-настройки...")
+            set_status("РўРёС€РёРЅР° 1 СЃРµРє РґР»СЏ Р°РІС‚Рѕ-РЅР°СЃС‚СЂРѕР№РєРё...")
             recognizer = build_recognizer()
             mic_index = get_selected_mic_index()
             with sr.Microphone(device_index=mic_index) as source:
@@ -2216,7 +2216,7 @@ def check_microphone():
                 calibrated_threshold = int(recognizer.energy_threshold)
                 settings["energy_threshold"] = calibrated_threshold
                 root.after(0, lambda: energy_var.set(calibrated_threshold))
-                set_status("Скажите любую фразу...")
+                set_status("РЎРєР°Р¶РёС‚Рµ Р»СЋР±СѓСЋ С„СЂР°Р·Сѓ...")
                 audio = recognizer.listen(
                     source,
                     timeout=5,
@@ -2227,40 +2227,40 @@ def check_microphone():
             candidates = recognize_candidates(recognizer, audio)
             if candidates:
                 preview = " / ".join(candidates[:3])
-                quality = "Нормально"
+                quality = "РќРѕСЂРјР°Р»СЊРЅРѕ"
                 if level < 18:
-                    quality = "Слишком тихо, поднимите Mic Gain или уровень микрофона в Windows"
+                    quality = "РЎР»РёС€РєРѕРј С‚РёС…Рѕ, РїРѕРґРЅРёРјРёС‚Рµ Mic Gain РёР»Рё СѓСЂРѕРІРµРЅСЊ РјРёРєСЂРѕС„РѕРЅР° РІ Windows"
                 elif level > 92:
-                    quality = "Слишком громко, есть риск искажений. Снизьте Mic Gain"
+                    quality = "РЎР»РёС€РєРѕРј РіСЂРѕРјРєРѕ, РµСЃС‚СЊ СЂРёСЃРє РёСЃРєР°Р¶РµРЅРёР№. РЎРЅРёР·СЊС‚Рµ Mic Gain"
 
                 save_settings()
                 restart_listen_event.set()
-                set_status(f"Проверка OK | Уровень {level}% | '{candidates[0]}'")
+                set_status(f"РџСЂРѕРІРµСЂРєР° OK | РЈСЂРѕРІРµРЅСЊ {level}% | '{candidates[0]}'")
                 show_info(
-                    "Проверка микрофона",
-                    f"Уровень сигнала: {level}%\n"
-                    f"Порог после авто-настройки: {settings['energy_threshold']}\n"
-                    f"Распознано: {preview}\n\n"
-                    f"Рекомендация: {quality}",
+                    "РџСЂРѕРІРµСЂРєР° РјРёРєСЂРѕС„РѕРЅР°",
+                    f"РЈСЂРѕРІРµРЅСЊ СЃРёРіРЅР°Р»Р°: {level}%\n"
+                    f"РџРѕСЂРѕРі РїРѕСЃР»Рµ Р°РІС‚Рѕ-РЅР°СЃС‚СЂРѕР№РєРё: {settings['energy_threshold']}\n"
+                    f"Р Р°СЃРїРѕР·РЅР°РЅРѕ: {preview}\n\n"
+                    f"Р РµРєРѕРјРµРЅРґР°С†РёСЏ: {quality}",
                 )
             else:
                 save_settings()
                 restart_listen_event.set()
-                set_status(f"Проверка: не распознано | Уровень {level}%")
+                set_status(f"РџСЂРѕРІРµСЂРєР°: РЅРµ СЂР°СЃРїРѕР·РЅР°РЅРѕ | РЈСЂРѕРІРµРЅСЊ {level}%")
                 show_warning(
-                    "Проверка микрофона",
-                    f"Речь не распознана.\n"
-                    f"Уровень сигнала: {level}%\n"
-                    f"Порог: {settings['energy_threshold']}\n\n"
-                    "Попробуйте выбрать другой микрофон или увеличить Mic Gain до 1.4-1.8.",
+                    "РџСЂРѕРІРµСЂРєР° РјРёРєСЂРѕС„РѕРЅР°",
+                    f"Р РµС‡СЊ РЅРµ СЂР°СЃРїРѕР·РЅР°РЅР°.\n"
+                    f"РЈСЂРѕРІРµРЅСЊ СЃРёРіРЅР°Р»Р°: {level}%\n"
+                    f"РџРѕСЂРѕРі: {settings['energy_threshold']}\n\n"
+                    "РџРѕРїСЂРѕР±СѓР№С‚Рµ РІС‹Р±СЂР°С‚СЊ РґСЂСѓРіРѕР№ РјРёРєСЂРѕС„РѕРЅ РёР»Рё СѓРІРµР»РёС‡РёС‚СЊ Mic Gain РґРѕ 1.4-1.8.",
                 )
         except sr.WaitTimeoutError:
-            set_status("Проверка: тишина, попробуйте еще раз")
-            show_warning("Проверка микрофона", "Не услышал речь в течение ожидания.")
+            set_status("РџСЂРѕРІРµСЂРєР°: С‚РёС€РёРЅР°, РїРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰Рµ СЂР°Р·")
+            show_warning("РџСЂРѕРІРµСЂРєР° РјРёРєСЂРѕС„РѕРЅР°", "РќРµ СѓСЃР»С‹С€Р°Р» СЂРµС‡СЊ РІ С‚РµС‡РµРЅРёРµ РѕР¶РёРґР°РЅРёСЏ.")
         except Exception as exc:
             message = friendly_audio_error(exc)
-            set_status(f"Проверка: ошибка ({message})")
-            show_warning("Проверка микрофона", f"Ошибка микрофона:\n{message}")
+            set_status(f"РџСЂРѕРІРµСЂРєР°: РѕС€РёР±РєР° ({message})")
+            show_warning("РџСЂРѕРІРµСЂРєР° РјРёРєСЂРѕС„РѕРЅР°", f"РћС€РёР±РєР° РјРёРєСЂРѕС„РѕРЅР°:\n{message}")
         finally:
             pause_listen_event.clear()
 
@@ -2268,17 +2268,17 @@ def check_microphone():
 
 
 def calibrate_mic():
-    # Оставлено для совместимости со старыми привязками кнопок.
+    # РћСЃС‚Р°РІР»РµРЅРѕ РґР»СЏ СЃРѕРІРјРµСЃС‚РёРјРѕСЃС‚Рё СЃРѕ СЃС‚Р°СЂС‹РјРё РїСЂРёРІСЏР·РєР°РјРё РєРЅРѕРїРѕРє.
     check_microphone()
 
 
 def test_recognition_once():
     if monitor_active_event.is_set():
-        set_status("Сначала выключите мониторинг")
-        show_warning("Тест распознавания", "Сначала выключите мониторинг и попробуйте снова.")
+        set_status("РЎРЅР°С‡Р°Р»Р° РІС‹РєР»СЋС‡РёС‚Рµ РјРѕРЅРёС‚РѕСЂРёРЅРі")
+        show_warning("РўРµСЃС‚ СЂР°СЃРїРѕР·РЅР°РІР°РЅРёСЏ", "РЎРЅР°С‡Р°Р»Р° РІС‹РєР»СЋС‡РёС‚Рµ РјРѕРЅРёС‚РѕСЂРёРЅРі Рё РїРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°.")
         return
 
-    set_status("Тест распознавания: слушаю...")
+    set_status("РўРµСЃС‚ СЂР°СЃРїРѕР·РЅР°РІР°РЅРёСЏ: СЃР»СѓС€Р°СЋ...")
     pause_listen_event.set()
     restart_listen_event.set()
 
@@ -2297,23 +2297,23 @@ def test_recognition_once():
             candidates = recognize_candidates(recognizer, audio, prefer_all_engines=True)
             if candidates:
                 preview = " / ".join(candidates[:3])
-                set_status(f"Тест речи OK | Уровень {level}% | '{candidates[0]}'")
+                set_status(f"РўРµСЃС‚ СЂРµС‡Рё OK | РЈСЂРѕРІРµРЅСЊ {level}% | '{candidates[0]}'")
                 set_last_phrase(candidates[0])
-                show_info("Тест распознавания", f"Распознано:\n{preview}\n\nУровень сигнала: {level}%")
+                show_info("РўРµСЃС‚ СЂР°СЃРїРѕР·РЅР°РІР°РЅРёСЏ", f"Р Р°СЃРїРѕР·РЅР°РЅРѕ:\n{preview}\n\nРЈСЂРѕРІРµРЅСЊ СЃРёРіРЅР°Р»Р°: {level}%")
             else:
-                set_status(f"Тест речи: не распознано | Уровень {level}%")
+                set_status(f"РўРµСЃС‚ СЂРµС‡Рё: РЅРµ СЂР°СЃРїРѕР·РЅР°РЅРѕ | РЈСЂРѕРІРµРЅСЊ {level}%")
                 show_warning(
-                    "Тест распознавания",
-                    f"Речь не распознана.\nУровень сигнала: {level}%\n\n"
-                    "Попробуйте говорить чуть медленнее и ближе к микрофону.",
+                    "РўРµСЃС‚ СЂР°СЃРїРѕР·РЅР°РІР°РЅРёСЏ",
+                    f"Р РµС‡СЊ РЅРµ СЂР°СЃРїРѕР·РЅР°РЅР°.\nРЈСЂРѕРІРµРЅСЊ СЃРёРіРЅР°Р»Р°: {level}%\n\n"
+                    "РџРѕРїСЂРѕР±СѓР№С‚Рµ РіРѕРІРѕСЂРёС‚СЊ С‡СѓС‚СЊ РјРµРґР»РµРЅРЅРµРµ Рё Р±Р»РёР¶Рµ Рє РјРёРєСЂРѕС„РѕРЅСѓ.",
                 )
         except sr.WaitTimeoutError:
-            set_status("Тест речи: тишина")
-            show_warning("Тест распознавания", "Не услышал речь в течение ожидания.")
+            set_status("РўРµСЃС‚ СЂРµС‡Рё: С‚РёС€РёРЅР°")
+            show_warning("РўРµСЃС‚ СЂР°СЃРїРѕР·РЅР°РІР°РЅРёСЏ", "РќРµ СѓСЃР»С‹С€Р°Р» СЂРµС‡СЊ РІ С‚РµС‡РµРЅРёРµ РѕР¶РёРґР°РЅРёСЏ.")
         except Exception as exc:
             message = friendly_audio_error(exc)
-            set_status(f"Тест речи: ошибка ({message})")
-            show_warning("Тест распознавания", f"Ошибка микрофона:\n{message}")
+            set_status(f"РўРµСЃС‚ СЂРµС‡Рё: РѕС€РёР±РєР° ({message})")
+            show_warning("РўРµСЃС‚ СЂР°СЃРїРѕР·РЅР°РІР°РЅРёСЏ", f"РћС€РёР±РєР° РјРёРєСЂРѕС„РѕРЅР°:\n{message}")
         finally:
             pause_listen_event.clear()
 
@@ -2334,7 +2334,7 @@ def open_live_test_window():
 
     dialog = tk.Toplevel(root)
     live_test_dialog = dialog
-    dialog.title("Live-тест микрофона")
+    dialog.title("Live-С‚РµСЃС‚ РјРёРєСЂРѕС„РѕРЅР°")
     dialog.geometry("640x360")
     dialog.minsize(560, 320)
     dialog.configure(bg=PALETTE["card"])
@@ -2342,17 +2342,17 @@ def open_live_test_window():
 
     run_event = threading.Event()
     level_var = tk.IntVar(value=0)
-    heard_var = tk.StringVar(value="Распознанная фраза: —")
-    state_var = tk.StringVar(value="Статус: готово")
-    monitor_var = tk.StringVar(value="Эхо: OFF")
+    heard_var = tk.StringVar(value="Р Р°СЃРїРѕР·РЅР°РЅРЅР°СЏ С„СЂР°Р·Р°: вЂ”")
+    state_var = tk.StringVar(value="РЎС‚Р°С‚СѓСЃ: РіРѕС‚РѕРІРѕ")
+    monitor_var = tk.StringVar(value="Р­С…Рѕ: OFF")
 
     frame = ttk.Frame(dialog, style="Card.TFrame", padding=12)
     frame.pack(fill="both", expand=True)
 
-    mic_text = mic_var.get() or "не выбран"
-    out_text = out_var.get() or "не выбран"
-    ttk.Label(frame, text=f"Микрофон: {mic_text}", style="Sub.TLabel").pack(anchor="w")
-    ttk.Label(frame, text=f"Вывод (эхо): {out_text}", style="Sub.TLabel").pack(anchor="w", pady=(2, 8))
+    mic_text = mic_var.get() or "РЅРµ РІС‹Р±СЂР°РЅ"
+    out_text = out_var.get() or "РЅРµ РІС‹Р±СЂР°РЅ"
+    ttk.Label(frame, text=f"РњРёРєСЂРѕС„РѕРЅ: {mic_text}", style="Sub.TLabel").pack(anchor="w")
+    ttk.Label(frame, text=f"Р’С‹РІРѕРґ (СЌС…Рѕ): {out_text}", style="Sub.TLabel").pack(anchor="w", pady=(2, 8))
 
     ttk.Progressbar(frame, variable=level_var, maximum=100).pack(fill="x")
     ttk.Label(frame, textvariable=state_var, style="Sub.TLabel").pack(anchor="w", pady=(8, 2))
@@ -2362,7 +2362,7 @@ def open_live_test_window():
     controls.pack(fill="x", pady=(12, 0))
 
     def sync_monitor_caption():
-        monitor_var.set("Эхо: ON" if monitor_active_event.is_set() else "Эхо: OFF")
+        monitor_var.set("Р­С…Рѕ: ON" if monitor_active_event.is_set() else "Р­С…Рѕ: OFF")
 
     def toggle_echo():
         toggle_monitoring()
@@ -2388,25 +2388,25 @@ def open_live_test_window():
                         audio = recognizer.listen(source, timeout=1.2, phrase_time_limit=2.2)
                     level = get_audio_level_percent(audio)
                     candidates = recognize_candidates(recognizer, audio, prefer_all_engines=True)
-                    heard = candidates[0] if candidates else "не распознано"
+                    heard = candidates[0] if candidates else "РЅРµ СЂР°СЃРїРѕР·РЅР°РЅРѕ"
                     dialog.after(0, lambda lvl=level, txt=heard: level_var.set(lvl))
-                    dialog.after(0, lambda txt=heard: heard_var.set(f"Распознанная фраза: {txt}"))
-                    dialog.after(0, lambda lvl=level: state_var.set(f"Статус: слушаю | уровень {lvl}%"))
+                    dialog.after(0, lambda txt=heard: heard_var.set(f"Р Р°СЃРїРѕР·РЅР°РЅРЅР°СЏ С„СЂР°Р·Р°: {txt}"))
+                    dialog.after(0, lambda lvl=level: state_var.set(f"РЎС‚Р°С‚СѓСЃ: СЃР»СѓС€Р°СЋ | СѓСЂРѕРІРµРЅСЊ {lvl}%"))
                 except sr.WaitTimeoutError:
                     dialog.after(0, lambda: level_var.set(0))
-                    dialog.after(0, lambda: state_var.set("Статус: тишина"))
+                    dialog.after(0, lambda: state_var.set("РЎС‚Р°С‚СѓСЃ: С‚РёС€РёРЅР°"))
                 except Exception as exc:
                     message = friendly_audio_error(exc)
-                    dialog.after(0, lambda m=message: state_var.set(f"Статус: ошибка ({m})"))
+                    dialog.after(0, lambda m=message: state_var.set(f"РЎС‚Р°С‚СѓСЃ: РѕС€РёР±РєР° ({m})"))
                     break
             pause_listen_event.clear()
 
         threading.Thread(target=worker, daemon=True).start()
 
-    ttk.Button(controls, text="Старт Live", command=start_live, style="Primary.TButton").pack(side="left")
-    ttk.Button(controls, text="Стоп", command=stop_live, style="Soft.TButton").pack(side="left", padx=(8, 0))
+    ttk.Button(controls, text="РЎС‚Р°СЂС‚ Live", command=start_live, style="Primary.TButton").pack(side="left")
+    ttk.Button(controls, text="РЎС‚РѕРї", command=stop_live, style="Soft.TButton").pack(side="left", padx=(8, 0))
     ttk.Button(controls, textvariable=monitor_var, command=toggle_echo, style="Soft.TButton").pack(side="left", padx=(8, 0))
-    ttk.Button(controls, text="Закрыть", command=dialog.destroy, style="Danger.TButton").pack(side="right")
+    ttk.Button(controls, text="Р—Р°РєСЂС‹С‚СЊ", command=dialog.destroy, style="Danger.TButton").pack(side="right")
 
     sync_monitor_caption()
 
@@ -2426,8 +2426,8 @@ def stop_monitoring():
     pause_listen_event.clear()
     restart_listen_event.set()
     if "monitor_button_text" in globals():
-        monitor_button_text.set("Монитор: OFF")
-    set_status("Мониторинг остановлен")
+        monitor_button_text.set("РњРѕРЅРёС‚РѕСЂ: OFF")
+    set_status("РњРѕРЅРёС‚РѕСЂРёРЅРі РѕСЃС‚Р°РЅРѕРІР»РµРЅ")
 
 
 def monitor_open_streams(pa, in_index, out_index):
@@ -2467,7 +2467,7 @@ def monitor_open_streams(pa, in_index, out_index):
                     out_channels = ch
                     break
                 if out_stream is None:
-                    raise RuntimeError("Не удалось открыть выходной поток")
+                    raise RuntimeError("РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ РІС‹С…РѕРґРЅРѕР№ РїРѕС‚РѕРє")
             except Exception:
                 in_stream.stop_stream()
                 in_stream.close()
@@ -2477,11 +2477,11 @@ def monitor_open_streams(pa, in_index, out_index):
             last_exc = exc
             continue
 
-    raise RuntimeError(f"Не удалось открыть мониторинг аудио: {last_exc}")
+    raise RuntimeError(f"РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ РјРѕРЅРёС‚РѕСЂРёРЅРі Р°СѓРґРёРѕ: {last_exc}")
 
 
 def apply_monitor_cleanup(data):
-    # Мягкая обработка для уменьшения "эхо-хвостов" в реальном времени.
+    # РњСЏРіРєР°СЏ РѕР±СЂР°Р±РѕС‚РєР° РґР»СЏ СѓРјРµРЅСЊС€РµРЅРёСЏ "СЌС…Рѕ-С…РІРѕСЃС‚РѕРІ" РІ СЂРµР°Р»СЊРЅРѕРј РІСЂРµРјРµРЅРё.
     try:
         rms = audio_rms(data, 2)
         gate = max(120, int(float(settings.get("energy_threshold", 110)) * 1.7))
@@ -2498,15 +2498,15 @@ def toggle_monitoring():
     if monitor_active_event.is_set():
         stop_monitoring()
         if "monitor_button_text" in globals():
-            monitor_button_text.set("Монитор: OFF")
+            monitor_button_text.set("РњРѕРЅРёС‚РѕСЂ: OFF")
         return
 
     if pyaudio is None:
-        set_status("PyAudio недоступен для мониторинга")
+        set_status("PyAudio РЅРµРґРѕСЃС‚СѓРїРµРЅ РґР»СЏ РјРѕРЅРёС‚РѕСЂРёРЅРіР°")
         return
 
     if "monitor_button_text" in globals():
-        monitor_button_text.set("Монитор: запуск...")
+        monitor_button_text.set("РњРѕРЅРёС‚РѕСЂ: Р·Р°РїСѓСЃРє...")
 
     def monitor_worker():
         pa = None
@@ -2520,7 +2520,7 @@ def toggle_monitoring():
             in_index = get_selected_mic_index()
             out_index = get_selected_output_index()
             if in_index is None:
-                set_status("Нет выбранного микрофона для мониторинга")
+                set_status("РќРµС‚ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РјРёРєСЂРѕС„РѕРЅР° РґР»СЏ РјРѕРЅРёС‚РѕСЂРёРЅРіР°")
                 return
 
             pa = pyaudio.PyAudio()
@@ -2528,8 +2528,8 @@ def toggle_monitoring():
 
             monitor_active_event.set()
             if "monitor_button_text" in globals():
-                monitor_button_text.set("Монитор: ON")
-            set_status(f"Мониторинг ON: реальное прослушивание ({rate} Hz)")
+                monitor_button_text.set("РњРѕРЅРёС‚РѕСЂ: ON")
+            set_status(f"РњРѕРЅРёС‚РѕСЂРёРЅРі ON: СЂРµР°Р»СЊРЅРѕРµ РїСЂРѕСЃР»СѓС€РёРІР°РЅРёРµ ({rate} Hz)")
 
             gain = float(settings.get("monitor_gain", 1.2))
             last_status = 0.0
@@ -2545,16 +2545,16 @@ def toggle_monitoring():
                 now = time.time()
                 if now - last_status >= 1.0:
                     level = int(max(0, min(100, (audio_rms(data, 2) / 32767.0) * 350)))
-                    set_status(f"Мониторинг ON | Уровень: {level}%")
+                    set_status(f"РњРѕРЅРёС‚РѕСЂРёРЅРі ON | РЈСЂРѕРІРµРЅСЊ: {level}%")
                     last_status = now
         except Exception as exc:
-            set_status(f"Мониторинг ошибка: {friendly_audio_error(exc)}")
+            set_status(f"РњРѕРЅРёС‚РѕСЂРёРЅРі РѕС€РёР±РєР°: {friendly_audio_error(exc)}")
         finally:
             monitor_active_event.clear()
             pause_listen_event.clear()
             restart_listen_event.set()
             if "monitor_button_text" in globals():
-                monitor_button_text.set("Монитор: OFF")
+                monitor_button_text.set("РњРѕРЅРёС‚РѕСЂ: OFF")
             try:
                 if in_stream is not None:
                     in_stream.stop_stream()
@@ -2655,15 +2655,15 @@ def create_tray_icon():
     draw.rounded_rectangle((16, 40, 48, 52), radius=5, fill=PALETTE["border"])
 
     menu = pystray.Menu(
-        pystray.MenuItem("Открыть настройки", show_window),
-        pystray.MenuItem("Скрыть", hide_window),
-        pystray.MenuItem("Выход", quit_app),
+        pystray.MenuItem("РћС‚РєСЂС‹С‚СЊ РЅР°СЃС‚СЂРѕР№РєРё", show_window),
+        pystray.MenuItem("РЎРєСЂС‹С‚СЊ", hide_window),
+        pystray.MenuItem("Р’С‹С…РѕРґ", quit_app),
     )
     tray_icon = pystray.Icon("voice_launcher", image, "Voice Launcher", menu)
     try:
         tray_icon.run_detached()
     except Exception as exc:
-        set_status(f"Трей недоступен: {exc}")
+        set_status(f"РўСЂРµР№ РЅРµРґРѕСЃС‚СѓРїРµРЅ: {exc}")
 
 
 def setup_styles():
@@ -2693,7 +2693,7 @@ load_settings()
 write_session_snapshot("startup_after_settings")
 
 root = tk.Tk()
-root.title("Голосовой запускатор")
+root.title("Р“РѕР»РѕСЃРѕРІРѕР№ Р·Р°РїСѓСЃРєР°С‚РѕСЂ")
 root.geometry("1280x820")
 root.minsize(1080, 700)
 root.configure(bg=PALETTE["bg"])
@@ -2721,8 +2721,8 @@ mode_strip.pack(fill="x", pady=(0, 8))
 notebook = ttk.Notebook(card, style="Futuristic.TNotebook")
 commands_tab = ttk.Frame(notebook, style="Card.TFrame", padding=10)
 audio_tab = ttk.Frame(notebook, style="Card.TFrame", padding=10)
-notebook.add(commands_tab, text="Команды")
-notebook.add(audio_tab, text="Расширенный")
+notebook.add(commands_tab, text="РљРѕРјР°РЅРґС‹")
+notebook.add(audio_tab, text="Р Р°СЃС€РёСЂРµРЅРЅС‹Р№")
 notebook.pack(fill="both", expand=True, pady=(0, 10))
 
 settings_box = ttk.Frame(audio_tab, style="Panel.TFrame", padding=12)
@@ -2772,7 +2772,7 @@ energy_var = tk.IntVar(value=int(settings.get("energy_threshold", 110)))
 fuzzy_var = tk.DoubleVar(value=float(settings.get("fuzzy_threshold", 0.72)))
 gain_var = tk.DoubleVar(value=float(settings.get("mic_gain", 1.4)))
 monitor_gain_var = tk.DoubleVar(value=float(settings.get("monitor_gain", 1.0)))
-monitor_button_text = tk.StringVar(value="Монитор: OFF")
+monitor_button_text = tk.StringVar(value="РњРѕРЅРёС‚РѕСЂ: OFF")
 simple_mode_text = tk.StringVar(value="")
 ui_controller = UiController(
     UiControllerDeps(
@@ -2807,14 +2807,14 @@ def open_audio_panel():
         save_settings()
         ui_controller.apply_mode()
     notebook.select(audio_tab)
-    set_status("Открыта аудио-панель: выберите Микрофон и Вывод")
+    set_status("РћС‚РєСЂС‹С‚Р° Р°СѓРґРёРѕ-РїР°РЅРµР»СЊ: РІС‹Р±РµСЂРёС‚Рµ РњРёРєСЂРѕС„РѕРЅ Рё Р’С‹РІРѕРґ")
 
 
 ttk.Button(mode_strip, textvariable=simple_mode_text, command=toggle_ui_mode, style="Soft.TButton").pack(
     side="right"
 )
 
-# Если пользователь еще не сохранял устройства, фиксируем автоматически лучшие кандидаты.
+# Р•СЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РµС‰Рµ РЅРµ СЃРѕС…СЂР°РЅСЏР» СѓСЃС‚СЂРѕР№СЃС‚РІР°, С„РёРєСЃРёСЂСѓРµРј Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё Р»СѓС‡С€РёРµ РєР°РЅРґРёРґР°С‚С‹.
 if int(settings.get("microphone_id", -1)) < 0 or int(settings.get("output_id", -1)) < 0:
     selected_mic_auto = next((opt for opt in mic_options if opt["label"] == mic_var.get()), None)
     selected_out_auto = next((opt for opt in output_options if opt["label"] == out_var.get()), None)
@@ -2837,11 +2837,11 @@ row2.pack(fill="x", pady=(0, 8))
 row3 = ttk.Frame(settings_box, style="Panel.TFrame")
 row3.pack(fill="x")
 
-ttk.Label(row1, text="Микрофон:", style="PanelLabel.TLabel").pack(side="left")
+ttk.Label(row1, text="РњРёРєСЂРѕС„РѕРЅ:", style="PanelLabel.TLabel").pack(side="left")
 mic_combo = ttk.Combobox(row1, state="readonly", width=44, values=mic_labels, textvariable=mic_var)
 mic_combo.pack(side="left", padx=(6, 6))
 
-ttk.Label(row1, text="Вывод:", style="PanelLabel.TLabel").pack(side="left")
+ttk.Label(row1, text="Р’С‹РІРѕРґ:", style="PanelLabel.TLabel").pack(side="left")
 out_combo = ttk.Combobox(row1, state="readonly", width=30, values=output_labels, textvariable=out_var)
 out_combo.pack(side="left", padx=(6, 6))
 
@@ -2876,7 +2876,7 @@ def refresh_mics():
     else:
         mic_var.set("")
 
-    set_status(f"Устройства обновлены: Mic {len(mic_labels_local)}, Out {len(out_labels_local)}")
+    set_status(f"РЈСЃС‚СЂРѕР№СЃС‚РІР° РѕР±РЅРѕРІР»РµРЅС‹: Mic {len(mic_labels_local)}, Out {len(out_labels_local)}")
 
 
 
@@ -2906,32 +2906,32 @@ def apply_audio_settings():
     settings["monitor_gain"] = round(float(monitor_gain_var.get()), 2)
     save_settings()
     restart_listen_event.set()
-    set_status("Настройки аудио сохранены")
+    set_status("РќР°СЃС‚СЂРѕР№РєРё Р°СѓРґРёРѕ СЃРѕС…СЂР°РЅРµРЅС‹")
 
 
 
-ttk.Button(row2, text="Обновить устройства", command=refresh_mics, style="Soft.TButton").pack(side="left")
-ttk.Button(row2, text="Проверка микрофона", command=check_microphone, style="Soft.TButton").pack(side="left", padx=6)
+ttk.Button(row2, text="РћР±РЅРѕРІРёС‚СЊ СѓСЃС‚СЂРѕР№СЃС‚РІР°", command=refresh_mics, style="Soft.TButton").pack(side="left")
+ttk.Button(row2, text="РџСЂРѕРІРµСЂРєР° РјРёРєСЂРѕС„РѕРЅР°", command=check_microphone, style="Soft.TButton").pack(side="left", padx=6)
 ttk.Button(row2, textvariable=monitor_button_text, command=toggle_monitoring, style="Soft.TButton").pack(side="left", padx=6)
-ttk.Button(row2, text="Сохранить аудио", command=apply_audio_settings, style="Primary.TButton").pack(side="left")
+ttk.Button(row2, text="РЎРѕС…СЂР°РЅРёС‚СЊ Р°СѓРґРёРѕ", command=apply_audio_settings, style="Primary.TButton").pack(side="left")
 
 
 ttk.Checkbutton(
     row3,
-    text="Авто-порог",
+    text="РђРІС‚Рѕ-РїРѕСЂРѕРі",
     variable=dynamic_var,
     onvalue=True,
     offvalue=False,
     style="Futuristic.TCheckbutton",
 ).pack(side="left")
 
-ttk.Label(row3, text="Порог:", style="PanelLabel.TLabel").pack(side="left", padx=(10, 4))
+ttk.Label(row3, text="РџРѕСЂРѕРі:", style="PanelLabel.TLabel").pack(side="left", padx=(10, 4))
 energy_scale = ttk.Scale(row3, from_=40, to=800, variable=energy_var, orient="horizontal", length=170)
 energy_scale.pack(side="left")
 energy_label = ttk.Label(row3, textvariable=energy_var, style="PanelLabel.TLabel", width=4)
 energy_label.pack(side="left", padx=(4, 10))
 
-ttk.Label(row3, text="Точность:", style="PanelLabel.TLabel").pack(side="left", padx=(8, 4))
+ttk.Label(row3, text="РўРѕС‡РЅРѕСЃС‚СЊ:", style="PanelLabel.TLabel").pack(side="left", padx=(8, 4))
 fuzzy_scale = ttk.Scale(row3, from_=0.55, to=0.98, variable=fuzzy_var, orient="horizontal", length=150)
 fuzzy_scale.pack(side="left")
 fuzzy_label = ttk.Label(row3, text="", style="PanelLabel.TLabel", width=4)
@@ -2975,7 +2975,7 @@ update_monitor_gain_label()
 
 diagnostics_box = ttk.Frame(audio_tab, style="Panel.TFrame", padding=12)
 diagnostics_box.pack(fill="both", expand=True, pady=(6, 0))
-ttk.Label(diagnostics_box, text="Последние события", style="PanelLabel.TLabel").pack(anchor="w", pady=(0, 6))
+ttk.Label(diagnostics_box, text="РџРѕСЃР»РµРґРЅРёРµ СЃРѕР±С‹С‚РёСЏ", style="PanelLabel.TLabel").pack(anchor="w", pady=(0, 6))
 events_list = tk.Listbox(
     diagnostics_box,
     height=10,
@@ -2995,7 +2995,7 @@ def refresh_events_panel():
     ui_controller.refresh_events_panel()
 
 
-ttk.Button(diagnostics_box, text="Обновить события", command=refresh_events_panel, style="Soft.TButton").pack(
+ttk.Button(diagnostics_box, text="РћР±РЅРѕРІРёС‚СЊ СЃРѕР±С‹С‚РёСЏ", command=refresh_events_panel, style="Soft.TButton").pack(
     anchor="e", pady=(6, 0)
 )
 apply_ui_mode()
@@ -3010,20 +3010,20 @@ toolbar_audio.pack(fill="x", pady=(8, 0))
 toolbar_data = ttk.Frame(toolbar, style="Card.TFrame")
 toolbar_data.pack(fill="x", pady=(8, 0))
 
-ttk.Button(toolbar_main, text="Добавить вручную", command=add_file_manual, style="Primary.TButton").pack(side="left")
-ttk.Button(toolbar_main, text="Добавить голосом", command=open_voice_capture_dialog, style="Soft.TButton").pack(side="left", padx=8)
-ttk.Button(toolbar_main, text="Проверить", command=test_selected, style="Soft.TButton").pack(side="left", padx=(0, 8))
-ttk.Button(toolbar_main, text="Удалить", command=remove_selected, style="Danger.TButton").pack(side="right")
+ttk.Button(toolbar_main, text="Р”РѕР±Р°РІРёС‚СЊ РІСЂСѓС‡РЅСѓСЋ", command=add_file_manual, style="Primary.TButton").pack(side="left")
+ttk.Button(toolbar_main, text="Р”РѕР±Р°РІРёС‚СЊ РіРѕР»РѕСЃРѕРј", command=open_voice_capture_dialog, style="Soft.TButton").pack(side="left", padx=8)
+ttk.Button(toolbar_main, text="РџСЂРѕРІРµСЂРёС‚СЊ", command=test_selected, style="Soft.TButton").pack(side="left", padx=(0, 8))
+ttk.Button(toolbar_main, text="РЈРґР°Р»РёС‚СЊ", command=remove_selected, style="Danger.TButton").pack(side="right")
 
-ttk.Button(toolbar_audio, text="Аудио панель", command=open_audio_panel, style="Soft.TButton").pack(side="left")
-ttk.Button(toolbar_audio, text="Проверить микрофон", command=check_microphone, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar_audio, text="Разовый тест", command=test_recognition_once, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar_audio, text="Live-тест", command=open_live_test_window, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_audio, text="РђСѓРґРёРѕ РїР°РЅРµР»СЊ", command=open_audio_panel, style="Soft.TButton").pack(side="left")
+ttk.Button(toolbar_audio, text="РџСЂРѕРІРµСЂРёС‚СЊ РјРёРєСЂРѕС„РѕРЅ", command=check_microphone, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_audio, text="Р Р°Р·РѕРІС‹Р№ С‚РµСЃС‚", command=test_recognition_once, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_audio, text="Live-С‚РµСЃС‚", command=open_live_test_window, style="Soft.TButton").pack(side="left", padx=(8, 0))
 
-ttk.Button(toolbar_data, text="Открыть логи", command=open_logs_folder, style="Soft.TButton").pack(side="left")
-ttk.Button(toolbar_data, text="Экспорт", command=export_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_data, text="РћС‚РєСЂС‹С‚СЊ Р»РѕРіРё", command=open_logs_folder, style="Soft.TButton").pack(side="left")
+ttk.Button(toolbar_data, text="Р­РєСЃРїРѕСЂС‚", command=export_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
 ttk.Button(toolbar_data, text="РРјРїРѕСЂС‚", command=import_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar_data, text="Диагностика", command=collect_diagnostics_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_data, text="Р”РёР°РіРЅРѕСЃС‚РёРєР°", command=collect_diagnostics_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
 
 table_wrap = ttk.Frame(commands_tab, style="Panel.TFrame", padding=6)
 table_wrap.pack(fill="both", expand=True)
@@ -3035,9 +3035,9 @@ tree = ttk.Treeview(
     height=14,
     style="Custom.Treeview",
 )
-tree.heading("phrase", text="Ключевая фраза")
+tree.heading("phrase", text="РљР»СЋС‡РµРІР°СЏ С„СЂР°Р·Р°")
 tree.heading("path", text="Р¤Р°Р№Р»")
-tree.heading("mode", text="Режим")
+tree.heading("mode", text="Р РµР¶РёРј")
 tree.column("phrase", width=330, anchor="w", stretch=False)
 tree.column("path", width=590, anchor="w", stretch=False)
 tree.column("mode", width=290, anchor="center", stretch=False)
@@ -3049,7 +3049,7 @@ tree.configure(yscrollcommand=scroll.set)
 
 
 def fit_tree_columns(_event=None):
-    # Держим колонки ровными и читаемыми на любом размере окна.
+    # Р”РµСЂР¶РёРј РєРѕР»РѕРЅРєРё СЂРѕРІРЅС‹РјРё Рё С‡РёС‚Р°РµРјС‹РјРё РЅР° Р»СЋР±РѕРј СЂР°Р·РјРµСЂРµ РѕРєРЅР°.
     total = table_wrap.winfo_width() - scroll.winfo_width() - 14
     if total < 720:
         total = 720
@@ -3065,7 +3065,7 @@ def fit_tree_columns(_event=None):
 
 table_wrap.bind("<Configure>", fit_tree_columns)
 
-status_var = tk.StringVar(value="Готово")
+status_var = tk.StringVar(value="Р“РѕС‚РѕРІРѕ")
 status = ttk.Label(card, textvariable=status_var, style="Status.TLabel", anchor="w")
 status.pack(fill="x", pady=(10, 0))
 asr_status_var = tk.StringVar(value=f"ASR: {asr_engine().capitalize()}")
@@ -3073,18 +3073,18 @@ ttk.Label(card, textvariable=asr_status_var, style="Sub.TLabel", anchor="w").pac
 
 hint = ttk.Label(
     card,
-    text="Режим ASR: Whisper (точнее). Проверка микрофона покажет уровень и распознанный текст.",
+    text="Р РµР¶РёРј ASR: Whisper (С‚РѕС‡РЅРµРµ). РџСЂРѕРІРµСЂРєР° РјРёРєСЂРѕС„РѕРЅР° РїРѕРєР°Р¶РµС‚ СѓСЂРѕРІРµРЅСЊ Рё СЂР°СЃРїРѕР·РЅР°РЅРЅС‹Р№ С‚РµРєСЃС‚.",
     style="Sub.TLabel",
     anchor="w",
 )
 hint.pack(fill="x", pady=(6, 0))
 
-last_phrase_var = tk.StringVar(value="Последняя фраза: —")
-last_action_var = tk.StringVar(value="Последнее действие: —")
+last_phrase_var = tk.StringVar(value="РџРѕСЃР»РµРґРЅСЏСЏ С„СЂР°Р·Р°: вЂ”")
+last_action_var = tk.StringVar(value="РџРѕСЃР»РµРґРЅРµРµ РґРµР№СЃС‚РІРёРµ: вЂ”")
 
 quick_status_card = ttk.Frame(commands_tab, style="Panel.TFrame", padding=12)
 quick_status_card.pack(fill="x", padx=6, pady=(0, 10), before=toolbar)
-ttk.Label(quick_status_card, text="Быстрый статус", style="PanelLabel.TLabel").pack(anchor="w")
+ttk.Label(quick_status_card, text="Р‘С‹СЃС‚СЂС‹Р№ СЃС‚Р°С‚СѓСЃ", style="PanelLabel.TLabel").pack(anchor="w")
 ttk.Label(quick_status_card, textvariable=status_var, style="HeroStatus.TLabel", anchor="w").pack(
     fill="x",
     pady=(4, 8),
@@ -3130,7 +3130,7 @@ def animate_tab_glow(step=0):
 
 def on_tab_changed(_event=None):
     active = notebook.tab(notebook.select(), "text")
-    set_status(f"Открыта вкладка: {active}")
+    set_status(f"РћС‚РєСЂС‹С‚Р° РІРєР»Р°РґРєР°: {active}")
     animate_tab_glow(0)
 
 

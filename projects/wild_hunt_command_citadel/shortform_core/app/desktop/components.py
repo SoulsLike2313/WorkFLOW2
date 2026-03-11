@@ -27,7 +27,7 @@ class NavRailButton(QPushButton):
 
 
 class StatusPill(QLabel):
-    def __init__(self, text: str = "unknown", level: str = "info") -> None:
+    def __init__(self, text: str = "неизв.", level: str = "info") -> None:
         super().__init__(text)
         self.setProperty("statusPill", "true")
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -152,19 +152,19 @@ class TopStatusBar(GlowCard):
         layout.setSpacing(8)
 
         self.pills: dict[str, StatusPill] = {
-            "profiles": StatusPill("profiles: --", "info"),
-            "sessions": StatusPill("sessions: --", "info"),
-            "queue": StatusPill("queue: --", "info"),
-            "verification": StatusPill("verify: --", "warn"),
-            "ai": StatusPill("ai: --", "info"),
-            "runtime": StatusPill("runtime: --", "info"),
-            "alerts": StatusPill("alerts: --", "warn"),
+            "profiles": StatusPill("профили: --", "info"),
+            "sessions": StatusPill("сессии: --", "info"),
+            "queue": StatusPill("очередь: --", "info"),
+            "verification": StatusPill("гейт: --", "warn"),
+            "ai": StatusPill("AI: --", "info"),
+            "runtime": StatusPill("система: --", "info"),
+            "alerts": StatusPill("сигналы: --", "warn"),
         }
         for pill in self.pills.values():
             layout.addWidget(pill)
 
         layout.addStretch(1)
-        self.refresh_button = QPushButton("Refresh Data")
+        self.refresh_button = QPushButton("Обновить данные")
         self.refresh_button.setObjectName("PrimaryCTA")
         self.refresh_button.clicked.connect(self.refresh_requested.emit)
         layout.addWidget(self.refresh_button)
@@ -180,16 +180,31 @@ class TopStatusBar(GlowCard):
         runtime_state: str,
         alerts_count: int,
     ) -> None:
-        self.pills["profiles"].set_state(f"profiles: {profile_count}", "ok" if profile_count > 0 else "info")
-        self.pills["sessions"].set_state(f"sessions: {session_count}", "ok" if session_count > 0 else "warn")
-        self.pills["queue"].set_state(f"queue: {queue_count}", "warn" if queue_count > 0 else "ok")
+        ai_map = {"ready": "готов", "degraded": "ограничено"}
+        runtime_map = {"ready": "готова", "degraded": "ограничена"}
+        verify_map = {
+            "PASS": "PASS",
+            "PASS_WITH_WARNINGS": "PASS с предупрежд.",
+            "FAIL": "FAIL",
+            "UNKNOWN": "неизвестно",
+        }
+
+        self.pills["profiles"].set_state(f"профили: {profile_count}", "ok" if profile_count > 0 else "info")
+        self.pills["sessions"].set_state(f"сессии: {session_count}", "ok" if session_count > 0 else "warn")
+        self.pills["queue"].set_state(f"очередь: {queue_count}", "warn" if queue_count > 0 else "ok")
 
         verification_level = "ok" if verification == "PASS" else "warn"
-        self.pills["verification"].set_state(f"verify: {verification}", verification_level)
+        self.pills["verification"].set_state(
+            f"гейт: {verify_map.get(verification, verification)}",
+            verification_level,
+        )
 
-        self.pills["ai"].set_state(f"ai: {ai_state}", "info" if ai_state != "ready" else "ok")
-        self.pills["runtime"].set_state(f"runtime: {runtime_state}", "ok" if runtime_state == "ready" else "warn")
-        self.pills["alerts"].set_state(f"alerts: {alerts_count}", "danger" if alerts_count > 0 else "ok")
+        self.pills["ai"].set_state(f"AI: {ai_map.get(ai_state, ai_state)}", "info" if ai_state != "ready" else "ok")
+        self.pills["runtime"].set_state(
+            f"система: {runtime_map.get(runtime_state, runtime_state)}",
+            "ok" if runtime_state == "ready" else "warn",
+        )
+        self.pills["alerts"].set_state(f"сигналы: {alerts_count}", "danger" if alerts_count > 0 else "ok")
 
 
 class EmptyStateCard(GlowCard):
@@ -220,40 +235,41 @@ class ContextPanel(GlowCard):
         layout.setContentsMargins(14, 14, 14, 14)
         layout.setSpacing(12)
 
-        title = QLabel("Context + Next Actions")
+        title = QLabel("Контекст и следующие шаги")
         title.setObjectName("ContextPanelTitle")
         layout.addWidget(title)
 
-        self.profile_title = QLabel("No profile selected")
+        self.profile_title = QLabel("Профиль не выбран")
         self.profile_title.setObjectName("SectionTitle")
         self.profile_title.setWordWrap(True)
         layout.addWidget(self.profile_title)
 
-        self.profile_meta = QLabel("Select profile from Profiles page.")
+        self.profile_meta = QLabel("Выберите профиль на экране «Профили».")
         self.profile_meta.setObjectName("SectionHint")
         self.profile_meta.setWordWrap(True)
         layout.addWidget(self.profile_meta)
 
-        self.alerts_block = QLabel("Alerts: none")
+        self.alerts_block = QLabel("Сигналы: нет")
         self.alerts_block.setObjectName("SectionHint")
         self.alerts_block.setWordWrap(True)
         layout.addWidget(self.alerts_block)
 
-        self.recommendations_hint = QLabel("AI hints will appear here.")
+        self.recommendations_hint = QLabel("Здесь появятся подсказки AI.")
         self.recommendations_hint.setObjectName("SectionHint")
         self.recommendations_hint.setWordWrap(True)
         layout.addWidget(self.recommendations_hint)
 
-        self.next_actions = QLabel("Next: refresh workspace and open session.")
+        self.next_actions = QLabel("Далее: обновите данные и откройте сессию.")
         self.next_actions.setObjectName("SectionHint")
         self.next_actions.setWordWrap(True)
         layout.addWidget(self.next_actions)
 
         btn_row = QHBoxLayout()
-        quick_ai = QPushButton("Open AI Studio")
+        quick_ai = QPushButton("Открыть AI-студию")
         quick_ai.setObjectName("PrimaryCTA")
         quick_ai.clicked.connect(lambda: self.action_requested.emit("open_ai_studio"))
-        quick_updates = QPushButton("Check Updates")
+        quick_updates = QPushButton("Проверить обновления")
+        quick_updates.setObjectName("OutlineCTA")
         quick_updates.clicked.connect(lambda: self.action_requested.emit("check_updates"))
         btn_row.addWidget(quick_ai)
         btn_row.addWidget(quick_updates)
@@ -264,6 +280,6 @@ class ContextPanel(GlowCard):
     def update_context(self, *, profile_name: str, profile_meta: str, alerts: list[str], recommendation_hint: str, next_actions: str) -> None:
         self.profile_title.setText(profile_name)
         self.profile_meta.setText(profile_meta)
-        self.alerts_block.setText("Alerts: none" if not alerts else "Alerts:\n- " + "\n- ".join(alerts[:4]))
+        self.alerts_block.setText("Сигналы: нет" if not alerts else "Сигналы:\n- " + "\n- ".join(alerts[:4]))
         self.recommendations_hint.setText(recommendation_hint)
         self.next_actions.setText(next_actions)
