@@ -11,6 +11,10 @@
   - `voice_launcher_app/profiles`
   - `voice_launcher_app/diagnostics`
   - `voice_launcher_app/ui`
+- Дополнительно вынесены бизнес-сервисы:
+  - `voice_launcher_app/core/command_manager.py` (валидация/сохранение команд)
+  - `voice_launcher_app/actions/launcher_runner.py` (оркестрация безопасного launcher_play)
+  - `voice_launcher_app/app/controller.py` (ASR listen loop, антидубль, match/launch orchestration)
 - Усилен `launcher_play`:
   - strict verification-first алгоритм
   - проверка окна по process path + title patterns + confidence

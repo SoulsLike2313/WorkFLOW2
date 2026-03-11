@@ -18,8 +18,8 @@ from tkinter import filedialog, messagebox, simpledialog, ttk
 import pystray
 import speech_recognition as sr
 from PIL import Image, ImageDraw
+from voice_launcher_app.app.controller import AppController, ListenerDeps
 from voice_launcher_app.actions.launcher_runner import LauncherRunnerDeps, run_launcher_play
-from voice_launcher_app.actions.launcher_safety import LauncherTarget, SafeLauncherAutomation
 from voice_launcher_app.core.command_manager import save_command_definition
 from voice_launcher_app.core.matching import find_best_command as modular_find_best_command
 from voice_launcher_app.diagnostics.bundle import collect_diagnostics
@@ -1898,28 +1898,6 @@ def resolve_process_for_window_handle(hwnd):
     return proc_name, proc_path
 
 
-def dedupe_windows(windows):
-    unique = []
-    seen = set()
-    for win in windows or []:
-        handle = get_window_handle(win)
-        key = handle if handle else id(win)
-        if key in seen:
-            continue
-        seen.add(key)
-        unique.append(win)
-    return unique
-
-
-def collect_window_handles(windows):
-    handles = set()
-    for win in windows or []:
-        handle = get_window_handle(win)
-        if handle is not None:
-            handles.add(handle)
-    return handles
-
-
 def build_hint_variants(text):
     raw = str(text or "").strip()
     variants = []
@@ -1953,56 +1931,6 @@ def build_window_hints(path, window_title_hint=""):
     prioritized = [h for h in hints if h not in generic]
     fallback = [h for h in hints if h in generic]
     return prioritized + fallback
-
-
-def find_candidate_windows(path, window_title_hint="", windows=None):
-    if Desktop is None:
-        return []
-
-    hints = build_window_hints(path, window_title_hint)
-    scored = []
-
-    if windows is None:
-        try:
-            windows = Desktop(backend="uia").windows()
-        except Exception:
-            return []
-
-    for win in windows:
-        title = get_window_title(win)
-        if not title:
-            continue
-        if "голосовой запускатор" in title or "voice launcher" in title:
-            continue
-
-        score = 0
-        for idx, hint in enumerate(hints):
-            if hint and hint in title:
-                score += max(2, 8 - idx)
-
-        if "launcher" in title or "лаунчер" in title:
-            score += 1
-
-        if score > 0:
-            scored.append((score, win))
-
-    scored.sort(key=lambda item: item[0], reverse=True)
-    return [win for _, win in scored]
-
-
-def find_fallback_windows(windows, known_handles):
-    fallback = []
-    for win in windows:
-        title = get_window_title(win)
-        if not title:
-            continue
-        if "голосовой запускатор" in title or "voice launcher" in title:
-            continue
-
-        handle = get_window_handle(win)
-        if handle is not None and handle not in known_handles:
-            fallback.append(win)
-    return fallback
 
 
 def activate_window(window_wrapper):
@@ -2184,131 +2112,25 @@ def launch_with_launcher_play(entry):
         launch_target(entry.get("path", ""))
         return
 
-    path = str(entry.get("path", "") or "").strip()
-    play_text = str(entry.get("play_text", "Играть") or "Играть").strip()
-    window_title = str(entry.get("window_title", "") or "").strip()
-    wait_timeout = max(30, min(900, int(entry.get("wait_timeout", 240) or 240)))
-    launcher_dry_run = bool(entry.get("launcher_dry_run", False))
-    launcher_highlight = bool(entry.get("launcher_highlight", False))
-    try:
-        min_confidence = float(entry.get("min_window_confidence", 0.90))
-    except Exception:
-        min_confidence = 0.90
-    min_confidence = max(0.65, min(0.99, min_confidence))
-
-    title_patterns = []
-    for item in [window_title] + build_window_hints(path, window_title):
-        norm = normalize_phrase(item or "")
-        if norm and norm not in title_patterns:
-            title_patterns.append(norm)
-
-    target = LauncherTarget(
-        path=path,
-        button_text=play_text,
-        title_patterns=title_patterns,
-        wait_timeout=wait_timeout,
-        min_window_confidence=min_confidence,
-        dry_run=launcher_dry_run,
-        highlight_only=launcher_highlight,
-    )
-
-    log_launcher(
-        "SAFE_START | "
-        f"path='{path}' play='{play_text}' title_patterns={title_patterns} "
-        f"timeout={wait_timeout} dry_run={launcher_dry_run} highlight={launcher_highlight} "
-        f"min_conf={min_confidence:.2f}"
-    )
-    log_runtime(f"Launcher+Play safe start: path='{path}' mode=launcher_play")
-
-    def desktop_factory():
-        return Desktop(backend="uia")
-
-    def process_starter(target_path):
-        running_proc = find_running_process_for_entry(entry)
-        if running_proc:
-            log_launcher(f"SAFE_INFO | process already running: {running_proc}")
-            return
-        launch_target(target_path, duplicate_guard_seconds=0.0)
-
-    def button_finder(window_wrapper, button_text):
-        found = find_play_control(window_wrapper, button_text)
-        if not found:
-            return None
-        control, caption, control_type, score = found
-        if not is_control_enabled(control):
-            return None
-        return {
-            "control": control,
-            "caption": caption,
-            "control_type": control_type,
-            "score": score,
-        }
-
-    def button_clicker(control_payload, window_wrapper):
-        if not isinstance(control_payload, dict):
-            return False
-        control = control_payload.get("control")
-        if control is None:
-            return False
-        clicked, method = click_play_control(control, window_wrapper)
-        if clicked:
-            log_launcher(
-                f"SAFE_CLICK | method={method} caption='{control_payload.get('caption', '')}' "
-                f"type={control_payload.get('control_type', '')} "
-                f"score={float(control_payload.get('score', 0.0)):.2f}"
-            )
-            try:
-                time.sleep(0.9)
-            except Exception:
-                pass
-            if play_control_is_ready(window_wrapper, play_text):
-                log_launcher("SAFE_CLICK | button still ready after click, launcher may reject it")
-            return True
-        return False
-
-    def highlighter(window_wrapper, control_payload):
-        if not isinstance(control_payload, dict):
-            return
-        control = control_payload.get("control")
-        try:
-            activate_window(window_wrapper)
-        except Exception:
-            pass
-        try:
-            if hasattr(control, "draw_outline"):
-                control.draw_outline(colour="green", thickness=3)
-        except Exception:
-            pass
-        try:
-            if hasattr(window_wrapper, "draw_outline"):
-                window_wrapper.draw_outline(colour="blue", thickness=2)
-        except Exception:
-            pass
-
     def worker():
-        set_status(f"Безопасный поиск окна лаунчера: '{play_text}'")
-        automation = SafeLauncherAutomation(desktop_factory=desktop_factory, logger=log_launcher)
-        report = automation.run(
-            target=target,
+        deps = LauncherRunnerDeps(
+            desktop_factory=lambda: Desktop(backend="uia"),
             process_resolver=resolve_process_for_window_handle,
-            process_starter=process_starter,
-            button_finder=button_finder,
-            button_clicker=button_clicker,
-            highlighter=highlighter,
+            find_running_process=find_running_process_for_entry,
+            launch_target=lambda target_path: launch_target(target_path, duplicate_guard_seconds=0.0),
+            find_play_control=find_play_control,
+            is_control_enabled=is_control_enabled,
+            click_play_control=click_play_control,
+            play_control_is_ready=play_control_is_ready,
+            activate_window=activate_window,
+            build_window_hints=build_window_hints,
+            normalize_phrase=normalize_phrase,
+            logger=log_launcher,
+            runtime_logger=log_runtime,
+            set_status=set_status,
+            set_last_action=set_last_action,
         )
-        log_runtime(
-            f"Launcher+Play report: ok={report.ok} stage={report.stage} "
-            f"clicked={report.clicked} preview={report.preview_only} conf={report.window_confidence:.2f}"
-        )
-        if report.ok and report.clicked:
-            set_status("Лаунчер: безопасный клик выполнен")
-            set_last_action("Лаунчер: клик по кнопке выполнен")
-        elif report.ok and report.preview_only:
-            set_status("Лаунчер: preview/dry-run выполнен, без клика")
-            set_last_action("Лаунчер: выполнен безопасный preview")
-        else:
-            set_status(f"Лаунчер: {report.message}")
-            set_last_action(f"Лаунчер: {report.message}")
+        run_launcher_play(entry=entry, deps=deps)
 
     threading.Thread(target=worker, daemon=True).start()
 
@@ -2813,85 +2635,27 @@ def open_voice_capture_dialog():
 
 # ======================= Listener =======================
 def listen_loop():
-    recognizer = build_recognizer()
-    last_adjust_ts = 0.0
     global last_voice_trigger
-    log_runtime("Listen loop started")
-
-    while not stop_event.is_set():
-        if pause_listen_event.is_set() or monitor_active_event.is_set():
-            time.sleep(0.1)
-            continue
-
-        if restart_listen_event.is_set():
-            recognizer = build_recognizer()
-            restart_listen_event.clear()
-
-        mic_index = get_selected_mic_index()
-
-        try:
-            with sr.Microphone(device_index=mic_index) as source:
-                now = time.time()
-                should_adjust = (now - last_adjust_ts) > 16 or bool(settings.get("dynamic_energy", True))
-                if should_adjust:
-                    recognizer.adjust_for_ambient_noise(source, duration=0.35)
-                    last_adjust_ts = now
-
-                set_status("Фоновое прослушивание активно")
-                audio = recognizer.listen(
-                    source,
-                    timeout=float(settings.get("listen_timeout", 1.8)),
-                    phrase_time_limit=float(settings.get("listen_phrase_limit", 5.0)),
-                )
-
-            candidates = recognize_candidates(recognizer, audio)
-            matched_phrase, target, score, heard, margin = find_best_command(candidates)
-            if candidates:
-                preview = ", ".join(candidates[:3])
-                log_asr(f"candidates=[{preview}]")
-            if target:
-                now = time.time()
-                mode = str(target.get("mode", "normal") or "normal").strip().lower()
-                if heard:
-                    set_last_phrase(heard)
-                if mode == "launcher_play":
-                    trigger_guard = 18.0
-                elif mode == "admin_task":
-                    trigger_guard = 6.0
-                else:
-                    trigger_guard = 2.8
-
-                if (
-                    matched_phrase == last_voice_trigger.get("phrase", "")
-                    and now - float(last_voice_trigger.get("ts", 0.0)) < trigger_guard
-                ):
-                    set_status(f"Антидубль фразы: '{matched_phrase}'")
-                    log_runtime(
-                        f"Voice trigger suppressed: phrase='{matched_phrase}' guard={trigger_guard:.1f}s"
-                    )
-                    continue
-
-                last_voice_trigger = {"phrase": matched_phrase or "", "ts": now}
-                launch_command(target)
-                log_asr(
-                    f"match heard='{heard}' -> '{matched_phrase}' "
-                    f"score={score:.2f} margin={margin:.2f}"
-                )
-                if score < 1.0:
-                    set_status(
-                        f"Слышу '{heard}' -> '{matched_phrase}' "
-                        f"(score {score:.2f}, margin {margin:.2f})"
-                    )
-            elif heard:
-                set_status(f"Слышу '{heard}', но команды не совпали")
-                set_last_phrase(heard)
-                log_asr(f"no-match heard='{heard}'")
-        except sr.WaitTimeoutError:
-            continue
-        except Exception as exc:
-            set_status(f"Проблема микрофона: {exc}")
-            log_runtime(f"Listen loop microphone error: {exc}")
-            time.sleep(0.5)
+    deps = ListenerDeps(
+        stop_event=stop_event,
+        pause_listen_event=pause_listen_event,
+        monitor_active_event=monitor_active_event,
+        restart_listen_event=restart_listen_event,
+        build_recognizer=build_recognizer,
+        get_selected_mic_index=get_selected_mic_index,
+        microphone_factory=sr.Microphone,
+        settings_provider=lambda: settings,
+        recognize_candidates=lambda recognizer, audio: recognize_candidates(recognizer, audio),
+        match_command=find_best_command,
+        launch_command=launch_command,
+        set_status=set_status,
+        set_last_phrase=set_last_phrase,
+        log_runtime=log_runtime,
+        log_asr=log_asr,
+        wait_timeout_error=sr.WaitTimeoutError,
+    )
+    controller = AppController(deps=deps, last_voice_trigger=last_voice_trigger)
+    last_voice_trigger = controller.run_listen_loop()
 
 
 # ======================= Tray & UI =======================
