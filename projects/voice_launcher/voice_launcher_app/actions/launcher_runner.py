@@ -34,23 +34,38 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
     wait_timeout = max(30, min(900, int(entry.get("wait_timeout", 240) or 240)))
     launcher_dry_run = bool(entry.get("launcher_dry_run", False))
     launcher_highlight = bool(entry.get("launcher_highlight", False))
+
     path_low = path.replace("\\", "/").lower()
     war_thunder_point_mode = "warthunder" in path_low
+    point_mode = str(entry.get("point_mode", "auto") or "auto").strip().lower()
+    if point_mode not in {"auto", "force", "off"}:
+        point_mode = "auto"
+    force_point_click = point_mode == "force" or (point_mode == "auto" and war_thunder_point_mode)
+    allow_point_fallback = force_point_click or (point_mode == "auto" and war_thunder_point_mode)
+
+    default_x_ratio = 0.855 if war_thunder_point_mode else 0.86
+    default_y_ratio = 0.945 if war_thunder_point_mode else 0.90
     try:
-        point_x_ratio = float(entry.get("point_x_ratio", 0.86))
+        point_x_ratio = float(entry.get("point_x_ratio", default_x_ratio))
     except Exception:
-        point_x_ratio = 0.86
+        point_x_ratio = default_x_ratio
     try:
-        point_y_ratio = float(entry.get("point_y_ratio", 0.90))
+        point_y_ratio = float(entry.get("point_y_ratio", default_y_ratio))
     except Exception:
-        point_y_ratio = 0.90
+        point_y_ratio = default_y_ratio
     point_x_ratio = max(0.05, min(0.98, point_x_ratio))
     point_y_ratio = max(0.05, min(0.98, point_y_ratio))
+
     try:
         min_confidence = float(entry.get("min_window_confidence", 0.90))
     except Exception:
         min_confidence = 0.90
     min_confidence = max(0.65, min(0.99, min_confidence))
+    if force_point_click and min_confidence > 0.65:
+        deps.logger(
+            f"SAFE_INFO | lowering min_window_confidence from {min_confidence:.2f} to 0.65 for point-click mode"
+        )
+        min_confidence = 0.65
 
     title_patterns = []
     for item in [window_title] + list(deps.build_window_hints(path, window_title)):
@@ -72,9 +87,20 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
         f"path='{path}' play='{play_text}' title_patterns={title_patterns} "
         f"timeout={wait_timeout} dry_run={launcher_dry_run} highlight={launcher_highlight} "
         f"min_conf={min_confidence:.2f} wt_point_mode={war_thunder_point_mode} "
+        f"point_mode={point_mode} force_point={force_point_click} "
         f"point=({point_x_ratio:.2f},{point_y_ratio:.2f})"
     )
     deps.runtime_logger(f"Launcher+Play safe start: path='{path}' mode=launcher_play")
+
+    def build_point_payload(score: float) -> dict:
+        return {
+            "point_click": True,
+            "x_ratio": point_x_ratio,
+            "y_ratio": point_y_ratio,
+            "caption": "",
+            "control_type": "PointFallback",
+            "score": score,
+        }
 
     def process_starter(target_path: str) -> None:
         running_proc = deps.find_running_process(entry)
@@ -84,24 +110,31 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
         deps.launch_target(target_path)
 
     def button_finder(window_wrapper, button_text):
+        if force_point_click:
+            deps.logger(
+                f"SAFE_INFO | point-click mode active ({point_x_ratio:.2f},{point_y_ratio:.2f}), "
+                "skip text button lookup"
+            )
+            return build_point_payload(0.70)
+
         found = deps.find_play_control(window_wrapper, button_text)
         if not found:
-            if war_thunder_point_mode:
+            if allow_point_fallback:
                 deps.logger(
                     f"SAFE_INFO | button text not found, fallback to point-click mode ({point_x_ratio:.2f},{point_y_ratio:.2f})"
                 )
-                return {
-                    "point_click": True,
-                    "x_ratio": point_x_ratio,
-                    "y_ratio": point_y_ratio,
-                    "caption": "",
-                    "control_type": "PointFallback",
-                    "score": 0.56,
-                }
+                return build_point_payload(0.56)
             return None
+
         control, caption, control_type, score = found
         if not deps.is_control_enabled(control):
+            if allow_point_fallback:
+                deps.logger(
+                    f"SAFE_INFO | text control disabled, fallback to point-click mode ({point_x_ratio:.2f},{point_y_ratio:.2f})"
+                )
+                return build_point_payload(0.54)
             return None
+
         return {
             "control": control,
             "caption": caption,
@@ -112,6 +145,7 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
     def button_clicker(control_payload, window_wrapper):
         if not isinstance(control_payload, dict):
             return False
+
         if bool(control_payload.get("point_click")):
             if deps.click_window_point is None:
                 return False
@@ -130,6 +164,7 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
         control = control_payload.get("control")
         if control is None:
             return False
+
         clicked, method = deps.click_play_control(control, window_wrapper)
         if clicked:
             deps.logger(
@@ -141,9 +176,44 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
                 time.sleep(0.9)
             except Exception:
                 pass
-            if deps.play_control_is_ready(window_wrapper, play_text):
+
+            still_ready = deps.play_control_is_ready(window_wrapper, play_text)
+            if still_ready:
                 deps.logger("SAFE_CLICK | button still ready after click, launcher may reject it")
+                if allow_point_fallback and deps.click_window_point is not None:
+                    deps.logger(
+                        f"SAFE_INFO | control click had no visible effect, retry via point-click ({point_x_ratio:.2f},{point_y_ratio:.2f})"
+                    )
+                    clicked_retry, method_retry = deps.click_window_point(
+                        window_wrapper,
+                        point_x_ratio,
+                        point_y_ratio,
+                    )
+                    if clicked_retry:
+                        deps.logger(
+                            "SAFE_CLICK | "
+                            f"method={method_retry} caption='point-fallback-after-control' "
+                            "type='PointFallback' score=0.58"
+                        )
+                        return True
             return True
+
+        if allow_point_fallback and deps.click_window_point is not None:
+            deps.logger(
+                f"SAFE_INFO | control click failed, retry via point-click ({point_x_ratio:.2f},{point_y_ratio:.2f})"
+            )
+            clicked_retry, method_retry = deps.click_window_point(
+                window_wrapper,
+                point_x_ratio,
+                point_y_ratio,
+            )
+            if clicked_retry:
+                deps.logger(
+                    "SAFE_CLICK | "
+                    f"method={method_retry} caption='point-fallback-after-fail' "
+                    "type='PointFallback' score=0.55"
+                )
+                return True
         return False
 
     def highlighter(window_wrapper, control_payload):
@@ -182,6 +252,7 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
         f"Launcher+Play report: ok={report.ok} stage={report.stage} "
         f"clicked={report.clicked} preview={report.preview_only} conf={report.window_confidence:.2f}"
     )
+
     if report.ok and report.clicked:
         deps.set_status("Лаунчер: безопасный клик выполнен")
         deps.set_last_action("Лаунчер: клик по кнопке выполнен")
@@ -191,4 +262,5 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
     else:
         deps.set_status(f"Лаунчер: {report.message}")
         deps.set_last_action(f"Лаунчер: {report.message}")
+
     return report
