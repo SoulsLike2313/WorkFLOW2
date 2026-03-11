@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import difflib
 from dataclasses import dataclass
-from typing import Dict, Iterable, Optional, Tuple
+from typing import Dict, Iterable, Optional
 
 
 def normalize_phrase(text: str) -> str:
@@ -60,6 +60,7 @@ class MatchResult:
     score: float
     heard: str
     margin: float
+    threshold: float = 0.0
 
 
 def find_best_command(
@@ -69,11 +70,11 @@ def find_best_command(
 ) -> MatchResult:
     candidates = [normalize_phrase(c) for c in candidates if normalize_phrase(c)]
     if not candidates or not commands:
-        return MatchResult(None, None, 0.0, "", 0.0)
+        return MatchResult(None, None, 0.0, "", 0.0, threshold=base_threshold)
 
     for candidate in candidates:
         if candidate in commands:
-            return MatchResult(candidate, commands[candidate], 1.0, candidate, 1.0)
+            return MatchResult(candidate, commands[candidate], 1.0, candidate, 1.0, threshold=1.0)
 
     keys = list(commands.keys())
     best_phrase = None
@@ -93,7 +94,7 @@ def find_best_command(
                 second_score = score
 
     if not best_phrase:
-        return MatchResult(None, None, best_score, best_candidate, 0.0)
+        return MatchResult(None, None, best_score, best_candidate, 0.0, threshold=base_threshold)
 
     margin = best_score - second_score
     adaptive_threshold = base_threshold
@@ -108,9 +109,15 @@ def find_best_command(
 
     if len(best_candidate) <= 2 and best_candidate and best_phrase:
         if best_candidate[0] != best_phrase[0]:
-            return MatchResult(None, None, best_score, best_candidate, margin)
+            return MatchResult(None, None, best_score, best_candidate, margin, threshold=adaptive_threshold)
 
     if best_score >= adaptive_threshold and margin >= required_margin:
-        return MatchResult(best_phrase, commands[best_phrase], best_score, best_candidate, margin)
-    return MatchResult(None, None, best_score, best_candidate, margin)
-
+        return MatchResult(
+            best_phrase,
+            commands[best_phrase],
+            best_score,
+            best_candidate,
+            margin,
+            threshold=adaptive_threshold,
+        )
+    return MatchResult(None, None, best_score, best_candidate, margin, threshold=adaptive_threshold)

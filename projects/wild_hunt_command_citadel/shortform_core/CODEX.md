@@ -114,6 +114,11 @@ app/workspace/
 - Verification artifacts are written under:
   - `runtime/verification/<run_id>/verification_summary.json`
   - `runtime/verification/<run_id>/verification_summary.md`
+  - `runtime/verification/<run_id>/readiness_summary.json`
+  - `runtime/verification/<run_id>/consolidated_status.json`
+  - `runtime/verification/<run_id>/patch_application_summary.json`
+  - `runtime/verification/<run_id>/update_audit_summary.json`
+  - `runtime/verification/<run_id>/diagnostics_manifest.json`
   - `runtime/verification/<run_id>/diagnostics/*.jsonl`
   - `runtime/verification/<run_id>/test_artifacts/*`
 
@@ -121,6 +126,7 @@ app/workspace/
 
 - `user mode`:
   - single entrypoint: `python -m app.launcher user`
+  - launcher enforces machine gate before opening UI
   - desktop window starts with internal backend lifecycle orchestration
   - user should not manually manage `uvicorn`
 - `developer mode`:

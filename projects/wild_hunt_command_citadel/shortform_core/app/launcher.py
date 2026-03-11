@@ -10,7 +10,13 @@ from .startup_manager import StartupManager
 from .workspace.diagnostics import diag_log
 
 
-def _run_user_mode() -> int:
+def _run_user_mode(*, skip_gate_check: bool = False) -> int:
+    if not skip_gate_check:
+        verify_code = subprocess.call([sys.executable, "-m", "app.verify"])
+        if verify_code != 0:
+            print("Machine Verification Gate did not return PASS. User mode launch aborted.")
+            return 1
+
     manager = StartupManager()
     manager.config.mode = "user"
     context = manager.initialize_local_runtime()
@@ -62,7 +68,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Shortform launcher")
     sub = parser.add_subparsers(dest="mode", required=True)
 
-    sub.add_parser("user", help="User mode: desktop app with internal backend orchestration")
+    user = sub.add_parser("user", help="User mode: desktop app with internal backend orchestration")
+    user.add_argument("--skip-gate-check", action="store_true", help="Skip gate check (internal/script usage)")
 
     dev = sub.add_parser("developer", help="Developer mode: explicit controls")
     dev_sub = dev.add_subparsers(dest="dev_cmd", required=True)
@@ -79,7 +86,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(list(argv) if argv is not None else None)
 
     if args.mode == "user":
-        return _run_user_mode()
+        return _run_user_mode(skip_gate_check=bool(args.skip_gate_check))
     if args.mode == "developer":
         if args.dev_cmd == "backend":
             return _run_developer_backend(args.host, args.port)

@@ -19,14 +19,14 @@ $pythonExe = Join-Path $projectRoot ".venv\Scripts\python.exe"
 & $pythonExe -m pip install -r requirements.txt
 
 if (-not $SkipVerify) {
-    & $pythonExe -m app.verify --skip-install
+    & $pythonExe -m app.verify
     if ($LASTEXITCODE -ne 0) {
         throw "Machine Verification Gate did not pass. Fix issues before user-mode manual testing."
     }
 }
 
 if ($Mode -eq "user") {
-    & $pythonExe -m app.launcher user
+    & $pythonExe -m app.launcher user --skip-gate-check
     exit $LASTEXITCODE
 }
 

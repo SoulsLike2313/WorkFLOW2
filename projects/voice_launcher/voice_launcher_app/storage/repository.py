@@ -5,18 +5,10 @@ import os
 import shutil
 import sys
 import time
-from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Tuple
 
-from .models import (
-    ACTION_ADMIN_TASK,
-    ACTION_LAUNCHER_PLAY,
-    ACTION_NORMAL,
-    SUPPORTED_ACTIONS,
-    CommandEntry,
-    SettingsData,
-)
+from .models import ACTION_LAUNCHER_PLAY, SUPPORTED_ACTIONS, CommandEntry, SettingsData
 
 
 def default_storage_dir() -> Path:
@@ -65,13 +57,13 @@ def _load_json(path: Path) -> Optional[Any]:
 def maybe_fix_mojibake(text: str) -> str:
     if not isinstance(text, str):
         return str(text)
-    if not any(ch in text for ch in ("Р", "С", "Ð", "Ñ")):
+    if not any(ch in text for ch in ("Р", "Г")):
         return text
 
     def score(candidate: str) -> float:
         cyr = sum(1 for ch in candidate if ("а" <= ch.lower() <= "я") or ch in "ёЁ")
-        bad = candidate.count("Р") + candidate.count("С") + candidate.count("Ð") + candidate.count("Ñ")
-        return cyr * 2.0 - bad * 2.8
+        bad = candidate.count("Р") + candidate.count("Г")
+        return cyr * 2.0 - bad * 1.8
 
     best = text
     best_score = score(text)
@@ -91,6 +83,14 @@ def normalize_phrase(text: str) -> str:
     return " ".join(str(text).strip().lower().split())
 
 
+def _parse_bool(value: Any, default: bool = False) -> bool:
+    if value is None:
+        return bool(default)
+    if isinstance(value, str):
+        return value.strip().lower() in ("1", "true", "yes", "on", "y")
+    return bool(value)
+
+
 def normalize_command_entry(raw: Any) -> Optional[CommandEntry]:
     if isinstance(raw, str):
         path = maybe_fix_mojibake(raw).strip()
@@ -105,11 +105,20 @@ def normalize_command_entry(raw: Any) -> Optional[CommandEntry]:
     entry.task_name = maybe_fix_mojibake(entry.task_name).strip()
     entry.play_text = maybe_fix_mojibake(entry.play_text).strip() or "Играть"
     entry.window_title = maybe_fix_mojibake(entry.window_title).strip()
-    entry.mode = entry.mode if entry.mode in SUPPORTED_ACTIONS else ACTION_NORMAL
+    entry.mode = entry.mode if entry.mode in SUPPORTED_ACTIONS else "normal"
     entry.wait_timeout = max(30, min(900, int(entry.wait_timeout)))
     entry.debounce_seconds = max(0.8, min(30.0, float(entry.debounce_seconds)))
+    entry.launcher_dry_run = _parse_bool(raw.get("launcher_dry_run", entry.launcher_dry_run))
+    entry.launcher_highlight = _parse_bool(raw.get("launcher_highlight", entry.launcher_highlight))
+    try:
+        entry.min_window_confidence = float(raw.get("min_window_confidence", entry.min_window_confidence))
+    except Exception:
+        entry.min_window_confidence = 0.90
+    entry.min_window_confidence = max(0.65, min(0.99, entry.min_window_confidence))
+
     if entry.mode == ACTION_LAUNCHER_PLAY:
         entry.debounce_seconds = max(12.0, entry.debounce_seconds)
+
     if not entry.path:
         return None
     return entry
@@ -123,8 +132,10 @@ def migrate_settings(raw: Dict[str, Any], backups_dir: Path) -> Tuple[SettingsDa
     changed = False
     src = dict(raw)
 
-    if int(src.get("settings_version", 0)) < 5:
-        src["settings_version"] = 5
+    if int(src.get("settings_version", 0)) < 6:
+        src["settings_version"] = 6
+        if "simple_mode" not in src:
+            src["simple_mode"] = True
         changed = True
 
     data = default_settings()
@@ -137,7 +148,15 @@ def migrate_settings(raw: Dict[str, Any], backups_dir: Path) -> Tuple[SettingsDa
         changed = True
 
     merged["whisper_model_size"] = str(merged.get("whisper_model_size", "small")).strip().lower() or "small"
-    if merged["whisper_model_size"] not in ("tiny", "base", "small", "medium", "large-v2", "large-v3", "distil-large-v3"):
+    if merged["whisper_model_size"] not in (
+        "tiny",
+        "base",
+        "small",
+        "medium",
+        "large-v2",
+        "large-v3",
+        "distil-large-v3",
+    ):
         merged["whisper_model_size"] = "small"
         changed = True
 
@@ -161,7 +180,8 @@ def migrate_settings(raw: Dict[str, Any], backups_dir: Path) -> Tuple[SettingsDa
     clamp("listen_phrase_limit", 1.5, 8.0, float)
     clamp("mic_gain", 1.0, 4.0, float)
     clamp("monitor_gain", 0.8, 2.5, float)
-    merged["dynamic_energy"] = bool(merged.get("dynamic_energy", True))
+    merged["dynamic_energy"] = _parse_bool(merged.get("dynamic_energy", True), True)
+    merged["simple_mode"] = _parse_bool(merged.get("simple_mode", True), True)
 
     settings = SettingsData(
         settings_version=int(merged["settings_version"]),
@@ -178,8 +198,12 @@ def migrate_settings(raw: Dict[str, Any], backups_dir: Path) -> Tuple[SettingsDa
         listen_phrase_limit=float(merged["listen_phrase_limit"]),
         mic_gain=float(merged["mic_gain"]),
         monitor_gain=float(merged["monitor_gain"]),
+        simple_mode=bool(merged["simple_mode"]),
         extra={},
     )
+
+    if changed and backups_dir.exists():
+        backups_dir.mkdir(parents=True, exist_ok=True)
     return settings, changed
 
 
@@ -236,4 +260,3 @@ def save_snapshot(paths: Dict[str, Path], name: str, payload: Dict[str, Any]) ->
     target = paths["snapshots"] / f"{name}_{stamp}.json"
     _save_json_atomic(target, payload)
     return target
-

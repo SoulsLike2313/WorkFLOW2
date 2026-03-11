@@ -100,10 +100,11 @@ powershell -ExecutionPolicy Bypass -File .\run_user.ps1
 ```
 
 What happens:
-- machine verification gate is executed first (`python -m app.verify --skip-install`)
+- machine verification gate is executed first (`python -m app.verify`)
 - if gate is `PASS`, desktop app opens
 - backend API is started automatically in the background and managed by launcher
 - user does not need to manually run `uvicorn` or open localhost
+- direct command `python -m app.launcher user` also enforces gate before window startup
 
 ## Developer Mode
 
@@ -123,6 +124,12 @@ Direct developer commands:
 ```
 
 ## Verification Workflow
+
+Canonical verify entrypoint:
+
+```powershell
+.\.venv\Scripts\python.exe -m app.verify
+```
 
 Run full verification pipeline:
 
@@ -146,6 +153,11 @@ What it does:
 - writes machine-readable report:
   - `runtime/verification/<run_id>/verification_summary.json`
   - `runtime/verification/<run_id>/verification_summary.md`
+  - `runtime/verification/<run_id>/readiness_summary.json`
+  - `runtime/verification/<run_id>/consolidated_status.json`
+  - `runtime/verification/<run_id>/patch_application_summary.json`
+  - `runtime/verification/<run_id>/update_audit_summary.json`
+  - `runtime/verification/<run_id>/diagnostics_manifest.json`
 
 Verification gate status:
 - `PASS`: manual user-mode testing is allowed
@@ -163,10 +175,15 @@ Optional direct test runs:
 
 ## Update / Patch Mode
 
+Developer backend:
+
+```powershell
+.\.venv\Scripts\python.exe -m app.launcher developer backend --host 127.0.0.1 --port 8000
+```
+
 Manifest check:
 
 ```powershell
-.\.venv\Scripts\python.exe -m uvicorn app.api:app --host 127.0.0.1 --port 8000
 # then call:
 # POST /updates/check?manifest_path=path\to\manifest.json
 ```
@@ -199,6 +216,11 @@ runtime/
     verify-<timestamp>/
       verification_summary.json
       verification_summary.md
+      readiness_summary.json
+      consolidated_status.json
+      patch_application_summary.json
+      update_audit_summary.json
+      diagnostics_manifest.json
       logs/
       diagnostics/
       test_artifacts/

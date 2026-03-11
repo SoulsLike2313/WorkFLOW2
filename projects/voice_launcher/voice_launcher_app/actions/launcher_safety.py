@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import time
 from dataclasses import dataclass, field
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Iterable, List, Optional, Sequence, Tuple
 
 
 def normalize(text: str) -> str:
@@ -83,10 +83,7 @@ def select_best_window(
 
 
 class SafeLauncherAutomation:
-    """Strict, verification-first launcher automation.
-
-    No clicks are performed unless the window is confidently identified.
-    """
+    """Verification-first launcher automation with click safety."""
 
     def __init__(self, desktop_factory, logger=None):
         self.desktop_factory = desktop_factory
@@ -108,6 +105,7 @@ class SafeLauncherAutomation:
         title = str(title).strip()
         if not title:
             return None
+
         handle = None
         for attr in ("handle", "hwnd"):
             try:
@@ -117,6 +115,7 @@ class SafeLauncherAutomation:
                 continue
         if not handle:
             return None
+
         proc_name, proc_path = process_resolver(handle)
         return WindowCandidate(
             title=title,
@@ -136,13 +135,12 @@ class SafeLauncherAutomation:
     ) -> LauncherReport:
         report = LauncherReport(ok=False, stage="start", message="init")
         target_path = str(target.path or "").strip()
+
+        report.stage = "validate_target"
         if not target_path:
-            report.stage = "validate_target"
             report.message = "Пустой путь launcher target"
             return report
-
         if not os.path.exists(target_path):
-            report.stage = "validate_target"
             report.message = f"Файл не найден: {target_path}"
             return report
         self._log(report, f"target validated: {target_path}")
@@ -161,21 +159,25 @@ class SafeLauncherAutomation:
             except Exception as exc:
                 report.message = f"Desktop enumeration failed: {exc}"
                 return report
+
             candidates: List[WindowCandidate] = []
             for wrapper in wrappers:
                 item = self._window_to_candidate(wrapper, process_resolver)
                 if item:
                     candidates.append(item)
+
             best, best_score = select_best_window(candidates, target)
             if best is not None:
                 break
             time.sleep(0.35)
+
         if best is None:
             report.stage = "verify_window"
             report.message = f"Окно не прошло верификацию (max confidence={best_score:.2f})"
             report.window_confidence = best_score
             return report
 
+        report.stage = "verify_window"
         report.window_confidence = best_score
         self._log(
             report,
@@ -195,7 +197,7 @@ class SafeLauncherAutomation:
                 highlighter(best.wrapper, control)
             report.ok = True
             report.preview_only = True
-            report.message = "Preview/Highlight выполнен, клик не выполнялся"
+            report.message = "Подсветка выполнена, клик не выполнялся"
             return report
 
         if target.dry_run:
@@ -208,11 +210,10 @@ class SafeLauncherAutomation:
         report.stage = "click"
         clicked = button_clicker(control, best.wrapper)
         if not clicked:
-            report.message = "Клик по кнопке отклонён или не выполнен"
+            report.message = "Клик по кнопке отклонен или не выполнен"
             return report
 
         report.ok = True
         report.clicked = True
         report.message = "Клик выполнен безопасно"
         return report
-

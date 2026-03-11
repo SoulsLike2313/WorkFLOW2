@@ -11,6 +11,7 @@ import sys
 import threading
 import time
 import tempfile
+from pathlib import Path
 import tkinter as tk
 from tkinter import filedialog, messagebox, simpledialog, ttk
 
@@ -19,6 +20,8 @@ import speech_recognition as sr
 from PIL import Image, ImageDraw
 from voice_launcher_app.actions.launcher_safety import LauncherTarget, SafeLauncherAutomation
 from voice_launcher_app.core.matching import find_best_command as modular_find_best_command
+from voice_launcher_app.diagnostics.bundle import collect_diagnostics
+from voice_launcher_app.profiles.profile_io import export_profile, import_profile
 try:
     import audioop
 except Exception:
@@ -61,10 +64,15 @@ def get_storage_dir():
 STORAGE_DIR = get_storage_dir()
 COMMANDS_FILE = os.path.join(STORAGE_DIR, "commands.json")
 SETTINGS_FILE = os.path.join(STORAGE_DIR, "settings.json")
-LAUNCHER_LOG_FILE = os.path.join(STORAGE_DIR, "launcher_automation.log")
-RUNTIME_LOG_FILE = os.path.join(STORAGE_DIR, "runtime.log")
-ASR_LOG_FILE = os.path.join(STORAGE_DIR, "asr_events.log")
-SESSION_SNAPSHOT_FILE = os.path.join(STORAGE_DIR, "dev_session_snapshot.json")
+LOGS_DIR = os.path.join(STORAGE_DIR, "logs")
+BACKUPS_DIR = os.path.join(STORAGE_DIR, "backups")
+SNAPSHOTS_DIR = os.path.join(STORAGE_DIR, "snapshots")
+for _folder in (LOGS_DIR, BACKUPS_DIR, SNAPSHOTS_DIR):
+    os.makedirs(_folder, exist_ok=True)
+LAUNCHER_LOG_FILE = os.path.join(LOGS_DIR, "launcher_automation.log")
+RUNTIME_LOG_FILE = os.path.join(LOGS_DIR, "runtime.log")
+ASR_LOG_FILE = os.path.join(LOGS_DIR, "asr_events.log")
+SESSION_SNAPSHOT_FILE = os.path.join(SNAPSHOTS_DIR, "dev_session_snapshot.json")
 
 PALETTE = {
     "bg": "#181325",
@@ -89,7 +97,7 @@ UI_FONT_SCRIPT = "Segoe Print"
 UI_FONT_SOFT = "Segoe UI Semibold"
 
 DEFAULT_SETTINGS = {
-    "settings_version": 4,
+    "settings_version": 6,
     "asr_engine": "whisper",
     "whisper_model_size": "small",
     "microphone_name": "",
@@ -103,6 +111,7 @@ DEFAULT_SETTINGS = {
     "listen_phrase_limit": 5.0,
     "mic_gain": 1.4,
     "monitor_gain": 1.0,
+    "simple_mode": True,
 }
 
 LEGACY_PRESET = {
@@ -141,6 +150,8 @@ runtime_log_lock = threading.Lock()
 command_launch_gate = {}
 process_list_cache = {"ts": 0.0, "names": set()}
 last_voice_trigger = {"phrase": "", "ts": 0.0}
+recent_heard_phrases = []
+recent_actions = []
 
 
 # ======================= Utils =======================
@@ -207,6 +218,27 @@ def normalize_phrase(text):
 
 def set_status(text):
     root.after(0, lambda: status_var.set(text))
+
+
+def push_history_value(buffer, value, limit=20):
+    value = str(value or "").strip()
+    if not value:
+        return
+    buffer.append(value)
+    if len(buffer) > limit:
+        del buffer[:-limit]
+
+
+def set_last_phrase(text):
+    push_history_value(recent_heard_phrases, text, limit=30)
+    if "last_phrase_var" in globals():
+        root.after(0, lambda: last_phrase_var.set(f"Последняя фраза: {text}"))
+
+
+def set_last_action(text):
+    push_history_value(recent_actions, text, limit=30)
+    if "last_action_var" in globals():
+        root.after(0, lambda: last_action_var.set(f"Последнее действие: {text}"))
 
 
 def log_launcher(text):
@@ -768,6 +800,17 @@ def load_settings():
             merged["settings_version"] = 4
             changed = True
 
+        # Миграция 5: добавлен safe launcher режим (dry-run/highlight) и структурные каталоги.
+        if int(merged.get("settings_version", 0)) < 5:
+            merged["settings_version"] = 5
+            changed = True
+
+        # Миграция 6: режим интерфейса (simple/advanced).
+        if int(merged.get("settings_version", 0)) < 6:
+            merged["simple_mode"] = bool(merged.get("simple_mode", True))
+            merged["settings_version"] = 6
+            changed = True
+
         # Санитизация значений (совместимость и устойчивость).
         fixed_mic_name = maybe_fix_mojibake(str(merged.get("microphone_name", ""))).strip()
         if fixed_mic_name != str(merged.get("microphone_name", "")):
@@ -799,6 +842,12 @@ def load_settings():
         if fixed_dynamic != dynamic_value:
             changed = True
         merged["dynamic_energy"] = fixed_dynamic
+        simple_value = merged.get("simple_mode", DEFAULT_SETTINGS.get("simple_mode", True))
+        if isinstance(simple_value, str):
+            fixed_simple = simple_value.strip().lower() in ("1", "true", "yes", "on")
+        else:
+            fixed_simple = bool(simple_value)
+        merged["simple_mode"] = fixed_simple
 
         def clamp_number(key, lo, hi, cast=float):
             nonlocal changed
@@ -823,6 +872,13 @@ def load_settings():
 
         settings = merged
         if changed:
+            try:
+                if os.path.exists(SETTINGS_FILE):
+                    stamp = time.strftime("%Y%m%d_%H%M%S")
+                    backup_path = os.path.join(BACKUPS_DIR, f"settings.migrate_{stamp}.bak.json")
+                    shutil.copy2(SETTINGS_FILE, backup_path)
+            except Exception:
+                pass
             save_json(SETTINGS_FILE, settings)
             log_runtime("Settings migrated/sanitized and saved")
     else:
@@ -871,6 +927,7 @@ def normalize_command_entry(value):
                 "debounce_seconds": 2.8,
                 "launcher_dry_run": False,
                 "launcher_highlight": False,
+                "min_window_confidence": 0.90,
             }
         return None
 
@@ -897,8 +954,13 @@ def normalize_command_entry(value):
         debounce_seconds = 2.8
     dry_run_raw = value.get("launcher_dry_run", False)
     highlight_raw = value.get("launcher_highlight", False)
+    min_conf_raw = value.get("min_window_confidence", 0.90)
     launcher_dry_run = bool(dry_run_raw) if not isinstance(dry_run_raw, str) else dry_run_raw.strip().lower() in ("1", "true", "yes", "on")
     launcher_highlight = bool(highlight_raw) if not isinstance(highlight_raw, str) else highlight_raw.strip().lower() in ("1", "true", "yes", "on")
+    try:
+        min_window_confidence = float(min_conf_raw)
+    except Exception:
+        min_window_confidence = 0.90
 
     if not path:
         return None
@@ -908,6 +970,7 @@ def normalize_command_entry(value):
         play_text = "Играть"
     wait_timeout = max(30, min(900, wait_timeout))
     debounce_seconds = max(0.8, min(30.0, debounce_seconds))
+    min_window_confidence = max(0.65, min(0.99, min_window_confidence))
 
     return {
         "mode": mode,
@@ -920,6 +983,7 @@ def normalize_command_entry(value):
         "debounce_seconds": debounce_seconds,
         "launcher_dry_run": launcher_dry_run,
         "launcher_highlight": launcher_highlight,
+        "min_window_confidence": min_window_confidence,
     }
 
 
@@ -992,6 +1056,7 @@ def run_admin_task(entry):
     run_result = run_schtasks(["schtasks", "/run", "/tn", task_name])
     if run_result.returncode == 0:
         set_status(f"Запущено как админ: {os.path.basename(entry.get('path', ''))}")
+        set_last_action(f"Админ-запуск: {os.path.basename(entry.get('path', ''))}")
         return
 
     # Фолбэк: если задача отсутствует, пересоздаем и пробуем еще раз.
@@ -1005,10 +1070,12 @@ def run_admin_task(entry):
     retry_result = run_schtasks(["schtasks", "/run", "/tn", entry["task_name"]])
     if retry_result.returncode == 0:
         set_status(f"Запущено как админ: {os.path.basename(entry.get('path', ''))}")
+        set_last_action(f"Админ-запуск: {os.path.basename(entry.get('path', ''))}")
         return
 
     err_text = extract_error_text(retry_result) or "Не удалось запустить задачу"
     set_status("Ошибка админ-запуска (см. консоль)")
+    set_last_action("Ошибка админ-запуска")
     print("Админ-запуск:", err_text)
 
 
@@ -1040,6 +1107,103 @@ def save_commands():
     save_json(COMMANDS_FILE, commands)
     log_runtime(f"Commands saved: {len(commands)} entries")
     write_session_snapshot("save_commands")
+
+
+def open_logs_folder():
+    try:
+        if os.name == "nt":
+            os.startfile(LOGS_DIR)
+        else:
+            subprocess.Popen(["xdg-open", LOGS_DIR])  # noqa: S603,S607
+        set_status("Открыта папка логов")
+    except Exception as exc:
+        show_warning("Логи", f"Не удалось открыть папку логов:\n{exc}")
+
+
+def export_profile_dialog():
+    default_name = f"voice_launcher_profile_{time.strftime('%Y%m%d_%H%M%S')}.json"
+    path = filedialog.asksaveasfilename(
+        title="Экспорт профиля",
+        defaultextension=".json",
+        initialdir=SNAPSHOTS_DIR,
+        initialfile=default_name,
+        filetypes=[("JSON", "*.json"), ("Все файлы", "*.*")],
+    )
+    if not path:
+        return
+    try:
+        export_profile(Path(path), commands=commands, settings=settings)
+        set_status("Профиль экспортирован")
+        set_last_action(f"Экспорт профиля: {path}")
+        show_info("Экспорт профиля", f"Профиль сохранен:\n{path}")
+    except Exception as exc:
+        show_warning("Экспорт профиля", f"Ошибка экспорта:\n{exc}")
+
+
+def import_profile_dialog():
+    path = filedialog.askopenfilename(
+        title="Импорт профиля",
+        filetypes=[("JSON", "*.json"), ("Все файлы", "*.*")],
+    )
+    if not path:
+        return
+    try:
+        imported_commands, imported_settings = import_profile(Path(path))
+    except Exception as exc:
+        show_warning("Импорт профиля", f"Ошибка чтения профиля:\n{exc}")
+        return
+
+    replace_mode = messagebox.askyesno(
+        "Импорт профиля",
+        "Полностью заменить текущие команды импортированными?\n\n"
+        "Да = заменить все\nНет = объединить",
+    )
+    apply_settings = messagebox.askyesno(
+        "Импорт профиля",
+        "Применить аудио/ASR настройки из профиля?",
+    )
+
+    if replace_mode:
+        commands.clear()
+    for phrase, payload in imported_commands.items():
+        normalized = normalize_command_entry(payload)
+        if not normalized:
+            continue
+        commands[normalize_phrase(phrase)] = normalized
+
+    if apply_settings:
+        merged = DEFAULT_SETTINGS.copy()
+        merged.update(imported_settings or {})
+        settings.update(merged)
+        save_settings()
+        restart_listen_event.set()
+
+    save_commands()
+    refresh_table()
+    set_status(f"Импорт завершен: {len(imported_commands)} команд")
+    set_last_action(f"Импорт профиля: {path}")
+    show_info("Импорт профиля", f"Импортировано команд: {len(imported_commands)}")
+
+
+def collect_diagnostics_dialog():
+    out_dir = filedialog.askdirectory(title="Куда сохранить диагностику?", initialdir=STORAGE_DIR)
+    if not out_dir:
+        return
+    try:
+        bundle_path = collect_diagnostics(
+            out_dir=Path(out_dir),
+            app_paths={
+                "commands": Path(COMMANDS_FILE),
+                "settings": Path(SETTINGS_FILE),
+                "logs": Path(LOGS_DIR),
+            },
+            app_version="1.1.0-dev",
+        )
+        set_status("Диагностика собрана")
+        set_last_action(f"Диагностика: {bundle_path}")
+        show_info("Диагностика", f"Диагностический пакет создан:\n{bundle_path}")
+    except Exception as exc:
+        show_warning("Диагностика", f"Ошибка сбора диагностики:\n{exc}")
 
 
 def refresh_table():
@@ -1312,61 +1476,33 @@ def command_match_score(candidate, key):
 
 
 def find_best_command(candidates):
-    if not candidates or not commands:
-        return None, None, 0.0, "", 0.0
-
-    # 1) Точное совпадение среди всех кандидатов.
-    for candidate in candidates:
-        if candidate in commands:
-            return candidate, commands[candidate], 1.0, candidate, 1.0
-
-    keys = list(commands.keys())
-    base_threshold = float(settings.get("fuzzy_threshold", 0.72))
-
-    best_phrase = None
-    best_candidate = ""
-    best_score = 0.0
-    second_score = 0.0
-
-    for candidate in candidates:
-        for key in keys:
-            score = command_match_score(candidate, key)
-            if score > best_score:
-                second_score = best_score
-                best_score = score
-                best_phrase = key
-                best_candidate = candidate
-            elif score > second_score:
-                second_score = score
-
-    if not best_phrase:
-        return None, None, best_score, best_candidate, 0.0
-
-    margin = best_score - second_score
-    adaptive_threshold = base_threshold
-
-    # Для коротких распознаваний поднимаем требования к "уникальности" (margin),
-    # но немного снижаем порог score, чтобы спасать "обрезанные" слова.
-    if len(best_candidate) <= 2:
-        adaptive_threshold = max(0.66, base_threshold - 0.14)
-        required_margin = 0.18
-    elif len(best_candidate) <= 4:
-        adaptive_threshold = max(0.70, base_threshold - 0.10)
-        required_margin = 0.11
-    else:
-        required_margin = 0.05
-
-    if best_candidate and best_phrase and len(best_candidate) <= 2:
-        if best_candidate[0] != best_phrase[0]:
-            return None, None, best_score, best_candidate, margin
-
-    if best_score >= adaptive_threshold and margin >= required_margin:
-        return best_phrase, commands[best_phrase], best_score, best_candidate, margin
-
-    return None, None, best_score, best_candidate, margin
+    result = modular_find_best_command(
+        candidates=candidates or [],
+        commands=commands,
+        base_threshold=float(settings.get("fuzzy_threshold", 0.72)),
+    )
+    return result.phrase, result.entry, result.score, result.heard, result.margin
 
 
 # ======================= Command actions =======================
+def detect_phrase_conflict(phrase, ignore_phrase=""):
+    check_phrase = normalize_phrase(phrase or "")
+    if not check_phrase:
+        return "", 0.0
+    ignore_norm = normalize_phrase(ignore_phrase or "")
+    best_phrase = ""
+    best_score = 0.0
+    for existing in commands.keys():
+        existing_norm = normalize_phrase(existing)
+        if not existing_norm or existing_norm == ignore_norm:
+            continue
+        score = command_match_score(check_phrase, existing_norm)
+        if score > best_score:
+            best_phrase = existing_norm
+            best_score = score
+    return best_phrase, best_score
+
+
 def save_mapping(
     phrase,
     path,
@@ -1377,6 +1513,10 @@ def save_mapping(
     wait_timeout=240,
     single_instance=True,
     debounce_seconds=2.8,
+    launcher_dry_run=False,
+    launcher_highlight=False,
+    min_window_confidence=0.90,
+    replacing_phrase="",
 ):
     phrase = normalize_phrase(phrase)
     if not phrase:
@@ -1384,6 +1524,18 @@ def save_mapping(
         return False
     if not path:
         messagebox.showinfo("Файл", "Выберите файл.")
+        return False
+    if not os.path.exists(path):
+        messagebox.showwarning("Файл", f"Путь не найден:\n{path}")
+        return False
+
+    conflict_phrase, conflict_score = detect_phrase_conflict(phrase, ignore_phrase=replacing_phrase)
+    if conflict_phrase and conflict_score >= 0.90:
+        messagebox.showwarning(
+            "Похожая команда",
+            f"Найдена слишком похожая команда: '{conflict_phrase}' (score {conflict_score:.2f}).\n"
+            "Измените фразу, чтобы снизить риск ложных срабатываний.",
+        )
         return False
 
     entry = {
@@ -1395,6 +1547,9 @@ def save_mapping(
         "wait_timeout": int(wait_timeout) if str(wait_timeout).strip() else 240,
         "single_instance": bool(single_instance),
         "debounce_seconds": max(0.8, min(30.0, float(debounce_seconds))),
+        "launcher_dry_run": bool(launcher_dry_run),
+        "launcher_highlight": bool(launcher_highlight),
+        "min_window_confidence": max(0.65, min(0.99, float(min_window_confidence))),
     }
     if use_admin:
         entry = {"mode": "admin_task", "path": path, "task_name": build_task_name(path)}
@@ -1414,6 +1569,7 @@ def save_mapping(
     save_commands()
     refresh_table()
     set_status(f"Сохранено: '{phrase}' ({get_entry_mode_label(entry)})")
+    set_last_action(f"Сохранена команда: {phrase}")
     log_runtime(f"Command added/updated: phrase='{phrase}' mode={entry.get('mode')} path='{path}'")
     return True
 
@@ -1494,6 +1650,7 @@ def remove_selected():
         save_commands()
         refresh_table()
         set_status(f"Удалено: '{phrase}'")
+        set_last_action(f"Удалена команда: {phrase}")
         log_runtime(f"Command removed: phrase='{phrase}'")
 
 
@@ -1637,9 +1794,11 @@ def launch_target(path, duplicate_guard_seconds=1.0):
         last_launch_time = now
         last_launch_phrase = path
         set_status(f"Запущено: {os.path.basename(path)}")
+        set_last_action(f"Запущено: {os.path.basename(path)}")
         log_runtime(f"Launch target started: {path}")
     except Exception as exc:
         set_status(f"Ошибка запуска: {exc}")
+        set_last_action(f"Ошибка запуска: {exc}")
         log_runtime(f"Launch target error: {path} | {exc}")
 
 
@@ -1674,6 +1833,49 @@ def get_window_handle(window_wrapper):
         except Exception:
             continue
     return None
+
+
+def get_window_pid(hwnd):
+    if os.name != "nt":
+        return 0
+    try:
+        pid = ctypes.c_ulong(0)
+        ctypes.windll.user32.GetWindowThreadProcessId(int(hwnd), ctypes.byref(pid))
+        return int(pid.value or 0)
+    except Exception:
+        return 0
+
+
+def get_process_path_by_pid(pid):
+    if os.name != "nt" or not pid:
+        return ""
+    PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+    handle = None
+    try:
+        handle = ctypes.windll.kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, int(pid))
+        if not handle:
+            return ""
+        size = ctypes.c_ulong(4096)
+        buffer = ctypes.create_unicode_buffer(4096)
+        ok = ctypes.windll.kernel32.QueryFullProcessImageNameW(handle, 0, buffer, ctypes.byref(size))
+        if ok:
+            return os.path.abspath(buffer.value)
+    except Exception:
+        return ""
+    finally:
+        try:
+            if handle:
+                ctypes.windll.kernel32.CloseHandle(handle)
+        except Exception:
+            pass
+    return ""
+
+
+def resolve_process_for_window_handle(hwnd):
+    pid = get_window_pid(hwnd)
+    proc_path = get_process_path_by_pid(pid)
+    proc_name = os.path.basename(proc_path).lower() if proc_path else ""
+    return proc_name, proc_path
 
 
 def dedupe_windows(windows):
@@ -1962,131 +2164,131 @@ def launch_with_launcher_play(entry):
         launch_target(entry.get("path", ""))
         return
 
-    path = entry.get("path", "")
+    path = str(entry.get("path", "") or "").strip()
     play_text = str(entry.get("play_text", "Играть") or "Играть").strip()
-    window_title = normalize_phrase(str(entry.get("window_title", "") or ""))
+    window_title = str(entry.get("window_title", "") or "").strip()
     wait_timeout = max(30, min(900, int(entry.get("wait_timeout", 240) or 240)))
-
+    launcher_dry_run = bool(entry.get("launcher_dry_run", False))
+    launcher_highlight = bool(entry.get("launcher_highlight", False))
     try:
-        baseline_windows = Desktop(backend="uia").windows()
+        min_confidence = float(entry.get("min_window_confidence", 0.90))
     except Exception:
-        baseline_windows = []
-    known_handles = collect_window_handles(baseline_windows)
+        min_confidence = 0.90
+    min_confidence = max(0.65, min(0.99, min_confidence))
+
+    title_patterns = []
+    for item in [window_title] + build_window_hints(path, window_title):
+        norm = normalize_phrase(item or "")
+        if norm and norm not in title_patterns:
+            title_patterns.append(norm)
+
+    target = LauncherTarget(
+        path=path,
+        button_text=play_text,
+        title_patterns=title_patterns,
+        wait_timeout=wait_timeout,
+        min_window_confidence=min_confidence,
+        dry_run=launcher_dry_run,
+        highlight_only=launcher_highlight,
+    )
 
     log_launcher(
-        f"START | path='{path}' | play='{play_text}' | title='{window_title}' | "
-        f"timeout={wait_timeout} | baseline={len(known_handles)}"
+        "SAFE_START | "
+        f"path='{path}' play='{play_text}' title_patterns={title_patterns} "
+        f"timeout={wait_timeout} dry_run={launcher_dry_run} highlight={launcher_highlight} "
+        f"min_conf={min_confidence:.2f}"
     )
-    log_runtime(f"Launcher+Play start: path='{path}' play='{play_text}' timeout={wait_timeout}")
+    log_runtime(f"Launcher+Play safe start: path='{path}' mode=launcher_play")
 
-    running_proc = find_running_process_for_entry(entry)
-    if running_proc:
-        set_status(f"Лаунчер уже запущен ({running_proc}), новый запуск не нужен")
-        log_launcher(f"INFO | existing launcher process detected: {running_proc}")
-        log_runtime(f"Launcher+Play reuse existing process: {running_proc}")
-    else:
-        launch_target(path)
+    def desktop_factory():
+        return Desktop(backend="uia")
+
+    def process_starter(target_path):
+        running_proc = find_running_process_for_entry(entry)
+        if running_proc:
+            log_launcher(f"SAFE_INFO | process already running: {running_proc}")
+            return
+        launch_target(target_path, duplicate_guard_seconds=0.0)
+
+    def button_finder(window_wrapper, button_text):
+        found = find_play_control(window_wrapper, button_text)
+        if not found:
+            return None
+        control, caption, control_type, score = found
+        if not is_control_enabled(control):
+            return None
+        return {
+            "control": control,
+            "caption": caption,
+            "control_type": control_type,
+            "score": score,
+        }
+
+    def button_clicker(control_payload, window_wrapper):
+        if not isinstance(control_payload, dict):
+            return False
+        control = control_payload.get("control")
+        if control is None:
+            return False
+        clicked, method = click_play_control(control, window_wrapper)
+        if clicked:
+            log_launcher(
+                f"SAFE_CLICK | method={method} caption='{control_payload.get('caption', '')}' "
+                f"type={control_payload.get('control_type', '')} "
+                f"score={float(control_payload.get('score', 0.0)):.2f}"
+            )
+            try:
+                time.sleep(0.9)
+            except Exception:
+                pass
+            if play_control_is_ready(window_wrapper, play_text):
+                log_launcher("SAFE_CLICK | button still ready after click, launcher may reject it")
+            return True
+        return False
+
+    def highlighter(window_wrapper, control_payload):
+        if not isinstance(control_payload, dict):
+            return
+        control = control_payload.get("control")
+        try:
+            activate_window(window_wrapper)
+        except Exception:
+            pass
+        try:
+            if hasattr(control, "draw_outline"):
+                control.draw_outline(colour="green", thickness=3)
+        except Exception:
+            pass
+        try:
+            if hasattr(window_wrapper, "draw_outline"):
+                window_wrapper.draw_outline(colour="blue", thickness=2)
+        except Exception:
+            pass
 
     def worker():
-        set_status(f"Лаунчер запущен, жду кнопку '{play_text}'...")
-        started = time.time()
-        next_kick = started + 12.0
-        next_click_after = started
-        attempts = 0
-        kick_attempts = 0
-
-        while time.time() - started < wait_timeout and not stop_event.is_set():
-            try:
-                windows = Desktop(backend="uia").windows()
-            except Exception as exc:
-                set_status(f"Автоклик недоступен: {exc}")
-                log_launcher(f"ERROR | desktop windows unavailable: {exc}")
-                log_runtime(f"Launcher+Play desktop error: {exc}")
-                return
-
-            # Если лаунчер уже висит в фоне/свернут, стараемся активировать его.
-            candidate_windows = find_candidate_windows(path, window_title, windows=windows)
-            if not candidate_windows:
-                candidate_windows = find_fallback_windows(windows, known_handles)
-            if not candidate_windows:
-                try:
-                    active_window = Desktop(backend="uia").get_active()
-                except Exception:
-                    active_window = None
-                if active_window is not None:
-                    candidate_windows = [active_window]
-            candidate_windows = dedupe_windows(candidate_windows)
-
-            for cand in candidate_windows:
-                activate_window(cand)
-
-            # Ищем кнопку только в окнах кандидата, чтобы не кликать чужое "Играть".
-            windows_to_scan = candidate_windows
-            if not windows_to_scan and window_title:
-                windows_to_scan = [win for win in windows if window_title in get_window_title(win)]
-
-            for win in windows_to_scan:
-                try:
-                    title = get_window_title(win)
-                    if window_title and window_title not in title:
-                        continue
-
-                    found = find_play_control(win, play_text)
-                    if not found:
-                        continue
-                    control, caption, control_type, score = found
-
-                    if not is_control_enabled(control):
-                        continue
-
-                    now = time.time()
-                    if now < next_click_after:
-                        continue
-
-                    clicked, method = click_play_control(control, win)
-                    if not clicked:
-                        continue
-
-                    attempts += 1
-                    next_click_after = now + 1.6
-                    log_launcher(
-                        f"CLICK | attempt={attempts} | method={method} | "
-                        f"title='{title}' | control='{caption}' | type={control_type} | score={score:.2f}"
-                    )
-                    set_status(f"Нажимаю '{play_text}' ({attempts})...")
-
-                    time.sleep(1.2)
-                    if not play_control_is_ready(win, play_text):
-                        set_status(f"Нажал '{play_text}' в лаунчере")
-                        log_launcher("SUCCESS | play control is no longer ready")
-                        log_runtime("Launcher+Play success: play control accepted click")
-                        return
-
-                    if attempts >= 6:
-                        set_status("Кнопка нажимается, но лаунчер не подтверждает запуск")
-                        log_launcher("WARNING | reached click attempt limit (6)")
-                        log_runtime("Launcher+Play warning: click attempts limit reached")
-                        return
-                except Exception:
-                    continue
-
-            # Некоторые лаунчеры не показывают окно при повторном старте.
-            # Периодически отправляем "kick", чтобы развернуть существующий инстанс.
-            now = time.time()
-            if now >= next_kick:
-                running_now = find_running_process_for_entry(entry)
-                if not candidate_windows and not running_now and kick_attempts < 2:
-                    launch_target(path, duplicate_guard_seconds=0.0)
-                    kick_attempts += 1
-                    set_status("Лаунчер не найден: отправил повторный запуск")
-                    log_launcher(f"KICK | retry launch signal ({kick_attempts}/2)")
-                next_kick = now + 12.0
-
-            time.sleep(1.0)
-
-        set_status(f"Кнопка '{play_text}' не стала доступной за {wait_timeout} сек")
-        log_launcher("TIMEOUT | play control did not become available in time")
-        log_runtime("Launcher+Play timeout")
+        set_status(f"Безопасный поиск окна лаунчера: '{play_text}'")
+        automation = SafeLauncherAutomation(desktop_factory=desktop_factory, logger=log_launcher)
+        report = automation.run(
+            target=target,
+            process_resolver=resolve_process_for_window_handle,
+            process_starter=process_starter,
+            button_finder=button_finder,
+            button_clicker=button_clicker,
+            highlighter=highlighter,
+        )
+        log_runtime(
+            f"Launcher+Play report: ok={report.ok} stage={report.stage} "
+            f"clicked={report.clicked} preview={report.preview_only} conf={report.window_confidence:.2f}"
+        )
+        if report.ok and report.clicked:
+            set_status("Лаунчер: безопасный клик выполнен")
+            set_last_action("Лаунчер: клик по кнопке выполнен")
+        elif report.ok and report.preview_only:
+            set_status("Лаунчер: preview/dry-run выполнен, без клика")
+            set_last_action("Лаунчер: выполнен безопасный preview")
+        else:
+            set_status(f"Лаунчер: {report.message}")
+            set_last_action(f"Лаунчер: {report.message}")
 
     threading.Thread(target=worker, daemon=True).start()
 
@@ -2379,6 +2581,9 @@ def open_voice_capture_dialog():
     play_text_var = tk.StringVar(value="Играть")
     window_title_var = tk.StringVar(value="")
     wait_timeout_var = tk.IntVar(value=240)
+    dry_run_var = tk.BooleanVar(value=False)
+    highlight_var = tk.BooleanVar(value=False)
+    min_confidence_var = tk.DoubleVar(value=0.90)
     status_local = tk.StringVar(value="1) Выберите файл  2) Запишите фразу")
     candidates_var = tk.StringVar(value=[])
 
@@ -2440,6 +2645,32 @@ def open_voice_capture_dialog():
     ttk.Label(wait_row, text="Ожидание кнопки (сек):", style="Sub.TLabel").pack(side="left")
     ttk.Spinbox(wait_row, from_=30, to=900, textvariable=wait_timeout_var, width=8).pack(side="left", padx=(8, 0))
 
+    safety_row = ttk.Frame(launcher_details, style="Card.TFrame")
+    safety_row.pack(fill="x", pady=(0, 8))
+    ttk.Checkbutton(
+        safety_row,
+        text="Dry-run (без клика)",
+        variable=dry_run_var,
+        onvalue=True,
+        offvalue=False,
+    ).pack(side="left")
+    ttk.Checkbutton(
+        safety_row,
+        text="Только подсветка",
+        variable=highlight_var,
+        onvalue=True,
+        offvalue=False,
+    ).pack(side="left", padx=(10, 0))
+    ttk.Label(safety_row, text="Уверенность окна:", style="Sub.TLabel").pack(side="left", padx=(14, 4))
+    ttk.Spinbox(
+        safety_row,
+        from_=0.65,
+        to=0.99,
+        increment=0.01,
+        textvariable=min_confidence_var,
+        width=6,
+    ).pack(side="left")
+
     def sync_mode(*_args):
         if admin_var.get() and launcher_play_var.get():
             launcher_play_var.set(False)
@@ -2447,7 +2678,7 @@ def open_voice_capture_dialog():
             status_local.set("Админ-режим: автонажатие лаунчера отключено")
         elif launcher_play_var.get():
             launcher_details.pack(fill="x", pady=(0, 8))
-            status_local.set("Режим лаунчера включен: ждем кнопку и нажимаем автоматически")
+            status_local.set("Режим лаунчера: безопасная верификация окна и кнопки")
         else:
             launcher_details.pack_forget()
             status_local.set("1) Выберите файл  2) Запишите фразу")
@@ -2524,11 +2755,35 @@ def open_voice_capture_dialog():
             play_text=play_text_var.get().strip() or "Играть",
             window_title=window_title_var.get().strip(),
             wait_timeout=int(wait_timeout_var.get() or 240),
+            launcher_dry_run=bool(dry_run_var.get()),
+            launcher_highlight=bool(highlight_var.get()),
+            min_window_confidence=float(min_confidence_var.get() or 0.90),
         )
         if saved:
             dialog.destroy()
 
+    def safe_preview():
+        preview_entry = {
+            "mode": "launcher_play",
+            "path": path_var.get().strip(),
+            "play_text": play_text_var.get().strip() or "Играть",
+            "window_title": window_title_var.get().strip(),
+            "wait_timeout": int(wait_timeout_var.get() or 240),
+            "launcher_dry_run": True,
+            "launcher_highlight": bool(highlight_var.get()),
+            "min_window_confidence": float(min_confidence_var.get() or 0.90),
+        }
+        if not preview_entry["path"]:
+            messagebox.showwarning("Безопасный тест", "Сначала выберите файл.", parent=dialog)
+            return
+        if not os.path.exists(preview_entry["path"]):
+            messagebox.showwarning("Безопасный тест", "Указанный файл не найден.", parent=dialog)
+            return
+        launch_with_launcher_play(preview_entry)
+        status_local.set("Запущен безопасный тест launcher_play (без клика)")
+
     ttk.Button(controls, text="Записать", command=start_record, style="Primary.TButton").pack(side="left")
+    ttk.Button(controls, text="Безопасный тест", command=safe_preview, style="Soft.TButton").pack(side="left", padx=8)
     ttk.Button(controls, text="Сохранить", command=save_voice_mapping, style="Soft.TButton").pack(side="left", padx=8)
     ttk.Button(controls, text="Отмена", command=dialog.destroy, style="Soft.TButton").pack(side="right")
 
@@ -2574,6 +2829,8 @@ def listen_loop():
             if target:
                 now = time.time()
                 mode = str(target.get("mode", "normal") or "normal").strip().lower()
+                if heard:
+                    set_last_phrase(heard)
                 if mode == "launcher_play":
                     trigger_guard = 18.0
                 elif mode == "admin_task":
@@ -2604,6 +2861,7 @@ def listen_loop():
                     )
             elif heard:
                 set_status(f"Слышу '{heard}', но команды не совпали")
+                set_last_phrase(heard)
                 log_asr(f"no-match heard='{heard}'")
         except sr.WaitTimeoutError:
             continue
@@ -2899,11 +3157,14 @@ tab_glow = tk.Canvas(card, height=4, highlightthickness=0, bg=PALETTE["card"], b
 tab_glow.pack(fill="x", pady=(2, 10))
 tab_glow_rect = tab_glow.create_rectangle(0, 0, 0, 4, outline="", fill=PALETTE["accent"])
 
+mode_strip = ttk.Frame(card, style="Card.TFrame")
+mode_strip.pack(fill="x", pady=(0, 8))
+
 notebook = ttk.Notebook(card, style="Futuristic.TNotebook")
 commands_tab = ttk.Frame(notebook, style="Card.TFrame", padding=10)
 audio_tab = ttk.Frame(notebook, style="Card.TFrame", padding=10)
 notebook.add(commands_tab, text="Команды")
-notebook.add(audio_tab, text="Аудио")
+notebook.add(audio_tab, text="Расширенный")
 notebook.pack(fill="both", expand=True, pady=(0, 10))
 
 settings_box = ttk.Frame(audio_tab, style="Panel.TFrame", padding=12)
@@ -2954,6 +3215,35 @@ fuzzy_var = tk.DoubleVar(value=float(settings.get("fuzzy_threshold", 0.72)))
 gain_var = tk.DoubleVar(value=float(settings.get("mic_gain", 1.4)))
 monitor_gain_var = tk.DoubleVar(value=float(settings.get("monitor_gain", 1.0)))
 monitor_button_text = tk.StringVar(value="Монитор: OFF")
+simple_mode_text = tk.StringVar(value="")
+
+
+def apply_ui_mode():
+    simple_mode = bool(settings.get("simple_mode", True))
+    if simple_mode:
+        try:
+            notebook.hide(audio_tab)
+        except Exception:
+            pass
+        simple_mode_text.set("Режим: Простой (переключить на расширенный)")
+    else:
+        try:
+            notebook.add(audio_tab, text="Расширенный")
+        except Exception:
+            pass
+        simple_mode_text.set("Режим: Расширенный (переключить на простой)")
+
+
+def toggle_ui_mode():
+    settings["simple_mode"] = not bool(settings.get("simple_mode", True))
+    save_settings()
+    apply_ui_mode()
+    set_status("Режим интерфейса сохранен")
+
+
+ttk.Button(mode_strip, textvariable=simple_mode_text, command=toggle_ui_mode, style="Soft.TButton").pack(
+    side="right"
+)
 
 # Если пользователь еще не сохранял устройства, фиксируем автоматически лучшие кандидаты.
 if int(settings.get("microphone_id", -1)) < 0 or int(settings.get("output_id", -1)) < 0:
@@ -3113,6 +3403,7 @@ def update_monitor_gain_label(*_args):
 
 monitor_gain_var.trace_add("write", update_monitor_gain_label)
 update_monitor_gain_label()
+apply_ui_mode()
 
 toolbar = ttk.Frame(commands_tab, style="Card.TFrame")
 toolbar.pack(fill="x", pady=(2, 10), padx=6)
@@ -3120,6 +3411,11 @@ toolbar.pack(fill="x", pady=(2, 10), padx=6)
 ttk.Button(toolbar, text="Добавить вручную", command=add_file_manual, style="Primary.TButton").pack(side="left")
 ttk.Button(toolbar, text="Добавить голосом", command=open_voice_capture_dialog, style="Soft.TButton").pack(side="left", padx=8)
 ttk.Button(toolbar, text="Проверить", command=test_selected, style="Soft.TButton").pack(side="left")
+ttk.Button(toolbar, text="Проверить микрофон", command=check_microphone, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar, text="Открыть логи", command=open_logs_folder, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar, text="Экспорт профиля", command=export_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar, text="Импорт профиля", command=import_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar, text="Диагностика", command=collect_diagnostics_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
 ttk.Button(toolbar, text="Удалить", command=remove_selected, style="Danger.TButton").pack(side="right", padx=(8, 0))
 
 table_wrap = ttk.Frame(commands_tab, style="Panel.TFrame", padding=6)
@@ -3173,6 +3469,11 @@ hint = ttk.Label(
     anchor="w",
 )
 hint.pack(fill="x", pady=(6, 0))
+
+last_phrase_var = tk.StringVar(value="Последняя фраза: —")
+last_action_var = tk.StringVar(value="Последнее действие: —")
+ttk.Label(card, textvariable=last_phrase_var, style="Sub.TLabel", anchor="w").pack(fill="x", pady=(4, 0))
+ttk.Label(card, textvariable=last_action_var, style="Sub.TLabel", anchor="w").pack(fill="x", pady=(2, 0))
 
 
 def animate_window_fade(alpha=0.0):

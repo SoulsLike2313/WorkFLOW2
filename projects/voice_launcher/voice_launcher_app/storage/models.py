@@ -20,6 +20,9 @@ class CommandEntry:
     wait_timeout: int = 240
     single_instance: bool = True
     debounce_seconds: float = 2.8
+    launcher_dry_run: bool = False
+    launcher_highlight: bool = False
+    min_window_confidence: float = 0.90
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -31,6 +34,9 @@ class CommandEntry:
             "wait_timeout": int(self.wait_timeout),
             "single_instance": bool(self.single_instance),
             "debounce_seconds": float(self.debounce_seconds),
+            "launcher_dry_run": bool(self.launcher_dry_run),
+            "launcher_highlight": bool(self.launcher_highlight),
+            "min_window_confidence": float(self.min_window_confidence),
         }
 
     @classmethod
@@ -44,12 +50,15 @@ class CommandEntry:
             wait_timeout=int(value.get("wait_timeout", 240) or 240),
             single_instance=bool(value.get("single_instance", True)),
             debounce_seconds=float(value.get("debounce_seconds", 2.8) or 2.8),
+            launcher_dry_run=bool(value.get("launcher_dry_run", False)),
+            launcher_highlight=bool(value.get("launcher_highlight", False)),
+            min_window_confidence=float(value.get("min_window_confidence", 0.90) or 0.90),
         )
 
 
 @dataclass
 class SettingsData:
-    settings_version: int = 5
+    settings_version: int = 6
     asr_engine: str = "whisper"
     whisper_model_size: str = "small"
     microphone_name: str = ""
@@ -63,6 +72,7 @@ class SettingsData:
     listen_phrase_limit: float = 5.0
     mic_gain: float = 1.4
     monitor_gain: float = 1.0
+    simple_mode: bool = True
     extra: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,7 +91,7 @@ class SettingsData:
             "listen_phrase_limit": float(self.listen_phrase_limit),
             "mic_gain": float(self.mic_gain),
             "monitor_gain": float(self.monitor_gain),
+            "simple_mode": bool(self.simple_mode),
         }
         base.update(self.extra)
         return base
-

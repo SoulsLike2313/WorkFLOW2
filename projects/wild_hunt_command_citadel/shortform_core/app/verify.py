@@ -341,13 +341,21 @@ class VerificationRunner:
                 archive.writestr("patch.txt", "verification patch bundle")
             bundle = PatchBundle(bundle_path=patch_zip, target_version=manifest.available_version)
             patch_result = update_service.apply_local_patch(bundle)
+            patch_result_payload = patch_result.model_dump(mode="json")
+            update_audit = [record.model_dump(mode="json") for record in update_service.audit]
 
             details = {
                 "check_result": check_result,
-                "patch_result": patch_result.model_dump(mode="json"),
-                "audit_records": len(update_service.audit),
+                "patch_result": patch_result_payload,
+                "audit_records_count": len(update_audit),
+                "audit_records": update_audit,
             }
-            status = VERIFIED if check_result.get("is_compatible") else FAILED
+            post_status = patch_result_payload.get("post_update_verification", {}).get("status")
+            patch_ok = (
+                patch_result_payload.get("status") == "applied"
+                and post_status in {GATE_PASS, GATE_WARN}
+            )
+            status = VERIFIED if check_result.get("is_compatible") and patch_ok else FAILED
             self._add_stage(name=name, status=status, started=started, details=details)
         except Exception as exc:  # pragma: no cover
             self._record_stage_exception(name, started, exc)
@@ -488,6 +496,204 @@ class VerificationRunner:
             return GATE_WARN
         return GATE_PASS
 
+    def _stage_by_name(self, name: str) -> StageResult | None:
+        for stage in self.stages:
+            if stage.name == name:
+                return stage
+        return None
+
+    def _write_json_artifact(self, filename: str, payload: dict[str, Any]) -> Path:
+        target = self.run_dir / filename
+        target.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        return target
+
+    def _build_readiness_summary(self, *, gate_status: str) -> dict[str, Any]:
+        runtime_stage = self._stage_by_name("runtime_readiness_checks")
+        ui_stage = self._stage_by_name("ui_backend_connectivity_checks")
+        update_stage = self._stage_by_name("update_patch_checks")
+
+        startup_readiness = (runtime_stage.details.get("local_readiness", {}) if runtime_stage else {})
+        startup_items = startup_readiness.get("items", []) if isinstance(startup_readiness, dict) else []
+        startup_all_ready = bool(startup_readiness.get("overall_ready")) if isinstance(startup_readiness, dict) else False
+        backend_ready = bool(runtime_stage.details.get("backend_ready")) if runtime_stage else False
+        ui_statuses = ui_stage.details.get("statuses", {}) if ui_stage else {}
+
+        patch_result = update_stage.details.get("patch_result", {}) if update_stage else {}
+        post_update = patch_result.get("post_update_verification", {}) if isinstance(patch_result, dict) else {}
+        post_update_status = post_update.get("status", GATE_FAIL)
+        post_update_readiness = post_update.get("readiness", {})
+
+        if not startup_all_ready or not backend_ready:
+            status = GATE_FAIL
+        elif post_update_status == GATE_FAIL:
+            status = GATE_FAIL
+        elif post_update_status == GATE_WARN:
+            status = GATE_WARN
+        elif any(not bool(item.get("ready")) for item in startup_items if isinstance(item, dict)):
+            status = GATE_WARN
+        else:
+            status = GATE_PASS
+
+        return {
+            "run_id": self.run_id,
+            "status": status,
+            "gate_status": gate_status,
+            "startup_readiness": startup_readiness,
+            "backend_ready": backend_ready,
+            "ui_backend_statuses": ui_statuses,
+            "post_update_status": post_update_status,
+            "post_update_readiness": post_update_readiness,
+            "usage_points": [
+                "app.startup_manager.StartupManager.initialize_local_runtime",
+                "app.verify.VerificationRunner._stage_runtime_readiness",
+                "app.update.services.UpdateService.post_update_verification",
+            ],
+        }
+
+    def _build_patch_application_summary(self, *, gate_status: str) -> dict[str, Any]:
+        update_stage = self._stage_by_name("update_patch_checks")
+        details = update_stage.details if update_stage else {}
+        check_result = details.get("check_result", {}) if isinstance(details, dict) else {}
+        patch_result = details.get("patch_result", {}) if isinstance(details, dict) else {}
+
+        patch_status = patch_result.get("status", "failed") if isinstance(patch_result, dict) else "failed"
+        post_status = (
+            patch_result.get("post_update_verification", {}).get("status", GATE_FAIL)
+            if isinstance(patch_result, dict)
+            else GATE_FAIL
+        )
+        if patch_status == "applied" and post_status == GATE_PASS:
+            status = GATE_PASS
+        elif patch_status == "applied" and post_status == GATE_WARN:
+            status = GATE_WARN
+        else:
+            status = GATE_FAIL
+
+        return {
+            "run_id": self.run_id,
+            "status": status,
+            "gate_status": gate_status,
+            "manifest_check": check_result,
+            "patch_result": patch_result,
+            "rollback_applied": patch_result.get("rollback_applied", False) if isinstance(patch_result, dict) else False,
+        }
+
+    def _build_update_audit_summary(self, *, gate_status: str) -> dict[str, Any]:
+        update_stage = self._stage_by_name("update_patch_checks")
+        details = update_stage.details if update_stage else {}
+        records = details.get("audit_records", []) if isinstance(details, dict) else []
+        if not isinstance(records, list):
+            records = []
+
+        expected_actions = ["load_manifest", "check_for_update", "post_update_verification", "apply_patch"]
+        present_actions = sorted({str(item.get("action")) for item in records if isinstance(item, dict) and item.get("action")})
+        missing_actions = [action for action in expected_actions if action not in present_actions]
+
+        by_result: dict[str, int] = {}
+        for record in records:
+            if not isinstance(record, dict):
+                continue
+            result = str(record.get("result", "unknown"))
+            by_result[result] = by_result.get(result, 0) + 1
+
+        if not records:
+            status = GATE_FAIL
+        elif missing_actions:
+            status = GATE_WARN
+        else:
+            status = GATE_PASS
+
+        return {
+            "run_id": self.run_id,
+            "status": status,
+            "gate_status": gate_status,
+            "record_count": len(records),
+            "expected_actions": expected_actions,
+            "present_actions": present_actions,
+            "missing_actions": missing_actions,
+            "results_breakdown": by_result,
+            "records": records,
+        }
+
+    def _build_consolidated_status(self, *, gate_status: str) -> dict[str, Any]:
+        verified = sorted([name for name, status in self.module_status.items() if status == VERIFIED])
+        partial = sorted([name for name, status in self.module_status.items() if status == PARTIALLY_VERIFIED])
+        stubbed = sorted([name for name, status in self.module_status.items() if status == STUB])
+        failed = sorted([name for name, status in self.module_status.items() if status == FAILED])
+
+        stages = [
+            {
+                "name": stage.name,
+                "status": stage.status,
+                "duration_seconds": stage.duration_seconds,
+            }
+            for stage in self.stages
+        ]
+
+        return {
+            "run_id": self.run_id,
+            "status": gate_status,
+            "manual_testing_allowed": gate_status == GATE_PASS,
+            "modules": {
+                "verified": verified,
+                "partially_verified": partial,
+                "stub_not_tested": stubbed,
+                "failed": failed,
+            },
+            "stages": stages,
+            "module_status": self.module_status,
+            "notes": {
+                "gate_policy": "Manual testing is allowed only when status is PASS.",
+            },
+        }
+
+    def _build_diagnostics_manifest(
+        self,
+        *,
+        gate_status: str,
+        diagnostics_dir: Path,
+        readiness_path: Path,
+        consolidated_path: Path,
+        patch_summary_path: Path,
+        update_audit_path: Path,
+        summary_json_path: Path,
+        summary_md_path: Path,
+    ) -> dict[str, Any]:
+        warnings = sorted([name for name, status in self.module_status.items() if status == PARTIALLY_VERIFIED])
+        failures = sorted([name for name, status in self.module_status.items() if status == FAILED])
+        stubs = sorted([name for name, status in self.module_status.items() if status == STUB])
+
+        stage_warnings = sorted([stage.name for stage in self.stages if stage.status == PARTIALLY_VERIFIED])
+        stage_failures = sorted([stage.name for stage in self.stages if stage.status == FAILED])
+
+        diagnostic_files = sorted([item.name for item in diagnostics_dir.glob("*.jsonl") if item.is_file()])
+        test_artifact_files = sorted([item.name for item in self.test_artifacts_dir.glob("*") if item.is_file()])
+
+        return {
+            "run_id": self.run_id,
+            "generated_at": _iso(_utc_now()),
+            "verification_entrypoint": "python -m app.verify",
+            "gate_status": gate_status,
+            "manual_testing_allowed": gate_status == GATE_PASS,
+            "warnings": warnings,
+            "failures": failures,
+            "stubs": stubs,
+            "stage_warnings": stage_warnings,
+            "stage_failures": stage_failures,
+            "artifacts": {
+                "verification_summary_json": str(summary_json_path),
+                "verification_summary_md": str(summary_md_path),
+                "readiness_summary_json": str(readiness_path),
+                "consolidated_status_json": str(consolidated_path),
+                "patch_application_summary_json": str(patch_summary_path),
+                "update_audit_summary_json": str(update_audit_path),
+                "diagnostics_dir": str(diagnostics_dir),
+                "diagnostics_files": diagnostic_files,
+                "test_artifacts_dir": str(self.test_artifacts_dir),
+                "test_artifact_files": test_artifact_files,
+            },
+        }
+
     def _write_reports(self) -> dict[str, str]:
         finished_at = _utc_now()
         diagnostics_dir = self.run_dir / "diagnostics"
@@ -496,6 +702,16 @@ class VerificationRunner:
             shutil.copy2(source, diagnostics_dir / source.name)
 
         gate_status = self._gate_status()
+        readiness_summary = self._build_readiness_summary(gate_status=gate_status)
+        consolidated_status = self._build_consolidated_status(gate_status=gate_status)
+        patch_application_summary = self._build_patch_application_summary(gate_status=gate_status)
+        update_audit_summary = self._build_update_audit_summary(gate_status=gate_status)
+
+        readiness_path = self._write_json_artifact("readiness_summary.json", readiness_summary)
+        consolidated_path = self._write_json_artifact("consolidated_status.json", consolidated_status)
+        patch_summary_path = self._write_json_artifact("patch_application_summary.json", patch_application_summary)
+        update_audit_path = self._write_json_artifact("update_audit_summary.json", update_audit_summary)
+
         payload = {
             "run_id": self.run_id,
             "started_at": _iso(self.started_at),
@@ -514,6 +730,10 @@ class VerificationRunner:
                 "logs_dir": str(self.log_dir),
                 "diagnostics_dir": str(diagnostics_dir),
                 "test_artifacts_dir": str(self.test_artifacts_dir),
+                "readiness_summary_path": str(readiness_path),
+                "consolidated_status_path": str(consolidated_path),
+                "patch_application_summary_path": str(patch_summary_path),
+                "update_audit_summary_path": str(update_audit_path),
             },
         }
         json_path = self.run_dir / "verification_summary.json"
@@ -521,6 +741,23 @@ class VerificationRunner:
 
         md_path = self.run_dir / "verification_summary.md"
         md_path.write_text(self._render_markdown(payload), encoding="utf-8")
+
+        diagnostics_manifest = self._build_diagnostics_manifest(
+            gate_status=gate_status,
+            diagnostics_dir=diagnostics_dir,
+            readiness_path=readiness_path,
+            consolidated_path=consolidated_path,
+            patch_summary_path=patch_summary_path,
+            update_audit_path=update_audit_path,
+            summary_json_path=json_path,
+            summary_md_path=md_path,
+        )
+        diagnostics_manifest_path = self._write_json_artifact("diagnostics_manifest.json", diagnostics_manifest)
+
+        payload["artifacts"]["diagnostics_manifest_path"] = str(diagnostics_manifest_path)
+        json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        md_path.write_text(self._render_markdown(payload), encoding="utf-8")
+
         return {"json_path": str(json_path), "md_path": str(md_path), "gate_status": gate_status}
 
     @staticmethod
