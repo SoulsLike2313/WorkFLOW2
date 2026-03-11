@@ -1,5 +1,5 @@
-﻿#define MyAppName "Voice Launcher"
-#define MyAppVersion "1.0.0"
+#define MyAppName "Voice Launcher"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "CVVCODEX"
 #define MyAppURL "https://example.local/voice-launcher"
 #define MyAppExeName "VoiceLauncher.exe"
@@ -22,19 +22,24 @@ SolidCompression=yes
 WizardStyle=modern
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
+SetupIconFile=..\assets\crypto_bot_icon.ico
+UninstallDisplayIcon={app}\{#MyAppExeName}
 
 [Languages]
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "autostart"; Description: "Запускать вместе с Windows"; GroupDescription: "Дополнительно"; Flags: unchecked
 
 [Files]
 Source: "..\dist\VoiceLauncher.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\config\*.json"; DestDir: "{app}\config"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{userstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: autostart
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "Запустить {#MyAppName}"; Flags: nowait postinstall skipifsilent

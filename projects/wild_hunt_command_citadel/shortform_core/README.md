@@ -90,6 +90,7 @@ requirements.txt
 run_setup.ps1
 run_user.ps1
 run_developer.ps1
+run_update.ps1
 ```
 
 ## User Mode (Desktop)
@@ -120,7 +121,7 @@ Direct developer commands:
 ```powershell
 .\.venv\Scripts\python.exe -m app.launcher developer backend --host 127.0.0.1 --port 8000
 .\.venv\Scripts\python.exe -m app.launcher developer ui --api-base-url http://127.0.0.1:8000
-.\.venv\Scripts\python.exe -m app.launcher developer verify
+.\.venv\Scripts\python.exe -m app.verify
 ```
 
 ## Verification Workflow
@@ -174,6 +175,40 @@ Optional direct test runs:
 ```
 
 ## Update / Patch Mode
+
+### User Update Flow (No Manual API/Ports)
+
+Use script flow from project root:
+
+```powershell
+cd projects/wild_hunt_command_citadel/shortform_core
+```
+
+1) Check manifest compatibility:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode check -ManifestPath .\runtime\verification\<run_id>\manifest.json
+```
+
+2) Apply local patch bundle:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode apply -BundlePath .\runtime\verification\<run_id>\patch_bundle.zip -TargetVersion 0.4.1
+```
+
+3) Run post-update verification:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode post-verify
+```
+
+Script outputs:
+
+- `runtime/output/update_check_result.json`
+- `runtime/output/update_apply_result.json`
+- `runtime/output/update_post_verify_result.json`
+
+### Developer Update Flow (API)
 
 Developer backend:
 

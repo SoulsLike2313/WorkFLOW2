@@ -129,10 +129,11 @@ app/workspace/
   - launcher enforces machine gate before opening UI
   - desktop window starts with internal backend lifecycle orchestration
   - user should not manually manage `uvicorn`
+  - local user update flow is script-based via `run_update.ps1` (no API ports)
 - `developer mode`:
   - `python -m app.launcher developer backend`
   - `python -m app.launcher developer ui`
-  - `python -m app.launcher developer verify`
+  - canonical verify command remains `python -m app.verify`
 
 ## Extension Rules
 

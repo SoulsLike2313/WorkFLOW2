@@ -1,0 +1,28 @@
+{
+  "запусти браузер": {
+    "mode": "normal",
+    "path": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "task_name": "",
+    "play_text": "Играть",
+    "window_title": "",
+    "wait_timeout": 240,
+    "single_instance": true,
+    "debounce_seconds": 2.8,
+    "launcher_dry_run": false,
+    "launcher_highlight": false,
+    "min_window_confidence": 0.9
+  },
+  "запусти игру": {
+    "mode": "launcher_play",
+    "path": "E:/WarThunder/launcher.exe",
+    "task_name": "",
+    "play_text": "Играть",
+    "window_title": "war thunder",
+    "wait_timeout": 300,
+    "single_instance": true,
+    "debounce_seconds": 15.0,
+    "launcher_dry_run": true,
+    "launcher_highlight": false,
+    "min_window_confidence": 0.92
+  }
+}

@@ -24,6 +24,13 @@ startup_trace.log
 %APPDATA%/
 projects/wild_hunt_command_citadel/tiktok_automation_app/output/
 projects/voice_launcher/appdata_snapshot/
+projects/voice_launcher/commands.json
+projects/voice_launcher/settings.json
+projects/voice_launcher/*.bak
+projects/voice_launcher/logs/
+projects/voice_launcher/backups/
+projects/voice_launcher/snapshots/
+projects/voice_launcher/dev_session_snapshot.json
 projects/__pycache__root_snapshot/
 
 # IDE / OS files

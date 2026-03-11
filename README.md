@@ -55,6 +55,18 @@ Expected behavior:
 - desktop window opens
 - internal backend is managed automatically (no manual server startup)
 
+## User Update / Patch Flow
+
+From `projects/wild_hunt_command_citadel/shortform_core`:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode check -ManifestPath .\runtime\verification\<run_id>\manifest.json
+powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode apply -BundlePath .\runtime\verification\<run_id>\patch_bundle.zip -TargetVersion 0.4.1
+powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode post-verify
+```
+
+This is user-facing flow and does not require manual `uvicorn` or `/updates/*` API calls.
+
 ## Developer Mode
 
 From `projects/wild_hunt_command_citadel/shortform_core`:
@@ -63,8 +75,28 @@ From `projects/wild_hunt_command_citadel/shortform_core`:
 powershell -ExecutionPolicy Bypass -File .\run_developer.ps1
 ```
 
+Developer API update flow remains available via backend endpoints when needed.
+
 ## GitHub Auto Sync Scripts
 
 - `scripts/auto_sync.ps1`
+- `scripts/check_repo_sync.ps1`
+- `scripts/sync_and_check.ps1`
 - `scripts/register_auto_sync_task.ps1`
 - `scripts/unregister_auto_sync_task.ps1`
+
+## Full Sync + Match Check (Windows)
+
+After each major update run:
+
+```powershell
+cd <repo-root>
+powershell -ExecutionPolicy Bypass -File .\scripts\sync_and_check.ps1 -Branch main -CommitMessage "sync: major update"
+```
+
+Strict check only (without commit/push):
+
+```powershell
+cd <repo-root>
+powershell -ExecutionPolicy Bypass -File .\scripts\check_repo_sync.ps1 -Branch main
+```

@@ -5,6 +5,8 @@ import platform
 import shutil
 import subprocess
 import time
+import ctypes
+from importlib import import_module
 from pathlib import Path
 from typing import Dict
 
@@ -46,6 +48,35 @@ def collect_diagnostics(
     code2, pip_freeze = run_cmd(["python", "-m", "pip", "freeze"])
     code3, devices = run_cmd(["powershell", "-NoProfile", "-Command", "Get-CimInstance Win32_SoundDevice | Select-Object Name | Format-Table -HideTableHeaders"])
 
+    commands_payload = {}
+    commands_file = app_paths.get("commands")
+    if commands_file and commands_file.exists():
+        try:
+            commands_payload = json.loads(commands_file.read_text(encoding="utf-8-sig"))
+        except Exception:
+            commands_payload = {}
+
+    paths_check = {}
+    for phrase, entry in (commands_payload or {}).items():
+        if isinstance(entry, dict):
+            path = str(entry.get("path", "")).strip()
+        else:
+            path = str(entry).strip()
+        if path:
+            paths_check[phrase] = Path(path).exists()
+
+    try:
+        is_admin = bool(ctypes.windll.shell32.IsUserAnAdmin())
+    except Exception:
+        is_admin = False
+
+    def module_ok(name: str) -> bool:
+        try:
+            import_module(name)
+            return True
+        except Exception:
+            return False
+
     report = {
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
         "app_version": app_version,
@@ -57,9 +88,16 @@ def collect_diagnostics(
             "settings_exists": bool(app_paths.get("settings") and app_paths["settings"].exists()),
             "commands_exists": bool(app_paths.get("commands") and app_paths["commands"].exists()),
             "logs_exists": bool(logs_dir and logs_dir.exists()),
+            "is_admin": is_admin,
+            "deps": {
+                "speech_recognition": module_ok("speech_recognition"),
+                "pyaudio": module_ok("pyaudio"),
+                "pywinauto": module_ok("pywinauto"),
+                "faster_whisper": module_ok("faster_whisper"),
+            },
+            "command_paths_ok": paths_check,
         },
     }
     with (target / "diagnostics.json").open("w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     return target
-

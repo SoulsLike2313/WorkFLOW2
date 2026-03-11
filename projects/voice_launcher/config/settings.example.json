@@ -1,0 +1,17 @@
+{
+  "settings_version": 6,
+  "asr_engine": "whisper",
+  "whisper_model_size": "small",
+  "microphone_name": "",
+  "microphone_id": -1,
+  "output_name": "",
+  "output_id": -1,
+  "dynamic_energy": true,
+  "energy_threshold": 110,
+  "fuzzy_threshold": 0.72,
+  "listen_timeout": 1.8,
+  "listen_phrase_limit": 5.0,
+  "mic_gain": 1.4,
+  "monitor_gain": 1.0,
+  "simple_mode": true
+}

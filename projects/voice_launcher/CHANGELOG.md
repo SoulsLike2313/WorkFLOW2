@@ -1,0 +1,47 @@
+# Changelog
+
+## 1.1.0-dev (2026-03-11)
+
+- Начат реальный модульный рефакторинг:
+  - `voice_launcher_app/app`
+  - `voice_launcher_app/core`
+  - `voice_launcher_app/asr`
+  - `voice_launcher_app/actions`
+  - `voice_launcher_app/storage`
+  - `voice_launcher_app/profiles`
+  - `voice_launcher_app/diagnostics`
+  - `voice_launcher_app/ui`
+- Усилен `launcher_play`:
+  - strict verification-first алгоритм
+  - проверка окна по process path + title patterns + confidence
+  - `dry-run` и `highlight-only`
+  - мягкий отказ без клика при недостаточной уверенности
+  - детальные этапные логи
+- Улучшено хранение данных:
+  - runtime-логи в `AppData\VoiceLauncher\logs`
+  - backups/snapshots в отдельных каталогах
+  - миграция настроек до `settings_version = 6`
+- Добавлены профили:
+  - экспорт/импорт команд и настроек (JSON)
+  - валидация профиля
+- Добавлена встроенная диагностика:
+  - сбор логов/конфигов/окружения в диагностический пакет
+- Обновлен UI:
+  - переключатель простой/расширенный режим
+  - быстрые кнопки (микрофон, логи, профиль, диагностика)
+  - нижняя строка “последняя фраза/последнее действие”
+  - события в расширенном табе
+- Обновлена сборка:
+  - новый `VoiceLauncher.spec` (hiddenimports + datas + icon)
+  - Inno Setup script с desktop/startup option
+  - `dev_tools/build_portable.ps1`
+  - `dev_tools/build_installer.ps1`
+- Добавлены default/example конфиги:
+  - `config/settings.example.json`
+  - `config/commands.example.json`
+- Добавлены тесты:
+  - storage/config migration
+  - matching
+  - profile import/export
+  - safe launcher automation
+  - smoke import

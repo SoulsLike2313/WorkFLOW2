@@ -10,5 +10,5 @@ if (-not (Test-Path ".venv\Scripts\python.exe")) {
 Write-Host "Developer mode:"
 Write-Host "1) Backend API: .\.venv\Scripts\python.exe -m app.launcher developer backend --host 127.0.0.1 --port 8000"
 Write-Host "2) Desktop UI: .\.venv\Scripts\python.exe -m app.launcher developer ui --api-base-url http://127.0.0.1:8000"
-Write-Host "3) Verify:      .\.venv\Scripts\python.exe -m app.launcher developer verify"
-
+Write-Host "3) Verify:      .\.venv\Scripts\python.exe -m app.verify"
+Write-Host "4) User update: powershell -ExecutionPolicy Bypass -File .\run_update.ps1 -Mode check -ManifestPath <manifest.json>"

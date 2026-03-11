@@ -52,11 +52,13 @@ except Exception:
 
 
 def get_storage_dir():
-    # В exe-версии храним данные в AppData, чтобы они не терялись.
-    if getattr(sys, "frozen", False):
-        base = os.path.join(os.getenv("APPDATA", os.path.expanduser("~")), "VoiceLauncher")
+    # Runtime-данные всегда в AppData (и для исходников, и для exe).
+    # При необходимости можно переопределить через VOICE_LAUNCHER_STORAGE_DIR.
+    env_override = os.getenv("VOICE_LAUNCHER_STORAGE_DIR", "").strip()
+    if env_override:
+        base = env_override
     else:
-        base = os.path.dirname(os.path.abspath(__file__))
+        base = os.path.join(os.getenv("APPDATA", os.path.expanduser("~")), "VoiceLauncher")
     os.makedirs(base, exist_ok=True)
     return base
 
@@ -233,12 +235,21 @@ def set_last_phrase(text):
     push_history_value(recent_heard_phrases, text, limit=30)
     if "last_phrase_var" in globals():
         root.after(0, lambda: last_phrase_var.set(f"Последняя фраза: {text}"))
+    if "refresh_events_panel" in globals():
+        root.after(0, refresh_events_panel)
 
 
 def set_last_action(text):
     push_history_value(recent_actions, text, limit=30)
     if "last_action_var" in globals():
         root.after(0, lambda: last_action_var.set(f"Последнее действие: {text}"))
+    if "refresh_events_panel" in globals():
+        root.after(0, refresh_events_panel)
+
+
+def set_asr_status(text):
+    if "asr_status_var" in globals():
+        root.after(0, lambda: asr_status_var.set(str(text)))
 
 
 def log_launcher(text):
@@ -742,7 +753,8 @@ def load_json(path):
         # Если JSON поврежден, сохраняем копию и не падаем.
         try:
             stamp = time.strftime("%Y%m%d_%H%M%S")
-            backup_path = f"{path}.corrupt_{stamp}.bak"
+            base_name = os.path.basename(path)
+            backup_path = os.path.join(BACKUPS_DIR, f"{base_name}.corrupt_{stamp}.bak")
             shutil.copy2(path, backup_path)
         except Exception:
             pass
@@ -1404,8 +1416,10 @@ def recognize_candidates(recognizer, audio, command_hint=False, prefer_all_engin
         google_candidates = recognize_with_google(recognizer, audio)
         if google_candidates:
             log_asr("cold-start fallback: used Google while Whisper warms up")
+            set_asr_status("ASR: Google (Whisper прогревается)")
             return google_candidates
         if whisper_warmup_in_progress:
+            set_asr_status("ASR: ожидание Whisper...")
             return []
 
     # Основной движок.
@@ -1413,18 +1427,26 @@ def recognize_candidates(recognizer, audio, command_hint=False, prefer_all_engin
         try:
             whisper_candidates = recognize_with_whisper(audio, command_hint=command_hint)
             if whisper_candidates and not prefer_all_engines:
+                set_asr_status("ASR: Whisper")
                 return whisper_candidates
         except Exception as exc:
             now = time.time()
             if now - last_asr_error_ts > 3.0:
                 set_status(f"Whisper недоступен, fallback на Google ({exc})")
                 last_asr_error_ts = now
+            set_asr_status("ASR: Google (fallback после ошибки Whisper)")
 
     google_candidates = recognize_with_google(recognizer, audio)
     if google_candidates and engine == "google" and not prefer_all_engines:
+        set_asr_status("ASR: Google")
         return google_candidates
 
     merged = merge_candidates(whisper_candidates, google_candidates)
+    if merged:
+        if whisper_candidates:
+            set_asr_status("ASR: Whisper + Google")
+        else:
+            set_asr_status("ASR: Google")
     return rank_candidates_for_choice(merged)
 
 
@@ -1549,8 +1571,12 @@ def save_mapping(
         "debounce_seconds": max(0.8, min(30.0, float(debounce_seconds))),
         "launcher_dry_run": bool(launcher_dry_run),
         "launcher_highlight": bool(launcher_highlight),
-        "min_window_confidence": max(0.65, min(0.99, float(min_window_confidence))),
+        "min_window_confidence": 0.90,
     }
+    try:
+        entry["min_window_confidence"] = max(0.65, min(0.99, float(min_window_confidence)))
+    except Exception:
+        entry["min_window_confidence"] = 0.90
     if use_admin:
         entry = {"mode": "admin_task", "path": path, "task_name": build_task_name(path)}
         ok, error = ensure_admin_task(entry)
@@ -1592,6 +1618,9 @@ def add_file_manual():
     play_text = "Играть"
     window_title = ""
     wait_timeout = 240
+    launcher_dry_run = False
+    launcher_highlight = False
+    min_window_confidence = 0.90
 
     if not use_admin:
         launcher_play = messagebox.askyesno(
@@ -1625,6 +1654,15 @@ def add_file_manual():
             if custom_wait:
                 wait_timeout = int(custom_wait)
 
+            launcher_dry_run = messagebox.askyesno(
+                "Безопасный режим",
+                "Включить dry-run (проверка без клика) для этой команды?",
+            )
+            launcher_highlight = messagebox.askyesno(
+                "Подсветка",
+                "Включить режим подсветки окна/кнопки вместо клика?",
+            )
+
     save_mapping(
         phrase,
         path,
@@ -1633,6 +1671,9 @@ def add_file_manual():
         play_text=play_text,
         window_title=window_title,
         wait_timeout=wait_timeout,
+        launcher_dry_run=launcher_dry_run,
+        launcher_highlight=launcher_highlight,
+        min_window_confidence=min_window_confidence,
     )
 
 
@@ -2567,7 +2608,7 @@ def toggle_monitoring():
 # ======================= Voice capture dialog =======================
 def open_voice_capture_dialog():
     dialog = tk.Toplevel(root)
-    dialog.title("Добавить команду голосом")
+    dialog.title("Мастер добавления команды")
     dialog.geometry("700x500")
     dialog.minsize(640, 440)
     dialog.configure(bg=PALETTE["card"])
@@ -2590,7 +2631,7 @@ def open_voice_capture_dialog():
     body = ttk.Frame(dialog, style="Card.TFrame", padding=12)
     body.pack(fill="both", expand=True)
 
-    ttk.Label(body, text="Файл", style="Sub.TLabel").pack(anchor="w")
+    ttk.Label(body, text="Шаг 1/5. Выберите файл", style="Sub.TLabel").pack(anchor="w")
     row = ttk.Frame(body, style="Card.TFrame")
     row.pack(fill="x", pady=(2, 8))
     ttk.Entry(row, textvariable=path_var).pack(side="left", fill="x", expand=True)
@@ -2602,7 +2643,7 @@ def open_voice_capture_dialog():
 
     ttk.Button(row, text="Выбрать", command=choose_file, style="Soft.TButton").pack(side="left", padx=(8, 0))
 
-    ttk.Label(body, text="Ключевая фраза", style="Sub.TLabel").pack(anchor="w")
+    ttk.Label(body, text="Шаг 2/5. Введите или запишите ключевую фразу", style="Sub.TLabel").pack(anchor="w")
     ttk.Entry(body, textvariable=phrase_var).pack(fill="x", pady=(2, 8))
 
     ttk.Label(body, text="Варианты распознавания", style="Sub.TLabel").pack(anchor="w")
@@ -2616,6 +2657,7 @@ def open_voice_capture_dialog():
 
     options.bind("<<ComboboxSelected>>", on_pick)
 
+    ttk.Label(body, text="Шаг 3/5. Выберите тип действия", style="Sub.TLabel").pack(anchor="w", pady=(4, 4))
     ttk.Checkbutton(
         body,
         text="Запускать как админ (через Планировщик задач)",
@@ -2635,6 +2677,7 @@ def open_voice_capture_dialog():
     ).pack(side="left")
 
     launcher_details = ttk.Frame(body, style="Card.TFrame")
+    ttk.Label(launcher_details, text="Шаг 4/5. Настройка launcher_play", style="Sub.TLabel").pack(anchor="w")
     ttk.Label(launcher_details, text="Текст кнопки:", style="Sub.TLabel").pack(anchor="w")
     ttk.Entry(launcher_details, textvariable=play_text_var).pack(fill="x", pady=(2, 6))
     ttk.Label(launcher_details, text="Фильтр окна (необязательно):", style="Sub.TLabel").pack(anchor="w")
@@ -2687,6 +2730,7 @@ def open_voice_capture_dialog():
     launcher_play_var.trace_add("write", sync_mode)
     sync_mode()
 
+    ttk.Label(body, text="Шаг 5/5. Тест и сохранение", style="Sub.TLabel").pack(anchor="w", pady=(4, 2))
     ttk.Label(body, textvariable=status_local, style="Sub.TLabel").pack(anchor="w", pady=(0, 10))
 
     controls = ttk.Frame(body, style="Card.TFrame")
@@ -3403,6 +3447,39 @@ def update_monitor_gain_label(*_args):
 
 monitor_gain_var.trace_add("write", update_monitor_gain_label)
 update_monitor_gain_label()
+
+diagnostics_box = ttk.Frame(audio_tab, style="Panel.TFrame", padding=12)
+diagnostics_box.pack(fill="both", expand=True, pady=(6, 0))
+ttk.Label(diagnostics_box, text="Последние события", style="PanelLabel.TLabel").pack(anchor="w", pady=(0, 6))
+events_list = tk.Listbox(
+    diagnostics_box,
+    height=10,
+    bg=PALETTE["card"],
+    fg=PALETTE["text"],
+    selectbackground=PALETTE["accent_deep"],
+    selectforeground=PALETTE["text"],
+    borderwidth=1,
+    relief="solid",
+)
+events_list.pack(fill="both", expand=True)
+
+
+def refresh_events_panel():
+    if "events_list" not in globals():
+        return
+    try:
+        events_list.delete(0, tk.END)
+        for phrase in recent_heard_phrases[-8:]:
+            events_list.insert(tk.END, f"Фраза: {phrase}")
+        for action in recent_actions[-8:]:
+            events_list.insert(tk.END, f"Действие: {action}")
+    except Exception:
+        pass
+
+
+ttk.Button(diagnostics_box, text="Обновить события", command=refresh_events_panel, style="Soft.TButton").pack(
+    anchor="e", pady=(6, 0)
+)
 apply_ui_mode()
 
 toolbar = ttk.Frame(commands_tab, style="Card.TFrame")
@@ -3412,6 +3489,7 @@ ttk.Button(toolbar, text="Добавить вручную", command=add_file_man
 ttk.Button(toolbar, text="Добавить голосом", command=open_voice_capture_dialog, style="Soft.TButton").pack(side="left", padx=8)
 ttk.Button(toolbar, text="Проверить", command=test_selected, style="Soft.TButton").pack(side="left")
 ttk.Button(toolbar, text="Проверить микрофон", command=check_microphone, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar, text="Тест распознавания", command=test_recognition_once, style="Soft.TButton").pack(side="left", padx=(8, 0))
 ttk.Button(toolbar, text="Открыть логи", command=open_logs_folder, style="Soft.TButton").pack(side="left", padx=(8, 0))
 ttk.Button(toolbar, text="Экспорт профиля", command=export_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
 ttk.Button(toolbar, text="Импорт профиля", command=import_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
@@ -3461,6 +3539,8 @@ table_wrap.bind("<Configure>", fit_tree_columns)
 status_var = tk.StringVar(value="Готово")
 status = ttk.Label(card, textvariable=status_var, style="Status.TLabel", anchor="w")
 status.pack(fill="x", pady=(10, 0))
+asr_status_var = tk.StringVar(value=f"ASR: {asr_engine().capitalize()}")
+ttk.Label(card, textvariable=asr_status_var, style="Sub.TLabel", anchor="w").pack(fill="x", pady=(4, 0))
 
 hint = ttk.Label(
     card,
