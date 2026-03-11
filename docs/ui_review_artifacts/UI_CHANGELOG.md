@@ -22,6 +22,16 @@
 - В manifest добавлены `screens_by_page`.
 - Добавлен `runtime/ui_snapshots/latest_run.txt`.
 
+### UI Compare
+- Добавлен `scripts/ui_compare_runs.py` (active module + root wrapper).
+- Новый compare-пайплайн:
+  - принимает `base_run` и `target_run`,
+  - сравнивает manifest + screenshot hashes,
+  - выдаёт список изменившихся экранов и per-page summary.
+- Артефакты сравнения:
+  - `runtime/ui_compare/<compare_run_id>_<base>_vs_<target>/ui_compare_summary.json`
+  - `runtime/ui_compare/<compare_run_id>_<base>_vs_<target>/ui_compare_summary.md`
+
 ### UI Validate
 - Добавлен screen-level audit (`screen_audit`) из doctor issues.
 - Добавлен `ui_visual_review.md` в каждый validate run.

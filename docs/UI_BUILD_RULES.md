@@ -64,6 +64,7 @@
 1. `ui_snapshot_runner` (baseline/after).
 2. `ui_doctor` (layout + interaction checks).
 3. `ui_validate` (consolidated gate + artifacts).
+4. `ui_compare_runs` (base vs target visual delta).
 
 ## 11. Required Artifacts
 - `runtime/ui_snapshots/<run_id>/...`

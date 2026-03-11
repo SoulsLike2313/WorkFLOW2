@@ -17,6 +17,9 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 
+from scripts.ui_qa_product import apply_scenario_state, scenario_catalog
+
+
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -54,17 +57,6 @@ def _hash_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _extract_run_dir(stdout_text: str) -> Path | None:
-    for line in stdout_text.splitlines():
-        candidate = line.strip()
-        if not candidate:
-            continue
-        path = Path(candidate)
-        if path.exists() and path.is_dir():
-            return path.resolve()
-    return None
-
-
 def _render_summary_md(summary: dict[str, Any]) -> str:
     lines = [
         "# UI Snapshot Summary",
@@ -75,15 +67,24 @@ def _render_summary_md(summary: dict[str, Any]) -> str:
         f"- Duration: `{summary.get('duration_seconds')}s`",
         f"- Scales: `{', '.join(summary.get('scales', []))}`",
         f"- Sizes: `{summary.get('sizes')}`",
-        f"- Screenshots: `{summary.get('screenshot_count', 0)}`",
+        f"- Captures: `{summary.get('capture_count', 0)}`",
         "",
-        "## Screenshots By Tab",
+        "## Coverage By Screen",
         "",
     ]
-    shots_by_tab = summary.get("screenshots_by_tab", {})
-    if shots_by_tab:
-        for tab_name, count in shots_by_tab.items():
-            lines.append(f"- {tab_name}: {count}")
+
+    coverage_by_screen = summary.get("coverage_by_screen", {})
+    if coverage_by_screen:
+        for screen_name, count in coverage_by_screen.items():
+            lines.append(f"- {screen_name}: {count}")
+    else:
+        lines.append("- none")
+
+    lines.extend(["", "## Coverage By State", ""])
+    coverage_by_state = summary.get("coverage_by_state", {})
+    if coverage_by_state:
+        for state_name, count in coverage_by_state.items():
+            lines.append(f"- {state_name}: {count}")
     else:
         lines.append("- none")
 
@@ -101,58 +102,19 @@ def _render_summary_md(summary: dict[str, Any]) -> str:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Capture GameRuAI UI screenshots by tab and viewport.")
+    parser = argparse.ArgumentParser(description="Capture product-specific GameRuAI UI screenshots by screen/state.")
     parser.add_argument("--worker", action="store_true", help="Internal worker mode.")
+    parser.add_argument("--run-id", default="", help="Master run ID for worker mode.")
     parser.add_argument("--scale", default="1.0", help="Scale for worker mode.")
     parser.add_argument("--scales", default="1.0,1.25,1.5", help="Scales for master mode.")
     parser.add_argument("--sizes", default="1600x960,1366x768,1280x800", help="Window sizes (comma-separated).")
     parser.add_argument("--output-dir", default="runtime/ui_snapshots", help="Output root for snapshot runs.")
     parser.add_argument("--run-dir", default="", help="Run directory for worker mode.")
     parser.add_argument("--worker-output", default="", help="Worker JSON output path.")
-    parser.add_argument("--wait-ms", type=int, default=220, help="Wait between tab transitions.")
+    parser.add_argument("--wait-ms", type=int, default=220, help="Wait between scenario transitions.")
     parser.add_argument("--label", default="ui_snapshot", help="Optional run label.")
     parser.add_argument("--project-name", default="GameRuAI UI-QA Project", help="Project name used in demo bootstrap.")
     return parser
-
-
-def _prepare_demo_state(window: Any, *, project_name: str) -> None:
-    game_root = window.services.config.paths.fixtures_root
-    summary = window.services.pipeline_end_to_end(project_name, game_root)
-
-    window.current_project_id = int(summary["project"]["id"])
-    window.current_game_root = game_root
-    window.project_panel.project_name_edit.setText(project_name)
-    window.project_panel.game_path_edit.setText(str(game_root))
-    window.companion_panel.watched_path_edit.setText(str(game_root))
-    window.live_panel.load_scenes(window.services.load_scenes(game_root))
-    window.translation_panel.set_backend_status(summary.get("translate", {}))
-    window.refresh_all_views()
-
-
-def _prime_tab_state(window: Any, tab_name: str) -> None:
-    if tab_name == "Asset Explorer":
-        tree = window.asset_panel.resource_tree
-        if tree.topLevelItemCount() > 0:
-            first = tree.topLevelItem(0)
-            tree.setCurrentItem(first)
-    elif tab_name == "Entries":
-        window.refresh_entries()
-    elif tab_name == "Translation":
-        window.refresh_translations()
-    elif tab_name == "Voice":
-        window.refresh_voice()
-    elif tab_name == "Learning":
-        window.refresh_learning()
-    elif tab_name == "Glossary":
-        window.refresh_glossary()
-    elif tab_name == "QA":
-        window.refresh_qa()
-    elif tab_name == "Reports":
-        window.refresh_reports()
-    elif tab_name == "Diagnostics":
-        window.refresh_diagnostics()
-    elif tab_name == "Companion":
-        window.refresh_companion()
 
 
 def _run_worker(args: argparse.Namespace) -> int:
@@ -169,46 +131,59 @@ def _run_worker(args: argparse.Namespace) -> int:
     screenshots_dir.mkdir(parents=True, exist_ok=True)
 
     sizes = _parse_sizes(args.sizes)
+    scenarios = scenario_catalog()
+
     config = AppConfig.load()
     ensure_demo_assets(config)
     services = AppServices(config)
 
     app = QApplication([])
     window = MainWindow(services)
-    _prepare_demo_state(window, project_name=args.project_name)
 
-    screenshots: list[dict[str, Any]] = []
-    for width, height in sizes:
-        window.resize(width, height)
-        window.show()
+    captures: list[dict[str, Any]] = []
+    errors: list[str] = []
+
+    def _wait() -> None:
         QTest.qWait(args.wait_ms)
         app.processEvents()
 
-        size_label = f"{width}x{height}"
-        tab_count = window.tabs.count()
-        for tab_index in range(tab_count):
-            window.tabs.setCurrentIndex(tab_index)
-            tab_name = window.tabs.tabText(tab_index)
-            _prime_tab_state(window, tab_name)
-            QTest.qWait(args.wait_ms)
-            app.processEvents()
+    for size_index, (width, height) in enumerate(sizes):
+        window.resize(width, height)
+        window.show()
+        _wait()
 
-            file_name = f"tab_{tab_index:02d}_{_slug(tab_name)}__{size_label}__scale_{args.scale.replace('.', '_')}.png"
+        size_label = f"{width}x{height}"
+        for scenario in scenarios:
+            if not scenario.requires_loaded and size_index > 0:
+                continue
+
+            ok = apply_scenario_state(window, scenario, project_name=args.project_name, wait_fn=_wait)
+            if not ok:
+                errors.append(f"screen_not_found::{scenario.screen_name}::{scenario.state_name}")
+                continue
+
+            _wait()
+            file_name = (
+                f"{_slug(scenario.screen_name)}__{_slug(scenario.state_name)}"
+                f"__{size_label}__scale_{args.scale.replace('.', '_')}.png"
+            )
             out_path = screenshots_dir / file_name
             image = window.grab()
             image.save(str(out_path))
 
-            screenshots.append(
+            captures.append(
                 {
-                    "tab_index": tab_index,
-                    "tab_name": tab_name,
+                    "run_id": args.run_id,
+                    "screen_name": scenario.screen_name,
+                    "state_name": scenario.state_name,
+                    "screenshot_path": str(out_path.resolve()),
+                    "timestamp": _now_iso(),
+                    "notes": scenario.notes,
                     "size": size_label,
                     "scale": args.scale,
                     "width": width,
                     "height": height,
-                    "path": str(out_path.resolve()),
                     "sha256": _hash_file(out_path),
-                    "captured_at": _now_iso(),
                 }
             )
 
@@ -217,9 +192,11 @@ def _run_worker(args: argparse.Namespace) -> int:
     app.quit()
 
     payload = {
+        "run_id": args.run_id,
         "scale": args.scale,
         "sizes": args.sizes,
-        "screenshots": screenshots,
+        "captures": captures,
+        "errors": errors,
     }
     Path(args.worker_output).resolve().write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     return 0
@@ -237,7 +214,8 @@ def _run_master(args: argparse.Namespace) -> int:
     started_at = _now_iso()
 
     scales = [token.strip() for token in args.scales.split(",") if token.strip()]
-    all_screenshots: list[dict[str, Any]] = []
+    all_captures: list[dict[str, Any]] = []
+    all_errors: list[str] = []
     failed_workers: list[str] = []
     commands: list[list[str]] = []
 
@@ -247,6 +225,8 @@ def _run_master(args: argparse.Namespace) -> int:
             sys.executable,
             str(Path(__file__).resolve()),
             "--worker",
+            "--run-id",
+            run_id,
             "--scale",
             scale,
             "--sizes",
@@ -272,15 +252,23 @@ def _run_master(args: argparse.Namespace) -> int:
         if not worker_output.exists():
             failed_workers.append(f"scale={scale} (missing worker output)")
             continue
-        payload = json.loads(worker_output.read_text(encoding="utf-8"))
-        all_screenshots.extend(payload.get("screenshots", []))
 
-    screenshots_by_tab: dict[str, int] = {}
-    for shot in all_screenshots:
-        tab_name = str(shot.get("tab_name", "unknown"))
-        screenshots_by_tab[tab_name] = screenshots_by_tab.get(tab_name, 0) + 1
+        payload = json.loads(worker_output.read_text(encoding="utf-8"))
+        all_captures.extend(payload.get("captures", []))
+        all_errors.extend(payload.get("errors", []))
+
+    coverage_by_screen: dict[str, int] = {}
+    coverage_by_state: dict[str, int] = {}
+    for capture in all_captures:
+        screen_name = str(capture.get("screen_name", "unknown"))
+        state_key = f"{capture.get('screen_name', 'unknown')}|{capture.get('state_name', 'unknown')}"
+        coverage_by_screen[screen_name] = coverage_by_screen.get(screen_name, 0) + 1
+        coverage_by_state[state_key] = coverage_by_state.get(state_key, 0) + 1
 
     status = "PASS" if not failed_workers else "FAIL"
+    if status == "PASS" and all_errors:
+        status = "PASS_WITH_WARNINGS"
+
     finished_at = _now_iso()
     duration_seconds = round(time.time() - started, 2)
 
@@ -290,8 +278,11 @@ def _run_master(args: argparse.Namespace) -> int:
         "generated_at": finished_at,
         "sizes": args.sizes,
         "scales": scales,
-        "screenshots": all_screenshots,
-        "screenshots_by_tab": dict(sorted(screenshots_by_tab.items())),
+        "captures": all_captures,
+        "screenshots": all_captures,
+        "coverage_by_screen": dict(sorted(coverage_by_screen.items())),
+        "coverage_by_state": dict(sorted(coverage_by_state.items())),
+        "worker_errors": all_errors,
     }
     manifest_path = run_dir / "ui_screenshots_manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -305,8 +296,10 @@ def _run_master(args: argparse.Namespace) -> int:
         "duration_seconds": duration_seconds,
         "scales": scales,
         "sizes": args.sizes,
-        "screenshot_count": len(all_screenshots),
-        "screenshots_by_tab": dict(sorted(screenshots_by_tab.items())),
+        "capture_count": len(all_captures),
+        "coverage_by_screen": dict(sorted(coverage_by_screen.items())),
+        "coverage_by_state": dict(sorted(coverage_by_state.items())),
+        "worker_errors": all_errors,
         "failed_workers": failed_workers,
         "commands": commands,
         "manifest_path": str(manifest_path.resolve()),
@@ -330,15 +323,15 @@ def _run_master(args: argparse.Namespace) -> int:
 
     print(str(run_dir.resolve()))
     print(f"UI snapshot status: {status}")
-    return 0 if status == "PASS" else 2
+    return 0 if status != "FAIL" else 2
 
 
 def main() -> int:
     parser = _build_parser()
     args = parser.parse_args()
     if args.worker:
-        if not args.run_dir or not args.worker_output:
-            parser.error("--run-dir and --worker-output are required in worker mode.")
+        if not args.run_dir or not args.worker_output or not args.run_id:
+            parser.error("--run-id, --run-dir and --worker-output are required in worker mode.")
         return _run_worker(args)
     return _run_master(args)
 

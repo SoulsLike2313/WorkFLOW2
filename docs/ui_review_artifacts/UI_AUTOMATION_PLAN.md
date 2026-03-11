@@ -39,7 +39,18 @@
   - `runtime/ui_validation/latest_run.json`
   - `runtime/ui_validation/validate_<run_id>/ui_visual_review.md`
 
+### 4) `scripts/ui_compare_runs.py`
+- Берёт два `run_id` (или пути к run-папкам).
+- Сравнивает manifests и фактические screenshot hashes.
+- Показывает, какие экраны реально изменились.
+- Артефакты:
+  - `runtime/ui_compare/<compare_run_id>_<base>_vs_<target>/ui_compare_summary.json`
+  - `runtime/ui_compare/<compare_run_id>_<base>_vs_<target>/ui_compare_summary.md`
+  - `runtime/ui_compare/latest_run.json`
+  - `runtime/ui_compare/latest_run.txt`
+
 ## Принцип запуска
 1. До правок: baseline snapshots.
 2. После правок: doctor + validate.
-3. Только после PASS — ручной visual acceptance.
+3. Для диффа итераций: compare (base run vs target run).
+4. Только после PASS — ручной visual acceptance.
