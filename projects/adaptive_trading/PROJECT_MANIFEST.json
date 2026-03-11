@@ -1,0 +1,22 @@
+﻿{
+  "schema_version": "1.0.0",
+  "project_id": "adaptive_trading",
+  "name": "Adaptive Trading",
+  "status": "experimental",
+  "project_root": "projects/adaptive_trading",
+  "description": "Experimental trading research scripts and GUI prototypes.",
+  "owner_scope": "experimental",
+  "language": "python",
+  "runtime_mode": "script_and_gui",
+  "entrypoints": {
+    "cli_script": "python adaptive_trading_bot.py",
+    "gui": "python adaptive_trading_gui.py"
+  },
+  "bootstrap": {
+    "requirements_file": "trading_requirements.txt"
+  },
+  "constraints": {
+    "not_part_of_active_release_gate": true,
+    "promote_to_active_requires_status_change": true
+  }
+}

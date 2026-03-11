@@ -1,0 +1,94 @@
+﻿{
+  "schema_version": "1.0.0",
+  "workspace_id": "workflow",
+  "workspace_name": "WorkFLOW Multi-Project Workspace",
+  "last_normalized_at": "2026-03-11",
+  "active_project_id": "shortform_core",
+  "status_model": [
+    "active",
+    "supporting",
+    "experimental",
+    "archived",
+    "legacy"
+  ],
+  "paths": {
+    "root": ".",
+    "projects_dir": "projects",
+    "workspace_config_dir": "workspace_config",
+    "bootstrap_script": "scripts/bootstrap_workspace.ps1"
+  },
+  "projects": [
+    {
+      "project_id": "shortform_core",
+      "name": "Shortform Core Workspace",
+      "status": "active",
+      "path": "projects/wild_hunt_command_citadel/shortform_core",
+      "manifest_path": "projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json",
+      "language": "python",
+      "runtime": "desktop_plus_internal_api",
+      "priority": 1
+    },
+    {
+      "project_id": "voice_launcher",
+      "name": "Voice Launcher",
+      "status": "supporting",
+      "path": "projects/voice_launcher",
+      "manifest_path": "projects/voice_launcher/PROJECT_MANIFEST.json",
+      "language": "python",
+      "runtime": "desktop",
+      "priority": 2
+    },
+    {
+      "project_id": "adaptive_trading",
+      "name": "Adaptive Trading",
+      "status": "experimental",
+      "path": "projects/adaptive_trading",
+      "manifest_path": "projects/adaptive_trading/PROJECT_MANIFEST.json",
+      "language": "python",
+      "runtime": "script_and_gui",
+      "priority": 3
+    },
+    {
+      "project_id": "tiktok_automation_app",
+      "name": "TikTok Automation App (Legacy)",
+      "status": "legacy",
+      "path": "projects/wild_hunt_command_citadel/tiktok_automation_app",
+      "manifest_path": "projects/wild_hunt_command_citadel/tiktok_automation_app/PROJECT_MANIFEST.json",
+      "language": "python",
+      "runtime": "desktop",
+      "priority": 4
+    }
+  ],
+  "status_index": {
+    "active": [
+      "shortform_core"
+    ],
+    "supporting": [
+      "voice_launcher"
+    ],
+    "experimental": [
+      "adaptive_trading"
+    ],
+    "archived": [],
+    "legacy": [
+      "tiktok_automation_app"
+    ]
+  },
+  "codex_defaults": {
+    "default_analysis_project": "shortform_core",
+    "analysis_order": [
+      "shortform_core",
+      "voice_launcher",
+      "adaptive_trading",
+      "tiktok_automation_app"
+    ],
+    "load_project_manifest_first": true,
+    "enforce_status_boundaries": true
+  },
+  "governance": {
+    "single_active_project_rule": true,
+    "manual_testing_gate": "PASS",
+    "project_isolation_required": true,
+    "machine_readable_manifests_required": true
+  }
+}

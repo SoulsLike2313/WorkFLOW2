@@ -1,0 +1,49 @@
+﻿{
+  "schema_version": "1.0.0",
+  "manifest_id": "codex-bootstrap-workflow",
+  "workspace_manifest_path": "workspace_config/workspace_manifest.json",
+  "codex_bootstrap_doc_path": "workspace_config/codex_bootstrap.md",
+  "bootstrap_priority": [
+    "load_workspace_manifest",
+    "resolve_active_project",
+    "load_active_project_manifest",
+    "inspect_active_project_readme",
+    "inspect_active_project_codex"
+  ],
+  "analysis_policy": {
+    "primary_target": "shortform_core",
+    "fallback_order": [
+      "voice_launcher",
+      "adaptive_trading",
+      "tiktok_automation_app"
+    ],
+    "never_guess_active_project": true,
+    "always_use_project_manifest": true
+  },
+  "required_repository_docs": [
+    "README.md",
+    "workspace_config/workspace_manifest.json",
+    "workspace_config/codex_bootstrap.md"
+  ],
+  "required_active_project_docs": [
+    "projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json",
+    "projects/wild_hunt_command_citadel/shortform_core/README.md",
+    "projects/wild_hunt_command_citadel/shortform_core/CODEX.md"
+  ],
+  "workspace_checks": {
+    "validate_manifest_json": true,
+    "validate_project_paths": true,
+    "validate_status_index": true,
+    "validate_active_project_pointer": true
+  },
+  "path_hints": {
+    "ignore": [
+      ".venv",
+      "__pycache__",
+      ".pytest_cache",
+      "runtime"
+    ],
+    "bootstrap_script": "scripts/bootstrap_workspace.ps1",
+    "report_dir": "runtime/workspace_bootstrap"
+  }
+}

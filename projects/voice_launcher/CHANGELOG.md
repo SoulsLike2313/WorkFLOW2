@@ -15,6 +15,9 @@
   - `voice_launcher_app/core/command_manager.py` (валидация/сохранение команд)
   - `voice_launcher_app/actions/launcher_runner.py` (оркестрация безопасного launcher_play)
   - `voice_launcher_app/app/controller.py` (ASR listen loop, антидубль, match/launch orchestration)
+  - `voice_launcher_app/ui/controller.py` (simple/advanced mode + история UI-событий)
+  - `voice_launcher_app/core/launch_policy.py` (процессный кэш + launch cooldown/single-instance gate)
+  - `voice_launcher_app/actions/target_launcher.py` (безопасный запуск файлов + duplicate-guard state)
 - Усилен `launcher_play`:
   - strict verification-first алгоритм
   - проверка окна по process path + title patterns + confidence

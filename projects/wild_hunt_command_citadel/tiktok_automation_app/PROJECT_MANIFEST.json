@@ -1,0 +1,20 @@
+﻿{
+  "schema_version": "1.0.0",
+  "project_id": "tiktok_automation_app",
+  "name": "TikTok Automation App",
+  "status": "legacy",
+  "project_root": "projects/wild_hunt_command_citadel/tiktok_automation_app",
+  "description": "Legacy desktop implementation retained for reference and migration history.",
+  "owner_scope": "legacy",
+  "language": "python",
+  "runtime_mode": "desktop",
+  "entrypoints": {
+    "run": "python app.py",
+    "setup": "powershell -ExecutionPolicy Bypass -File .\\run_setup.ps1"
+  },
+  "constraints": {
+    "new_feature_development": false,
+    "active_runtime_reference": false,
+    "migration_target": "shortform_core"
+  }
+}

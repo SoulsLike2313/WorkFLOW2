@@ -1,0 +1,31 @@
+﻿{
+  "schema_version": "1.0.0",
+  "project_id": "shortform_core",
+  "name": "Shortform Core Workspace",
+  "status": "active",
+  "project_root": "projects/wild_hunt_command_citadel/shortform_core",
+  "description": "Primary engineering product for multi-profile shortform workspace, verification gate, and desktop launcher lifecycle.",
+  "owner_scope": "primary",
+  "language": "python",
+  "runtime_mode": "desktop_plus_internal_api",
+  "entrypoints": {
+    "user_mode": "powershell -ExecutionPolicy Bypass -File .\\run_user.ps1",
+    "developer_mode": "powershell -ExecutionPolicy Bypass -File .\\run_developer.ps1",
+    "verify": "python -m app.verify",
+    "update": "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1"
+  },
+  "bootstrap": {
+    "venv_path": ".venv",
+    "requirements_file": "requirements.txt",
+    "default_command": "python -m app.launcher user"
+  },
+  "artifacts": {
+    "verification_dir": "runtime/verification",
+    "output_dir": "runtime/output"
+  },
+  "constraints": {
+    "machine_gate_required": true,
+    "manual_test_requires_pass": true,
+    "status_boundary_enforced": true
+  }
+}

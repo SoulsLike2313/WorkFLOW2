@@ -1,5 +1,4 @@
 ﻿import ctypes
-import csv
 import difflib
 import hashlib
 import json
@@ -20,10 +19,17 @@ import speech_recognition as sr
 from PIL import Image, ImageDraw
 from voice_launcher_app.app.controller import AppController, ListenerDeps
 from voice_launcher_app.actions.launcher_runner import LauncherRunnerDeps, run_launcher_play
+from voice_launcher_app.actions.target_launcher import TargetLauncher, TargetLauncherDeps, TargetLauncherState
 from voice_launcher_app.core.command_manager import save_command_definition
+from voice_launcher_app.core.launch_policy import (
+    LaunchGate,
+    ProcessScanner,
+    find_running_process_for_entry as core_find_running_process_for_entry,
+)
 from voice_launcher_app.core.matching import find_best_command as modular_find_best_command
 from voice_launcher_app.diagnostics.bundle import collect_diagnostics
 from voice_launcher_app.profiles.profile_io import export_profile, import_profile
+from voice_launcher_app.ui.controller import UiController, UiControllerDeps
 try:
     import audioop
 except Exception:
@@ -149,13 +155,17 @@ device_options_cache = {"ts": 0.0, "inputs": [], "outputs": []}
 
 last_launch_phrase = ""
 last_launch_time = 0.0
+target_launcher_executor = None
 launcher_log_lock = threading.Lock()
 runtime_log_lock = threading.Lock()
 command_launch_gate = {}
 process_list_cache = {"ts": 0.0, "names": set()}
+launch_gate_service = None
+process_scanner_service = None
 last_voice_trigger = {"phrase": "", "ts": 0.0}
 recent_heard_phrases = []
 recent_actions = []
+ui_controller = None
 
 
 # ======================= Utils =======================
@@ -234,6 +244,9 @@ def push_history_value(buffer, value, limit=20):
 
 
 def set_last_phrase(text):
+    if ui_controller is not None:
+        ui_controller.push_last_phrase(text)
+        return
     push_history_value(recent_heard_phrases, text, limit=30)
     if "last_phrase_var" in globals():
         root.after(0, lambda: last_phrase_var.set(f"Последняя фраза: {text}"))
@@ -242,6 +255,9 @@ def set_last_phrase(text):
 
 
 def set_last_action(text):
+    if ui_controller is not None:
+        ui_controller.push_last_action(text)
+        return
     push_history_value(recent_actions, text, limit=30)
     if "last_action_var" in globals():
         root.after(0, lambda: last_action_var.set(f"Последнее действие: {text}"))
@@ -1674,152 +1690,97 @@ def remove_selected():
         log_runtime(f"Command removed: phrase='{phrase}'")
 
 
-def get_running_process_names(force_refresh=False):
-    global process_list_cache
-    if os.name != "nt":
-        return set()
-
-    now = time.time()
-    cached_ts = float(process_list_cache.get("ts", 0.0))
-    cached_names = process_list_cache.get("names", set())
-    if (
-        not force_refresh
-        and isinstance(cached_names, set)
-        and now - cached_ts <= 1.2
-    ):
-        return set(cached_names)
-
+def run_tasklist_command(args):
     create_flags = 0
     if hasattr(subprocess, "CREATE_NO_WINDOW"):
         create_flags = subprocess.CREATE_NO_WINDOW
+    return subprocess.run(
+        args,
+        capture_output=True,
+        text=True,
+        creationflags=create_flags,
+    )
 
-    names = set()
-    try:
-        result = subprocess.run(
-            ["tasklist", "/FO", "CSV", "/NH"],
-            capture_output=True,
-            text=True,
-            creationflags=create_flags,
+
+def get_process_scanner():
+    global process_scanner_service
+    if process_scanner_service is None:
+        process_scanner_service = ProcessScanner(
+            runner=run_tasklist_command,
+            logger=log_runtime,
+            platform_name=os.name,
+            now=time.time,
+            cache_ttl=1.2,
+            cache=process_list_cache,
         )
-        if result.returncode == 0 and result.stdout:
-            for row in csv.reader(result.stdout.splitlines()):
-                if not row:
-                    continue
-                name = os.path.basename(str(row[0]).strip().strip('"')).lower()
-                if name and name != "image name":
-                    names.add(name)
-    except Exception as exc:
-        log_runtime(f"Process list error: {exc}")
-
-    process_list_cache = {"ts": now, "names": names}
-    return set(names)
+    return process_scanner_service
 
 
-def get_entry_process_names(entry):
-    path = str(entry.get("path", "") or "").strip()
-    if not path:
-        return []
+def get_launch_gate():
+    global launch_gate_service
+    if launch_gate_service is None:
+        launch_gate_service = LaunchGate(
+            gate=command_launch_gate,
+            now=time.time,
+        )
+    return launch_gate_service
 
-    base = os.path.basename(path).strip().lower()
-    stem, ext = os.path.splitext(base)
-    names = []
 
-    if ext == ".exe" and base:
-        names.append(base)
-    elif ext in (".lnk", ".url") and stem:
-        names.append(f"{stem}.exe")
-
-    # Для типовых путей вида .../GameFolder/launcher.exe добавляем эвристику folder.exe.
-    if base in ("launcher.exe", "start.exe", "updater.exe"):
-        folder = normalize_phrase(os.path.basename(os.path.dirname(path or ""))).replace(" ", "")
-        if folder:
-            names.append(f"{folder}.exe")
-
-    # Убираем дубликаты при сохранении порядка.
-    uniq = []
-    for item in names:
-        if item and item not in uniq:
-            uniq.append(item)
-    return uniq
+def get_running_process_names(force_refresh=False):
+    scanner = get_process_scanner()
+    names = scanner.get_running_process_names(force_refresh=force_refresh)
+    try:
+        process_list_cache.update(scanner.cache)
+    except Exception:
+        pass
+    return names
 
 
 def find_running_process_for_entry(entry):
-    target_proc_names = get_entry_process_names(entry)
-    if not target_proc_names:
-        return ""
     running_names = get_running_process_names()
-    for pname in target_proc_names:
-        if pname in running_names:
-            return pname
-    return ""
-
-
-def command_launch_key(entry):
-    mode = str(entry.get("mode", "normal") or "normal").strip().lower()
-    path = str(entry.get("path", "") or "").strip().lower()
-    return f"{mode}|{path}"
+    return core_find_running_process_for_entry(
+        entry=entry,
+        running_names=running_names,
+        normalize_phrase=normalize_phrase,
+    )
 
 
 def can_launch_entry(entry):
-    key = command_launch_key(entry)
-    now = time.time()
-    cooldown_until = float(command_launch_gate.get(key, 0.0))
-    if now < cooldown_until:
-        return False, "cooldown", max(0.0, cooldown_until - now)
+    decision = get_launch_gate().can_launch_entry(
+        entry=entry,
+        find_running_process=find_running_process_for_entry,
+    )
+    return decision.can_launch, decision.reason, decision.payload
 
-    try:
-        debounce_seconds = float(entry.get("debounce_seconds", 2.8))
-    except Exception:
-        debounce_seconds = 2.8
-    mode = str(entry.get("mode", "normal") or "normal").strip().lower()
-    if mode == "launcher_play":
-        debounce_seconds = max(debounce_seconds, 12.0)
-    debounce_seconds = max(0.8, min(30.0, debounce_seconds))
 
-    single_instance_raw = entry.get("single_instance", True)
-    if isinstance(single_instance_raw, str):
-        single_instance = single_instance_raw.strip().lower() in ("1", "true", "yes", "on")
-    else:
-        single_instance = bool(single_instance_raw)
-
-    if single_instance:
-        running_proc = find_running_process_for_entry(entry)
-        if running_proc:
-            command_launch_gate[key] = now + 1.2
-            return False, "already_running", running_proc
-
-    command_launch_gate[key] = now + debounce_seconds
-    return True, "ok", debounce_seconds
+def get_target_launcher():
+    global target_launcher_executor
+    if target_launcher_executor is None:
+        state = TargetLauncherState(
+            last_path=last_launch_phrase,
+            last_time=last_launch_time,
+        )
+        deps = TargetLauncherDeps(
+            path_exists=os.path.exists,
+            status=set_status,
+            last_action=set_last_action,
+            runtime_log=log_runtime,
+            time_now=time.time,
+            platform_name=os.name,
+            os_startfile=getattr(os, "startfile", None),
+            popen=subprocess.Popen,
+        )
+        target_launcher_executor = TargetLauncher(deps=deps, state=state)
+    return target_launcher_executor
 
 
 def launch_target(path, duplicate_guard_seconds=1.0):
     global last_launch_time, last_launch_phrase
-
-    now = time.time()
-    # Защита от двойного запуска одной и той же команды подряд.
-    if duplicate_guard_seconds > 0 and now - last_launch_time < duplicate_guard_seconds and path == last_launch_phrase:
-        log_runtime(f"Launch skipped by duplicate-guard: {path}")
-        return
-
-    if not os.path.exists(path):
-        set_status("Файл не найден")
-        log_runtime(f"Launch failed (missing path): {path}")
-        return
-
-    try:
-        if os.name == "nt":
-            os.startfile(path)  # noqa: S606,S607
-        else:
-            subprocess.Popen([path])  # noqa: S603
-        last_launch_time = now
-        last_launch_phrase = path
-        set_status(f"Запущено: {os.path.basename(path)}")
-        set_last_action(f"Запущено: {os.path.basename(path)}")
-        log_runtime(f"Launch target started: {path}")
-    except Exception as exc:
-        set_status(f"Ошибка запуска: {exc}")
-        set_last_action(f"Ошибка запуска: {exc}")
-        log_runtime(f"Launch target error: {path} | {exc}")
+    launcher = get_target_launcher()
+    ok = launcher.launch_target(path, duplicate_guard_seconds=duplicate_guard_seconds)
+    last_launch_time = float(launcher.state.last_time)
+    last_launch_phrase = str(launcher.state.last_path)
+    return ok
 
 
 def get_path_stem(path):
@@ -3003,29 +2964,29 @@ gain_var = tk.DoubleVar(value=float(settings.get("mic_gain", 1.4)))
 monitor_gain_var = tk.DoubleVar(value=float(settings.get("monitor_gain", 1.0)))
 monitor_button_text = tk.StringVar(value="Монитор: OFF")
 simple_mode_text = tk.StringVar(value="")
+ui_controller = UiController(
+    UiControllerDeps(
+        root=root,
+        settings=settings,
+        save_settings=save_settings,
+        set_status=set_status,
+        heard_history=recent_heard_phrases,
+        action_history=recent_actions,
+    )
+)
+ui_controller.bind_mode_controls(notebook=notebook, advanced_tab=audio_tab, mode_text_var=simple_mode_text)
 
 
 def apply_ui_mode():
-    simple_mode = bool(settings.get("simple_mode", True))
-    if simple_mode:
-        try:
-            notebook.hide(audio_tab)
-        except Exception:
-            pass
-        simple_mode_text.set("Режим: Простой (переключить на расширенный)")
-    else:
-        try:
-            notebook.add(audio_tab, text="Расширенный")
-        except Exception:
-            pass
-        simple_mode_text.set("Режим: Расширенный (переключить на простой)")
+    if ui_controller is None:
+        return
+    ui_controller.apply_mode()
 
 
 def toggle_ui_mode():
-    settings["simple_mode"] = not bool(settings.get("simple_mode", True))
-    save_settings()
-    apply_ui_mode()
-    set_status("Режим интерфейса сохранен")
+    if ui_controller is None:
+        return
+    ui_controller.toggle_mode()
 
 
 ttk.Button(mode_strip, textvariable=simple_mode_text, command=toggle_ui_mode, style="Soft.TButton").pack(
@@ -3208,16 +3169,9 @@ events_list.pack(fill="both", expand=True)
 
 
 def refresh_events_panel():
-    if "events_list" not in globals():
+    if ui_controller is None:
         return
-    try:
-        events_list.delete(0, tk.END)
-        for phrase in recent_heard_phrases[-8:]:
-            events_list.insert(tk.END, f"Фраза: {phrase}")
-        for action in recent_actions[-8:]:
-            events_list.insert(tk.END, f"Действие: {action}")
-    except Exception:
-        pass
+    ui_controller.refresh_events_panel()
 
 
 ttk.Button(diagnostics_box, text="Обновить события", command=refresh_events_panel, style="Soft.TButton").pack(
@@ -3297,6 +3251,12 @@ last_phrase_var = tk.StringVar(value="Последняя фраза: —")
 last_action_var = tk.StringVar(value="Последнее действие: —")
 ttk.Label(card, textvariable=last_phrase_var, style="Sub.TLabel", anchor="w").pack(fill="x", pady=(4, 0))
 ttk.Label(card, textvariable=last_action_var, style="Sub.TLabel", anchor="w").pack(fill="x", pady=(2, 0))
+if ui_controller is not None:
+    ui_controller.bind_history_widgets(
+        events_listbox=events_list,
+        last_phrase_var=last_phrase_var,
+        last_action_var=last_action_var,
+    )
 
 
 def animate_window_fade(alpha=0.0):
