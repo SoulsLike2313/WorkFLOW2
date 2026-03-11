@@ -191,14 +191,24 @@ def main() -> int:
 
     executed_checks.append("project_registry_field_validation")
     registry_field_errors = []
+    registry_entrypoint_errors = []
     for item in registry:
         slug = str(item.get("slug", "")).strip() or "<missing-slug>"
         for field in REQUIRED_REGISTRY_FIELDS:
             if field not in item:
                 registry_field_errors.append(f"{slug}: missing field '{field}'")
+        main_entrypoints = item.get("main_entrypoints", [])
+        verification_entrypoints = item.get("verification_entrypoints", [])
+        if not isinstance(main_entrypoints, list) or not main_entrypoints:
+            registry_entrypoint_errors.append(f"{slug}: registry main_entrypoints must be a non-empty list")
+        if not isinstance(verification_entrypoints, list) or not verification_entrypoints:
+            registry_entrypoint_errors.append(f"{slug}: registry verification_entrypoints must be a non-empty list")
     if registry_field_errors:
         failed_checks.append("project_registry_field_validation")
         errors.extend(registry_field_errors)
+    elif registry_entrypoint_errors:
+        failed_checks.append("project_registry_field_validation")
+        errors.extend(registry_entrypoint_errors)
     else:
         passed_checks.append("project_registry_field_validation")
 

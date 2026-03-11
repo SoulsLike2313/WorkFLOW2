@@ -4,26 +4,26 @@ from typing import Dict, Iterable, Tuple
 
 
 PREMIUM_PALETTE: Dict[str, str] = {
-    "bg": "#130A21",
-    "card": "#1E1233",
-    "card_alt": "#2A1846",
+    "bg": "#130B24",
+    "card": "#1C1235",
+    "card_alt": "#281A46",
     "text": "#FFF4DE",
-    "muted": "#F1DCA8",
-    "accent": "#FFC83F",
-    "accent_hover": "#FFD867",
-    "accent_deep": "#E59D12",
-    "danger": "#FF7F45",
-    "danger_hover": "#FF9A62",
-    "soft": "#32214F",
-    "border": "#FF9D2E",
-    "tab": "#301A50",
-    "tab_active": "#5A2C8E",
-    "hero_left": "#4B1690",
-    "hero_right": "#8A32D9",
+    "muted": "#F8DFA7",
+    "accent": "#FFD24A",
+    "accent_hover": "#FFE17A",
+    "accent_deep": "#E7A81A",
+    "danger": "#FF8A58",
+    "danger_hover": "#FFA476",
+    "soft": "#342353",
+    "border": "#FF9B2A",
+    "tab": "#341D58",
+    "tab_active": "#63359B",
+    "hero_left": "#5620A0",
+    "hero_right": "#8F35DF",
 }
 
 THEME_FONTS: Dict[str, str] = {
-    "title": "Bahnschrift SemiBold",
+    "title": "Segoe Script",
     "body": "Segoe UI Semibold",
 }
 
@@ -59,6 +59,7 @@ def premium_glow_colors() -> Iterable[str]:
 
 
 def setup_styles(style, palette: Dict[str, str], title_font: str, body_font: str) -> None:
+    button_font = body_font or title_font
     style.theme_use("clam")
     style.configure("Root.TFrame", background=palette["bg"])
     style.configure("Card.TFrame", background=palette["card"])
@@ -68,7 +69,7 @@ def setup_styles(style, palette: Dict[str, str], title_font: str, body_font: str
         "Title.TLabel",
         background=palette["hero_left"],
         foreground=palette["text"],
-        font=(title_font, 26),
+        font=(title_font, 28),
     )
     style.configure(
         "Sub.TLabel",
@@ -92,10 +93,20 @@ def setup_styles(style, palette: Dict[str, str], title_font: str, body_font: str
         relief="solid",
         bordercolor=palette["border"],
     )
+    style.configure(
+        "HeroStatus.TLabel",
+        background=mix_hex(palette["tab_active"], palette["hero_right"], 0.45),
+        foreground="#FFF8E8",
+        font=(body_font, 13),
+        padding=(16, 14),
+        borderwidth=1,
+        relief="solid",
+        bordercolor=palette["border"],
+    )
 
     style.configure(
         "Primary.TButton",
-        font=(title_font, 13),
+        font=(button_font, 12),
         padding=(18, 12),
         borderwidth=2,
         relief="solid",
@@ -115,7 +126,7 @@ def setup_styles(style, palette: Dict[str, str], title_font: str, body_font: str
 
     style.configure(
         "Soft.TButton",
-        font=(title_font, 13),
+        font=(button_font, 12),
         padding=(18, 12),
         borderwidth=2,
         foreground=palette["text"],
@@ -134,7 +145,7 @@ def setup_styles(style, palette: Dict[str, str], title_font: str, body_font: str
 
     style.configure(
         "Danger.TButton",
-        font=(title_font, 13),
+        font=(button_font, 12),
         padding=(18, 12),
         borderwidth=2,
         foreground="#FFF6F2",
@@ -175,7 +186,7 @@ def setup_styles(style, palette: Dict[str, str], title_font: str, body_font: str
         background=palette["tab"],
         foreground=palette["muted"],
         padding=(22, 12),
-        font=(title_font, 12),
+        font=(body_font, 12),
         borderwidth=0,
     )
     style.map(
@@ -187,7 +198,7 @@ def setup_styles(style, palette: Dict[str, str], title_font: str, body_font: str
     style.configure(
         "Custom.Treeview",
         font=(body_font, 12),
-        rowheight=42,
+        rowheight=44,
         background=palette["card_alt"],
         fieldbackground=palette["card_alt"],
         foreground=palette["text"],
@@ -202,7 +213,7 @@ def setup_styles(style, palette: Dict[str, str], title_font: str, body_font: str
     )
     style.configure(
         "Custom.Treeview.Heading",
-        font=(body_font, 13),
+        font=(body_font, 12),
         foreground=palette["text"],
         background=palette["tab"],
         relief="solid",

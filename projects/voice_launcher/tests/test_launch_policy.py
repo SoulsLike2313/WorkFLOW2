@@ -81,3 +81,46 @@ def test_launch_gate_cooldown_and_single_instance():
 def test_command_launch_key():
     key = command_launch_key({"mode": "LAUNCHER_PLAY", "path": "E:/WarThunder/launcher.exe"})
     assert key == "launcher_play|e:/warthunder/launcher.exe"
+
+
+def test_launch_gate_inflight_and_finish_cooldown():
+    clock = Clock(100.0)
+    gate = LaunchGate(now=clock.now)
+    entry = {"mode": "launcher_play", "path": "E:/WarThunder/launcher.exe", "wait_timeout": 200}
+
+    hold = gate.mark_launch_started(entry)
+    assert hold >= 35.0
+
+    blocked_inflight = gate.can_launch_entry(entry, find_running_process=lambda _e: "")
+    assert blocked_inflight.can_launch is False
+    assert blocked_inflight.reason == "inflight"
+
+    cooldown = gate.mark_launch_finished(entry, ok=True)
+    assert cooldown >= 100.0
+
+    blocked_cooldown = gate.can_launch_entry(entry, find_running_process=lambda _e: "")
+    assert blocked_cooldown.can_launch is False
+    assert blocked_cooldown.reason == "cooldown"
+
+
+def test_launch_gate_respects_custom_post_launch_cooldown():
+    clock = Clock(5.0)
+    gate = LaunchGate(now=clock.now)
+    entry = {
+        "mode": "launcher_play",
+        "path": "E:/WarThunder/launcher.exe",
+        "post_launch_cooldown": 15,
+    }
+
+    gate.mark_launch_started(entry, hold_seconds=2.0)
+    gate.mark_launch_finished(entry, ok=True)
+
+    clock.advance(10.0)
+    blocked = gate.can_launch_entry(entry, find_running_process=lambda _e: "")
+    assert blocked.can_launch is False
+    assert blocked.reason == "cooldown"
+
+    clock.advance(6.0)
+    allowed = gate.can_launch_entry(entry, find_running_process=lambda _e: "")
+    assert allowed.can_launch is True
+    assert allowed.reason == "ok"

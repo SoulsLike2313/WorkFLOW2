@@ -24,10 +24,11 @@ from voice_launcher_app.core.command_manager import save_command_definition
 from voice_launcher_app.core.launch_policy import (
     LaunchGate,
     ProcessScanner,
+    command_launch_key,
     find_running_process_for_entry as core_find_running_process_for_entry,
 )
 from voice_launcher_app.core.matching import find_best_command as modular_find_best_command
-from voice_launcher_app.diagnostics.bundle import collect_diagnostics
+from voice_launcher_app.diagnostics import EventHistory, collect_diagnostics
 from voice_launcher_app.profiles.profile_io import export_profile, import_profile
 from voice_launcher_app.asr.audio_devices import AudioDeviceService
 from voice_launcher_app.ui.controller import UiController, UiControllerDeps
@@ -151,12 +152,14 @@ target_launcher_executor = None
 launcher_log_lock = threading.Lock()
 runtime_log_lock = threading.Lock()
 command_launch_gate = {}
+active_command_launches = {}
 process_list_cache = {"ts": 0.0, "names": set()}
 launch_gate_service = None
 process_scanner_service = None
 last_voice_trigger = {"phrase": "", "ts": 0.0}
-recent_heard_phrases = []
-recent_actions = []
+event_history = EventHistory(limit=40)
+recent_heard_phrases = event_history.heard
+recent_actions = event_history.actions
 ui_controller = None
 
 
@@ -226,20 +229,11 @@ def set_status(text):
     root.after(0, lambda: status_var.set(text))
 
 
-def push_history_value(buffer, value, limit=20):
-    value = str(value or "").strip()
-    if not value:
-        return
-    buffer.append(value)
-    if len(buffer) > limit:
-        del buffer[:-limit]
-
-
 def set_last_phrase(text):
     if ui_controller is not None:
         ui_controller.push_last_phrase(text)
         return
-    push_history_value(recent_heard_phrases, text, limit=30)
+    event_history.add_heard(text)
     if "last_phrase_var" in globals():
         root.after(0, lambda: last_phrase_var.set(f"Последняя фраза: {text}"))
     if "refresh_events_panel" in globals():
@@ -250,7 +244,7 @@ def set_last_action(text):
     if ui_controller is not None:
         ui_controller.push_last_action(text)
         return
-    push_history_value(recent_actions, text, limit=30)
+    event_history.add_action(text)
     if "last_action_var" in globals():
         root.after(0, lambda: last_action_var.set(f"Последнее действие: {text}"))
     if "refresh_events_panel" in globals():
@@ -329,6 +323,7 @@ def write_session_snapshot(trigger="manual"):
             "microphone_name": maybe_fix_mojibake(str(settings.get("microphone_name", ""))),
             "output_id": int(settings.get("output_id", -1)),
             "output_name": maybe_fix_mojibake(str(settings.get("output_name", ""))),
+            "recent_history": event_history.snapshot(tail=20),
             "files": {
                 "commands": COMMANDS_FILE,
                 "settings": SETTINGS_FILE,
@@ -867,13 +862,13 @@ def normalize_command_entry(value):
 
 def get_entry_mode_label(entry):
     if isinstance(entry, dict) and entry.get("mode") == "admin_task":
-        return "Админ-запуск"
+        return "Админ"
     if isinstance(entry, dict) and entry.get("mode") == "launcher_play":
         if bool(entry.get("launcher_highlight", False)):
-            return "Лаунчер (preview)"
+            return "Лаунчер: preview"
         if bool(entry.get("launcher_dry_run", False)):
-            return "Лаунчер (dry-run)"
-        return "Лаунчер + Play"
+            return "Лаунчер: dry-run"
+        return "Лаунчер+Play"
     return "Обычный"
 
 
@@ -932,14 +927,14 @@ def run_admin_task(entry):
             set_status("Админ-запуск не настроен")
             if error:
                 print("Админ-запуск:", error)
-            return
+            return False
         task_name = entry.get("task_name", "").strip()
 
     run_result = run_schtasks(["schtasks", "/run", "/tn", task_name])
     if run_result.returncode == 0:
         set_status(f"Запущено как админ: {os.path.basename(entry.get('path', ''))}")
         set_last_action(f"Админ-запуск: {os.path.basename(entry.get('path', ''))}")
-        return
+        return True
 
     # Фолбэк: если задача отсутствует, пересоздаем и пробуем еще раз.
     ok, error = ensure_admin_task(entry)
@@ -947,18 +942,19 @@ def run_admin_task(entry):
         set_status("Не удалось создать админ-задачу")
         if error:
             print("Админ-запуск:", error)
-        return
+        return False
 
     retry_result = run_schtasks(["schtasks", "/run", "/tn", entry["task_name"]])
     if retry_result.returncode == 0:
         set_status(f"Запущено как админ: {os.path.basename(entry.get('path', ''))}")
         set_last_action(f"Админ-запуск: {os.path.basename(entry.get('path', ''))}")
-        return
+        return True
 
     err_text = extract_error_text(retry_result) or "Не удалось запустить задачу"
     set_status("Ошибка админ-запуска (см. консоль)")
     set_last_action("Ошибка админ-запуска")
     print("Админ-запуск:", err_text)
+    return False
 
 
 def load_commands():
@@ -1078,8 +1074,11 @@ def collect_diagnostics_dialog():
                 "commands": Path(COMMANDS_FILE),
                 "settings": Path(SETTINGS_FILE),
                 "logs": Path(LOGS_DIR),
+                "backups": Path(BACKUPS_DIR),
+                "snapshots": Path(SNAPSHOTS_DIR),
             },
             app_version="1.1.0-dev",
+            history=event_history.snapshot(tail=35),
         )
         set_status("Диагностика собрана")
         set_last_action(f"Диагностика: {bundle_path}")
@@ -1569,6 +1568,7 @@ def get_launch_gate():
     if launch_gate_service is None:
         launch_gate_service = LaunchGate(
             gate=command_launch_gate,
+            active=active_command_launches,
             now=time.time,
         )
     return launch_gate_service
@@ -1601,6 +1601,18 @@ def can_launch_entry(entry):
     return decision.can_launch, decision.reason, decision.payload
 
 
+def mark_launch_started(entry, hold_seconds=None):
+    return get_launch_gate().mark_launch_started(entry=entry, hold_seconds=hold_seconds)
+
+
+def mark_launch_finished(entry, ok=True, cooldown_seconds=None):
+    return get_launch_gate().mark_launch_finished(
+        entry=entry,
+        ok=ok,
+        cooldown_seconds=cooldown_seconds,
+    )
+
+
 def get_target_launcher():
     global target_launcher_executor
     if target_launcher_executor is None:
@@ -1628,6 +1640,7 @@ def launch_target(path, duplicate_guard_seconds=1.0):
     ok = launcher.launch_target(path, duplicate_guard_seconds=duplicate_guard_seconds)
     last_launch_time = float(launcher.state.last_time)
     last_launch_phrase = str(launcher.state.last_path)
+    return ok
     return ok
 
 
@@ -1915,13 +1928,19 @@ def play_control_is_ready(window_wrapper, play_text):
     return is_control_enabled(control)
 
 
-def launch_with_launcher_play(entry):
+def launch_with_launcher_play(entry, on_finish=None):
     if Desktop is None:
         set_status("Режим лаунчера: установите pywinauto (`pip install pywinauto`)")
         launch_target(entry.get("path", ""))
+        if callable(on_finish):
+            try:
+                on_finish(None)
+            except Exception:
+                pass
         return
 
     def worker():
+        report = None
         deps = LauncherRunnerDeps(
             desktop_factory=lambda: Desktop(backend="uia"),
             process_resolver=resolve_process_for_window_handle,
@@ -1939,7 +1958,14 @@ def launch_with_launcher_play(entry):
             set_status=set_status,
             set_last_action=set_last_action,
         )
-        run_launcher_play(entry=entry, deps=deps)
+        try:
+            report = run_launcher_play(entry=entry, deps=deps)
+        finally:
+            if callable(on_finish):
+                try:
+                    on_finish(report)
+                except Exception:
+                    pass
 
     threading.Thread(target=worker, daemon=True).start()
 
@@ -1957,6 +1983,11 @@ def launch_command(entry):
             log_runtime(
                 f"Launch blocked by cooldown: path='{normalized.get('path', '')}' wait={float(payload):.2f}s"
             )
+        elif reason == "inflight":
+            set_status(f"Запуск уже выполняется: подождите {float(payload):.1f} сек")
+            log_runtime(
+                f"Launch blocked by inflight-guard: key='{command_launch_key(normalized)}' wait={float(payload):.2f}s"
+            )
         elif reason == "already_running":
             set_status(f"Уже запущено: {payload}")
             log_runtime(
@@ -1965,13 +1996,29 @@ def launch_command(entry):
         return
 
     if normalized.get("mode") == "admin_task":
-        run_admin_task(normalized)
+        mark_launch_started(normalized)
+        ok = False
+        try:
+            ok = bool(run_admin_task(normalized))
+        finally:
+            mark_launch_finished(normalized, ok=ok)
         return
     if normalized.get("mode") == "launcher_play":
-        launch_with_launcher_play(normalized)
+        mark_launch_started(normalized)
+
+        def launcher_done(report):
+            ok = bool(getattr(report, "ok", False))
+            mark_launch_finished(normalized, ok=ok)
+
+        launch_with_launcher_play(normalized, on_finish=launcher_done)
         return
 
-    launch_target(normalized.get("path", ""))
+    mark_launch_started(normalized, hold_seconds=2.5)
+    ok = False
+    try:
+        ok = bool(launch_target(normalized.get("path", "")))
+    finally:
+        mark_launch_finished(normalized, ok=ok)
 
 
 def test_selected():
@@ -2659,10 +2706,10 @@ tree = ttk.Treeview(
 )
 tree.heading("phrase", text="Ключевая фраза")
 tree.heading("path", text="Файл")
-tree.heading("mode", text="Режим запуска")
+tree.heading("mode", text="Режим")
 tree.column("phrase", width=330, anchor="w", stretch=False)
 tree.column("path", width=590, anchor="w", stretch=False)
-tree.column("mode", width=250, anchor="w", stretch=False)
+tree.column("mode", width=290, anchor="center", stretch=False)
 tree.pack(side="left", fill="both", expand=True)
 
 scroll = ttk.Scrollbar(table_wrap, orient="vertical", command=tree.yview)
@@ -2676,8 +2723,8 @@ def fit_tree_columns(_event=None):
     if total < 720:
         total = 720
 
-    phrase_w = max(260, int(total * 0.28))
-    mode_w = max(250, int(total * 0.22))
+    phrase_w = max(280, int(total * 0.30))
+    mode_w = max(290, int(total * 0.24))
     path_w = max(260, total - phrase_w - mode_w)
 
     tree.column("phrase", width=phrase_w)
@@ -2703,8 +2750,27 @@ hint.pack(fill="x", pady=(6, 0))
 
 last_phrase_var = tk.StringVar(value="Последняя фраза: —")
 last_action_var = tk.StringVar(value="Последнее действие: —")
-ttk.Label(card, textvariable=last_phrase_var, style="Sub.TLabel", anchor="w").pack(fill="x", pady=(4, 0))
-ttk.Label(card, textvariable=last_action_var, style="Sub.TLabel", anchor="w").pack(fill="x", pady=(2, 0))
+
+quick_status_card = ttk.Frame(commands_tab, style="Panel.TFrame", padding=12)
+quick_status_card.pack(fill="x", padx=6, pady=(0, 10), before=toolbar)
+ttk.Label(quick_status_card, text="Быстрый статус", style="PanelLabel.TLabel").pack(anchor="w")
+ttk.Label(quick_status_card, textvariable=status_var, style="HeroStatus.TLabel", anchor="w").pack(
+    fill="x",
+    pady=(4, 8),
+)
+quick_meta = ttk.Frame(quick_status_card, style="Panel.TFrame")
+quick_meta.pack(fill="x")
+ttk.Label(quick_meta, textvariable=last_phrase_var, style="PanelLabel.TLabel", anchor="w").pack(
+    side="left",
+    fill="x",
+    expand=True,
+)
+ttk.Label(quick_meta, textvariable=last_action_var, style="PanelLabel.TLabel", anchor="e").pack(
+    side="right",
+    fill="x",
+    expand=True,
+)
+
 if ui_controller is not None:
     ui_controller.bind_history_widgets(
         events_listbox=events_list,

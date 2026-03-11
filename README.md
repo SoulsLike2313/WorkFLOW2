@@ -1,91 +1,102 @@
 ﻿# WorkFLOW Multi-Project Workspace
 
 ## Overview
-This repository is organized as a normalized multi-project workspace.
+This repository is a strict multi-project workspace with machine-readable governance.
 
-Core principles:
-- each project is isolated and independently scoped;
-- one project is explicitly marked as active;
-- project statuses are machine-readable;
-- Codex/device bootstrap does not rely on guessing from free-form text.
+Primary goals:
+- explicit active project selection
+- isolated project scopes
+- machine-verifiable manifests
+- repeatable onboarding for Codex and human operators
 
-## Workspace control layer
-Canonical workspace control files:
+## Workspace control plane
+Canonical workspace files:
 - `workspace_config/workspace_manifest.json`
 - `workspace_config/codex_manifest.json`
+- `workspace_config/PROJECT_RULES.md`
 - `workspace_config/codex_bootstrap.md`
+
+Operational scripts:
 - `scripts/bootstrap_workspace.ps1`
+- `scripts/validate_workspace.py`
+- `scripts/new_project.py`
 
-These files define project statuses, active target, analysis order, and bootstrap checks.
+## Active project
+Current active project:
+- `projects/wild_hunt_command_citadel/shortform_core`
 
-## Project status map
-Status categories used in this workspace:
+Active project docs:
+- `projects/wild_hunt_command_citadel/shortform_core/README.md`
+- `projects/wild_hunt_command_citadel/shortform_core/CODEX.md`
+- `projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json`
+
+Manual testing policy:
+- manual test is allowed only after verification gate `PASS`.
+
+## Project registry model
+Statuses:
 - `active`
 - `supporting`
 - `experimental`
 - `archived`
 - `legacy`
 
-Current registry:
+Registry is authoritative in:
+- `workspace_config/workspace_manifest.json` (`project_registry`)
 
-| Project ID | Path | Status | Manifest |
-|---|---|---|---|
-| `shortform_core` | `projects/wild_hunt_command_citadel/shortform_core` | `active` | `projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json` |
-| `voice_launcher` | `projects/voice_launcher` | `supporting` | `projects/voice_launcher/PROJECT_MANIFEST.json` |
-| `adaptive_trading` | `projects/adaptive_trading` | `experimental` | `projects/adaptive_trading/PROJECT_MANIFEST.json` |
-| `tiktok_automation_app` | `projects/wild_hunt_command_citadel/tiktok_automation_app` | `legacy` | `projects/wild_hunt_command_citadel/tiktok_automation_app/PROJECT_MANIFEST.json` |
+Each registered project must contain:
+- `README.md`
+- `PROJECT_MANIFEST.json`
 
-Notes:
-- archived bucket exists in the model and is currently empty.
-- only the active project is used as default engineering target.
+## Verification proof model
+Active verification entrypoint:
+```powershell
+cd projects/wild_hunt_command_citadel/shortform_core
+python -m app.verify
+```
 
-## Active project (source of truth)
-Active project:
-- `projects/wild_hunt_command_citadel/shortform_core`
+Expected verification artifacts:
+- `runtime/verification/<run_id>/verification_summary.json`
+- `runtime/verification/<run_id>/verification_summary.md`
+- `runtime/verification/<run_id>/readiness_summary.json`
+- `runtime/verification/<run_id>/consolidated_status.json`
+- `runtime/verification/<run_id>/diagnostics_manifest.json`
+- `runtime/verification/<run_id>/test_results.json`
+- `runtime/verification/<run_id>/patch_application_summary.json`
+- `runtime/verification/<run_id>/update_audit_summary.json`
 
-Primary docs for active runtime and engineering contracts:
-- `projects/wild_hunt_command_citadel/shortform_core/README.md`
-- `projects/wild_hunt_command_citadel/shortform_core/CODEX.md`
+Gate values:
+- `PASS`
+- `PASS_WITH_WARNINGS`
+- `FAIL`
 
-User mode / developer mode / verification / update flow are maintained in the active project scope.
-
-## Bootstrap on a new device
-From repository root:
-
+## Workspace bootstrap and validation
+Bootstrap (new device / onboarding):
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap_workspace.ps1
 ```
 
-Optional active-project environment setup:
-
+Workspace validation:
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap_workspace.ps1 -SetupActive
+python scripts/validate_workspace.py
 ```
 
-Bootstrap outputs:
-- `runtime/workspace_bootstrap/bootstrap_report_<timestamp>.json`
+Validation artifacts:
+- `runtime/workspace_validation/<run_id>/validation_summary.json`
+- `runtime/workspace_validation/<run_id>/validation_summary.md`
 
-## How Codex should start analysis
-Codex bootstrap order:
-1. read `workspace_config/workspace_manifest.json`
-2. resolve `active_project_id`
-3. read active `PROJECT_MANIFEST.json`
-4. read active project docs (`README.md`, `CODEX.md`)
-5. work inside active scope unless user explicitly requests another project
+## Future project standard
+Create new projects only via generator:
+```powershell
+python scripts/new_project.py
+```
 
-Detailed flow is documented in:
-- `workspace_config/codex_bootstrap.md`
+Template source:
+- `workspace_config/templates/project_template/`
 
-## Project isolation rules
-- project-level implementation details stay inside each project folder.
-- root README is a workspace map, not a full technical spec for every module.
-- status changes must be reflected in both:
-  - `workspace_config/workspace_manifest.json`
-  - target `PROJECT_MANIFEST.json`
+Rules:
+- `workspace_config/PROJECT_RULES.md`
 
-## Manifest maintenance
-When adding or reclassifying a project:
-1. create/update project `PROJECT_MANIFEST.json`
-2. update `workspace_config/workspace_manifest.json`
-3. if analysis priority changes, update `workspace_config/codex_manifest.json`
-4. run bootstrap check script and confirm report status is `PASS` or `PASS_WITH_WARNINGS`
+## Notes
+Root README is a workspace map.
+Project-level implementation details remain in each project README and PROJECT_MANIFEST.

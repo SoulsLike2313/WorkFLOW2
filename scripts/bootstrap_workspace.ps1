@@ -29,12 +29,12 @@ if (-not (Test-Path $codexManifestPath)) {
     $errors.Add("Missing codex manifest: $codexManifestPath")
 }
 
-$workspaceManifestData = $null
+$workspace = $null
 $codex = $null
 
 if ($errors.Count -eq 0) {
     try {
-        $workspaceManifestData = Get-Content -Raw $workspaceManifestPath | ConvertFrom-Json
+        $workspace = Get-Content -Raw $workspaceManifestPath | ConvertFrom-Json
     }
     catch {
         $errors.Add("Invalid workspace manifest JSON: $($_.Exception.Message)")
@@ -48,106 +48,125 @@ if ($errors.Count -eq 0) {
     }
 }
 
+$registry = @()
+$activeProjectSlug = ""
 $allowedStatuses = @("active", "supporting", "experimental", "archived", "legacy")
-$activeProjects = @()
+$activeProject = $null
 
-if ($null -ne $workspaceManifestData -and $errors.Count -eq 0) {
-    foreach ($project in $workspaceManifestData.projects) {
-        $projectPath = Join-Path $RepoRoot $project.path
-        $manifestPath = Join-Path $RepoRoot $project.manifest_path
-        $statusValid = $allowedStatuses -contains $project.status
-        $pathExists = Test-Path $projectPath
+if ($null -ne $workspace -and $errors.Count -eq 0) {
+    if ($workspace.status_values) {
+        $allowedStatuses = @($workspace.status_values)
+    }
+
+    $activeProjectSlug = [string]$workspace.active_project
+    $registry = @($workspace.project_registry)
+
+    if ($registry.Count -eq 0) {
+        $errors.Add("Workspace project_registry is empty.")
+    }
+
+    foreach ($project in $registry) {
+        $slug = [string]$project.slug
+        $status = [string]$project.status
+        $rootRel = [string]$project.root_path
+        $manifestRel = [string]$project.manifest_path
+        $readmeRel = [string]$project.readme_path
+
+        $rootPath = Join-Path $RepoRoot $rootRel
+        $manifestPath = Join-Path $RepoRoot $manifestRel
+        $readmePath = Join-Path $RepoRoot $readmeRel
+
+        $statusValid = $allowedStatuses -contains $status
+        $rootExists = Test-Path $rootPath
         $manifestExists = Test-Path $manifestPath
+        $readmeExists = Test-Path $readmePath
 
         if (-not $statusValid) {
-            $errors.Add("Project '$($project.project_id)' has invalid status '$($project.status)'.")
+            $errors.Add("Project '$slug' has invalid status '$status'.")
         }
-        if (-not $pathExists) {
-            $errors.Add("Project path missing for '$($project.project_id)': $($project.path)")
+        if (-not $rootExists) {
+            $errors.Add("Project '$slug' missing root_path '$rootRel'.")
         }
         if (-not $manifestExists) {
-            $errors.Add("Project manifest missing for '$($project.project_id)': $($project.manifest_path)")
+            $errors.Add("Project '$slug' missing manifest_path '$manifestRel'.")
+        }
+        if (-not $readmeExists) {
+            $errors.Add("Project '$slug' missing readme_path '$readmeRel'.")
         }
 
-        if ($project.status -eq "active") {
-            $activeProjects += $project
+        if ($manifestExists) {
+            try {
+                $projectManifest = Get-Content -Raw $manifestPath | ConvertFrom-Json
+                $manifestSlug = [string]$projectManifest.slug
+                $manifestStatus = [string]$projectManifest.status
+                if ($manifestSlug -ne $slug) {
+                    $errors.Add("Manifest slug mismatch for '$slug' (manifest has '$manifestSlug').")
+                }
+                if ($manifestStatus -ne $status) {
+                    $errors.Add("Manifest status mismatch for '$slug': registry='$status', manifest='$manifestStatus'.")
+                }
+            }
+            catch {
+                $errors.Add("Project '$slug' manifest parse failed: $($_.Exception.Message)")
+            }
+        }
+
+        if ($slug -eq $activeProjectSlug) {
+            $activeProject = $project
+            if ($status -ne "active") {
+                $errors.Add("active_project '$activeProjectSlug' is not marked as status 'active'.")
+            }
         }
 
         $projectChecks.Add([ordered]@{
-            project_id = $project.project_id
-            status = $project.status
-            path = $project.path
-            path_exists = $pathExists
-            manifest_path = $project.manifest_path
+            slug = $slug
+            status = $status
+            root_path = $rootRel
+            root_exists = $rootExists
+            manifest_path = $manifestRel
             manifest_exists = $manifestExists
+            readme_path = $readmeRel
+            readme_exists = $readmeExists
             status_valid = $statusValid
         })
     }
 
-    $resolvedActive = $workspaceManifestData.projects | Where-Object { $_.project_id -eq $workspaceManifestData.active_project_id }
-    $resolvedActiveCount = ($resolvedActive | Measure-Object).Count
-    if ($resolvedActiveCount -ne 1) {
-        $errors.Add("active_project_id '$($workspaceManifestData.active_project_id)' does not resolve uniquely.")
-    }
-    elseif (($resolvedActive | Select-Object -First 1).status -ne "active") {
-        $errors.Add("active_project_id '$($workspaceManifestData.active_project_id)' is not marked as active.")
+    if ($null -eq $activeProject) {
+        $errors.Add("Could not resolve active_project '$activeProjectSlug' in project_registry.")
     }
 
-    foreach ($bucket in $allowedStatuses) {
-        if (-not $workspaceManifestData.status_index.PSObject.Properties.Name.Contains($bucket)) {
-            $warnings.Add("status_index bucket missing: $bucket")
-            continue
-        }
-
-        $bucketIds = $workspaceManifestData.status_index.$bucket
-        if ($null -eq $bucketIds) {
-            $bucketIds = @()
-        }
-        foreach ($bucketId in $bucketIds) {
-            $match = $workspaceManifestData.projects | Where-Object { $_.project_id -eq $bucketId -and $_.status -eq $bucket }
-            $matchCount = ($match | Measure-Object).Count
-            if ($matchCount -eq 0) {
-                $errors.Add("status_index mismatch: '$bucketId' listed under '$bucket' but no matching project entry.")
-            }
-        }
+    $activeCount = @($registry | Where-Object { [string]$_.status -eq "active" }).Count
+    if ($activeCount -ne 1) {
+        $errors.Add("Expected exactly one active project, found $activeCount.")
     }
 }
 
-if ($SetupActive -and $errors.Count -eq 0) {
-    foreach ($project in $activeProjects) {
-        $projectRoot = Join-Path $RepoRoot $project.path
-        $projectManifestPath = Join-Path $RepoRoot $project.manifest_path
-        $projectManifest = $null
+if ($SetupActive -and $errors.Count -eq 0 -and $null -ne $activeProject) {
+    $activeRootPath = Join-Path $RepoRoot ([string]$activeProject.root_path)
+    $activeManifestPath = Join-Path $RepoRoot ([string]$activeProject.manifest_path)
 
-        try {
-            $projectManifest = Get-Content -Raw $projectManifestPath | ConvertFrom-Json
+    try {
+        $manifest = Get-Content -Raw $activeManifestPath | ConvertFrom-Json
+        $venvPath = Join-Path $activeRootPath ".venv"
+        $depsRel = [string]$manifest.dependencies_file
+        if ([string]::IsNullOrWhiteSpace($depsRel)) {
+            $depsRel = "requirements.txt"
         }
-        catch {
-            $errors.Add("Failed to parse project manifest for '$($project.project_id)': $($_.Exception.Message)")
-            continue
-        }
-
-        $venvPath = Join-Path $projectRoot $projectManifest.bootstrap.venv_path
-        $requirementsFile = if ([string]::IsNullOrWhiteSpace($projectManifest.bootstrap.requirements_file)) {
-            Join-Path $projectRoot "requirements.txt"
-        }
-        else {
-            Join-Path $projectRoot $projectManifest.bootstrap.requirements_file
-        }
+        $depsPath = Join-Path $activeRootPath $depsRel
 
         if (-not (Test-Path $venvPath)) {
-            Push-Location $projectRoot
+            Push-Location $activeRootPath
             try {
-                python -m venv $projectManifest.bootstrap.venv_path
+                python -m venv .venv
                 $setupActions.Add([ordered]@{
-                    project_id = $project.project_id
+                    slug = [string]$manifest.slug
                     action = "create_venv"
                     status = "done"
-                    target = $projectManifest.bootstrap.venv_path
+                    target = ".venv"
                 })
             }
             catch {
-                $errors.Add("Failed to create venv for '$($project.project_id)': $($_.Exception.Message)")
+                $errors.Add("Failed to create active project venv: $($_.Exception.Message)")
             }
             finally {
                 Pop-Location
@@ -155,95 +174,114 @@ if ($SetupActive -and $errors.Count -eq 0) {
         }
         else {
             $setupActions.Add([ordered]@{
-                project_id = $project.project_id
+                slug = [string]$manifest.slug
                 action = "create_venv"
                 status = "skipped_existing"
-                target = $projectManifest.bootstrap.venv_path
+                target = ".venv"
             })
         }
 
         if (-not $SkipDependencyInstall) {
-            if (Test-Path $requirementsFile) {
+            if (Test-Path $depsPath) {
                 $pythonExe = Join-Path $venvPath "Scripts\python.exe"
-                if (-not (Test-Path $pythonExe)) {
-                    $warnings.Add("Python executable not found in venv for '$($project.project_id)': $pythonExe")
-                }
-                else {
-                    Push-Location $projectRoot
+                if (Test-Path $pythonExe) {
+                    Push-Location $activeRootPath
                     try {
-                        & $pythonExe -m pip install -r $requirementsFile
+                        & $pythonExe -m pip install -r $depsPath
                         $setupActions.Add([ordered]@{
-                            project_id = $project.project_id
-                            action = "install_requirements"
+                            slug = [string]$manifest.slug
+                            action = "install_dependencies"
                             status = "done"
-                            target = (Split-Path -Leaf $requirementsFile)
+                            target = $depsRel
                         })
                     }
                     catch {
-                        $errors.Add("Dependency installation failed for '$($project.project_id)': $($_.Exception.Message)")
+                        $errors.Add("Failed to install dependencies for active project: $($_.Exception.Message)")
                     }
                     finally {
                         Pop-Location
                     }
                 }
+                else {
+                    $warnings.Add("Active project venv python not found: $pythonExe")
+                }
             }
             else {
-                $warnings.Add("Requirements file not found for '$($project.project_id)': $requirementsFile")
+                $warnings.Add("Active project dependencies file not found: $depsPath")
             }
         }
         else {
             $setupActions.Add([ordered]@{
-                project_id = $project.project_id
-                action = "install_requirements"
+                slug = [string]$manifest.slug
+                action = "install_dependencies"
                 status = "skipped_by_flag"
-                target = (Split-Path -Leaf $requirementsFile)
+                target = $depsRel
             })
         }
     }
+    catch {
+        $errors.Add("Failed setup for active project '$($activeProject.slug)': $($_.Exception.Message)")
+    }
 }
 
-$status = if ($errors.Count -eq 0) { if ($warnings.Count -eq 0) { "PASS" } else { "PASS_WITH_WARNINGS" } } else { "FAIL" }
+$status = if ($errors.Count -gt 0) { "FAIL" } elseif ($warnings.Count -gt 0) { "PASS_WITH_WARNINGS" } else { "PASS" }
 $timestamp = Get-Date -Format "yyyyMMddTHHmmss"
 $reportPath = Join-Path $reportDir "bootstrap_report_$timestamp.json"
-$activeProjectId = ""
-$projectCount = 0
-if ($null -ne $workspaceManifestData -and $null -ne $workspaceManifestData.projects) {
-    $projectCount = [int](($workspaceManifestData.projects | Measure-Object).Count)
+
+$verificationCommand = ""
+if ($null -ne $workspace -and $null -ne $workspace.verification_entrypoints) {
+    $verificationCommand = [string]$workspace.verification_entrypoints.active_project_verify
 }
-if ($null -ne $workspaceManifestData -and $null -ne $workspaceManifestData.active_project_id) {
-    $activeProjectId = [string]$workspaceManifestData.active_project_id
+if ([string]::IsNullOrWhiteSpace($verificationCommand)) {
+    $verificationCommand = "python -m app.verify"
 }
+
+$activeEntryHints = @()
+if ($null -ne $activeProject -and $null -ne $activeProject.main_entrypoints) {
+    $activeEntryHints = @($activeProject.main_entrypoints)
+}
+
+$firstActionPlan = @(
+    "Run workspace validation: python scripts/validate_workspace.py",
+    "Open active project manifest and README",
+    "Run active verification entrypoint",
+    "Review latest verification artifacts before manual testing"
+)
 
 $report = [ordered]@{
     generated_at = (Get-Date).ToString("o")
     repo_root = $RepoRoot
-    workspace_manifest = "workspace_config/workspace_manifest.json"
-    codex_manifest = "workspace_config/codex_manifest.json"
+    workspace_manifest_path = "workspace_config/workspace_manifest.json"
+    codex_manifest_path = "workspace_config/codex_manifest.json"
     status = $status
+    active_project = $activeProjectSlug
     setup_active = [bool]$SetupActive
     skip_dependency_install = [bool]$SkipDependencyInstall
     summary = [ordered]@{
-        project_count = $projectCount
-        active_project_id = $activeProjectId
-        errors = $errors.Count
+        project_count = $registry.Count
         warnings = $warnings.Count
+        errors = $errors.Count
     }
-    checks = $projectChecks.ToArray()
-    setup_actions = $setupActions.ToArray()
-    errors = $errors.ToArray()
-    warnings = $warnings.ToArray()
+    project_registry = @($projectChecks.ToArray())
+    entrypoint_hints = [ordered]@{
+        active_project_main_entrypoints = $activeEntryHints
+        workspace_bootstrap = if ($null -ne $workspace) { [string]$workspace.entrypoints.workspace_bootstrap } else { "" }
+        workspace_validator = if ($null -ne $workspace) { [string]$workspace.entrypoints.workspace_validate } else { "python scripts/validate_workspace.py" }
+    }
+    verification_command = $verificationCommand
+    first_action_plan = $firstActionPlan
+    setup_actions = @($setupActions.ToArray())
+    warnings = @($warnings.ToArray())
+    errors = @($errors.ToArray())
 }
 
-$report | ConvertTo-Json -Depth 8 | Set-Content -Path $reportPath -Encoding UTF8
+$report | ConvertTo-Json -Depth 10 | Set-Content -Path $reportPath -Encoding UTF8
 
 Write-Host "[workspace-bootstrap] status: $status"
+Write-Host "[workspace-bootstrap] active_project: $activeProjectSlug"
 Write-Host "[workspace-bootstrap] report: $reportPath"
-if ($warnings.Count -gt 0) {
-    Write-Host "[workspace-bootstrap] warnings: $($warnings.Count)"
-}
+
 if ($errors.Count -gt 0) {
-    Write-Host "[workspace-bootstrap] errors: $($errors.Count)"
     exit 1
 }
-
 exit 0

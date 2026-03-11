@@ -1,51 +1,30 @@
-﻿# Codex Workspace Bootstrap (WorkFLOW)
+﻿# Codex Bootstrap Guide
 
-This document defines the canonical startup flow for Codex on a new device.
-
-## 1. Load workspace metadata
+## Mandatory startup order
 1. Read `workspace_config/workspace_manifest.json`.
-2. Confirm `active_project_id` and `status_index` are consistent.
-3. Read `workspace_config/codex_manifest.json`.
+2. Run `python scripts/validate_workspace.py`.
+3. Resolve `active_project` from workspace manifest.
+4. Read active `PROJECT_MANIFEST.json`.
+5. Read active project `README.md` and `CODEX.md`.
+6. Run active verification entrypoint before manual test claims.
 
-## 2. Resolve active project
-Current active project:
-- `shortform_core`
-- path: `projects/wild_hunt_command_citadel/shortform_core`
+## Active project policy
+- Analyze active project first.
+- Legacy/archived projects are touched only on explicit user request.
+- Do not infer project scope from folder names; use manifests.
 
-Codex should prioritize this project for:
-- analysis
-- implementation
-- verification
-- runtime decisions
-
-## 3. Read active project contracts
-Read in this order:
-1. `projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json`
-2. `projects/wild_hunt_command_citadel/shortform_core/README.md`
-3. `projects/wild_hunt_command_citadel/shortform_core/CODEX.md`
-
-## 4. Status isolation rules
-- `active`: may receive primary engineering changes.
-- `supporting`: changes only when explicitly requested or needed for integration.
-- `experimental`: isolate from active runtime unless explicitly promoted.
-- `archived`: read-only unless explicitly reactivated.
-- `legacy`: avoid new features; maintain only compatibility/migration notes.
-
-## 5. Bootstrap command (new device)
-From repository root run:
-
+## Bootstrap command
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap_workspace.ps1
 ```
 
-Optional active-project setup:
-
+Optional active setup:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap_workspace.ps1 -SetupActive
 ```
 
-## 6. Output artifacts
-Bootstrap reports are written to:
-- `runtime/workspace_bootstrap/bootstrap_report_<timestamp>.json`
-
-Use this report to verify manifest consistency and project-path readiness.
+## First action plan for human + Codex
+1. Validate workspace registry (`python scripts/validate_workspace.py`).
+2. Confirm active project and entrypoints from manifests.
+3. Execute active verify pipeline.
+4. Review latest runtime artifacts before any manual UI testing.

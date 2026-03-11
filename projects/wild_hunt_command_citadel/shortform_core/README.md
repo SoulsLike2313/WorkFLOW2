@@ -156,6 +156,7 @@ What it does:
   - `runtime/verification/<run_id>/verification_summary.md`
   - `runtime/verification/<run_id>/readiness_summary.json`
   - `runtime/verification/<run_id>/consolidated_status.json`
+  - `runtime/verification/<run_id>/test_results.json`
   - `runtime/verification/<run_id>/patch_application_summary.json`
   - `runtime/verification/<run_id>/update_audit_summary.json`
   - `runtime/verification/<run_id>/diagnostics_manifest.json`
@@ -253,6 +254,7 @@ runtime/
       verification_summary.md
       readiness_summary.json
       consolidated_status.json
+      test_results.json
       patch_application_summary.json
       update_audit_summary.json
       diagnostics_manifest.json

@@ -119,7 +119,20 @@ def command_launch_key(entry: Dict[str, Any]) -> str:
 @dataclass
 class LaunchGate:
     gate: Dict[str, float] = field(default_factory=dict)
+    active: Dict[str, float] = field(default_factory=dict)
     now: Callable[[], float] = time.time
+
+    @staticmethod
+    def _float_or(value: Any, default: float) -> float:
+        try:
+            return float(value)
+        except Exception:
+            return float(default)
+
+    def _cleanup_active(self, now: float) -> None:
+        stale = [key for key, until in self.active.items() if now >= float(until)]
+        for key in stale:
+            self.active.pop(key, None)
 
     def can_launch_entry(
         self,
@@ -128,6 +141,12 @@ class LaunchGate:
     ) -> LaunchDecision:
         key = command_launch_key(entry)
         now = self.now()
+        self._cleanup_active(now)
+
+        active_until = float(self.active.get(key, 0.0))
+        if now < active_until:
+            return LaunchDecision(False, "inflight", max(0.0, active_until - now))
+
         cooldown_until = float(self.gate.get(key, 0.0))
         if now < cooldown_until:
             return LaunchDecision(False, "cooldown", max(0.0, cooldown_until - now))
@@ -155,3 +174,43 @@ class LaunchGate:
 
         self.gate[key] = now + debounce_seconds
         return LaunchDecision(True, "ok", debounce_seconds)
+
+    def mark_launch_started(self, entry: Dict[str, Any], hold_seconds: float | None = None) -> float:
+        key = command_launch_key(entry)
+        mode = str(entry.get("mode", "normal") or "normal").strip().lower()
+
+        if hold_seconds is None:
+            if mode == "launcher_play":
+                wait_timeout = self._float_or(entry.get("wait_timeout", 120), 120.0)
+                hold_seconds = max(35.0, min(360.0, wait_timeout * 0.45))
+            elif mode == "admin_task":
+                hold_seconds = 8.0
+            else:
+                hold_seconds = 3.5
+        hold_seconds = max(1.0, float(hold_seconds))
+        self.active[key] = self.now() + hold_seconds
+        return hold_seconds
+
+    def mark_launch_finished(
+        self,
+        entry: Dict[str, Any],
+        ok: bool = True,
+        cooldown_seconds: float | None = None,
+    ) -> float:
+        key = command_launch_key(entry)
+        self.active.pop(key, None)
+
+        mode = str(entry.get("mode", "normal") or "normal").strip().lower()
+        if cooldown_seconds is None:
+            if mode == "launcher_play":
+                configured = self._float_or(entry.get("post_launch_cooldown", 0), 0.0)
+                cooldown_seconds = configured if configured > 0 else (110.0 if ok else 14.0)
+            elif mode == "admin_task":
+                cooldown_seconds = 5.0 if ok else 2.0
+            else:
+                cooldown_seconds = 1.2 if ok else 0.8
+
+        cooldown_seconds = max(0.0, float(cooldown_seconds))
+        if cooldown_seconds > 0:
+            self.gate[key] = max(float(self.gate.get(key, 0.0)), self.now() + cooldown_seconds)
+        return cooldown_seconds
