@@ -187,9 +187,9 @@ class UpdatesPage(BasePage):
 
         cards = QHBoxLayout()
         cards.setSpacing(ROW_GAP)
-        self.current_version = MetricCard("Текущая версия", "-", "runtime")
-        self.available_version = MetricCard("Доступно", "-", "manifest")
-        self.patch_status = MetricCard("Статус патча", "-", "локальный цикл патча")
+        self.current_version = MetricCard("Текущая версия", "-", "рабочая среда")
+        self.available_version = MetricCard("Доступная версия", "-", "манифест обновлений")
+        self.patch_status = MetricCard("Статус патча", "-", "локальный цикл обновления")
         self.post_verify = MetricCard("Пост-проверка", "-", "машинный гейт")
         cards.addWidget(self.current_version)
         cards.addWidget(self.available_version)
@@ -243,10 +243,10 @@ class UpdatesPage(BasePage):
         self.available_version.set_data(avail, "совместимо" if check.get("is_compatible") else "манифест не найден")
 
         patch_status = str(patch.get("status") or updates.get("patch_status") or "idle")
-        self.patch_status.set_data(_ru_patch_status(patch_status), str(patch.get("message", "локальный цикл патча")))
+        self.patch_status.set_data(_ru_patch_status(patch_status), str(patch.get("message", "локальный цикл обновления")))
 
         post_status = str(post.get("status") or updates.get("post_verify_status") or "unknown")
-        self.post_verify.set_data(_ru_gate(post_status), "ручной тест только при PASS")
+        self.post_verify.set_data(_ru_gate(post_status), "ручное тестирование доступно только при PASS")
 
         lines = [
             f"Проверено: {_fmt_ts(datetime.now().isoformat())}",
@@ -280,7 +280,7 @@ class SettingsPage(BasePage):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(PAGE_GAP)
 
-        layout.addWidget(SectionHeader("Настройки", "Параметры рабочего пространства/runtime и ссылки на диагностику"))
+        layout.addWidget(SectionHeader("Настройки", "Параметры рабочей среды и ссылки на диагностику"))
 
         card = GlowCard(elevated=False)
         card.setObjectName("SettingsRuntimeBlock")

@@ -1,0 +1,60 @@
+from __future__ import annotations
+
+import json
+
+from PySide6.QtWidgets import QLabel, QPushButton, QSplitter, QTableWidget, QVBoxLayout, QWidget, QTextEdit
+from PySide6.QtCore import Qt
+
+from .table_utils import fill_table
+
+
+class LearningPanel(QWidget):
+    def __init__(self):
+        super().__init__()
+        root = QVBoxLayout(self)
+        self.refresh_btn = QPushButton("Refresh Learning Snapshot")
+        self.summary = QTextEdit()
+        self.summary.setReadOnly(True)
+
+        splitter = QSplitter(Qt.Orientation.Horizontal)
+        self.corrections_table = QTableWidget(0, 6)
+        self.corrections_table.setHorizontalHeaderLabels(["ID", "Entry", "Line", "Before", "After", "When"])
+        self.events_table = QTableWidget(0, 5)
+        self.events_table.setHorizontalHeaderLabels(["ID", "Type", "Scope", "Ref", "Created"])
+        splitter.addWidget(self.corrections_table)
+        splitter.addWidget(self.events_table)
+        splitter.setSizes([700, 400])
+
+        root.addWidget(self.refresh_btn)
+        root.addWidget(self.summary)
+        root.addWidget(splitter)
+
+    def load_snapshot(self, snapshot: dict) -> None:
+        corrections = snapshot.get("corrections", [])
+        corr_rows = [
+            (
+                c.get("id"),
+                c.get("entry_id"),
+                c.get("line_id"),
+                str(c.get("before_text", ""))[:42],
+                str(c.get("after_text", ""))[:42],
+                c.get("created_at"),
+            )
+            for c in corrections
+        ]
+        fill_table(self.corrections_table, corr_rows)
+
+        events = snapshot.get("adaptation_summary", {}).get("recent", [])
+        event_rows = [
+            (e.get("id"), e.get("event_type"), e.get("event_scope"), e.get("event_ref"), e.get("created_at"))
+            for e in events
+        ]
+        fill_table(self.events_table, event_rows)
+
+        summary_payload = {
+            "adaptation_summary": snapshot.get("adaptation_summary", {}),
+            "terms_learned": len(snapshot.get("terms", [])),
+            "tm_entries": len(snapshot.get("tm", [])),
+            "recent_corrections": len(corrections),
+        }
+        self.summary.setPlainText(json.dumps(summary_payload, ensure_ascii=False, indent=2))

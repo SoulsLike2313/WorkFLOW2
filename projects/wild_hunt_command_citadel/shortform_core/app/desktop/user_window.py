@@ -89,7 +89,7 @@ class UserWorkspaceWindow(QMainWindow):
 
         app_title = QLabel("Shortform Workspace")
         app_title.setObjectName("AppTitle")
-        app_subtitle = QLabel("Панель управления профилями, сессиями, аналитикой и AI.")
+        app_subtitle = QLabel("Единое рабочее пространство для профилей, сессий, аналитики и AI.")
         app_subtitle.setObjectName("AppSubtitle")
         app_subtitle.setWordWrap(True)
 
@@ -540,9 +540,9 @@ class UserWorkspaceWindow(QMainWindow):
         if isinstance(profile, dict):
             profile_name = str(profile.get("display_name", "Профиль"))
             profile_meta = (
-                f"подключение={profile.get('connection_type', '-')} | "
-                f"режим={profile.get('management_mode', '-')} | "
-                f"состояние={profile.get('health_state', '-')}"
+                f"Тип подключения: {profile.get('connection_type', '-')} | "
+                f"Режим: {profile.get('management_mode', '-')} | "
+                f"Состояние: {profile.get('health_state', '-')}"
             )
         else:
             profile_name = "Профиль не выбран"
@@ -554,14 +554,20 @@ class UserWorkspaceWindow(QMainWindow):
         rec_hint = (
             str(recs[0].get("title", recs[0].get("recommendation_type", "Пока без рекомендации")))
             if recs
-            else "Сформируйте рекомендации после загрузки метрик."
+            else "Рекомендации появятся после синхронизации метрик."
         )
 
-        next_actions = "1) Добавить профиль 2) Открыть сессию 3) Добавить контент 4) Загрузить метрики 5) Сформировать план"
+        next_actions = (
+            "Начните с профиля: добавьте профиль, откройте сессию, "
+            "затем загрузите контент и метрики."
+        )
         if profiles and not self._snapshot.get("selected_session"):
-            next_actions = "Откройте сессию для выбранного профиля, затем перейдите в «Контент» или «AI-студию»."
+            next_actions = "Откройте сессию выбранного профиля, затем перейдите в «Контент» или «AI-студию»."
         if self._snapshot.get("verification_state") != "PASS":
-            next_actions = "Гейт верификации не PASS. Работайте в контролируемом режиме и проверьте обновления/диагностику."
+            next_actions = (
+                "Статус верификации ниже PASS. Работайте в контролируемом режиме "
+                "и проверьте раздел «Обновления»."
+            )
 
         self.context_panel.update_context(
             profile_name=profile_name,

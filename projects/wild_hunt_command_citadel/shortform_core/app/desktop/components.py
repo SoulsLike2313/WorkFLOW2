@@ -273,8 +273,8 @@ class MetricCard(GlowCard):
         self.setObjectName("MetricCard")
         self.setMinimumHeight(148)
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(16, 14, 16, 14)
-        layout.setSpacing(5)
+        layout.setContentsMargins(18, 16, 18, 16)
+        layout.setSpacing(8)
 
         self.title = QLabel(title)
         self.title.setObjectName("CardTitle")
@@ -298,7 +298,7 @@ class SectionHeader(QWidget):
         super().__init__()
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(3)
+        layout.setSpacing(6)
 
         self.title = QLabel(title)
         self.title.setObjectName("SectionTitle")
@@ -324,8 +324,8 @@ class TopStatusBar(GlowCard):
         self._is_loading = False
 
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(20, 14, 20, 14)
-        layout.setSpacing(10)
+        layout.setContentsMargins(22, 15, 22, 15)
+        layout.setSpacing(12)
 
         self.pills: dict[str, StatusPill] = {
             "profiles": StatusPill("профили: --", "info"),
@@ -423,10 +423,10 @@ class ContextPanel(GlowCard):
         self.setObjectName("ContextPanel")
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(16, 16, 16, 16)
-        layout.setSpacing(12)
+        layout.setContentsMargins(18, 18, 18, 18)
+        layout.setSpacing(14)
 
-        title = QLabel("Контекст и следующие шаги")
+        title = QLabel("Контекст и следующие действия")
         title.setObjectName("ContextPanelTitle")
         layout.addWidget(title)
 
@@ -435,29 +435,29 @@ class ContextPanel(GlowCard):
         self.profile_title.setWordWrap(True)
         layout.addWidget(self.profile_title)
 
-        self.profile_meta = QLabel("Выберите профиль на экране «Профили».")
+        self.profile_meta = QLabel("Выберите профиль в разделе «Профили», чтобы увидеть детали.")
         self.profile_meta.setObjectName("SectionHint")
         self.profile_meta.setWordWrap(True)
         layout.addWidget(self.profile_meta)
 
-        self.alerts_block = QLabel("Сигналы: нет")
+        self.alerts_block = QLabel("Сигналы: нет активных предупреждений")
         self.alerts_block.setObjectName("SectionHint")
         self.alerts_block.setWordWrap(True)
         layout.addWidget(self.alerts_block)
 
-        self.recommendations_hint = QLabel("Здесь появятся подсказки AI.")
+        self.recommendations_hint = QLabel("Здесь появятся рекомендации AI и подсказки по шагам.")
         self.recommendations_hint.setObjectName("SectionHint")
         self.recommendations_hint.setWordWrap(True)
         layout.addWidget(self.recommendations_hint)
 
-        self.next_actions = QLabel("Далее: обновите данные и откройте сессию.")
+        self.next_actions = QLabel("Следующий шаг: обновите данные и откройте рабочую сессию.")
         self.next_actions.setObjectName("SectionHint")
         self.next_actions.setWordWrap(True)
         layout.addWidget(self.next_actions)
 
         layout.addStretch(1)
 
-        action_caption = QLabel("Действия")
+        action_caption = QLabel("Быстрые действия")
         action_caption.setObjectName("ContextActionCaption")
         layout.addWidget(action_caption)
 
@@ -483,6 +483,6 @@ class ContextPanel(GlowCard):
     def update_context(self, *, profile_name: str, profile_meta: str, alerts: list[str], recommendation_hint: str, next_actions: str) -> None:
         self.profile_title.setText(profile_name)
         self.profile_meta.setText(profile_meta)
-        self.alerts_block.setText("Сигналы: нет" if not alerts else "Сигналы:\n- " + "\n- ".join(alerts[:4]))
+        self.alerts_block.setText("Сигналы: нет активных предупреждений" if not alerts else "Сигналы:\n• " + "\n• ".join(alerts[:4]))
         self.recommendations_hint.setText(recommendation_hint)
         self.next_actions.setText(next_actions)

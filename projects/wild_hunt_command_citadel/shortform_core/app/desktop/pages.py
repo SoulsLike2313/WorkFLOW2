@@ -117,7 +117,7 @@ def _ru_viewport_preset(value: str) -> str:
 def _ru_connection_type(value: str) -> str:
     mapping = {
         "cdp": "CDP",
-        "official_auth": "Официальный auth",
+        "official_auth": "Официальная авторизация",
         "device": "Устройство",
     }
     return mapping.get(value, value)
@@ -144,11 +144,11 @@ def _ru_profile_status(value: str) -> str:
 
 def _ru_health_state(value: str) -> str:
     mapping = {
-        "healthy": "Норма",
-        "ok": "Норма",
-        "ready": "Готов",
-        "warning": "Риск",
-        "degraded": "Ограничен",
+        "healthy": "Стабильно",
+        "ok": "Стабильно",
+        "ready": "Готово",
+        "warning": "Требует внимания",
+        "degraded": "Ограничено",
         "error": "Ошибка",
         "unknown": "Неизвестно",
     }
@@ -181,10 +181,10 @@ class DashboardPage(BasePage):
         self.cards = {
             "profiles": MetricCard("Активные профили", "0", "зарегистрировано"),
             "sessions": MetricCard("Подключённые сессии", "0", "открытые окна"),
-            "queue": MetricCard("Состояние очереди", "0", "элементов в ожидании"),
+            "queue": MetricCard("Состояние очереди", "0", "элементов в публикации"),
             "verify": MetricCard("Верификация", "--", "статус гейта"),
             "ai": MetricCard("Состояние AI", "--", "готовность модулей"),
-            "updates": MetricCard("Состояние обновлений", "--", "post-verify"),
+            "updates": MetricCard("Состояние обновлений", "--", "пост-проверка"),
         }
 
         order = ["profiles", "sessions", "queue", "verify", "ai", "updates"]
@@ -297,10 +297,10 @@ class DashboardPage(BasePage):
         self.cards["queue"].set_data(str(summary.get("queued_content_items", 0)), "контент-элементов")
 
         verify = str(snapshot.get("verification_state", "--"))
-        self.cards["verify"].set_data(_ru_gate(verify), "ручной тест только при PASS")
+        self.cards["verify"].set_data(_ru_gate(verify), "ручное тестирование доступно только при PASS")
 
         ai_ready = readiness.get("items", {}).get("ai_ready", False) if isinstance(readiness.get("items"), dict) else False
-        self.cards["ai"].set_data("готово" if ai_ready else "ограничено", "ассистивный интеллект")
+        self.cards["ai"].set_data("готово" if ai_ready else "ограничено", "ассистивные модули")
 
         post_status = str(updates.get("post_verify_status", "unknown"))
         self.cards["updates"].set_data(_ru_gate(post_status), str(updates.get("version_label", "версия не определена")))
@@ -329,7 +329,7 @@ class DashboardPage(BasePage):
                 confidence_label = str(confidence)
             self.rec_list.addItem(f"Уверенность: {confidence_label} · {title}\n{rationale}")
         if self.rec_list.count() == 0:
-            self.rec_list.addItem("Рекомендации появятся после загрузки метрик профиля.")
+            self.rec_list.addItem("Рекомендации появятся после синхронизации метрик профиля.")
 
 
 class ProfilesPage(BasePage):
@@ -348,8 +348,8 @@ class ProfilesPage(BasePage):
         summary.setSpacing(ROW_GAP)
         self.profile_total_card = MetricCard("Профилей", "0", "в рабочем реестре")
         self.profile_connected_card = MetricCard("Подключено", "0", "активные связи")
-        self.profile_healthy_card = MetricCard("Стабильные", "0", "health = норма")
-        self.profile_attention_card = MetricCard("Требуют внимания", "0", "warning / disconnect")
+        self.profile_healthy_card = MetricCard("Стабильные", "0", "состояние: стабильно")
+        self.profile_attention_card = MetricCard("Требуют внимания", "0", "сигналы и отключения")
         for card in (
             self.profile_total_card,
             self.profile_connected_card,
@@ -444,8 +444,8 @@ class ProfilesPage(BasePage):
                 attention += 1
 
         self.profile_total_card.set_data(str(len(items)), "всего профилей")
-        self.profile_connected_card.set_data(str(connected), "статус active")
-        self.profile_healthy_card.set_data(str(healthy), "health good/ready")
+        self.profile_connected_card.set_data(str(connected), "в активном состоянии")
+        self.profile_healthy_card.set_data(str(healthy), "стабильные и готовые")
         self.profile_attention_card.set_data(str(attention), "требуют проверки")
 
         self.table.setRowCount(0)
@@ -480,7 +480,7 @@ class SessionsPage(BasePage):
         summary = QHBoxLayout()
         summary.setSpacing(ROW_GAP)
         self.sessions_open_card = MetricCard("Открытые сессии", "0", "из доступных профилей")
-        self.sessions_selected_card = MetricCard("Текущий профиль", "-", "состояние runtime")
+        self.sessions_selected_card = MetricCard("Текущий профиль", "-", "состояние исполнения")
         self.sessions_viewport_card = MetricCard("Пресет окна", "-", "формат 9:16")
         for card in (self.sessions_open_card, self.sessions_selected_card, self.sessions_viewport_card):
             card.setProperty("sessionsMetric", "true")
@@ -568,17 +568,49 @@ class SessionsPage(BasePage):
         self.frame_runtime.setWordWrap(True)
         frame_layout.addWidget(self.frame_runtime)
 
-        self.frame_source = QLabel("источник: не привязан")
+        self.frame_source = QLabel("Источник: не привязан")
         self.frame_source.setObjectName("SectionHint")
         frame_layout.addWidget(self.frame_source)
 
-        self.session_preview = QLabel("SESSION PREVIEW 9:16\n\nОткройте сессию профиля для живого состояния.")
+        chip_row = QHBoxLayout()
+        chip_row.setSpacing(8)
+        self.session_runtime_chip = QLabel("Состояние: ожидание")
+        self.session_link_chip = QLabel("Источник: не привязан")
+        self.session_viewport_chip = QLabel("Пресет: смартфон")
+        for chip, level in (
+            (self.session_runtime_chip, "warn"),
+            (self.session_link_chip, "warn"),
+            (self.session_viewport_chip, "info"),
+        ):
+            chip.setProperty("sessionChip", "true")
+            chip.setProperty("sessionChipLevel", level)
+            chip.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            chip.setMinimumHeight(28)
+            chip_row.addWidget(chip)
+        frame_layout.addLayout(chip_row)
+
+        self.session_preview = QLabel("ПРЕВЬЮ СЕССИИ 9:16\n\nОткройте сессию профиля, чтобы увидеть рабочее состояние.")
         self.session_preview.setObjectName("SessionMobilePreview")
         self.session_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.session_preview.setMinimumSize(280, 450)
         self.session_preview.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.session_preview.setWordWrap(True)
         frame_layout.addWidget(self.session_preview)
+
+        context_block = QWidget()
+        context_block.setObjectName("SessionContextBlock")
+        context_layout = QVBoxLayout(context_block)
+        context_layout.setContentsMargins(10, 10, 10, 10)
+        context_layout.setSpacing(6)
+        self.frame_context = QLabel("Контур сессии ожидает подключения профиля и источника.")
+        self.frame_context.setObjectName("SessionContextHint")
+        self.frame_context.setWordWrap(True)
+        context_layout.addWidget(self.frame_context)
+        self.frame_next_step = QLabel("Следующий шаг: выберите профиль в реестре и откройте сессию.")
+        self.frame_next_step.setObjectName("SessionNextStep")
+        self.frame_next_step.setWordWrap(True)
+        context_layout.addWidget(self.frame_next_step)
+        frame_layout.addWidget(context_block)
 
         self.frame_footer = QLabel("Контекст: рабочая мобильная рамка с привязкой к источнику.")
         self.frame_footer.setObjectName("SectionHint")
@@ -602,6 +634,15 @@ class SessionsPage(BasePage):
             self.setProperty("selected_profile_id", profile_id)
             self.action_requested.emit("select_profile", profile_id)
 
+    def _set_session_chip(self, chip: QLabel, text: str, level: str) -> None:
+        if level not in {"ok", "warn", "info"}:
+            level = "info"
+        chip.setText(text)
+        if chip.property("sessionChipLevel") != level:
+            chip.setProperty("sessionChipLevel", level)
+            chip.style().unpolish(chip)
+            chip.style().polish(chip)
+
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:
         self.session_list.clear()
 
@@ -616,10 +657,18 @@ class SessionsPage(BasePage):
             is_open = bool(session.get("is_open", False))
             if is_open:
                 open_sessions += 1
+            session_runtime = _ru_runtime_state(str(session.get("runtime_state", "closed")))
+            session_source_raw = str(session.get("attached_source_type", "")).strip()
+            session_source = (
+                session_source_raw
+                if session_source_raw and session_source_raw.lower() not in {"none", "null", "-", "не указан"}
+                else "не указан"
+            )
+            session_viewport = _ru_viewport_preset(str(session.get("viewport_preset", "smartphone_default")))
             line = (
-                f"{profile.get('display_name', 'Без имени')} | "
-                f"состояние={_ru_runtime_state(str(session.get('runtime_state', 'closed')))} | "
-                f"открыта={'да' if is_open else 'нет'}"
+                f"{profile.get('display_name', 'Без имени')}\n"
+                f"Состояние: {session_runtime} · Окно: {'открыто' if is_open else 'закрыто'}\n"
+                f"Источник: {session_source} · Пресет: {session_viewport}"
             )
             item = QListWidgetItem(line)
             item.setData(Qt.ItemDataRole.UserRole, profile_id)
@@ -632,34 +681,49 @@ class SessionsPage(BasePage):
         runtime_state = _ru_runtime_state(str(selected_session.get("runtime_state", "closed")))
         viewport_label = _ru_viewport_preset(str(selected_session.get("viewport_preset", "-")))
         is_open = bool(selected_session.get("is_open", False))
+        source_raw = str(selected_session.get("attached_source_type", "")).strip()
+        source_label = source_raw if source_raw and source_raw.lower() not in {"none", "null", "-", "не указан"} else "не указан"
+        source_id_raw = str(selected_session.get("attached_source_id", "")).strip()
+        source_id = source_id_raw if source_id_raw and source_id_raw.lower() not in {"none", "null"} else "-"
 
         self.sessions_open_card.set_data(str(open_sessions), f"из {len(profiles)} профилей")
-        self.sessions_selected_card.set_data("Открыта" if is_open else "Закрыта", f"runtime: {runtime_state}")
+        self.sessions_selected_card.set_data("Открыта" if is_open else "Закрыта", f"режим: {runtime_state}")
         self.sessions_viewport_card.set_data(viewport_label, "активный профиль")
+        self._set_session_chip(self.session_runtime_chip, f"Состояние: {runtime_state}", "ok" if is_open else "warn")
+        self._set_session_chip(self.session_link_chip, f"Источник: {source_label}", "info" if source_label != "не указан" else "warn")
+        self._set_session_chip(self.session_viewport_chip, f"Пресет: {viewport_label}", "info")
 
         self.frame_title.setText(f"Сессия 9:16 | {profile_name}")
         self.frame_runtime.setText(
-            f"состояние={runtime_state} | "
-            f"открыта={'да' if is_open else 'нет'} | "
-            f"пресет={viewport_label}"
+            f"Состояние: {runtime_state} | "
+            f"Окно: {'открыто' if is_open else 'закрыто'} | "
+            f"Пресет: {viewport_label}"
         )
         self.frame_source.setText(
-            f"источник={selected_session.get('attached_source_type', 'none')} "
-            f"id={selected_session.get('attached_source_id', '-') }"
+            f"Источник: {source_label} | ID: {source_id}"
         )
         if is_open:
             self.session_preview.setText(
-                f"LIVE SESSION 9:16\n\n{profile_name}\n\n"
+                f"АКТИВНАЯ СЕССИЯ 9:16\n\n{profile_name}\n\n"
                 f"Состояние: {runtime_state}\n"
                 f"Пресет: {viewport_label}\n"
-                f"Источник: {selected_session.get('attached_source_type', 'none')}"
+                f"Источник: {source_label}"
             )
+            self.frame_context.setText("Сессия активна и синхронизирована с профилем. Можно переходить к контенту и аналитике.")
+            self.frame_next_step.setText("Следующий шаг: откройте «Контент» для очереди публикаций или «Аналитику» для оценки динамики.")
         else:
             self.session_preview.setText(
-                "SESSION PREVIEW 9:16\n\n"
+                "ПРЕВЬЮ СЕССИИ 9:16\n\n"
                 "Сессия не открыта.\n"
                 "Выберите профиль в реестре и нажмите «Открыть сессию»."
             )
+            if selected_profile_id:
+                self.frame_context.setText("Профиль выбран, но рабочее окно сессии ещё не запущено.")
+                self.frame_next_step.setText("Следующий шаг: задайте пресет окна и нажмите «Открыть сессию».")
+            else:
+                self.frame_context.setText("Сессионная зона ожидает выбор профиля в реестре.")
+                self.frame_next_step.setText("Следующий шаг: выберите профиль слева, затем откройте сессию 9:16.")
+        self.frame_footer.setText("Сессионная зона связана со статусом профиля, источником и текущим пресетом окна.")
 
 
 class ContentPage(BasePage):
@@ -674,9 +738,9 @@ class ContentPage(BasePage):
         summary = QHBoxLayout()
         summary.setSpacing(ROW_GAP)
         self.card_total = MetricCard("Библиотека", "0", "элементов")
-        self.card_queue = MetricCard("В очереди", "0", "готово к постингу")
+        self.card_queue = MetricCard("В очереди", "0", "готово к публикации")
         self.card_ready = MetricCard("Готово", "0", "прошло валидацию")
-        self.card_invalid = MetricCard("Предупр./ошибки", "0", "требует проверки")
+        self.card_invalid = MetricCard("Риски и ошибки", "0", "требует проверки")
         summary.addWidget(self.card_total)
         summary.addWidget(self.card_queue)
         summary.addWidget(self.card_ready)
@@ -782,6 +846,42 @@ class AnalyticsPage(BasePage):
         row.addWidget(self.top_card)
         layout.addLayout(row)
 
+        story_card = GlowCard(elevated=False)
+        story_card.setObjectName("AnalyticsStoryBlock")
+        story_layout = QVBoxLayout(story_card)
+        _setup_card_layout(story_layout)
+        story_layout.addWidget(SectionHeader("История периода", "Ключевой контекст и сигналы перед действиями"))
+
+        self.story_headline = QLabel("Ожидаем данные, чтобы построить связную картину результатов.")
+        self.story_headline.setObjectName("AnalyticsStoryHeadline")
+        self.story_headline.setWordWrap(True)
+        story_layout.addWidget(self.story_headline)
+
+        self.story_subline = QLabel("После синхронизации метрик появятся тренды, риски и приоритеты на следующий цикл.")
+        self.story_subline.setObjectName("AnalyticsStorySubline")
+        self.story_subline.setWordWrap(True)
+        story_layout.addWidget(self.story_subline)
+
+        cues_row = QHBoxLayout()
+        cues_row.setSpacing(GRID_GAP)
+        self.trend_chip = QLabel("Тренд: —")
+        self.quality_chip = QLabel("Качество: —")
+        self.stability_chip = QLabel("Стабильность: —")
+        self.action_chip = QLabel("План: —")
+        for chip, level in (
+            (self.trend_chip, "info"),
+            (self.quality_chip, "info"),
+            (self.stability_chip, "info"),
+            (self.action_chip, "info"),
+        ):
+            chip.setProperty("analyticsCue", "true")
+            chip.setProperty("analyticsCueLevel", level)
+            chip.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            chip.setMinimumHeight(30)
+            cues_row.addWidget(chip)
+        story_layout.addLayout(cues_row)
+        layout.addWidget(story_card)
+
         split = QSplitter(Qt.Orientation.Horizontal)
         split.setObjectName("AnalyticsSplit")
         split.setChildrenCollapsible(False)
@@ -832,12 +932,30 @@ class AnalyticsPage(BasePage):
         self.plan_text.setReadOnly(True)
         right_layout.addWidget(self.plan_text)
 
+        recs_header = SectionHeader("Рекомендации", "Приоритеты для следующего цикла публикаций")
+        recs_header.setObjectName("AnalyticsRecommendationsHeader")
+        right_layout.addWidget(recs_header)
+        self.recommendations_list = QListWidget()
+        self.recommendations_list.setObjectName("AnalyticsRecommendationList")
+        self.recommendations_list.setSpacing(4)
+        self.recommendations_list.setWordWrap(True)
+        right_layout.addWidget(self.recommendations_list)
+
         split.addWidget(left)
         split.addWidget(right)
         split.setStretchFactor(0, 11)
         split.setStretchFactor(1, 9)
         split.setSizes([600, 500])
         layout.addWidget(split, stretch=1)
+
+    def _set_cue_chip(self, chip: QLabel, text: str, level: str) -> None:
+        if level not in {"ok", "warn", "danger", "info"}:
+            level = "info"
+        chip.setText(text)
+        if chip.property("analyticsCueLevel") != level:
+            chip.setProperty("analyticsCueLevel", level)
+            chip.style().unpolish(chip)
+            chip.style().polish(chip)
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:
         perf = snapshot.get("analytics_performance", {}) or {}
@@ -848,28 +966,97 @@ class AnalyticsPage(BasePage):
         top = _safe_list(snapshot.get("analytics_top_content"))
         self.top_card.set_data(str(len(top)), "позиций")
 
-        self.top_list.clear()
-        for item in top[:10]:
-            score = float(item.get("weighted_engagement_score", 0.0))
-            views = int(item.get("views", 0))
-            self.top_list.addItem(
-                f"{item.get('content_id', '-')} · оценка {score:.2f}\n"
-                f"Просмотры: {_fmt_num(views)} | сигнал: {'сильный' if score >= 0.4 else 'умеренный'}"
-            )
-        if self.top_list.count() == 0:
-            self.top_list.addItem("Пока нет данных по топ-контенту.")
-
         weak_items = []
         for item in top:
             if float(item.get("weighted_engagement_score", 0.0)) < 0.15:
                 weak_items.append(item)
 
-        self.weak_list.clear()
-        for item in weak_items[:10]:
+        top_scores = [float(item.get("weighted_engagement_score", 0.0)) for item in top]
+        avg_top_score = sum(top_scores) / len(top_scores) if top_scores else 0.0
+        weak_ratio = (len(weak_items) / len(top)) if top else 0.0
+        momentum = float(perf.get("momentum_score", 0.0))
+        recs = _safe_list(snapshot.get("analytics_recommendations"))
+        plan = snapshot.get("analytics_action_plan")
+        plan_steps = _safe_list(plan.get("next_actions")) if isinstance(plan, dict) else []
+
+        if not top:
+            self.story_headline.setText("Данных пока недостаточно для устойчивой оценки динамики контента.")
+            self.story_subline.setText("Синхронизируйте метрики и сформируйте рекомендации, чтобы увидеть вектор роста.")
+        elif momentum >= 0.6 and avg_top_score >= 0.28:
+            self.story_headline.setText("Профиль показывает уверенный рост: сильные ролики удерживают темп.")
+            self.story_subline.setText("Рекомендуется масштабировать рабочие форматы и закрепить слот публикации по времени.")
+        elif momentum < 0.25 or weak_ratio >= 0.45:
+            self.story_headline.setText("Динамика замедлена: заметна доля слабых роликов и нестабильные сигналы.")
+            self.story_subline.setText("Приоритет — пересборка хука, упрощение структуры и короткий цикл повторного теста.")
+        else:
+            self.story_headline.setText("Результаты смешанные: есть точки роста, но стабильность пока не закреплена.")
+            self.story_subline.setText("Сфокусируйтесь на 2–3 форматах с лучшей вовлечённостью и снижайте вариативность.")
+
+        trend_text, trend_level = (
+            ("Тренд: рост", "ok")
+            if momentum >= 0.6
+            else ("Тренд: замедление", "warn")
+            if momentum < 0.25
+            else ("Тренд: стабилизация", "info")
+        )
+        quality_text, quality_level = (
+            ("Качество: сильное", "ok")
+            if avg_top_score >= 0.30
+            else ("Качество: умеренное", "info")
+            if avg_top_score >= 0.17
+            else ("Качество: слабое", "warn")
+        )
+        stability_text, stability_level = (
+            ("Стабильность: высокая", "ok")
+            if weak_ratio <= 0.20
+            else ("Стабильность: средняя", "info")
+            if weak_ratio <= 0.40
+            else ("Стабильность: риск", "warn")
+        )
+        action_text, action_level = (
+            (f"План: {len(plan_steps)} шага", "ok")
+            if len(plan_steps) >= 3
+            else ("План: доработать", "warn")
+            if top
+            else ("План: ожидание", "info")
+        )
+        self._set_cue_chip(self.trend_chip, trend_text, trend_level)
+        self._set_cue_chip(self.quality_chip, quality_text, quality_level)
+        self._set_cue_chip(self.stability_chip, stability_text, stability_level)
+        self._set_cue_chip(self.action_chip, action_text, action_level)
+
+        self.top_list.clear()
+        for idx, item in enumerate(top[:10], start=1):
             score = float(item.get("weighted_engagement_score", 0.0))
+            views = int(item.get("views", 0))
+            engagement_raw = float(item.get("engagement_rate", 0.0))
+            engagement_label = f"{engagement_raw * 100:.1f}%" if engagement_raw <= 1.0 else f"{engagement_raw:.1f}%"
+            signal = "сильный" if score >= 0.40 else "перспективный" if score >= 0.24 else "умеренный"
+            marker = "▲" if score >= 0.40 else "•"
+            self.top_list.addItem(
+                f"{marker} TOP #{idx} · {item.get('content_id', '-')}\n"
+                f"Оценка: {score:.2f} · Вовлечённость: {engagement_label} · Просмотры: {_fmt_num(views)}\n"
+                f"Инсайт: {signal} сигнал, формат можно масштабировать."
+            )
+        if self.top_list.count() == 0:
+            self.top_list.addItem("Пока нет данных по топ-контенту.")
+
+        self.weak_list.clear()
+        for idx, item in enumerate(weak_items[:10], start=1):
+            score = float(item.get("weighted_engagement_score", 0.0))
+            completion = float(item.get("completion_rate", 0.0))
+            comments_ratio = float(item.get("comment_to_view_ratio", 0.0))
+            causes: list[str] = []
+            if completion and completion < 0.35:
+                causes.append("слабое удержание")
+            if comments_ratio and comments_ratio < 0.01:
+                causes.append("низкая реакция аудитории")
+            if not causes:
+                causes.append("низкая конверсия в действия")
             self.weak_list.addItem(
-                f"{item.get('content_id', '-')} · слабый сигнал {score:.2f}\n"
-                f"Рекомендация: пересобрать hook/структуру и повторно проверить формат."
+                f"▼ RISK #{idx} · {item.get('content_id', '-')}\n"
+                f"Оценка: {score:.2f} · Причины: {', '.join(causes)}\n"
+                f"Рекомендация: пересобрать хук и структуру, затем повторно проверить формат."
             )
         if self.weak_list.count() == 0:
             self.weak_list.addItem("Для выбранного профиля слабых роликов не найдено.")
@@ -877,14 +1064,16 @@ class AnalyticsPage(BasePage):
         patterns = _safe_list(snapshot.get("analytics_patterns"))
         self.patterns_list.clear()
         for pattern in patterns[:12]:
+            confidence = float(pattern.get("confidence", 0.0))
+            marker = "◆" if confidence >= 0.65 else "◇" if confidence >= 0.40 else "·"
+            strength = "сильный" if confidence >= 0.65 else "рабочий" if confidence >= 0.40 else "гипотеза"
             self.patterns_list.addItem(
-                f"{pattern.get('pattern_type', '-')} · {pattern.get('label', '-')}\n"
-                f"Уверенность: {float(pattern.get('confidence', 0.0)):.2f} | evidence: {pattern.get('evidence', '-')}"
+                f"{marker} {pattern.get('pattern_type', '-')} · {pattern.get('label', '-')}\n"
+                f"Уверенность: {confidence:.2f} ({strength}) | подтверждение: {pattern.get('evidence', '-')}"
             )
         if self.patterns_list.count() == 0:
             self.patterns_list.addItem("Паттерны пока не выявлены.")
 
-        plan = snapshot.get("analytics_action_plan")
         if isinstance(plan, dict):
             lines = [
                 f"Результативность: {plan.get('performance_summary', '-')}",
@@ -902,6 +1091,17 @@ class AnalyticsPage(BasePage):
         else:
             self.plan_text.setPlainText("План действий ещё не сформирован. Используйте кнопку «Сформировать контент-план».")
 
+        self.recommendations_list.clear()
+        for idx, rec in enumerate(recs[:10], start=1):
+            title = str(rec.get("title", rec.get("recommendation_type", "Рекомендация")))
+            rationale = str(rec.get("rationale", "Обоснование не указано"))
+            priority = rec.get("priority", "-")
+            self.recommendations_list.addItem(
+                f"#{idx} · приоритет {priority}\n{title}\n{rationale}"
+            )
+        if self.recommendations_list.count() == 0:
+            self.recommendations_list.addItem("Рекомендации появятся после генерации action plan и обновления метрик.")
+
 
 class AIStudioPage(BasePage):
     def __init__(self) -> None:
@@ -918,7 +1118,7 @@ class AIStudioPage(BasePage):
         cards = QHBoxLayout()
         cards.setSpacing(ROW_GAP)
         self.rec_count_card = MetricCard("Рекомендации", "0", "активный список")
-        self.learning_card = MetricCard("Записи обучения", "0", "feedback-цикл")
+        self.learning_card = MetricCard("Записи обучения", "0", "цикл обратной связи")
         self.bundle_card = MetricCard("Пакеты генерации", "0", "конвейер брифов")
         self.confidence_card = MetricCard("Средняя уверенность", "0.00", "доверие к рекомендациям")
         for card in (self.rec_count_card, self.learning_card, self.bundle_card, self.confidence_card):
@@ -933,7 +1133,7 @@ class AIStudioPage(BasePage):
         action_card.setObjectName("AIActionBlock")
         action_card_layout = QVBoxLayout(action_card)
         _setup_card_layout(action_card_layout)
-        action_card_layout.addWidget(SectionHeader("Операции AI", "Генерация рекомендаций и подготовка production-бандла"))
+        action_card_layout.addWidget(SectionHeader("Операции AI", "Генерация рекомендаций и подготовка рабочего пакета"))
 
         action_row = QGridLayout()
         action_row.setHorizontalSpacing(GRID_GAP)
@@ -1054,7 +1254,7 @@ class AIStudioPage(BasePage):
 
         self.bundle_list.clear()
         for bundle in bundles[:12]:
-            ready = "готово" if bundle.get("generation_ready_flag", False) else "черновик"
+            ready = "готов к генерации" if bundle.get("generation_ready_flag", False) else "черновик"
             self.bundle_list.addItem(
                 f"{bundle.get('id', '-')} · статус: {ready}\n"
                 f"Цель: {bundle.get('content_goal', '-')} | Угол: {bundle.get('creative_angle', '-')}"

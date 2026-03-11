@@ -117,28 +117,30 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         border-radius: 21px;
         font-family: '{tokens.typography['display']}';
         font-size: 16px;
-        font-weight: 680;
+        font-weight: 640;
     }}
 
     QLabel#AppTitle {{
         font-family: '{tokens.typography['display']}';
-        font-size: 19px;
-        font-weight: 590;
+        font-size: 18px;
+        font-weight: 570;
+        letter-spacing: 0.15px;
         color: {c['primary_text']};
     }}
 
     QLabel#AppSubtitle {{
         color: rgba(163, 175, 205, 0.95);
-        font-size: 11px;
+        font-size: 12px;
         font-family: '{tokens.typography['label']}';
-        font-weight: 450;
+        font-weight: 430;
+        line-height: 1.35em;
     }}
 
     QLabel#SidebarRuntimeStatus {{
         color: rgba(162, 174, 204, 0.92);
         font-family: '{tokens.typography['label']}';
         font-size: 11px;
-        font-weight: 520;
+        font-weight: 500;
         padding: 8px 10px;
         border-radius: 12px;
         border: 1px solid rgba(170, 138, 245, 0.14);
@@ -157,7 +159,7 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         color: rgba(199, 210, 237, 0.96);
         font-family: '{tokens.typography['label']}';
         font-size: 13px;
-        font-weight: 520;
+        font-weight: 500;
     }}
 
     QPushButton[navButton='true']:hover {{
@@ -302,9 +304,9 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     QLabel#DashboardRowCaption {{
         color: rgba(187, 199, 229, 0.95);
         font-family: '{tokens.typography['label']}';
-        font-size: 11px;
-        font-weight: 560;
-        letter-spacing: 0.3px;
+        font-size: 12px;
+        font-weight: 520;
+        letter-spacing: 0.2px;
         padding-left: 2px;
         margin-top: 2px;
     }}
@@ -380,12 +382,19 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     }}
 
     QFrame#SessionsControlBlock,
-    QFrame#SessionsRegistryBlock,
-    QFrame#SessionsWorkspaceBlock {{
+    QFrame#SessionsRegistryBlock {{
         background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
             stop:0 rgba(24, 35, 56, 0.98), stop:0.56 rgba(17, 26, 43, 0.98), stop:1 rgba(12, 19, 31, 0.99));
         border: 1px solid rgba(172, 140, 248, 0.20);
         border-top: 1px solid rgba(223, 207, 255, 0.30);
+    }}
+
+    QFrame#SessionsWorkspaceBlock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(29, 43, 68, 0.99), stop:0.52 rgba(20, 31, 50, 0.99), stop:1 rgba(14, 22, 36, 0.99));
+        border: 1px solid rgba(193, 162, 255, 0.28);
+        border-top: 1px solid rgba(236, 221, 255, 0.40);
+        border-bottom: 1px solid rgba(8, 12, 20, 0.78);
     }}
 
     QWidget#SessionsPage QFrame#MetricCard[sessionsMetric='true'] {{
@@ -396,30 +405,93 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     }}
 
     QListWidget#SessionsList::item {{
-        padding: 10px 11px;
-        border-radius: 11px;
-        margin-bottom: 4px;
-        background: rgba(255, 255, 255, 0.012);
-        border: 1px solid transparent;
+        padding: 11px 12px;
+        border-radius: 12px;
+        margin-bottom: 6px;
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid rgba(168, 136, 244, 0.08);
     }}
 
     QListWidget#SessionsList::item:hover {{
-        border: 1px solid rgba(182, 151, 255, 0.32);
-        background: rgba(154, 116, 255, 0.12);
+        border: 1px solid rgba(191, 161, 255, 0.36);
+        background: rgba(154, 116, 255, 0.14);
+    }}
+
+    QListWidget#SessionsList::item:selected {{
+        border: 1px solid rgba(204, 176, 255, 0.46);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 rgba(154, 116, 255, 0.22), stop:1 rgba(116, 90, 191, 0.14));
     }}
 
     QLabel#SessionMobilePreview {{
         background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-            stop:0 rgba(18, 28, 45, 0.97), stop:0.5 rgba(14, 22, 36, 0.97), stop:1 rgba(11, 18, 30, 0.97));
-        border: 1px solid rgba(193, 163, 255, 0.54);
-        border-top: 1px solid rgba(236, 222, 255, 0.54);
+            stop:0 rgba(20, 31, 50, 0.985), stop:0.52 rgba(14, 22, 36, 0.985), stop:1 rgba(10, 17, 28, 0.985));
+        border: 1px solid rgba(199, 170, 255, 0.58);
+        border-top: 1px solid rgba(240, 226, 255, 0.60);
         border-radius: 28px;
-        color: rgba(220, 230, 255, 0.95);
+        color: rgba(228, 237, 255, 0.96);
         font-family: '{tokens.typography['label']}';
         font-size: 13px;
-        font-weight: 540;
-        padding: 16px;
-        line-height: 1.35em;
+        font-weight: 520;
+        letter-spacing: 0.12px;
+        padding: 18px;
+        line-height: 1.42em;
+    }}
+
+    QLabel[sessionChip='true'] {{
+        border-radius: 11px;
+        padding: 5px 10px;
+        min-height: 28px;
+        font-family: '{tokens.typography['label']}';
+        font-size: 12px;
+        font-weight: 520;
+        color: rgba(231, 238, 255, 0.96);
+        border: 1px solid rgba(178, 147, 252, 0.28);
+        border-top: 1px solid rgba(226, 210, 255, 0.34);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(39, 55, 86, 0.58), stop:1 rgba(24, 35, 56, 0.54));
+    }}
+
+    QLabel[sessionChipLevel='ok'] {{
+        border-color: rgba(103, 230, 183, 0.42);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(43, 99, 82, 0.46), stop:1 rgba(28, 66, 54, 0.40));
+    }}
+
+    QLabel[sessionChipLevel='warn'] {{
+        border-color: rgba(255, 195, 116, 0.46);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(112, 84, 38, 0.42), stop:1 rgba(82, 60, 26, 0.36));
+    }}
+
+    QLabel[sessionChipLevel='info'] {{
+        border-color: rgba(146, 215, 255, 0.44);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(47, 92, 123, 0.42), stop:1 rgba(32, 66, 91, 0.36));
+    }}
+
+    QWidget#SessionContextBlock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(34, 48, 76, 0.42), stop:1 rgba(20, 30, 49, 0.38));
+        border: 1px solid rgba(182, 151, 255, 0.20);
+        border-top: 1px solid rgba(227, 210, 255, 0.26);
+        border-radius: 13px;
+    }}
+
+    QLabel#SessionContextHint {{
+        color: rgba(210, 222, 248, 0.95);
+        font-family: '{tokens.typography['label']}';
+        font-size: 12px;
+        font-weight: 480;
+        line-height: 1.38em;
+    }}
+
+    QLabel#SessionNextStep {{
+        color: rgba(225, 233, 255, 0.97);
+        font-family: '{tokens.typography['label']}';
+        font-size: 12px;
+        font-weight: 520;
+        line-height: 1.4em;
     }}
 
     QWidget#AnalyticsPage QFrame#MetricCard[analyticsMetric='true'] {{
@@ -443,9 +515,70 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         border-top: 1px solid rgba(234, 217, 255, 0.38);
     }}
 
+    QFrame#AnalyticsStoryBlock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(34, 49, 78, 0.99), stop:0.52 rgba(24, 35, 58, 0.99), stop:1 rgba(17, 25, 41, 0.99));
+        border: 1px solid rgba(197, 166, 255, 0.30);
+        border-top: 1px solid rgba(239, 225, 255, 0.42);
+    }}
+
+    QLabel#AnalyticsStoryHeadline {{
+        color: rgba(237, 243, 255, 0.98);
+        font-family: '{tokens.typography['title']}';
+        font-size: 15px;
+        font-weight: 560;
+        line-height: 1.38em;
+    }}
+
+    QLabel#AnalyticsStorySubline {{
+        color: rgba(185, 198, 229, 0.96);
+        font-family: '{tokens.typography['label']}';
+        font-size: 12px;
+        font-weight: 450;
+        line-height: 1.42em;
+    }}
+
+    QLabel[analyticsCue='true'] {{
+        border-radius: 11px;
+        padding: 5px 11px;
+        font-family: '{tokens.typography['label']}';
+        font-size: 12px;
+        font-weight: 520;
+        color: rgba(230, 238, 255, 0.97);
+        border: 1px solid rgba(181, 150, 255, 0.30);
+        border-top: 1px solid rgba(228, 212, 255, 0.38);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(38, 55, 86, 0.56), stop:1 rgba(24, 36, 58, 0.50));
+    }}
+
+    QLabel[analyticsCueLevel='ok'] {{
+        border-color: rgba(104, 231, 184, 0.42);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(45, 103, 85, 0.44), stop:1 rgba(29, 67, 55, 0.38));
+    }}
+
+    QLabel[analyticsCueLevel='warn'] {{
+        border-color: rgba(255, 194, 115, 0.45);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(111, 84, 38, 0.42), stop:1 rgba(81, 60, 27, 0.36));
+    }}
+
+    QLabel[analyticsCueLevel='danger'] {{
+        border-color: rgba(255, 140, 170, 0.44);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(111, 44, 63, 0.40), stop:1 rgba(80, 32, 46, 0.34));
+    }}
+
+    QLabel[analyticsCueLevel='info'] {{
+        border-color: rgba(150, 217, 255, 0.44);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(48, 93, 124, 0.40), stop:1 rgba(33, 66, 91, 0.34));
+    }}
+
     QListWidget#AnalyticsTopList::item,
     QListWidget#AnalyticsWeakList::item,
-    QListWidget#AnalyticsPatternsList::item {{
+    QListWidget#AnalyticsPatternsList::item,
+    QListWidget#AnalyticsRecommendationList::item {{
         padding: 10px 11px;
         border-radius: 11px;
         margin-bottom: 4px;
@@ -464,9 +597,14 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         background: rgba(104, 199, 255, 0.08);
     }}
 
+    QListWidget#AnalyticsRecommendationList::item {{
+        background: rgba(154, 116, 255, 0.10);
+    }}
+
     QListWidget#AnalyticsTopList::item:hover,
     QListWidget#AnalyticsWeakList::item:hover,
-    QListWidget#AnalyticsPatternsList::item:hover {{
+    QListWidget#AnalyticsPatternsList::item:hover,
+    QListWidget#AnalyticsRecommendationList::item:hover {{
         border: 1px solid rgba(190, 159, 255, 0.34);
     }}
 
@@ -493,8 +631,8 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     QWidget#DashboardPage QWidget#DashboardQuickHeader QLabel#SectionTitle,
     QWidget#DashboardPage QWidget#DashboardAuditHeader QLabel#SectionTitle,
     QWidget#DashboardPage QWidget#DashboardRecommendationHeader QLabel#SectionTitle {{
-        font-size: 17px;
-        font-weight: 600;
+        font-size: 16px;
+        font-weight: 570;
     }}
 
     QWidget#DashboardPage QWidget#DashboardOverviewHeader QLabel#SectionHint,
@@ -507,31 +645,35 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     QLabel#CardTitle {{
         color: rgba(202, 213, 241, 0.90);
         font-family: '{tokens.typography['label']}';
-        font-size: 11px;
-        font-weight: 560;
+        font-size: 12px;
+        font-weight: 530;
+        letter-spacing: 0.15px;
     }}
 
     QLabel#CardValue {{
         color: {c['primary_text']};
         font-family: '{tokens.typography['metric']}';
-        font-size: 29px;
-        font-weight: 590;
+        font-size: 30px;
+        font-weight: 560;
+        letter-spacing: 0.15px;
         margin-top: 2px;
-        margin-bottom: 1px;
+        margin-bottom: 2px;
     }}
 
     QLabel#CardMeta {{
         color: rgba(154, 165, 194, 0.95);
         font-family: '{tokens.typography['label']}';
         font-size: 12px;
-        font-weight: 500;
+        font-weight: 470;
+        line-height: 1.35em;
     }}
 
     QFrame#SessionFrame {{
         background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-            stop:0 rgba(36, 51, 82, 0.98), stop:1 rgba(24, 36, 60, 0.98));
-        border: 1px solid rgba(190, 159, 255, 0.52);
-        border-top: 1px solid rgba(232, 214, 255, 0.44);
+            stop:0 rgba(42, 58, 90, 0.985), stop:0.52 rgba(30, 44, 72, 0.985), stop:1 rgba(22, 34, 56, 0.99));
+        border: 1px solid rgba(200, 171, 255, 0.56);
+        border-top: 1px solid rgba(242, 228, 255, 0.62);
+        border-bottom: 1px solid rgba(9, 14, 23, 0.88);
         border-radius: {r['xl']}px;
     }}
 
@@ -539,14 +681,16 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         color: {c['primary_text']};
         font-family: '{tokens.typography['title']}';
         font-size: 16px;
-        font-weight: 590;
+        font-weight: 560;
+        letter-spacing: 0.1px;
     }}
 
     QLabel#SectionHint {{
         color: rgba(154, 166, 196, 0.96);
         font-family: '{tokens.typography['label']}';
-        font-size: 12px;
-        font-weight: 450;
+        font-size: 13px;
+        font-weight: 430;
+        line-height: 1.4em;
     }}
 
     QPushButton {{
@@ -558,8 +702,8 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
             stop:0 rgba(35, 49, 77, 0.94), stop:1 rgba(21, 30, 49, 0.95));
         color: {c['primary_text']};
         font-family: '{tokens.typography['label']}';
-        font-size: 12px;
-        font-weight: 540;
+        font-size: 13px;
+        font-weight: 520;
     }}
 
     QPushButton[motionButton='true'] {{
@@ -597,7 +741,7 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
             stop:0 rgba(120, 88, 214, 0.96), stop:1 rgba(163, 126, 248, 0.96));
         color: #FCF9FF;
         font-family: '{tokens.typography['label']}';
-        font-weight: 620;
+        font-weight: 580;
     }}
 
     QPushButton#PrimaryCTA:hover {{
@@ -759,10 +903,10 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
 
     QLabel[statusPill='true'] {{
         border-radius: 12px;
-        padding: 5px 11px;
-        font-size: 11px;
+        padding: 6px 12px;
+        font-size: 12px;
         font-family: '{tokens.typography['label']}';
-        font-weight: 560;
+        font-weight: 520;
         min-width: 96px;
         border: 1px solid rgba(174, 143, 247, 0.14);
         border-top: 1px solid rgba(223, 207, 255, 0.22);
@@ -806,7 +950,7 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         color: {c['primary_text']};
         font-family: '{tokens.typography['title']}';
         font-size: 16px;
-        font-weight: 620;
+        font-weight: 580;
     }}
 
     QWidget#ContextPanel {{
@@ -821,9 +965,9 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     QLabel#ContextActionCaption {{
         color: rgba(194, 206, 236, 0.95);
         font-family: '{tokens.typography['label']}';
-        font-size: 11px;
-        font-weight: 560;
-        letter-spacing: 0.25px;
+        font-size: 12px;
+        font-weight: 520;
+        letter-spacing: 0.18px;
         padding-left: 2px;
     }}
 
