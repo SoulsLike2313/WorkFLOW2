@@ -54,6 +54,9 @@ class RepositoryHub:
             "translation_backend_runs",
             "language_detections",
             "voice_links",
+            "voice_attempt_history",
+            "voice_sample_bank",
+            "speaker_groups",
             "voice_attempts",
             "qa_findings",
             "correction_history",
@@ -588,6 +591,106 @@ class RepositoryHub:
                 out[row["speaker_id"]] = {}
         return out
 
+    def replace_speaker_groups(self, project_id: int, groups: list[dict[str, Any]]) -> None:
+        with self.db.transaction() as cur:
+            cur.execute("DELETE FROM speaker_groups WHERE project_id=?", (project_id,))
+            for item in groups:
+                cur.execute(
+                    """
+                    INSERT INTO speaker_groups(
+                      project_id, speaker_id, group_label, line_count, linked_count, broken_links,
+                      scene_count, avg_confidence, metadata_json, updated_at
+                    ) VALUES(?,?,?,?,?,?,?,?,?,?)
+                    """,
+                    (
+                        project_id,
+                        str(item.get("speaker_id") or "unknown"),
+                        str(item.get("group_label") or "speaker:unknown"),
+                        int(item.get("line_count") or 0),
+                        int(item.get("linked_count") or 0),
+                        int(item.get("broken_links") or 0),
+                        int(item.get("scene_count") or 0),
+                        float(item.get("avg_confidence") or 0.0),
+                        json.dumps(
+                            {
+                                "scene_ids": item.get("scene_ids", []),
+                                "linking_strategy": item.get("linking_strategy", "speaker_id+metadata+scene"),
+                            },
+                            ensure_ascii=False,
+                        ),
+                        _now_iso(),
+                    ),
+                )
+
+    def list_speaker_groups(self, project_id: int, limit: int = 200) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, speaker_id, group_label, line_count, linked_count, broken_links, scene_count,
+                   avg_confidence, metadata_json, updated_at
+            FROM speaker_groups
+            WHERE project_id=?
+            ORDER BY line_count DESC, speaker_id ASC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
+            except json.JSONDecodeError:
+                item["metadata_json"] = {}
+            out.append(item)
+        return out
+
+    def replace_voice_sample_bank(self, project_id: int, samples: list[dict[str, Any]]) -> None:
+        with self.db.transaction() as cur:
+            cur.execute("DELETE FROM voice_sample_bank WHERE project_id=?", (project_id,))
+            for item in samples:
+                cur.execute(
+                    """
+                    INSERT INTO voice_sample_bank(
+                      project_id, speaker_id, line_id, scene_id, source_file, source_duration_ms, metadata_json, created_at
+                    ) VALUES(?,?,?,?,?,?,?,?)
+                    """,
+                    (
+                        project_id,
+                        str(item.get("speaker_id") or "unknown"),
+                        str(item.get("line_id") or ""),
+                        str(item.get("scene_id") or ""),
+                        str(item.get("source_file") or ""),
+                        int(item.get("source_duration_ms") or 0),
+                        json.dumps(item.get("metadata_json", {}), ensure_ascii=False),
+                        _now_iso(),
+                    ),
+                )
+
+    def list_voice_sample_bank(
+        self, project_id: int, *, speaker_id: str | None = None, limit: int = 2000
+    ) -> list[dict[str, Any]]:
+        query = """
+            SELECT id, speaker_id, line_id, scene_id, source_file, source_duration_ms, metadata_json, created_at
+            FROM voice_sample_bank
+            WHERE project_id=?
+        """
+        params: list[Any] = [project_id]
+        if speaker_id:
+            query += " AND speaker_id=?"
+            params.append(speaker_id)
+        query += " ORDER BY id DESC LIMIT ?"
+        params.append(limit)
+        rows = self.db.query(query, tuple(params))
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
+            except json.JSONDecodeError:
+                item["metadata_json"] = {}
+            out.append(item)
+        return out
+
     def add_voice_attempt(self, project_id: int, attempt: VoiceAttempt) -> None:
         self.db.execute(
             """
@@ -630,6 +733,74 @@ class RepositoryHub:
             item = dict(row)
             try:
                 item["metadata_json"] = json.loads(item["metadata_json"] or "{}")
+            except json.JSONDecodeError:
+                item["metadata_json"] = {}
+            out.append(item)
+        return out
+
+    def add_voice_attempt_history(
+        self,
+        *,
+        project_id: int,
+        entry_id: int | None,
+        speaker_id: str,
+        source_file: str,
+        source_duration_ms: int,
+        generated_file: str,
+        synthesis_mode: str,
+        alignment_ratio: float,
+        quality_score: float,
+        confidence_score: float,
+        metadata_json: dict[str, Any],
+    ) -> None:
+        self.db.execute(
+            """
+            INSERT INTO voice_attempt_history(
+              project_id, entry_id, speaker_id, source_file, source_duration_ms, generated_file, synthesis_mode,
+              alignment_ratio, quality_score, confidence_score, metadata_json, created_at
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            (
+                project_id,
+                entry_id,
+                speaker_id,
+                source_file,
+                source_duration_ms,
+                generated_file,
+                synthesis_mode,
+                alignment_ratio,
+                quality_score,
+                confidence_score,
+                json.dumps(metadata_json, ensure_ascii=False),
+                _now_iso(),
+            ),
+        )
+
+    def list_voice_attempt_history(
+        self,
+        *,
+        project_id: int,
+        speaker_id: str | None = None,
+        limit: int = 500,
+    ) -> list[dict[str, Any]]:
+        query = """
+            SELECT id, entry_id, speaker_id, source_file, source_duration_ms, generated_file, synthesis_mode,
+                   alignment_ratio, quality_score, confidence_score, metadata_json, created_at
+            FROM voice_attempt_history
+            WHERE project_id=?
+        """
+        params: list[Any] = [project_id]
+        if speaker_id:
+            query += " AND speaker_id=?"
+            params.append(speaker_id)
+        query += " ORDER BY id DESC LIMIT ?"
+        params.append(limit)
+        rows = self.db.query(query, tuple(params))
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
             except json.JSONDecodeError:
                 item["metadata_json"] = {}
             out.append(item)

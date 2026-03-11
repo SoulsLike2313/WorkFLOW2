@@ -33,10 +33,15 @@ from app.translator.glossary_injector import GlossaryInjector
 from app.translator.memory_lookup import MemoryLookup
 from app.translator.realtime_orchestrator import RealtimeOrchestrator
 from app.translator.router import TranslatorRouter
+from app.voice.attempt_history import VoiceAttemptHistoryService
 from app.voice.audio_post import alignment_plan
+from app.voice.duration_planner import plan_duration
+from app.voice.preview_player import VoicePreviewPlayer
 from app.voice.quality_score import score_voice_attempt
+from app.voice.speaker_grouping import SpeakerGroupingService
 from app.voice.speaker_profile import SpeakerProfileService
 from app.voice.synthesis_mock import MockVoiceSynthesizer
+from app.voice.voice_sample_bank import VoiceSampleBankService
 from app.voice.voice_linker import VoiceLinker
 from app.workers.job_manager import JobManager
 
@@ -71,6 +76,10 @@ class AppServices:
         self.history_service = HistoryService(self.repo)
         self.speaker_profiles = SpeakerProfileService(self.repo)
         self.voice_linker = VoiceLinker(self.repo)
+        self.speaker_grouping = SpeakerGroupingService()
+        self.voice_sample_bank = VoiceSampleBankService(self.repo)
+        self.voice_attempt_history = VoiceAttemptHistoryService(self.repo)
+        self.voice_preview_player = VoicePreviewPlayer()
         self.voice_synthesizer = MockVoiceSynthesizer()
         self.qa_service = QaService(self.repo)
         self.exporter = Exporter(self.repo)
@@ -286,31 +295,80 @@ class AppServices:
         def _run() -> dict[str, Any]:
             voice_out = self.config.paths.runtime_root / "voice_outputs"
             voice_out.mkdir(parents=True, exist_ok=True)
-            entries = self.voice_linker.get_voiced_entries(project_id)
+            scene_index = self._build_scene_index(game_root)
+            linked_all = self.voice_linker.analyze_links(project_id, game_root=game_root, scene_index=scene_index)
+            entries = [item for item in linked_all if item.get("voice_link")]
+            valid_entries = [item for item in entries if item.get("link_valid", True)]
+
+            sample_summary = self.voice_sample_bank.rebuild(
+                project_id=project_id,
+                linked_entries=entries,
+                game_root=game_root,
+            )
+            groups = self.speaker_grouping.build_groups(entries)
+            self.repo.replace_speaker_groups(project_id, groups)
+
             profiles = self.speaker_profiles.get_profiles(project_id)
             generated = 0
+            avg_alignment = 0.0
+            avg_quality = 0.0
+            avg_confidence = 0.0
 
-            for entry in entries:
+            for entry in valid_entries:
                 translated_text = (entry.get("translated_text") or "").strip()
                 if not translated_text:
                     continue
                 speaker_id = entry.get("speaker_id") or "narrator"
-                profile = profiles.get(speaker_id, {"speaker_id": speaker_id, "speech_rate": 1.0, "style_preset": "neutral"})
+                profile = profiles.get(
+                    speaker_id,
+                    {
+                        "speaker_id": speaker_id,
+                        "speech_rate": 1.0,
+                        "style_preset": "neutral",
+                        "emotion_bias": "neutral",
+                        "base_frequency": 220,
+                    },
+                )
                 source_voice_rel = str(entry.get("voice_link"))
                 source_voice_path = game_root / source_voice_rel
                 source_duration = self._wav_duration_ms(source_voice_path)
                 output_path = voice_out / f"{entry['line_id']}_ru.wav"
+
+                duration_plan = plan_duration(
+                    translated_text,
+                    source_duration_ms=source_duration,
+                    speech_rate=float(profile.get("speech_rate", 1.0)),
+                    style_preset=str(profile.get("style_preset", "neutral")),
+                    emotion=str(profile.get("emotion_bias", "neutral")),
+                )
                 synth = self.voice_synthesizer.synthesize(
                     translated_text,
                     speaker_profile=profile,
                     output_path=output_path,
                     source_duration_ms=source_duration,
+                    style_override=str(profile.get("style_preset", "neutral")),
+                    emotion=str(profile.get("emotion_bias", "neutral")),
+                    duration_plan=duration_plan.as_dict(),
+                    synthesis_mode="mock_demo_tts_stub",
                 )
                 alignment = alignment_plan(source_duration, int(synth["duration_ms"]))
+                planner_alignment_ratio = float(duration_plan.alignment_ratio)
                 quality = score_voice_attempt(
                     has_translation=True,
                     alignment_ratio=float(alignment["ratio"]),
                     style_match=True,
+                )
+                confidence = round(
+                    max(
+                        0.1,
+                        min(
+                            0.99,
+                            (float(entry.get("link_confidence") or 0.4) * 0.45)
+                            + (float(duration_plan.confidence) * 0.35)
+                            + (quality * 0.2),
+                        ),
+                    ),
+                    3,
                 )
                 from app.core.enums import VoiceAttemptStatus
                 from app.core.models import VoiceAttempt
@@ -330,23 +388,73 @@ class AppServices:
                     duration_source_ms=source_duration,
                     duration_output_ms=int(synth["duration_ms"]),
                     metadata={
-                        "voice_mode": "mock_stub",
+                        "voice_mode": "mock_demo",
+                        "synthesis_mode": "mock_demo_tts_stub",
                         "profile": profile,
                         "synthesis": synth,
                         "alignment": alignment,
+                        "duration_plan": duration_plan.as_dict(),
+                        "linking": {
+                            "strategy": entry.get("linking_strategy", "speaker_id+metadata+scene"),
+                            "reason": entry.get("link_reason", ""),
+                            "confidence": float(entry.get("link_confidence") or 0.0),
+                            "valid": bool(entry.get("link_valid", True)),
+                            "scene_id": entry.get("scene_id", ""),
+                        },
+                        "confidence_score": confidence,
                     },
                 )
                 self.repo.add_voice_attempt(project_id, attempt)
+                self.voice_attempt_history.record(
+                    project_id=project_id,
+                    entry_id=int(entry["id"]),
+                    speaker_id=str(speaker_id),
+                    source_file=source_voice_rel,
+                    source_duration_ms=source_duration,
+                    generated_file=output_voice_path,
+                    synthesis_mode="mock_demo_tts_stub",
+                    alignment_ratio=planner_alignment_ratio,
+                    quality_score=quality,
+                    confidence_score=confidence,
+                    metadata={
+                        "line_id": entry.get("line_id", ""),
+                        "scene_id": entry.get("scene_id", ""),
+                        "duration_plan": duration_plan.as_dict(),
+                        "alignment": alignment,
+                    },
+                )
                 generated += 1
+                avg_alignment += float(alignment["ratio"])
+                avg_quality += quality
+                avg_confidence += confidence
 
             self.repo.add_adaptation_event(
                 project_id,
                 event_type="voice_batch",
                 event_scope="voice",
                 event_ref=str(generated),
-                details={"generated": generated},
+                details={
+                    "generated": generated,
+                    "linked_total": len(entries),
+                    "valid_links": len(valid_entries),
+                    "broken_links": len([item for item in entries if not item.get("link_valid", True)]),
+                    "sample_bank_total": sample_summary["samples_total"],
+                    "speaker_groups": len(groups),
+                    "synthesis_mode": "mock_demo_tts_stub",
+                },
             )
-            return {"voice_attempts": generated}
+            return {
+                "voice_attempts": generated,
+                "linked_total": len(entries),
+                "valid_links": len(valid_entries),
+                "broken_links": len([item for item in entries if not item.get("link_valid", True)]),
+                "speaker_groups": len(groups),
+                "sample_bank_total": sample_summary["samples_total"],
+                "synthesis_mode": "mock_demo_tts_stub",
+                "avg_alignment_ratio": round(avg_alignment / max(1, generated), 3),
+                "avg_quality_score": round(avg_quality / max(1, generated), 3),
+                "avg_confidence_score": round(avg_confidence / max(1, generated), 3),
+            }
 
         return self.job_manager.run_job("voice", _run)
 
@@ -565,6 +673,49 @@ class AppServices:
 
     def asset_details(self, project_id: int, file_path: str) -> dict[str, Any]:
         return self.asset_explorer.get_resource_details(project_id, file_path)
+
+    def voice_snapshot(self, project_id: int, *, game_root: Path) -> dict[str, Any]:
+        attempts = self.repo.list_voice_attempts(project_id)
+        for row in attempts:
+            meta = row.get("metadata_json") or {}
+            row["synthesis_mode"] = str(meta.get("synthesis_mode") or meta.get("voice_mode") or "unknown")
+            row["confidence_score"] = float(meta.get("confidence_score") or 0.0)
+            align = meta.get("alignment") or {}
+            row["alignment_ratio"] = float(align.get("ratio") or 0.0)
+            plan = meta.get("duration_plan") or {}
+            row["duration_action"] = str(plan.get("recommended_action") or "")
+
+        history = self.voice_attempt_history.list_recent(project_id, limit=600)
+        groups = self.repo.list_speaker_groups(project_id, limit=200)
+        samples = self.repo.list_voice_sample_bank(project_id, limit=5000)
+        return {
+            "attempts": attempts,
+            "history": history,
+            "speaker_groups": groups,
+            "sample_bank": samples,
+            "summary": {
+                "attempts_total": len(attempts),
+                "history_total": len(history),
+                "speaker_groups": len(groups),
+                "sample_bank_total": len(samples),
+                "broken_links": len(
+                    [
+                        item
+                        for item in samples
+                        if not bool((item.get("metadata_json") or {}).get("link_valid", True))
+                    ]
+                ),
+                "synthesis_mode": "mock_demo_tts_stub",
+            },
+        }
+
+    def voice_preview(self, source_voice_path: str, generated_voice_path: str, *, game_root: Path) -> dict[str, Any]:
+        return self.voice_preview_player.preview_payload(
+            source_voice_path=source_voice_path,
+            generated_voice_path=generated_voice_path,
+            game_root=game_root,
+            repo_root=self.config.paths.repo_root,
+        )
 
     def quick_reindex(self, *, project_id: int, game_root: Path, changed_paths: list[str]) -> int:
         reindexed_entries = 0

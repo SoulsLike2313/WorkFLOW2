@@ -124,6 +124,36 @@ CREATE TABLE IF NOT EXISTS voice_profiles (
 );
 CREATE INDEX IF NOT EXISTS idx_voice_profiles_project ON voice_profiles(project_id);
 
+CREATE TABLE IF NOT EXISTS speaker_groups (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  speaker_id TEXT NOT NULL,
+  group_label TEXT NOT NULL,
+  line_count INTEGER NOT NULL DEFAULT 0,
+  linked_count INTEGER NOT NULL DEFAULT 0,
+  broken_links INTEGER NOT NULL DEFAULT 0,
+  scene_count INTEGER NOT NULL DEFAULT 0,
+  avg_confidence REAL NOT NULL DEFAULT 0,
+  metadata_json TEXT NOT NULL DEFAULT '{}',
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(project_id, speaker_id)
+);
+CREATE INDEX IF NOT EXISTS idx_speaker_groups_project ON speaker_groups(project_id);
+
+CREATE TABLE IF NOT EXISTS voice_sample_bank (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  speaker_id TEXT NOT NULL,
+  line_id TEXT,
+  scene_id TEXT,
+  source_file TEXT NOT NULL,
+  source_duration_ms INTEGER NOT NULL DEFAULT 0,
+  metadata_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_voice_sample_bank_project ON voice_sample_bank(project_id);
+CREATE INDEX IF NOT EXISTS idx_voice_sample_bank_speaker ON voice_sample_bank(project_id, speaker_id);
+
 CREATE TABLE IF NOT EXISTS voice_attempts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   entry_id INTEGER NOT NULL REFERENCES extracted_entries(id) ON DELETE CASCADE,
@@ -141,6 +171,24 @@ CREATE TABLE IF NOT EXISTS voice_attempts (
 );
 CREATE INDEX IF NOT EXISTS idx_voice_attempts_project ON voice_attempts(project_id);
 CREATE INDEX IF NOT EXISTS idx_voice_attempts_entry ON voice_attempts(entry_id);
+
+CREATE TABLE IF NOT EXISTS voice_attempt_history (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  entry_id INTEGER REFERENCES extracted_entries(id) ON DELETE SET NULL,
+  speaker_id TEXT NOT NULL,
+  source_file TEXT NOT NULL,
+  source_duration_ms INTEGER NOT NULL DEFAULT 0,
+  generated_file TEXT NOT NULL,
+  synthesis_mode TEXT NOT NULL,
+  alignment_ratio REAL NOT NULL DEFAULT 0,
+  quality_score REAL NOT NULL DEFAULT 0,
+  confidence_score REAL NOT NULL DEFAULT 0,
+  metadata_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_voice_attempt_history_project ON voice_attempt_history(project_id);
+CREATE INDEX IF NOT EXISTS idx_voice_attempt_history_speaker ON voice_attempt_history(project_id, speaker_id);
 
 CREATE TABLE IF NOT EXISTS correction_history (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

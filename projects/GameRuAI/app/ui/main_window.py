@@ -101,6 +101,7 @@ class MainWindow(QMainWindow):
 
         self.voice_panel.generate_btn.clicked.connect(self.on_voice_attempts)
         self.voice_panel.update_profile_btn.clicked.connect(self.on_update_voice_profile)
+        self.voice_panel.attempts_table.itemSelectionChanged.connect(self.on_voice_attempt_selected)
 
         self.learning_panel.refresh_btn.clicked.connect(self.refresh_learning)
         self.glossary_panel.add_btn.clicked.connect(self.on_add_glossary_term)
@@ -231,11 +232,28 @@ class MainWindow(QMainWindow):
         if not self._require_project():
             return
         result = self.services.voice_attempts(self.current_project_id, self.current_game_root)
-        self.voice_panel.info_label.setText(f"Voice attempts generated: {result['voice_attempts']}")
+        self.voice_panel.info_label.setText(
+            "Voice attempts generated: "
+            f"{result['voice_attempts']} | linked={result.get('linked_total', 0)} | "
+            f"broken_links={result.get('broken_links', 0)}"
+        )
         self.refresh_voice()
         self.refresh_entries()
         self.refresh_learning()
         self.refresh_jobs()
+
+    def on_voice_attempt_selected(self) -> None:
+        if self.current_project_id is None:
+            return
+        attempt = self.voice_panel.selected_attempt()
+        if not attempt:
+            return
+        preview = self.services.voice_preview(
+            str(attempt.get("source_voice_path") or ""),
+            str(attempt.get("output_voice_path") or ""),
+            game_root=self.current_game_root,
+        )
+        self.voice_panel.show_attempt_details(preview_payload=preview, attempt=attempt)
 
     def on_update_voice_profile(self) -> None:
         if not self._require_project():
@@ -423,9 +441,10 @@ class MainWindow(QMainWindow):
 
     def refresh_voice(self) -> None:
         if self.current_project_id is None:
-            self.voice_panel.load_voice_attempts([])
+            self.voice_panel.load_voice_data({})
             return
-        self.voice_panel.load_voice_attempts(self.services.repo.list_voice_attempts(self.current_project_id))
+        snapshot = self.services.voice_snapshot(self.current_project_id, game_root=self.current_game_root)
+        self.voice_panel.load_voice_data(snapshot)
 
     def refresh_learning(self) -> None:
         if self.current_project_id is None:

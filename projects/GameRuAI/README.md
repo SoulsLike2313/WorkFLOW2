@@ -1,7 +1,7 @@
 ﻿# GameRuAI (Desktop MVP Demo)
 
-GameRuAI is a local desktop demo app for game localization experiments.
-It scans fixture game data, extracts multilingual text, detects source language, translates to Russian, runs mock voice attempts, and shows transparent learning signals (TM, glossary, corrections).
+GameRuAI is a local desktop demo app for game localization and safe game-resource research.
+Current MVP includes scan/extract/detect/translate/learning loop, companion sidecar mode, and lightweight asset research mode.
 
 ## Stack
 - Python 3.11+
@@ -11,24 +11,18 @@ It scans fixture game data, extracts multilingual text, detects source language,
 - structured logging
 - pathlib
 
-## What Is Working In This Sprint
-- Translation backend router with graceful fallback:
-  - `local_mock` (default, always available)
-  - `dummy` (always available)
-  - `argos` (optional)
-  - `transformers` (optional)
-- Context-aware translation pipeline:
-  - context fields: speaker, scene, neighbor lines, line type, file group, style preset
-  - context is passed to orchestrator/backend and persisted (`context_used`)
-- Translation transparency:
-  - active backend, fallback, latency, quality, uncertainty
-  - glossary/TM usage and context usage in decision data
-- Safe Companion Mode (sidecar only):
-  - launch executable
-  - bind session to project
-  - watch file changes
-  - quick re-index for changed text/config files
-  - no runtime injection / memory hacking / binary patching
+## Working Features (Current Sprint)
+- Translation pipeline with backend router and fallback (`local_mock`, `dummy`, optional `argos`/`transformers`).
+- Context-aware translation with transparent decision data (backend, fallback, latency, uncertainty, TM/glossary/context usage).
+- Learning loop (manual correction -> TM/glossary/adaptation visibility).
+- Companion mode (safe sidecar): launch process, monitor session, watch file changes, quick re-index.
+- Asset Research Mode:
+  - asset indexing (`asset_type`, `preview_type`, `preview_status`, relevance, suspected container flag)
+  - asset explorer tree in UI
+  - texture preview for supported image files
+  - audio preview for supported WAV files
+  - metadata-only fallback for unsupported/binary formats
+  - archive/container suspicion report
 
 ## Install
 ```powershell
@@ -54,36 +48,26 @@ python -m app.main
 
 ## Open Demo Project
 1. Open `Project` tab.
-2. Use `Use Demo Fixture` or set `fixtures/demo_game_world`.
+2. Set `fixtures/demo_game_world` (or click `Use Demo Fixture`).
 3. Click `Create/Select Project`.
-4. Run `Run Full Demo Pipeline` or run steps manually.
+4. Run `Scan` (or one-click `Run Full Demo Pipeline`).
 
-## See Active Backend And Context
-1. Open `Translation` tab.
-2. Select backend (`local_mock` / `dummy` / `argos` / `transformers`).
-3. Click `Translate to Russian`.
-4. Check Backend Status block:
-   - active backend
-   - fallback used count
-   - context used count
-5. In translation table check columns: `Backend`, `Fallback`, `Context`, `Latency`, `Uncertainty`.
-6. In `Entries` tab check `Context` column per row.
+## Asset Explorer
+1. Open `Asset Explorer` tab.
+2. Click `Refresh Asset Index` after scan.
+3. Browse `Resource` tree.
+4. Select file to inspect:
+   - metadata panel
+   - texture preview widget (if supported)
+   - audio preview widget (if supported WAV)
+   - archive/container report table
 
-## Companion Mode (Working MVP)
+## Companion Mode
 1. Open `Companion` tab.
-2. Set executable path (for demo you can use `python.exe`).
-3. Set watched path (game folder).
-4. Optional args example:
-   ```
-   -c "import time; time.sleep(60)"
-   ```
-5. Click `Launch Companion Session`.
-6. Edit a text file inside watched path.
-7. Click `Poll Status / Watch`.
-8. Observe:
-   - session status widget
-   - quick re-index count
-   - watched file events table
+2. Set executable + watched path.
+3. Launch session.
+4. Modify files in watched folder.
+5. Poll session to see file events and quick re-index.
 
 ## Tests
 Run all:
@@ -91,9 +75,9 @@ Run all:
 pytest -q
 ```
 
-Run sprint-specific tests:
+Run sprint-specific asset tests:
 ```powershell
-pytest -q tests/unit/test_context_builder.py tests/unit/test_backend_router_fallback.py tests/unit/test_companion_launcher_lifecycle.py tests/unit/test_file_watch_service.py tests/integration/test_translation_context_and_fallback.py tests/integration/test_companion_quick_rescan.py
+pytest -q tests/unit/test_asset_classifier.py tests/unit/test_asset_preview_eligibility.py tests/unit/test_archive_suspicion_heuristics.py tests/integration/test_asset_research_mode.py
 ```
 
 ## Build
@@ -106,8 +90,8 @@ Optional one-file:
 python scripts/build_app.py --onefile
 ```
 
-## Honest Limits (Current Sprint)
-- `argos`/`transformers` backends are optional adapters; if dependency is missing, fallback is used automatically.
-- Voice generation is mock/stub (no real cloning model in this sprint).
-- Companion quick re-index currently targets changed text/config assets only.
-- No asset explorer, texture preview, or 3D preview in this sprint.
+## Honest Limits
+- Texture preview is limited to lightweight supported image formats handled locally.
+- Audio preview is fully supported for WAV metadata preview; other audio formats are metadata-only.
+- Unknown/binary resources are shown as metadata-only (no fake preview).
+- No 3D preview, mesh editor, scene reconstruction, runtime scene capture, or memory inspection in this sprint.
