@@ -17,6 +17,7 @@ installer/output/
 
 # Logs and runtime output
 *.log
+runtime/
 dev_logs/
 startup_trace.log
 
