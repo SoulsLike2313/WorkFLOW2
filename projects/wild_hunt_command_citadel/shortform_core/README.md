@@ -92,30 +92,34 @@ run_user.ps1
 run_developer.ps1
 ```
 
-## Quick Start (Windows)
+## User Mode (Desktop)
 
 ```powershell
 cd projects/wild_hunt_command_citadel/shortform_core
-powershell -ExecutionPolicy Bypass -File .\run_setup.ps1
+powershell -ExecutionPolicy Bypass -File .\run_user.ps1
 ```
 
-Then run API:
+What happens:
+- machine verification gate is executed first (`python -m app.verify --skip-install`)
+- if gate is `PASS`, desktop app opens
+- backend API is started automatically in the background and managed by launcher
+- user does not need to manually run `uvicorn` or open localhost
 
-```powershell
-.\.venv\Scripts\python.exe -m uvicorn app.api:app --host 127.0.0.1 --port 8000 --reload
-```
+## Developer Mode
 
-## Manual Start
+Setup and show developer commands:
 
 ```powershell
 cd projects/wild_hunt_command_citadel/shortform_core
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+powershell -ExecutionPolicy Bypass -File .\run_developer.ps1
+```
 
-python -m app.main
-python -m app.bootstrap_v2
-python -m uvicorn app.api:app --host 127.0.0.1 --port 8000 --reload
+Direct developer commands:
+
+```powershell
+.\.venv\Scripts\python.exe -m app.launcher developer backend --host 127.0.0.1 --port 8000
+.\.venv\Scripts\python.exe -m app.launcher developer ui --api-base-url http://127.0.0.1:8000
+.\.venv\Scripts\python.exe -m app.launcher developer verify
 ```
 
 ## Verification Workflow
@@ -129,14 +133,24 @@ cd projects/wild_hunt_command_citadel/shortform_core
 
 What it does:
 - checks environment and installs dependencies (`pip install -r requirements.txt`)
-- initializes verification SQLite database
-- applies schema/bootstrap and loads demo seed
-- runs `unit`, `integration`, and API smoke tests
-- validates key workspace/analytics/AI/generation flows
-- collects structured diagnostics logs
+- validates config and startup prerequisites
+- initializes verification SQLite + workspace persistence state
+- applies schema/bootstrap and loads demo seeds
+- runs `unittest` suites (`unit`, `integration`, `smoke`)
+- runs `pytest` suites (`app/tests_pytest`)
+- runs runtime readiness checks (backend start/ready)
+- runs AI contract checks
+- runs UI/backend connectivity checks
+- runs update/patch checks with post-update verification
+- collects structured diagnostics logs and test artifacts
 - writes machine-readable report:
   - `runtime/verification/<run_id>/verification_summary.json`
   - `runtime/verification/<run_id>/verification_summary.md`
+
+Verification gate status:
+- `PASS`: manual user-mode testing is allowed
+- `PASS_WITH_WARNINGS`: manual user-mode testing is blocked
+- `FAIL`: manual user-mode testing is blocked
 
 Optional direct test runs:
 
@@ -144,6 +158,51 @@ Optional direct test runs:
 .\.venv\Scripts\python.exe -m unittest discover -s app/tests/unit -t . -p "test_*.py"
 .\.venv\Scripts\python.exe -m unittest discover -s app/tests/integration -t . -p "test_*.py"
 .\.venv\Scripts\python.exe -m unittest discover -s app/tests/smoke -t . -p "test_*.py"
+.\.venv\Scripts\python.exe -m pytest app/tests_pytest -q
+```
+
+## Update / Patch Mode
+
+Manifest check:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn app.api:app --host 127.0.0.1 --port 8000
+# then call:
+# POST /updates/check?manifest_path=path\to\manifest.json
+```
+
+Local patch apply:
+
+```powershell
+# POST /updates/apply-local?bundle_path=path\to\bundle.zip&target_version=0.4.1
+```
+
+Post-update verification:
+
+```powershell
+# GET /updates/post-verify
+```
+
+## Runtime Artifacts Layout
+
+```text
+runtime/
+  logs/
+    runtime_logs.jsonl
+    audit_logs.jsonl
+    verification_logs.jsonl
+    diagnostics_logs.jsonl (if enabled by flow)
+    ai_learning_logs.jsonl
+    update_logs.jsonl
+    patch_logs.jsonl
+  verification/
+    verify-<timestamp>/
+      verification_summary.json
+      verification_summary.md
+      logs/
+      diagnostics/
+      test_artifacts/
+  patches/
 ```
 
 ## Config (Environment Variables)
@@ -152,10 +211,13 @@ Optional direct test runs:
 - `SFCO_API_HOST` (default: `127.0.0.1`)
 - `SFCO_API_PORT` (default: `8000`)
 - `SFCO_DATABASE_PATH`
+- `SFCO_WORKSPACE_STATE_PATH`
 - `SFCO_OUTPUT_DIR`
 - `SFCO_LOGS_DIR`
 - `SFCO_VERIFICATION_DIR`
+- `SFCO_PATCH_DIR`
 - `SFCO_DEBUG_LOGS` (`1/true/on` enables debug diagnostics)
+- `SFCO_MODE` (`user` or `developer`)
 - analytics weights:
   - `SFCO_VIEWS_WEIGHT`
   - `SFCO_LIKES_WEIGHT`
@@ -169,11 +231,17 @@ Optional direct test runs:
 
 Legacy core endpoints:
 - `GET /health`
+- `GET /readiness`
 - `POST /bootstrap/load-demo`
 - `GET /accounts/{account_id}/snapshot`
 - `POST /metrics/ingest`
 - `POST /plan/generate`
 - `GET /plan/{account_id}/latest`
+- Updates:
+  - `GET /updates/version`
+  - `POST /updates/check`
+  - `POST /updates/apply-local`
+  - `GET /updates/post-verify`
 
 Workspace endpoints:
 - Profiles:
@@ -183,6 +251,7 @@ Workspace endpoints:
   - `POST /workspace/profiles/{profile_id}/connect`
   - `POST /workspace/profiles/{profile_id}/disconnect`
   - `POST /workspace/profiles/{profile_id}/management-mode`
+  - `GET /workspace/readiness`
 - Session:
   - `POST /workspace/sessions/{profile_id}/open`
   - `POST /workspace/sessions/{profile_id}/close`

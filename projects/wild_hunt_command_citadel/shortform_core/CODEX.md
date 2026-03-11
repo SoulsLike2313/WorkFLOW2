@@ -29,10 +29,13 @@ Keep these layers separated:
 - domain models (`app/workspace/models.py`)
 - provider contracts (`app/workspace/contracts.py`)
 - connectors/providers/adapters (`connectors.py`, `device_providers.py`, `metrics_providers.py`, `video_generator.py`)
+- persistence (`app/workspace/persistence.py`)
 - repositories/state (`app/workspace/repository.py`)
 - policy guard (`app/workspace/policy.py`)
 - services (`app/workspace/services/*`)
 - transport (`app/workspace/api.py`, `app/api.py`)
+- startup/orchestration (`app/startup_manager.py`, `app/launcher.py`)
+- update/patch layer (`app/update/*`)
 
 Do not place domain logic in UI/transport code.
 
@@ -48,7 +51,19 @@ Do not place domain logic in UI/transport code.
 
 ```text
 app/
+  launcher.py
+  readiness.py
+  startup_manager.py
   verify.py
+  version.py
+  desktop/
+    main.py
+    user_window.py
+  update/
+    models.py
+    services.py
+  tests_pytest/
+    *.py
   tests/
     unit/
     integration/
@@ -62,6 +77,7 @@ app/workspace/
   demo_seed.py
   device_providers.py
   diagnostics.py
+  persistence.py
   errors.py
   metrics_providers.py
   models.py
@@ -85,6 +101,11 @@ app/workspace/
 ## Verification Contract
 
 - Use `python -m app.verify` as the canonical verification entrypoint.
+- Verification gate statuses:
+  - `PASS`
+  - `PASS_WITH_WARNINGS`
+  - `FAIL`
+- User mode manual testing is allowed only when gate is `PASS`.
 - Every significant change must be followed by:
   - real execution,
   - test/flow verification,
@@ -94,6 +115,18 @@ app/workspace/
   - `runtime/verification/<run_id>/verification_summary.json`
   - `runtime/verification/<run_id>/verification_summary.md`
   - `runtime/verification/<run_id>/diagnostics/*.jsonl`
+  - `runtime/verification/<run_id>/test_artifacts/*`
+
+## Launch Modes
+
+- `user mode`:
+  - single entrypoint: `python -m app.launcher user`
+  - desktop window starts with internal backend lifecycle orchestration
+  - user should not manually manage `uvicorn`
+- `developer mode`:
+  - `python -m app.launcher developer backend`
+  - `python -m app.launcher developer ui`
+  - `python -m app.launcher developer verify`
 
 ## Extension Rules
 
