@@ -17,6 +17,8 @@ from tkinter import filedialog, messagebox, simpledialog, ttk
 import pystray
 import speech_recognition as sr
 from PIL import Image, ImageDraw
+from voice_launcher_app.actions.launcher_safety import LauncherTarget, SafeLauncherAutomation
+from voice_launcher_app.core.matching import find_best_command as modular_find_best_command
 try:
     import audioop
 except Exception:
@@ -867,6 +869,8 @@ def normalize_command_entry(value):
                 "wait_timeout": 240,
                 "single_instance": True,
                 "debounce_seconds": 2.8,
+                "launcher_dry_run": False,
+                "launcher_highlight": False,
             }
         return None
 
@@ -891,6 +895,10 @@ def normalize_command_entry(value):
         debounce_seconds = float(value.get("debounce_seconds", 2.8))
     except Exception:
         debounce_seconds = 2.8
+    dry_run_raw = value.get("launcher_dry_run", False)
+    highlight_raw = value.get("launcher_highlight", False)
+    launcher_dry_run = bool(dry_run_raw) if not isinstance(dry_run_raw, str) else dry_run_raw.strip().lower() in ("1", "true", "yes", "on")
+    launcher_highlight = bool(highlight_raw) if not isinstance(highlight_raw, str) else highlight_raw.strip().lower() in ("1", "true", "yes", "on")
 
     if not path:
         return None
@@ -910,6 +918,8 @@ def normalize_command_entry(value):
         "wait_timeout": wait_timeout,
         "single_instance": single_instance,
         "debounce_seconds": debounce_seconds,
+        "launcher_dry_run": launcher_dry_run,
+        "launcher_highlight": launcher_highlight,
     }
 
 

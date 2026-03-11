@@ -44,7 +44,6 @@ class ReadinessService:
                     self._workspace_ready(workspace_runtime),
                     self._analytics_ready(workspace_runtime),
                     self._ai_ready(workspace_runtime),
-                    self._update_ready(config),
                     self._ui_bridge_ready(),
                 ]
             )
@@ -126,11 +125,5 @@ class ReadinessService:
         return ReadinessItem(name="ai_ready", ready=ok, reason="" if ok else "ai services missing")
 
     @staticmethod
-    def _update_ready(config: AppConfig) -> ReadinessItem:
-        ok = config.storage.patch_dir.exists()
-        return ReadinessItem(name="update_ready", ready=ok, reason="" if ok else "patch directory unavailable")
-
-    @staticmethod
     def _ui_bridge_ready() -> ReadinessItem:
         return ReadinessItem(name="ui_bridge_ready", ready=True, reason="desktop bridge available")
-

@@ -69,6 +69,7 @@ class PatchApplicationResult(BaseModel):
     backup_path: Path | None = None
     extracted_to: Path | None = None
     post_update_verification: dict[str, Any] = Field(default_factory=dict)
+    rollback_applied: bool = False
 
 
 class UpdateAuditRecord(BaseModel):
@@ -79,4 +80,3 @@ class UpdateAuditRecord(BaseModel):
     result: str
     payload: dict[str, Any] = Field(default_factory=dict)
     created_at: datetime = Field(default_factory=_utc_now)
-

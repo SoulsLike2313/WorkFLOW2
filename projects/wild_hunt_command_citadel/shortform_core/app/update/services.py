@@ -75,6 +75,7 @@ class UpdateService:
         patch_root = self.config.storage.patch_dir
         patch_root.mkdir(parents=True, exist_ok=True)
         backup_path = patch_root / f"{bundle.bundle_id}-workspace_state.backup.db"
+        rollback_applied = False
 
         try:
             if self.config.storage.workspace_state_path.exists():
@@ -93,6 +94,13 @@ class UpdateService:
             post_verify = self.post_update_verification()
             status = PatchStatus.APPLIED if post_verify.get("status") in {"PASS", "PASS_WITH_WARNINGS"} else PatchStatus.FAILED
             message = "Patch applied with post-update verification." if status == PatchStatus.APPLIED else "Patch applied but verification failed."
+            if status == PatchStatus.FAILED:
+                rollback_applied = self._restore_workspace_state(backup_path)
+                if rollback_applied:
+                    status = PatchStatus.ROLLED_BACK
+                    message = "Patch verification failed; workspace state rollback applied."
+                else:
+                    message = "Patch verification failed; rollback could not be applied."
             result = PatchApplicationResult(
                 patch_id=bundle.bundle_id,
                 status=status,
@@ -100,26 +108,51 @@ class UpdateService:
                 backup_path=backup_path,
                 extracted_to=extracted_to,
                 post_update_verification=post_verify,
+                rollback_applied=rollback_applied,
             )
             self._audit("apply_patch", result.status.value, result.model_dump(mode="json"))
             diag_log(
                 "patch_logs",
                 "patch_applied",
-                payload={"patch_id": bundle.bundle_id, "status": result.status.value, "backup_path": str(backup_path)},
+                payload={
+                    "patch_id": bundle.bundle_id,
+                    "status": result.status.value,
+                    "backup_path": str(backup_path),
+                    "rollback_applied": rollback_applied,
+                },
                 level="INFO" if status == PatchStatus.APPLIED else "ERROR",
             )
             return result
         except Exception as exc:
+            rollback_applied = backup_path.exists() and self._restore_workspace_state(backup_path)
             result = PatchApplicationResult(
                 patch_id=bundle.bundle_id,
                 status=PatchStatus.FAILED,
                 message=str(exc),
                 backup_path=backup_path if backup_path.exists() else None,
                 post_update_verification={"status": "FAIL", "reason": str(exc)},
+                rollback_applied=rollback_applied,
             )
             self._audit("apply_patch", "failed", result.model_dump(mode="json"))
-            diag_log("patch_logs", "patch_failed", level="ERROR", payload={"patch_id": bundle.bundle_id, "error": str(exc)})
+            diag_log(
+                "patch_logs",
+                "patch_failed",
+                level="ERROR",
+                payload={"patch_id": bundle.bundle_id, "error": str(exc), "rollback_applied": rollback_applied},
+            )
             return result
+
+    def _restore_workspace_state(self, backup_path: Path) -> bool:
+        workspace_state_path = self.config.storage.workspace_state_path
+        if not backup_path.exists():
+            return False
+        # Sentinel backup means workspace state did not exist before patch.
+        if backup_path.suffix == ".backup":
+            if workspace_state_path.exists():
+                workspace_state_path.unlink()
+            return True
+        shutil.copy2(backup_path, workspace_state_path)
+        return True
 
     def post_update_verification(self) -> dict[str, Any]:
         readiness = ReadinessService().evaluate_local(config=self.config, workspace_runtime=None)
@@ -147,4 +180,3 @@ class UpdateService:
 
     def _audit(self, action: str, result: str, payload: dict[str, Any]) -> None:
         self.audit.append(UpdateAuditRecord(action=action, result=result, payload=payload))
-
