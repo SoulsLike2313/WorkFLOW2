@@ -1,45 +1,56 @@
 ﻿# Root Repository Normalization
 
 ## Scope
-This review artifact documents the root-level normalization pass only.
+This artifact covers root-level normalization only.
 
-## What Was Wrong In The Previous Root README
-1. It did not provide a clear root-level orientation for `docs/`, `projects/`, and `scripts/` as operator-first entry points.
-2. It was governance-heavy, but less explicit as a practical repository map for daily usage.
-3. Active module priority was present, but not clearly separated from secondary project status in a concise operator view.
-4. The flow between root README and workspace manifests was present but not structured as a strict "map -> manifest -> project" navigation path.
+## What Was Wrong In The Old Root README
+1. It mixed governance and operations without a strict root-first navigation path.
+2. Root folders (`docs`, `projects`, `scripts`) were not presented as a clean operator map.
+3. Active module priority was present but not enforced as the default workflow.
+4. Secondary projects could still be interpreted as near-equal focus without status-first guidance.
+5. Manifest linkage existed but was not framed as the primary source-of-truth route.
 
-## What Was Fixed
+## What Was Corrected
 1. Root README was fully rewritten as a repository map.
-2. Active module was made explicit as the main engineering target:
+2. Active module was made explicit and primary:
    - `projects/wild_hunt_command_citadel/shortform_core`
-3. A dedicated "Active vs Secondary Modules" section now explains status hierarchy from `workspace_manifest.json`.
-4. Root-level responsibilities are now clearly separated:
+3. Root-level responsibilities were clarified for:
    - `docs/`
    - `projects/`
    - `scripts/`
    - `workspace_config/`
    - `runtime/`
+4. A strict status model was introduced in the root narrative:
+   - active / supporting / experimental / legacy
 5. Root README now routes users directly to:
-   - workspace manifests,
-   - active project README,
-   - active project manifest,
-   - canonical startup/verify/update entrypoints.
+   - `workspace_config/workspace_manifest.json`
+   - `workspace_config/codex_manifest.json`
+   - project `PROJECT_MANIFEST.json`
+   - active module README
 
-## Removed As Outdated Or Redundant
-The previous root README sections were replaced in full. The normalization removed the old structure and rebuilt it around:
-- workspace map first,
-- active module first,
-- manifest-linked navigation,
-- concise operational entrypoints.
+## Old Sections Removed or Replaced
+The old root README structure was replaced in full.
+Legacy or less-effective root sections were removed/replaced by the new map model, including:
+- workspace-control-centric blocks without root map clarity
+- generic registry prose without explicit operator priority
+- verbose verification descriptions not centered on active-module entrypoints
+- duplicate root/project detail mixing
 
-No absolute local disk paths are used.
-No EXE path references are used.
-No legacy launch references are used as primary guidance.
+In practical terms, the previous layout was replaced with:
+- active module first
+- root structure map
+- project status hierarchy
+- manifest-first navigation
+- concise root entrypoints
 
-## Why The New Version Is Better As A Repository Map
-1. It is operator-oriented and task-oriented from the root.
-2. It establishes clear priority: active module first, secondary modules by status.
-3. It reduces ambiguity by linking root navigation to machine-readable manifests.
-4. It avoids duplicated project internals and points readers to project-level docs where details belong.
-5. It is portable and environment-agnostic (no machine-specific absolute paths).
+## Why The New Version Is Better
+1. It is a true repository map instead of a mixed policy narrative.
+2. It enforces active-module-first workflow.
+3. It makes secondary projects clearly secondary.
+4. It links root navigation to machine-readable manifests.
+5. It is portable and environment-agnostic.
+
+## Normalization Validation
+- No absolute local disk paths in root README.
+- No `.exe` references in root README.
+- No legacy launch references as root-default guidance.

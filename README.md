@@ -1,55 +1,57 @@
-﻿# WorkFLOW Repository
+﻿# WorkFLOW Multi-Project Repository
 
 ## Overview
-This repository is organized as a **multi-project workspace** with one active product module and several secondary modules.
+This repository is a structured multi-project workspace.
 
-The active engineering focus is:
+Current engineering priority is one active product module:
 - `projects/wild_hunt_command_citadel/shortform_core`
 
-Root-level documentation is a workspace map. Project-level implementation details live inside each project folder.
+Root documentation is a navigation map. Implementation details belong to each project directory.
 
-## Current Active Module
-- **Active module:** `projects/wild_hunt_command_citadel/shortform_core`
-- **Project README:** `projects/wild_hunt_command_citadel/shortform_core/README.md`
-- **Project manifest:** `projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json`
+## Active Module
+Primary active module:
+- `projects/wild_hunt_command_citadel/shortform_core`
 
-If you are starting work in this repository, begin with this module unless the task explicitly says otherwise.
+Primary references:
+- `projects/wild_hunt_command_citadel/shortform_core/README.md`
+- `projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json`
 
-## Repository Structure
-Top-level directories:
-- `docs/`: cross-repo documentation and review artifacts.
-- `projects/`: project source roots (active + secondary/legacy).
-- `scripts/`: workspace-level bootstrap, validation, startup, and maintenance scripts.
-- `workspace_config/`: machine-readable workspace governance (`workspace_manifest`, `codex_manifest`, rules, templates).
-- `runtime/`: generated runtime and verification artifacts.
+## Root-Level Structure
+Top-level purpose:
+- `docs/`: repository-level documentation and review artifacts.
+- `projects/`: project source roots (active + secondary/legacy scopes).
+- `scripts/`: workspace bootstrap, validation, startup, and utility scripts.
+- `workspace_config/`: machine-readable workspace governance and templates.
+- `runtime/`: generated runtime and diagnostics artifacts.
 
-## Active vs Secondary Modules
-Source of truth: `workspace_config/workspace_manifest.json` (`project_registry` + `project_status_index`).
+## Project Priority and Status
+Status source of truth:
+- `workspace_config/workspace_manifest.json`
 
-Current status model:
+Current priority model:
 - `active`: `shortform_core`
 - `supporting`: `voice_launcher`
 - `experimental`: `adaptive_trading`
 - `legacy`: `tiktok_automation_app`
 
 Interpretation:
-- `shortform_core` is the primary product module.
-- Other projects are maintained as secondary scopes and should not be treated as equal current priority unless requested.
+- `shortform_core` is the main current product module.
+- Other projects are secondary scopes and should be handled only when a task explicitly targets them.
 
-## Workspace Manifests and Rules
-Workspace control files:
+## Workspace Manifests and Contracts
+Workspace-level contracts:
 - `workspace_config/workspace_manifest.json`
 - `workspace_config/codex_manifest.json`
 - `workspace_config/PROJECT_RULES.md`
 - `workspace_config/codex_bootstrap.md`
 
-Project-level machine-readable contract:
+Project-level contracts:
 - `projects/<project>/PROJECT_MANIFEST.json`
 
-Use manifests as authoritative source for project status, entrypoints, and scope.
+Use manifests for scope, status, and entrypoints instead of guessing from folder names.
 
-## How To Use the Active Module
-From repository root (`.`):
+## Root Entrypoints for the Active Module
+Run from repository root (`.`):
 
 User mode:
 ```powershell
@@ -61,34 +63,26 @@ Developer mode:
 python scripts/project_startup.py run --project-slug shortform_core --entrypoint developer --startup-kind developer --port-mode fixed
 ```
 
-## Verification and Readiness
-Canonical verify flow:
+Verification:
 ```powershell
 python scripts/project_startup.py run --project-slug shortform_core --entrypoint verify --startup-kind verify --port-mode fixed
 ```
 
-Alternative direct verify (inside the project):
-```powershell
-cd projects/wild_hunt_command_citadel/shortform_core
-python -m app.verify
-```
-
-Manual testing policy:
-- manual testing is allowed only when verification gate is `PASS`.
-
-## Update / Patch Flow
-User-facing update flow for active module:
+Update flow:
 ```powershell
 python scripts/project_startup.py run --project-slug shortform_core --entrypoint update --startup-kind update --port-mode fixed
 ```
 
-Developer update endpoints and deeper update diagnostics are documented in:
-- `projects/wild_hunt_command_citadel/shortform_core/README.md`
+Manual test policy:
+- manual testing is allowed only after verification gate `PASS`.
 
-## Notes About Secondary Modules
-Secondary modules remain in the workspace for supporting, experimental, or legacy purposes.
+## Supporting Files and Notes
+Supporting files in root:
+- `.gitignore`
+- workspace-level scripts in `scripts/`
+- workspace governance in `workspace_config/`
 
-Default operator workflow:
-1. Start with `shortform_core`.
-2. Switch to another project only if the task explicitly targets that project.
-3. Validate scope against manifests before making changes.
+Operator default flow:
+1. Validate scope in `workspace_manifest.json`.
+2. Work in `shortform_core` unless another project is explicitly requested.
+3. Use project-level README and PROJECT_MANIFEST for implementation details.
