@@ -1,0 +1,30 @@
+﻿{
+  "schema_version": "2.0.0",
+  "name": "{{NAME}}",
+  "slug": "{{SLUG}}",
+  "description": "{{DESCRIPTION}}",
+  "status": "{{STATUS}}",
+  "category": "{{CATEGORY}}",
+  "type": "{{TYPE}}",
+  "priority": {{PRIORITY}},
+  "root_path": "{{ROOT_PATH}}",
+  "readme_path": "{{README_PATH}}",
+  "main_entrypoints": [
+    "{{MAIN_ENTRYPOINT}}"
+  ],
+  "verification_entrypoints": [
+    "{{VERIFY_ENTRYPOINT}}"
+  ],
+  "user_mode_entrypoint": "{{USER_MODE_ENTRYPOINT}}",
+  "developer_mode_entrypoint": "{{DEVELOPER_MODE_ENTRYPOINT}}",
+  "update_entrypoint": "{{UPDATE_ENTRYPOINT}}",
+  "config_files": [],
+  "runtime_dirs": [],
+  "log_dirs": [],
+  "data_dirs": [],
+  "dependencies_file": "{{DEPENDENCIES_FILE}}",
+  "owner": "{{OWNER}}",
+  "maturity_level": "{{MATURITY_LEVEL}}",
+  "tags": [],
+  "notes": []
+}

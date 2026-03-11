@@ -1,0 +1,12 @@
+﻿{
+  "preset": "tool",
+  "default_category": "desktop_tool",
+  "directories": [
+    "tool",
+    "scripts",
+    "tests"
+  ],
+  "main_entrypoint": "python tool/main.py",
+  "verification_entrypoint": "python -m pytest -q",
+  "dependencies_file": "requirements.txt"
+}

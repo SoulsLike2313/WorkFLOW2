@@ -23,6 +23,7 @@ def collect_diagnostics(
     out_dir: Path,
     app_paths: Dict[str, Path],
     app_version: str = "dev",
+    history: Dict[str, object] | None = None,
 ) -> Path:
     stamp = time.strftime("%Y%m%d_%H%M%S")
     target = out_dir / f"diagnostics_{stamp}"
@@ -97,6 +98,7 @@ def collect_diagnostics(
             },
             "command_paths_ok": paths_check,
         },
+        "recent_history": history or {},
     }
     with (target / "diagnostics.json").open("w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)

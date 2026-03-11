@@ -1,0 +1,12 @@
+﻿{
+  "preset": "library",
+  "default_category": "platform_core",
+  "directories": [
+    "src",
+    "tests",
+    "docs"
+  ],
+  "main_entrypoint": "python -m src",
+  "verification_entrypoint": "python -m pytest -q",
+  "dependencies_file": "requirements.txt"
+}

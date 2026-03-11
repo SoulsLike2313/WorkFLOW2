@@ -1,0 +1,293 @@
+﻿#!/usr/bin/env python
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+from typing import Any
+
+ALLOWED_STATUSES = ["active", "supporting", "experimental", "archived", "legacy"]
+ALLOWED_TYPES = ["desktop_app", "backend_service", "tool", "prototype", "library"]
+
+REQUIRED_PROJECT_MANIFEST_FIELDS = [
+    "name",
+    "slug",
+    "description",
+    "status",
+    "category",
+    "type",
+    "priority",
+    "root_path",
+    "readme_path",
+    "main_entrypoints",
+    "verification_entrypoints",
+    "user_mode_entrypoint",
+    "developer_mode_entrypoint",
+    "update_entrypoint",
+    "config_files",
+    "runtime_dirs",
+    "log_dirs",
+    "data_dirs",
+    "dependencies_file",
+    "owner",
+    "maturity_level",
+    "tags",
+    "notes",
+]
+
+
+def _load_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def _write_json(path: Path, payload: dict[str, Any]) -> None:
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def _prompt(label: str, *, default: str | None = None, allowed: list[str] | None = None) -> str:
+    hint = f" [{default}]" if default else ""
+    allowed_hint = f" ({', '.join(allowed)})" if allowed else ""
+    while True:
+        value = input(f"{label}{allowed_hint}{hint}: ").strip()
+        if not value and default is not None:
+            value = default
+        if not value:
+            print("Value is required.")
+            continue
+        if allowed and value not in allowed:
+            print(f"Invalid value: {value}")
+            continue
+        return value
+
+
+def _preset_structure(repo_root: Path, project_type: str) -> dict[str, Any]:
+    path = repo_root / "workspace_config" / "templates" / "project_template" / "presets" / project_type / "structure.json"
+    if not path.exists():
+        raise FileNotFoundError(f"Missing preset structure: {path}")
+    return _load_json(path)
+
+
+def _default_category(project_type: str, preset: dict[str, Any]) -> str:
+    if project_type == "prototype":
+        return "research_prototype"
+    if project_type in {"desktop_app", "tool"}:
+        return "desktop_tool"
+    if project_type in {"backend_service", "library"}:
+        return "platform_core"
+    return str(preset.get("default_category", "desktop_tool"))
+
+
+def _status_index_with(registry: list[dict[str, Any]], statuses: list[str]) -> dict[str, list[str]]:
+    mapping: dict[str, list[str]] = {status: [] for status in statuses}
+    for item in registry:
+        status = str(item.get("status", "")).strip()
+        slug = str(item.get("slug", "")).strip()
+        if status in mapping and slug:
+            mapping[status].append(slug)
+    return mapping
+
+
+def _create_scaffold(project_root: Path, directories: list[str]) -> None:
+    project_root.mkdir(parents=True, exist_ok=False)
+    for rel in directories:
+        (project_root / rel).mkdir(parents=True, exist_ok=True)
+
+
+def _write_project_readme(path: Path, *, name: str, status: str, project_type: str, slug: str) -> None:
+    lines = [
+        f"# {name}",
+        "",
+        "## Overview",
+        f"Project slug: `{slug}`",
+        f"Project type: `{project_type}`",
+        f"Workspace status: `{status}`",
+        "",
+        "## Entry points",
+        "See `PROJECT_MANIFEST.json` for machine-readable entrypoints.",
+        "",
+        "## Notes",
+        "This project was generated via `python scripts/new_project.py`.",
+    ]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _build_project_manifest(
+    *,
+    name: str,
+    slug: str,
+    description: str,
+    status: str,
+    category: str,
+    project_type: str,
+    priority: int,
+    root_path: str,
+    readme_path: str,
+    main_entrypoint: str,
+    verify_entrypoint: str,
+    dependencies_file: str,
+    owner: str,
+) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "schema_version": "2.0.0",
+        "name": name,
+        "slug": slug,
+        "description": description,
+        "status": status,
+        "category": category,
+        "type": project_type,
+        "priority": priority,
+        "root_path": root_path,
+        "readme_path": readme_path,
+        "main_entrypoints": [main_entrypoint],
+        "verification_entrypoints": [verify_entrypoint],
+        "user_mode_entrypoint": main_entrypoint,
+        "developer_mode_entrypoint": verify_entrypoint,
+        "update_entrypoint": "not_applicable",
+        "config_files": [dependencies_file],
+        "runtime_dirs": ["runtime"],
+        "log_dirs": ["runtime/logs"],
+        "data_dirs": ["runtime/data"],
+        "dependencies_file": dependencies_file,
+        "owner": owner,
+        "maturity_level": "prototype" if project_type == "prototype" else "early",
+        "tags": ["generated", project_type, status],
+        "notes": [
+            "Generated by scripts/new_project.py.",
+            "Adjust entrypoints and maturity level after first implementation pass.",
+        ],
+    }
+    for field in REQUIRED_PROJECT_MANIFEST_FIELDS:
+        if field not in payload:
+            raise ValueError(f"Missing required manifest field during generation: {field}")
+    return payload
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Create and register a workspace project from standard preset")
+    parser.add_argument("--name", help="Project display name")
+    parser.add_argument("--slug", help="Project slug (unique)")
+    parser.add_argument("--status", choices=ALLOWED_STATUSES, help="Project status")
+    parser.add_argument("--type", dest="project_type", choices=ALLOWED_TYPES, help="Project preset type")
+    parser.add_argument("--category", help="Project category (defaults from preset)")
+    parser.add_argument("--description", default="", help="Project description")
+    parser.add_argument("--owner", default="workspace-owner", help="Project owner marker")
+    parser.add_argument("--relative-path", default="", help="Project path relative to repo root")
+    parser.add_argument("--set-active", action="store_true", help="Allow switching active project when status=active")
+    parser.add_argument("--dry-run", action="store_true", help="Validate and print changes without writing")
+    args = parser.parse_args()
+
+    repo_root = Path(__file__).resolve().parents[1]
+    workspace_manifest_path = repo_root / "workspace_config" / "workspace_manifest.json"
+    workspace = _load_json(workspace_manifest_path)
+
+    name = args.name or _prompt("Project name")
+    slug = args.slug or _prompt("Project slug")
+    status = args.status or _prompt("Project status", default="experimental", allowed=ALLOWED_STATUSES)
+    project_type = args.project_type or _prompt("Project type", default="tool", allowed=ALLOWED_TYPES)
+
+    preset = _preset_structure(repo_root, project_type)
+    category = args.category or _default_category(project_type, preset)
+    description = args.description.strip() or f"{name} ({project_type}) generated workspace project."
+
+    registry = list(workspace.get("project_registry", []))
+    slugs = {str(item.get("slug", "")).strip() for item in registry}
+    if slug in slugs:
+        raise SystemExit(f"Slug already exists in workspace manifest: {slug}")
+
+    active_slug = str(workspace.get("active_project", "")).strip()
+    if status == "active" and active_slug and active_slug != slug and not args.set_active:
+        raise SystemExit(
+            f"Active project already set to '{active_slug}'. Use --set-active to switch active project to '{slug}'."
+        )
+
+    relative_path = args.relative_path.strip() if args.relative_path else f"projects/{slug}"
+    root_path = relative_path.replace("\\", "/")
+    project_root = repo_root / Path(relative_path)
+    manifest_rel = f"{root_path}/PROJECT_MANIFEST.json"
+    readme_rel = f"{root_path}/README.md"
+
+    if project_root.exists():
+        raise SystemExit(f"Project path already exists: {project_root}")
+
+    max_priority = 0
+    for item in registry:
+        try:
+            max_priority = max(max_priority, int(item.get("priority", 0)))
+        except Exception:
+            continue
+    next_priority = max_priority + 1
+
+    main_entrypoint = str(preset.get("main_entrypoint", "python -m main"))
+    verify_entrypoint = str(preset.get("verification_entrypoint", "python -m pytest -q"))
+    dependencies_file = str(preset.get("dependencies_file", "requirements.txt"))
+    directories = [str(item) for item in preset.get("directories", [])]
+
+    project_manifest = _build_project_manifest(
+        name=name,
+        slug=slug,
+        description=description,
+        status=status,
+        category=category,
+        project_type=project_type,
+        priority=next_priority,
+        root_path=root_path,
+        readme_path=readme_rel,
+        main_entrypoint=main_entrypoint,
+        verify_entrypoint=verify_entrypoint,
+        dependencies_file=dependencies_file,
+        owner=args.owner,
+    )
+
+    registry_item = {
+        "slug": slug,
+        "name": name,
+        "status": status,
+        "category": category,
+        "type": project_type,
+        "priority": next_priority,
+        "root_path": root_path,
+        "manifest_path": manifest_rel,
+        "readme_path": readme_rel,
+        "main_entrypoints": [main_entrypoint],
+        "verification_entrypoints": [verify_entrypoint],
+        "update_entrypoints": [],
+    }
+
+    updated_registry = sorted([*registry, registry_item], key=lambda item: int(item.get("priority", 999999)))
+    workspace["project_registry"] = updated_registry
+
+    if status == "active":
+        workspace["active_project"] = slug
+
+    statuses = [str(item) for item in workspace.get("status_values", ALLOWED_STATUSES)]
+    workspace["project_status_index"] = _status_index_with(updated_registry, statuses)
+
+    if args.dry_run:
+        print("[new-project] dry-run successful")
+        print(f"[new-project] slug={slug}")
+        print(f"[new-project] root_path={root_path}")
+        print(f"[new-project] status={status} type={project_type}")
+        return 0
+
+    _create_scaffold(project_root, directories)
+
+    readme_path = repo_root / readme_rel
+    manifest_path = repo_root / manifest_rel
+    _write_project_readme(readme_path, name=name, status=status, project_type=project_type, slug=slug)
+    _write_json(manifest_path, project_manifest)
+
+    deps_path = project_root / dependencies_file
+    if not deps_path.exists():
+        deps_path.write_text("\n", encoding="utf-8")
+
+    _write_json(workspace_manifest_path, workspace)
+
+    print(f"[new-project] created: {root_path}")
+    print(f"[new-project] manifest: {manifest_rel}")
+    print(f"[new-project] workspace registry updated: {workspace_manifest_path}")
+    print("[new-project] next step: python scripts/validate_workspace.py")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

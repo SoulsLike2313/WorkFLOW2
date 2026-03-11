@@ -1,0 +1,14 @@
+﻿{
+  "preset": "backend_service",
+  "default_category": "platform_core",
+  "directories": [
+    "service",
+    "api",
+    "tests",
+    "runtime",
+    "config"
+  ],
+  "main_entrypoint": "python -m service.main",
+  "verification_entrypoint": "python -m pytest -q",
+  "dependencies_file": "requirements.txt"
+}

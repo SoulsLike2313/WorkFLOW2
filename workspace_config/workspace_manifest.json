@@ -1,65 +1,51 @@
 ﻿{
-  "schema_version": "1.0.0",
-  "workspace_id": "workflow",
+  "schema_version": "2.0.0",
+  "workspace_slug": "workflow",
   "workspace_name": "WorkFLOW Multi-Project Workspace",
-  "last_normalized_at": "2026-03-11",
-  "active_project_id": "shortform_core",
-  "status_model": [
+  "active_project": "shortform_core",
+  "status_values": [
     "active",
     "supporting",
     "experimental",
     "archived",
     "legacy"
   ],
-  "paths": {
-    "root": ".",
-    "projects_dir": "projects",
-    "workspace_config_dir": "workspace_config",
-    "bootstrap_script": "scripts/bootstrap_workspace.ps1"
-  },
-  "projects": [
-    {
-      "project_id": "shortform_core",
-      "name": "Shortform Core Workspace",
-      "status": "active",
-      "path": "projects/wild_hunt_command_citadel/shortform_core",
-      "manifest_path": "projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json",
-      "language": "python",
-      "runtime": "desktop_plus_internal_api",
-      "priority": 1
-    },
-    {
-      "project_id": "voice_launcher",
-      "name": "Voice Launcher",
-      "status": "supporting",
-      "path": "projects/voice_launcher",
-      "manifest_path": "projects/voice_launcher/PROJECT_MANIFEST.json",
-      "language": "python",
-      "runtime": "desktop",
-      "priority": 2
-    },
-    {
-      "project_id": "adaptive_trading",
-      "name": "Adaptive Trading",
-      "status": "experimental",
-      "path": "projects/adaptive_trading",
-      "manifest_path": "projects/adaptive_trading/PROJECT_MANIFEST.json",
-      "language": "python",
-      "runtime": "script_and_gui",
-      "priority": 3
-    },
-    {
-      "project_id": "tiktok_automation_app",
-      "name": "TikTok Automation App (Legacy)",
-      "status": "legacy",
-      "path": "projects/wild_hunt_command_citadel/tiktok_automation_app",
-      "manifest_path": "projects/wild_hunt_command_citadel/tiktok_automation_app/PROJECT_MANIFEST.json",
-      "language": "python",
-      "runtime": "desktop",
-      "priority": 4
-    }
+  "category_values": [
+    "platform_core",
+    "desktop_tool",
+    "research_prototype",
+    "legacy_product"
   ],
-  "status_index": {
+  "root_paths": {
+    "repository_root": ".",
+    "projects_root": "projects",
+    "workspace_config_root": "workspace_config",
+    "scripts_root": "scripts",
+    "runtime_root": "runtime"
+  },
+  "entrypoints": {
+    "workspace_bootstrap": "powershell -ExecutionPolicy Bypass -File .\\scripts\\bootstrap_workspace.ps1",
+    "workspace_validate": "python scripts/validate_workspace.py",
+    "new_project_generator": "python scripts/new_project.py"
+  },
+  "verification_entrypoints": {
+    "active_project_verify": "python -m app.verify",
+    "workspace_validate": "python scripts/validate_workspace.py",
+    "repo_sync_check": "powershell -ExecutionPolicy Bypass -File .\\scripts\\check_repo_sync.ps1"
+  },
+  "update_entrypoints": {
+    "active_user_update": "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1",
+    "active_developer_update_api": "python -m app.launcher developer backend"
+  },
+  "bootstrap_rules": {
+    "validate_workspace_before_changes": true,
+    "resolve_active_project_from_manifest": true,
+    "load_project_manifest_before_analysis": true,
+    "do_not_guess_project_scope": true,
+    "legacy_archived_only_on_explicit_request": true,
+    "manual_testing_gate": "PASS"
+  },
+  "project_status_index": {
     "active": [
       "shortform_core"
     ],
@@ -74,21 +60,82 @@
       "tiktok_automation_app"
     ]
   },
-  "codex_defaults": {
-    "default_analysis_project": "shortform_core",
-    "analysis_order": [
-      "shortform_core",
-      "voice_launcher",
-      "adaptive_trading",
-      "tiktok_automation_app"
-    ],
-    "load_project_manifest_first": true,
-    "enforce_status_boundaries": true
-  },
-  "governance": {
-    "single_active_project_rule": true,
-    "manual_testing_gate": "PASS",
-    "project_isolation_required": true,
-    "machine_readable_manifests_required": true
-  }
+  "project_registry": [
+    {
+      "slug": "shortform_core",
+      "name": "Shortform Core Workspace",
+      "status": "active",
+      "category": "platform_core",
+      "type": "desktop_app",
+      "priority": 1,
+      "root_path": "projects/wild_hunt_command_citadel/shortform_core",
+      "manifest_path": "projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json",
+      "readme_path": "projects/wild_hunt_command_citadel/shortform_core/README.md",
+      "main_entrypoints": [
+        "python -m app.launcher user",
+        "python -m app.launcher developer backend --host 127.0.0.1 --port 8000"
+      ],
+      "verification_entrypoints": [
+        "python -m app.verify"
+      ],
+      "update_entrypoints": [
+        "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1"
+      ]
+    },
+    {
+      "slug": "voice_launcher",
+      "name": "Voice Launcher",
+      "status": "supporting",
+      "category": "desktop_tool",
+      "type": "desktop_app",
+      "priority": 2,
+      "root_path": "projects/voice_launcher",
+      "manifest_path": "projects/voice_launcher/PROJECT_MANIFEST.json",
+      "readme_path": "projects/voice_launcher/README.md",
+      "main_entrypoints": [
+        "python voice_launcher.py"
+      ],
+      "verification_entrypoints": [
+        "python -m pytest -q"
+      ],
+      "update_entrypoints": []
+    },
+    {
+      "slug": "adaptive_trading",
+      "name": "Adaptive Trading",
+      "status": "experimental",
+      "category": "research_prototype",
+      "type": "prototype",
+      "priority": 3,
+      "root_path": "projects/adaptive_trading",
+      "manifest_path": "projects/adaptive_trading/PROJECT_MANIFEST.json",
+      "readme_path": "projects/adaptive_trading/README.md",
+      "main_entrypoints": [
+        "python adaptive_trading_bot.py",
+        "python adaptive_trading_gui.py"
+      ],
+      "verification_entrypoints": [
+        "python -m py_compile adaptive_trading_bot.py adaptive_trading_gui.py"
+      ],
+      "update_entrypoints": []
+    },
+    {
+      "slug": "tiktok_automation_app",
+      "name": "TikTok Automation App",
+      "status": "legacy",
+      "category": "legacy_product",
+      "type": "desktop_app",
+      "priority": 4,
+      "root_path": "projects/wild_hunt_command_citadel/tiktok_automation_app",
+      "manifest_path": "projects/wild_hunt_command_citadel/tiktok_automation_app/PROJECT_MANIFEST.json",
+      "readme_path": "projects/wild_hunt_command_citadel/tiktok_automation_app/README.md",
+      "main_entrypoints": [
+        "python app.py"
+      ],
+      "verification_entrypoints": [
+        "python -m py_compile app.py"
+      ],
+      "update_entrypoints": []
+    }
+  ]
 }

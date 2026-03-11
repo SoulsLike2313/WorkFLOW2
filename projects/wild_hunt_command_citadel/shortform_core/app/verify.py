@@ -654,6 +654,7 @@ class VerificationRunner:
         diagnostics_dir: Path,
         readiness_path: Path,
         consolidated_path: Path,
+        test_results_path: Path,
         patch_summary_path: Path,
         update_audit_path: Path,
         summary_json_path: Path,
@@ -685,6 +686,7 @@ class VerificationRunner:
                 "verification_summary_md": str(summary_md_path),
                 "readiness_summary_json": str(readiness_path),
                 "consolidated_status_json": str(consolidated_path),
+                "test_results_json": str(test_results_path),
                 "patch_application_summary_json": str(patch_summary_path),
                 "update_audit_summary_json": str(update_audit_path),
                 "diagnostics_dir": str(diagnostics_dir),
@@ -692,6 +694,44 @@ class VerificationRunner:
                 "test_artifacts_dir": str(self.test_artifacts_dir),
                 "test_artifact_files": test_artifact_files,
             },
+        }
+
+    def _build_test_results(self, *, gate_status: str, started_at: datetime, finished_at: datetime) -> dict[str, Any]:
+        executed_suites = [stage.name for stage in self.stages]
+        passed_checks = sorted([stage.name for stage in self.stages if stage.status == VERIFIED])
+        warned_checks = sorted([stage.name for stage in self.stages if stage.status == PARTIALLY_VERIFIED])
+        failed_checks = sorted([stage.name for stage in self.stages if stage.status == FAILED])
+        stub_components = sorted([name for name, status in self.module_status.items() if status == STUB])
+        duration_seconds = round((finished_at - started_at).total_seconds(), 3)
+
+        test_stage_names = {"unit_tests", "integration_tests", "api_smoke_tests", "pytest_suite"}
+        suites: dict[str, Any] = {}
+        for stage in self.stages:
+            if stage.name not in test_stage_names:
+                continue
+            suites[stage.name] = {
+                "status": stage.status,
+                "duration_seconds": stage.duration_seconds,
+                "suite_type": stage.details.get("suite"),
+                "source": stage.details.get("start_dir") or stage.details.get("suite_dir"),
+                "exit_code": stage.details.get("exit_code"),
+                "stdout_log": stage.stdout_log,
+                "stderr_log": stage.stderr_log,
+            }
+
+        return {
+            "run_id": self.run_id,
+            "started_at": _iso(started_at),
+            "finished_at": _iso(finished_at),
+            "duration_seconds": duration_seconds,
+            "overall_gate_status": gate_status,
+            "executed_suites": executed_suites,
+            "passed_checks": passed_checks,
+            "warned_checks": warned_checks,
+            "failed_checks": failed_checks,
+            "stub_components": stub_components,
+            "manual_testing_allowed": gate_status == GATE_PASS,
+            "suites": suites,
         }
 
     def _write_reports(self) -> dict[str, str]:
@@ -706,18 +746,43 @@ class VerificationRunner:
         consolidated_status = self._build_consolidated_status(gate_status=gate_status)
         patch_application_summary = self._build_patch_application_summary(gate_status=gate_status)
         update_audit_summary = self._build_update_audit_summary(gate_status=gate_status)
+        test_results = self._build_test_results(gate_status=gate_status, started_at=self.started_at, finished_at=finished_at)
 
         readiness_path = self._write_json_artifact("readiness_summary.json", readiness_summary)
         consolidated_path = self._write_json_artifact("consolidated_status.json", consolidated_status)
+        test_results_path = self._write_json_artifact("test_results.json", test_results)
         patch_summary_path = self._write_json_artifact("patch_application_summary.json", patch_application_summary)
         update_audit_path = self._write_json_artifact("update_audit_summary.json", update_audit_summary)
+
+        passed_checks = sorted([stage.name for stage in self.stages if stage.status == VERIFIED])
+        warned_checks = sorted([stage.name for stage in self.stages if stage.status == PARTIALLY_VERIFIED])
+        failed_checks = sorted([stage.name for stage in self.stages if stage.status == FAILED])
+        stub_components = sorted([name for name, status in self.module_status.items() if status == STUB])
+
+        artifacts_list = [
+            str(self.run_dir / "verification_summary.json"),
+            str(self.run_dir / "verification_summary.md"),
+            str(readiness_path),
+            str(consolidated_path),
+            str(test_results_path),
+            str(patch_summary_path),
+            str(update_audit_path),
+            str(self.run_dir / "diagnostics_manifest.json"),
+        ]
 
         payload = {
             "run_id": self.run_id,
             "started_at": _iso(self.started_at),
             "finished_at": _iso(finished_at),
             "duration_seconds": round((finished_at - self.started_at).total_seconds(), 3),
+            "overall_gate_status": gate_status,
             "commands": self.commands,
+            "executed_suites": [stage.name for stage in self.stages],
+            "passed_checks": passed_checks,
+            "warned_checks": warned_checks,
+            "failed_checks": failed_checks,
+            "stub_components": stub_components,
+            "artifacts_list": artifacts_list,
             "stages": [self._stage_to_dict(item) for item in self.stages],
             "module_status": self.module_status,
             "seed_summary": self.seed_summary,
@@ -732,6 +797,7 @@ class VerificationRunner:
                 "test_artifacts_dir": str(self.test_artifacts_dir),
                 "readiness_summary_path": str(readiness_path),
                 "consolidated_status_path": str(consolidated_path),
+                "test_results_path": str(test_results_path),
                 "patch_application_summary_path": str(patch_summary_path),
                 "update_audit_summary_path": str(update_audit_path),
             },
@@ -747,6 +813,7 @@ class VerificationRunner:
             diagnostics_dir=diagnostics_dir,
             readiness_path=readiness_path,
             consolidated_path=consolidated_path,
+            test_results_path=test_results_path,
             patch_summary_path=patch_summary_path,
             update_audit_path=update_audit_path,
             summary_json_path=json_path,
@@ -780,12 +847,50 @@ class VerificationRunner:
             f"# Verification Summary ({payload['run_id']})",
             "",
             f"- Gate status: `{payload['gate_status']}`",
+            f"- Overall gate status: `{payload['overall_gate_status']}`",
             f"- Manual testing allowed: `{payload['manual_testing_allowed']}`",
             f"- Started: `{payload['started_at']}`",
             f"- Finished: `{payload['finished_at']}`",
+            f"- Duration: `{payload['duration_seconds']}s`",
             "",
-            "## Module Status",
+            "## Check Summary",
+            f"- Passed checks: `{len(payload.get('passed_checks', []))}`",
+            f"- Warned checks: `{len(payload.get('warned_checks', []))}`",
+            f"- Failed checks: `{len(payload.get('failed_checks', []))}`",
+            f"- Stub components: `{len(payload.get('stub_components', []))}`",
+            "",
+            "### Warned checks",
         ]
+        for check in payload.get("warned_checks", []):
+            lines.append(f"- `{check}`")
+        if not payload.get("warned_checks"):
+            lines.append("- none")
+        lines.extend(
+            [
+                "",
+                "### Failed checks",
+            ]
+        )
+        for check in payload.get("failed_checks", []):
+            lines.append(f"- `{check}`")
+        if not payload.get("failed_checks"):
+            lines.append("- none")
+        lines.extend(
+            [
+                "",
+                "### Stub components",
+            ]
+        )
+        for component in payload.get("stub_components", []):
+            lines.append(f"- `{component}`")
+        if not payload.get("stub_components"):
+            lines.append("- none")
+        lines.extend(
+            [
+                "",
+            "## Module Status",
+            ]
+        )
         for key, value in payload.get("module_status", {}).items():
             lines.append(f"- `{key}`: **{value}**")
         lines.append("")

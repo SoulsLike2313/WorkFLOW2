@@ -1,31 +1,54 @@
 ﻿{
-  "schema_version": "1.0.0",
-  "project_id": "shortform_core",
+  "schema_version": "2.0.0",
   "name": "Shortform Core Workspace",
+  "slug": "shortform_core",
+  "description": "Primary modular desktop workspace with internal API lifecycle, verification gate, readiness model, and update/patch flow.",
   "status": "active",
-  "project_root": "projects/wild_hunt_command_citadel/shortform_core",
-  "description": "Primary engineering product for multi-profile shortform workspace, verification gate, and desktop launcher lifecycle.",
-  "owner_scope": "primary",
-  "language": "python",
-  "runtime_mode": "desktop_plus_internal_api",
-  "entrypoints": {
-    "user_mode": "powershell -ExecutionPolicy Bypass -File .\\run_user.ps1",
-    "developer_mode": "powershell -ExecutionPolicy Bypass -File .\\run_developer.ps1",
-    "verify": "python -m app.verify",
-    "update": "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1"
-  },
-  "bootstrap": {
-    "venv_path": ".venv",
-    "requirements_file": "requirements.txt",
-    "default_command": "python -m app.launcher user"
-  },
-  "artifacts": {
-    "verification_dir": "runtime/verification",
-    "output_dir": "runtime/output"
-  },
-  "constraints": {
-    "machine_gate_required": true,
-    "manual_test_requires_pass": true,
-    "status_boundary_enforced": true
-  }
+  "category": "platform_core",
+  "type": "desktop_app",
+  "priority": 1,
+  "root_path": "projects/wild_hunt_command_citadel/shortform_core",
+  "readme_path": "projects/wild_hunt_command_citadel/shortform_core/README.md",
+  "main_entrypoints": [
+    "python -m app.launcher user",
+    "python -m app.launcher developer backend --host 127.0.0.1 --port 8000",
+    "python -m app.launcher developer ui --api-base-url http://127.0.0.1:8000"
+  ],
+  "verification_entrypoints": [
+    "python -m app.verify"
+  ],
+  "user_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_user.ps1",
+  "developer_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_developer.ps1",
+  "update_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1",
+  "config_files": [
+    "CODEX.md",
+    "PROMPT_FOR_CODEX.txt",
+    "requirements.txt"
+  ],
+  "runtime_dirs": [
+    "runtime/output",
+    "runtime/logs",
+    "runtime/verification"
+  ],
+  "log_dirs": [
+    "runtime/logs",
+    "runtime/verification"
+  ],
+  "data_dirs": [
+    "external_data",
+    "runtime/output"
+  ],
+  "dependencies_file": "requirements.txt",
+  "owner": "workflow-core-team",
+  "maturity_level": "production_candidate",
+  "tags": [
+    "workspace",
+    "verification-gated",
+    "desktop",
+    "api"
+  ],
+  "notes": [
+    "Manual testing is allowed only when verification gate is PASS.",
+    "This project is the active engineering source of truth in workspace_manifest."
+  ]
 }

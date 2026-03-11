@@ -1,0 +1,13 @@
+﻿{
+  "preset": "desktop_app",
+  "default_category": "desktop_tool",
+  "directories": [
+    "app",
+    "tests",
+    "runtime",
+    "config"
+  ],
+  "main_entrypoint": "python -m app.main",
+  "verification_entrypoint": "python -m pytest -q",
+  "dependencies_file": "requirements.txt"
+}

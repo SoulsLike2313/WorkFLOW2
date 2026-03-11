@@ -1,22 +1,45 @@
 ﻿{
-  "schema_version": "1.0.0",
-  "project_id": "adaptive_trading",
+  "schema_version": "2.0.0",
   "name": "Adaptive Trading",
+  "slug": "adaptive_trading",
+  "description": "Experimental trading scripts and GUI prototypes for research workflows.",
   "status": "experimental",
-  "project_root": "projects/adaptive_trading",
-  "description": "Experimental trading research scripts and GUI prototypes.",
-  "owner_scope": "experimental",
-  "language": "python",
-  "runtime_mode": "script_and_gui",
-  "entrypoints": {
-    "cli_script": "python adaptive_trading_bot.py",
-    "gui": "python adaptive_trading_gui.py"
-  },
-  "bootstrap": {
-    "requirements_file": "trading_requirements.txt"
-  },
-  "constraints": {
-    "not_part_of_active_release_gate": true,
-    "promote_to_active_requires_status_change": true
-  }
+  "category": "research_prototype",
+  "type": "prototype",
+  "priority": 3,
+  "root_path": "projects/adaptive_trading",
+  "readme_path": "projects/adaptive_trading/README.md",
+  "main_entrypoints": [
+    "python adaptive_trading_bot.py",
+    "python adaptive_trading_gui.py"
+  ],
+  "verification_entrypoints": [
+    "python -m py_compile adaptive_trading_bot.py adaptive_trading_gui.py adaptive_trading_gui_easy.py adaptive_trading_gui_ultra.py"
+  ],
+  "user_mode_entrypoint": "python adaptive_trading_gui.py",
+  "developer_mode_entrypoint": "python adaptive_trading_bot.py",
+  "update_entrypoint": "not_applicable",
+  "config_files": [
+    "trading_requirements.txt"
+  ],
+  "runtime_dirs": [
+    "__pycache__"
+  ],
+  "log_dirs": [],
+  "data_dirs": [
+    "demo_wallet.json",
+    "learned_crypto_model_test.json"
+  ],
+  "dependencies_file": "trading_requirements.txt",
+  "owner": "trading-research-owner",
+  "maturity_level": "prototype",
+  "tags": [
+    "experimental",
+    "trading",
+    "prototype"
+  ],
+  "notes": [
+    "Experimental scope; excluded from active release gate.",
+    "Promotion requires status/category update in workspace manifest."
+  ]
 }

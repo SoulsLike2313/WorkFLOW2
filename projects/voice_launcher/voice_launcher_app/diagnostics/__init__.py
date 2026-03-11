@@ -1,4 +1,4 @@
 from .bundle import collect_diagnostics
+from .history import EventHistory
 
-__all__ = ["collect_diagnostics"]
-
+__all__ = ["EventHistory", "collect_diagnostics"]

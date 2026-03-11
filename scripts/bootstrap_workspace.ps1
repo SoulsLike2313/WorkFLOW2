@@ -52,7 +52,7 @@ $allowedStatuses = @("active", "supporting", "experimental", "archived", "legacy
 $activeProjects = @()
 
 if ($null -ne $workspaceManifestData -and $errors.Count -eq 0) {
-    foreach ($project in @($workspaceManifestData.projects)) {
+    foreach ($project in $workspaceManifestData.projects) {
         $projectPath = Join-Path $RepoRoot $project.path
         $manifestPath = Join-Path $RepoRoot $project.manifest_path
         $statusValid = $allowedStatuses -contains $project.status
@@ -84,11 +84,12 @@ if ($null -ne $workspaceManifestData -and $errors.Count -eq 0) {
         })
     }
 
-    $resolvedActive = @($workspaceManifestData.projects | Where-Object { $_.project_id -eq $workspaceManifestData.active_project_id })
-    if ($resolvedActive.Count -ne 1) {
+    $resolvedActive = $workspaceManifestData.projects | Where-Object { $_.project_id -eq $workspaceManifestData.active_project_id }
+    $resolvedActiveCount = ($resolvedActive | Measure-Object).Count
+    if ($resolvedActiveCount -ne 1) {
         $errors.Add("active_project_id '$($workspaceManifestData.active_project_id)' does not resolve uniquely.")
     }
-    elseif ($resolvedActive[0].status -ne "active") {
+    elseif (($resolvedActive | Select-Object -First 1).status -ne "active") {
         $errors.Add("active_project_id '$($workspaceManifestData.active_project_id)' is not marked as active.")
     }
 
@@ -98,10 +99,14 @@ if ($null -ne $workspaceManifestData -and $errors.Count -eq 0) {
             continue
         }
 
-        $bucketIds = @($workspaceManifestData.status_index.$bucket)
+        $bucketIds = $workspaceManifestData.status_index.$bucket
+        if ($null -eq $bucketIds) {
+            $bucketIds = @()
+        }
         foreach ($bucketId in $bucketIds) {
-            $match = @($workspaceManifestData.projects | Where-Object { $_.project_id -eq $bucketId -and $_.status -eq $bucket })
-            if ($match.Count -eq 0) {
+            $match = $workspaceManifestData.projects | Where-Object { $_.project_id -eq $bucketId -and $_.status -eq $bucket }
+            $matchCount = ($match | Measure-Object).Count
+            if ($matchCount -eq 0) {
                 $errors.Add("status_index mismatch: '$bucketId' listed under '$bucket' but no matching project entry.")
             }
         }
@@ -203,7 +208,7 @@ $reportPath = Join-Path $reportDir "bootstrap_report_$timestamp.json"
 $activeProjectId = ""
 $projectCount = 0
 if ($null -ne $workspaceManifestData -and $null -ne $workspaceManifestData.projects) {
-    $projectCount = [int]@($workspaceManifestData.projects).Count
+    $projectCount = [int](($workspaceManifestData.projects | Measure-Object).Count)
 }
 if ($null -ne $workspaceManifestData -and $null -ne $workspaceManifestData.active_project_id) {
     $activeProjectId = [string]$workspaceManifestData.active_project_id
@@ -223,10 +228,10 @@ $report = [ordered]@{
         errors = $errors.Count
         warnings = $warnings.Count
     }
-    checks = @($projectChecks)
-    setup_actions = @($setupActions)
-    errors = @($errors)
-    warnings = @($warnings)
+    checks = $projectChecks.ToArray()
+    setup_actions = $setupActions.ToArray()
+    errors = $errors.ToArray()
+    warnings = $warnings.ToArray()
 }
 
 $report | ConvertTo-Json -Depth 8 | Set-Content -Path $reportPath -Encoding UTF8

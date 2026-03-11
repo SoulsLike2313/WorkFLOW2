@@ -1,23 +1,51 @@
 ﻿{
-  "schema_version": "1.0.0",
-  "project_id": "voice_launcher",
+  "schema_version": "2.0.0",
   "name": "Voice Launcher",
+  "slug": "voice_launcher",
+  "description": "Supporting desktop voice launcher utility with independent packaging and runtime flow.",
   "status": "supporting",
-  "project_root": "projects/voice_launcher",
-  "description": "Supporting desktop utility project with independent release and packaging cycle.",
-  "owner_scope": "supporting",
-  "language": "python",
-  "runtime_mode": "desktop",
-  "entrypoints": {
-    "run": "python voice_launcher.py",
-    "tests": "python -m pytest -q"
-  },
-  "bootstrap": {
-    "venv_path": ".venv",
-    "requirements_hint": "See README dependency section"
-  },
-  "constraints": {
-    "isolated_from_active_runtime": true,
-    "changes_require_explicit_scope": true
-  }
+  "category": "desktop_tool",
+  "type": "desktop_app",
+  "priority": 2,
+  "root_path": "projects/voice_launcher",
+  "readme_path": "projects/voice_launcher/README.md",
+  "main_entrypoints": [
+    "python voice_launcher.py"
+  ],
+  "verification_entrypoints": [
+    "python -m pytest -q"
+  ],
+  "user_mode_entrypoint": "python voice_launcher.py",
+  "developer_mode_entrypoint": "python -m pytest -q",
+  "update_entrypoint": "not_applicable",
+  "config_files": [
+    "README.md",
+    "pytest.ini",
+    "VoiceLauncher.spec"
+  ],
+  "runtime_dirs": [
+    "logs",
+    "snapshots",
+    "backups"
+  ],
+  "log_dirs": [
+    "logs",
+    "dev_logs"
+  ],
+  "data_dirs": [
+    "appdata_snapshot",
+    "config"
+  ],
+  "dependencies_file": "README.md",
+  "owner": "voice-launcher-owner",
+  "maturity_level": "stable_supporting",
+  "tags": [
+    "desktop",
+    "voice",
+    "supporting"
+  ],
+  "notes": [
+    "Supporting project; not part of active shortform_core verification gate.",
+    "Cross-project changes require explicit request."
+  ]
 }

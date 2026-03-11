@@ -1,0 +1,12 @@
+﻿{
+  "preset": "prototype",
+  "default_category": "research_prototype",
+  "directories": [
+    "experiments",
+    "notebooks",
+    "data"
+  ],
+  "main_entrypoint": "python experiments/main.py",
+  "verification_entrypoint": "python -m py_compile experiments/main.py",
+  "dependencies_file": "requirements.txt"
+}

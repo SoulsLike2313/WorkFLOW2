@@ -29,7 +29,16 @@ from voice_launcher_app.core.launch_policy import (
 from voice_launcher_app.core.matching import find_best_command as modular_find_best_command
 from voice_launcher_app.diagnostics.bundle import collect_diagnostics
 from voice_launcher_app.profiles.profile_io import export_profile, import_profile
+from voice_launcher_app.asr.audio_devices import AudioDeviceService
 from voice_launcher_app.ui.controller import UiController, UiControllerDeps
+from voice_launcher_app.ui.wizard import CommandWizardDeps, open_command_wizard
+from voice_launcher_app.ui.theme import (
+    PREMIUM_PALETTE,
+    THEME_FONTS,
+    paint_hero_gradient as draw_hero_gradient,
+    premium_glow_colors,
+    setup_styles as apply_theme_styles,
+)
 try:
     import audioop
 except Exception:
@@ -84,27 +93,9 @@ RUNTIME_LOG_FILE = os.path.join(LOGS_DIR, "runtime.log")
 ASR_LOG_FILE = os.path.join(LOGS_DIR, "asr_events.log")
 SESSION_SNAPSHOT_FILE = os.path.join(SNAPSHOTS_DIR, "dev_session_snapshot.json")
 
-PALETTE = {
-    "bg": "#181325",
-    "card": "#231B35",
-    "card_alt": "#2B2140",
-    "text": "#F8F5FF",
-    "muted": "#D3C8EE",
-    "accent": "#7E5BD6",
-    "accent_hover": "#9575E5",
-    "accent_deep": "#5B3FA5",
-    "danger": "#C0617A",
-    "danger_hover": "#D27990",
-    "soft": "#33274B",
-    "border": "#F08B32",
-    "tab": "#32264B",
-    "tab_active": "#433064",
-    "hero_left": "#4A2F73",
-    "hero_right": "#6A4B9D",
-}
-
-UI_FONT_SCRIPT = "Segoe Print"
-UI_FONT_SOFT = "Segoe UI Semibold"
+PALETTE = dict(PREMIUM_PALETTE)
+UI_FONT_SCRIPT = THEME_FONTS.get("title", "Bahnschrift SemiBold")
+UI_FONT_SOFT = THEME_FONTS.get("body", "Segoe UI Semibold")
 
 DEFAULT_SETTINGS = {
     "settings_version": 6,
@@ -152,6 +143,7 @@ whisper_warmup_in_progress = False
 last_asr_error_ts = 0.0
 single_instance_mutex = None
 device_options_cache = {"ts": 0.0, "inputs": [], "outputs": []}
+audio_device_service = None
 
 last_launch_phrase = ""
 last_launch_time = 0.0
@@ -564,192 +556,48 @@ def maybe_fix_mojibake(text):
     return best
 
 
-def clean_device_name(name):
-    fixed = maybe_fix_mojibake(name)
-    return " ".join(fixed.split()).strip()
-
-
-def host_priority(host_name):
-    lower = host_name.lower()
-    if "wasapi" in lower:
-        return 3
-    if "mme" in lower:
-        return 2
-    if "wdm" in lower:
-        return 1
-    return 0
-
-
-def dedupe_options(options):
-    chosen = {}
-    for opt in options:
-        key = opt["name"].lower()
-        current = chosen.get(key)
-        if current is None or opt["host_score"] > current["host_score"]:
-            chosen[key] = opt
-    return list(chosen.values())
-
-
-def filter_headset_first(options):
-    keywords = ("head", "headset", "headphone", "науш", "гарнит")
-    targeted = [opt for opt in options if any(k in opt["name"].lower() for k in keywords)]
-    if targeted:
-        return targeted
-    return options
-
-
-def device_score(option, kind="input", preferred_output_name=""):
-    name = option["name"].lower()
-    score = int(option.get("host_score", 0)) * 20
-
-    # Явный приоритет вашему основному USB-аудио.
-    if "fifine" in name:
-        score += 120
-
-    if kind == "input":
-        if "микрофон" in name or "microphone" in name:
-            score += 28
-    else:
-        if "динам" in name or "speaker" in name or "head" in name:
-            score += 18
-
-    # Если вывод выбран как fifine — вход тоже стараемся держать в этой же связке.
-    if preferred_output_name:
-        low_pref = preferred_output_name.lower()
-        if "fifine" in low_pref and "fifine" in name:
-            score += 40
-
-    bad_keywords = (
-        "dualsense",
-        "controller",
-        "xbox",
-        "sound mapper",
-        "первичный",
-        "primary",
-    )
-    for bad in bad_keywords:
-        if bad in name:
-            score -= 120
-
-    # Для выхода дополнительно снижаем HDMI/мониторные устройства.
-    if kind == "output":
-        for bad_out in ("lg ips", "hdmi", "display audio"):
-            if bad_out in name:
-                score -= 70
-
-    return score
+def get_audio_device_service():
+    global audio_device_service
+    if audio_device_service is None:
+        audio_device_service = AudioDeviceService(
+            settings=settings,
+            maybe_fix_mojibake=maybe_fix_mojibake,
+            pyaudio_mod=pyaudio,
+            cache_ttl=DEVICE_CACHE_TTL,
+            cache=device_options_cache,
+        )
+    audio_device_service.settings = settings
+    audio_device_service.pyaudio_mod = pyaudio
+    audio_device_service.cache_ttl = DEVICE_CACHE_TTL
+    return audio_device_service
 
 
 def sort_device_options(options, kind="input", preferred_output_name=""):
-    return sorted(
+    return get_audio_device_service().sort_device_options(
         options,
-        key=lambda opt: (
-            -device_score(opt, kind=kind, preferred_output_name=preferred_output_name),
-            opt["id"],
-        ),
+        kind=kind,
+        preferred_output_name=preferred_output_name,
     )
 
 
 def get_device_options(force_refresh=False):
     global device_options_cache
-
-    now = time.time()
-    cached_inputs = device_options_cache.get("inputs", [])
-    cached_outputs = device_options_cache.get("outputs", [])
-    cache_age = now - float(device_options_cache.get("ts", 0.0))
-    if (
-        not force_refresh
-        and cache_age <= DEVICE_CACHE_TTL
-        and isinstance(cached_inputs, list)
-        and isinstance(cached_outputs, list)
-    ):
-        return list(cached_inputs), list(cached_outputs)
-
-    if pyaudio is None:
-        return [], []
-
-    try:
-        pa = pyaudio.PyAudio()
-    except Exception:
-        return [], []
-
-    inputs = []
-    outputs = []
-
-    try:
-        host_names = {}
-        for host_idx in range(pa.get_host_api_count()):
-            info = pa.get_host_api_info_by_index(host_idx)
-            host_names[host_idx] = str(info.get("name", ""))
-
-        for idx in range(pa.get_device_count()):
-            info = pa.get_device_info_by_index(idx)
-            name = clean_device_name(str(info.get("name", f"Device {idx}")))
-            host_name = host_names.get(int(info.get("hostApi", -1)), "")
-            host_score = host_priority(host_name)
-
-            if int(info.get("maxInputChannels", 0)) > 0:
-                inputs.append(
-                    {
-                        "id": idx,
-                        "raw": str(info.get("name", "")),
-                        "name": name,
-                        "host": host_name,
-                        "host_score": host_score,
-                        "label": f"[{idx}] {name}",
-                    }
-                )
-            if int(info.get("maxOutputChannels", 0)) > 0:
-                outputs.append(
-                    {
-                        "id": idx,
-                        "raw": str(info.get("name", "")),
-                        "name": name,
-                        "host": host_name,
-                        "host_score": host_score,
-                        "label": f"[{idx}] {name}",
-                    }
-                )
-    finally:
-        pa.terminate()
-
-    inputs = sort_device_options(filter_headset_first(dedupe_options(inputs)), kind="input")
-    outputs = sort_device_options(filter_headset_first(dedupe_options(outputs)), kind="output")
-    device_options_cache = {"ts": now, "inputs": list(inputs), "outputs": list(outputs)}
+    service = get_audio_device_service()
+    inputs, outputs = service.get_device_options(force_refresh=force_refresh)
+    device_options_cache = dict(service.cache)
     return inputs, outputs
 
 
 def resolve_selected_index(options, id_key, name_key):
-    if not options:
-        return None
-
-    selected_id = int(settings.get(id_key, -1))
-    if selected_id >= 0 and any(opt["id"] == selected_id for opt in options):
-        return selected_id
-
-    selected_name = settings.get(name_key, "")
-    if selected_name:
-        for opt in options:
-            if opt["raw"] == selected_name or opt["name"] == selected_name:
-                return opt["id"]
-
-    return options[0]["id"]
+    return get_audio_device_service().resolve_selected_index(options, id_key, name_key)
 
 
 def get_selected_mic_index():
-    selected_id = int(settings.get("microphone_id", -1))
-    if selected_id >= 0:
-        return selected_id
-    input_options, _ = get_device_options()
-    return resolve_selected_index(input_options, "microphone_id", "microphone_name")
+    return get_audio_device_service().get_selected_mic_index()
 
 
 def get_selected_output_index():
-    selected_id = int(settings.get("output_id", -1))
-    if selected_id >= 0:
-        return selected_id
-    _, output_options = get_device_options()
-    return resolve_selected_index(output_options, "output_id", "output_name")
+    return get_audio_device_service().get_selected_output_index()
 
 
 def save_json(path, data):
@@ -2369,229 +2217,25 @@ def toggle_monitoring():
 
 # ======================= Voice capture dialog =======================
 def open_voice_capture_dialog():
-    dialog = tk.Toplevel(root)
-    dialog.title("Мастер добавления команды")
-    dialog.geometry("700x500")
-    dialog.minsize(640, 440)
-    dialog.configure(bg=PALETTE["card"])
-    dialog.transient(root)
-    dialog.grab_set()
-
-    path_var = tk.StringVar(value="")
-    phrase_var = tk.StringVar(value="")
-    admin_var = tk.BooleanVar(value=False)
-    launcher_play_var = tk.BooleanVar(value=False)
-    play_text_var = tk.StringVar(value="Играть")
-    window_title_var = tk.StringVar(value="")
-    wait_timeout_var = tk.IntVar(value=240)
-    dry_run_var = tk.BooleanVar(value=False)
-    highlight_var = tk.BooleanVar(value=False)
-    min_confidence_var = tk.DoubleVar(value=0.90)
-    status_local = tk.StringVar(value="1) Выберите файл  2) Запишите фразу")
-    candidates_var = tk.StringVar(value=[])
-
-    body = ttk.Frame(dialog, style="Card.TFrame", padding=12)
-    body.pack(fill="both", expand=True)
-
-    ttk.Label(body, text="Шаг 1/5. Выберите файл", style="Sub.TLabel").pack(anchor="w")
-    row = ttk.Frame(body, style="Card.TFrame")
-    row.pack(fill="x", pady=(2, 8))
-    ttk.Entry(row, textvariable=path_var).pack(side="left", fill="x", expand=True)
-
-    def choose_file():
-        path = filedialog.askopenfilename(title="Выберите файл", parent=dialog)
-        if path:
-            path_var.set(path)
-
-    ttk.Button(row, text="Выбрать", command=choose_file, style="Soft.TButton").pack(side="left", padx=(8, 0))
-
-    ttk.Label(body, text="Шаг 2/5. Введите или запишите ключевую фразу", style="Sub.TLabel").pack(anchor="w")
-    ttk.Entry(body, textvariable=phrase_var).pack(fill="x", pady=(2, 8))
-
-    ttk.Label(body, text="Варианты распознавания", style="Sub.TLabel").pack(anchor="w")
-    options = ttk.Combobox(body, textvariable=candidates_var, state="readonly")
-    options.pack(fill="x", pady=(2, 8))
-
-    def on_pick(_event=None):
-        value = options.get().strip()
-        if value:
-            phrase_var.set(value)
-
-    options.bind("<<ComboboxSelected>>", on_pick)
-
-    ttk.Label(body, text="Шаг 3/5. Выберите тип действия", style="Sub.TLabel").pack(anchor="w", pady=(4, 4))
-    ttk.Checkbutton(
-        body,
-        text="Запускать как админ (через Планировщик задач)",
-        variable=admin_var,
-        onvalue=True,
-        offvalue=False,
-    ).pack(anchor="w", pady=(0, 8))
-
-    launcher_row = ttk.Frame(body, style="Card.TFrame")
-    launcher_row.pack(fill="x", pady=(0, 4))
-    ttk.Checkbutton(
-        launcher_row,
-        text="Режим лаунчера: автонажатие кнопки",
-        variable=launcher_play_var,
-        onvalue=True,
-        offvalue=False,
-    ).pack(side="left")
-
-    launcher_details = ttk.Frame(body, style="Card.TFrame")
-    ttk.Label(launcher_details, text="Шаг 4/5. Настройка launcher_play", style="Sub.TLabel").pack(anchor="w")
-    ttk.Label(launcher_details, text="Текст кнопки:", style="Sub.TLabel").pack(anchor="w")
-    ttk.Entry(launcher_details, textvariable=play_text_var).pack(fill="x", pady=(2, 6))
-    ttk.Label(launcher_details, text="Фильтр окна (необязательно):", style="Sub.TLabel").pack(anchor="w")
-    ttk.Entry(launcher_details, textvariable=window_title_var).pack(fill="x", pady=(2, 6))
-
-    wait_row = ttk.Frame(launcher_details, style="Card.TFrame")
-    wait_row.pack(fill="x", pady=(0, 8))
-    ttk.Label(wait_row, text="Ожидание кнопки (сек):", style="Sub.TLabel").pack(side="left")
-    ttk.Spinbox(wait_row, from_=30, to=900, textvariable=wait_timeout_var, width=8).pack(side="left", padx=(8, 0))
-
-    safety_row = ttk.Frame(launcher_details, style="Card.TFrame")
-    safety_row.pack(fill="x", pady=(0, 8))
-    ttk.Checkbutton(
-        safety_row,
-        text="Dry-run (без клика)",
-        variable=dry_run_var,
-        onvalue=True,
-        offvalue=False,
-    ).pack(side="left")
-    ttk.Checkbutton(
-        safety_row,
-        text="Только подсветка",
-        variable=highlight_var,
-        onvalue=True,
-        offvalue=False,
-    ).pack(side="left", padx=(10, 0))
-    ttk.Label(safety_row, text="Уверенность окна:", style="Sub.TLabel").pack(side="left", padx=(14, 4))
-    ttk.Spinbox(
-        safety_row,
-        from_=0.65,
-        to=0.99,
-        increment=0.01,
-        textvariable=min_confidence_var,
-        width=6,
-    ).pack(side="left")
-
-    def sync_mode(*_args):
-        if admin_var.get() and launcher_play_var.get():
-            launcher_play_var.set(False)
-        if admin_var.get():
-            status_local.set("Админ-режим: автонажатие лаунчера отключено")
-        elif launcher_play_var.get():
-            launcher_details.pack(fill="x", pady=(0, 8))
-            status_local.set("Режим лаунчера: безопасная верификация окна и кнопки")
-        else:
-            launcher_details.pack_forget()
-            status_local.set("1) Выберите файл  2) Запишите фразу")
-
-    admin_var.trace_add("write", sync_mode)
-    launcher_play_var.trace_add("write", sync_mode)
-    sync_mode()
-
-    ttk.Label(body, text="Шаг 5/5. Тест и сохранение", style="Sub.TLabel").pack(anchor="w", pady=(4, 2))
-    ttk.Label(body, textvariable=status_local, style="Sub.TLabel").pack(anchor="w", pady=(0, 10))
-
-    controls = ttk.Frame(body, style="Card.TFrame")
-    controls.pack(fill="x")
-
-    def do_record():
-        def ui(text):
-            dialog.after(0, lambda: status_local.set(text))
-
-        if monitor_active_event.is_set():
-            ui("Сначала выключите мониторинг")
-            return
-
-        pause_listen_event.set()
-
-        try:
-            ui("Подготовка микрофона... 1 сек тишины")
-            recognizer = build_recognizer()
-            recognizer.pause_threshold = 1.0
-            recognizer.non_speaking_duration = 0.45
-            mic_index = get_selected_mic_index()
-            with sr.Microphone(device_index=mic_index) as source:
-                recognizer.adjust_for_ambient_noise(source, duration=1.0)
-                ui("Слушаю... произнесите фразу четко один раз")
-                audio = recognizer.listen(
-                    source,
-                    timeout=VOICE_CAPTURE_TIMEOUT,
-                    phrase_time_limit=max(5.2, float(settings.get("listen_phrase_limit", 5.0))),
-                )
-
-            level = get_audio_level_percent(audio)
-            candidates = recognize_candidates(recognizer, audio, prefer_all_engines=True)
-            if not candidates:
-                ui(f"Не распознано. Уровень сигнала: {level}%. Повторите запись.")
-                return
-
-            candidates = candidates[:8]
-            dialog.after(0, lambda: options.configure(values=candidates))
-            dialog.after(0, lambda: options.set(candidates[0]))
-            dialog.after(0, lambda: phrase_var.set(candidates[0]))
-            ui(f"Фраза записана. Уровень сигнала: {level}%")
-        except sr.WaitTimeoutError:
-            ui("Тишина. Нажмите 'Записать' еще раз.")
-        except Exception as exc:
-            ui(f"Ошибка записи: {exc}")
-        finally:
-            pause_listen_event.clear()
-
-    def start_record():
-        threading.Thread(target=do_record, daemon=True).start()
-
-    def save_voice_mapping():
-        path = path_var.get().strip()
-        phrase = phrase_var.get().strip()
-        if not path:
-            messagebox.showinfo("Файл", "Выберите файл.", parent=dialog)
-            return
-        if not phrase:
-            messagebox.showinfo("Фраза", "Сначала запишите или введите фразу.", parent=dialog)
-            return
-        saved = save_mapping(
-            phrase,
-            path,
-            use_admin=bool(admin_var.get()),
-            launcher_play=bool(launcher_play_var.get()),
-            play_text=play_text_var.get().strip() or "Играть",
-            window_title=window_title_var.get().strip(),
-            wait_timeout=int(wait_timeout_var.get() or 240),
-            launcher_dry_run=bool(dry_run_var.get()),
-            launcher_highlight=bool(highlight_var.get()),
-            min_window_confidence=float(min_confidence_var.get() or 0.90),
+    open_command_wizard(
+        CommandWizardDeps(
+            root=root,
+            card_color=PALETTE["card"],
+            monitor_active_event=monitor_active_event,
+            pause_listen_event=pause_listen_event,
+            build_recognizer=build_recognizer,
+            get_selected_mic_index=get_selected_mic_index,
+            microphone_factory=sr.Microphone,
+            wait_timeout_error=sr.WaitTimeoutError,
+            voice_capture_timeout=VOICE_CAPTURE_TIMEOUT,
+            settings_provider=lambda: settings,
+            get_audio_level_percent=get_audio_level_percent,
+            recognize_candidates=recognize_candidates,
+            save_mapping=save_mapping,
+            launch_with_launcher_play=launch_with_launcher_play,
+            path_exists=os.path.exists,
         )
-        if saved:
-            dialog.destroy()
-
-    def safe_preview():
-        preview_entry = {
-            "mode": "launcher_play",
-            "path": path_var.get().strip(),
-            "play_text": play_text_var.get().strip() or "Играть",
-            "window_title": window_title_var.get().strip(),
-            "wait_timeout": int(wait_timeout_var.get() or 240),
-            "launcher_dry_run": True,
-            "launcher_highlight": bool(highlight_var.get()),
-            "min_window_confidence": float(min_confidence_var.get() or 0.90),
-        }
-        if not preview_entry["path"]:
-            messagebox.showwarning("Безопасный тест", "Сначала выберите файл.", parent=dialog)
-            return
-        if not os.path.exists(preview_entry["path"]):
-            messagebox.showwarning("Безопасный тест", "Указанный файл не найден.", parent=dialog)
-            return
-        launch_with_launcher_play(preview_entry)
-        status_local.set("Запущен безопасный тест launcher_play (без клика)")
-
-    ttk.Button(controls, text="Записать", command=start_record, style="Primary.TButton").pack(side="left")
-    ttk.Button(controls, text="Безопасный тест", command=safe_preview, style="Soft.TButton").pack(side="left", padx=8)
-    ttk.Button(controls, text="Сохранить", command=save_voice_mapping, style="Soft.TButton").pack(side="left", padx=8)
-    ttk.Button(controls, text="Отмена", command=dialog.destroy, style="Soft.TButton").pack(side="right")
+    )
 
 
 # ======================= Listener =======================
@@ -2648,9 +2292,11 @@ def create_tray_icon():
     if tray_icon is not None:
         return
 
-    image = Image.new("RGB", (64, 64), color="white")
+    image = Image.new("RGB", (64, 64), color=PALETTE["card"])
     draw = ImageDraw.Draw(image)
-    draw.rounded_rectangle((8, 8, 56, 56), radius=12, fill="#3A86FF")
+    draw.rounded_rectangle((6, 6, 58, 58), radius=14, fill=PALETTE["hero_left"])
+    draw.ellipse((20, 14, 50, 44), fill=PALETTE["accent"])
+    draw.rounded_rectangle((16, 40, 48, 52), radius=5, fill=PALETTE["border"])
 
     menu = pystray.Menu(
         pystray.MenuItem("Открыть настройки", show_window),
@@ -2666,208 +2312,16 @@ def create_tray_icon():
 
 def setup_styles():
     style = ttk.Style()
-    style.theme_use("clam")
-
-    style.configure("Root.TFrame", background=PALETTE["bg"])
-    style.configure("Card.TFrame", background=PALETTE["card"])
-    style.configure("Panel.TFrame", background=PALETTE["card_alt"])
-
-    style.configure(
-        "Title.TLabel",
-        background=PALETTE["hero_left"],
-        foreground=PALETTE["text"],
-        font=(UI_FONT_SCRIPT, 24),
-    )
-    style.configure(
-        "Sub.TLabel",
-        background=PALETTE["card"],
-        foreground=PALETTE["muted"],
-        font=(UI_FONT_SCRIPT, 13),
-    )
-    style.configure(
-        "PanelLabel.TLabel",
-        background=PALETTE["card_alt"],
-        foreground=PALETTE["muted"],
-        font=(UI_FONT_SOFT, 12),
-    )
-    style.configure(
-        "Status.TLabel",
-        background=PALETTE["soft"],
-        foreground=PALETTE["text"],
-        font=(UI_FONT_SOFT, 12),
-        padding=(12, 10),
-        borderwidth=1,
-        relief="solid",
-        bordercolor=PALETTE["border"],
-    )
-
-    style.configure(
-        "Primary.TButton",
-        font=(UI_FONT_SCRIPT, 13),
-        padding=(18, 12),
-        borderwidth=2,
-        relief="solid",
-        foreground="#FFF8F1",
-        background=PALETTE["accent"],
-        bordercolor=PALETTE["border"],
-        lightcolor=PALETTE["border"],
-        darkcolor=PALETTE["accent_deep"],
-        focuscolor=PALETTE["border"],
-    )
-    style.map(
-        "Primary.TButton",
-        background=[("active", PALETTE["accent_hover"]), ("pressed", PALETTE["accent_deep"])],
-        bordercolor=[("active", "#FFAA55"), ("pressed", "#F08B32")],
-        foreground=[("disabled", "#8AA3B8")],
-    )
-
-    style.configure(
-        "Soft.TButton",
-        font=(UI_FONT_SCRIPT, 13),
-        padding=(18, 12),
-        borderwidth=2,
-        foreground=PALETTE["text"],
-        background=PALETTE["card_alt"],
-        bordercolor=PALETTE["border"],
-        relief="solid",
-        lightcolor=PALETTE["border"],
-        darkcolor=PALETTE["tab_active"],
-        focuscolor=PALETTE["border"],
-    )
-    style.map(
-        "Soft.TButton",
-        background=[("active", PALETTE["tab_active"])],
-        bordercolor=[("active", "#FFAA55"), ("pressed", "#F08B32")],
-    )
-
-    style.configure(
-        "Danger.TButton",
-        font=(UI_FONT_SCRIPT, 13),
-        padding=(18, 12),
-        borderwidth=2,
-        foreground="#FFF6F8",
-        background=PALETTE["danger"],
-        bordercolor=PALETTE["border"],
-        relief="solid",
-        lightcolor=PALETTE["border"],
-        darkcolor="#8B3F54",
-        focuscolor=PALETTE["border"],
-    )
-    style.map(
-        "Danger.TButton",
-        background=[("active", PALETTE["danger_hover"])],
-        bordercolor=[("active", "#FFAA55"), ("pressed", "#F08B32")],
-    )
-
-    style.configure(
-        "Futuristic.TCheckbutton",
-        background=PALETTE["card_alt"],
-        foreground=PALETTE["text"],
-        font=(UI_FONT_SOFT, 12),
-        indicatorcolor=PALETTE["accent"],
-    )
-    style.map(
-        "Futuristic.TCheckbutton",
-        background=[("active", PALETTE["card_alt"])],
-        indicatorcolor=[("selected", PALETTE["accent"]), ("!selected", PALETTE["card_alt"])],
-    )
-
-    style.configure(
-        "Futuristic.TNotebook",
-        background=PALETTE["card"],
-        borderwidth=0,
-        tabmargins=(0, 0, 0, 0),
-    )
-    style.configure(
-        "Futuristic.TNotebook.Tab",
-        background=PALETTE["tab"],
-        foreground=PALETTE["muted"],
-        padding=(22, 12),
-        font=(UI_FONT_SCRIPT, 13),
-        borderwidth=0,
-    )
-    style.map(
-        "Futuristic.TNotebook.Tab",
-        background=[("selected", PALETTE["tab_active"]), ("active", PALETTE["tab_active"])],
-        foreground=[("selected", PALETTE["text"]), ("active", PALETTE["text"])],
-    )
-
-    style.configure(
-        "Custom.Treeview",
-        font=(UI_FONT_SOFT, 12),
-        rowheight=42,
-        background=PALETTE["card_alt"],
-        fieldbackground=PALETTE["card_alt"],
-        foreground=PALETTE["text"],
-        borderwidth=1,
-        relief="solid",
-        bordercolor=PALETTE["border"],
-    )
-    style.map(
-        "Custom.Treeview",
-        background=[("selected", "#5A438A")],
-        foreground=[("selected", "#F5FBFF")],
-    )
-    style.configure(
-        "Custom.Treeview.Heading",
-        font=(UI_FONT_SOFT, 13),
-        foreground=PALETTE["text"],
-        background=PALETTE["tab"],
-        relief="solid",
-        padding=(10, 10),
-        borderwidth=1,
-        bordercolor=PALETTE["border"],
-    )
-
-
-def hex_to_rgb(value):
-    value = value.lstrip("#")
-    return tuple(int(value[i : i + 2], 16) for i in (0, 2, 4))
-
-
-def rgb_to_hex(rgb):
-    return "#{:02X}{:02X}{:02X}".format(*rgb)
-
-
-def mix_hex(start_hex, end_hex, t):
-    start = hex_to_rgb(start_hex)
-    end = hex_to_rgb(end_hex)
-    mixed = tuple(int(start[i] + (end[i] - start[i]) * t) for i in range(3))
-    return rgb_to_hex(mixed)
+    apply_theme_styles(style=style, palette=PALETTE, title_font=UI_FONT_SCRIPT, body_font=UI_FONT_SOFT)
 
 
 def paint_hero_gradient(canvas):
-    canvas.delete("all")
-    width = max(1, canvas.winfo_width())
-    height = max(1, canvas.winfo_height())
-    steps = max(50, width // 4)
-    for i in range(steps):
-        t = i / max(1, steps - 1)
-        color = mix_hex(PALETTE["hero_left"], PALETTE["hero_right"], t)
-        x0 = int((i / steps) * width)
-        x1 = int(((i + 1) / steps) * width)
-        canvas.create_rectangle(x0, 0, x1, height, outline="", fill=color)
-
-    # Мягкие световые полосы.
-    canvas.create_line(0, height - 2, width, height - 2, fill="#F2A35A", width=1)
-    canvas.create_line(0, 1, width, 1, fill="#F7C79A", width=1)
-
-    # Рендерим текст прямо в Canvas, чтобы убрать "подсвеченный блок" у подзаголовка.
-    canvas.create_text(
-        28,
-        30,
-        anchor="w",
-        text="Voice Launcher",
-        fill=PALETTE["text"],
-        font=(UI_FONT_SCRIPT, 30),
-    )
-    canvas.create_text(
-        30,
-        70,
-        anchor="w",
-        text="Фиолетовый металлик • Мягкий интерфейс, умный запуск и точная настройка звука",
-        fill="#F6E6FF",
-        font=(UI_FONT_SOFT, 13),
+    draw_hero_gradient(
+        canvas=canvas,
+        palette=PALETTE,
+        title_font=UI_FONT_SCRIPT,
+        body_font=UI_FONT_SOFT,
+        title_text="Voice Launcher",
     )
 
 
@@ -3268,17 +2722,7 @@ def animate_window_fade(alpha=0.0):
 
 
 def animate_tab_glow(step=0):
-    colors = [
-        "#4B5F75",
-        "#56718D",
-        "#5E83A6",
-        "#6CA3C8",
-        "#78B9DE",
-        "#6CA3C8",
-        "#5E83A6",
-        "#56718D",
-        "#4B5F75",
-    ]
+    colors = list(premium_glow_colors())
     width = max(20, tab_glow.winfo_width())
     pulse = 0.20 + 0.70 * (step / max(1, len(colors) - 1))
     tab_glow.coords(tab_glow_rect, 0, 0, int(width * pulse), 4)
