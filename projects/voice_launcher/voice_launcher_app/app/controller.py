@@ -49,6 +49,22 @@ class AppController:
             and now - float(self.last_voice_trigger.get("ts", 0.0)) < trigger_guard
         )
 
+    @staticmethod
+    def friendly_audio_error(exc: Exception) -> str:
+        raw = str(exc or "").strip()
+        low = raw.lower()
+        if "could not find pyaudio" in low:
+            return "Микрофон недоступен: PyAudio не установлен. Установите пакет pyaudio."
+        if "no default input device available" in low:
+            return "Микрофон недоступен: в Windows не выбрано устройство ввода по умолчанию."
+        if "invalid input device" in low:
+            return "Микрофон недоступен: выбранное устройство ввода не найдено."
+        if "unanticipated host error" in low or "device unavailable" in low:
+            return "Микрофон временно недоступен. Проверьте, не занят ли он другим приложением."
+        if raw:
+            return f"Проблема микрофона: {raw}"
+        return "Проблема микрофона: неизвестная ошибка."
+
     def run_listen_loop(self, max_iterations: Optional[int] = None) -> Dict[str, Any]:
         self.recognizer = self.deps.build_recognizer()
         self.deps.log_runtime("Listen loop started")
@@ -124,7 +140,7 @@ class AppController:
             except self.deps.wait_timeout_error:
                 continue
             except Exception as exc:
-                self.deps.set_status(f"Проблема микрофона: {exc}")
+                self.deps.set_status(self.friendly_audio_error(exc))
                 self.deps.log_runtime(f"Listen loop microphone error: {exc}")
                 self.deps.sleep(0.5)
 

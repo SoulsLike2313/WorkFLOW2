@@ -141,3 +141,8 @@ def test_controller_handles_no_match_with_heard_phrase():
     assert any("не совпали" in text for text in statuses)
     assert phrases == ["тан"]
     assert any("no-match" in text for text in asr_logs)
+
+
+def test_friendly_audio_error_for_missing_pyaudio():
+    message = AppController.friendly_audio_error(RuntimeError("Could not find PyAudio; check installation"))
+    assert "PyAudio" in message

@@ -1,5 +1,5 @@
-﻿{
-  "schema_version": "2.0.0",
+{
+  "schema_version": "2.1.0",
   "name": "Voice Launcher",
   "slug": "voice_launcher",
   "description": "Supporting desktop voice launcher utility with independent packaging and runtime flow.",
@@ -9,14 +9,47 @@
   "priority": 2,
   "root_path": "projects/voice_launcher",
   "readme_path": "projects/voice_launcher/README.md",
+  "runtime_namespace": "voice_launcher",
+  "port_range": {
+    "start": 8100,
+    "end": 8199
+  },
+  "port_mode_default": "fixed",
+  "service_ports": {
+    "api_port": 8100,
+    "ui_bridge_port": 8110,
+    "update_port": 8120,
+    "health_port": 8130
+  },
+  "runtime_paths": {
+    "runtime_dir": "runtime/projects/voice_launcher",
+    "log_dir": "runtime/projects/voice_launcher/logs",
+    "data_dir": "runtime/projects/voice_launcher/data",
+    "cache_dir": "runtime/projects/voice_launcher/cache",
+    "temp_dir": "runtime/projects/voice_launcher/temp",
+    "diagnostics_dir": "runtime/projects/voice_launcher/diagnostics",
+    "update_artifacts_dir": "runtime/projects/voice_launcher/update_artifacts",
+    "verification_dir": "runtime/projects/voice_launcher/verification"
+  },
+  "state_paths": {
+    "db_path": "runtime/projects/voice_launcher/db/voice_launcher.db",
+    "state_path": "runtime/projects/voice_launcher/state/runtime_state.json"
+  },
+  "health_path": "/health",
+  "env_overrides": {
+    "VOICE_LAUNCHER_STORAGE_DIR": "{runtime_paths.runtime_dir}",
+    "VOICE_LAUNCHER_CACHE_DIR": "{runtime_paths.cache_dir}"
+  },
   "main_entrypoints": [
-    "python voice_launcher.py"
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode user -PortMode fixed",
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode developer -PortMode fixed",
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -PortMode fixed"
   ],
   "verification_entrypoints": [
     "python -m pytest -q"
   ],
-  "user_mode_entrypoint": "python voice_launcher.py",
-  "developer_mode_entrypoint": "python -m pytest -q",
+  "user_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode user -PortMode fixed",
+  "developer_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode developer -PortMode fixed",
   "update_entrypoint": "not_applicable",
   "config_files": [
     "README.md",
@@ -24,17 +57,21 @@
     "VoiceLauncher.spec"
   ],
   "runtime_dirs": [
-    "logs",
-    "snapshots",
-    "backups"
+    "runtime/projects/voice_launcher",
+    "runtime/projects/voice_launcher/logs",
+    "runtime/projects/voice_launcher/data",
+    "runtime/projects/voice_launcher/cache",
+    "runtime/projects/voice_launcher/temp",
+    "runtime/projects/voice_launcher/diagnostics",
+    "runtime/projects/voice_launcher/update_artifacts",
+    "runtime/projects/voice_launcher/verification"
   ],
   "log_dirs": [
-    "logs",
-    "dev_logs"
+    "runtime/projects/voice_launcher/logs",
+    "runtime/projects/voice_launcher/diagnostics"
   ],
   "data_dirs": [
-    "appdata_snapshot",
-    "config"
+    "runtime/projects/voice_launcher/data"
   ],
   "dependencies_file": "README.md",
   "owner": "voice-launcher-owner",
@@ -46,6 +83,6 @@
   ],
   "notes": [
     "Supporting project; not part of active shortform_core verification gate.",
-    "Cross-project changes require explicit request."
+    "Startup preflight enforces isolated runtime namespace and project port range."
   ]
 }

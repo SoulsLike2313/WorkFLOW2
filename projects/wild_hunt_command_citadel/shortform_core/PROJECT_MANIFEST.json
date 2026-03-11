@@ -1,5 +1,5 @@
-﻿{
-  "schema_version": "2.0.0",
+{
+  "schema_version": "2.1.0",
   "name": "Shortform Core Workspace",
   "slug": "shortform_core",
   "description": "Primary modular desktop workspace with internal API lifecycle, verification gate, readiness model, and update/patch flow.",
@@ -9,34 +9,77 @@
   "priority": 1,
   "root_path": "projects/wild_hunt_command_citadel/shortform_core",
   "readme_path": "projects/wild_hunt_command_citadel/shortform_core/README.md",
+  "runtime_namespace": "shortform_core",
+  "port_range": {
+    "start": 8000,
+    "end": 8099
+  },
+  "port_mode_default": "fixed",
+  "service_ports": {
+    "api_port": 8000,
+    "ui_bridge_port": 8010,
+    "update_port": 8020,
+    "health_port": 8030
+  },
+  "runtime_paths": {
+    "runtime_dir": "runtime/projects/shortform_core",
+    "log_dir": "runtime/projects/shortform_core/logs",
+    "data_dir": "runtime/projects/shortform_core/data",
+    "cache_dir": "runtime/projects/shortform_core/cache",
+    "temp_dir": "runtime/projects/shortform_core/temp",
+    "diagnostics_dir": "runtime/projects/shortform_core/diagnostics",
+    "update_artifacts_dir": "runtime/projects/shortform_core/update_artifacts",
+    "verification_dir": "runtime/projects/shortform_core/verification"
+  },
+  "state_paths": {
+    "db_path": "runtime/projects/shortform_core/db/shortform_core.db",
+    "state_path": "runtime/projects/shortform_core/state/workspace_state.db"
+  },
+  "health_path": "/workspace/health",
+  "env_overrides": {
+    "SFCO_PROJECT_ROOT": "{project_root}",
+    "SFCO_API_HOST": "127.0.0.1",
+    "SFCO_API_PORT": "{service_ports.api_port}",
+    "SFCO_LOGS_DIR": "{runtime_paths.log_dir}",
+    "SFCO_OUTPUT_DIR": "{runtime_paths.data_dir}",
+    "SFCO_VERIFICATION_DIR": "{runtime_paths.verification_dir}",
+    "SFCO_PATCH_DIR": "{runtime_paths.update_artifacts_dir}",
+    "SFCO_DATABASE_PATH": "{state_paths.db_path}",
+    "SFCO_WORKSPACE_STATE_PATH": "{state_paths.state_path}"
+  },
   "main_entrypoints": [
-    "python -m app.launcher user",
-    "python -m app.launcher developer backend --host 127.0.0.1 --port 8000",
-    "python -m app.launcher developer ui --api-base-url http://127.0.0.1:8000"
+    "powershell -ExecutionPolicy Bypass -File .\\run_user.ps1 -PortMode fixed",
+    "powershell -ExecutionPolicy Bypass -File .\\run_developer.ps1 -PortMode fixed",
+    "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1 -Mode check -PortMode fixed -ManifestPath <manifest.json>"
   ],
   "verification_entrypoints": [
     "python -m app.verify"
   ],
-  "user_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_user.ps1",
-  "developer_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_developer.ps1",
-  "update_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1",
+  "user_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_user.ps1 -PortMode fixed",
+  "developer_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_developer.ps1 -PortMode fixed",
+  "update_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1 -Mode check -PortMode fixed -ManifestPath <manifest.json>",
   "config_files": [
     "CODEX.md",
     "PROMPT_FOR_CODEX.txt",
     "requirements.txt"
   ],
   "runtime_dirs": [
-    "runtime/output",
-    "runtime/logs",
-    "runtime/verification"
+    "runtime/projects/shortform_core",
+    "runtime/projects/shortform_core/logs",
+    "runtime/projects/shortform_core/data",
+    "runtime/projects/shortform_core/cache",
+    "runtime/projects/shortform_core/temp",
+    "runtime/projects/shortform_core/diagnostics",
+    "runtime/projects/shortform_core/update_artifacts",
+    "runtime/projects/shortform_core/verification"
   ],
   "log_dirs": [
-    "runtime/logs",
-    "runtime/verification"
+    "runtime/projects/shortform_core/logs",
+    "runtime/projects/shortform_core/diagnostics"
   ],
   "data_dirs": [
-    "external_data",
-    "runtime/output"
+    "runtime/projects/shortform_core/data",
+    "external_data"
   ],
   "dependencies_file": "requirements.txt",
   "owner": "workflow-core-team",
@@ -49,6 +92,6 @@
   ],
   "notes": [
     "Manual testing is allowed only when verification gate is PASS.",
-    "This project is the active engineering source of truth in workspace_manifest."
+    "Runtime namespace and ports are isolated by workspace startup preflight."
   ]
 }

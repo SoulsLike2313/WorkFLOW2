@@ -345,6 +345,22 @@ def show_warning(title, text):
     root.after(0, lambda: messagebox.showwarning(title, text))
 
 
+def friendly_audio_error(exc):
+    raw = str(exc or "").strip()
+    low = raw.lower()
+    if "could not find pyaudio" in low:
+        return "PyAudio не установлен. Установите `pyaudio` и перезапустите лаунчер."
+    if "no default input device available" in low:
+        return "В системе не выбран микрофон по умолчанию."
+    if "invalid input device" in low:
+        return "Выбранный микрофон недоступен. Обновите список устройств и выберите рабочий."
+    if "unanticipated host error" in low or "device unavailable" in low:
+        return "Микрофон временно недоступен. Проверьте, не занят ли он другим приложением."
+    if raw:
+        return raw
+    return "Неизвестная ошибка аудиоустройства."
+
+
 def audio_rms(raw_data, sample_width):
     if not raw_data:
         return 0
@@ -2104,8 +2120,9 @@ def check_microphone():
             set_status("Проверка: тишина, попробуйте еще раз")
             show_warning("Проверка микрофона", "Не услышал речь в течение ожидания.")
         except Exception as exc:
-            set_status(f"Проверка: ошибка ({exc})")
-            show_warning("Проверка микрофона", f"Ошибка микрофона:\n{exc}")
+            message = friendly_audio_error(exc)
+            set_status(f"Проверка: ошибка ({message})")
+            show_warning("Проверка микрофона", f"Ошибка микрофона:\n{message}")
         finally:
             pause_listen_event.clear()
 
@@ -2249,7 +2266,7 @@ def toggle_monitoring():
                     set_status(f"Мониторинг ON | Уровень: {level}%")
                     last_status = now
         except Exception as exc:
-            set_status(f"Мониторинг ошибка: {exc}")
+            set_status(f"Мониторинг ошибка: {friendly_audio_error(exc)}")
         finally:
             monitor_active_event.clear()
             pause_listen_event.clear()
@@ -2693,16 +2710,22 @@ apply_ui_mode()
 toolbar = ttk.Frame(commands_tab, style="Card.TFrame")
 toolbar.pack(fill="x", pady=(2, 10), padx=6)
 
-ttk.Button(toolbar, text="Добавить вручную", command=add_file_manual, style="Primary.TButton").pack(side="left")
-ttk.Button(toolbar, text="Добавить голосом", command=open_voice_capture_dialog, style="Soft.TButton").pack(side="left", padx=8)
-ttk.Button(toolbar, text="Проверить", command=test_selected, style="Soft.TButton").pack(side="left")
-ttk.Button(toolbar, text="Проверить микрофон", command=check_microphone, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar, text="Тест распознавания", command=test_recognition_once, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar, text="Открыть логи", command=open_logs_folder, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar, text="Экспорт профиля", command=export_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar, text="Импорт профиля", command=import_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar, text="Диагностика", command=collect_diagnostics_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
-ttk.Button(toolbar, text="Удалить", command=remove_selected, style="Danger.TButton").pack(side="right", padx=(8, 0))
+toolbar_main = ttk.Frame(toolbar, style="Card.TFrame")
+toolbar_main.pack(fill="x")
+toolbar_tools = ttk.Frame(toolbar, style="Card.TFrame")
+toolbar_tools.pack(fill="x", pady=(8, 0))
+
+ttk.Button(toolbar_main, text="Добавить вручную", command=add_file_manual, style="Primary.TButton").pack(side="left")
+ttk.Button(toolbar_main, text="Добавить голосом", command=open_voice_capture_dialog, style="Soft.TButton").pack(side="left", padx=8)
+ttk.Button(toolbar_main, text="Проверить", command=test_selected, style="Soft.TButton").pack(side="left", padx=(0, 8))
+ttk.Button(toolbar_main, text="Удалить", command=remove_selected, style="Danger.TButton").pack(side="right")
+
+ttk.Button(toolbar_tools, text="Проверить микрофон", command=check_microphone, style="Soft.TButton").pack(side="left")
+ttk.Button(toolbar_tools, text="Тест распознавания", command=test_recognition_once, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_tools, text="Открыть логи", command=open_logs_folder, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_tools, text="Экспорт профиля", command=export_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_tools, text="Импорт профиля", command=import_profile_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
+ttk.Button(toolbar_tools, text="Диагностика", command=collect_diagnostics_dialog, style="Soft.TButton").pack(side="left", padx=(8, 0))
 
 table_wrap = ttk.Frame(commands_tab, style="Panel.TFrame", padding=6)
 table_wrap.pack(fill="both", expand=True)

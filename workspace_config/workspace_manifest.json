@@ -1,5 +1,5 @@
-﻿{
-  "schema_version": "2.0.0",
+{
+  "schema_version": "2.1.0",
   "workspace_slug": "workflow",
   "workspace_name": "WorkFLOW Multi-Project Workspace",
   "active_project": "shortform_core",
@@ -23,10 +23,28 @@
     "scripts_root": "scripts",
     "runtime_root": "runtime"
   },
+  "isolation_policy": {
+    "strict_isolation_required": true,
+    "allow_silent_fallback": false,
+    "port_allocator": {
+      "base_start": 8000,
+      "range_size": 100,
+      "max_end": 19999,
+      "default_mode": "fixed"
+    },
+    "runtime_layout": {
+      "runtime_root": "runtime/projects",
+      "diagnostics_root": "runtime/startup_diagnostics",
+      "require_project_scoped_paths": true
+    }
+  },
   "entrypoints": {
     "workspace_bootstrap": "powershell -ExecutionPolicy Bypass -File .\\scripts\\bootstrap_workspace.ps1",
     "workspace_validate": "python scripts/validate_workspace.py",
-    "new_project_generator": "python scripts/new_project.py"
+    "new_project_generator": "python scripts/new_project.py",
+    "project_startup_prepare": "python scripts/project_startup.py prepare --project-slug <slug>",
+    "project_startup_run_user": "python scripts/project_startup.py run --project-slug <slug> --entrypoint user --startup-kind user",
+    "project_startup_run_developer": "python scripts/project_startup.py run --project-slug <slug> --entrypoint developer --startup-kind developer"
   },
   "verification_entrypoints": {
     "active_project_verify": "python -m app.verify",
@@ -68,18 +86,31 @@
       "category": "platform_core",
       "type": "desktop_app",
       "priority": 1,
+      "runtime_namespace": "shortform_core",
+      "port_range": {
+        "start": 8000,
+        "end": 8099
+      },
+      "port_mode_default": "fixed",
+      "service_ports": {
+        "api_port": 8000,
+        "ui_bridge_port": 8010,
+        "update_port": 8020,
+        "health_port": 8030
+      },
       "root_path": "projects/wild_hunt_command_citadel/shortform_core",
       "manifest_path": "projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json",
       "readme_path": "projects/wild_hunt_command_citadel/shortform_core/README.md",
       "main_entrypoints": [
-        "python -m app.launcher user",
-        "python -m app.launcher developer backend --host 127.0.0.1 --port 8000"
+        "python scripts/project_startup.py run --project-slug shortform_core --entrypoint user --startup-kind user --port-mode fixed",
+        "python scripts/project_startup.py run --project-slug shortform_core --entrypoint developer --startup-kind developer --port-mode fixed",
+        "python scripts/project_startup.py run --project-slug shortform_core --entrypoint verify --startup-kind verify --port-mode fixed"
       ],
       "verification_entrypoints": [
         "python -m app.verify"
       ],
       "update_entrypoints": [
-        "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1"
+        "python scripts/project_startup.py run --project-slug shortform_core --entrypoint update --startup-kind update --port-mode fixed"
       ]
     },
     {
@@ -89,11 +120,25 @@
       "category": "desktop_tool",
       "type": "desktop_app",
       "priority": 2,
+      "runtime_namespace": "voice_launcher",
+      "port_range": {
+        "start": 8100,
+        "end": 8199
+      },
+      "port_mode_default": "fixed",
+      "service_ports": {
+        "api_port": 8100,
+        "ui_bridge_port": 8110,
+        "update_port": 8120,
+        "health_port": 8130
+      },
       "root_path": "projects/voice_launcher",
       "manifest_path": "projects/voice_launcher/PROJECT_MANIFEST.json",
       "readme_path": "projects/voice_launcher/README.md",
       "main_entrypoints": [
-        "python voice_launcher.py"
+        "python scripts/project_startup.py run --project-slug voice_launcher --entrypoint user --startup-kind user --port-mode fixed",
+        "python scripts/project_startup.py run --project-slug voice_launcher --entrypoint developer --startup-kind developer --port-mode fixed",
+        "python scripts/project_startup.py run --project-slug voice_launcher --entrypoint verify --startup-kind verify --port-mode fixed"
       ],
       "verification_entrypoints": [
         "python -m pytest -q"
@@ -107,15 +152,28 @@
       "category": "research_prototype",
       "type": "prototype",
       "priority": 3,
+      "runtime_namespace": "adaptive_trading",
+      "port_range": {
+        "start": 8200,
+        "end": 8299
+      },
+      "port_mode_default": "fixed",
+      "service_ports": {
+        "api_port": 8200,
+        "ui_bridge_port": 8210,
+        "update_port": 8220,
+        "health_port": 8230
+      },
       "root_path": "projects/adaptive_trading",
       "manifest_path": "projects/adaptive_trading/PROJECT_MANIFEST.json",
       "readme_path": "projects/adaptive_trading/README.md",
       "main_entrypoints": [
-        "python adaptive_trading_bot.py",
-        "python adaptive_trading_gui.py"
+        "python scripts/project_startup.py run --project-slug adaptive_trading --entrypoint user --startup-kind user --port-mode fixed",
+        "python scripts/project_startup.py run --project-slug adaptive_trading --entrypoint developer --startup-kind developer --port-mode fixed",
+        "python scripts/project_startup.py run --project-slug adaptive_trading --entrypoint verify --startup-kind verify --port-mode fixed"
       ],
       "verification_entrypoints": [
-        "python -m py_compile adaptive_trading_bot.py adaptive_trading_gui.py"
+        "python -m py_compile adaptive_trading_bot.py adaptive_trading_gui.py adaptive_trading_gui_easy.py adaptive_trading_gui_ultra.py"
       ],
       "update_entrypoints": []
     },
@@ -126,14 +184,28 @@
       "category": "legacy_product",
       "type": "desktop_app",
       "priority": 4,
+      "runtime_namespace": "tiktok_automation_app",
+      "port_range": {
+        "start": 8300,
+        "end": 8399
+      },
+      "port_mode_default": "fixed",
+      "service_ports": {
+        "api_port": 8300,
+        "ui_bridge_port": 8310,
+        "update_port": 8320,
+        "health_port": 8330
+      },
       "root_path": "projects/wild_hunt_command_citadel/tiktok_automation_app",
       "manifest_path": "projects/wild_hunt_command_citadel/tiktok_automation_app/PROJECT_MANIFEST.json",
       "readme_path": "projects/wild_hunt_command_citadel/tiktok_automation_app/README.md",
       "main_entrypoints": [
-        "python app.py"
+        "python scripts/project_startup.py run --project-slug tiktok_automation_app --entrypoint user --startup-kind user --port-mode fixed",
+        "python scripts/project_startup.py run --project-slug tiktok_automation_app --entrypoint developer --startup-kind developer --port-mode fixed",
+        "python scripts/project_startup.py run --project-slug tiktok_automation_app --entrypoint verify --startup-kind verify --port-mode fixed"
       ],
       "verification_entrypoints": [
-        "python -m py_compile app.py"
+        "python -m py_compile app.py automation_engine.py ui_main.py"
       ],
       "update_entrypoints": []
     }
