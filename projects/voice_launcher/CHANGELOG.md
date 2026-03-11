@@ -53,3 +53,18 @@
   - profile import/export
   - safe launcher automation
   - smoke import
+
+## 1.1.0-dev update (2026-03-11)
+
+- Stability hardening:
+  - Added `inflight` single-flight guard in `LaunchGate` to prevent repeated concurrent launches of the same command.
+  - Added `post_launch_cooldown` behavior for `launcher_play` to avoid multi-window spam after one successful trigger.
+  - `voice_launcher.py` now marks launch lifecycle (`mark_launch_started` / `mark_launch_finished`) for normal/admin/launcher modes.
+- Diagnostics and history:
+  - Integrated `EventHistory` and included it in runtime snapshot and diagnostics bundle.
+  - Diagnostics now also bundles recent `logs`, `backups`, `snapshots` and dependency versions.
+- Premium UI pass:
+  - Updated premium palette/typography and control styles in `voice_launcher_app/ui/theme.py`.
+  - Added top "Quick Status" card in commands tab and improved mode-column readability/adaptive sizing.
+- Tests:
+  - Added `tests/test_audio_devices.py`, `tests/test_event_history.py`, `tests/test_theme.py`.

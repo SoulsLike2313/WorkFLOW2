@@ -25,6 +25,19 @@ def test_normalize_command_entry_accepts_launcher_safety_fields():
     assert 0.65 <= entry.min_window_confidence <= 0.99
 
 
+def test_normalize_command_entry_parses_single_instance_and_post_cooldown():
+    raw = {
+        "mode": "launcher_play",
+        "path": "C:/Games/launcher.exe",
+        "single_instance": "false",
+        "post_launch_cooldown": 180,
+    }
+    entry = normalize_command_entry(raw)
+    assert entry is not None
+    assert entry.single_instance is False
+    assert entry.post_launch_cooldown == 180
+
+
 def test_migrate_settings_to_v6_sets_simple_mode(tmp_path):
     backups = tmp_path / "backups"
     backups.mkdir()

@@ -54,6 +54,7 @@ def build_command_entry(
     launcher_highlight: bool,
     min_window_confidence: float,
     build_task_name: Callable[[str], str],
+    post_launch_cooldown: int = 110,
 ) -> dict:
     entry = {
         "mode": "normal",
@@ -67,6 +68,7 @@ def build_command_entry(
         "launcher_dry_run": bool(launcher_dry_run),
         "launcher_highlight": bool(launcher_highlight),
         "min_window_confidence": float(min_window_confidence),
+        "post_launch_cooldown": int(post_launch_cooldown),
     }
     if use_admin:
         entry["mode"] = "admin_task"
@@ -100,6 +102,7 @@ def save_command_definition(
     path_exists: Callable[[str], bool],
     ignore_phrase: str = "",
     conflict_threshold: float = 0.90,
+    post_launch_cooldown: int = 110,
 ) -> CommandSaveResult:
     phrase = normalize_phrase(phrase)
     if not phrase:
@@ -140,6 +143,7 @@ def save_command_definition(
             launcher_dry_run=launcher_dry_run,
             launcher_highlight=launcher_highlight,
             min_window_confidence=min_window_confidence,
+            post_launch_cooldown=post_launch_cooldown,
             build_task_name=build_task_name,
         )
     except ValueError as exc:

@@ -71,3 +71,10 @@
   - profile import/export
   - safe launcher logic
   - smoke import
+
+## Latest Improvements (2026-03-11)
+
+- Added anti-duplicate launch hardening (`inflight` + post-launch cooldown) to reduce accidental multi-open.
+- Added premium quick-status card and improved command mode column layout.
+- Diagnostics now includes event history and recent backups/snapshots.
+- New tests added for audio device service, theme helpers, and event history.

@@ -14,4 +14,5 @@ def test_build_launcher_preview_defaults():
     assert payload["launcher_dry_run"] is True
     assert payload["launcher_highlight"] is True
     assert payload["play_text"] == "Играть"
+    assert payload["post_launch_cooldown"] == 110
     assert payload["path"] == "E:/WarThunder/launcher.exe"

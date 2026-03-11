@@ -108,6 +108,7 @@ def normalize_command_entry(raw: Any) -> Optional[CommandEntry]:
     entry.mode = entry.mode if entry.mode in SUPPORTED_ACTIONS else "normal"
     entry.wait_timeout = max(30, min(900, int(entry.wait_timeout)))
     entry.debounce_seconds = max(0.8, min(30.0, float(entry.debounce_seconds)))
+    entry.single_instance = _parse_bool(raw.get("single_instance", entry.single_instance), True)
     entry.launcher_dry_run = _parse_bool(raw.get("launcher_dry_run", entry.launcher_dry_run))
     entry.launcher_highlight = _parse_bool(raw.get("launcher_highlight", entry.launcher_highlight))
     try:
@@ -115,6 +116,11 @@ def normalize_command_entry(raw: Any) -> Optional[CommandEntry]:
     except Exception:
         entry.min_window_confidence = 0.90
     entry.min_window_confidence = max(0.65, min(0.99, entry.min_window_confidence))
+    try:
+        entry.post_launch_cooldown = int(raw.get("post_launch_cooldown", entry.post_launch_cooldown))
+    except Exception:
+        entry.post_launch_cooldown = 110
+    entry.post_launch_cooldown = max(5, min(900, int(entry.post_launch_cooldown)))
 
     if entry.mode == ACTION_LAUNCHER_PLAY:
         entry.debounce_seconds = max(12.0, entry.debounce_seconds)

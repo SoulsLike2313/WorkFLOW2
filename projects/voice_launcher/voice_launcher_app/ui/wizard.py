@@ -14,6 +14,7 @@ def build_launcher_preview(
     play_text: str,
     window_title: str,
     wait_timeout: int,
+    post_launch_cooldown: int = 110,
     highlight: bool,
     min_window_confidence: float,
 ) -> Dict[str, Any]:
@@ -23,6 +24,7 @@ def build_launcher_preview(
         "play_text": str(play_text or "Играть").strip() or "Играть",
         "window_title": str(window_title or "").strip(),
         "wait_timeout": int(wait_timeout or 240),
+        "post_launch_cooldown": int(post_launch_cooldown or 110),
         "launcher_dry_run": True,
         "launcher_highlight": bool(highlight),
         "min_window_confidence": float(min_window_confidence or 0.90),
@@ -64,6 +66,7 @@ def open_command_wizard(deps: CommandWizardDeps) -> None:
     play_text_var = tk.StringVar(value="Играть")
     window_title_var = tk.StringVar(value="")
     wait_timeout_var = tk.IntVar(value=240)
+    post_launch_cooldown_var = tk.IntVar(value=110)
     dry_run_var = tk.BooleanVar(value=False)
     highlight_var = tk.BooleanVar(value=False)
     min_confidence_var = tk.DoubleVar(value=0.90)
@@ -129,6 +132,8 @@ def open_command_wizard(deps: CommandWizardDeps) -> None:
     wait_row.pack(fill="x", pady=(0, 8))
     ttk.Label(wait_row, text="Ожидание кнопки (сек):", style="Sub.TLabel").pack(side="left")
     ttk.Spinbox(wait_row, from_=30, to=900, textvariable=wait_timeout_var, width=8).pack(side="left", padx=(8, 0))
+    ttk.Label(wait_row, text="Пауза после старта (сек):", style="Sub.TLabel").pack(side="left", padx=(12, 4))
+    ttk.Spinbox(wait_row, from_=5, to=900, textvariable=post_launch_cooldown_var, width=8).pack(side="left")
 
     safety_row = ttk.Frame(launcher_details, style="Card.TFrame")
     safety_row.pack(fill="x", pady=(0, 8))
@@ -243,6 +248,7 @@ def open_command_wizard(deps: CommandWizardDeps) -> None:
             play_text=play_text_var.get().strip() or "Играть",
             window_title=window_title_var.get().strip(),
             wait_timeout=int(wait_timeout_var.get() or 240),
+            post_launch_cooldown=int(post_launch_cooldown_var.get() or 110),
             launcher_dry_run=bool(dry_run_var.get()),
             launcher_highlight=bool(highlight_var.get()),
             min_window_confidence=float(min_confidence_var.get() or 0.90),
@@ -256,6 +262,7 @@ def open_command_wizard(deps: CommandWizardDeps) -> None:
             play_text=play_text_var.get().strip() or "Играть",
             window_title=window_title_var.get().strip(),
             wait_timeout=int(wait_timeout_var.get() or 240),
+            post_launch_cooldown=int(post_launch_cooldown_var.get() or 110),
             highlight=bool(highlight_var.get()),
             min_window_confidence=float(min_confidence_var.get() or 0.90),
         )

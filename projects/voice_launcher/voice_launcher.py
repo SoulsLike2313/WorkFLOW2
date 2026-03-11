@@ -801,6 +801,7 @@ def normalize_command_entry(value):
                 "launcher_dry_run": False,
                 "launcher_highlight": False,
                 "min_window_confidence": 0.90,
+                "post_launch_cooldown": 110,
             }
         return None
 
@@ -828,12 +829,17 @@ def normalize_command_entry(value):
     dry_run_raw = value.get("launcher_dry_run", False)
     highlight_raw = value.get("launcher_highlight", False)
     min_conf_raw = value.get("min_window_confidence", 0.90)
+    post_launch_cd_raw = value.get("post_launch_cooldown", 110)
     launcher_dry_run = bool(dry_run_raw) if not isinstance(dry_run_raw, str) else dry_run_raw.strip().lower() in ("1", "true", "yes", "on")
     launcher_highlight = bool(highlight_raw) if not isinstance(highlight_raw, str) else highlight_raw.strip().lower() in ("1", "true", "yes", "on")
     try:
         min_window_confidence = float(min_conf_raw)
     except Exception:
         min_window_confidence = 0.90
+    try:
+        post_launch_cooldown = int(post_launch_cd_raw)
+    except Exception:
+        post_launch_cooldown = 110
 
     if not path:
         return None
@@ -844,6 +850,7 @@ def normalize_command_entry(value):
     wait_timeout = max(30, min(900, wait_timeout))
     debounce_seconds = max(0.8, min(30.0, debounce_seconds))
     min_window_confidence = max(0.65, min(0.99, min_window_confidence))
+    post_launch_cooldown = max(5, min(900, post_launch_cooldown))
 
     return {
         "mode": mode,
@@ -857,6 +864,7 @@ def normalize_command_entry(value):
         "launcher_dry_run": launcher_dry_run,
         "launcher_highlight": launcher_highlight,
         "min_window_confidence": min_window_confidence,
+        "post_launch_cooldown": post_launch_cooldown,
     }
 
 
@@ -1389,6 +1397,7 @@ def save_mapping(
     launcher_dry_run=False,
     launcher_highlight=False,
     min_window_confidence=0.90,
+    post_launch_cooldown=110,
     replacing_phrase="",
 ):
     result = save_command_definition(
@@ -1405,6 +1414,7 @@ def save_mapping(
         launcher_dry_run=bool(launcher_dry_run),
         launcher_highlight=bool(launcher_highlight),
         min_window_confidence=float(min_window_confidence),
+        post_launch_cooldown=int(post_launch_cooldown) if str(post_launch_cooldown).strip() else 110,
         build_task_name=build_task_name,
         score_func=command_match_score,
         path_exists=os.path.exists,

@@ -23,6 +23,7 @@ class CommandEntry:
     launcher_dry_run: bool = False
     launcher_highlight: bool = False
     min_window_confidence: float = 0.90
+    post_launch_cooldown: int = 110
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -37,6 +38,7 @@ class CommandEntry:
             "launcher_dry_run": bool(self.launcher_dry_run),
             "launcher_highlight": bool(self.launcher_highlight),
             "min_window_confidence": float(self.min_window_confidence),
+            "post_launch_cooldown": int(self.post_launch_cooldown),
         }
 
     @classmethod
@@ -53,6 +55,7 @@ class CommandEntry:
             launcher_dry_run=bool(value.get("launcher_dry_run", False)),
             launcher_highlight=bool(value.get("launcher_highlight", False)),
             min_window_confidence=float(value.get("min_window_confidence", 0.90) or 0.90),
+            post_launch_cooldown=int(value.get("post_launch_cooldown", 110) or 110),
         )
 
 

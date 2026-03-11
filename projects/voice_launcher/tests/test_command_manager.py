@@ -51,10 +51,12 @@ def test_save_command_definition_ok_launcher_mode():
         launcher_dry_run=True,
         launcher_highlight=False,
         min_window_confidence=0.92,
+        post_launch_cooldown=150,
         build_task_name=lambda p: f"task:{p}",
         score_func=command_match_score,
         path_exists=lambda _p: True,
     )
     assert result.ok is True
     assert result.entry["mode"] == "launcher_play"
+    assert result.entry["post_launch_cooldown"] == 150
     assert "включи игру" in store
