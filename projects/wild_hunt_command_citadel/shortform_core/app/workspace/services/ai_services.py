@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -493,30 +493,30 @@ class AICreativeDirectorService:
         if item.hook_label:
             score += 0.25
         else:
-            feedback.append("Добавь явный hook в первые 1-2 секунды.")
+            feedback.append("Add a clear hook in the first 1-2 seconds.")
         if item.duration is not None and 12 <= item.duration <= 45:
             score += 0.25
         else:
-            feedback.append("Проверь длительность: для short-form чаще работает 12-45 сек.")
+            feedback.append("Adjust duration: 12-45 seconds often works better for short-form.")
         if item.caption and len(item.caption) <= 220:
             score += 0.2
         else:
-            feedback.append("Сделай caption короче и конкретнее.")
+            feedback.append("Keep caption shorter and more specific.")
         if item.cta_label:
             score += 0.15
         else:
-            feedback.append("Добавь CTA (что сделать после просмотра).")
+            feedback.append("Add an explicit CTA (what to do after watching).")
         if item.format_label and item.topic_label:
             score += 0.15
         else:
-            feedback.append("Уточни format/topic labels для аналитики и планирования.")
+            feedback.append("Set format/topic labels for better analytics and planning.")
 
         result = {
             "content_id": content_id,
             "profile_id": item.profile_id,
             "quality_score": round(score, 3),
             "quality_level": "strong" if score >= 0.75 else "medium" if score >= 0.5 else "weak",
-            "feedback": feedback or ["Контент выглядит структурированно для теста публикации."],
+            "feedback": feedback or ["Content is structured enough for a controlled publication test."],
             "visual_direction": self.suggest_visual_direction(item.topic_label or "generic"),
             "audio_direction": self.suggest_audio_direction(item.topic_label or "generic"),
             "caption_variants": self.suggest_caption_variants(item.topic_label or "generic"),
@@ -694,3 +694,4 @@ class AIRecommendationService:
             key=lambda item: (priority_rank.get(item.priority, 0), item.confidence, item.created_at),
             reverse=True,
         )
+

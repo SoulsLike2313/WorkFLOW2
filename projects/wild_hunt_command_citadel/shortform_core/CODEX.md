@@ -47,11 +47,21 @@ Do not place domain logic in UI/transport code.
 ## Current Module Map
 
 ```text
+app/
+  verify.py
+  tests/
+    unit/
+    integration/
+    smoke/
 app/workspace/
+  ai_contracts.py
+  ai_providers.py
   api.py
   connectors.py
   contracts.py
+  demo_seed.py
   device_providers.py
+  diagnostics.py
   errors.py
   metrics_providers.py
   models.py
@@ -65,11 +75,25 @@ app/workspace/
     analytics_services.py
     audit_service.py
     content_service.py
+    generation_prep_service.py
     metrics_service.py
     profile_service.py
     session_service.py
     video_generation_service.py
 ```
+
+## Verification Contract
+
+- Use `python -m app.verify` as the canonical verification entrypoint.
+- Every significant change must be followed by:
+  - real execution,
+  - test/flow verification,
+  - diagnostic logs,
+  - status classification (`verified`, `partially verified`, `stub / not tested`, `failed`).
+- Verification artifacts are written under:
+  - `runtime/verification/<run_id>/verification_summary.json`
+  - `runtime/verification/<run_id>/verification_summary.md`
+  - `runtime/verification/<run_id>/diagnostics/*.jsonl`
 
 ## Extension Rules
 
