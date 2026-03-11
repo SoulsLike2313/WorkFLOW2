@@ -153,6 +153,11 @@ def _run_master(args: argparse.Namespace) -> int:
         "sizes": args.sizes,
         "screenshots": all_screenshots,
     }
+    screens_by_page: dict[str, int] = {}
+    for shot in all_screenshots:
+        page = str(shot.get("page", "unknown"))
+        screens_by_page[page] = screens_by_page.get(page, 0) + 1
+    manifest["screens_by_page"] = screens_by_page
     manifest_path = run_dir / "ui_screenshots_manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -185,6 +190,7 @@ def _run_master(args: argparse.Namespace) -> int:
         "timestamp": finished_at,
     }
     (output_root / "latest_run.json").write_text(json.dumps(latest, ensure_ascii=False, indent=2), encoding="utf-8")
+    (output_root / "latest_run.txt").write_text(str(run_dir.resolve()) + "\n", encoding="utf-8")
 
     print(str(run_dir.resolve()))
     print(f"UI snapshot status: {status}")

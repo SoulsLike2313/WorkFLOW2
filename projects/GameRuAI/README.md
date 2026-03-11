@@ -58,6 +58,28 @@ python -m app.main
 2. Open `Diagnostics` tab for backend and quality history.
 3. Use widgets/tables to track translation quality, companion event health, and voice prep readiness.
 
+## UI QA Automation
+Run the full UI audit loop (doctor + snapshots + consolidated artifacts):
+```powershell
+python scripts/ui_validate.py
+```
+
+Run snapshot harvesting only:
+```powershell
+python scripts/ui_snapshot_runner.py
+```
+
+Run structural UI diagnostics only:
+```powershell
+python scripts/ui_doctor.py
+```
+
+Validation outputs:
+- `ui_validation_summary.json`
+- `ui_validation_summary.md`
+- `ui_screenshots_manifest.json`
+- `runtime/ui_validation/latest_run.txt`
+
 ## Tests
 Run all:
 ```powershell

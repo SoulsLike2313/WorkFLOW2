@@ -163,12 +163,20 @@ def _run_master(args: argparse.Namespace) -> int:
         all_shots.extend(payload.get("screenshots", []))
 
     severity_counts = {"critical": 0, "major": 0, "minor": 0}
+    issue_categories: dict[str, int] = {}
     for issue in all_issues:
         sev = str(issue.get("severity", "minor")).lower()
         if sev in severity_counts:
             severity_counts[sev] += 1
         else:
             severity_counts["minor"] += 1
+        category = str(issue.get("category", "unknown"))
+        issue_categories[category] = issue_categories.get(category, 0) + 1
+
+    shots_by_page: dict[str, int] = {}
+    for shot in all_shots:
+        page = str(shot.get("page", "unknown"))
+        shots_by_page[page] = shots_by_page.get(page, 0) + 1
 
     if severity_counts["critical"] > 0 or failed_workers:
         overall_status = "FAIL"
@@ -193,6 +201,8 @@ def _run_master(args: argparse.Namespace) -> int:
         "commands": commands,
         "failed_workers": failed_workers,
         "severity_counts": severity_counts,
+        "issue_categories": issue_categories,
+        "screenshots_by_page": shots_by_page,
         "issues": all_issues,
         "artifacts": {
             "screenshots_manifest": str((run_dir / "ui_screenshots_manifest.json").resolve()),
@@ -204,6 +214,7 @@ def _run_master(args: argparse.Namespace) -> int:
     manifest = {
         "run_id": run_id,
         "screenshots": all_shots,
+        "screenshots_by_page": shots_by_page,
     }
     (run_dir / "ui_screenshots_manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2),
@@ -239,6 +250,20 @@ def _render_summary_md(summary: dict[str, Any]) -> str:
     lines.append(f"- critical: {counts.get('critical', 0)}")
     lines.append(f"- major: {counts.get('major', 0)}")
     lines.append(f"- minor: {counts.get('minor', 0)}")
+    screen_counts = summary.get("screenshots_by_page", {})
+    if isinstance(screen_counts, dict) and screen_counts:
+        lines.append("")
+        lines.append("## Screenshots By Page")
+        lines.append("")
+        for page, amount in screen_counts.items():
+            lines.append(f"- {page}: {amount}")
+    category_counts = summary.get("issue_categories", {})
+    if isinstance(category_counts, dict) and category_counts:
+        lines.append("")
+        lines.append("## Issue Categories")
+        lines.append("")
+        for category, amount in category_counts.items():
+            lines.append(f"- {category}: {amount}")
     lines.append("")
     lines.append("## Issues")
     lines.append("")

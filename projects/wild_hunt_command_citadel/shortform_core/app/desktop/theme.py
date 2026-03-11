@@ -311,6 +311,20 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         margin-top: 2px;
     }}
 
+    QLabel#DashboardCoreStateSummary,
+    QLabel#DashboardNextActionSummary {{
+        color: rgba(195, 206, 234, 0.96);
+        font-family: '{tokens.typography['label']}';
+        font-size: 12px;
+        font-weight: 450;
+        line-height: 1.42em;
+        border: 1px solid rgba(170, 138, 244, 0.18);
+        border-top: 1px solid rgba(224, 206, 255, 0.28);
+        border-radius: 12px;
+        background: rgba(20, 30, 49, 0.56);
+        padding: 8px 10px;
+    }}
+
     QFrame#DashboardQuickActions QPushButton[dashboardQuickButton='true'] {{
         min-height: 40px;
         border-radius: 14px;

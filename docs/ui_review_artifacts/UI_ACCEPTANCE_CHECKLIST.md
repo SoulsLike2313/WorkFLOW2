@@ -1,42 +1,45 @@
 # UI Acceptance Checklist
 
-Использовать для финального ручного просмотра перед sign-off.
+## A. Product-grade baseline
+- [ ] Интерфейс выглядит как premium command center, не как debug shell.
+- [ ] Dashboard честно отражает состояние ядра (не пустые декоративные блоки).
+- [ ] Пользователь сразу понимает “где я” и “что делать дальше”.
 
-## Layout / Grid
-- [ ] Нет overlaps между блоками.
-- [ ] Нет clipping важных подписей/CTA.
-- [ ] Нет floating CTA вне композиции блока.
-- [ ] Единая колонная логика и предсказуемые отступы.
-- [ ] Context panel и центральная зона не конфликтуют на resize.
+## B. Layout integrity
+- [ ] Нет overlaps.
+- [ ] Нет clipping ключевых CTA/метрик.
+- [ ] Нет floating CTA вне своей панели.
+- [ ] Main workspace и context panel устойчивы на resize.
+- [ ] Нет broken/empty page states после быстрых переключений.
 
-## Interaction
+## C. Interaction quality
 - [ ] Нет hover-only critical controls.
-- [ ] Hover/focus/pressed состояния читаемы и стабильны.
-- [ ] CTA видны в базовом состоянии.
-- [ ] Primary/secondary/context action hierarchy понятна.
+- [ ] Hover/focus/pressed читаемы и стабильны.
+- [ ] CTA hierarchy понятна: primary / secondary / contextual.
 
-## Visual Quality
-- [ ] Premium feel сохранён (dark graphite + violet metallic).
-- [ ] Нет дешёвого retro sci-fi / plastic feel.
-- [ ] Карточки/панели имеют понятную surface hierarchy.
-- [ ] Glow контролируемый, не перегруженный.
+## D. Screen-specific checks
+- [ ] Dashboard: core-state + next-actions читаются быстро.
+- [ ] Profiles: profile identity и quick actions считываются без перегруза.
+- [ ] Sessions: frame и surrounding controls выглядят устойчиво.
+- [ ] Content: queue/validation/readiness логично связаны.
+- [ ] Analytics: top/weak/recommendations читаются как actionable блоки.
+- [ ] AI Studio: rationale/confidence/ideas читаются без шума.
+- [ ] Audit: timeline и severity читаются мгновенно.
+- [ ] Updates: update flow и post-verify статус понятны.
+- [ ] Settings: ссылки на runtime/diagnostics не теряются.
 
-## Typography / Copy
-- [ ] Иерархия заголовков и метрик ясная.
+## E. Localization / readability
 - [ ] Русский текст естественный и продуктовый.
-- [ ] Нет грубых/колких формулировок.
-- [ ] Нет случайного смешения RU/EN в интерфейсе.
+- [ ] Нет случайного RU/EN микса без причины.
+- [ ] Длинные русские строки не ломают layout.
 
-## Scaling / Robustness
-- [ ] Проверка `100%` пройдена.
-- [ ] Проверка `125%` пройдена.
-- [ ] Проверка `150%` пройдена.
-- [ ] Длинные русские строки не ломают композицию.
+## F. Scaling / DPI
+- [ ] Проверка 100% пройдена.
+- [ ] Проверка 125% пройдена.
+- [ ] Проверка 150% пройдена.
 
-## Product Logic
-- [ ] Навигация и текущий экран считываются мгновенно.
-- [ ] Следующий шаг пользователя понятен.
-- [ ] Sessions ощущается как product workspace, не placeholder.
-- [ ] Analytics читается быстро и даёт actionable контекст.
-- [ ] AI Studio понятен по рекомендациям/rationale/confidence.
-- [ ] Остатки старого branding отсутствуют.
+## G. Final gate
+- [ ] `ui_doctor` -> PASS.
+- [ ] `ui_snapshot_runner` -> PASS.
+- [ ] `ui_validate` -> PASS.
+- [ ] Только после этого разрешён final human sign-off.

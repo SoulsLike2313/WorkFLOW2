@@ -37,6 +37,28 @@ pytest -q tests/integration/test_reports_generation.py
 pytest -q tests/unit/test_report_builders.py tests/unit/test_metrics_aggregation.py tests/unit/test_backend_diagnostics_calculations.py
 ```
 
+## UI QA automation
+Run consolidated UI validation:
+```powershell
+python scripts/ui_validate.py
+```
+
+Run only screenshot capture:
+```powershell
+python scripts/ui_snapshot_runner.py
+```
+
+Run only UI doctor diagnostics:
+```powershell
+python scripts/ui_doctor.py
+```
+
+Expected artifacts:
+- `ui_validation_summary.json`
+- `ui_validation_summary.md`
+- `ui_screenshots_manifest.json`
+- `runtime/ui_validation/latest_run.txt`
+
 ## Notes
 - Tests use temporary SQLite runtime paths.
 - Fixture dataset is generated automatically by test session setup.

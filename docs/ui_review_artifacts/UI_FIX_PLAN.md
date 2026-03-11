@@ -1,23 +1,39 @@
 # UI Fix Plan
 
+## Стратегия этой фазы
+
+Не “косметика”, а системная коррекция:
+1. Screenshot baseline.
+2. Visual audit + инженерный аудит на устойчивость.
+3. Правки HUD и validation tooling.
+4. Повторный screenshot + doctor + validate.
+5. Фиксация артефактов и статусов.
+
 ## Приоритеты
-### 1) Critical (сразу)
-- Убрать broken page states при быстром переключении.
-- Убрать hover-only риски для критичных CTA.
-- Закрыть любые битые/пустые зоны.
 
-### 2) Major
-- Починить clipping и out-of-bounds на `Sessions` и плотных размерах окна.
-- Укрепить split-геометрию между main area и context panel.
-- Устранить ложные ошибки в автоматической UI-валидации.
+### Priority 1 — Critical stability
+- Исключить broken page states.
+- Исключить hover-only критичные действия.
+- Стабилизировать layout при resize/scaling.
 
-### 3) Minor
-- Дошлифовать копирайтинг и micro-spacing.
-- Обновить review artifacts после каждого крупного прогона.
+### Priority 2 — Product-grade HUD clarity
+- Dashboard должен показывать реальную силу ядра:
+  - readiness,
+  - verification,
+  - update state,
+  - next actions.
 
-## Порядок выполнения
-1. Исправления в UI/runtime (`user_window`, `pages`).
-2. Усиление автоматической проверки (`ui_doctor`, затем `ui_validate`).
-3. Снимки baseline (`ui_snapshot_runner`).
-4. Пересборка артефактов (`json` + `md` + run pointers).
-5. Финальный ручной acceptance pass по чек-листу.
+### Priority 3 — Resilience automation
+- Усилить автоматические проверки так, чтобы ловить regressions до ручного ревью.
+
+## Выполнено
+
+- Dashboard: добавлены `core_state_summary` и `next_action_summary`.
+- `ui_doctor`: добавлены проверки split/top-status/context/dashboard-summary.
+- `ui_validate`: добавлены screen-audit и `ui_visual_review.md`.
+- `ui_snapshot_runner`: добавлены `screens_by_page` и `latest_run.txt`.
+- Финальный автоматический гейт: `PASS`.
+
+## Остаток
+
+- Ручной visual acceptance (на реальном пользовательском окружении) перед финальным freeze.

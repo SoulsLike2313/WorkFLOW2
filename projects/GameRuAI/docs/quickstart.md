@@ -44,3 +44,14 @@ python -m app.main
 ```powershell
 pytest -q
 ```
+
+## 9) UI validation loop
+```powershell
+python scripts/ui_validate.py
+```
+
+Artifacts after run:
+- `ui_validation_summary.json`
+- `ui_validation_summary.md`
+- `ui_screenshots_manifest.json`
+- `runtime/ui_validation/latest_run.txt`

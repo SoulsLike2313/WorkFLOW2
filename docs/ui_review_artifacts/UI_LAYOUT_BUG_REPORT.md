@@ -1,16 +1,20 @@
 # UI Layout Bug Report
 
-## Таблица дефектов
+## Проверенные прогоны
+- baseline snapshots: `20260311_220907`
+- post-fix snapshots: `20260311_221740`
+- doctor: `20260311_221939`
+- validate: `20260311_222150`
 
-| Экран | Блок | Проблема | Severity | Вероятная причина | Стратегия фикса | Статус |
+## Актуальная таблица layout-рисков
+
+| Screen | Block | Issue | Severity | Likely Cause | Proposed Fix | Status |
 |---|---|---|---|---|---|---|
-| All | Page transition layer | Пустые/битые зоны при быстром переключении | critical | Неочищенный opacity effect | Явный cleanup fade target при stop/finished | Fixed |
-| Sessions | Session frame + status chips | Clipping статусов на `1366x768` и `1280x800` | major | Длинные строки + ограниченная ширина | Сокращённые статусы + выравнивание + scroll container | Fixed |
-| Sessions | Нижняя зона preview | Визуальный срез при плотном окне | major | Мин. высота preview + плотная вертикальная композиция | Коррекция min-size и контейнеризации | Fixed |
-| Analytics | Validation expectations | Ложный critical “missing CTA” | major | Валидация ждала кнопку вместо label-индикатора | Разделение required buttons и required labels | Fixed |
-| Workspace split | Main area vs context panel | Риск конфликтной ширины колонок на resize | major | Недостаточная ребалансировка split | Явный `rebalance_main_splitter()` + guards | Fixed |
+| All | Main split | Конфликт ширин main/context при resize | major (historical) | Недостаточная проверка split ratio | Добавлены ui_doctor split checks | Fixed |
+| Dashboard | HUD summary | Недостаточная отражаемость реального состояния ядра | major | Не хватало явных core-state/next-actions | Добавлены summary-блоки | Fixed |
+| Sessions | Session status area | Риск clipping на средних окнах | major (historical) | Плотная геометрия + длинные строки | Укороченные статусы + контейнеризация | Fixed |
+| All | CTA visibility | Риск hover-only critical controls | critical (historical) | Неполные проверки валидации | Жёсткий ui_doctor check | Fixed |
 
-## Текущий остаток
-- Critical layout-багов по текущим инвариантам не найдено.
-- Major layout-багов по текущим инвариантам не найдено.
-- Остаётся обязательный ручной visual acceptance на реальном DPI/шрифтах.
+## Остаток
+- По текущим инвариантам doctor/validate критичных и major layout ошибок не выявили.
+- Рекомендуется финальный ручной pass на реальном пользовательском DPI/шрифтах.

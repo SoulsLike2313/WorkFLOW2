@@ -1,43 +1,56 @@
 # UI Problem Audit
 
 Дата: 2026-03-11  
-Область: `shortform_core` desktop UI (`Dashboard`, `Profiles`, `Sessions`, `Content`, `Analytics`, `AI Studio`, `Audit`, `Updates`, `Settings`)
+Модуль: `shortform_core` desktop UI
 
-## Метод проверки
-- Ручной проход по экранам с фокусом на product UX (навигация, CTA, читаемость, контекст).
-- Машинный проход через `scripts/ui_doctor.py`:
-  - проверка критичных CTA;
-  - проверка anti-pattern `hover-only`;
-  - поиск clipping/overflow/out-of-bounds/overlap;
-  - скриншоты для `100% / 125% / 150%`.
-- Снимки экранов через `scripts/ui_snapshot_runner.py` для baseline-сравнения итераций.
+## Screenshot-driven прогоны этой фазы
 
-## Сводка по severity
-### Critical
-- Пустые/битые зоны при быстрых переключениях экранов (эффект fade мог оставаться на странице).
-- Риск недоступности критичных CTA, если валидация не проверяет их как always-visible.
+### Baseline
+- Snapshot run: `20260311_220907` (`PASS`)
+- Путь: `runtime/ui_snapshots/20260311_220907`
 
-Статус: исправлено.
+### After corrections
+- Snapshot run: `20260311_221740` (`PASS`)
+- Doctor run: `20260311_221939` (`PASS`)
+- Validate run: `20260311_222150` (`PASS`)
+- Snapshot (внутри validate): `20260311_222355` (`PASS`)
 
-### Major
-- Clipping текста в `Sessions` на средних размерах окна.
-- Нестабильная геометрия части страниц при плотных размерах окна (недостаточная контейнеризация).
-- Ложные срабатывания валидации (ожидание кнопки там, где фактически должен быть label-блок).
+## Найденные системные проблемы
 
-Статус: исправлено.
+### Critical (исторически, закрыты)
+- Риск broken page-state после быстрых переключений экранов.
+- Риск отсутствия критичных CTA в базовой видимости (анти-pattern hover-only).
 
-### Minor
-- Нужен отдельный регламент UI QA, чтобы не возвращаться к тем же проблемам при следующих итерациях.
-- Нужен единый entrypoint валидации, который формирует понятные артефакты в корне активного модуля.
+### Major (закрыты в этой фазе)
+- Недостаточная product-выразительность Dashboard как HUD реальных возможностей ядра.
+- Недостаточный автоматический контроль устойчивости split/layout и context/top-status зон.
+- Недостаточная трассировка screen-level аудита в сводке `ui_validate`.
 
-Статус: закрыто в этой фазе (через `ui_validate` + `UI_BUILD_RULES`).
+### Minor (остаются для ручного visual acceptance)
+- Тонкая типографическая калибровка micro-spacing в длинных текстовых блоках.
+- Финальная оценка “премиальности” на реальном пользовательском окружении.
 
-## Что проверено в этой фазе
-- Все основные экраны открываются и переключаются.
-- Критичные CTA присутствуют и не завязаны на hover-only visibility.
-- Нет критичных налезаний/выхода интерактивных контролов за границы по текущему набору инвариантов.
-- Сформированы machine-readable артефакты (`json` + `md`) и run pointers.
+## Что исправлено
 
-## Остаточные риски
-- Ручной visual acceptance всё ещё обязателен (особенно на реальном Windows-мониторе, шрифтах и пользовательском масштабе ОС).
-- Автоматический UI doctor покрывает геометрию и видимость, но не заменяет дизайнерскую оценку micro-типографики.
+- Dashboard получил явные блоки:
+  - `core_state_summary`,
+  - `next_action_summary`.
+- `ui_doctor` усилен checks:
+  - splitter size/ratio stability;
+  - top status pills completeness;
+  - context panel action/info sufficiency;
+  - dashboard summary presence.
+- `ui_validate` усилен:
+  - screen audit aggregation;
+  - `ui_visual_review.md` per run;
+  - расширенный артефактный manifest (doctor/snapshot links).
+- `ui_snapshot_runner` усилен:
+  - `screens_by_page`,
+  - `latest_run.txt`,
+  - comparison-ready manifests.
+
+## Текущее состояние
+
+- Автоматический UI gate: **PASS**.
+- Критичных/major дефектов по текущим инвариантам не обнаружено.
+- Следующий этап: финальный ручной human acceptance.
