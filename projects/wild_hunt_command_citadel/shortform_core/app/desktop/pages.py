@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QSplitter,
+    QSizePolicy,
     QTableWidget,
     QTableWidgetItem,
     QTextEdit,
@@ -42,6 +43,19 @@ def _fmt_num(value: Any) -> str:
 
 def _safe_list(value: Any) -> list[Any]:
     return value if isinstance(value, list) else []
+
+
+PAGE_GAP = 16
+ROW_GAP = 12
+GRID_GAP = 10
+CARD_INSET = (16, 14, 16, 14)
+ACTION_BUTTON_HEIGHT = 40
+PRIMARY_ACTION_MIN_WIDTH = 170
+
+
+def _setup_card_layout(layout: QVBoxLayout) -> None:
+    layout.setContentsMargins(*CARD_INSET)
+    layout.setSpacing(ROW_GAP)
 
 
 def _ru_gate(value: str) -> str:
@@ -154,15 +168,15 @@ class DashboardPage(BasePage):
         self.setObjectName("DashboardPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(14)
+        layout.setSpacing(PAGE_GAP)
 
         overview_header = SectionHeader("Обзор", "Сводка рабочего пространства и быстрые действия")
         overview_header.setObjectName("DashboardOverviewHeader")
         layout.addWidget(overview_header)
 
         metrics_grid = QGridLayout()
-        metrics_grid.setHorizontalSpacing(13)
-        metrics_grid.setVerticalSpacing(13)
+        metrics_grid.setHorizontalSpacing(ROW_GAP)
+        metrics_grid.setVerticalSpacing(ROW_GAP)
 
         self.cards = {
             "profiles": MetricCard("Активные профили", "0", "зарегистрировано"),
@@ -190,16 +204,15 @@ class DashboardPage(BasePage):
         quick_card = GlowCard(elevated=False)
         quick_card.setObjectName("DashboardQuickActions")
         quick_layout = QVBoxLayout(quick_card)
-        quick_layout.setContentsMargins(14, 12, 14, 12)
-        quick_layout.setSpacing(10)
+        _setup_card_layout(quick_layout)
         quick_header = SectionHeader("Быстрые действия", "Ключевые шаги рабочего сценария")
         quick_header.setObjectName("DashboardQuickHeader")
         quick_layout.addWidget(quick_header)
 
         row1 = QHBoxLayout()
         row2 = QHBoxLayout()
-        row1.setSpacing(8)
-        row2.setSpacing(8)
+        row1.setSpacing(GRID_GAP)
+        row2.setSpacing(GRID_GAP)
 
         row1_caption = QLabel("Запуск рабочего цикла")
         row1_caption.setObjectName("DashboardRowCaption")
@@ -207,23 +220,24 @@ class DashboardPage(BasePage):
         row2_caption.setObjectName("DashboardRowCaption")
 
         actions = [
-            ("Добавить профиль", "add_profile"),
-            ("Открыть сессию", "open_session"),
-            ("Загрузить метрики", "import_metrics"),
-            ("Сформировать контент-план", "generate_plan"),
-            ("Открыть AI-студию", "open_ai_studio"),
-            ("Проверить обновления", "check_updates"),
+            ("Добавить профиль", "add_profile", "secondary"),
+            ("Открыть сессию", "open_session", "secondary"),
+            ("Загрузить метрики", "import_metrics", "outline"),
+            ("Сформировать контент-план", "generate_plan", "primary"),
+            ("Открыть AI-студию", "open_ai_studio", "secondary"),
+            ("Проверить обновления", "check_updates", "outline"),
         ]
-        for idx, (title, action) in enumerate(actions):
+        for idx, (title, action, tone) in enumerate(actions):
             button = MotionButton(title)
-            if action in {"add_profile", "open_session", "generate_plan"}:
+            if tone == "primary":
                 button.setObjectName("PrimaryCTA")
-            elif action in {"check_updates"}:
+            elif tone == "outline":
                 button.setObjectName("OutlineCTA")
             else:
                 button.setObjectName("SecondaryCTA")
             button.setProperty("dashboardQuickButton", "true")
-            button.setMinimumHeight(39)
+            button.setMinimumHeight(ACTION_BUTTON_HEIGHT)
+            button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
             button.clicked.connect(lambda _=False, a=action: self.action_requested.emit(a, None))
             (row1 if idx < 3 else row2).addWidget(button, 1)
 
@@ -234,13 +248,15 @@ class DashboardPage(BasePage):
         layout.addWidget(quick_card)
 
         split = QSplitter(Qt.Orientation.Horizontal)
+        split.setObjectName("DashboardSplit")
         split.setChildrenCollapsible(False)
+        split.setHandleWidth(10)
 
         audit_card = GlowCard(elevated=False)
         audit_card.setObjectName("DashboardAuditBlock")
+        audit_card.setMinimumWidth(360)
         audit_layout = QVBoxLayout(audit_card)
-        audit_layout.setContentsMargins(14, 12, 14, 12)
-        audit_layout.setSpacing(10)
+        _setup_card_layout(audit_layout)
         audit_header = SectionHeader("Последние события журнала", "Актуальная лента действий")
         audit_header.setObjectName("DashboardAuditHeader")
         audit_layout.addWidget(audit_header)
@@ -252,9 +268,9 @@ class DashboardPage(BasePage):
 
         rec_card = GlowCard(elevated=False)
         rec_card.setObjectName("DashboardRecommendationBlock")
+        rec_card.setMinimumWidth(360)
         rec_layout = QVBoxLayout(rec_card)
-        rec_layout.setContentsMargins(14, 12, 14, 12)
-        rec_layout.setSpacing(10)
+        _setup_card_layout(rec_layout)
         rec_header = SectionHeader("Сводка рекомендаций AI", "Приоритетные предложения")
         rec_header.setObjectName("DashboardRecommendationHeader")
         rec_layout.addWidget(rec_header)
@@ -266,9 +282,9 @@ class DashboardPage(BasePage):
 
         split.addWidget(audit_card)
         split.addWidget(rec_card)
-        split.setStretchFactor(0, 1)
-        split.setStretchFactor(1, 1)
-        split.setSizes([520, 520])
+        split.setStretchFactor(0, 11)
+        split.setStretchFactor(1, 9)
+        split.setSizes([600, 500])
         layout.addWidget(split, stretch=1)
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:
@@ -322,14 +338,14 @@ class ProfilesPage(BasePage):
         self.setObjectName("ProfilesPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(14)
+        layout.setSpacing(PAGE_GAP)
 
         header = SectionHeader("Профили", "Тип подключения, режим управления, состояние и быстрые действия")
         header.setObjectName("ProfilesHeader")
         layout.addWidget(header)
 
         summary = QHBoxLayout()
-        summary.setSpacing(12)
+        summary.setSpacing(ROW_GAP)
         self.profile_total_card = MetricCard("Профилей", "0", "в рабочем реестре")
         self.profile_connected_card = MetricCard("Подключено", "0", "активные связи")
         self.profile_healthy_card = MetricCard("Стабильные", "0", "health = норма")
@@ -347,31 +363,31 @@ class ProfilesPage(BasePage):
         actions_card = GlowCard(elevated=False)
         actions_card.setObjectName("ProfilesQuickActionsBlock")
         actions_layout = QVBoxLayout(actions_card)
-        actions_layout.setContentsMargins(14, 12, 14, 12)
-        actions_layout.setSpacing(10)
+        _setup_card_layout(actions_layout)
         actions_layout.addWidget(SectionHeader("Быстрые действия профилей", "Создание, подключение и переходы в рабочие модули"))
 
         actions_grid = QGridLayout()
-        actions_grid.setHorizontalSpacing(8)
-        actions_grid.setVerticalSpacing(8)
+        actions_grid.setHorizontalSpacing(GRID_GAP)
+        actions_grid.setVerticalSpacing(GRID_GAP)
         profile_actions = [
-            ("Создать профиль", "add_profile", True),
-            ("Подключить профиль", "connect_profile", False),
-            ("Открыть сессию", "open_session", True),
-            ("Открыть аналитику", "open_analytics", False),
-            ("Открыть контент", "open_content", False),
-            ("Открыть AI", "open_ai_studio", False),
+            ("Создать профиль", "add_profile", "primary"),
+            ("Подключить профиль", "connect_profile", "outline"),
+            ("Открыть сессию", "open_session", "secondary"),
+            ("Открыть аналитику", "open_analytics", "secondary"),
+            ("Открыть контент", "open_content", "secondary"),
+            ("Открыть AI", "open_ai_studio", "secondary"),
         ]
-        for idx, (title, action, primary) in enumerate(profile_actions):
+        for idx, (title, action, tone) in enumerate(profile_actions):
             btn = MotionButton(title)
-            if primary:
+            if tone == "primary":
                 btn.setObjectName("PrimaryCTA")
-            elif action in {"connect_profile"}:
+            elif tone == "outline":
                 btn.setObjectName("OutlineCTA")
             else:
                 btn.setObjectName("SecondaryCTA")
             btn.setProperty("profilesQuickAction", "true")
-            btn.setMinimumHeight(39)
+            btn.setMinimumHeight(ACTION_BUTTON_HEIGHT)
+            btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
             btn.clicked.connect(lambda _=False, a=action: self.action_requested.emit(a, self.selected_profile_id()))
             row = idx // 3
             col = idx % 3
@@ -455,14 +471,14 @@ class SessionsPage(BasePage):
         self.setObjectName("SessionsPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(14)
+        layout.setSpacing(PAGE_GAP)
 
         header = SectionHeader("Сессии", "Премиальное окно 9:16 с управлением и статусом")
         header.setObjectName("SessionsHeader")
         layout.addWidget(header)
 
         summary = QHBoxLayout()
-        summary.setSpacing(12)
+        summary.setSpacing(ROW_GAP)
         self.sessions_open_card = MetricCard("Открытые сессии", "0", "из доступных профилей")
         self.sessions_selected_card = MetricCard("Текущий профиль", "-", "состояние runtime")
         self.sessions_viewport_card = MetricCard("Пресет окна", "-", "формат 9:16")
@@ -474,46 +490,54 @@ class SessionsPage(BasePage):
         controls_card = GlowCard(elevated=False)
         controls_card.setObjectName("SessionsControlBlock")
         controls_layout = QVBoxLayout(controls_card)
-        controls_layout.setContentsMargins(14, 12, 14, 12)
-        controls_layout.setSpacing(10)
+        _setup_card_layout(controls_layout)
         controls_layout.addWidget(SectionHeader("Управление сессией", "Выбор пресета, запуск и завершение окна профиля"))
 
-        controls = QHBoxLayout()
-        controls.setSpacing(8)
+        controls_top = QHBoxLayout()
+        controls_top.setSpacing(GRID_GAP)
         self.viewport = QComboBox()
         self.viewport.setObjectName("SessionsViewportPreset")
         self.viewport.addItem("Смартфон (по умолчанию)", "smartphone_default")
         self.viewport.addItem("Android (высокий)", "android_tall")
         self.viewport.addItem("iPhone-стиль", "iphone_like")
         self.viewport.addItem("Пользовательский", "custom")
-        controls.addWidget(QLabel("Пресет окна:"))
-        controls.addWidget(self.viewport, 1)
-        controls.addStretch(1)
+        controls_top.addWidget(QLabel("Пресет окна:"))
+        controls_top.addWidget(self.viewport, 1)
+        controls_layout.addLayout(controls_top)
 
         open_btn = MotionButton("Открыть сессию")
         open_btn.setObjectName("PrimaryCTA")
         open_btn.setProperty("sessionsAction", "true")
-        open_btn.setMinimumWidth(154)
+        open_btn.setMinimumHeight(ACTION_BUTTON_HEIGHT)
+        open_btn.setMinimumWidth(PRIMARY_ACTION_MIN_WIDTH)
+        open_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         open_btn.clicked.connect(lambda: self.action_requested.emit("open_session", self._payload()))
         close_btn = MotionButton("Закрыть сессию")
         close_btn.setObjectName("DangerCTA")
         close_btn.setProperty("sessionsAction", "true")
-        close_btn.setMinimumWidth(154)
+        close_btn.setMinimumHeight(ACTION_BUTTON_HEIGHT)
+        close_btn.setMinimumWidth(PRIMARY_ACTION_MIN_WIDTH)
+        close_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         close_btn.clicked.connect(lambda: self.action_requested.emit("close_session", self._payload()))
 
-        controls.addWidget(open_btn)
-        controls.addWidget(close_btn)
-        controls_layout.addLayout(controls)
+        controls_actions = QGridLayout()
+        controls_actions.setHorizontalSpacing(GRID_GAP)
+        controls_actions.setVerticalSpacing(GRID_GAP)
+        controls_actions.addWidget(open_btn, 0, 0)
+        controls_actions.addWidget(close_btn, 0, 1)
+        controls_actions.setColumnStretch(0, 1)
+        controls_actions.setColumnStretch(1, 1)
+        controls_layout.addLayout(controls_actions)
         layout.addWidget(controls_card)
 
         body = QHBoxLayout()
-        body.setSpacing(12)
+        body.setSpacing(ROW_GAP)
 
         left_card = GlowCard(elevated=False)
         left_card.setObjectName("SessionsRegistryBlock")
+        left_card.setMinimumWidth(340)
         left_layout = QVBoxLayout(left_card)
-        left_layout.setContentsMargins(14, 12, 14, 12)
-        left_layout.setSpacing(10)
+        _setup_card_layout(left_layout)
         left_layout.addWidget(SectionHeader("Реестр сессий", "Состояние выполнения по каждому профилю"))
         self.session_list = QListWidget()
         self.session_list.setObjectName("SessionsList")
@@ -525,15 +549,15 @@ class SessionsPage(BasePage):
 
         right_card = GlowCard(elevated=False)
         right_card.setObjectName("SessionsWorkspaceBlock")
+        right_card.setMinimumWidth(430)
         right_layout = QVBoxLayout(right_card)
-        right_layout.setContentsMargins(14, 12, 14, 12)
-        right_layout.setSpacing(10)
+        _setup_card_layout(right_layout)
 
         self.session_frame = GlowCard(elevated=True)
         self.session_frame.setObjectName("SessionFrame")
         frame_layout = QVBoxLayout(self.session_frame)
         frame_layout.setContentsMargins(16, 16, 16, 16)
-        frame_layout.setSpacing(10)
+        frame_layout.setSpacing(ROW_GAP)
 
         self.frame_title = QLabel("Окно сессии 9:16")
         self.frame_title.setObjectName("SectionTitle")
@@ -551,7 +575,8 @@ class SessionsPage(BasePage):
         self.session_preview = QLabel("SESSION PREVIEW 9:16\n\nОткройте сессию профиля для живого состояния.")
         self.session_preview.setObjectName("SessionMobilePreview")
         self.session_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.session_preview.setMinimumSize(270, 430)
+        self.session_preview.setMinimumSize(280, 450)
+        self.session_preview.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.session_preview.setWordWrap(True)
         frame_layout.addWidget(self.session_preview)
 
@@ -643,10 +668,11 @@ class ContentPage(BasePage):
         self.setObjectName("ContentPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(12)
+        layout.setSpacing(PAGE_GAP)
         layout.addWidget(SectionHeader("Контент", "Библиотека, очередь, валидация и готовность к публикации"))
 
         summary = QHBoxLayout()
+        summary.setSpacing(ROW_GAP)
         self.card_total = MetricCard("Библиотека", "0", "элементов")
         self.card_queue = MetricCard("В очереди", "0", "готово к постингу")
         self.card_ready = MetricCard("Готово", "0", "прошло валидацию")
@@ -657,20 +683,30 @@ class ContentPage(BasePage):
         summary.addWidget(self.card_invalid)
         layout.addLayout(summary)
 
-        actions = QHBoxLayout()
+        actions = QGridLayout()
+        actions.setHorizontalSpacing(GRID_GAP)
+        actions.setVerticalSpacing(GRID_GAP)
         add_btn = MotionButton("Добавить демо-контент")
         add_btn.setObjectName("PrimaryCTA")
+        add_btn.setMinimumHeight(ACTION_BUTTON_HEIGHT)
+        add_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         add_btn.clicked.connect(lambda: self.action_requested.emit("add_placeholder_content", None))
         validate_btn = MotionButton("Проверить выбранное")
         validate_btn.setObjectName("SecondaryCTA")
+        validate_btn.setMinimumHeight(ACTION_BUTTON_HEIGHT)
+        validate_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         validate_btn.clicked.connect(lambda: self.action_requested.emit("validate_content", self.selected_content_id()))
         queue_btn = MotionButton("Поставить в очередь")
         queue_btn.setObjectName("OutlineCTA")
+        queue_btn.setMinimumHeight(ACTION_BUTTON_HEIGHT)
+        queue_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         queue_btn.clicked.connect(lambda: self.action_requested.emit("queue_content", self.selected_content_id()))
-        actions.addWidget(add_btn)
-        actions.addWidget(validate_btn)
-        actions.addWidget(queue_btn)
-        actions.addStretch(1)
+        actions.addWidget(add_btn, 0, 0)
+        actions.addWidget(validate_btn, 0, 1)
+        actions.addWidget(queue_btn, 0, 2)
+        actions.setColumnStretch(0, 1)
+        actions.setColumnStretch(1, 1)
+        actions.setColumnStretch(2, 1)
         layout.addLayout(actions)
 
         self.table = QTableWidget(0, 7)
@@ -727,13 +763,13 @@ class AnalyticsPage(BasePage):
         self.setObjectName("AnalyticsPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(14)
+        layout.setSpacing(PAGE_GAP)
         analytics_header = SectionHeader("Аналитика", "Результативность, топ-контент, слабые сигналы и план действий")
         analytics_header.setObjectName("AnalyticsHeader")
         layout.addWidget(analytics_header)
 
         row = QHBoxLayout()
-        row.setSpacing(12)
+        row.setSpacing(ROW_GAP)
         self.views_card = MetricCard("Окно просмотров", "0", "результат профиля")
         self.engagement_card = MetricCard("Вовлечённость", "0", "суммарно за окно")
         self.momentum_card = MetricCard("Моментум", "0", "оценка динамики")
@@ -747,13 +783,15 @@ class AnalyticsPage(BasePage):
         layout.addLayout(row)
 
         split = QSplitter(Qt.Orientation.Horizontal)
+        split.setObjectName("AnalyticsSplit")
         split.setChildrenCollapsible(False)
+        split.setHandleWidth(10)
 
         left = GlowCard(elevated=False)
         left.setObjectName("AnalyticsTopWeakBlock")
+        left.setMinimumWidth(360)
         left_layout = QVBoxLayout(left)
-        left_layout.setContentsMargins(14, 12, 14, 12)
-        left_layout.setSpacing(10)
+        _setup_card_layout(left_layout)
         top_header = SectionHeader("Топ-контент", "Лучшие ролики и выбросы")
         top_header.setObjectName("AnalyticsTopHeader")
         left_layout.addWidget(top_header)
@@ -774,9 +812,9 @@ class AnalyticsPage(BasePage):
 
         right = GlowCard(elevated=False)
         right.setObjectName("AnalyticsInsightsBlock")
+        right.setMinimumWidth(360)
         right_layout = QVBoxLayout(right)
-        right_layout.setContentsMargins(14, 12, 14, 12)
-        right_layout.setSpacing(10)
+        _setup_card_layout(right_layout)
         patterns_header = SectionHeader("Паттерны контента", "Темы, форматы, хуки и окна публикации")
         patterns_header.setObjectName("AnalyticsPatternsHeader")
         right_layout.addWidget(patterns_header)
@@ -796,9 +834,9 @@ class AnalyticsPage(BasePage):
 
         split.addWidget(left)
         split.addWidget(right)
-        split.setStretchFactor(0, 1)
-        split.setStretchFactor(1, 1)
-        split.setSizes([500, 540])
+        split.setStretchFactor(0, 11)
+        split.setStretchFactor(1, 9)
+        split.setSizes([600, 500])
         layout.addWidget(split, stretch=1)
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:
@@ -871,14 +909,14 @@ class AIStudioPage(BasePage):
         self.setObjectName("AIStudioPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(14)
+        layout.setSpacing(PAGE_GAP)
 
         ai_header = SectionHeader("AI-студия", "Восприятие, рекомендации, обучение и креативные брифы")
         ai_header.setObjectName("AIStudioHeader")
         layout.addWidget(ai_header)
 
         cards = QHBoxLayout()
-        cards.setSpacing(12)
+        cards.setSpacing(ROW_GAP)
         self.rec_count_card = MetricCard("Рекомендации", "0", "активный список")
         self.learning_card = MetricCard("Записи обучения", "0", "feedback-цикл")
         self.bundle_card = MetricCard("Пакеты генерации", "0", "конвейер брифов")
@@ -894,36 +932,43 @@ class AIStudioPage(BasePage):
         action_card = GlowCard(elevated=False)
         action_card.setObjectName("AIActionBlock")
         action_card_layout = QVBoxLayout(action_card)
-        action_card_layout.setContentsMargins(14, 12, 14, 12)
-        action_card_layout.setSpacing(10)
+        _setup_card_layout(action_card_layout)
         action_card_layout.addWidget(SectionHeader("Операции AI", "Генерация рекомендаций и подготовка production-бандла"))
 
-        action_row = QHBoxLayout()
-        action_row.setSpacing(8)
+        action_row = QGridLayout()
+        action_row.setHorizontalSpacing(GRID_GAP)
+        action_row.setVerticalSpacing(GRID_GAP)
         gen_btn = MotionButton("Сгенерировать рекомендации")
         gen_btn.setObjectName("PrimaryCTA")
         gen_btn.setProperty("aiAction", "true")
-        gen_btn.setMinimumWidth(190)
+        gen_btn.setMinimumHeight(ACTION_BUTTON_HEIGHT)
+        gen_btn.setMinimumWidth(PRIMARY_ACTION_MIN_WIDTH)
+        gen_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         gen_btn.clicked.connect(lambda: self.action_requested.emit("generate_ai_recommendations", None))
         bundle_btn = MotionButton("Собрать пакет генерации")
         bundle_btn.setObjectName("SecondaryCTA")
         bundle_btn.setProperty("aiAction", "true")
-        bundle_btn.setMinimumWidth(190)
+        bundle_btn.setMinimumHeight(ACTION_BUTTON_HEIGHT)
+        bundle_btn.setMinimumWidth(PRIMARY_ACTION_MIN_WIDTH)
+        bundle_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         bundle_btn.clicked.connect(lambda: self.action_requested.emit("build_generation_bundle", None))
-        action_row.addWidget(gen_btn)
-        action_row.addWidget(bundle_btn)
-        action_row.addStretch(1)
+        action_row.addWidget(gen_btn, 0, 0)
+        action_row.addWidget(bundle_btn, 0, 1)
+        action_row.setColumnStretch(0, 1)
+        action_row.setColumnStretch(1, 1)
         action_card_layout.addLayout(action_row)
         layout.addWidget(action_card)
 
         split = QSplitter(Qt.Orientation.Horizontal)
+        split.setObjectName("AIStudioSplit")
         split.setChildrenCollapsible(False)
+        split.setHandleWidth(10)
 
         left = GlowCard(elevated=False)
         left.setObjectName("AIRecommendationBlock")
+        left.setMinimumWidth(360)
         left_layout = QVBoxLayout(left)
-        left_layout.setContentsMargins(14, 12, 14, 12)
-        left_layout.setSpacing(10)
+        _setup_card_layout(left_layout)
         ai_recs_header = SectionHeader("Рекомендации", "Обоснование, уверенность, альтернативы")
         ai_recs_header.setObjectName("AIRecommendationsHeader")
         left_layout.addWidget(ai_recs_header)
@@ -935,9 +980,9 @@ class AIStudioPage(BasePage):
 
         right = GlowCard(elevated=False)
         right.setObjectName("AILearningBlock")
+        right.setMinimumWidth(360)
         right_layout = QVBoxLayout(right)
-        right_layout.setContentsMargins(14, 12, 14, 12)
-        right_layout.setSpacing(10)
+        _setup_card_layout(right_layout)
         ai_learn_header = SectionHeader("Сводка обучения", "Что система узнала по результатам")
         ai_learn_header.setObjectName("AILearningHeader")
         right_layout.addWidget(ai_learn_header)
@@ -957,9 +1002,9 @@ class AIStudioPage(BasePage):
 
         split.addWidget(left)
         split.addWidget(right)
-        split.setStretchFactor(0, 1)
-        split.setStretchFactor(1, 1)
-        split.setSizes([500, 560])
+        split.setStretchFactor(0, 11)
+        split.setStretchFactor(1, 9)
+        split.setSizes([600, 500])
         layout.addWidget(split, stretch=1)
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:

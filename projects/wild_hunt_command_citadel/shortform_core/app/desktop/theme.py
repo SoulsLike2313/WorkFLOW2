@@ -207,6 +207,26 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         padding-right: 16px;
     }}
 
+    QWidget#WorkspaceStack {{
+        background: transparent;
+    }}
+
+    QSplitter#MainWorkspaceSplit::handle,
+    QSplitter#DashboardSplit::handle,
+    QSplitter#AnalyticsSplit::handle,
+    QSplitter#AIStudioSplit::handle {{
+        background: rgba(145, 116, 220, 0.16);
+        border-radius: 4px;
+        margin: 8px 1px;
+    }}
+
+    QSplitter#MainWorkspaceSplit::handle:hover,
+    QSplitter#DashboardSplit::handle:hover,
+    QSplitter#AnalyticsSplit::handle:hover,
+    QSplitter#AIStudioSplit::handle:hover {{
+        background: rgba(182, 152, 255, 0.34);
+    }}
+
     QFrame[card='true'] {{
         background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
             stop:0 rgba(24, 34, 54, 0.97), stop:0.52 rgba(16, 24, 39, 0.98), stop:1 rgba(13, 20, 33, 0.99));
@@ -246,6 +266,7 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     QFrame#DashboardQuickActions,
     QFrame#DashboardAuditBlock,
     QFrame#DashboardRecommendationBlock,
+    QFrame#AuditActionBar,
     QFrame#AuditTimelineBlock,
     QFrame#AuditErrorsBlock,
     QFrame#UpdatesDiagnosticsBlock,
@@ -309,6 +330,7 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
 
     QFrame#DashboardAuditBlock:hover,
     QFrame#DashboardRecommendationBlock:hover,
+    QFrame#AuditActionBar:hover,
     QFrame#AuditTimelineBlock:hover,
     QFrame#AuditErrorsBlock:hover,
     QFrame#UpdatesDiagnosticsBlock:hover,
@@ -794,6 +816,23 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         border-top: 1px solid rgba(226, 209, 255, 0.36);
         border-bottom: 1px solid rgba(8, 12, 20, 0.82);
         border-radius: {r['xl']}px;
+    }}
+
+    QLabel#ContextActionCaption {{
+        color: rgba(194, 206, 236, 0.95);
+        font-family: '{tokens.typography['label']}';
+        font-size: 11px;
+        font-weight: 560;
+        letter-spacing: 0.25px;
+        padding-left: 2px;
+    }}
+
+    QWidget#ContextActionDock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(31, 44, 70, 0.46), stop:1 rgba(17, 26, 43, 0.42));
+        border: 1px solid rgba(180, 149, 255, 0.24);
+        border-top: 1px solid rgba(228, 211, 255, 0.30);
+        border-radius: 14px;
     }}
 
     QWidget#AIStudioPage QFrame[card='true'],

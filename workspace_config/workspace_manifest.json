@@ -71,7 +71,8 @@
       "voice_launcher"
     ],
     "experimental": [
-      "adaptive_trading"
+      "adaptive_trading",
+      "game_ru_ai"
     ],
     "archived": [],
     "legacy": [
@@ -206,6 +207,38 @@
       ],
       "verification_entrypoints": [
         "python -m py_compile app.py automation_engine.py ui_main.py"
+      ],
+      "update_entrypoints": []
+    },
+    {
+      "slug": "game_ru_ai",
+      "name": "GameRuAI",
+      "status": "experimental",
+      "category": "desktop_tool",
+      "type": "desktop_app",
+      "priority": 5,
+      "runtime_namespace": "game_ru_ai",
+      "port_range": {
+        "start": 8400,
+        "end": 8499
+      },
+      "port_mode_default": "fixed",
+      "service_ports": {
+        "api_port": 8400,
+        "ui_bridge_port": 8410,
+        "update_port": 8420,
+        "health_port": 8430
+      },
+      "root_path": "projects/GameRuAI",
+      "manifest_path": "projects/GameRuAI/PROJECT_MANIFEST.json",
+      "readme_path": "projects/GameRuAI/README.md",
+      "main_entrypoints": [
+        "python scripts/project_startup.py run --project-slug game_ru_ai --entrypoint user --startup-kind user --port-mode fixed",
+        "python scripts/project_startup.py run --project-slug game_ru_ai --entrypoint developer --startup-kind developer --port-mode fixed",
+        "python scripts/project_startup.py run --project-slug game_ru_ai --entrypoint verify --startup-kind verify --port-mode fixed"
+      ],
+      "verification_entrypoints": [
+        "python scripts/project_startup.py run --project-slug game_ru_ai --entrypoint verify --startup-kind verify --port-mode fixed"
       ],
       "update_entrypoints": []
     }

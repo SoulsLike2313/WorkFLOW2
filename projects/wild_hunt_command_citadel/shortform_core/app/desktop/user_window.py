@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QMainWindow,
     QMessageBox,
+    QSizePolicy,
     QSplitter,
     QStackedWidget,
     QVBoxLayout,
@@ -59,6 +60,7 @@ class UserWorkspaceWindow(QMainWindow):
         self._pages: dict[str, BasePage] = {}
         self._page_order: list[str] = []
         self._page_fade_anim: QPropertyAnimation | None = None
+        self.main_splitter: QSplitter | None = None
 
         self._build_ui()
         self.setStyleSheet(build_stylesheet(build_theme_tokens()))
@@ -75,15 +77,15 @@ class UserWorkspaceWindow(QMainWindow):
         self.setCentralWidget(root)
 
         layout = QHBoxLayout(root)
-        layout.setContentsMargins(14, 14, 14, 14)
-        layout.setSpacing(12)
+        layout.setContentsMargins(16, 16, 16, 16)
+        layout.setSpacing(16)
 
         sidebar = QWidget()
         sidebar.setObjectName("Sidebar")
-        sidebar.setFixedWidth(286)
+        sidebar.setFixedWidth(280)
         sidebar_layout = QVBoxLayout(sidebar)
-        sidebar_layout.setContentsMargins(14, 16, 14, 16)
-        sidebar_layout.setSpacing(11)
+        sidebar_layout.setContentsMargins(16, 16, 16, 16)
+        sidebar_layout.setSpacing(12)
 
         app_title = QLabel("Shortform Workspace")
         app_title.setObjectName("AppTitle")
@@ -134,37 +136,69 @@ class UserWorkspaceWindow(QMainWindow):
         center = QWidget()
         center_layout = QVBoxLayout(center)
         center_layout.setContentsMargins(0, 0, 0, 0)
-        center_layout.setSpacing(10)
+        center_layout.setSpacing(12)
 
         self.top_status = TopStatusBar()
         self.top_status.refresh_requested.connect(self.refresh_workspace)
         center_layout.addWidget(self.top_status)
 
         split = QSplitter(Qt.Orientation.Horizontal)
+        split.setObjectName("MainWorkspaceSplit")
         split.setChildrenCollapsible(False)
-        split.setHandleWidth(8)
+        split.setHandleWidth(10)
+        self.main_splitter = split
 
         self.workspace_stack = QStackedWidget()
-        self.workspace_stack.setMinimumWidth(740)
+        self.workspace_stack.setObjectName("WorkspaceStack")
+        self.workspace_stack.setMinimumWidth(760)
         split.addWidget(self.workspace_stack)
 
         self.context_panel = ContextPanel()
         self.context_panel.action_requested.connect(lambda action: self._on_page_action(action, None))
-        self.context_panel.setMinimumWidth(320)
-        self.context_panel.setMaximumWidth(400)
+        self.context_panel.setMinimumWidth(336)
+        self.context_panel.setMaximumWidth(392)
         split.addWidget(self.context_panel)
 
-        split.setStretchFactor(0, 5)
-        split.setStretchFactor(1, 2)
-        split.setSizes([1120, 340])
+        split.setStretchFactor(0, 12)
+        split.setStretchFactor(1, 5)
+        split.setSizes([980, 360])
         center_layout.addWidget(split, stretch=1)
         layout.addWidget(center, stretch=1)
 
         self._register_pages()
         self._switch_page("dashboard")
+        QTimer.singleShot(0, self._rebalance_main_splitter)
+
+    def _rebalance_main_splitter(self) -> None:
+        if self.main_splitter is None or self.main_splitter.count() < 2:
+            return
+        total = self.main_splitter.width()
+        if total <= 0:
+            return
+
+        min_left = 760
+        min_right = 336
+        target_right = int(total * 0.28)
+        right = max(min_right, min(380, target_right))
+        if total - right < min_left:
+            right = max(min_right, total - min_left)
+        left = max(min_left, total - right)
+        self.main_splitter.setSizes([left, right])
+
+    def resizeEvent(self, event) -> None:  # type: ignore[override]
+        super().resizeEvent(event)
+        if self.main_splitter is None:
+            return
+        sizes = self.main_splitter.sizes()
+        if len(sizes) != 2:
+            return
+        if sizes[0] < 740 or sizes[1] < 320:
+            self._rebalance_main_splitter()
 
     def _register_nav_button(self, layout: QVBoxLayout, key: str, label: str) -> None:
         button = NavRailButton(label, page_key=key)
+        button.setProperty("sidebarAction", "true")
+        button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         button.clicked.connect(lambda _=False, k=key: self._switch_page(k))
         layout.addWidget(button)
         self._nav_buttons[key] = button

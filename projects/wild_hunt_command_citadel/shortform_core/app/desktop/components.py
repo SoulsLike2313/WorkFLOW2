@@ -320,12 +320,12 @@ class TopStatusBar(GlowCard):
     def __init__(self) -> None:
         super().__init__(elevated=False)
         self.setObjectName("TopStatusBar")
-        self.setMinimumHeight(72)
+        self.setMinimumHeight(76)
         self._is_loading = False
 
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(18, 14, 18, 14)
-        layout.setSpacing(11)
+        layout.setContentsMargins(20, 14, 20, 14)
+        layout.setSpacing(10)
 
         self.pills: dict[str, StatusPill] = {
             "profiles": StatusPill("профили: --", "info"),
@@ -342,7 +342,8 @@ class TopStatusBar(GlowCard):
         layout.addStretch(1)
         self.refresh_button = MotionButton("Обновить данные")
         self.refresh_button.setObjectName("PrimaryCTA")
-        self.refresh_button.setMinimumWidth(154)
+        self.refresh_button.setMinimumHeight(40)
+        self.refresh_button.setMinimumWidth(164)
         self.refresh_button.clicked.connect(self.refresh_requested.emit)
         layout.addWidget(self.refresh_button)
 
@@ -423,7 +424,7 @@ class ContextPanel(GlowCard):
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(16, 16, 16, 16)
-        layout.setSpacing(14)
+        layout.setSpacing(12)
 
         title = QLabel("Контекст и следующие шаги")
         title.setObjectName("ContextPanelTitle")
@@ -454,21 +455,30 @@ class ContextPanel(GlowCard):
         self.next_actions.setWordWrap(True)
         layout.addWidget(self.next_actions)
 
-        btn_col = QVBoxLayout()
-        btn_col.setSpacing(8)
+        layout.addStretch(1)
+
+        action_caption = QLabel("Действия")
+        action_caption.setObjectName("ContextActionCaption")
+        layout.addWidget(action_caption)
+
+        action_dock = QWidget()
+        action_dock.setObjectName("ContextActionDock")
+        btn_col = QVBoxLayout(action_dock)
+        btn_col.setContentsMargins(10, 10, 10, 10)
+        btn_col.setSpacing(10)
         quick_ai = MotionButton("Открыть AI-студию")
         quick_ai.setObjectName("PrimaryCTA")
-        quick_ai.setMinimumHeight(38)
+        quick_ai.setMinimumHeight(40)
+        quick_ai.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         quick_ai.clicked.connect(lambda: self.action_requested.emit("open_ai_studio"))
         quick_updates = MotionButton("Проверить обновления")
         quick_updates.setObjectName("OutlineCTA")
-        quick_updates.setMinimumHeight(38)
+        quick_updates.setMinimumHeight(40)
+        quick_updates.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         quick_updates.clicked.connect(lambda: self.action_requested.emit("check_updates"))
         btn_col.addWidget(quick_ai)
         btn_col.addWidget(quick_updates)
-        layout.addLayout(btn_col)
-
-        layout.addStretch(1)
+        layout.addWidget(action_dock)
 
     def update_context(self, *, profile_name: str, profile_meta: str, alerts: list[str], recommendation_hint: str, next_actions: str) -> None:
         self.profile_title.setText(profile_name)
