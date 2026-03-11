@@ -138,9 +138,40 @@ def test_controller_handles_no_match_with_heard_phrase():
     controller.run_listen_loop(max_iterations=1)
 
     assert launches == []
+    assert not any("не совпали" in text for text in statuses)
+    assert phrases == []
+    assert any("no-match filtered" in text for text in asr_logs)
+
+
+def test_controller_keeps_unmatched_phrase_when_score_is_relevant():
+    statuses = []
+    phrases = []
+    launches = []
+    asr_logs = []
+    runtime_logs = []
+    stop_event = Flag(False)
+    recognizer = FakeRecognizer(audios=["a1"])
+    clock = Clock(0.0)
+    match_payload = (None, None, 0.78, "танки включить", 0.09)
+
+    deps = make_deps(
+        recognizer=recognizer,
+        match_payload=match_payload,
+        stop_event=stop_event,
+        statuses=statuses,
+        phrases=phrases,
+        launches=launches,
+        asr_logs=asr_logs,
+        runtime_logs=runtime_logs,
+        clock=clock,
+    )
+    controller = AppController(deps=deps)
+    controller.run_listen_loop(max_iterations=1)
+
+    assert launches == []
     assert any("не совпали" in text for text in statuses)
-    assert phrases == ["тан"]
-    assert any("no-match" in text for text in asr_logs)
+    assert phrases == ["танки включить"]
+    assert any("no-match heard" in text for text in asr_logs)
 
 
 def test_friendly_audio_error_for_missing_pyaudio():

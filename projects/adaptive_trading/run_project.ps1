@@ -1,11 +1,11 @@
-$ErrorActionPreference = "Stop"
-
 param(
     [ValidateSet("user", "developer", "train", "verify")]
     [string]$Mode = "user",
     [ValidateSet("fixed", "auto")]
     [string]$PortMode = "fixed"
 )
+
+$ErrorActionPreference = "Stop"
 
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $projectRoot

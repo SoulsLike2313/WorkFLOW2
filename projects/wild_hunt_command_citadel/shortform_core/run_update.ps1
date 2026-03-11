@@ -1,5 +1,3 @@
-$ErrorActionPreference = "Stop"
-
 param(
     [ValidateSet("check", "apply", "post-verify")]
     [string]$Mode = "check",
@@ -9,6 +7,8 @@ param(
     [string]$BundlePath = "",
     [string]$TargetVersion = ""
 )
+
+$ErrorActionPreference = "Stop"
 
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $projectRoot

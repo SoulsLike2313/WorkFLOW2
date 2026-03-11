@@ -33,6 +33,7 @@ class AppController:
         self.recognizer = None
         self.last_adjust_ts = 0.0
         self.last_voice_trigger = dict(last_voice_trigger or {"phrase": "", "ts": 0.0})
+        self.last_unmatched_heard = {"text": "", "ts": 0.0}
 
     @staticmethod
     def trigger_guard_seconds(mode: str) -> float:
@@ -48,6 +49,29 @@ class AppController:
             matched_phrase == self.last_voice_trigger.get("phrase", "")
             and now - float(self.last_voice_trigger.get("ts", 0.0)) < trigger_guard
         )
+
+    def _should_publish_unmatched(self, heard: str, score: float, margin: float, now: float) -> bool:
+        text = str(heard or "").strip()
+        if not text:
+            return False
+
+        # Фильтр шумовых "галлюцинаций" при тишине/фоне.
+        if float(score) < 0.58:
+            return False
+        if len(text) >= 48 and float(score) < 0.72:
+            return False
+        if len(text) <= 2 and float(score) < 0.80:
+            return False
+        if float(margin) < 0.02 and float(score) < 0.75:
+            return False
+
+        last_text = str(self.last_unmatched_heard.get("text", "") or "")
+        last_ts = float(self.last_unmatched_heard.get("ts", 0.0) or 0.0)
+        if text == last_text and now - last_ts < 6.0:
+            return False
+
+        self.last_unmatched_heard = {"text": text, "ts": now}
+        return True
 
     @staticmethod
     def friendly_audio_error(exc: Exception) -> str:
@@ -134,9 +158,15 @@ class AppController:
                             f"(score {score:.2f}, margin {margin:.2f})"
                         )
                 elif heard:
-                    self.deps.set_status(f"Слышу '{heard}', но команды не совпали")
-                    self.deps.set_last_phrase(heard)
-                    self.deps.log_asr(f"no-match heard='{heard}'")
+                    now = self.deps.now()
+                    if self._should_publish_unmatched(heard, score, margin, now):
+                        self.deps.set_status(f"Слышу '{heard}', но команды не совпали")
+                        self.deps.set_last_phrase(heard)
+                        self.deps.log_asr(f"no-match heard='{heard}' score={score:.2f} margin={margin:.2f}")
+                    else:
+                        self.deps.log_asr(
+                            f"no-match filtered heard='{heard}' score={score:.2f} margin={margin:.2f}"
+                        )
             except self.deps.wait_timeout_error:
                 continue
             except Exception as exc:

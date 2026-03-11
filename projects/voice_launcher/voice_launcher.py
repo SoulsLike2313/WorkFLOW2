@@ -1801,9 +1801,27 @@ def find_play_control(window_wrapper, play_text):
     if not target:
         target = "играть"
 
+    targets = [target]
+    if "игр" not in target:
+        targets.append("играть")
+    for extra in ("play", "start", "launch"):
+        if extra not in targets:
+            targets.append(extra)
+
     tokens = [token for token in target.split() if len(token) >= 2]
     best = None
     best_score = 0.0
+    fallback_geom = []
+
+    win_rect = None
+    win_w = 0
+    win_h = 0
+    try:
+        win_rect = window_wrapper.rectangle()
+        win_w = max(1, int(win_rect.right) - int(win_rect.left))
+        win_h = max(1, int(win_rect.bottom) - int(win_rect.top))
+    except Exception:
+        win_rect = None
 
     control_types = ("Button", "Hyperlink", "Custom", "Text")
     for ctype in control_types:
@@ -1824,16 +1842,39 @@ def find_play_control(window_wrapper, play_text):
 
             score = 0.0
             if caption:
-                if target in caption:
-                    score = 1.0
-                else:
-                    ratio = difflib.SequenceMatcher(None, target, caption).ratio()
+                for target_item in targets:
+                    if target_item in caption:
+                        score = max(score, 1.0)
+                        continue
+                    ratio = difflib.SequenceMatcher(None, target_item, caption).ratio()
                     if ratio >= 0.68:
-                        score = ratio
+                        score = max(score, ratio)
                     elif any(token in caption for token in tokens):
-                        score = 0.72
+                        score = max(score, 0.72)
 
             if score <= 0:
+                # Безопасный геометрический fallback для лаунчеров, где текст кнопки
+                # недоступен в UIA, но сама кнопка "Play" обычно крупная и справа внизу.
+                if ctype in ("Button", "Custom") and win_rect is not None and win_w > 0 and win_h > 0:
+                    try:
+                        rect = ctrl.rectangle()
+                        width = int(rect.right) - int(rect.left)
+                        height = int(rect.bottom) - int(rect.top)
+                        if width >= 140 and height >= 34:
+                            cx = int((int(rect.left) + int(rect.right)) / 2)
+                            cy = int((int(rect.top) + int(rect.bottom)) / 2)
+                            right_half = cx >= int(win_rect.left) + int(win_w * 0.55)
+                            lower_half = cy >= int(win_rect.top) + int(win_h * 0.55)
+                            if right_half and lower_half:
+                                geom = 0.48 + min(0.16, (width * height) / float(max(1, win_w * win_h)) * 4.0)
+                                try:
+                                    if ctrl.is_enabled():
+                                        geom += 0.05
+                                except Exception:
+                                    pass
+                                fallback_geom.append((geom, ctrl, caption, ctype))
+                    except Exception:
+                        pass
                 continue
 
             if ctype == "Button":
@@ -1854,6 +1895,11 @@ def find_play_control(window_wrapper, play_text):
             if score > best_score:
                 best_score = score
                 best = (ctrl, caption, ctype, score)
+
+    if best is None and fallback_geom:
+        fallback_geom.sort(key=lambda item: item[0], reverse=True)
+        geom_score, geom_ctrl, geom_caption, geom_type = fallback_geom[0]
+        return geom_ctrl, geom_caption, geom_type, geom_score
 
     return best
 
@@ -1948,6 +1994,44 @@ def click_play_control(control, window_wrapper):
     return False, "none"
 
 
+def click_window_point(window_wrapper, x_ratio=0.86, y_ratio=0.90):
+    x_ratio = max(0.05, min(0.98, float(x_ratio)))
+    y_ratio = max(0.05, min(0.98, float(y_ratio)))
+    try:
+        activate_window(window_wrapper)
+    except Exception:
+        pass
+
+    rect = None
+    try:
+        rect = window_wrapper.rectangle()
+    except Exception:
+        rect = None
+    if rect is None:
+        return False, "point_no_rect"
+
+    width = max(1, int(rect.right) - int(rect.left))
+    height = max(1, int(rect.bottom) - int(rect.top))
+    rel_x = int(width * x_ratio)
+    rel_y = int(height * y_ratio)
+    abs_x = int(rect.left) + rel_x
+    abs_y = int(rect.top) + rel_y
+
+    try:
+        if pywinauto_mouse is not None:
+            pywinauto_mouse.click(button="left", coords=(abs_x, abs_y))
+            return True, "point_mouse_abs"
+    except Exception:
+        pass
+
+    try:
+        window_wrapper.click_input(coords=(rel_x, rel_y))
+        return True, "point_click_input"
+    except Exception:
+        pass
+    return False, "point_click_failed"
+
+
 def play_control_is_ready(window_wrapper, play_text):
     found = find_play_control(window_wrapper, play_text)
     if not found:
@@ -1979,6 +2063,7 @@ def launch_with_launcher_play(entry, on_finish=None):
             click_play_control=click_play_control,
             play_control_is_ready=play_control_is_ready,
             activate_window=activate_window,
+            click_window_point=click_window_point,
             build_window_hints=build_window_hints,
             normalize_phrase=normalize_phrase,
             logger=log_launcher,

@@ -47,21 +47,31 @@ def compute_window_confidence(candidate: WindowCandidate, target: LauncherTarget
     score = 0.0
     target_path = os.path.normcase(os.path.abspath(target.path or ""))
     cand_path = os.path.normcase(os.path.abspath(candidate.process_path or ""))
+    target_name = os.path.basename(target_path).lower() if target_path else ""
+    proc_name = os.path.basename(str(candidate.process_name or "")).lower()
+
     if target_path and cand_path and target_path == cand_path:
-        score += 0.78
+        # Точное совпадение process path считаем сильным и безопасным сигналом.
+        score += 0.92
     elif target_path and cand_path and os.path.basename(target_path) == os.path.basename(cand_path):
-        score += 0.55
+        score += 0.68
+    elif target_name and proc_name and target_name == proc_name:
+        score += 0.56
 
     title_norm = normalize(candidate.title)
     patterns = [normalize(p) for p in target.title_patterns if normalize(p)]
     if patterns:
-        matched = sum(1 for p in patterns if p in title_norm)
-        if matched:
-            score += min(0.22, 0.11 * matched)
+        if title_norm:
+            matched = sum(1 for p in patterns if p in title_norm)
+            if matched:
+                score += min(0.20, 0.10 * matched)
+            else:
+                score -= 0.12
         else:
-            score -= 0.25
+            # Некоторые лаунчеры рисуют окно без доступного заголовка.
+            score -= 0.02
     elif title_norm:
-        score += 0.08
+        score += 0.05
 
     return max(0.0, min(1.0, score))
 
@@ -98,14 +108,6 @@ class SafeLauncherAutomation:
                 pass
 
     def _window_to_candidate(self, wrapper, process_resolver) -> Optional[WindowCandidate]:
-        try:
-            title = wrapper.window_text() or ""
-        except Exception:
-            title = ""
-        title = str(title).strip()
-        if not title:
-            return None
-
         handle = None
         for attr in ("handle", "hwnd"):
             try:
@@ -115,6 +117,25 @@ class SafeLauncherAutomation:
                 continue
         if not handle:
             return None
+
+        try:
+            title = wrapper.window_text() or ""
+        except Exception:
+            title = ""
+        title = str(title).strip()
+        try:
+            if hasattr(wrapper, "is_visible") and not wrapper.is_visible():
+                return None
+        except Exception:
+            pass
+        try:
+            rect = wrapper.rectangle()
+            width = int(rect.right) - int(rect.left)
+            height = int(rect.bottom) - int(rect.top)
+            if width < 240 or height < 160:
+                return None
+        except Exception:
+            pass
 
         proc_name, proc_path = process_resolver(handle)
         return WindowCandidate(
@@ -153,6 +174,7 @@ class SafeLauncherAutomation:
         deadline = time.time() + max(5, int(target.wait_timeout))
         best = None
         best_score = 0.0
+        last_debug_ts = 0.0
         while time.time() < deadline:
             try:
                 wrappers = self.desktop_factory().windows()
@@ -169,6 +191,13 @@ class SafeLauncherAutomation:
             best, best_score = select_best_window(candidates, target)
             if best is not None:
                 break
+            now = time.time()
+            if now - last_debug_ts >= 2.5:
+                self._log(
+                    report,
+                    f"wait-window: candidates={len(candidates)} best_score={best_score:.2f}",
+                )
+                last_debug_ts = now
             time.sleep(0.35)
 
         if best is None:

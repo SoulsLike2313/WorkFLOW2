@@ -24,6 +24,7 @@ class LauncherRunnerDeps:
     runtime_logger: Callable[[str], None]
     set_status: Callable[[str], None]
     set_last_action: Callable[[str], None]
+    click_window_point: Callable[[Any, float, float], tuple[bool, str]] | None = None
 
 
 def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
@@ -33,6 +34,18 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
     wait_timeout = max(30, min(900, int(entry.get("wait_timeout", 240) or 240)))
     launcher_dry_run = bool(entry.get("launcher_dry_run", False))
     launcher_highlight = bool(entry.get("launcher_highlight", False))
+    path_low = path.replace("\\", "/").lower()
+    war_thunder_point_mode = "warthunder" in path_low
+    try:
+        point_x_ratio = float(entry.get("point_x_ratio", 0.86))
+    except Exception:
+        point_x_ratio = 0.86
+    try:
+        point_y_ratio = float(entry.get("point_y_ratio", 0.90))
+    except Exception:
+        point_y_ratio = 0.90
+    point_x_ratio = max(0.05, min(0.98, point_x_ratio))
+    point_y_ratio = max(0.05, min(0.98, point_y_ratio))
     try:
         min_confidence = float(entry.get("min_window_confidence", 0.90))
     except Exception:
@@ -58,7 +71,8 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
         "SAFE_START | "
         f"path='{path}' play='{play_text}' title_patterns={title_patterns} "
         f"timeout={wait_timeout} dry_run={launcher_dry_run} highlight={launcher_highlight} "
-        f"min_conf={min_confidence:.2f}"
+        f"min_conf={min_confidence:.2f} wt_point_mode={war_thunder_point_mode} "
+        f"point=({point_x_ratio:.2f},{point_y_ratio:.2f})"
     )
     deps.runtime_logger(f"Launcher+Play safe start: path='{path}' mode=launcher_play")
 
@@ -72,6 +86,18 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
     def button_finder(window_wrapper, button_text):
         found = deps.find_play_control(window_wrapper, button_text)
         if not found:
+            if war_thunder_point_mode:
+                deps.logger(
+                    f"SAFE_INFO | button text not found, fallback to point-click mode ({point_x_ratio:.2f},{point_y_ratio:.2f})"
+                )
+                return {
+                    "point_click": True,
+                    "x_ratio": point_x_ratio,
+                    "y_ratio": point_y_ratio,
+                    "caption": "",
+                    "control_type": "PointFallback",
+                    "score": 0.56,
+                }
             return None
         control, caption, control_type, score = found
         if not deps.is_control_enabled(control):
@@ -86,6 +112,21 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
     def button_clicker(control_payload, window_wrapper):
         if not isinstance(control_payload, dict):
             return False
+        if bool(control_payload.get("point_click")):
+            if deps.click_window_point is None:
+                return False
+            clicked, method = deps.click_window_point(
+                window_wrapper,
+                float(control_payload.get("x_ratio", point_x_ratio)),
+                float(control_payload.get("y_ratio", point_y_ratio)),
+            )
+            if clicked:
+                deps.logger(
+                    f"SAFE_CLICK | method={method} caption='point-fallback' type='PointFallback' "
+                    f"score={float(control_payload.get('score', 0.0)):.2f}"
+                )
+            return bool(clicked)
+
         control = control_payload.get("control")
         if control is None:
             return False
@@ -108,16 +149,19 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
     def highlighter(window_wrapper, control_payload):
         if not isinstance(control_payload, dict):
             return
-        control = control_payload.get("control")
         try:
             deps.activate_window(window_wrapper)
         except Exception:
             pass
-        try:
-            if hasattr(control, "draw_outline"):
-                control.draw_outline(colour="green", thickness=3)
-        except Exception:
-            pass
+        if bool(control_payload.get("point_click")):
+            return
+        control = control_payload.get("control")
+        if control is not None:
+            try:
+                if hasattr(control, "draw_outline"):
+                    control.draw_outline(colour="green", thickness=3)
+            except Exception:
+                pass
         try:
             if hasattr(window_wrapper, "draw_outline"):
                 window_wrapper.draw_outline(colour="blue", thickness=2)

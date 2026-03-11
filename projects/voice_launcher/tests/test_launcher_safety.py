@@ -87,3 +87,39 @@ def test_safe_launcher_refuses_low_confidence_window(tmp_path):
     )
     assert report.ok is False
     assert report.stage in {"verify_window", "wait_window"}
+
+
+def test_safe_launcher_accepts_untitled_window_when_process_path_exact(tmp_path):
+    exe = tmp_path / "launcher.exe"
+    exe.write_text("stub", encoding="utf-8")
+
+    fake_windows = [FakeWindow("", 303)]
+    clicked = {"value": False}
+    automation = SafeLauncherAutomation(desktop_factory=lambda: FakeDesktop(fake_windows))
+    target = LauncherTarget(
+        path=str(exe),
+        button_text="Играть",
+        title_patterns=["war thunder", "launcher"],
+        min_window_confidence=0.90,
+        wait_timeout=2,
+    )
+
+    def process_resolver(_hwnd):
+        return "launcher.exe", str(exe)
+
+    def button_finder(_win, _btn):
+        return {"ok": True}
+
+    def button_clicker(_ctrl, _win):
+        clicked["value"] = True
+        return True
+
+    report = automation.run(
+        target=target,
+        process_resolver=process_resolver,
+        process_starter=lambda _path: None,
+        button_finder=button_finder,
+        button_clicker=button_clicker,
+    )
+    assert report.ok is True
+    assert clicked["value"] is True

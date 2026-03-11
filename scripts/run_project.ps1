@@ -1,5 +1,3 @@
-$ErrorActionPreference = "Stop"
-
 param(
     [Parameter(Mandatory = $true)]
     [string]$ProjectSlug,
@@ -10,6 +8,8 @@ param(
     [string]$PortMode = "fixed",
     [string]$StartupKind = "startup"
 )
+
+$ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $repoRoot
