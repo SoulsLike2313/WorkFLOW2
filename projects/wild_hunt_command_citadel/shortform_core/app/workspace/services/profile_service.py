@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from ..connectors import ConnectorRegistry
+from ..diagnostics import diag_log
 from ..errors import LimitExceededError, NotFoundError
 from ..models import (
     ActionResult,
@@ -54,6 +55,12 @@ class ProfileService:
     ) -> Profile:
         if self.repository.count_profiles() >= self.max_profiles:
             message = f"Profile limit reached ({self.max_profiles}). Increase MAX_PROFILES in configuration."
+            diag_log(
+                "runtime_logs",
+                "profile_limit_reached",
+                level="WARNING",
+                payload={"display_name": display_name, "max_profiles": self.max_profiles},
+            )
             self.audit_service.log_action(
                 action_type="create_profile",
                 actor_type=ActorType.SYSTEM,
@@ -81,6 +88,16 @@ class ProfileService:
 
         self.repository.save_profile(profile)
         self.repository.save_connection(connection)
+        diag_log(
+            "runtime_logs",
+            "profile_created",
+            payload={
+                "profile_id": profile.id,
+                "display_name": display_name,
+                "connection_type": connection_type.value,
+                "management_mode": management_mode.value,
+            },
+        )
         self.audit_service.log_action(
             action_type="create_profile",
             profile_id=profile.id,
@@ -111,6 +128,11 @@ class ProfileService:
         profile = self.get_profile(profile_id)
         updated = profile.model_copy(update={"management_mode": management_mode, "updated_at": _utc_now()})
         self.repository.save_profile(updated)
+        diag_log(
+            "runtime_logs",
+            "profile_management_mode_updated",
+            payload={"profile_id": profile_id, "management_mode": management_mode.value},
+        )
         self.audit_service.log_action(
             action_type="set_management_mode",
             profile_id=profile_id,
@@ -148,6 +170,15 @@ class ProfileService:
         connector = self.connector_registry.get(profile.connection_type)
         connected = connector.connect(profile, updated_connection)
         status, health = self._profile_status_from_connection(connected.connection_status)
+        diag_log(
+            "runtime_logs",
+            "profile_connected",
+            payload={
+                "profile_id": profile_id,
+                "connection_type": profile.connection_type.value,
+                "connection_status": connected.connection_status.value,
+            },
+        )
 
         self.repository.save_connection(connected)
         self.repository.save_profile(
@@ -174,6 +205,11 @@ class ProfileService:
 
         connector = self.connector_registry.get(profile.connection_type)
         disconnected = connector.disconnect(profile, connection)
+        diag_log(
+            "runtime_logs",
+            "profile_disconnected",
+            payload={"profile_id": profile_id, "connection_type": profile.connection_type.value},
+        )
 
         self.repository.save_connection(disconnected)
         self.repository.save_profile(
@@ -198,6 +234,11 @@ class ProfileService:
         connection = self.get_connection(profile_id)
         connector = self.connector_registry.get(profile.connection_type)
         status, metadata = connector.health_check(profile, connection)
+        diag_log(
+            "runtime_logs",
+            "profile_health_check",
+            payload={"profile_id": profile_id, "status": status.value, "metadata": metadata},
+        )
         self.audit_service.log_action(
             action_type="profile_health_check",
             profile_id=profile_id,

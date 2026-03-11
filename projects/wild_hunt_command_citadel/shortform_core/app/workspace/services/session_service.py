@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
+from ..diagnostics import diag_log
 from ..errors import NotFoundError, ValidationError
 from ..models import (
     ActionResult,
@@ -71,6 +72,16 @@ class SessionWindowService:
         )
         self.repository.save_session(session)
         self.repository.save_profile(profile.model_copy(update={"session_state": SessionRuntimeState.OPEN, "updated_at": now}))
+        diag_log(
+            "runtime_logs",
+            "session_window_opened",
+            payload={
+                "profile_id": profile_id,
+                "viewport_preset": viewport_preset.value,
+                "width": session.width,
+                "height": session.height,
+            },
+        )
         self.audit_service.log_action(
             action_type="open_session_window",
             profile_id=profile_id,
@@ -111,6 +122,7 @@ class SessionWindowService:
         self.repository.save_profile(
             profile.model_copy(update={"session_state": SessionRuntimeState.CLOSED, "updated_at": _utc_now()})
         )
+        diag_log("runtime_logs", "session_window_closed", payload={"profile_id": profile_id})
         self.audit_service.log_action(
             action_type="close_session_window",
             profile_id=profile_id,
@@ -140,6 +152,11 @@ class SessionWindowService:
             }
         )
         self.repository.save_session(updated)
+        diag_log(
+            "runtime_logs",
+            "session_viewport_set",
+            payload={"profile_id": profile_id, "viewport_preset": viewport_preset.value, "width": dimensions[0], "height": dimensions[1]},
+        )
         self.audit_service.log_action(
             action_type="set_viewport_preset",
             profile_id=profile_id,
@@ -162,6 +179,11 @@ class SessionWindowService:
             update={"attached_source_type": source_type, "attached_source_id": source_id, "updated_at": _utc_now()}
         )
         self.repository.save_session(updated)
+        diag_log(
+            "runtime_logs",
+            "session_source_attached",
+            payload={"profile_id": profile_id, "source_type": source_type.value, "source_id": source_id},
+        )
         self.audit_service.log_action(
             action_type="attach_session_source",
             profile_id=profile_id,

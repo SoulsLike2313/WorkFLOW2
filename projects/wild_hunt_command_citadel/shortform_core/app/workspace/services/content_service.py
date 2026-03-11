@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 
+from ..diagnostics import diag_log
 from ..errors import NotFoundError
 from ..models import (
     ActionResult,
@@ -39,6 +40,11 @@ class ContentService:
 
         created = item.model_copy(update={"updated_at": _utc_now()})
         self.repository.save_content_item(created)
+        diag_log(
+            "content_processing_logs",
+            "content_item_added",
+            payload={"content_id": created.id, "profile_id": item.profile_id, "local_path": created.local_path},
+        )
         self.audit_service.log_action(
             action_type="add_content_item",
             profile_id=item.profile_id,
@@ -99,6 +105,12 @@ class ContentService:
         if state == ValidationState.VALID and item.status == ContentStatus.DRAFT:
             updated = updated.model_copy(update={"status": ContentStatus.READY, "updated_at": _utc_now()})
         self.repository.save_content_item(updated)
+        diag_log(
+            "content_processing_logs",
+            "content_item_validated",
+            payload={"content_id": content_id, "validation_state": state.value, "issues": issues, "warnings": warnings},
+            level="WARNING" if state == ValidationState.WARNING else "INFO",
+        )
 
         payload = {
             "content_id": content_id,
@@ -154,6 +166,12 @@ class ContentService:
         if not readiness["is_ready"]:
             updated_failed = item.model_copy(update={"status": ContentStatus.FAILED, "updated_at": _utc_now()})
             self.repository.save_content_item(updated_failed)
+            diag_log(
+                "content_processing_logs",
+                "content_queue_failed",
+                level="WARNING",
+                payload={"content_id": content_id, "profile_id": item.profile_id, "issues": readiness["issues"]},
+            )
             self.audit_service.log_action(
                 action_type="queue_content_item",
                 profile_id=item.profile_id,
@@ -171,6 +189,11 @@ class ContentService:
             }
         )
         self.repository.save_content_item(queued)
+        diag_log(
+            "content_processing_logs",
+            "content_queued",
+            payload={"content_id": content_id, "profile_id": item.profile_id, "scheduled_at": queued.scheduled_at.isoformat() if queued.scheduled_at else None},
+        )
         self.audit_service.log_action(
             action_type="queue_content_item",
             profile_id=item.profile_id,

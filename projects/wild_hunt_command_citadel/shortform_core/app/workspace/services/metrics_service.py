@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from ..diagnostics import diag_log
 from ..errors import NotFoundError, ValidationError
 from ..metrics_providers import CsvJsonImportMetricsProvider, MetricsProviderRegistry
 from ..models import (
@@ -43,6 +44,16 @@ class MetricsIngestionService:
 
         normalized = self.formulas.enrich_snapshot(snapshot)
         self.repository.save_metrics_snapshot(normalized)
+        diag_log(
+            "import_provider_logs",
+            "metrics_snapshot_ingested",
+            payload={
+                "profile_id": snapshot.profile_id,
+                "content_id": snapshot.content_id,
+                "source_type": snapshot.source_type.value,
+                "weighted_engagement_score": normalized.weighted_engagement_score,
+            },
+        )
         self.audit_service.log_action(
             action_type="ingest_metrics_snapshot",
             profile_id=snapshot.profile_id,
@@ -73,6 +84,11 @@ class MetricsIngestionService:
             raise ValidationError("File import currently supports csv_json_import_provider only.")
 
         rows = CsvJsonImportMetricsProvider.read_file(file_path)
+        diag_log(
+            "import_provider_logs",
+            "metrics_import_started",
+            payload={"profile_id": profile_id, "path": str(file_path), "row_count": len(rows)},
+        )
         inserted = 0
         for row in rows:
             content_id = str(row.get("content_id") or row.get("contentId") or "").strip()
@@ -98,6 +114,11 @@ class MetricsIngestionService:
             normalized = self.formulas.enrich_snapshot(snapshot)
             self.repository.save_metrics_snapshot(normalized)
             inserted += 1
+        diag_log(
+            "import_provider_logs",
+            "metrics_import_finished",
+            payload={"profile_id": profile_id, "path": str(file_path), "inserted": inserted},
+        )
 
         self.audit_service.log_action(
             action_type="import_metrics_from_file",
@@ -128,6 +149,16 @@ class MetricsIngestionService:
             momentum_score=momentum,
         )
         self.repository.save_profile_performance(perf)
+        diag_log(
+            "runtime_logs",
+            "profile_performance_summary_built",
+            payload={
+                "profile_id": profile_id,
+                "window": window,
+                "total_views_window": total_views,
+                "momentum_score": momentum,
+            },
+        )
         self.audit_service.log_action(
             action_type="build_profile_performance_summary",
             profile_id=profile_id,

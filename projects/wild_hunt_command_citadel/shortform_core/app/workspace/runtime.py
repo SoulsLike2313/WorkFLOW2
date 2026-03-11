@@ -6,6 +6,13 @@ from pathlib import Path
 from .connectors import ConnectorRegistry
 from .diagnostics import configure_diagnostics
 from .device_providers import DeviceProviderRegistry
+from .ai_providers import (
+    StubCreativeProvider,
+    StubGenerationAdapter,
+    StubLearningScorer,
+    StubPerceptionProvider,
+    StubReasoningProvider,
+)
 from .metrics_providers import MetricsProviderRegistry
 from .policy import PolicyGuard
 from .repository import WorkspaceRepository
@@ -20,6 +27,7 @@ from .services import (
     ContentIntelligenceService,
     ContentPlanningService,
     ContentService,
+    GenerationPreparationService,
     MetricsIngestionService,
     ProfileService,
     SessionRuntimeController,
@@ -48,9 +56,15 @@ class WorkspaceRuntime:
     ai_learning: AILearningService
     ai_creative: AICreativeDirectorService
     ai_recommendation: AIRecommendationService
+    generation_prep: GenerationPreparationService
     video_generation: VideoGenerationService
     device_registry: DeviceProviderRegistry
     metrics_provider_registry: MetricsProviderRegistry
+    perception_provider: StubPerceptionProvider
+    reasoning_provider: StubReasoningProvider
+    creative_provider: StubCreativeProvider
+    generation_adapter: StubGenerationAdapter
+    learning_scorer: StubLearningScorer
 
 
 def build_workspace_runtime(
@@ -70,6 +84,11 @@ def build_workspace_runtime(
     device_registry = DeviceProviderRegistry()
     connector_registry = ConnectorRegistry(device_registry)
     metrics_provider_registry = MetricsProviderRegistry()
+    perception_provider = StubPerceptionProvider()
+    reasoning_provider = StubReasoningProvider()
+    creative_provider = StubCreativeProvider()
+    generation_adapter = StubGenerationAdapter()
+    learning_scorer = StubLearningScorer()
 
     formulas = AnalyticsFormulaService(
         weights=analytics_weights
@@ -115,6 +134,7 @@ def build_workspace_runtime(
     ai_learning = AILearningService(repository=repository, audit_service=audit)
     ai_creative = AICreativeDirectorService(repository=repository, planning_service=planning, audit_service=audit)
     ai_recommendation = AIRecommendationService(repository=repository, planning_service=planning)
+    generation_prep = GenerationPreparationService(repository=repository, audit_service=audit)
 
     video_generation = VideoGenerationService(
         repository=repository,
@@ -139,7 +159,13 @@ def build_workspace_runtime(
         ai_learning=ai_learning,
         ai_creative=ai_creative,
         ai_recommendation=ai_recommendation,
+        generation_prep=generation_prep,
         video_generation=video_generation,
         device_registry=device_registry,
         metrics_provider_registry=metrics_provider_registry,
+        perception_provider=perception_provider,
+        reasoning_provider=reasoning_provider,
+        creative_provider=creative_provider,
+        generation_adapter=generation_adapter,
+        learning_scorer=learning_scorer,
     )

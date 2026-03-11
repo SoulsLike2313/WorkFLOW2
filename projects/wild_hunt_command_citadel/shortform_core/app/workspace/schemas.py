@@ -10,7 +10,9 @@ from .models import (
     LearningType,
     ManagementMode,
     MetricsSourceType,
+    OutcomeLabel,
     Platform,
+    RecommendationFeedbackStatus,
     SourceType,
     ViewportPreset,
 )
@@ -161,3 +163,56 @@ class IngestAIFeedbackRequest(BaseModel):
     outcome_summary: str
     adjustment_summary: str
     confidence_delta: float = 0.0
+
+
+class IngestAIRecommendationFeedbackRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    profile_id: str
+    recommendation_id: str
+    feedback_status: RecommendationFeedbackStatus
+    user_notes: str = ""
+    manual_score: float | None = Field(default=None, ge=0.0, le=1.0)
+
+
+class IngestAIOutcomeFeedbackRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    profile_id: str
+    recommendation_id: str
+    content_id: str
+    metrics_snapshot_ids: list[str] = Field(default_factory=list)
+    outcome_label: OutcomeLabel
+    outcome_summary: str
+
+
+class GenerateAudioBriefRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    content_goal: str
+    music_mood: str = ""
+    voice_style: str = ""
+
+
+class GenerateScriptBriefRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    content_goal: str
+    hook: str = ""
+    cta: str = ""
+
+
+class GenerateTextBriefRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    content_goal: str
+    cta_options: list[str] = Field(default_factory=list)
+
+
+class BuildGenerationBundleRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    content_goal: str
+    creative_angle: str
+    format_target: str
+    duration_target: str

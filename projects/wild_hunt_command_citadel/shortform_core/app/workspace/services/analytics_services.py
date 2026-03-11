@@ -4,6 +4,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from statistics import mean, pstdev
 
+from ..diagnostics import diag_log
 from ..errors import NotFoundError
 from ..models import (
     ActionPlan,
@@ -229,6 +230,11 @@ class ContentIntelligenceService:
                     )
                 )
         self.repository.replace_content_patterns(profile_id, patterns)
+        diag_log(
+            "runtime_logs",
+            "content_patterns_extracted",
+            payload={"profile_id": profile_id, "pattern_count": len(patterns), "window": window},
+        )
         return patterns
 
     def detect_successful_angles(self, profile_id: str, window: str = "30d") -> list[str]:
@@ -346,6 +352,16 @@ class ContentPlanningService:
         )
         self.repository.save_action_plan(plan)
         self.repository.replace_recommendations(profile_id, self._build_recommendations(profile_id, successful_angles, weak_angles))
+        diag_log(
+            "runtime_logs",
+            "content_action_plan_generated",
+            payload={
+                "profile_id": profile_id,
+                "window": window,
+                "next_actions_count": len(plan.next_actions),
+                "recommendation_count": len(self.repository.list_recommendations(profile_id)),
+            },
+        )
         return plan
 
     def build_experiment_queue(self, profile_id: str, count: int = 3) -> list[str]:

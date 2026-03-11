@@ -13,6 +13,7 @@ from .analytics_services import (
 )
 from .audit_service import AuditService
 from .content_service import ContentService
+from .generation_prep_service import GenerationPreparationService
 from .metrics_service import MetricsIngestionService
 from .profile_service import ProfileService
 from .session_service import SessionRuntimeController, SessionWindowService
@@ -29,6 +30,7 @@ __all__ = [
     "ContentIntelligenceService",
     "ContentPlanningService",
     "ContentService",
+    "GenerationPreparationService",
     "MetricsIngestionService",
     "ProfileService",
     "SessionRuntimeController",

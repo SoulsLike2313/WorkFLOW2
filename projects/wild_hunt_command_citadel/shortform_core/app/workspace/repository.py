@@ -4,20 +4,32 @@ from threading import RLock
 
 from .models import (
     AILearningRecord,
+    AIHypothesis,
+    AIOutcomeLink,
     AIPerceptionFrame,
+    AIPerceptionResult,
+    AIPatternConfidenceHistory,
+    AIRecommendationFeedback,
+    AIAssetReview,
     ActionPlan,
+    AudioGenerationBrief,
     AssistiveScreenState,
     AuditLog,
+    CreativeManifest,
     ContentItem,
     ContentMetricsSnapshot,
     ContentPattern,
     ContentRecommendation,
     ContentStatus,
     ErrorLog,
+    GenerationAssetBundle,
     Profile,
     ProfileConnection,
     ProfilePerformanceSnapshot,
+    PromptPack,
+    ScriptGenerationBrief,
     SessionWindow,
+    TextGenerationBrief,
     VideoGenerationBrief,
     WorkspaceSummary,
 )
@@ -48,8 +60,20 @@ class WorkspaceRepository:
 
         self._screen_states: dict[str, list[AssistiveScreenState]] = {}
         self._perception_frames: dict[str, list[AIPerceptionFrame]] = {}
+        self._perception_results: dict[str, list[AIPerceptionResult]] = {}
+        self._asset_reviews: dict[str, list[AIAssetReview]] = {}
         self._learning_records: dict[str, list[AILearningRecord]] = {}
+        self._hypotheses: dict[str, list[AIHypothesis]] = {}
+        self._outcome_links: dict[str, list[AIOutcomeLink]] = {}
+        self._recommendation_feedback: dict[str, list[AIRecommendationFeedback]] = {}
+        self._pattern_confidence_history: dict[str, list[AIPatternConfidenceHistory]] = {}
         self._video_briefs: dict[str, list[VideoGenerationBrief]] = {}
+        self._audio_briefs: dict[str, list[AudioGenerationBrief]] = {}
+        self._script_briefs: dict[str, list[ScriptGenerationBrief]] = {}
+        self._text_briefs: dict[str, list[TextGenerationBrief]] = {}
+        self._prompt_packs: dict[str, list[PromptPack]] = {}
+        self._creative_manifests: dict[str, list[CreativeManifest]] = {}
+        self._generation_bundles: dict[str, list[GenerationAssetBundle]] = {}
 
         self._audit_logs: list[AuditLog] = []
         self._error_logs: list[ErrorLog] = []
@@ -252,6 +276,34 @@ class WorkspaceRepository:
             items = items[:limit]
         return items
 
+    def save_perception_result(self, item: AIPerceptionResult) -> AIPerceptionResult:
+        with self._lock:
+            bucket = self._perception_results.setdefault(item.profile_id, [])
+            bucket.append(item)
+            return item
+
+    def list_perception_results(self, profile_id: str, *, limit: int | None = None) -> list[AIPerceptionResult]:
+        with self._lock:
+            items = list(self._perception_results.get(profile_id, []))
+        items.sort(key=lambda item: item.created_at, reverse=True)
+        if limit is not None:
+            items = items[:limit]
+        return items
+
+    def save_asset_review(self, item: AIAssetReview) -> AIAssetReview:
+        with self._lock:
+            bucket = self._asset_reviews.setdefault(item.profile_id, [])
+            bucket.append(item)
+            return item
+
+    def list_asset_reviews(self, profile_id: str, *, limit: int | None = None) -> list[AIAssetReview]:
+        with self._lock:
+            items = list(self._asset_reviews.get(profile_id, []))
+        items.sort(key=lambda item: item.created_at, reverse=True)
+        if limit is not None:
+            items = items[:limit]
+        return items
+
     def save_learning_record(self, item: AILearningRecord) -> AILearningRecord:
         with self._lock:
             bucket = self._learning_records.setdefault(item.profile_id, [])
@@ -261,6 +313,77 @@ class WorkspaceRepository:
     def list_learning_records(self, profile_id: str, *, limit: int | None = None) -> list[AILearningRecord]:
         with self._lock:
             items = list(self._learning_records.get(profile_id, []))
+        items.sort(key=lambda item: item.created_at, reverse=True)
+        if limit is not None:
+            items = items[:limit]
+        return items
+
+    def save_hypothesis(self, item: AIHypothesis) -> AIHypothesis:
+        with self._lock:
+            bucket = self._hypotheses.setdefault(item.profile_id, [])
+            bucket.append(item)
+            return item
+
+    def list_hypotheses(self, profile_id: str, *, limit: int | None = None) -> list[AIHypothesis]:
+        with self._lock:
+            items = list(self._hypotheses.get(profile_id, []))
+        items.sort(key=lambda item: item.updated_at, reverse=True)
+        if limit is not None:
+            items = items[:limit]
+        return items
+
+    def replace_hypotheses(self, profile_id: str, items: list[AIHypothesis]) -> list[AIHypothesis]:
+        with self._lock:
+            self._hypotheses[profile_id] = list(items)
+            return items
+
+    def save_outcome_link(self, item: AIOutcomeLink) -> AIOutcomeLink:
+        with self._lock:
+            bucket = self._outcome_links.setdefault(item.profile_id, [])
+            bucket.append(item)
+            return item
+
+    def list_outcome_links(self, profile_id: str, *, limit: int | None = None) -> list[AIOutcomeLink]:
+        with self._lock:
+            items = list(self._outcome_links.get(profile_id, []))
+        items.sort(key=lambda item: item.created_at, reverse=True)
+        if limit is not None:
+            items = items[:limit]
+        return items
+
+    def save_recommendation_feedback(self, item: AIRecommendationFeedback) -> AIRecommendationFeedback:
+        with self._lock:
+            bucket = self._recommendation_feedback.setdefault(item.profile_id, [])
+            bucket.append(item)
+            return item
+
+    def list_recommendation_feedback(
+        self,
+        profile_id: str,
+        *,
+        limit: int | None = None,
+    ) -> list[AIRecommendationFeedback]:
+        with self._lock:
+            items = list(self._recommendation_feedback.get(profile_id, []))
+        items.sort(key=lambda item: item.created_at, reverse=True)
+        if limit is not None:
+            items = items[:limit]
+        return items
+
+    def save_pattern_confidence_history(self, item: AIPatternConfidenceHistory) -> AIPatternConfidenceHistory:
+        with self._lock:
+            bucket = self._pattern_confidence_history.setdefault(item.profile_id, [])
+            bucket.append(item)
+            return item
+
+    def list_pattern_confidence_history(
+        self,
+        profile_id: str,
+        *,
+        limit: int | None = None,
+    ) -> list[AIPatternConfidenceHistory]:
+        with self._lock:
+            items = list(self._pattern_confidence_history.get(profile_id, []))
         items.sort(key=lambda item: item.created_at, reverse=True)
         if limit is not None:
             items = items[:limit]
@@ -287,6 +410,90 @@ class WorkspaceRepository:
                     if item.id == brief_id:
                         return item
         return None
+
+    def save_audio_brief(self, item: AudioGenerationBrief) -> AudioGenerationBrief:
+        with self._lock:
+            bucket = self._audio_briefs.setdefault(item.profile_id, [])
+            bucket.append(item)
+            return item
+
+    def list_audio_briefs(self, profile_id: str, *, limit: int | None = None) -> list[AudioGenerationBrief]:
+        with self._lock:
+            items = list(self._audio_briefs.get(profile_id, []))
+        items.sort(key=lambda item: item.created_at, reverse=True)
+        if limit is not None:
+            items = items[:limit]
+        return items
+
+    def save_script_brief(self, item: ScriptGenerationBrief) -> ScriptGenerationBrief:
+        with self._lock:
+            bucket = self._script_briefs.setdefault(item.profile_id, [])
+            bucket.append(item)
+            return item
+
+    def list_script_briefs(self, profile_id: str, *, limit: int | None = None) -> list[ScriptGenerationBrief]:
+        with self._lock:
+            items = list(self._script_briefs.get(profile_id, []))
+        items.sort(key=lambda item: item.created_at, reverse=True)
+        if limit is not None:
+            items = items[:limit]
+        return items
+
+    def save_text_brief(self, item: TextGenerationBrief) -> TextGenerationBrief:
+        with self._lock:
+            bucket = self._text_briefs.setdefault(item.profile_id, [])
+            bucket.append(item)
+            return item
+
+    def list_text_briefs(self, profile_id: str, *, limit: int | None = None) -> list[TextGenerationBrief]:
+        with self._lock:
+            items = list(self._text_briefs.get(profile_id, []))
+        items.sort(key=lambda item: item.created_at, reverse=True)
+        if limit is not None:
+            items = items[:limit]
+        return items
+
+    def save_prompt_pack(self, item: PromptPack) -> PromptPack:
+        with self._lock:
+            bucket = self._prompt_packs.setdefault(item.profile_id, [])
+            bucket.append(item)
+            return item
+
+    def list_prompt_packs(self, profile_id: str, *, limit: int | None = None) -> list[PromptPack]:
+        with self._lock:
+            items = list(self._prompt_packs.get(profile_id, []))
+        items.sort(key=lambda item: item.created_at, reverse=True)
+        if limit is not None:
+            items = items[:limit]
+        return items
+
+    def save_creative_manifest(self, item: CreativeManifest) -> CreativeManifest:
+        with self._lock:
+            bucket = self._creative_manifests.setdefault(item.profile_id, [])
+            bucket.append(item)
+            return item
+
+    def list_creative_manifests(self, profile_id: str, *, limit: int | None = None) -> list[CreativeManifest]:
+        with self._lock:
+            items = list(self._creative_manifests.get(profile_id, []))
+        items.sort(key=lambda item: item.created_at, reverse=True)
+        if limit is not None:
+            items = items[:limit]
+        return items
+
+    def save_generation_bundle(self, item: GenerationAssetBundle) -> GenerationAssetBundle:
+        with self._lock:
+            bucket = self._generation_bundles.setdefault(item.profile_id, [])
+            bucket.append(item)
+            return item
+
+    def list_generation_bundles(self, profile_id: str, *, limit: int | None = None) -> list[GenerationAssetBundle]:
+        with self._lock:
+            items = list(self._generation_bundles.get(profile_id, []))
+        items.sort(key=lambda item: item.created_at, reverse=True)
+        if limit is not None:
+            items = items[:limit]
+        return items
 
     # Logs
     def append_audit(self, event: AuditLog) -> AuditLog:
