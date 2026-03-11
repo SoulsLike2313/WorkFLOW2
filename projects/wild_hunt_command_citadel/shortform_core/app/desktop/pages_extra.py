@@ -11,14 +11,13 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QListWidget,
-    QPushButton,
     QTableWidget,
     QTableWidgetItem,
     QTextEdit,
     QVBoxLayout,
 )
 
-from .components import GlowCard, MetricCard, SectionHeader
+from .components import GlowCard, MetricCard, MotionButton, SectionHeader
 from .pages import BasePage
 
 
@@ -71,7 +70,7 @@ class AuditPage(BasePage):
         layout.addWidget(SectionHeader("Журнал / Таймлайн", "Типизированная лента событий рабочего пространства, AI и обновлений"))
 
         actions = QHBoxLayout()
-        refresh_btn = QPushButton("Обновить таймлайн")
+        refresh_btn = MotionButton("Обновить таймлайн")
         refresh_btn.setObjectName("PrimaryCTA")
         refresh_btn.clicked.connect(lambda: self.action_requested.emit("refresh", None))
 
@@ -87,6 +86,13 @@ class AuditPage(BasePage):
         actions.addStretch(1)
         layout.addLayout(actions)
 
+        timeline_card = GlowCard(elevated=False)
+        timeline_card.setObjectName("AuditTimelineBlock")
+        timeline_layout = QVBoxLayout(timeline_card)
+        timeline_layout.setContentsMargins(14, 12, 14, 12)
+        timeline_layout.setSpacing(10)
+        timeline_layout.addWidget(SectionHeader("Таймлайн событий", "События системы, AI, обновлений и рабочего цикла"))
+
         self.table = QTableWidget(0, 6)
         self.table.setHorizontalHeaderLabels(["Время", "Источник", "Действие", "Результат", "Профиль", "Канал"])
         self.table.verticalHeader().setVisible(False)
@@ -95,12 +101,22 @@ class AuditPage(BasePage):
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.horizontalHeader().setDefaultSectionSize(130)
-        layout.addWidget(self.table, stretch=1)
+        self.table.setObjectName("AuditTimelineTable")
+        timeline_layout.addWidget(self.table)
+        layout.addWidget(timeline_card, stretch=1)
+
+        errors_card = GlowCard(elevated=False)
+        errors_card.setObjectName("AuditErrorsBlock")
+        errors_layout = QVBoxLayout(errors_card)
+        errors_layout.setContentsMargins(14, 12, 14, 12)
+        errors_layout.setSpacing(10)
+        errors_layout.addWidget(SectionHeader("Последние сбои", "Ошибки выполнения и события запрета политик"))
 
         self.errors = QListWidget()
+        self.errors.setObjectName("AuditErrorsList")
         self.errors.setMinimumHeight(120)
-        layout.addWidget(SectionHeader("Последние сбои", "Ошибки и события запрета политик"))
-        layout.addWidget(self.errors)
+        errors_layout.addWidget(self.errors)
+        layout.addWidget(errors_card)
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:
         selected_label = self.level_filter.currentText()
@@ -166,10 +182,11 @@ class UpdatesPage(BasePage):
         layout.addLayout(cards)
 
         actions = QHBoxLayout()
-        check_btn = QPushButton("Проверить обновления")
+        check_btn = MotionButton("Проверить обновления")
         check_btn.setObjectName("PrimaryCTA")
         check_btn.clicked.connect(lambda: self.action_requested.emit("check_updates", None))
-        post_btn = QPushButton("Запустить пост-проверку")
+        post_btn = MotionButton("Запустить пост-проверку")
+        post_btn.setObjectName("SecondaryCTA")
         post_btn.clicked.connect(lambda: self.action_requested.emit("run_post_verify", None))
         actions.addWidget(check_btn)
         actions.addWidget(post_btn)
@@ -177,9 +194,10 @@ class UpdatesPage(BasePage):
         layout.addLayout(actions)
 
         details_card = GlowCard(elevated=False)
+        details_card.setObjectName("UpdatesDiagnosticsBlock")
         details_layout = QVBoxLayout(details_card)
-        details_layout.setContentsMargins(12, 10, 12, 10)
-        details_layout.setSpacing(8)
+        details_layout.setContentsMargins(14, 12, 14, 12)
+        details_layout.setSpacing(10)
         details_layout.addWidget(SectionHeader("Диагностика обновлений", "Машиночитаемая сводка для оператора"))
 
         self.details = QTextEdit()
@@ -242,8 +260,9 @@ class SettingsPage(BasePage):
         layout.addWidget(SectionHeader("Настройки", "Параметры рабочего пространства/runtime и ссылки на диагностику"))
 
         card = GlowCard(elevated=False)
+        card.setObjectName("SettingsRuntimeBlock")
         card_layout = QVBoxLayout(card)
-        card_layout.setContentsMargins(12, 10, 12, 10)
+        card_layout.setContentsMargins(14, 12, 14, 12)
         card_layout.setSpacing(10)
 
         form = QFormLayout()
@@ -267,9 +286,10 @@ class SettingsPage(BasePage):
         card_layout.addLayout(form)
 
         actions = QHBoxLayout()
-        diagnostics_btn = QPushButton("Открыть диагностику")
+        diagnostics_btn = MotionButton("Открыть диагностику")
+        diagnostics_btn.setObjectName("OutlineCTA")
         diagnostics_btn.clicked.connect(lambda: self.action_requested.emit("open_diagnostics", None))
-        reload_btn = QPushButton("Обновить настройки")
+        reload_btn = MotionButton("Обновить настройки")
         reload_btn.setObjectName("PrimaryCTA")
         reload_btn.clicked.connect(lambda: self.action_requested.emit("refresh", None))
         actions.addWidget(diagnostics_btn)

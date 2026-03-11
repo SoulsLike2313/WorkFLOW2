@@ -13,7 +13,6 @@ from PySide6.QtWidgets import (
     QLabel,
     QListWidget,
     QListWidgetItem,
-    QPushButton,
     QSplitter,
     QTableWidget,
     QTableWidgetItem,
@@ -22,7 +21,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .components import EmptyStateCard, GlowCard, MetricCard, SectionHeader
+from .components import EmptyStateCard, GlowCard, MetricCard, MotionButton, SectionHeader
 
 
 def _fmt_ts(value: Any) -> str:
@@ -119,8 +118,8 @@ class DashboardPage(BasePage):
         layout.addWidget(SectionHeader("Обзор", "Сводка рабочего пространства и быстрые действия"))
 
         metrics_grid = QGridLayout()
-        metrics_grid.setHorizontalSpacing(10)
-        metrics_grid.setVerticalSpacing(10)
+        metrics_grid.setHorizontalSpacing(12)
+        metrics_grid.setVerticalSpacing(12)
 
         self.cards = {
             "profiles": MetricCard("Активные профили", "0", "зарегистрировано"),
@@ -140,9 +139,10 @@ class DashboardPage(BasePage):
         layout.addLayout(metrics_grid)
 
         quick_card = GlowCard(elevated=False)
+        quick_card.setObjectName("DashboardQuickActions")
         quick_layout = QVBoxLayout(quick_card)
-        quick_layout.setContentsMargins(12, 10, 12, 10)
-        quick_layout.setSpacing(8)
+        quick_layout.setContentsMargins(14, 12, 14, 12)
+        quick_layout.setSpacing(10)
         quick_layout.addWidget(SectionHeader("Быстрые действия", "Ключевые шаги рабочего сценария"))
 
         row1 = QHBoxLayout()
@@ -156,9 +156,13 @@ class DashboardPage(BasePage):
             ("Проверить обновления", "check_updates"),
         ]
         for idx, (title, action) in enumerate(actions):
-            button = QPushButton(title)
+            button = MotionButton(title)
             if action in {"add_profile", "open_session", "generate_plan"}:
                 button.setObjectName("PrimaryCTA")
+            elif action in {"check_updates"}:
+                button.setObjectName("OutlineCTA")
+            else:
+                button.setObjectName("SecondaryCTA")
             button.clicked.connect(lambda _=False, a=action: self.action_requested.emit(a, None))
             (row1 if idx < 3 else row2).addWidget(button)
 
@@ -170,19 +174,23 @@ class DashboardPage(BasePage):
         split.setChildrenCollapsible(False)
 
         audit_card = GlowCard(elevated=False)
+        audit_card.setObjectName("DashboardAuditBlock")
         audit_layout = QVBoxLayout(audit_card)
-        audit_layout.setContentsMargins(12, 10, 12, 10)
-        audit_layout.setSpacing(8)
+        audit_layout.setContentsMargins(14, 12, 14, 12)
+        audit_layout.setSpacing(10)
         audit_layout.addWidget(SectionHeader("Последние события журнала", "Актуальная лента действий"))
         self.audit_list = QListWidget()
+        self.audit_list.setObjectName("DashboardAuditList")
         audit_layout.addWidget(self.audit_list)
 
         rec_card = GlowCard(elevated=False)
+        rec_card.setObjectName("DashboardRecommendationBlock")
         rec_layout = QVBoxLayout(rec_card)
-        rec_layout.setContentsMargins(12, 10, 12, 10)
-        rec_layout.setSpacing(8)
+        rec_layout.setContentsMargins(14, 12, 14, 12)
+        rec_layout.setSpacing(10)
         rec_layout.addWidget(SectionHeader("Сводка рекомендаций AI", "Приоритетные предложения"))
         self.rec_list = QListWidget()
+        self.rec_list.setObjectName("DashboardRecommendationList")
         rec_layout.addWidget(self.rec_list)
 
         split.addWidget(audit_card)
@@ -246,9 +254,13 @@ class ProfilesPage(BasePage):
             ("Открыть контент", "open_content", False),
             ("Открыть AI", "open_ai_studio", False),
         ]:
-            btn = QPushButton(title)
+            btn = MotionButton(title)
             if primary:
                 btn.setObjectName("PrimaryCTA")
+            elif action in {"connect_profile"}:
+                btn.setObjectName("OutlineCTA")
+            else:
+                btn.setObjectName("SecondaryCTA")
             btn.clicked.connect(lambda _=False, a=action: self.action_requested.emit(a, self.selected_profile_id()))
             action_row.addWidget(btn)
         action_row.addStretch(1)
@@ -320,10 +332,10 @@ class SessionsPage(BasePage):
         controls.addWidget(QLabel("Пресет окна:"))
         controls.addWidget(self.viewport)
 
-        open_btn = QPushButton("Открыть сессию")
+        open_btn = MotionButton("Открыть сессию")
         open_btn.setObjectName("PrimaryCTA")
         open_btn.clicked.connect(lambda: self.action_requested.emit("open_session", self._payload()))
-        close_btn = QPushButton("Закрыть сессию")
+        close_btn = MotionButton("Закрыть сессию")
         close_btn.setObjectName("DangerCTA")
         close_btn.clicked.connect(lambda: self.action_requested.emit("close_session", self._payload()))
 
@@ -451,12 +463,14 @@ class ContentPage(BasePage):
         layout.addLayout(summary)
 
         actions = QHBoxLayout()
-        add_btn = QPushButton("Добавить демо-контент")
+        add_btn = MotionButton("Добавить демо-контент")
         add_btn.setObjectName("PrimaryCTA")
         add_btn.clicked.connect(lambda: self.action_requested.emit("add_placeholder_content", None))
-        validate_btn = QPushButton("Проверить выбранное")
+        validate_btn = MotionButton("Проверить выбранное")
+        validate_btn.setObjectName("SecondaryCTA")
         validate_btn.clicked.connect(lambda: self.action_requested.emit("validate_content", self.selected_content_id()))
-        queue_btn = QPushButton("Поставить в очередь")
+        queue_btn = MotionButton("Поставить в очередь")
+        queue_btn.setObjectName("OutlineCTA")
         queue_btn.clicked.connect(lambda: self.action_requested.emit("queue_content", self.selected_content_id()))
         actions.addWidget(add_btn)
         actions.addWidget(validate_btn)
@@ -535,9 +549,10 @@ class AnalyticsPage(BasePage):
         split = QSplitter(Qt.Orientation.Horizontal)
 
         left = GlowCard(elevated=False)
+        left.setObjectName("AIRecommendationBlock")
         left_layout = QVBoxLayout(left)
-        left_layout.setContentsMargins(12, 10, 12, 10)
-        left_layout.setSpacing(8)
+        left_layout.setContentsMargins(14, 12, 14, 12)
+        left_layout.setSpacing(10)
         left_layout.addWidget(SectionHeader("Топ-контент", "Лучшие ролики и выбросы"))
         self.top_list = QListWidget()
         left_layout.addWidget(self.top_list)
@@ -549,8 +564,8 @@ class AnalyticsPage(BasePage):
 
         right = GlowCard(elevated=False)
         right_layout = QVBoxLayout(right)
-        right_layout.setContentsMargins(12, 10, 12, 10)
-        right_layout.setSpacing(8)
+        right_layout.setContentsMargins(14, 12, 14, 12)
+        right_layout.setSpacing(10)
         right_layout.addWidget(SectionHeader("Паттерны контента", "Темы, форматы, хуки и окна публикации"))
         self.patterns_list = QListWidget()
         right_layout.addWidget(self.patterns_list)
@@ -647,10 +662,11 @@ class AIStudioPage(BasePage):
         layout.addLayout(cards)
 
         action_row = QHBoxLayout()
-        gen_btn = QPushButton("Сгенерировать рекомендации")
+        gen_btn = MotionButton("Сгенерировать рекомендации")
         gen_btn.setObjectName("PrimaryCTA")
         gen_btn.clicked.connect(lambda: self.action_requested.emit("generate_ai_recommendations", None))
-        bundle_btn = QPushButton("Собрать пакет генерации")
+        bundle_btn = MotionButton("Собрать пакет генерации")
+        bundle_btn.setObjectName("SecondaryCTA")
         bundle_btn.clicked.connect(lambda: self.action_requested.emit("build_generation_bundle", None))
         action_row.addWidget(gen_btn)
         action_row.addWidget(bundle_btn)
@@ -665,19 +681,23 @@ class AIStudioPage(BasePage):
         left_layout.setSpacing(8)
         left_layout.addWidget(SectionHeader("Рекомендации", "Обоснование, уверенность, альтернативы"))
         self.recommendations = QListWidget()
+        self.recommendations.setObjectName("AIRecommendationList")
         left_layout.addWidget(self.recommendations)
 
         right = GlowCard(elevated=False)
+        right.setObjectName("AILearningBlock")
         right_layout = QVBoxLayout(right)
         right_layout.setContentsMargins(12, 10, 12, 10)
         right_layout.setSpacing(8)
         right_layout.addWidget(SectionHeader("Сводка обучения", "Что система узнала по результатам"))
         self.learning_summary = QTextEdit()
+        self.learning_summary.setObjectName("AILearningSummary")
         self.learning_summary.setReadOnly(True)
         right_layout.addWidget(self.learning_summary)
 
         right_layout.addWidget(SectionHeader("Превью пакета генерации", "Подготовка видео, аудио, сценария и текста"))
         self.bundle_list = QListWidget()
+        self.bundle_list.setObjectName("AIBundleList")
         right_layout.addWidget(self.bundle_list)
 
         split.addWidget(left)

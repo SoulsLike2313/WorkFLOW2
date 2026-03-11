@@ -4,8 +4,9 @@ from datetime import datetime
 from typing import Any
 
 import httpx
-from PySide6.QtCore import QTimer, Qt
+from PySide6.QtCore import QEasingCurve, QPropertyAnimation, QTimer, Qt
 from PySide6.QtWidgets import (
+    QGraphicsOpacityEffect,
     QHBoxLayout,
     QInputDialog,
     QLabel,
@@ -57,6 +58,7 @@ class UserWorkspaceWindow(QMainWindow):
         self._nav_buttons: dict[str, NavRailButton] = {}
         self._pages: dict[str, BasePage] = {}
         self._page_order: list[str] = []
+        self._page_fade_anim: QPropertyAnimation | None = None
 
         self._build_ui()
         self.setStyleSheet(build_stylesheet(build_theme_tokens()))
@@ -165,9 +167,35 @@ class UserWorkspaceWindow(QMainWindow):
             return
         index = self._page_order.index(key)
         self.workspace_stack.setCurrentIndex(index)
+        self._animate_page_transition(self.workspace_stack.currentWidget())
         for nav_key, button in self._nav_buttons.items():
             button.setChecked(nav_key == key)
         diag_log("runtime_logs", "desktop_switch_page", payload={"page": key})
+
+    def _animate_page_transition(self, page: QWidget | None) -> None:
+        if page is None:
+            return
+        if self._page_fade_anim is not None:
+            self._page_fade_anim.stop()
+            self._page_fade_anim = None
+
+        effect = QGraphicsOpacityEffect(page)
+        effect.setOpacity(0.0)
+        page.setGraphicsEffect(effect)
+
+        anim = QPropertyAnimation(effect, b"opacity", self)
+        anim.setDuration(170)
+        anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+        anim.setStartValue(0.0)
+        anim.setEndValue(1.0)
+
+        def _cleanup() -> None:
+            page.setGraphicsEffect(None)
+            self._page_fade_anim = None
+
+        anim.finished.connect(_cleanup)
+        self._page_fade_anim = anim
+        anim.start()
 
     def _client(self) -> httpx.Client:
         return httpx.Client(base_url=self.api_base_url, timeout=7.0)
