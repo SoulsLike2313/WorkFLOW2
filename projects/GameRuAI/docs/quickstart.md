@@ -21,25 +21,24 @@ python -m app.main
 1. `Project` tab -> `fixtures/demo_game_world` -> `Create/Select Project`
 2. Run `Scan`
 
-## 5) Translation / companion / asset flows
+## 5) Translation / companion / asset / voice flows
 - Translation: `Scan -> Extract -> Detect -> Translate`
 - Companion: `Companion` tab -> launch session -> edit file -> poll status
 - Asset research: `Asset Explorer` -> `Refresh Asset Index` -> inspect file
+- Voice prep: `Voice` -> `Generate Demo Voice Attempts`
 
-## 6) Voice preparation flow
-1. Run translation first (voice attempts use translated RU text).
-2. Open `Voice` tab.
-3. Click `Generate Demo Voice Attempts`.
-4. Inspect sections:
-   - `Speaker groups`
-   - `Voice attempt history`
-   - `Voice Preview panel`
-   - `Duration Plan widget`
-   - `Voice quality/confidence`
+## 6) Reports and diagnostics
+1. Open `Reports` tab -> click `Generate Reports`.
+2. Read:
+   - translation metrics
+   - language distribution + uncertainty
+   - QA and export integrity summary
+   - compact quality widgets
+3. Open `Diagnostics` tab for backend latency/fallback/context and quality snapshot history.
 
 ## 7) Demo/mock clarity
-- Synthesis mode in this sprint is `mock_demo_tts_stub`.
-- UI and metadata explicitly mark it as demo/mock preparation layer.
+- Voice synthesis mode is `mock_demo_tts_stub`.
+- Fallback/demo behavior is shown in UI and reports (not hidden).
 
 ## 8) Tests
 ```powershell

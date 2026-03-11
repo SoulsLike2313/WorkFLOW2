@@ -1,4 +1,4 @@
-﻿# Translation Backends (Sprint Scope)
+﻿# Translation Backends
 
 ## Working Architecture
 - Router: `app/translator/router.py`
@@ -8,59 +8,46 @@
   - `app/translator/backends/argos_backend.py`
   - `app/translator/backends/transformers_backend.py`
 - Orchestrator: `app/translator/realtime_orchestrator.py`
-- Context builder: `app/translator/context_builder.py`
-- Context model: `app/core/context_models.py`
+- Context builder/model:
+  - `app/translator/context_builder.py`
+  - `app/core/context_models.py`
 
 ## Backend Selection
-`TranslatorRouter.resolve(requested_backend)` returns:
-- active backend
-- fallback info (`fallback_used`, `fallback_backend`, reason)
+`TranslatorRouter.resolve(requested_backend)` returns active backend plus fallback metadata.
+If optional backend is unavailable, fallback is explicit and logged.
 
-If requested optional backend is unavailable, router falls back to `local_mock` (or `dummy` if needed).
-
-## Context-Aware Translation
-Context fields used:
-- `speaker_id`
-- `scene_id`
-- `neighboring_lines`
-- `line_type`
-- `file_group`
-- `style_preset`
-
-Context is built before translation and passed to backend.
-`context_used` is stored in `translations` and `translation_backend_runs`.
-
-## Transparency Data (Implemented)
-For each translation run, the app stores and/or displays:
+## Persisted Transparency Data
+Per translation/backend run:
 - requested backend
 - active backend
-- fallback backend
-- TM hit / glossary hit
-- context used
-- latency (ms)
-- quality score
-- uncertainty warning
+- fallback flag and fallback backend
+- latency
+- context-used flag
+- TM/glossary usage
+- quality/uncertainty
 
-UI locations:
-- `Translation` tab: backend status + translation table columns
-- `Entries` tab: `Context` column
-- `Jobs / Logs` tab: backend run records
-
-## Database Tables Used
-- `translations` (includes `backend`, `fallback_backend`, `context_used`)
+Tables:
+- `translations`
 - `translation_backend_runs`
+- `backend_diagnostics` (aggregated report view)
 
-## Working vs Fallback/Demo
-Working now:
-- full pipeline with `local_mock` and `dummy`
-- graceful fallback if `argos`/`transformers` are missing
-- context pipeline end-to-end
+## Diagnostics and Metrics
+Reports layer calculates:
+- backend usage distribution
+- avg/min/max/p95 latency
+- fallback rate
+- context usage rate
+- glossary hit rate
+- TM hit rate
+- uncertain language rate
+- low-quality translation counts
 
-Fallback/demo behavior:
-- `argos` and `transformers` backends are lightweight adapters and require optional dependencies
-- when dependencies are not installed, fallback is expected and logged
+UI:
+- `Translation` tab (line-level transparency)
+- `Reports` tab (project translation metrics)
+- `Diagnostics` tab (backend aggregated diagnostics)
 
-Not implemented in this sprint:
-- heavy production-grade MT model orchestration
-- remote provider integrations
-- automatic model download/management UI
+## Honest Status
+- `local_mock`/`dummy` are primary local demo backends.
+- `argos`/`transformers` are optional adapters and may fallback if dependencies are missing.
+- No production-grade MT claims in this MVP.

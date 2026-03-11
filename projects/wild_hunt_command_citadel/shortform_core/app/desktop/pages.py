@@ -222,6 +222,20 @@ class DashboardPage(BasePage):
         quick_hint.setObjectName("SectionHint")
         quick_hint.setWordWrap(True)
 
+        core_state_caption = QLabel("Состояние ядра и готовность модулей")
+        core_state_caption.setObjectName("DashboardRowCaption")
+        self.core_state_summary = QLabel("Ожидается загрузка статусов readiness, верификации и обновлений.")
+        self.core_state_summary.setObjectName("SectionHint")
+        self.core_state_summary.setWordWrap(True)
+        self.core_state_summary.setObjectName("DashboardCoreStateSummary")
+
+        next_action_caption = QLabel("Рекомендуемые следующие действия")
+        next_action_caption.setObjectName("DashboardRowCaption")
+        self.next_action_summary = QLabel("Здесь появится пошаговая подсказка по текущему состоянию системы.")
+        self.next_action_summary.setObjectName("SectionHint")
+        self.next_action_summary.setWordWrap(True)
+        self.next_action_summary.setObjectName("DashboardNextActionSummary")
+
         actions = [
             ("Добавить профиль", "add_profile", "primary"),
             ("Открыть сессию", "open_session", "secondary"),
@@ -249,6 +263,12 @@ class DashboardPage(BasePage):
         quick_layout.addWidget(row2_caption)
         quick_layout.addLayout(row2)
         quick_layout.addWidget(quick_hint)
+        quick_layout.addSpacing(4)
+        quick_layout.addWidget(core_state_caption)
+        quick_layout.addWidget(self.core_state_summary)
+        quick_layout.addSpacing(2)
+        quick_layout.addWidget(next_action_caption)
+        quick_layout.addWidget(self.next_action_summary)
         layout.addWidget(quick_card)
 
         split = QSplitter(Qt.Orientation.Horizontal)
@@ -308,6 +328,42 @@ class DashboardPage(BasePage):
 
         post_status = str(updates.get("post_verify_status", "unknown"))
         self.cards["updates"].set_data(_ru_gate(post_status), str(updates.get("version_label", "версия не определена")))
+
+        readiness_items = readiness.get("items", {}) if isinstance(readiness.get("items"), dict) else {}
+        readiness_view = [
+            ("Конфиг", bool(readiness_items.get("config_ready"))),
+            ("База данных", bool(readiness_items.get("db_ready"))),
+            ("Репозитории", bool(readiness_items.get("repository_ready"))),
+            ("API", bool(readiness_items.get("api_ready"))),
+            ("Workspace", bool(readiness_items.get("workspace_ready"))),
+            ("Аналитика", bool(readiness_items.get("analytics_ready"))),
+            ("AI", bool(readiness_items.get("ai_ready"))),
+            ("Обновления", bool(readiness_items.get("update_ready"))),
+        ]
+        readiness_line = " · ".join(f"{name}: {'готово' if ready else 'не готово'}" for name, ready in readiness_view)
+        self.core_state_summary.setText(
+            f"Readiness: {readiness_line}\n"
+            f"Верификация: {_ru_gate(verify)} · Пост-проверка: {_ru_gate(post_status)}"
+        )
+
+        next_steps: list[str] = []
+        profile_count = int(summary.get("profile_count", 0))
+        open_sessions = int(summary.get("open_session_windows", 0))
+        queue_count = int(summary.get("queued_content_items", 0))
+        alerts_count = len(_safe_list(snapshot.get("alerts")))
+        if profile_count == 0:
+            next_steps.append("1) Добавьте первый профиль и задайте тип подключения.")
+        if profile_count > 0 and open_sessions == 0:
+            next_steps.append("2) Откройте сессию 9:16 для выбранного профиля.")
+        if queue_count == 0:
+            next_steps.append("3) Добавьте контент и отправьте элемент в очередь.")
+        if verify != "PASS":
+            next_steps.append("4) Проверьте раздел «Обновления» и добейтесь статуса PASS.")
+        if alerts_count > 0:
+            next_steps.append("5) Разберите сигналы в журнале и устраните предупреждения.")
+        if not next_steps:
+            next_steps.append("Система готова: загрузите свежие метрики и сформируйте план следующего цикла.")
+        self.next_action_summary.setText("\n".join(next_steps[:5]))
 
         self.audit_list.clear()
         for item in _safe_list(snapshot.get("audit_log"))[:16]:

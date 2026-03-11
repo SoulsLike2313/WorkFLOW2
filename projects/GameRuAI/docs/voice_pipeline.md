@@ -1,10 +1,10 @@
 ﻿# Voice Pipeline (Preparation Layer)
 
-## Sprint Scope
-This sprint improves the voice layer as a practical preparation pipeline.
-It does not claim final production-grade Russian dubbing.
+## Scope
+Voice layer is a practical preparation pipeline for future dubbing iterations.
+It is not final production dubbing.
 
-## Added Modules
+## Added Core Modules
 - `app/voice/voice_sample_bank.py`
 - `app/voice/speaker_grouping.py`
 - `app/voice/duration_planner.py`
@@ -12,22 +12,17 @@ It does not claim final production-grade Russian dubbing.
 - `app/voice/preview_player.py`
 
 ## What Works
-- Voice-linked entries are analyzed with:
+- Voice linking diagnostics:
   - speaker-aware linking
   - scene-aware metadata
   - broken link validation
-  - link confidence scoring
-- Speaker groups are built and persisted.
-- Voice sample bank is built and persisted (source file, duration, scene, speaker).
-- Duration planning produces alignment/action/confidence hints.
-- Mock synthesis uses stable speaker parameters + style/emotion variation.
-- Voice attempt history is persisted and visible in UI.
-- Preview path resolver reports source/generated file availability for UI.
-
-## Database Tables
-- `speaker_groups`
-- `voice_sample_bank`
-- `voice_attempt_history`
+  - link confidence score
+- Speaker groups persisted (`speaker_groups`).
+- Voice sample bank persisted (`voice_sample_bank`).
+- Duration planning and alignment hints per attempt.
+- Mock synthesis with stable speaker/style/emotion variation.
+- Voice attempt history persisted (`voice_attempt_history`).
+- Preview path resolver for source/generated audio availability.
 
 ## UI Coverage
 In `Voice` tab:
@@ -37,9 +32,13 @@ In `Voice` tab:
 - Duration Plan widget
 - Voice Quality/Confidence widget
 
-## Honest Status (Important)
+In reporting UI:
+- `Reports` tab: voice attempt counts, alignment/quality summary, synthesis mode usage
+- `Diagnostics` tab: quality snapshot history (including voice-related metrics)
+
+## Honest Status
 - Active synthesis mode: `mock_demo_tts_stub`.
-- This is explicitly a demo/mock preparation layer.
+- Explicitly demo/mock preparation behavior.
 - Not implemented in this sprint:
   - real speech cloning
   - final production dubbing
@@ -47,9 +46,9 @@ In `Voice` tab:
   - full phoneme forced alignment
   - universal multi-engine reinjection
 
-## Why This Is Useful
-Even with mock synthesis, the layer now gives reusable structure for future RU dubbing:
-- speaker/sample organization
+## Why It Is Useful
+This layer already provides durable preparation data:
+- per-speaker sample structure
 - link quality diagnostics
-- duration planning for alignment
+- duration planning baseline
 - attempt history for iterative tuning

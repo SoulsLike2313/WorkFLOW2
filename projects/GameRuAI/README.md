@@ -1,7 +1,7 @@
 ﻿# GameRuAI (Desktop MVP Demo)
 
 GameRuAI is a local desktop demo app for game localization workflows.
-Current MVP combines translation + learning loop, safe companion mode, lightweight asset research, and a voice preparation layer.
+Current MVP includes translation + learning loop, companion mode, asset research, voice preparation, and project diagnostics.
 
 ## Stack
 - Python 3.11+
@@ -16,17 +16,16 @@ Current MVP combines translation + learning loop, safe companion mode, lightweig
 - Learning loop (manual correction -> TM/glossary reuse).
 - Companion mode (safe sidecar, file watch, quick re-index).
 - Asset Research Mode (index + preview where supported + metadata fallback).
-- Voice Preparation Layer:
-  - speaker grouping from voice-linked entries
-  - voice sample bank (source file, duration, scene, speaker)
-  - duration planning for mock synthesis
-  - voice attempt history persistence
-  - preview path resolution for source/generated files
+- Voice Preparation Layer (speaker grouping, sample bank, duration planning, attempt history).
+- Reports and Diagnostics layer:
+  - translation metrics and backend diagnostics
+  - language distribution and uncertainty report
+  - voice/QA/companion quality summaries
 
-## Honest Voice Status
-- Voice synthesis in this sprint is explicitly `mock/demo` (`mock_demo_tts_stub`).
-- This is preparation for future RU dubbing pipeline, not final production dubbing.
-- No speech cloning, no lip-sync, no full phoneme forced alignment.
+## Honest Status
+- Voice synthesis in current MVP is `mock_demo_tts_stub` (demo/mock preparation layer).
+- Reports are based on actual stored pipeline data.
+- No production-grade dubbing claims.
 
 ## Install
 ```powershell
@@ -54,26 +53,15 @@ python -m app.main
 1. `Project` tab -> set `fixtures/demo_game_world` -> `Create/Select Project`.
 2. Run `Scan` (or one-click `Run Full Demo Pipeline`).
 
-## Voice Sprint UI
-1. Open `Voice` tab.
-2. Click `Generate Demo Voice Attempts`.
-3. Check:
-   - `Speaker groups`
-   - `Voice attempts`
-   - `Voice attempt history`
-   - `Voice Preview panel`
-   - `Duration Plan widget`
-   - `Voice quality/confidence`
+## Reports And Diagnostics UI
+1. Open `Reports` tab -> click `Generate Reports`.
+2. Open `Diagnostics` tab for backend and quality history.
+3. Use widgets/tables to track translation quality, companion event health, and voice prep readiness.
 
 ## Tests
 Run all:
 ```powershell
 pytest -q
-```
-
-Voice sprint tests:
-```powershell
-pytest -q tests/unit/test_speaker_grouping.py tests/unit/test_voice_link_validation.py tests/unit/test_duration_planner.py tests/unit/test_voice_attempt_history.py tests/integration/test_voice_preparation_pipeline.py
 ```
 
 ## Build
@@ -88,5 +76,5 @@ python scripts/build_app.py --onefile
 
 ## Current Limits
 - Voice pipeline remains preparation-layer quality (not final dubbing).
-- Unsupported/unknown assets still use metadata-only fallback.
-- No 3D runtime capture or memory inspection.
+- Asset unsupported formats remain metadata-only.
+- No 3D runtime capture, memory inspection, or production speech cloning.

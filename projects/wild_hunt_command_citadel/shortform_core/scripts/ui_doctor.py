@@ -333,6 +333,127 @@ def _run_worker(args: argparse.Namespace) -> int:
         window.show()
         wait_ms(260)
 
+        splitter = getattr(window, "main_splitter", None)
+        if splitter is None:
+            add_issue(
+                "critical",
+                "missing_main_splitter",
+                "all",
+                "Main splitter is missing from workspace window.",
+                None,
+                size_label,
+            )
+        else:
+            split_sizes = splitter.sizes()
+            if len(split_sizes) == 2:
+                left_size, right_size = split_sizes
+                total = max(1, left_size + right_size)
+                right_ratio = right_size / total
+                if left_size < 620:
+                    add_issue(
+                        "major",
+                        "splitter_left_too_small",
+                        "all",
+                        f"Main workspace column is too narrow ({left_size}px).",
+                        splitter,
+                        size_label,
+                    )
+                if right_size < 280:
+                    add_issue(
+                        "major",
+                        "splitter_right_too_small",
+                        "all",
+                        f"Context panel is too narrow ({right_size}px).",
+                        splitter,
+                        size_label,
+                    )
+                if right_ratio < 0.18 or right_ratio > 0.42:
+                    add_issue(
+                        "major",
+                        "splitter_ratio_unstable",
+                        "all",
+                        f"Context panel ratio is outside expected range ({right_ratio:.2f}).",
+                        splitter,
+                        size_label,
+                    )
+
+        top_status = getattr(window, "top_status", None)
+        if top_status is None or not top_status.isVisible():
+            add_issue(
+                "critical",
+                "missing_top_status_bar",
+                "all",
+                "Top status bar is not visible.",
+                top_status if isinstance(top_status, QWidget) else None,
+                size_label,
+            )
+        else:
+            pills = getattr(top_status, "pills", {})
+            if not isinstance(pills, dict) or len(pills) < 5:
+                add_issue(
+                    "major",
+                    "insufficient_status_pills",
+                    "all",
+                    "Top status bar does not expose required status pills.",
+                    top_status,
+                    size_label,
+                )
+            else:
+                for key, pill in pills.items():
+                    if not pill.isVisible():
+                        add_issue(
+                            "major",
+                            "status_pill_hidden",
+                            "all",
+                            f"Status pill '{key}' is hidden.",
+                            pill,
+                            size_label,
+                        )
+                        continue
+                    text = (pill.text() or "").strip()
+                    if not text:
+                        add_issue(
+                            "major",
+                            "status_pill_empty",
+                            "all",
+                            f"Status pill '{key}' has empty text.",
+                            pill,
+                            size_label,
+                        )
+
+        context_panel = getattr(window, "context_panel", None)
+        if context_panel is None or not context_panel.isVisible():
+            add_issue(
+                "critical",
+                "missing_context_panel",
+                "all",
+                "Context panel is not visible.",
+                context_panel if isinstance(context_panel, QWidget) else None,
+                size_label,
+            )
+        else:
+            context_actions = [btn for btn in context_panel.findChildren(QPushButton) if btn.isVisible()]
+            if len(context_actions) < 2:
+                add_issue(
+                    "major",
+                    "context_actions_missing",
+                    "all",
+                    "Context panel has fewer than 2 visible actions.",
+                    context_panel,
+                    size_label,
+                )
+            context_labels = [lbl for lbl in context_panel.findChildren(QLabel) if lbl.isVisible()]
+            meaningful_labels = [lbl for lbl in context_labels if len((lbl.text() or "").strip()) >= 8]
+            if len(meaningful_labels) < 3:
+                add_issue(
+                    "major",
+                    "context_information_thin",
+                    "all",
+                    "Context panel does not provide enough readable context lines.",
+                    context_panel,
+                    size_label,
+                )
+
         for page_key in PAGE_KEYS:
             window._switch_page(page_key)
             wait_ms(320)
@@ -359,6 +480,47 @@ def _run_worker(args: argparse.Namespace) -> int:
                     size_label,
                 )
                 continue
+
+            if page_key == "dashboard":
+                core_state_label = getattr(page_widget, "core_state_summary", None)
+                next_actions_label = getattr(page_widget, "next_action_summary", None)
+                if core_state_label is None or not isinstance(core_state_label, QLabel):
+                    add_issue(
+                        "major",
+                        "dashboard_core_state_missing",
+                        page_key,
+                        "Dashboard does not expose a core system state summary block.",
+                        page_widget,
+                        size_label,
+                    )
+                elif not (core_state_label.text() or "").strip():
+                    add_issue(
+                        "major",
+                        "dashboard_core_state_empty",
+                        page_key,
+                        "Core system state summary is empty.",
+                        core_state_label,
+                        size_label,
+                    )
+
+                if next_actions_label is None or not isinstance(next_actions_label, QLabel):
+                    add_issue(
+                        "major",
+                        "dashboard_next_actions_missing",
+                        page_key,
+                        "Dashboard does not expose next recommended actions.",
+                        page_widget,
+                        size_label,
+                    )
+                elif not (next_actions_label.text() or "").strip():
+                    add_issue(
+                        "major",
+                        "dashboard_next_actions_empty",
+                        page_key,
+                        "Next actions summary is empty.",
+                        next_actions_label,
+                        size_label,
+                    )
 
             effect = page_widget.graphicsEffect()
             if isinstance(effect, QGraphicsOpacityEffect) and effect.opacity() < 0.95:

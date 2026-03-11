@@ -67,10 +67,21 @@ def _render_md(summary: dict[str, Any]) -> str:
             f"- ui_doctor run: `{doctor.get('run_id', '-')}` (`{doctor.get('status', '-')}`)",
             f"- ui_snapshot_runner run: `{snapshot.get('run_id', '-')}` (`{snapshot.get('status', '-')}`)",
             "",
-            "## Artifacts",
+            "## Screen Audit",
             "",
         ]
     )
+    screen_audit = summary.get("screen_audit", {})
+    if not screen_audit:
+        lines.append("- no screen-level audit data")
+    else:
+        for page, details in screen_audit.items():
+            lines.append(
+                f"- {page}: critical={details.get('critical', 0)}, "
+                f"major={details.get('major', 0)}, minor={details.get('minor', 0)}"
+            )
+
+    lines.extend(["", "## Artifacts", ""])
     artifacts = summary.get("artifacts", {})
     for key, value in artifacts.items():
         lines.append(f"- {key}: `{value}`")
@@ -91,6 +102,70 @@ def _render_md(summary: dict[str, Any]) -> str:
     else:
         lines.extend(["", "## Failures", "", "- none"])
 
+    return "\n".join(lines).strip() + "\n"
+
+
+def _build_screen_audit(doctor_summary: dict[str, Any]) -> dict[str, dict[str, int]]:
+    issues = doctor_summary.get("issues", [])
+    result: dict[str, dict[str, int]] = {}
+    if not isinstance(issues, list):
+        return result
+    for issue in issues:
+        if not isinstance(issue, dict):
+            continue
+        page = str(issue.get("page", "unknown"))
+        severity = str(issue.get("severity", "minor")).lower()
+        if severity not in {"critical", "major", "minor"}:
+            severity = "minor"
+        if page not in result:
+            result[page] = {"critical": 0, "major": 0, "minor": 0}
+        result[page][severity] += 1
+    return result
+
+
+def _render_visual_review_md(summary: dict[str, Any]) -> str:
+    lines = [
+        "# UI Visual Review",
+        "",
+        f"- Validate run: `{summary.get('run_id')}`",
+        f"- Overall status: `{summary.get('overall_status')}`",
+        f"- Doctor run: `{summary.get('ui_doctor', {}).get('run_id', '-')}`",
+        f"- Snapshot run: `{summary.get('ui_snapshot_runner', {}).get('run_id', '-')}`",
+        "",
+        "## Automated Signals",
+        "",
+    ]
+    screen_audit = summary.get("screen_audit", {})
+    if not screen_audit:
+        lines.append("- No per-screen issues were emitted by ui_doctor.")
+    else:
+        for page, details in screen_audit.items():
+            lines.append(
+                f"- {page}: critical={details.get('critical', 0)}, "
+                f"major={details.get('major', 0)}, minor={details.get('minor', 0)}"
+            )
+
+    lines.extend(
+        [
+            "",
+            "## Manual Visual Focus",
+            "",
+            "- Dashboard: читаемость блока состояния ядра и next-actions.",
+            "- Sessions: геометрия session frame и статусных зон на 125%/150%.",
+            "- Analytics/AI Studio: плотность длинных текстовых блоков и иерархия CTA.",
+            "- Context panel: отсутствие сжатия и потерянных action-блоков при resize.",
+            "",
+            "## Recommendation",
+            "",
+        ]
+    )
+    status = str(summary.get("overall_status", "FAIL"))
+    if status == "FAIL":
+        lines.append("- Автоматический гейт не пройден: ручной acceptance запрещён.")
+    elif status == "PASS_WITH_WARNINGS":
+        lines.append("- Есть предупреждения: нужен прицельный ручной visual review.")
+    else:
+        lines.append("- Гейт пройден. Выполните финальный ручной visual acceptance перед freeze.")
     return "\n".join(lines).strip() + "\n"
 
 
