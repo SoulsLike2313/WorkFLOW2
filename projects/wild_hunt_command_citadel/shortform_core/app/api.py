@@ -30,6 +30,7 @@ def _build_runtime() -> tuple[AppConfig, SQLiteRepository, WorkspaceRuntime]:
         analytics_weights=config.workspace.analytics_weights.model_dump(),
         log_dir=config.storage.logs_dir,
         debug_logs=config.workspace.debug_logs,
+        persistence_path=config.storage.workspace_state_path,
     )
     return config, repository, workspace_runtime
 

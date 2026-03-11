@@ -14,6 +14,7 @@ from .ai_providers import (
     StubReasoningProvider,
 )
 from .metrics_providers import MetricsProviderRegistry
+from .persistence import SQLiteWorkspacePersistence
 from .policy import PolicyGuard
 from .repository import WorkspaceRepository
 from .services import (
@@ -40,6 +41,7 @@ from .video_generator import MockVideoGeneratorAdapter
 
 @dataclass
 class WorkspaceRuntime:
+    persistence: SQLiteWorkspacePersistence | None
     repository: WorkspaceRepository
     audit: AuditService
     profiles: ProfileService
@@ -73,11 +75,13 @@ def build_workspace_runtime(
     analytics_weights: dict[str, float] | None = None,
     log_dir: Path | None = None,
     debug_logs: bool = False,
+    persistence_path: Path | None = None,
 ) -> WorkspaceRuntime:
     if log_dir is not None:
         configure_diagnostics(log_dir, debug=debug_logs)
 
-    repository = WorkspaceRepository()
+    persistence = SQLiteWorkspacePersistence(persistence_path) if persistence_path is not None else None
+    repository = WorkspaceRepository(persistence=persistence)
     policy_guard = PolicyGuard()
     audit = AuditService(repository)
 
@@ -143,6 +147,7 @@ def build_workspace_runtime(
     )
 
     return WorkspaceRuntime(
+        persistence=persistence,
         repository=repository,
         audit=audit,
         profiles=profile_service,

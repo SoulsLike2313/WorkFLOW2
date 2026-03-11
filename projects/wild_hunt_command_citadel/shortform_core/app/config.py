@@ -50,9 +50,11 @@ class StorageConfig(BaseModel):
 
     project_root: Path = PROJECT_ROOT
     database_path: Path = PROJECT_ROOT / "runtime" / "shortform_core.db"
+    workspace_state_path: Path = PROJECT_ROOT / "runtime" / "workspace_state.db"
     output_dir: Path = PROJECT_ROOT / "runtime" / "output"
     logs_dir: Path = PROJECT_ROOT / "runtime" / "logs"
     verification_dir: Path = PROJECT_ROOT / "runtime" / "verification"
+    patch_dir: Path = PROJECT_ROOT / "runtime" / "patches"
     tiktok_snapshot_dir: Path = PROJECT_ROOT / "external_data" / "tiktok_automation_snapshot"
 
 
@@ -65,6 +67,7 @@ class AppConfig(BaseModel):
     workspace: WorkspaceConfig = Field(default_factory=WorkspaceConfig)
     api_host: str = "127.0.0.1"
     api_port: int = Field(default=8000, ge=1, le=65535)
+    mode: str = "developer"
 
 
 def _env_int(env: Mapping[str, str], key: str, default: int) -> int:
@@ -125,9 +128,11 @@ def load_config(env: Mapping[str, str] | None = None) -> AppConfig:
     storage = StorageConfig(
         project_root=_env_path(source, "SFCO_PROJECT_ROOT", PROJECT_ROOT),
         database_path=_env_path(source, "SFCO_DATABASE_PATH", PROJECT_ROOT / "runtime" / "shortform_core.db"),
+        workspace_state_path=_env_path(source, "SFCO_WORKSPACE_STATE_PATH", PROJECT_ROOT / "runtime" / "workspace_state.db"),
         output_dir=_env_path(source, "SFCO_OUTPUT_DIR", PROJECT_ROOT / "runtime" / "output"),
         logs_dir=_env_path(source, "SFCO_LOGS_DIR", PROJECT_ROOT / "runtime" / "logs"),
         verification_dir=_env_path(source, "SFCO_VERIFICATION_DIR", PROJECT_ROOT / "runtime" / "verification"),
+        patch_dir=_env_path(source, "SFCO_PATCH_DIR", PROJECT_ROOT / "runtime" / "patches"),
         tiktok_snapshot_dir=_env_path(
             source,
             "SFCO_TIKTOK_SNAPSHOT_DIR",
@@ -139,6 +144,7 @@ def load_config(env: Mapping[str, str] | None = None) -> AppConfig:
     storage.output_dir.mkdir(parents=True, exist_ok=True)
     storage.logs_dir.mkdir(parents=True, exist_ok=True)
     storage.verification_dir.mkdir(parents=True, exist_ok=True)
+    storage.patch_dir.mkdir(parents=True, exist_ok=True)
 
     return AppConfig(
         thresholds=thresholds,
@@ -147,4 +153,5 @@ def load_config(env: Mapping[str, str] | None = None) -> AppConfig:
         workspace=workspace,
         api_host=source.get("SFCO_API_HOST", "127.0.0.1"),
         api_port=_env_int(source, "SFCO_API_PORT", 8000),
+        mode=source.get("SFCO_MODE", "developer").strip().lower(),
     )
