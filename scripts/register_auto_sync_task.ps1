@@ -10,13 +10,17 @@ if ($Minutes -lt 1) {
 }
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$syncScript = Join-Path $PSScriptRoot "auto_sync.ps1"
+$hiddenLauncher = Join-Path $PSScriptRoot "auto_sync_hidden.vbs"
 $branch = (git -C $repoRoot branch --show-current).Trim()
 if ([string]::IsNullOrWhiteSpace($branch)) {
     $branch = "main"
 }
 
-$command = "powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$syncScript`" -RepoRoot `"$repoRoot`" -Branch `"$branch`""
+if (-not (Test-Path $hiddenLauncher)) {
+    throw "Missing launcher: $hiddenLauncher"
+}
+
+$command = "wscript.exe //B //NoLogo `"$hiddenLauncher`" `"$repoRoot`" `"$branch`""
 
 schtasks /Create /F /SC MINUTE /MO $Minutes /TN $TaskName /TR $command | Out-Null
 if ($LASTEXITCODE -ne 0) {
