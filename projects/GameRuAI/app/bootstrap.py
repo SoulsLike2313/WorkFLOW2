@@ -5,8 +5,12 @@ import wave
 from pathlib import Path
 from typing import Any, Generator
 
+from app.companion.file_watch_service import FileWatchService
+from app.companion.launcher import CompanionLauncher
+from app.companion.process_monitor import ProcessMonitor
+from app.companion.session_registry import SessionRegistry
 from app.config import AppConfig
-from app.core.models import ExportResult
+from app.core.models import ExportResult, ScannedFile
 from app.extractors.registry import ExtractorRegistry
 from app.glossary.models import GlossaryTerm
 from app.glossary.service import GlossaryService
@@ -20,8 +24,10 @@ from app.memory.service import TranslationMemoryService
 from app.patcher.exporter import Exporter
 from app.qa.service import QaService
 from app.scanner.scanner_service import ScannerService
+from app.scanner.file_classifier import classify_file
 from app.storage.db import Database
 from app.storage.repositories import RepositoryHub
+from app.translator.context_builder import TranslationContextBuilder
 from app.translator.glossary_injector import GlossaryInjector
 from app.translator.memory_lookup import MemoryLookup
 from app.translator.realtime_orchestrator import RealtimeOrchestrator
@@ -50,6 +56,7 @@ class AppServices:
         self.detector = LanguageDetector()
         self.glossary_service = GlossaryService(self.repo)
         self.memory_service = TranslationMemoryService(self.repo)
+        self.context_builder = TranslationContextBuilder(self.repo)
         self.translator = RealtimeOrchestrator(
             translator_router=TranslatorRouter(),
             glossary_injector=GlossaryInjector(self.glossary_service),
@@ -65,6 +72,10 @@ class AppServices:
         self.voice_synthesizer = MockVoiceSynthesizer()
         self.qa_service = QaService(self.repo)
         self.exporter = Exporter(self.repo)
+        self.process_monitor = ProcessMonitor()
+        self.session_registry = SessionRegistry(self.repo)
+        self.file_watch_service = FileWatchService(self.repo)
+        self.companion_launcher = CompanionLauncher(self.session_registry, self.process_monitor)
 
     def close(self) -> None:
         self.db.close()
@@ -78,6 +89,20 @@ class AppServices:
             {"id": project.id, "name": project.name, "game_path": project.game_path}
             for project in self.repo.list_projects()
         ]
+
+    def _resolve_project_game_root(self, project_id: int) -> Path:
+        for project in self.repo.list_projects():
+            if int(project.id) == int(project_id):
+                return Path(project.game_path)
+        return self.config.paths.fixtures_root
+
+    def _build_scene_index(self, game_root: Path) -> dict[str, str]:
+        mapping: dict[str, str] = {}
+        for scene in self.load_scenes(game_root):
+            scene_id = str(scene.get("scene_id") or "")
+            for line_id in scene.get("line_ids", []):
+                mapping[str(line_id)] = scene_id
+        return mapping
 
     def scan(self, project_id: int, game_root: Path) -> dict[str, Any]:
         self.repo.clear_project_runtime(project_id)
@@ -124,12 +149,24 @@ class AppServices:
     def translate(self, project_id: int, *, backend_name: str = "local_mock", style: str = "neutral") -> dict[str, Any]:
         def _run() -> dict[str, Any]:
             entries = self.repo.list_entries(project_id, limit=100000)
+            game_root = self._resolve_project_game_root(project_id)
+            scene_index = self._build_scene_index(game_root)
             translated = 0
             tm_reuse = 0
             glossary_reuse = 0
             corrected_rows = 0
+            context_used_count = 0
+            fallback_used_count = 0
+            backend_usage: dict[str, int] = {}
+            total_latency = 0
             for entry in entries:
                 source_lang = entry.get("detected_lang") or "unknown"
+                context = self.context_builder.build(
+                    project_id=project_id,
+                    entry_id=int(entry["id"]),
+                    style_preset=style,
+                    scene_index=scene_index,
+                )
                 decision = self.translator.translate_entry(
                     project_id=project_id,
                     entry_id=int(entry["id"]),
@@ -137,8 +174,35 @@ class AppServices:
                     source_lang=str(source_lang),
                     backend_name=backend_name,
                     style=style,
+                    context=context,
                 )
                 self.repo.upsert_translation(project_id, decision)
+                self.repo.add_translation_backend_run(
+                    project_id=project_id,
+                    entry_id=int(entry["id"]),
+                    requested_backend=backend_name,
+                    backend_name=decision.backend,
+                    fallback_backend=decision.fallback_backend,
+                    latency_ms=decision.latency_ms,
+                    context_used=decision.context_used,
+                    fallback_used=bool(decision.fallback_backend),
+                )
+                self.logger.info(
+                    "translation_backend_run",
+                    extra={
+                        "event": "translation.backend_run",
+                        "project_id": project_id,
+                        "entry_id": int(entry["id"]),
+                        "details": {
+                            "requested_backend": backend_name,
+                            "active_backend": decision.backend,
+                            "fallback_backend": decision.fallback_backend,
+                            "latency_ms": decision.latency_ms,
+                            "context_used": decision.context_used,
+                            "quality_score": decision.quality_score,
+                        },
+                    },
+                )
                 translated += 1
                 if decision.backend == "translation_memory" or decision.tm_hits:
                     tm_reuse += 1
@@ -146,6 +210,12 @@ class AppServices:
                     glossary_reuse += 1
                 if decision.status.value == "corrected":
                     corrected_rows += 1
+                if decision.context_used:
+                    context_used_count += 1
+                if decision.fallback_backend:
+                    fallback_used_count += 1
+                backend_usage[decision.backend] = backend_usage.get(decision.backend, 0) + 1
+                total_latency += decision.latency_ms
             self.repo.add_adaptation_event(
                 project_id,
                 event_type="batch_translation",
@@ -162,6 +232,8 @@ class AppServices:
                     "tm_reuse_count": tm_reuse,
                     "glossary_reuse_count": glossary_reuse,
                     "corrected_rows": corrected_rows,
+                    "context_used_count": context_used_count,
+                    "fallback_used_count": fallback_used_count,
                 },
             )
             return {
@@ -169,6 +241,11 @@ class AppServices:
                 "tm_reuse_count": tm_reuse,
                 "glossary_reuse_count": glossary_reuse,
                 "corrected_rows": corrected_rows,
+                "requested_backend": backend_name,
+                "backend_usage": backend_usage,
+                "fallback_used_count": fallback_used_count,
+                "context_used_count": context_used_count,
+                "avg_latency_ms": int(total_latency / max(1, translated)),
             }
 
         return self.job_manager.run_job("translate", _run)
@@ -336,6 +413,7 @@ class AppServices:
             return
         line_ids = scene.get("line_ids", [])
         all_entries = {row["line_id"]: row for row in self.repo.list_entries(project_id, limit=100000)}
+        scene_index = self._build_scene_index(game_root)
 
         for line_id in line_ids:
             entry = all_entries.get(line_id)
@@ -349,14 +427,32 @@ class AppServices:
                 entry["detected_lang"] = detect.language
                 entry["language_confidence"] = detect.confidence
 
+            context = self.context_builder.build(
+                project_id=project_id,
+                entry_id=int(entry["id"]),
+                style_preset="neutral",
+                scene_index=scene_index,
+            )
+
             decision = self.translator.translate_entry(
                 project_id=project_id,
                 entry_id=int(entry["id"]),
                 source_text=entry["source_text"],
                 source_lang=str(entry.get("detected_lang") or "unknown"),
                 backend_name=backend_name,
+                context=context,
             )
             self.repo.upsert_translation(project_id, decision)
+            self.repo.add_translation_backend_run(
+                project_id=project_id,
+                entry_id=int(entry["id"]),
+                requested_backend=backend_name,
+                backend_name=decision.backend,
+                fallback_backend=decision.fallback_backend,
+                latency_ms=decision.latency_ms,
+                context_used=decision.context_used,
+                fallback_used=bool(decision.fallback_backend),
+            )
 
             voice_status = "skipped"
             if entry.get("voice_link"):
@@ -372,7 +468,148 @@ class AppServices:
                 "voice_status": voice_status,
                 "uncertainty": decision.uncertainty,
                 "decision_log": decision.decision_log,
+                "context_used": decision.context_used,
+                "active_backend": decision.backend,
+                "fallback_backend": decision.fallback_backend or "",
             }
+
+    def launch_companion(
+        self,
+        *,
+        project_id: int,
+        executable_path: Path,
+        watched_path: Path,
+        args: list[str] | None = None,
+    ) -> dict[str, Any]:
+        session = self.companion_launcher.launch(
+            project_id=project_id,
+            executable_path=executable_path,
+            watched_path=watched_path,
+            args=args,
+            cwd=watched_path,
+        )
+        self.file_watch_service.start_watch(project_id=project_id, session_id=session.session_id, watched_path=watched_path)
+        self.repo.add_adaptation_event(
+            project_id,
+            event_type="companion_session_started",
+            event_scope="companion",
+            event_ref=session.session_id,
+            details={"executable_path": str(executable_path), "watched_path": str(watched_path)},
+        )
+        return self.session_registry.get(session.session_id) or {}
+
+    def poll_companion(self, *, project_id: int, session_id: str, game_root: Path) -> dict[str, Any]:
+        status = self.process_monitor.status(session_id)
+        ended = status.startswith("exited")
+        self.session_registry.update(session_id, status=status, pid=self.process_monitor.pid(session_id), ended=ended)
+        events = self.file_watch_service.poll(session_id)
+        changed_paths = [str(event["file_path"]) for event in events if event["event_type"] in {"created", "modified"}]
+        quick_reindexed_entries = 0
+        if changed_paths:
+            quick_reindexed_entries = self.quick_reindex(project_id=project_id, game_root=game_root, changed_paths=changed_paths)
+            self.repo.add_adaptation_event(
+                project_id,
+                event_type="companion_quick_reindex",
+                event_scope="companion",
+                event_ref=session_id,
+                details={"changed_paths": changed_paths, "reindexed_entries": quick_reindexed_entries},
+            )
+        return {
+            "session": self.session_registry.get(session_id),
+            "status": status,
+            "events": events,
+            "quick_reindexed_entries": quick_reindexed_entries,
+            "all_events": self.repo.list_watched_file_events(project_id, session_id=session_id, limit=300),
+        }
+
+    def stop_companion(self, *, project_id: int, session_id: str) -> dict[str, Any]:
+        status = self.process_monitor.stop(session_id)
+        self.session_registry.update(session_id, status=status, pid=self.process_monitor.pid(session_id), ended=True)
+        self.file_watch_service.stop_watch(session_id)
+        self.process_monitor.unregister(session_id)
+        self.repo.add_adaptation_event(
+            project_id,
+            event_type="companion_session_stopped",
+            event_scope="companion",
+            event_ref=session_id,
+            details={"status": status},
+        )
+        return self.session_registry.get(session_id) or {}
+
+    def list_companion_sessions(self, project_id: int) -> list[dict[str, Any]]:
+        return self.session_registry.list_by_project(project_id)
+
+    def quick_reindex(self, *, project_id: int, game_root: Path, changed_paths: list[str]) -> int:
+        reindexed_entries = 0
+        scene_index = self._build_scene_index(game_root)
+        for rel_path in changed_paths:
+            path = game_root / rel_path
+            if not path.exists() or not path.is_file():
+                continue
+
+            file_type, file_ext = classify_file(path)
+            if file_type not in {"text", "config"} or rel_path.startswith("metadata/"):
+                continue
+
+            scanned_file = ScannedFile(
+                project_id=project_id,
+                file_path=rel_path,
+                file_type=file_type,
+                file_ext=file_ext,
+                size_bytes=path.stat().st_size,
+                sha1=self._sha1_file(path),
+                manifest_group=rel_path.split("/", 1)[0] if "/" in rel_path else "root",
+            )
+            self.repo.upsert_scanned_file(scanned_file)
+
+            extractor = self.extractors.get_for_path(path)
+            if not extractor:
+                continue
+            self.repo.clear_entries_for_file(project_id, rel_path)
+            records = extractor.extract(path, project_id=project_id, rel_path=rel_path)
+            if not records:
+                continue
+            self.repo.add_extracted_entries(records)
+            reindexed_entries += len(records)
+
+            updated_entries = [entry for entry in self.repo.list_entries(project_id, search=rel_path, limit=100000) if entry.get("file_path") == rel_path]
+            for entry in updated_entries:
+                detect = self.detector.detect(entry["source_text"])
+                self.repo.upsert_language_detection(
+                    entry_id=int(entry["id"]),
+                    project_id=project_id,
+                    detected_lang=detect.language,
+                    confidence=detect.confidence,
+                    heuristics=detect.details,
+                )
+                context = self.context_builder.build(
+                    project_id=project_id,
+                    entry_id=int(entry["id"]),
+                    style_preset="neutral",
+                    scene_index=scene_index,
+                )
+                decision = self.translator.translate_entry(
+                    project_id=project_id,
+                    entry_id=int(entry["id"]),
+                    source_text=entry["source_text"],
+                    source_lang=detect.language,
+                    backend_name="local_mock",
+                    style="neutral",
+                    context=context,
+                )
+                self.repo.upsert_translation(project_id, decision)
+                self.repo.add_translation_backend_run(
+                    project_id=project_id,
+                    entry_id=int(entry["id"]),
+                    requested_backend="local_mock",
+                    backend_name=decision.backend,
+                    fallback_backend=decision.fallback_backend,
+                    latency_ms=decision.latency_ms,
+                    context_used=decision.context_used,
+                    fallback_used=bool(decision.fallback_backend),
+                )
+
+        return reindexed_entries
 
     @staticmethod
     def _wav_duration_ms(path: Path) -> int:
@@ -385,6 +622,19 @@ class AppServices:
                 return int((frames / max(1, rate)) * 1000)
         except Exception:
             return 1500
+
+    @staticmethod
+    def _sha1_file(path: Path) -> str:
+        import hashlib
+
+        hasher = hashlib.sha1()
+        with path.open("rb") as file_handle:
+            while True:
+                chunk = file_handle.read(8192)
+                if not chunk:
+                    break
+                hasher.update(chunk)
+        return hasher.hexdigest()
 
     def _preload_voice_profiles(self, project_id: int, game_root: Path) -> None:
         profile_file = game_root / "metadata" / "voice_profiles.json"

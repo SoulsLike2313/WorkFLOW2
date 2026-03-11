@@ -22,9 +22,16 @@ class TranslationPanel(QWidget):
         super().__init__()
         root = QVBoxLayout(self)
 
+        self.backend_status_label = QLabel("Active backend: n/a")
+        self.fallback_status_label = QLabel("Fallback: n/a")
+        self.context_status_label = QLabel("Context used: n/a")
+        root.addWidget(self.backend_status_label)
+        root.addWidget(self.fallback_status_label)
+        root.addWidget(self.context_status_label)
+
         controls = QHBoxLayout()
         self.backend_combo = QComboBox()
-        self.backend_combo.addItems(["local_mock", "dummy"])
+        self.backend_combo.addItems(["local_mock", "dummy", "argos", "transformers"])
         self.style_combo = QComboBox()
         self.style_combo.addItems(["neutral", "dramatic", "calm", "radio"])
         self.translate_btn = QPushButton("Translate to Russian")
@@ -34,7 +41,7 @@ class TranslationPanel(QWidget):
         controls.addWidget(self.style_combo)
         controls.addWidget(self.translate_btn)
 
-        self.table = QTableWidget(0, 10)
+        self.table = QTableWidget(0, 13)
         self.table.setHorizontalHeaderLabels(
             [
                 "Entry ID",
@@ -43,10 +50,13 @@ class TranslationPanel(QWidget):
                 "Source",
                 "Translated",
                 "Backend",
+                "Fallback",
+                "Context",
                 "Reason",
                 "Quality",
                 "Latency",
                 "Uncertainty",
+                "Warning",
             ]
         )
 
@@ -85,12 +95,26 @@ class TranslationPanel(QWidget):
                 (row.get("source_text", "")[:65] + "...") if len(row.get("source_text", "")) > 65 else row.get("source_text", ""),
                 (row.get("translated_text", "")[:65] + "...") if len(row.get("translated_text", "")) > 65 else row.get("translated_text", ""),
                 row.get("backend", ""),
+                row.get("fallback_backend", ""),
+                "yes" if row.get("context_used") else "no",
                 (row.get("decision_log_json", [""])[0] if row.get("decision_log_json") else ""),
                 row.get("quality_score", 0),
                 row.get("latency_ms", 0),
                 row.get("uncertainty", 0),
+                "HIGH" if float(row.get("uncertainty", 0) or 0) >= 0.28 else "",
             )
             for row in rows
         ]
         fill_table(self.table, data)
         self.info_label.setText(f"Translations: {len(rows)}")
+
+    def set_backend_status(self, summary: dict) -> None:
+        usage = summary.get("backend_usage", {})
+        if usage:
+            ordered = sorted(usage.items(), key=lambda item: item[1], reverse=True)
+            active = ordered[0][0]
+        else:
+            active = summary.get("requested_backend", "n/a")
+        self.backend_status_label.setText(f"Active backend: {active} (requested: {summary.get('requested_backend', 'n/a')})")
+        self.fallback_status_label.setText(f"Fallback used: {summary.get('fallback_used_count', 0)}")
+        self.context_status_label.setText(f"Context used: {summary.get('context_used_count', 0)} lines")

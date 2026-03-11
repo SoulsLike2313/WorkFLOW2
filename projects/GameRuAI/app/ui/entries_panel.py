@@ -33,7 +33,7 @@ class EntriesPanel(QWidget):
         toolbar.addWidget(self.search_edit)
         toolbar.addWidget(self.refresh_btn)
 
-        self.table = QTableWidget(0, 12)
+        self.table = QTableWidget(0, 13)
         self.table.setHorizontalHeaderLabels(
             [
                 "ID",
@@ -45,6 +45,7 @@ class EntriesPanel(QWidget):
                 "RU",
                 "Status",
                 "Gloss/TM",
+                "Context",
                 "Quality",
                 "Voice Link",
                 "Voice Status",
@@ -71,6 +72,7 @@ class EntriesPanel(QWidget):
                     (e.get("translated_text", "")[:70] + "...") if len(e.get("translated_text", "")) > 70 else e.get("translated_text", ""),
                     e.get("translation_status", ""),
                     hits,
+                    "yes" if e.get("context_used") else "no",
                     e.get("quality_score", ""),
                     "yes" if e.get("has_voice_link") else "no",
                     e.get("voice_status", ""),

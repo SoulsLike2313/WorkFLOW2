@@ -1,22 +1,34 @@
-# GameRuAI (Desktop MVP Demo)
+﻿# GameRuAI (Desktop MVP Demo)
 
-GameRuAI is a local desktop demo tool that scans a game-like fixture, extracts multilingual text lines, detects source language, translates to Russian, performs mock Russian voice attempts, and shows transparent learning/adaptation behavior through glossary, translation memory, and user corrections.
+GameRuAI is a local desktop demo app for game localization experiments.
+It scans fixture game data, extracts multilingual text, detects source language, translates to Russian, runs mock voice attempts, and shows transparent learning signals (TM, glossary, corrections).
 
-## Tech Stack
+## Stack
 - Python 3.11+
 - PySide6
 - SQLite
 - pytest
 - structured logging
 - pathlib
-- modular architecture
 
-## Project Layout
-- `app/` main application modules (UI + services + pipeline)
-- `fixtures/demo_game_world/` generated demo mini-game data
-- `scripts/` utility scripts for dev run / build / fixture generation
-- `tests/` unit, integration, regression tests
-- `docs/` architecture and usage docs
+## What Is Working In This Sprint
+- Translation backend router with graceful fallback:
+  - `local_mock` (default, always available)
+  - `dummy` (always available)
+  - `argos` (optional)
+  - `transformers` (optional)
+- Context-aware translation pipeline:
+  - context fields: speaker, scene, neighbor lines, line type, file group, style preset
+  - context is passed to orchestrator/backend and persisted (`context_used`)
+- Translation transparency:
+  - active backend, fallback, latency, quality, uncertainty
+  - glossary/TM usage and context usage in decision data
+- Safe Companion Mode (sidecar only):
+  - launch executable
+  - bind session to project
+  - watch file changes
+  - quick re-index for changed text/config files
+  - no runtime injection / memory hacking / binary patching
 
 ## Install
 ```powershell
@@ -30,7 +42,7 @@ pip install -r requirements-dev.txt
 python scripts/generate_demo_assets.py --project-root .
 ```
 
-## Run Dev Mode
+## Run App
 ```powershell
 python scripts/run_dev.py
 ```
@@ -40,36 +52,51 @@ Or directly:
 python -m app.main
 ```
 
-## Open Demo Project In UI
+## Open Demo Project
 1. Open `Project` tab.
-2. Use `Use Demo Fixture` or set path to `fixtures/demo_game_world`.
+2. Use `Use Demo Fixture` or set `fixtures/demo_game_world`.
 3. Click `Create/Select Project`.
-4. Quick way: click `Run Full Demo Pipeline` (one-click end-to-end).
-5. Manual way: `Scan` -> `Extract Strings` -> `Detect Language` -> `Translate to Russian` -> `Generate Demo Voice Attempts`.
+4. Run `Run Full Demo Pipeline` or run steps manually.
 
-## Live Demo Mode
-1. Go to `Live Demo` tab.
-2. Select a scene from `scene_id :: title`.
-3. Click `Start Live Demo`.
-4. Observe stream: source -> detected lang -> translated RU -> voice status -> uncertainty.
+## See Active Backend And Context
+1. Open `Translation` tab.
+2. Select backend (`local_mock` / `dummy` / `argos` / `transformers`).
+3. Click `Translate to Russian`.
+4. Check Backend Status block:
+   - active backend
+   - fallback used count
+   - context used count
+5. In translation table check columns: `Backend`, `Fallback`, `Context`, `Latency`, `Uncertainty`.
+6. In `Entries` tab check `Context` column per row.
 
-## Learning / Adaptation Visibility
-- `Translation` tab:
-  - apply manual correction per `Entry ID`;
-  - optionally add glossary pair.
-- `Learning` tab:
-  - correction history;
-  - adaptation events;
-  - terms learned / TM entries summary.
-- `Glossary` tab:
-  - view and add glossary terms.
+## Companion Mode (Working MVP)
+1. Open `Companion` tab.
+2. Set executable path (for demo you can use `python.exe`).
+3. Set watched path (game folder).
+4. Optional args example:
+   ```
+   -c "import time; time.sleep(60)"
+   ```
+5. Click `Launch Companion Session`.
+6. Edit a text file inside watched path.
+7. Click `Poll Status / Watch`.
+8. Observe:
+   - session status widget
+   - quick re-index count
+   - watched file events table
 
-## Run Tests
+## Tests
+Run all:
 ```powershell
-pytest
+pytest -q
 ```
 
-## Build App
+Run sprint-specific tests:
+```powershell
+pytest -q tests/unit/test_context_builder.py tests/unit/test_backend_router_fallback.py tests/unit/test_companion_launcher_lifecycle.py tests/unit/test_file_watch_service.py tests/integration/test_translation_context_and_fallback.py tests/integration/test_companion_quick_rescan.py
+```
+
+## Build
 ```powershell
 python scripts/build_app.py
 ```
@@ -79,7 +106,8 @@ Optional one-file:
 python scripts/build_app.py --onefile
 ```
 
-## Notes
-- Original fixture files are never modified during export.
-- Export artifacts are written into selected output folder (`patch/`, `export_manifest.json`, `diff_report.md`).
-- Voice synthesis in this demo is explicitly `MOCK/STUB` (technical WAV generation, no real voice cloning).
+## Honest Limits (Current Sprint)
+- `argos`/`transformers` backends are optional adapters; if dependency is missing, fallback is used automatically.
+- Voice generation is mock/stub (no real cloning model in this sprint).
+- Companion quick re-index currently targets changed text/config assets only.
+- No asset explorer, texture preview, or 3D preview in this sprint.

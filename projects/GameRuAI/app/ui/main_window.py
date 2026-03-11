@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
 
 from app.bootstrap import AppServices
 
+from .companion_panel import CompanionPanel
 from .entries_panel import EntriesPanel
 from .export_panel import ExportPanel
 from .glossary_panel import GlossaryPanel
@@ -33,6 +34,7 @@ class MainWindow(QMainWindow):
         self.services = services
         self.current_project_id: int | None = None
         self.current_game_root: Path = services.config.paths.fixtures_root
+        self.current_companion_session_id: str | None = None
         self._live_rows: list[dict[str, Any]] = []
         self._live_idx = 0
         self._live_timer = QTimer(self)
@@ -58,6 +60,7 @@ class MainWindow(QMainWindow):
         self.export_panel = ExportPanel(str(services.config.paths.exports_dir))
         self.jobs_panel = JobsPanel()
         self.live_panel = LiveDemoPanel()
+        self.companion_panel = CompanionPanel()
 
         self.tabs.addTab(self.project_panel, "Project")
         self.tabs.addTab(self.scan_panel, "Scan")
@@ -70,6 +73,7 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.export_panel, "Export")
         self.tabs.addTab(self.jobs_panel, "Jobs / Logs")
         self.tabs.addTab(self.live_panel, "Live Demo")
+        self.tabs.addTab(self.companion_panel, "Companion")
 
         self._wire_actions()
         self.refresh_all_views()
@@ -98,6 +102,11 @@ class MainWindow(QMainWindow):
         self.export_panel.export_btn.clicked.connect(self.on_export)
         self.jobs_panel.refresh_btn.clicked.connect(self.refresh_jobs)
         self.live_panel.start_btn.clicked.connect(self.on_start_live_demo)
+        self.companion_panel.pick_executable_btn.clicked.connect(self.companion_panel.choose_executable)
+        self.companion_panel.pick_watch_btn.clicked.connect(self.companion_panel.choose_watched_path)
+        self.companion_panel.launch_btn.clicked.connect(self.on_launch_companion)
+        self.companion_panel.poll_btn.clicked.connect(self.on_poll_companion)
+        self.companion_panel.stop_btn.clicked.connect(self.on_stop_companion)
 
     def _require_project(self) -> bool:
         if self.current_project_id is None:
@@ -116,6 +125,7 @@ class MainWindow(QMainWindow):
         self.project_panel.info_label.setText(
             f"Project ready: id={project['id']} name={project['name']} root={project['game_path']}"
         )
+        self.companion_panel.watched_path_edit.setText(str(game_root))
         self.live_panel.load_scenes(self.services.load_scenes(game_root))
         self.refresh_all_views()
 
@@ -135,6 +145,7 @@ class MainWindow(QMainWindow):
         self.project_panel.info_label.setText(
             f"Pipeline done: extracted={summary['extract']['entries_extracted']}, translated={summary['translate']['translated']}, voice={summary['voice']['voice_attempts']}"
         )
+        self.translation_panel.set_backend_status(summary["translate"])
         self.refresh_all_views()
 
     def on_scan(self) -> None:
@@ -170,6 +181,7 @@ class MainWindow(QMainWindow):
             style=self.translation_panel.style_combo.currentText(),
         )
         self.translation_panel.info_label.setText(f"Translated: {result['translated']}")
+        self.translation_panel.set_backend_status(result)
         self.refresh_translations()
         self.refresh_entries()
         self.refresh_learning()
@@ -273,6 +285,57 @@ class MainWindow(QMainWindow):
         )
         self.refresh_jobs()
 
+    def on_launch_companion(self) -> None:
+        if not self._require_project():
+            return
+        executable = Path(self.companion_panel.executable_edit.text().strip())
+        watched_path = Path(self.companion_panel.watched_path_edit.text().strip() or str(self.current_game_root))
+        if not executable.exists():
+            QMessageBox.warning(self, "Companion", f"Executable not found: {executable}")
+            return
+        if not watched_path.exists():
+            QMessageBox.warning(self, "Companion", f"Watched path not found: {watched_path}")
+            return
+        session = self.services.launch_companion(
+            project_id=self.current_project_id,
+            executable_path=executable,
+            watched_path=watched_path,
+            args=self.companion_panel.args_list(),
+        )
+        self.current_companion_session_id = str(session.get("session_id"))
+        self.companion_panel.session_status.setText(
+            f"Session status: {session.get('process_status')} ({self.current_companion_session_id})"
+        )
+        self.refresh_companion()
+
+    def on_poll_companion(self) -> None:
+        if not self._require_project() or not self.current_companion_session_id:
+            return
+        status = self.services.poll_companion(
+            project_id=self.current_project_id,
+            session_id=self.current_companion_session_id,
+            game_root=self.current_game_root,
+        )
+        session = status.get("session") or {}
+        self.companion_panel.session_status.setText(
+            f"Session status: {status.get('status')} pid={session.get('process_pid')}"
+        )
+        self.companion_panel.reindex_status.setText(f"Quick re-index: {status.get('quick_reindexed_entries', 0)}")
+        self.companion_panel.load_events(status.get("all_events", []))
+        self.refresh_companion()
+
+    def on_stop_companion(self) -> None:
+        if not self._require_project() or not self.current_companion_session_id:
+            return
+        session = self.services.stop_companion(
+            project_id=self.current_project_id,
+            session_id=self.current_companion_session_id,
+        )
+        self.companion_panel.session_status.setText(
+            f"Session status: {session.get('process_status')} ({self.current_companion_session_id})"
+        )
+        self.refresh_companion()
+
     def on_start_live_demo(self) -> None:
         if not self._require_project():
             return
@@ -312,6 +375,7 @@ class MainWindow(QMainWindow):
         self.refresh_glossary()
         self.refresh_qa()
         self.refresh_jobs()
+        self.refresh_companion()
 
     def refresh_entries(self) -> None:
         if self.current_project_id is None:
@@ -365,5 +429,21 @@ class MainWindow(QMainWindow):
             "voice": self.services.job_manager.get_job_state("voice"),
             "export": self.services.job_manager.get_job_state("export"),
             "export_jobs": self.services.repo.list_export_jobs(self.current_project_id),
+            "backend_runs": self.services.repo.list_translation_backend_runs(self.current_project_id, limit=20),
         }
         self.jobs_panel.show_jobs(jobs)
+
+    def refresh_companion(self) -> None:
+        if self.current_project_id is None:
+            self.companion_panel.load_sessions([])
+            self.companion_panel.load_events([])
+            return
+        sessions = self.services.list_companion_sessions(self.current_project_id)
+        self.companion_panel.load_sessions(sessions)
+        if self.current_companion_session_id:
+            events = self.services.repo.list_watched_file_events(
+                self.current_project_id, session_id=self.current_companion_session_id, limit=300
+            )
+        else:
+            events = self.services.repo.list_watched_file_events(self.current_project_id, limit=300)
+        self.companion_panel.load_events(events)

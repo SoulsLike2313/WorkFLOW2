@@ -35,6 +35,7 @@ from .pages import (
 )
 from .pages_extra import AuditPage, SettingsPage, UpdatesPage
 from .theme import build_stylesheet, build_theme_tokens
+from .ui_customization import build_customization_stylesheet, load_ui_customization_profile
 
 
 def _safe_list(value: Any) -> list[Any]:
@@ -68,7 +69,10 @@ class UserWorkspaceWindow(QMainWindow):
         self.main_splitter: QSplitter | None = None
 
         self._build_ui()
-        self.setStyleSheet(build_stylesheet(build_theme_tokens()))
+        self._ui_customization = load_ui_customization_profile()
+        base_stylesheet = build_stylesheet(build_theme_tokens())
+        customization_stylesheet = build_customization_stylesheet(self._ui_customization)
+        self.setStyleSheet(base_stylesheet + "\n" + customization_stylesheet)
         self.refresh_workspace()
 
         self._auto_refresh = QTimer(self)

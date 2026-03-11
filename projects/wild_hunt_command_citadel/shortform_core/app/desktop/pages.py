@@ -735,6 +735,7 @@ class SessionsPage(BasePage):
 
         self.frame_source = QLabel("Источник: не привязан")
         self.frame_source.setObjectName("SectionHint")
+        self.frame_source.setWordWrap(True)
         frame_layout.addWidget(self.frame_source)
 
         chip_grid = QGridLayout()
@@ -869,7 +870,7 @@ class SessionsPage(BasePage):
         self.sessions_open_card.set_data(str(open_sessions), f"из {len(profiles)} профилей")
         self.sessions_selected_card.set_data("Открыта" if is_open else "Закрыта", f"режим: {runtime_state}")
         self.sessions_viewport_card.set_data(viewport_label, "активный профиль")
-        self._set_session_chip(self.session_runtime_chip, f"Статус: {runtime_state}", "ok" if is_open else "warn")
+        self._set_session_chip(self.session_runtime_chip, "Окно: открыто" if is_open else "Окно: закрыто", "ok" if is_open else "warn")
         self._set_session_chip(
             self.session_link_chip,
             f"Источник: {source_label if source_label != 'не указан' else '—'}",
@@ -883,9 +884,7 @@ class SessionsPage(BasePage):
             f"Окно: {'открыто' if is_open else 'закрыто'} | "
             f"Пресет: {viewport_label}"
         )
-        self.frame_source.setText(
-            f"Источник: {source_label} | ID: {source_id}"
-        )
+        self.frame_source.setText(f"Источник: {source_label}\nID: {source_id}")
         if is_open:
             self.session_preview.setText(
                 f"АКТИВНАЯ СЕССИЯ 9:16\n\n{profile_name}\n\n"

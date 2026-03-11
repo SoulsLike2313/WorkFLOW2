@@ -332,7 +332,7 @@ class TopStatusBar(GlowCard):
     def __init__(self) -> None:
         super().__init__(elevated=False)
         self.setObjectName("TopStatusBar")
-        self.setMinimumHeight(124)
+        self.setMinimumHeight(108)
         self._is_loading = False
 
         layout = QHBoxLayout(self)
