@@ -24,6 +24,9 @@ from app.logging_setup import setup_logging
 from app.memory.service import TranslationMemoryService
 from app.patcher.exporter import Exporter
 from app.qa.service import QaService
+from app.reports.backend_diagnostics import build_backend_diagnostics
+from app.reports.project_summary import build_project_summary
+from app.reports.translation_report import build_translation_report
 from app.scanner.scanner_service import ScannerService
 from app.scanner.file_classifier import classify_file
 from app.storage.db import Database
@@ -498,6 +501,7 @@ class AppServices:
             "translated_entries": export_result.translated_entries,
             "voiced_entries": export_result.voiced_entries,
         }
+        summary["reports"] = self.generate_reports(pid)
         return summary
 
     def learning_snapshot(self, project_id: int) -> dict[str, Any]:
@@ -716,6 +720,81 @@ class AppServices:
             game_root=game_root,
             repo_root=self.config.paths.repo_root,
         )
+
+    def generate_reports(self, project_id: int) -> dict[str, Any]:
+        entries = self.repo.list_entries(project_id, limit=100000)
+        translations = self.repo.list_translations(project_id)
+        backend_runs = self.repo.list_translation_backend_runs(project_id, limit=100000)
+        voice_attempts = self.repo.list_voice_attempts(project_id, limit=100000)
+        voice_history = self.repo.list_voice_attempt_history(project_id=project_id, limit=100000)
+        speaker_groups = self.repo.list_speaker_groups(project_id, limit=1000)
+        qa_findings = self.repo.list_qa_findings(project_id, limit=100000)
+        export_jobs = self.repo.list_export_jobs(project_id, limit=1000)
+        companion_sessions = self.repo.list_companion_sessions(project_id, limit=1000)
+        watched_events = self.repo.list_watched_file_events(project_id, limit=100000)
+        asset_rows = self.repo.list_asset_index(project_id, limit=100000)
+
+        translation_report = build_translation_report(entries, translations)
+        backend_diag = build_backend_diagnostics(backend_runs)
+        summary = build_project_summary(
+            entries=entries,
+            translations=translations,
+            translation_report=translation_report,
+            voice_attempts=voice_attempts,
+            voice_history=voice_history,
+            speaker_groups=speaker_groups,
+            qa_findings=qa_findings,
+            export_jobs=export_jobs,
+            companion_sessions=companion_sessions,
+            watched_events=watched_events,
+            asset_index=asset_rows,
+        )
+
+        language_payload = summary.get("language", {})
+        self.repo.upsert_language_report(
+            project_id=project_id,
+            report_name="language_distribution",
+            lines_total=len(entries),
+            uncertain_count=int(language_payload.get("uncertain_count", 0)),
+            uncertain_rate=round(int(language_payload.get("uncertain_count", 0)) / max(1, len(entries)), 4),
+            payload=language_payload,
+        )
+        self.repo.replace_backend_diagnostics(project_id, backend_diag)
+        self.repo.add_project_report(project_id=project_id, report_type="translation_report", payload=translation_report)
+        self.repo.add_project_report(project_id=project_id, report_type="project_summary", payload=summary)
+        self.repo.add_quality_snapshot(
+            project_id=project_id,
+            snapshot_type="quality_dashboard",
+            payload=summary.get("quality_dashboard", {}),
+        )
+
+        return {
+            "translation_report": translation_report,
+            "backend_diagnostics": backend_diag,
+            "project_summary": summary,
+            "quality_dashboard": summary.get("quality_dashboard", {}),
+        }
+
+    def reports_snapshot(self, project_id: int) -> dict[str, Any]:
+        reports = self.repo.list_project_reports(project_id, limit=40)
+        language_reports = self.repo.list_language_reports(project_id, limit=40)
+        quality_snapshots = self.repo.list_quality_snapshots(project_id, limit=40)
+        translation_report = next((item for item in reports if item.get("report_type") == "translation_report"), None)
+        project_summary = next((item for item in reports if item.get("report_type") == "project_summary"), None)
+        return {
+            "translation_report": (translation_report or {}).get("payload_json", {}),
+            "project_summary": (project_summary or {}).get("payload_json", {}),
+            "language_reports": language_reports,
+            "quality_snapshots": quality_snapshots,
+            "quality_dashboard": ((project_summary or {}).get("payload_json", {}) or {}).get("quality_dashboard", {}),
+        }
+
+    def diagnostics_snapshot(self, project_id: int) -> dict[str, Any]:
+        return {
+            "backend_diagnostics": self.repo.list_backend_diagnostics(project_id, limit=200),
+            "project_reports": self.repo.list_project_reports(project_id, limit=80),
+            "quality_snapshots": self.repo.list_quality_snapshots(project_id, limit=80),
+        }
 
     def quick_reindex(self, *, project_id: int, game_root: Path, changed_paths: list[str]) -> int:
         reindexed_entries = 0

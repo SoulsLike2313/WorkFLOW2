@@ -283,6 +283,52 @@ CREATE TABLE IF NOT EXISTS translation_backend_runs (
 CREATE INDEX IF NOT EXISTS idx_backend_runs_project ON translation_backend_runs(project_id);
 CREATE INDEX IF NOT EXISTS idx_backend_runs_entry ON translation_backend_runs(entry_id);
 
+CREATE TABLE IF NOT EXISTS language_reports (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  report_name TEXT NOT NULL,
+  lines_total INTEGER NOT NULL DEFAULT 0,
+  uncertain_count INTEGER NOT NULL DEFAULT 0,
+  uncertain_rate REAL NOT NULL DEFAULT 0,
+  payload_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(project_id, report_name)
+);
+CREATE INDEX IF NOT EXISTS idx_language_reports_project ON language_reports(project_id);
+
+CREATE TABLE IF NOT EXISTS project_reports (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  report_type TEXT NOT NULL,
+  payload_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_project_reports_project ON project_reports(project_id);
+
+CREATE TABLE IF NOT EXISTS backend_diagnostics (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  backend_name TEXT NOT NULL,
+  runs_count INTEGER NOT NULL DEFAULT 0,
+  avg_latency_ms REAL NOT NULL DEFAULT 0,
+  p95_latency_ms REAL NOT NULL DEFAULT 0,
+  fallback_count INTEGER NOT NULL DEFAULT 0,
+  context_used_rate REAL NOT NULL DEFAULT 0,
+  payload_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_backend_diagnostics_project ON backend_diagnostics(project_id);
+
+CREATE TABLE IF NOT EXISTS quality_snapshots (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  snapshot_type TEXT NOT NULL,
+  payload_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_quality_snapshots_project ON quality_snapshots(project_id);
+
 CREATE TABLE IF NOT EXISTS asset_index (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,

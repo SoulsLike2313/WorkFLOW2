@@ -2,15 +2,15 @@
 
 ## Таблица дефектов
 
-| Screen | Block | Issue | Likely Cause | Fix Strategy | Status |
-|---|---|---|---|---|---|
-| All | Page transition | Пустой/битый экран после быстрых переключений | Fade animation stop без cleanup effect | Явный `_clear_page_fade()` + очистка target effect | Fixed |
-| Sessions | Session frame / chips | Clipping статуса на средних размерах | Длинный статус и ограниченная ширина чипа | Сократить статус, выровнять text strategy | Fixed |
-| Sessions | Session frame | Нижняя часть визуально “срезалась” | Высокая min-height preview + плотный layout | Снизить min-size preview + scroll container на уровне stack | Fixed |
-| Content | Action row | Риск визуальной “оторванности” CTA при плотном окне | Слабая связка action bar и контента | Уточнена иерархия CTA + подсказка workflow | Fixed |
-| Analytics | Validation expectations | Ложный critical “missing CTA” | Валидатор проверял кнопки вместо labels | Развести required buttons/required labels | Fixed |
-| Updates | Action context | Непонятный user flow обновления | Недостаток product copy | Добавлен flow-hint + статусы PASS/PASS+/FAIL | Fixed |
+| Экран | Блок | Проблема | Severity | Вероятная причина | Стратегия фикса | Статус |
+|---|---|---|---|---|---|---|
+| All | Page transition layer | Пустые/битые зоны при быстром переключении | critical | Неочищенный opacity effect | Явный cleanup fade target при stop/finished | Fixed |
+| Sessions | Session frame + status chips | Clipping статусов на `1366x768` и `1280x800` | major | Длинные строки + ограниченная ширина | Сокращённые статусы + выравнивание + scroll container | Fixed |
+| Sessions | Нижняя зона preview | Визуальный срез при плотном окне | major | Мин. высота preview + плотная вертикальная композиция | Коррекция min-size и контейнеризации | Fixed |
+| Analytics | Validation expectations | Ложный critical “missing CTA” | major | Валидация ждала кнопку вместо label-индикатора | Разделение required buttons и required labels | Fixed |
+| Workspace split | Main area vs context panel | Риск конфликтной ширины колонок на resize | major | Недостаточная ребалансировка split | Явный `rebalance_main_splitter()` + guards | Fixed |
 
-## Остаточные наблюдения
-- Критичных layout-багов по текущим инвариантам не обнаружено.
-- Рекомендован ручной pass на реальном мониторе с русскими шрифтами (в дополнение к offscreen проверкам).
+## Текущий остаток
+- Critical layout-багов по текущим инвариантам не найдено.
+- Major layout-багов по текущим инвариантам не найдено.
+- Остаётся обязательный ручной visual acceptance на реальном DPI/шрифтах.

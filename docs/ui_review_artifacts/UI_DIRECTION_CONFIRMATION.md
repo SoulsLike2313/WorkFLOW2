@@ -1,21 +1,23 @@
 # UI Direction Confirmation
 
-Подтверждаю визуальный и продуктовый вектор для текущего UI:
+Подтверждённый вектор интерфейса:
 
-- Tactical AAA Command Center + Premium Minimal Metallic.
-- Баланс направления: `80% premium control center` + `20% controlled sci-fi glow`.
+- Tactical AAA Command Center.
+- Premium Minimal Metallic.
+- Баланс: `80% premium control center + 20% controlled sci-fi glow`.
 - База: dark graphite / near-black.
-- Акценты: purple metallic, точечный glow только на meaningful states.
-- Фокус: читаемость, иерархия, UX-предсказуемость, grid discipline.
+- Акценты: violet/purple metallic.
+- Glow: только на meaningful states (active/focus/primary/context), без neon overload.
 
-## Явные запреты (приняты как правила)
-- No Witcher/Wild Hunt/lore theme.
+## Явные запреты
+- No Witcher / Wild Hunt / fantasy / lore branding.
 - No cheap retro sci-fi skin.
-- No debug-shell look.
+- No debug-shell visual language.
 - No floating CTA.
 - No hover-only critical controls.
-- No plastic-looking buttons.
+- No plastic buttons и грубые толстые outlines.
 
 ## Product-first трактовка
-- Красивый UI без стабильной геометрии не считается качеством.
-- Premium feel подтверждается только вместе с предсказуемой интерактивностью и устойчивым layout.
+- Красота без стабильной геометрии не считается качеством.
+- Premium UI = читаемость + иерархия + предсказуемые действия + устойчивая сетка.
+- Каждая панель должна иметь ясную продуктовую роль (context, action, insight, status).

@@ -16,6 +16,7 @@ from app.bootstrap import AppServices
 
 from .asset_explorer_panel import AssetExplorerPanel
 from .companion_panel import CompanionPanel
+from .diagnostics_panel import DiagnosticsPanel
 from .entries_panel import EntriesPanel
 from .export_panel import ExportPanel
 from .glossary_panel import GlossaryPanel
@@ -24,6 +25,7 @@ from .learning_panel import LearningPanel
 from .live_demo_panel import LiveDemoPanel
 from .project_wizard import ProjectWizardPanel
 from .qa_panel import QaPanel
+from .reports_panel import ReportsPanel
 from .scan_panel import ScanPanel
 from .translation_panel import TranslationPanel
 from .voice_panel import VoicePanel
@@ -59,6 +61,8 @@ class MainWindow(QMainWindow):
         self.learning_panel = LearningPanel()
         self.glossary_panel = GlossaryPanel()
         self.qa_panel = QaPanel()
+        self.reports_panel = ReportsPanel()
+        self.diagnostics_panel = DiagnosticsPanel()
         self.export_panel = ExportPanel(str(services.config.paths.exports_dir))
         self.jobs_panel = JobsPanel()
         self.live_panel = LiveDemoPanel()
@@ -73,6 +77,8 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.learning_panel, "Learning")
         self.tabs.addTab(self.glossary_panel, "Glossary")
         self.tabs.addTab(self.qa_panel, "QA")
+        self.tabs.addTab(self.reports_panel, "Reports")
+        self.tabs.addTab(self.diagnostics_panel, "Diagnostics")
         self.tabs.addTab(self.export_panel, "Export")
         self.tabs.addTab(self.jobs_panel, "Jobs / Logs")
         self.tabs.addTab(self.live_panel, "Live Demo")
@@ -106,6 +112,9 @@ class MainWindow(QMainWindow):
         self.learning_panel.refresh_btn.clicked.connect(self.refresh_learning)
         self.glossary_panel.add_btn.clicked.connect(self.on_add_glossary_term)
         self.qa_panel.run_btn.clicked.connect(self.on_run_qa)
+        self.reports_panel.generate_btn.clicked.connect(self.on_generate_reports)
+        self.reports_panel.refresh_btn.clicked.connect(self.refresh_reports)
+        self.diagnostics_panel.refresh_btn.clicked.connect(self.refresh_diagnostics)
         self.export_panel.export_btn.clicked.connect(self.on_export)
         self.jobs_panel.refresh_btn.clicked.connect(self.refresh_jobs)
         self.live_panel.start_btn.clicked.connect(self.on_start_live_demo)
@@ -193,6 +202,8 @@ class MainWindow(QMainWindow):
         self.refresh_translations()
         self.refresh_entries()
         self.refresh_learning()
+        self.refresh_reports()
+        self.refresh_diagnostics()
         self.refresh_jobs()
 
     def on_apply_correction(self) -> None:
@@ -240,6 +251,8 @@ class MainWindow(QMainWindow):
         self.refresh_voice()
         self.refresh_entries()
         self.refresh_learning()
+        self.refresh_reports()
+        self.refresh_diagnostics()
         self.refresh_jobs()
 
     def on_voice_attempt_selected(self) -> None:
@@ -291,6 +304,15 @@ class MainWindow(QMainWindow):
             f"QA done. total={summary['findings_total']} errors={summary['errors']} warnings={summary['warnings']}"
         )
         self.refresh_qa()
+        self.refresh_reports()
+        self.refresh_diagnostics()
+
+    def on_generate_reports(self) -> None:
+        if not self._require_project():
+            return
+        self.services.generate_reports(self.current_project_id)
+        self.refresh_reports()
+        self.refresh_diagnostics()
 
     def on_export(self) -> None:
         if not self._require_project():
@@ -308,6 +330,8 @@ class MainWindow(QMainWindow):
                 ]
             )
         )
+        self.refresh_reports()
+        self.refresh_diagnostics()
         self.refresh_jobs()
 
     def on_launch_companion(self) -> None:
@@ -348,6 +372,8 @@ class MainWindow(QMainWindow):
         self.companion_panel.reindex_status.setText(f"Quick re-index: {status.get('quick_reindexed_entries', 0)}")
         self.companion_panel.load_events(status.get("all_events", []))
         self.refresh_assets()
+        self.refresh_reports()
+        self.refresh_diagnostics()
         self.refresh_companion()
 
     def on_stop_companion(self) -> None:
@@ -414,6 +440,8 @@ class MainWindow(QMainWindow):
         self.refresh_learning()
         self.refresh_glossary()
         self.refresh_qa()
+        self.refresh_reports()
+        self.refresh_diagnostics()
         self.refresh_jobs()
         self.refresh_companion()
 
@@ -463,6 +491,26 @@ class MainWindow(QMainWindow):
             self.qa_panel.load_findings([])
             return
         self.qa_panel.load_findings(self.services.repo.list_qa_findings(self.current_project_id))
+
+    def refresh_reports(self) -> None:
+        if self.current_project_id is None:
+            self.reports_panel.load_reports({})
+            return
+        snapshot = self.services.reports_snapshot(self.current_project_id)
+        if not snapshot.get("project_summary"):
+            self.services.generate_reports(self.current_project_id)
+            snapshot = self.services.reports_snapshot(self.current_project_id)
+        self.reports_panel.load_reports(snapshot)
+
+    def refresh_diagnostics(self) -> None:
+        if self.current_project_id is None:
+            self.diagnostics_panel.load_diagnostics({})
+            return
+        snapshot = self.services.diagnostics_snapshot(self.current_project_id)
+        if not snapshot.get("backend_diagnostics"):
+            self.services.generate_reports(self.current_project_id)
+            snapshot = self.services.diagnostics_snapshot(self.current_project_id)
+        self.diagnostics_panel.load_diagnostics(snapshot)
 
     def refresh_jobs(self) -> None:
         if self.current_project_id is None:

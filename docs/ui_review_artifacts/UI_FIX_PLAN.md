@@ -1,26 +1,23 @@
 # UI Fix Plan
 
-## Приоритеты (порядок исправления)
-1. Critical layout/render bugs.
-2. CTA visibility and interaction stability.
-3. Clipping/overflow при resize и DPI.
-4. Screen-level composition polish.
-5. Автоматизация проверки и повторный прогон.
+## Приоритеты
+### 1) Critical (сразу)
+- Убрать broken page states при быстром переключении.
+- Убрать hover-only риски для критичных CTA.
+- Закрыть любые битые/пустые зоны.
 
-## Реально выполненный план
-1. Исправлен системный баг opacity-transition.
-   - Добавлен безопасный cleanup при остановке анимации.
-2. Добавлена стабильность layout на плотных размерах окна.
-   - Страницы в `workspace_stack` обёрнуты в `QScrollArea`.
-3. Исправлен `Sessions` clipping.
-   - Уменьшен min-size preview, сокращён статусный текст в чипе, улучшены переносы источника.
-4. Добавлен customization layer без ломки геометрии.
-   - `ui_customization.py` + optional override-профиль.
-5. Добавлен и стабилизирован `ui_doctor`.
-   - Исправлены worker/import ошибки.
-   - Исправлены ложные срабатывания по analytics CTA.
-6. Повторные прогоны до `PASS`.
+### 2) Major
+- Починить clipping и out-of-bounds на `Sessions` и плотных размерах окна.
+- Укрепить split-геометрию между main area и context panel.
+- Устранить ложные ошибки в автоматической UI-валидации.
 
-## Проверка выполнения
-- Последний успешный прогон: `runtime/ui_validation/20260311_212039`.
-- Итог: `PASS`.
+### 3) Minor
+- Дошлифовать копирайтинг и micro-spacing.
+- Обновить review artifacts после каждого крупного прогона.
+
+## Порядок выполнения
+1. Исправления в UI/runtime (`user_window`, `pages`).
+2. Усиление автоматической проверки (`ui_doctor`, затем `ui_validate`).
+3. Снимки baseline (`ui_snapshot_runner`).
+4. Пересборка артефактов (`json` + `md` + run pointers).
+5. Финальный ручной acceptance pass по чек-листу.

@@ -1,34 +1,36 @@
 # UI Automation Plan
 
 ## Цель
-Перевести UI-контроль из “визуально кажется норм” в повторяемый machine-run процесс.
+Сделать UI-проверку воспроизводимой и машиночитаемой, чтобы не возвращаться к тем же layout/CTA проблемам.
 
-## Добавленный инструмент
-- `projects/wild_hunt_command_citadel/shortform_core/scripts/ui_doctor.py`
+## Компоненты
+1. `scripts/ui_doctor.py`
+- Прогоняет экраны на нескольких scale/sizes.
+- Проверяет critical CTA visibility.
+- Проверяет anti-pattern `hover-only critical controls`.
+- Проверяет clipping/overflow/out-of-bounds/sibling-overlap.
+- Выдаёт итог: `PASS`, `PASS_WITH_WARNINGS`, `FAIL`.
 
-## Что проверяет `ui_doctor`
-- Запуск UI в test/offscreen режиме.
-- Проход по экранам: Dashboard, Profiles, Sessions, Content, Analytics, AI Studio, Audit, Updates, Settings.
-- Скриншоты по DPI/scaling сценариям (`1.0`, `1.25`, `1.5`) и типовым размерам окна.
-- Проверка видимости обязательных кнопок.
-- Проверка hover-only anti-pattern.
-- Проверка clipping для labels/buttons.
-- Проверка out-of-bounds/negative positioning.
-- Проверка overlap среди sibling controls.
-- Проверка stuck opacity эффекта страницы.
+2. `scripts/ui_snapshot_runner.py`
+- Открывает основные экраны.
+- Делает baseline скриншоты.
+- Формирует manifest для сравнения между итерациями.
 
-## Артефакты `ui_doctor`
-- `ui_validation_summary.json`
-- `ui_validation_summary.md`
-- `ui_screenshots_manifest.json`
-- скриншоты в `runtime/ui_validation/<run_id>/screenshots/`
+3. `scripts/ui_validate.py`
+- Единый orchestrator.
+- Запускает `ui_doctor` + `ui_snapshot_runner`.
+- Собирает сводные артефакты в корне active module:
+  - `ui_validation_summary.json`
+  - `ui_validation_summary.md`
+  - `ui_screenshots_manifest.json`
+  - `runtime/ui_validation/latest_run.txt`
 
-## Gate policy
-- `PASS`: можно переходить к ручному acceptance.
-- `PASS_WITH_WARNINGS`: ручной pass допустим, но warning-пункты фиксируются в backlog.
-- `FAIL`: ручной acceptance блокируется.
+## Что автоматизация должна ловить
+- Налезания и clipping.
+- Floating/выпадающие из сетки CTA.
+- Hover-only критичные кнопки.
+- Проблемы при масштабах `100%`, `125%`, `150%`.
+- Сломанные/пустые зоны после переключений экранов.
 
-## Следующие шаги автоматизации
-- Добавить baseline diff по скриншотам (visual regression).
-- Добавить проверку контрастности текста/кнопок.
-- Добавить “golden interactions” сценарии (click path smoke).
+## Результат
+UI quality становится повторяемой инженерной процедурой, а не только ручной оценкой “на глаз”.

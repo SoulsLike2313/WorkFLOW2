@@ -1,25 +1,42 @@
 # UI Acceptance Checklist
 
-Использовать для финального ручного просмотра после machine-run `PASS`.
+Использовать для финального ручного просмотра перед sign-off.
 
-- [ ] Premium feel: интерфейс выглядит как premium control center, без debug-shell ощущения.
-- [ ] Consistency: единый стиль кнопок, карточек, панелей, pills, хедеров и списков.
-- [ ] Navigation clarity: активный раздел считывается мгновенно, пользователь понимает текущий контекст.
-- [ ] Button quality: hover/focus/pressed/disabled читаемы и предсказуемы.
-- [ ] Card/panel quality: нет тяжёлых грубых рамок, иерархия поверхностей понятна.
-- [ ] Typography: заголовки, body и secondary текст читаемы, нет грубых столкновений.
-- [ ] Spacing/rhythm: нет налезаний, нет “слипания” блоков, ритм отступов устойчив.
-- [ ] Motion quality: анимации аккуратные, не вызывают исчезновения/ломку экрана.
-- [ ] Localization: русский текст естественный, без смешения английского без причины.
-- [ ] Scaling: проверка на 100% / 125% / 150% без clipping/overflow/overlap.
-- [ ] Sessions realism: 9:16 session area не выглядит как пустой placeholder.
-- [ ] Analytics storytelling: в аналитике ясно “что происходит” и “что делать дальше”.
-- [ ] Sidebar consistency: состояния `default/hover/active` стабильны и контрастны.
-- [ ] Context panel consistency: правая панель не конфликтует с центральной зоной.
-- [ ] CTA clarity: primary/secondary/outline не перепутаны, нет floating CTA.
-- [ ] Hover-only anti-pattern: критичные действия видимы без hover.
-- [ ] Old branding absence: нет Witcher/Wild Hunt/лора/игрового брендинга.
+## Layout / Grid
+- [ ] Нет overlaps между блоками.
+- [ ] Нет clipping важных подписей/CTA.
+- [ ] Нет floating CTA вне композиции блока.
+- [ ] Единая колонная логика и предсказуемые отступы.
+- [ ] Context panel и центральная зона не конфликтуют на resize.
 
-## Acceptance gate
-- Manual acceptance разрешён только при `ui_doctor` статусе `PASS` или `PASS_WITH_WARNINGS` без critical.
-- Если есть `FAIL` или critical-issues: возврат в correction phase обязателен.
+## Interaction
+- [ ] Нет hover-only critical controls.
+- [ ] Hover/focus/pressed состояния читаемы и стабильны.
+- [ ] CTA видны в базовом состоянии.
+- [ ] Primary/secondary/context action hierarchy понятна.
+
+## Visual Quality
+- [ ] Premium feel сохранён (dark graphite + violet metallic).
+- [ ] Нет дешёвого retro sci-fi / plastic feel.
+- [ ] Карточки/панели имеют понятную surface hierarchy.
+- [ ] Glow контролируемый, не перегруженный.
+
+## Typography / Copy
+- [ ] Иерархия заголовков и метрик ясная.
+- [ ] Русский текст естественный и продуктовый.
+- [ ] Нет грубых/колких формулировок.
+- [ ] Нет случайного смешения RU/EN в интерфейсе.
+
+## Scaling / Robustness
+- [ ] Проверка `100%` пройдена.
+- [ ] Проверка `125%` пройдена.
+- [ ] Проверка `150%` пройдена.
+- [ ] Длинные русские строки не ломают композицию.
+
+## Product Logic
+- [ ] Навигация и текущий экран считываются мгновенно.
+- [ ] Следующий шаг пользователя понятен.
+- [ ] Sessions ощущается как product workspace, не placeholder.
+- [ ] Analytics читается быстро и даёт actionable контекст.
+- [ ] AI Studio понятен по рекомендациям/rationale/confidence.
+- [ ] Остатки старого branding отсутствуют.

@@ -52,6 +52,10 @@ class RepositoryHub:
             "asset_index",
             "translations",
             "translation_backend_runs",
+            "backend_diagnostics",
+            "language_reports",
+            "quality_snapshots",
+            "project_reports",
             "language_detections",
             "voice_links",
             "voice_attempt_history",
@@ -928,6 +932,171 @@ class RepositoryHub:
             item = dict(row)
             item["context_used"] = bool(item.get("context_used"))
             item["fallback_used"] = bool(item.get("fallback_used"))
+            out.append(item)
+        return out
+
+    def upsert_language_report(
+        self,
+        *,
+        project_id: int,
+        report_name: str,
+        lines_total: int,
+        uncertain_count: int,
+        uncertain_rate: float,
+        payload: dict[str, Any],
+    ) -> None:
+        self.db.execute(
+            """
+            INSERT INTO language_reports(
+              project_id, report_name, lines_total, uncertain_count, uncertain_rate, payload_json, created_at, updated_at
+            ) VALUES(?,?,?,?,?,?,?,?)
+            ON CONFLICT(project_id, report_name) DO UPDATE SET
+              lines_total=excluded.lines_total,
+              uncertain_count=excluded.uncertain_count,
+              uncertain_rate=excluded.uncertain_rate,
+              payload_json=excluded.payload_json,
+              updated_at=excluded.updated_at
+            """,
+            (
+                project_id,
+                report_name,
+                lines_total,
+                uncertain_count,
+                uncertain_rate,
+                json.dumps(payload, ensure_ascii=False),
+                _now_iso(),
+                _now_iso(),
+            ),
+        )
+
+    def list_language_reports(self, project_id: int, limit: int = 100) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, report_name, lines_total, uncertain_count, uncertain_rate, payload_json, created_at, updated_at
+            FROM language_reports
+            WHERE project_id=?
+            ORDER BY updated_at DESC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["payload_json"] = json.loads(item.get("payload_json") or "{}")
+            except json.JSONDecodeError:
+                item["payload_json"] = {}
+            out.append(item)
+        return out
+
+    def replace_backend_diagnostics(self, project_id: int, rows: list[dict[str, Any]]) -> None:
+        with self.db.transaction() as cur:
+            cur.execute("DELETE FROM backend_diagnostics WHERE project_id=?", (project_id,))
+            for item in rows:
+                cur.execute(
+                    """
+                    INSERT INTO backend_diagnostics(
+                      project_id, backend_name, runs_count, avg_latency_ms, p95_latency_ms,
+                      fallback_count, context_used_rate, payload_json, created_at
+                    ) VALUES(?,?,?,?,?,?,?,?,?)
+                    """,
+                    (
+                        project_id,
+                        str(item.get("backend_name") or "unknown"),
+                        int(item.get("runs_count") or 0),
+                        float(item.get("avg_latency_ms") or 0.0),
+                        float(item.get("p95_latency_ms") or 0.0),
+                        int(item.get("fallback_count") or 0),
+                        float(item.get("context_used_rate") or 0.0),
+                        json.dumps(item, ensure_ascii=False),
+                        _now_iso(),
+                    ),
+                )
+
+    def list_backend_diagnostics(self, project_id: int, limit: int = 100) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, backend_name, runs_count, avg_latency_ms, p95_latency_ms, fallback_count,
+                   context_used_rate, payload_json, created_at
+            FROM backend_diagnostics
+            WHERE project_id=?
+            ORDER BY runs_count DESC, backend_name ASC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["payload_json"] = json.loads(item.get("payload_json") or "{}")
+            except json.JSONDecodeError:
+                item["payload_json"] = {}
+            out.append(item)
+        return out
+
+    def add_project_report(self, *, project_id: int, report_type: str, payload: dict[str, Any]) -> None:
+        self.db.execute(
+            """
+            INSERT INTO project_reports(project_id, report_type, payload_json, created_at)
+            VALUES(?,?,?,?)
+            """,
+            (project_id, report_type, json.dumps(payload, ensure_ascii=False), _now_iso()),
+        )
+
+    def list_project_reports(self, project_id: int, report_type: str | None = None, limit: int = 100) -> list[dict[str, Any]]:
+        query = """
+            SELECT id, report_type, payload_json, created_at
+            FROM project_reports
+            WHERE project_id=?
+        """
+        params: list[Any] = [project_id]
+        if report_type:
+            query += " AND report_type=?"
+            params.append(report_type)
+        query += " ORDER BY id DESC LIMIT ?"
+        params.append(limit)
+        rows = self.db.query(query, tuple(params))
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["payload_json"] = json.loads(item.get("payload_json") or "{}")
+            except json.JSONDecodeError:
+                item["payload_json"] = {}
+            out.append(item)
+        return out
+
+    def add_quality_snapshot(self, *, project_id: int, snapshot_type: str, payload: dict[str, Any]) -> None:
+        self.db.execute(
+            """
+            INSERT INTO quality_snapshots(project_id, snapshot_type, payload_json, created_at)
+            VALUES(?,?,?,?)
+            """,
+            (project_id, snapshot_type, json.dumps(payload, ensure_ascii=False), _now_iso()),
+        )
+
+    def list_quality_snapshots(self, project_id: int, snapshot_type: str | None = None, limit: int = 100) -> list[dict[str, Any]]:
+        query = """
+            SELECT id, snapshot_type, payload_json, created_at
+            FROM quality_snapshots
+            WHERE project_id=?
+        """
+        params: list[Any] = [project_id]
+        if snapshot_type:
+            query += " AND snapshot_type=?"
+            params.append(snapshot_type)
+        query += " ORDER BY id DESC LIMIT ?"
+        params.append(limit)
+        rows = self.db.query(query, tuple(params))
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["payload_json"] = json.loads(item.get("payload_json") or "{}")
+            except json.JSONDecodeError:
+                item["payload_json"] = {}
             out.append(item)
         return out
 
