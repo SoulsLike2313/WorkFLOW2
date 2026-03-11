@@ -1,0 +1,92 @@
+[
+  {
+    "speaker_id": "CHR_AELA",
+    "display_name": "Aela Vorn",
+    "style_preset": "neutral",
+    "speech_rate": 0.85,
+    "base_frequency": 180,
+    "emotion_bias": "focused",
+    "region": "Northreach Federation"
+  },
+  {
+    "speaker_id": "CHR_LUCIEN",
+    "display_name": "Lucien Mireau",
+    "style_preset": "dramatic",
+    "speech_rate": 1.0,
+    "base_frequency": 197,
+    "emotion_bias": "composed",
+    "region": "Cendre Republic"
+  },
+  {
+    "speaker_id": "CHR_GRETA",
+    "display_name": "Greta Eisen",
+    "style_preset": "calm",
+    "speech_rate": 1.15,
+    "base_frequency": 214,
+    "emotion_bias": "controlled",
+    "region": "Ironstadt League"
+  },
+  {
+    "speaker_id": "CHR_SANTIAGO",
+    "display_name": "Santiago Rojas",
+    "style_preset": "radio",
+    "speech_rate": 1.3,
+    "base_frequency": 231,
+    "emotion_bias": "energetic",
+    "region": "Solmar Coalition"
+  },
+  {
+    "speaker_id": "CHR_VIOLA",
+    "display_name": "Viola Conti",
+    "style_preset": "neutral",
+    "speech_rate": 0.85,
+    "base_frequency": 248,
+    "emotion_bias": "expressive",
+    "region": "Aurelia Compact"
+  },
+  {
+    "speaker_id": "CHR_DUARTE",
+    "display_name": "Duarte Silva",
+    "style_preset": "dramatic",
+    "speech_rate": 1.0,
+    "base_frequency": 265,
+    "emotion_bias": "relaxed",
+    "region": "Verde Straits"
+  },
+  {
+    "speaker_id": "CHR_MAJA",
+    "display_name": "Maja Kowalska",
+    "style_preset": "calm",
+    "speech_rate": 1.15,
+    "base_frequency": 282,
+    "emotion_bias": "direct",
+    "region": "Amber Frontier"
+  },
+  {
+    "speaker_id": "CHR_AKIRA",
+    "display_name": "Akira Sato",
+    "style_preset": "radio",
+    "speech_rate": 1.3,
+    "base_frequency": 299,
+    "emotion_bias": "calm",
+    "region": "Kairo Arcology"
+  },
+  {
+    "speaker_id": "CHR_EMRE",
+    "display_name": "Emre Demir",
+    "style_preset": "neutral",
+    "speech_rate": 0.85,
+    "base_frequency": 316,
+    "emotion_bias": "assertive",
+    "region": "Anat Sol Dominion"
+  },
+  {
+    "speaker_id": "CHR_HANA",
+    "display_name": "Hana Park",
+    "style_preset": "dramatic",
+    "speech_rate": 1.0,
+    "base_frequency": 333,
+    "emotion_bias": "gentle",
+    "region": "Neon Han District"
+  }
+]

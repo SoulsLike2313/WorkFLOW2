@@ -1,0 +1,165 @@
+[
+  {
+    "speaker_id": "CHR_AELA",
+    "name": "Aela Vorn",
+    "region": "Northreach Federation",
+    "primary_language": "en",
+    "additional_languages": [
+      "de"
+    ],
+    "speech_style": "tactical and direct",
+    "speech_tempo": "medium-fast",
+    "emotional_profile": {
+      "baseline": "focused",
+      "stress": "sharp",
+      "humor": "dry"
+    }
+  },
+  {
+    "speaker_id": "CHR_LUCIEN",
+    "name": "Lucien Mireau",
+    "region": "Cendre Republic",
+    "primary_language": "fr",
+    "additional_languages": [
+      "en",
+      "it"
+    ],
+    "speech_style": "elegant and ironic",
+    "speech_tempo": "medium",
+    "emotional_profile": {
+      "baseline": "composed",
+      "stress": "sarcastic",
+      "humor": "witty"
+    }
+  },
+  {
+    "speaker_id": "CHR_GRETA",
+    "name": "Greta Eisen",
+    "region": "Ironstadt League",
+    "primary_language": "de",
+    "additional_languages": [
+      "en"
+    ],
+    "speech_style": "precise and strict",
+    "speech_tempo": "steady",
+    "emotional_profile": {
+      "baseline": "controlled",
+      "stress": "commanding",
+      "humor": "minimal"
+    }
+  },
+  {
+    "speaker_id": "CHR_SANTIAGO",
+    "name": "Santiago Rojas",
+    "region": "Solmar Coalition",
+    "primary_language": "es",
+    "additional_languages": [
+      "pt"
+    ],
+    "speech_style": "warm and confident",
+    "speech_tempo": "fast",
+    "emotional_profile": {
+      "baseline": "energetic",
+      "stress": "intense",
+      "humor": "playful"
+    }
+  },
+  {
+    "speaker_id": "CHR_VIOLA",
+    "name": "Viola Conti",
+    "region": "Aurelia Compact",
+    "primary_language": "it",
+    "additional_languages": [
+      "fr"
+    ],
+    "speech_style": "dramatic and poetic",
+    "speech_tempo": "medium",
+    "emotional_profile": {
+      "baseline": "expressive",
+      "stress": "passionate",
+      "humor": "theatrical"
+    }
+  },
+  {
+    "speaker_id": "CHR_DUARTE",
+    "name": "Duarte Silva",
+    "region": "Verde Straits",
+    "primary_language": "pt",
+    "additional_languages": [
+      "es"
+    ],
+    "speech_style": "calm and practical",
+    "speech_tempo": "slow-medium",
+    "emotional_profile": {
+      "baseline": "relaxed",
+      "stress": "grounded",
+      "humor": "friendly"
+    }
+  },
+  {
+    "speaker_id": "CHR_MAJA",
+    "name": "Maja Kowalska",
+    "region": "Amber Frontier",
+    "primary_language": "pl",
+    "additional_languages": [
+      "en"
+    ],
+    "speech_style": "blunt and loyal",
+    "speech_tempo": "medium",
+    "emotional_profile": {
+      "baseline": "direct",
+      "stress": "protective",
+      "humor": "dry"
+    }
+  },
+  {
+    "speaker_id": "CHR_AKIRA",
+    "name": "Akira Sato",
+    "region": "Kairo Arcology",
+    "primary_language": "ja",
+    "additional_languages": [
+      "en"
+    ],
+    "speech_style": "formal and concise",
+    "speech_tempo": "measured",
+    "emotional_profile": {
+      "baseline": "calm",
+      "stress": "focused",
+      "humor": "subtle"
+    }
+  },
+  {
+    "speaker_id": "CHR_EMRE",
+    "name": "Emre Demir",
+    "region": "Anat Sol Dominion",
+    "primary_language": "tr",
+    "additional_languages": [
+      "en",
+      "de"
+    ],
+    "speech_style": "street-smart and bold",
+    "speech_tempo": "fast",
+    "emotional_profile": {
+      "baseline": "assertive",
+      "stress": "impatient",
+      "humor": "teasing"
+    }
+  },
+  {
+    "speaker_id": "CHR_HANA",
+    "name": "Hana Park",
+    "region": "Neon Han District",
+    "primary_language": "ko",
+    "additional_languages": [
+      "ja",
+      "en"
+    ],
+    "speech_style": "soft but analytical",
+    "speech_tempo": "medium",
+    "emotional_profile": {
+      "baseline": "gentle",
+      "stress": "urgent",
+      "humor": "quiet"
+    }
+  }
+]

@@ -1,0 +1,271 @@
+combat:
+- line_id: L0201
+  language: de
+  speaker_id: CHR_GRETA
+  text: Hallo, die Mission im Korridor 607 beginnt jetzt.
+  voice_link: ''
+  tags:
+  - combat_barks
+  - lang_de
+  context: combat_barks
+- line_id: L0202
+  language: es
+  speaker_id: CHR_SANTIAGO
+  text: Hola, la mision secundaria empieza en nodo 614.
+  voice_link: audio/voice_L0202.wav
+  tags:
+  - combat_barks
+  - lang_es
+  context: combat_barks
+- line_id: L0203
+  language: it
+  speaker_id: CHR_VIOLA
+  text: Ciao, la missione richiede accesso al livello 621.
+  voice_link: ''
+  tags:
+  - combat_barks
+  - lang_it
+  context: combat_barks
+- line_id: L0204
+  language: pt
+  speaker_id: CHR_DUARTE
+  text: Pressione [E] para destravar o painel.
+  voice_link: audio/voice_L0204.wav
+  tags:
+  - combat_barks
+  - lang_pt
+  context: combat_barks
+- line_id: L0205
+  language: pl
+  speaker_id: CHR_MAJA
+  text: Nacisnij [E], aby otworzyc wlaz.
+  voice_link: audio/voice_L0205.wav
+  tags:
+  - combat_barks
+  - lang_pl
+  context: combat_barks
+- line_id: L0206
+  language: ja
+  speaker_id: CHR_AKIRA
+  text: '%PLAYER_NAME% は中央通路へ移動してください。'
+  voice_link: audio/voice_L0206.wav
+  tags:
+  - combat_barks
+  - lang_ja
+  context: combat_barks
+- line_id: L0207
+  language: tr
+  speaker_id: CHR_EMRE
+  text: Dukkan %PLAYER_NAME% icin malzeme ayirdi.
+  voice_link: ''
+  tags:
+  - combat_barks
+  - lang_tr
+  context: combat_barks
+- line_id: L0208
+  language: ko
+  speaker_id: CHR_HANA
+  text: '%PLAYER_NAME% 는 중앙 통로로 이동하세요.'
+  voice_link: audio/voice_L0208.wav
+  tags:
+  - combat_barks
+  - lang_ko
+  context: combat_barks
+- line_id: L0209
+  language: zh
+  speaker_id: CHR_HANA
+  text: 按下[E]打开控制台。
+  voice_link: ''
+  tags:
+  - combat_barks
+  - lang_zh
+  context: combat_barks
+- line_id: L0210
+  language: en
+  speaker_id: CHR_AELA
+  text: Shop is open, bring 3 crystal shards.
+  voice_link: audio/voice_L0210.wav
+  tags:
+  - combat_barks
+  - lang_en
+  context: combat_barks
+- line_id: L0211
+  language: fr
+  speaker_id: CHR_LUCIEN
+  text: Bonjour, la mission commence dans la zone 677.
+  voice_link: ''
+  tags:
+  - combat_barks
+  - lang_fr
+  context: combat_barks
+- line_id: L0212
+  language: de
+  speaker_id: CHR_GRETA
+  text: Druecke [E], um das Modul zu starten.
+  voice_link: audio/voice_L0212.wav
+  tags:
+  - combat_barks
+  - lang_de
+  context: combat_barks
+- line_id: L0213
+  language: es
+  speaker_id: CHR_SANTIAGO
+  text: El comerciante espera a %PLAYER_NAME% en la plaza.
+  voice_link: ''
+  tags:
+  - combat_barks
+  - lang_es
+  context: combat_barks
+- line_id: L0214
+  language: it
+  speaker_id: CHR_VIOLA
+  text: Ciao, la missione richiede accesso al livello 698.
+  voice_link: audio/voice_L0214.wav
+  tags:
+  - combat_barks
+  - lang_it
+  context: combat_barks
+- line_id: L0215
+  language: pt
+  speaker_id: CHR_DUARTE
+  text: A loja guarda itens para %PLAYER_NAME%.
+  voice_link: audio/voice_L0215.wav
+  tags:
+  - combat_barks
+  - lang_pt
+  context: combat_barks
+- line_id: L0216
+  language: pl
+  speaker_id: CHR_MAJA
+  text: 'Uwaga: <b>reaktor</b> traci moc.'
+  voice_link: audio/voice_L0216.wav
+  tags:
+  - combat_barks
+  - lang_pl
+  context: combat_barks
+- line_id: L0217
+  language: ja
+  speaker_id: CHR_AKIRA
+  text: '%PLAYER_NAME% は中央通路へ移動してください。'
+  voice_link: ''
+  tags:
+  - combat_barks
+  - lang_ja
+  context: combat_barks
+- line_id: L0218
+  language: tr
+  speaker_id: CHR_EMRE
+  text: 'Tehlike: <b>reaktor</b> dengesiz durumda.'
+  voice_link: audio/voice_L0218.wav
+  tags:
+  - combat_barks
+  - lang_tr
+  context: combat_barks
+- line_id: L0219
+  language: ko
+  speaker_id: CHR_HANA
+  text: '%PLAYER_NAME% 는 중앙 통로로 이동하세요.'
+  voice_link: ''
+  tags:
+  - combat_barks
+  - lang_ko
+  context: combat_barks
+- line_id: L0220
+  language: zh
+  speaker_id: CHR_AELA
+  text: '%PLAYER_NAME%请前往中央平台。'
+  voice_link: audio/voice_L0220.wav
+  tags:
+  - combat_barks
+  - lang_zh
+  context: combat_barks
+- line_id: L0221
+  language: en
+  speaker_id: CHR_AELA
+  text: Press [E] to activate beacon %PLAYER_NAME%.
+  voice_link: ''
+  tags:
+  - combat_barks
+  - lang_en
+  context: combat_barks
+- line_id: L0222
+  language: fr
+  speaker_id: CHR_LUCIEN
+  text: Appuie sur [E] pour ouvrir le terminal.
+  voice_link: audio/voice_L0222.wav
+  tags:
+  - combat_barks
+  - lang_fr
+  context: combat_barks
+- line_id: L0223
+  language: de
+  speaker_id: CHR_GRETA
+  text: 'Achtung: der <b>Reaktor</b> ist nicht stabil.'
+  voice_link: ''
+  tags:
+  - combat_barks
+  - lang_de
+  context: combat_barks
+- line_id: L0224
+  language: es
+  speaker_id: CHR_SANTIAGO
+  text: Pulsa [E] para abrir la compuerta.
+  voice_link: audio/voice_L0224.wav
+  tags:
+  - combat_barks
+  - lang_es
+  context: combat_barks
+- line_id: L0225
+  language: it
+  speaker_id: CHR_VIOLA
+  text: Ciao, la missione richiede accesso al livello 775.
+  voice_link: audio/voice_L0225.wav
+  tags:
+  - combat_barks
+  - lang_it
+  context: combat_barks
+- line_id: L0226
+  language: pt
+  speaker_id: CHR_DUARTE
+  text: Ola, a missao principal muda no setor 782.
+  voice_link: audio/voice_L0226.wav
+  tags:
+  - combat_barks
+  - lang_pt
+  context: combat_barks
+- line_id: L0227
+  language: pl
+  speaker_id: CHR_MAJA
+  text: 'Uwaga: <b>reaktor</b> traci moc.'
+  voice_link: ''
+  tags:
+  - combat_barks
+  - lang_pl
+  context: combat_barks
+- line_id: L0228
+  language: ja
+  speaker_id: CHR_AKIRA
+  text: 任務はセクター796で開始します。
+  voice_link: audio/voice_L0228.wav
+  tags:
+  - combat_barks
+  - lang_ja
+  context: combat_barks
+- line_id: L0229
+  language: tr
+  speaker_id: CHR_EMRE
+  text: Merhaba, gorev 803 bolgesinde basliyor.
+  voice_link: ''
+  tags:
+  - combat_barks
+  - lang_tr
+  context: combat_barks
+- line_id: L0230
+  language: ko
+  speaker_id: CHR_HANA
+  text: '%PLAYER_NAME% 는 중앙 통로로 이동하세요.'
+  voice_link: audio/voice_L0230.wav
+  tags:
+  - combat_barks
+  - lang_ko
+  context: combat_barks

@@ -1,0 +1,424 @@
+{
+  "lines": [
+    {
+      "line_id": "L0001",
+      "language": "en",
+      "speaker_id": "CHR_AELA",
+      "text": "Commander, the gate in Sector 107 is unstable.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_en"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0002",
+      "language": "fr",
+      "speaker_id": "CHR_LUCIEN",
+      "text": "Bonjour, la mission commence dans la zone 114.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_fr"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0003",
+      "language": "de",
+      "speaker_id": "CHR_GRETA",
+      "text": "Achtung: der <b>Reaktor</b> ist nicht stabil.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_de"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0004",
+      "language": "es",
+      "speaker_id": "CHR_SANTIAGO",
+      "text": "Pulsa [E] para abrir la compuerta.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_es"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0005",
+      "language": "it",
+      "speaker_id": "CHR_VIOLA",
+      "text": "Premi [E] per confermare il percorso.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_it"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0006",
+      "language": "pt",
+      "speaker_id": "CHR_DUARTE",
+      "text": "Pressione [E] para destravar o painel.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_pt"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0007",
+      "language": "pl",
+      "speaker_id": "CHR_MAJA",
+      "text": "Czesc, misja boczna jest przy punkcie 149.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_pl"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0008",
+      "language": "ja",
+      "speaker_id": "CHR_AKIRA",
+      "text": "任務はセクター156で開始します。",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_ja"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0009",
+      "language": "tr",
+      "speaker_id": "CHR_EMRE",
+      "text": "Dukkan %PLAYER_NAME% icin malzeme ayirdi.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_tr"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0010",
+      "language": "ko",
+      "speaker_id": "CHR_HANA",
+      "text": "임무는 구역 170 에서 시작됩니다.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_ko"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0011",
+      "language": "zh",
+      "speaker_id": "CHR_LUCIEN",
+      "text": "任务将在区域177开始。",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_zh"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0012",
+      "language": "en",
+      "speaker_id": "CHR_AELA",
+      "text": "Commander, the gate in Sector 184 is unstable.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_en"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0013",
+      "language": "fr",
+      "speaker_id": "CHR_LUCIEN",
+      "text": "Appuie sur [E] pour ouvrir le terminal.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_fr"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0014",
+      "language": "de",
+      "speaker_id": "CHR_GRETA",
+      "text": "Druecke [E], um das Modul zu starten.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_de"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0015",
+      "language": "es",
+      "speaker_id": "CHR_SANTIAGO",
+      "text": "Hola, la mision secundaria empieza en nodo 205.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_es"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0016",
+      "language": "it",
+      "speaker_id": "CHR_VIOLA",
+      "text": "Premi [E] per confermare il percorso.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_it"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0017",
+      "language": "pt",
+      "speaker_id": "CHR_DUARTE",
+      "text": "A loja guarda itens para %PLAYER_NAME%.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_pt"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0018",
+      "language": "pl",
+      "speaker_id": "CHR_MAJA",
+      "text": "Nacisnij [E], aby otworzyc wlaz.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_pl"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0019",
+      "language": "ja",
+      "speaker_id": "CHR_AKIRA",
+      "text": "%PLAYER_NAME% は中央通路へ移動してください。",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_ja"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0020",
+      "language": "tr",
+      "speaker_id": "CHR_EMRE",
+      "text": "Tehlike: <b>reaktor</b> dengesiz durumda.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_tr"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0021",
+      "language": "ko",
+      "speaker_id": "CHR_HANA",
+      "text": "임무는 구역 247 에서 시작됩니다.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_ko"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0022",
+      "language": "zh",
+      "speaker_id": "CHR_GRETA",
+      "text": "按下[E]打开控制台。",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_zh"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0023",
+      "language": "en",
+      "speaker_id": "CHR_AELA",
+      "text": "Shop is open, bring 3 crystal shards.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_en"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0024",
+      "language": "fr",
+      "speaker_id": "CHR_LUCIEN",
+      "text": "Le marchand attend %PLAYER_NAME% au pont central.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_fr"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0025",
+      "language": "de",
+      "speaker_id": "CHR_GRETA",
+      "text": "Achtung: der <b>Reaktor</b> ist nicht stabil.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_de"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0026",
+      "language": "es",
+      "speaker_id": "CHR_SANTIAGO",
+      "text": "Pulsa [E] para abrir la compuerta.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_es"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0027",
+      "language": "it",
+      "speaker_id": "CHR_VIOLA",
+      "text": "Premi [E] per confermare il percorso.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_it"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0028",
+      "language": "pt",
+      "speaker_id": "CHR_DUARTE",
+      "text": "Perigo: o <b>nucleo</b> esta sobrecarga.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_pt"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0029",
+      "language": "pl",
+      "speaker_id": "CHR_MAJA",
+      "text": "Czesc, misja boczna jest przy punkcie 303.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_pl"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0030",
+      "language": "ja",
+      "speaker_id": "CHR_AKIRA",
+      "text": "任務はセクター310で開始します。",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_ja"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0031",
+      "language": "tr",
+      "speaker_id": "CHR_EMRE",
+      "text": "Dukkan %PLAYER_NAME% icin malzeme ayirdi.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_tr"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0032",
+      "language": "ko",
+      "speaker_id": "CHR_HANA",
+      "text": "임무는 구역 324 에서 시작됩니다.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_ko"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0033",
+      "language": "zh",
+      "speaker_id": "CHR_SANTIAGO",
+      "text": "警告：<b>反应堆</b>温度过高。",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_zh"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0034",
+      "language": "en",
+      "speaker_id": "CHR_AELA",
+      "text": "Warning: <b>reactor</b> heat reached 338.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_en"
+      ],
+      "context": "ui"
+    },
+    {
+      "line_id": "L0035",
+      "language": "fr",
+      "speaker_id": "CHR_LUCIEN",
+      "text": "Le marchand attend %PLAYER_NAME% au pont central.",
+      "voice_link": "",
+      "tags": [
+        "ui",
+        "lang_fr"
+      ],
+      "context": "ui"
+    }
+  ]
+}

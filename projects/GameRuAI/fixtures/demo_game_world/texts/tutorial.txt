@@ -1,0 +1,25 @@
+L0176|CHR_MAJA|tutorial|audio/voice_L0176.wav|tutorial,lang_zh|任务将在区域432开始。
+L0177|CHR_AELA|tutorial||tutorial,lang_en|Shop is open, bring 3 crystal shards.
+L0178|CHR_LUCIEN|tutorial|audio/voice_L0178.wav|tutorial,lang_fr|Le marchand attend %PLAYER_NAME% au pont central.
+L0179|CHR_GRETA|tutorial||tutorial,lang_de|Bitte bringe %PLAYER_NAME% zum Handelsposten.
+L0180|CHR_SANTIAGO|tutorial|audio/voice_L0180.wav|tutorial,lang_es|El comerciante espera a %PLAYER_NAME% en la plaza.
+L0181|CHR_VIOLA|tutorial||tutorial,lang_it|Il negozio offre sconti per %PLAYER_NAME%.
+L0182|CHR_DUARTE|tutorial|audio/voice_L0182.wav|tutorial,lang_pt|Ola, a missao principal muda no setor 474.
+L0183|CHR_MAJA|tutorial||tutorial,lang_pl|Czesc, misja boczna jest przy punkcie 481.
+L0184|CHR_AKIRA|tutorial|audio/voice_L0184.wav|tutorial,lang_ja|任務はセクター488で開始します。
+L0185|CHR_EMRE|tutorial|audio/voice_L0185.wav|tutorial,lang_tr|Dukkan %PLAYER_NAME% icin malzeme ayirdi.
+L0186|CHR_HANA|tutorial|audio/voice_L0186.wav|tutorial,lang_ko|경고: <b>반응로</b> 온도가 상승합니다.
+L0187|CHR_AKIRA|tutorial||tutorial,lang_zh|任务将在区域509开始。
+L0188|CHR_AELA|tutorial|audio/voice_L0188.wav|tutorial,lang_en|Press [E] to activate beacon %PLAYER_NAME%.
+L0189|CHR_LUCIEN|tutorial||tutorial,lang_fr|Appuie sur [E] pour ouvrir le terminal.
+L0190|CHR_GRETA|tutorial|audio/voice_L0190.wav|tutorial,lang_de|Druecke [E], um das Modul zu starten.
+L0191|CHR_SANTIAGO|tutorial||tutorial,lang_es|El comerciante espera a %PLAYER_NAME% en la plaza.
+L0192|CHR_VIOLA|tutorial|audio/voice_L0192.wav|tutorial,lang_it|Premi [E] per confermare il percorso.
+L0193|CHR_DUARTE|tutorial||tutorial,lang_pt|A loja guarda itens para %PLAYER_NAME%.
+L0194|CHR_MAJA|tutorial|audio/voice_L0194.wav|tutorial,lang_pl|Nacisnij [E], aby otworzyc wlaz.
+L0195|CHR_AKIRA|tutorial|audio/voice_L0195.wav|tutorial,lang_ja|警告：<b>リアクター</b>温度が上昇中です。
+L0196|CHR_EMRE|tutorial|audio/voice_L0196.wav|tutorial,lang_tr|Dukkan %PLAYER_NAME% icin malzeme ayirdi.
+L0197|CHR_HANA|tutorial||tutorial,lang_ko|[E] 키를 눌러 문을 여세요.
+L0198|CHR_EMRE|tutorial|audio/voice_L0198.wav|tutorial,lang_zh|任务将在区域586开始。
+L0199|CHR_AELA|tutorial||tutorial,lang_en|Shop is open, bring 3 crystal shards.
+L0200|CHR_LUCIEN|tutorial|audio/voice_L0200.wav|tutorial,lang_fr|Bonjour, la mission commence dans la zone 600.

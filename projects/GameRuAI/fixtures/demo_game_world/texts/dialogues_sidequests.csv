@@ -1,0 +1,51 @@
+line_id,language,speaker_id,text,voice_link,tags,context
+L0096,ja,CHR_AKIRA,[E]を押してゲートを開いてください。,audio/voice_L0096.wav,"['dialogues_sidequests', 'lang_ja']",dialogues_sidequests
+L0097,tr,CHR_EMRE,Kapak acmak icin [E] tusuna bas.,,"['dialogues_sidequests', 'lang_tr']",dialogues_sidequests
+L0098,ko,CHR_HANA,%PLAYER_NAME% 는 중앙 통로로 이동하세요.,audio/voice_L0098.wav,"['dialogues_sidequests', 'lang_ko']",dialogues_sidequests
+L0099,zh,CHR_HANA,任务将在区域793开始。,,"['dialogues_sidequests', 'lang_zh']",dialogues_sidequests
+L0100,en,CHR_AELA,"Shop is open, bring 3 crystal shards.",audio/voice_L0100.wav,"['dialogues_sidequests', 'lang_en']",dialogues_sidequests
+L0101,fr,CHR_LUCIEN,Alerte: le signal <b>orbital</b> chute vite.,,"['dialogues_sidequests', 'lang_fr']",dialogues_sidequests
+L0102,de,CHR_GRETA,Bitte bringe %PLAYER_NAME% zum Handelsposten.,audio/voice_L0102.wav,"['dialogues_sidequests', 'lang_de']",dialogues_sidequests
+L0103,es,CHR_SANTIAGO,Peligro: el <b>motor</b> pierde energia.,,"['dialogues_sidequests', 'lang_es']",dialogues_sidequests
+L0104,it,CHR_VIOLA,"Ciao, la missione richiede accesso al livello 828.",audio/voice_L0104.wav,"['dialogues_sidequests', 'lang_it']",dialogues_sidequests
+L0105,pt,CHR_DUARTE,"Ola, a missao principal muda no setor 835.",audio/voice_L0105.wav,"['dialogues_sidequests', 'lang_pt']",dialogues_sidequests
+L0106,pl,CHR_MAJA,Uwaga: <b>reaktor</b> traci moc.,audio/voice_L0106.wav,"['dialogues_sidequests', 'lang_pl']",dialogues_sidequests
+L0107,ja,CHR_AKIRA,警告：<b>リアクター</b>温度が上昇中です。,,"['dialogues_sidequests', 'lang_ja']",dialogues_sidequests
+L0108,tr,CHR_EMRE,"Merhaba, gorev 856 bolgesinde basliyor.",audio/voice_L0108.wav,"['dialogues_sidequests', 'lang_tr']",dialogues_sidequests
+L0109,ko,CHR_HANA,경고: <b>반응로</b> 온도가 상승합니다.,,"['dialogues_sidequests', 'lang_ko']",dialogues_sidequests
+L0110,zh,CHR_AELA,%PLAYER_NAME%请前往中央平台。,audio/voice_L0110.wav,"['dialogues_sidequests', 'lang_zh']",dialogues_sidequests
+L0111,en,CHR_AELA,Press [E] to activate beacon %PLAYER_NAME%.,,"['dialogues_sidequests', 'lang_en']",dialogues_sidequests
+L0112,fr,CHR_LUCIEN,Alerte: le signal <b>orbital</b> chute vite.,audio/voice_L0112.wav,"['dialogues_sidequests', 'lang_fr']",dialogues_sidequests
+L0113,de,CHR_GRETA,"Hallo, die Mission im Korridor 891 beginnt jetzt.",,"['dialogues_sidequests', 'lang_de']",dialogues_sidequests
+L0114,es,CHR_SANTIAGO,Peligro: el <b>motor</b> pierde energia.,audio/voice_L0114.wav,"['dialogues_sidequests', 'lang_es']",dialogues_sidequests
+L0115,it,CHR_VIOLA,Premi [E] per confermare il percorso.,audio/voice_L0115.wav,"['dialogues_sidequests', 'lang_it']",dialogues_sidequests
+L0116,pt,CHR_DUARTE,"Ola, a missao principal muda no setor 912.",audio/voice_L0116.wav,"['dialogues_sidequests', 'lang_pt']",dialogues_sidequests
+L0117,pl,CHR_MAJA,Uwaga: <b>reaktor</b> traci moc.,,"['dialogues_sidequests', 'lang_pl']",dialogues_sidequests
+L0118,ja,CHR_AKIRA,[E]を押してゲートを開いてください。,audio/voice_L0118.wav,"['dialogues_sidequests', 'lang_ja']",dialogues_sidequests
+L0119,tr,CHR_EMRE,Kapak acmak icin [E] tusuna bas.,,"['dialogues_sidequests', 'lang_tr']",dialogues_sidequests
+L0120,ko,CHR_HANA,경고: <b>반응로</b> 온도가 상승합니다.,audio/voice_L0120.wav,"['dialogues_sidequests', 'lang_ko']",dialogues_sidequests
+L0121,zh,CHR_LUCIEN,按下[E]打开控制台。,,"['dialogues_sidequests', 'lang_zh']",dialogues_sidequests
+L0122,en,CHR_AELA,"Commander, the gate in Sector 954 is unstable.",audio/voice_L0122.wav,"['dialogues_sidequests', 'lang_en']",dialogues_sidequests
+L0123,fr,CHR_LUCIEN,Le marchand attend %PLAYER_NAME% au pont central.,,"['dialogues_sidequests', 'lang_fr']",dialogues_sidequests
+L0124,de,CHR_GRETA,Bitte bringe %PLAYER_NAME% zum Handelsposten.,audio/voice_L0124.wav,"['dialogues_sidequests', 'lang_de']",dialogues_sidequests
+L0125,es,CHR_SANTIAGO,"Hola, la mision secundaria empieza en nodo 975.",audio/voice_L0125.wav,"['dialogues_sidequests', 'lang_es']",dialogues_sidequests
+L0126,it,CHR_VIOLA,"Ciao, la missione richiede accesso al livello 982.",audio/voice_L0126.wav,"['dialogues_sidequests', 'lang_it']",dialogues_sidequests
+L0127,pt,CHR_DUARTE,Perigo: o <b>nucleo</b> esta sobrecarga.,,"['dialogues_sidequests', 'lang_pt']",dialogues_sidequests
+L0128,pl,CHR_MAJA,Uwaga: <b>reaktor</b> traci moc.,audio/voice_L0128.wav,"['dialogues_sidequests', 'lang_pl']",dialogues_sidequests
+L0129,ja,CHR_AKIRA,[E]を押してゲートを開いてください。,,"['dialogues_sidequests', 'lang_ja']",dialogues_sidequests
+L0130,tr,CHR_EMRE,"Merhaba, gorev 110 bolgesinde basliyor.",audio/voice_L0130.wav,"['dialogues_sidequests', 'lang_tr']",dialogues_sidequests
+L0131,ko,CHR_HANA,[E] 키를 눌러 문을 여세요.,,"['dialogues_sidequests', 'lang_ko']",dialogues_sidequests
+L0132,zh,CHR_GRETA,任务将在区域124开始。,audio/voice_L0132.wav,"['dialogues_sidequests', 'lang_zh']",dialogues_sidequests
+L0133,en,CHR_AELA,"Commander, the gate in Sector 131 is unstable.",,"['dialogues_sidequests', 'lang_en']",dialogues_sidequests
+L0134,fr,CHR_LUCIEN,Alerte: le signal <b>orbital</b> chute vite.,audio/voice_L0134.wav,"['dialogues_sidequests', 'lang_fr']",dialogues_sidequests
+L0135,de,CHR_GRETA,"Hallo, die Mission im Korridor 145 beginnt jetzt.",audio/voice_L0135.wav,"['dialogues_sidequests', 'lang_de']",dialogues_sidequests
+L0136,es,CHR_SANTIAGO,Pulsa [E] para abrir la compuerta.,audio/voice_L0136.wav,"['dialogues_sidequests', 'lang_es']",dialogues_sidequests
+L0137,it,CHR_VIOLA,Premi [E] per confermare il percorso.,,"['dialogues_sidequests', 'lang_it']",dialogues_sidequests
+L0138,pt,CHR_DUARTE,A loja guarda itens para %PLAYER_NAME%.,audio/voice_L0138.wav,"['dialogues_sidequests', 'lang_pt']",dialogues_sidequests
+L0139,pl,CHR_MAJA,"Nacisnij [E], aby otworzyc wlaz.",,"['dialogues_sidequests', 'lang_pl']",dialogues_sidequests
+L0140,ja,CHR_AKIRA,警告：<b>リアクター</b>温度が上昇中です。,audio/voice_L0140.wav,"['dialogues_sidequests', 'lang_ja']",dialogues_sidequests
+L0141,tr,CHR_EMRE,Dukkan %PLAYER_NAME% icin malzeme ayirdi.,,"['dialogues_sidequests', 'lang_tr']",dialogues_sidequests
+L0142,ko,CHR_HANA,[E] 키를 눌러 문을 여세요.,audio/voice_L0142.wav,"['dialogues_sidequests', 'lang_ko']",dialogues_sidequests
+L0143,zh,CHR_SANTIAGO,按下[E]打开控制台。,,"['dialogues_sidequests', 'lang_zh']",dialogues_sidequests
+L0144,en,CHR_AELA,Warning: <b>reactor</b> heat reached 208.,audio/voice_L0144.wav,"['dialogues_sidequests', 'lang_en']",dialogues_sidequests
+L0145,fr,CHR_LUCIEN,Alerte: le signal <b>orbital</b> chute vite.,audio/voice_L0145.wav,"['dialogues_sidequests', 'lang_fr']",dialogues_sidequests

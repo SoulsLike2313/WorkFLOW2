@@ -5,6 +5,7 @@ from typing import Any
 
 import httpx
 from PySide6.QtCore import QEasingCurve, QPropertyAnimation, QTimer, Qt
+from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import (
     QGraphicsOpacityEffect,
     QHBoxLayout,
@@ -46,9 +47,10 @@ class UserWorkspaceWindow(QMainWindow):
     def __init__(self, *, api_base_url: str) -> None:
         super().__init__()
         self.api_base_url = api_base_url.rstrip("/")
+        self._ui_scale = self._detect_ui_scale()
         self.setWindowTitle("Shortform Workspace")
         self.resize(1540, 920)
-        self.setMinimumSize(1260, 760)
+        self.setMinimumSize(1160, 700)
 
         self._snapshot: dict[str, Any] = {}
         self._selected_profile_id: str | None = None
@@ -71,6 +73,16 @@ class UserWorkspaceWindow(QMainWindow):
         self._auto_refresh.timeout.connect(self.refresh_workspace)
         self._auto_refresh.start()
 
+    def _detect_ui_scale(self) -> float:
+        screen = self.screen() or QGuiApplication.primaryScreen()
+        if screen is None:
+            return 1.0
+        try:
+            scale = float(screen.logicalDotsPerInch()) / 96.0
+        except Exception:
+            return 1.0
+        return max(1.0, min(1.6, scale))
+
     def _build_ui(self) -> None:
         root = QWidget()
         root.setObjectName("RootShell")
@@ -82,13 +94,15 @@ class UserWorkspaceWindow(QMainWindow):
 
         sidebar = QWidget()
         sidebar.setObjectName("Sidebar")
-        sidebar.setFixedWidth(280)
+        sidebar_width = int(280 + max(0.0, self._ui_scale - 1.0) * 90)
+        sidebar.setFixedWidth(max(280, min(340, sidebar_width)))
         sidebar_layout = QVBoxLayout(sidebar)
         sidebar_layout.setContentsMargins(16, 16, 16, 16)
         sidebar_layout.setSpacing(12)
 
         app_title = QLabel("Shortform Workspace")
         app_title.setObjectName("AppTitle")
+        app_title.setWordWrap(True)
         app_subtitle = QLabel("Единое рабочее пространство для профилей, сессий, аналитики и AI.")
         app_subtitle.setObjectName("AppSubtitle")
         app_subtitle.setWordWrap(True)
@@ -102,7 +116,8 @@ class UserWorkspaceWindow(QMainWindow):
         emblem = QLabel("SF")
         emblem.setObjectName("SidebarEmblem")
         emblem.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        emblem.setFixedSize(42, 42)
+        emblem_size = int(42 + max(0.0, self._ui_scale - 1.0) * 12)
+        emblem.setFixedSize(max(42, min(52, emblem_size)), max(42, min(52, emblem_size)))
         brand_layout.addWidget(emblem)
 
         title_block = QWidget()
@@ -150,13 +165,13 @@ class UserWorkspaceWindow(QMainWindow):
 
         self.workspace_stack = QStackedWidget()
         self.workspace_stack.setObjectName("WorkspaceStack")
-        self.workspace_stack.setMinimumWidth(760)
+        self.workspace_stack.setMinimumWidth(700)
         split.addWidget(self.workspace_stack)
 
         self.context_panel = ContextPanel()
         self.context_panel.action_requested.connect(lambda action: self._on_page_action(action, None))
-        self.context_panel.setMinimumWidth(336)
-        self.context_panel.setMaximumWidth(392)
+        self.context_panel.setMinimumWidth(308)
+        self.context_panel.setMaximumWidth(420)
         split.addWidget(self.context_panel)
 
         split.setStretchFactor(0, 12)
@@ -176,10 +191,10 @@ class UserWorkspaceWindow(QMainWindow):
         if total <= 0:
             return
 
-        min_left = 760
-        min_right = 336
+        min_left = 700
+        min_right = 308
         target_right = int(total * 0.28)
-        right = max(min_right, min(380, target_right))
+        right = max(min_right, min(404, target_right))
         if total - right < min_left:
             right = max(min_right, total - min_left)
         left = max(min_left, total - right)
@@ -192,7 +207,7 @@ class UserWorkspaceWindow(QMainWindow):
         sizes = self.main_splitter.sizes()
         if len(sizes) != 2:
             return
-        if sizes[0] < 740 or sizes[1] < 320:
+        if sizes[0] < 690 or sizes[1] < 300:
             self._rebalance_main_splitter()
 
     def _register_nav_button(self, layout: QVBoxLayout, key: str, label: str) -> None:

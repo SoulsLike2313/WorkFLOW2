@@ -1,0 +1,434 @@
+{
+  "categories": [
+    {
+      "name": "factions",
+      "entries": [
+        {
+          "line_id": "L0231",
+          "language": "zh",
+          "speaker_id": "CHR_LUCIEN",
+          "text": "按下[E]打开控制台。",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_zh"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0232",
+          "language": "en",
+          "speaker_id": "CHR_AELA",
+          "text": "Commander, the gate in Sector 824 is unstable.",
+          "voice_link": "audio/voice_L0232.wav",
+          "tags": [
+            "codex_entries",
+            "lang_en"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0233",
+          "language": "fr",
+          "speaker_id": "CHR_LUCIEN",
+          "text": "Bonjour, la mission commence dans la zone 831.",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_fr"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0234",
+          "language": "de",
+          "speaker_id": "CHR_GRETA",
+          "text": "Druecke [E], um das Modul zu starten.",
+          "voice_link": "audio/voice_L0234.wav",
+          "tags": [
+            "codex_entries",
+            "lang_de"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0235",
+          "language": "es",
+          "speaker_id": "CHR_SANTIAGO",
+          "text": "Hola, la mision secundaria empieza en nodo 845.",
+          "voice_link": "audio/voice_L0235.wav",
+          "tags": [
+            "codex_entries",
+            "lang_es"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0236",
+          "language": "it",
+          "speaker_id": "CHR_VIOLA",
+          "text": "Ciao, la missione richiede accesso al livello 852.",
+          "voice_link": "audio/voice_L0236.wav",
+          "tags": [
+            "codex_entries",
+            "lang_it"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0237",
+          "language": "pt",
+          "speaker_id": "CHR_DUARTE",
+          "text": "Pressione [E] para destravar o painel.",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_pt"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0238",
+          "language": "pl",
+          "speaker_id": "CHR_MAJA",
+          "text": "Kupiec czeka na %PLAYER_NAME% przy rynku.",
+          "voice_link": "audio/voice_L0238.wav",
+          "tags": [
+            "codex_entries",
+            "lang_pl"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0239",
+          "language": "ja",
+          "speaker_id": "CHR_AKIRA",
+          "text": "任務はセクター873で開始します。",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_ja"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0240",
+          "language": "tr",
+          "speaker_id": "CHR_EMRE",
+          "text": "Kapak acmak icin [E] tusuna bas.",
+          "voice_link": "audio/voice_L0240.wav",
+          "tags": [
+            "codex_entries",
+            "lang_tr"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0241",
+          "language": "ko",
+          "speaker_id": "CHR_HANA",
+          "text": "임무는 구역 887 에서 시작됩니다.",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_ko"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0242",
+          "language": "zh",
+          "speaker_id": "CHR_GRETA",
+          "text": "任务将在区域894开始。",
+          "voice_link": "audio/voice_L0242.wav",
+          "tags": [
+            "codex_entries",
+            "lang_zh"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0243",
+          "language": "en",
+          "speaker_id": "CHR_AELA",
+          "text": "Shop is open, bring 3 crystal shards.",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_en"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0244",
+          "language": "fr",
+          "speaker_id": "CHR_LUCIEN",
+          "text": "Le marchand attend %PLAYER_NAME% au pont central.",
+          "voice_link": "audio/voice_L0244.wav",
+          "tags": [
+            "codex_entries",
+            "lang_fr"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0245",
+          "language": "de",
+          "speaker_id": "CHR_GRETA",
+          "text": "Achtung: der <b>Reaktor</b> ist nicht stabil.",
+          "voice_link": "audio/voice_L0245.wav",
+          "tags": [
+            "codex_entries",
+            "lang_de"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0246",
+          "language": "es",
+          "speaker_id": "CHR_SANTIAGO",
+          "text": "Pulsa [E] para abrir la compuerta.",
+          "voice_link": "audio/voice_L0246.wav",
+          "tags": [
+            "codex_entries",
+            "lang_es"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0247",
+          "language": "it",
+          "speaker_id": "CHR_VIOLA",
+          "text": "Pericolo: il <b>reattore</b> vibra troppo.",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_it"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0248",
+          "language": "pt",
+          "speaker_id": "CHR_DUARTE",
+          "text": "Pressione [E] para destravar o painel.",
+          "voice_link": "audio/voice_L0248.wav",
+          "tags": [
+            "codex_entries",
+            "lang_pt"
+          ],
+          "context": "codex_entries"
+        }
+      ]
+    },
+    {
+      "name": "technology",
+      "entries": [
+        {
+          "line_id": "L0249",
+          "language": "pl",
+          "speaker_id": "CHR_MAJA",
+          "text": "Uwaga: <b>reaktor</b> traci moc.",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_pl"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0250",
+          "language": "ja",
+          "speaker_id": "CHR_AKIRA",
+          "text": "%PLAYER_NAME% は中央通路へ移動してください。",
+          "voice_link": "audio/voice_L0250.wav",
+          "tags": [
+            "codex_entries",
+            "lang_ja"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0251",
+          "language": "tr",
+          "speaker_id": "CHR_EMRE",
+          "text": "Kapak acmak icin [E] tusuna bas.",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_tr"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0252",
+          "language": "ko",
+          "speaker_id": "CHR_HANA",
+          "text": "경고: <b>반응로</b> 온도가 상승합니다.",
+          "voice_link": "audio/voice_L0252.wav",
+          "tags": [
+            "codex_entries",
+            "lang_ko"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0253",
+          "language": "zh",
+          "speaker_id": "CHR_SANTIAGO",
+          "text": "%PLAYER_NAME%请前往中央平台。",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_zh"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0254",
+          "language": "en",
+          "speaker_id": "CHR_AELA",
+          "text": "Warning: <b>reactor</b> heat reached 978.",
+          "voice_link": "audio/voice_L0254.wav",
+          "tags": [
+            "codex_entries",
+            "lang_en"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0255",
+          "language": "fr",
+          "speaker_id": "CHR_LUCIEN",
+          "text": "Bonjour, la mission commence dans la zone 985.",
+          "voice_link": "audio/voice_L0255.wav",
+          "tags": [
+            "codex_entries",
+            "lang_fr"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0256",
+          "language": "de",
+          "speaker_id": "CHR_GRETA",
+          "text": "Hallo, die Mission im Korridor 992 beginnt jetzt.",
+          "voice_link": "audio/voice_L0256.wav",
+          "tags": [
+            "codex_entries",
+            "lang_de"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0257",
+          "language": "es",
+          "speaker_id": "CHR_SANTIAGO",
+          "text": "El comerciante espera a %PLAYER_NAME% en la plaza.",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_es"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0258",
+          "language": "it",
+          "speaker_id": "CHR_VIOLA",
+          "text": "Ciao, la missione richiede accesso al livello 106.",
+          "voice_link": "audio/voice_L0258.wav",
+          "tags": [
+            "codex_entries",
+            "lang_it"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0259",
+          "language": "pt",
+          "speaker_id": "CHR_DUARTE",
+          "text": "Ola, a missao principal muda no setor 113.",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_pt"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0260",
+          "language": "pl",
+          "speaker_id": "CHR_MAJA",
+          "text": "Nacisnij [E], aby otworzyc wlaz.",
+          "voice_link": "audio/voice_L0260.wav",
+          "tags": [
+            "codex_entries",
+            "lang_pl"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0261",
+          "language": "ja",
+          "speaker_id": "CHR_AKIRA",
+          "text": "警告：<b>リアクター</b>温度が上昇中です。",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_ja"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0262",
+          "language": "tr",
+          "speaker_id": "CHR_EMRE",
+          "text": "Kapak acmak icin [E] tusuna bas.",
+          "voice_link": "audio/voice_L0262.wav",
+          "tags": [
+            "codex_entries",
+            "lang_tr"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0263",
+          "language": "ko",
+          "speaker_id": "CHR_HANA",
+          "text": "경고: <b>반응로</b> 온도가 상승합니다.",
+          "voice_link": "",
+          "tags": [
+            "codex_entries",
+            "lang_ko"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0264",
+          "language": "zh",
+          "speaker_id": "CHR_VIOLA",
+          "text": "任务将在区域148开始。",
+          "voice_link": "audio/voice_L0264.wav",
+          "tags": [
+            "codex_entries",
+            "lang_zh"
+          ],
+          "context": "codex_entries"
+        },
+        {
+          "line_id": "L0265",
+          "language": "en",
+          "speaker_id": "CHR_AELA",
+          "text": "Press [E] to activate beacon %PLAYER_NAME%.",
+          "voice_link": "audio/voice_L0265.wav",
+          "tags": [
+            "codex_entries",
+            "lang_en"
+          ],
+          "context": "codex_entries"
+        }
+      ]
+    }
+  ]
+}

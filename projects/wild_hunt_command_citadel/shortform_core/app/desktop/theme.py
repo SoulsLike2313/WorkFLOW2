@@ -122,7 +122,7 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
 
     QLabel#AppTitle {{
         font-family: '{tokens.typography['display']}';
-        font-size: 18px;
+        font-size: 17px;
         font-weight: 570;
         letter-spacing: 0.15px;
         color: {c['primary_text']};
@@ -363,7 +363,93 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         border-top: 1px solid rgba(233, 216, 255, 0.34);
     }}
 
+    QFrame#ProfilesIdentityBlock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(33, 47, 75, 0.99), stop:0.52 rgba(23, 34, 56, 0.99), stop:1 rgba(16, 24, 40, 0.99));
+        border: 1px solid rgba(195, 164, 255, 0.28);
+        border-top: 1px solid rgba(238, 223, 255, 0.40);
+        border-bottom: 1px solid rgba(8, 12, 20, 0.80);
+    }}
+
+    QLabel#ProfilesAvatar {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(144, 111, 235, 0.92), stop:1 rgba(102, 78, 177, 0.92));
+        border: 1px solid rgba(228, 211, 255, 0.54);
+        border-top: 1px solid rgba(244, 233, 255, 0.62);
+        border-radius: 26px;
+        color: rgba(251, 246, 255, 0.98);
+        font-family: '{tokens.typography['display']}';
+        font-size: 15px;
+        font-weight: 620;
+    }}
+
+    QLabel#ProfilesIdentityName {{
+        color: rgba(239, 244, 255, 0.98);
+        font-family: '{tokens.typography['title']}';
+        font-size: 17px;
+        font-weight: 570;
+        letter-spacing: 0.10px;
+    }}
+
+    QLabel#ProfilesIdentityMeta {{
+        color: rgba(193, 205, 235, 0.96);
+        font-family: '{tokens.typography['label']}';
+        font-size: 12px;
+        font-weight: 470;
+        line-height: 1.36em;
+    }}
+
+    QLabel#ProfilesIdentityAux {{
+        color: rgba(174, 187, 219, 0.95);
+        font-family: '{tokens.typography['label']}';
+        font-size: 12px;
+        font-weight: 440;
+        line-height: 1.36em;
+    }}
+
+    QLabel[profileStateChip='true'] {{
+        border-radius: 11px;
+        padding: 5px 10px;
+        font-family: '{tokens.typography['label']}';
+        font-size: 12px;
+        font-weight: 520;
+        color: rgba(231, 238, 255, 0.97);
+        border: 1px solid rgba(182, 151, 255, 0.30);
+        border-top: 1px solid rgba(229, 213, 255, 0.38);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(39, 55, 86, 0.58), stop:1 rgba(24, 36, 58, 0.52));
+    }}
+
+    QLabel[profileStateLevel='ok'] {{
+        border-color: rgba(103, 230, 183, 0.44);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(44, 101, 84, 0.46), stop:1 rgba(29, 67, 55, 0.40));
+    }}
+
+    QLabel[profileStateLevel='warn'] {{
+        border-color: rgba(255, 194, 114, 0.45);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(112, 84, 38, 0.42), stop:1 rgba(82, 60, 26, 0.36));
+    }}
+
+    QLabel[profileStateLevel='danger'] {{
+        border-color: rgba(255, 142, 171, 0.44);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(110, 44, 63, 0.40), stop:1 rgba(80, 32, 46, 0.34));
+    }}
+
+    QLabel[profileStateLevel='info'] {{
+        border-color: rgba(148, 216, 255, 0.45);
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(48, 93, 124, 0.40), stop:1 rgba(33, 66, 91, 0.34));
+    }}
+
     QFrame#ProfilesQuickActionsBlock QPushButton[profilesQuickAction='true'] {{
+        min-height: 40px;
+        border-radius: 14px;
+    }}
+
+    QFrame#ProfilesIdentityBlock QPushButton[profilesSelectedAction='true'] {{
         min-height: 40px;
         border-radius: 14px;
     }}
@@ -579,9 +665,9 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     QListWidget#AnalyticsWeakList::item,
     QListWidget#AnalyticsPatternsList::item,
     QListWidget#AnalyticsRecommendationList::item {{
-        padding: 10px 11px;
+        padding: 12px 13px;
         border-radius: 11px;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
         border: 1px solid transparent;
     }}
 
@@ -660,6 +746,12 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         margin-bottom: 2px;
     }}
 
+    QLabel#CardValue[cardValueDense='true'] {{
+        font-size: 22px;
+        font-weight: 540;
+        letter-spacing: 0.10px;
+    }}
+
     QLabel#CardMeta {{
         color: rgba(154, 165, 194, 0.95);
         font-family: '{tokens.typography['label']}';
@@ -702,7 +794,7 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
             stop:0 rgba(35, 49, 77, 0.94), stop:1 rgba(21, 30, 49, 0.95));
         color: {c['primary_text']};
         font-family: '{tokens.typography['label']}';
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 520;
     }}
 
@@ -803,11 +895,11 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         color: {c['primary_text']};
         selection-background-color: rgba(143, 109, 255, 0.25);
         selection-color: {c['primary_text']};
-        padding: 4px;
+        padding: 6px;
     }}
 
     QListWidget::item, QTableWidget::item {{
-        padding: 7px 8px;
+        padding: 8px 10px;
         font-family: '{tokens.typography['label']}';
         font-size: 12px;
         color: rgba(232, 238, 255, 0.94);
@@ -826,14 +918,14 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
             stop:0 rgba(13, 20, 33, 0.98), stop:1 rgba(9, 14, 24, 0.98));
         border: 1px solid rgba(149, 116, 224, 0.12);
         border-top: 1px solid rgba(202, 183, 252, 0.20);
-        padding: 6px;
+        padding: 8px;
     }}
 
     QListWidget#DashboardAuditList::item,
     QListWidget#DashboardRecommendationList::item {{
-        padding: 10px 11px;
+        padding: 12px 13px;
         border-radius: 11px;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
         border: 1px solid transparent;
     }}
 
@@ -857,9 +949,9 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
 
     QListWidget#AIRecommendationList::item,
     QListWidget#AIBundleList::item {{
-        padding: 10px 11px;
+        padding: 12px 13px;
         border-radius: 11px;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
         border: 1px solid transparent;
     }}
 
@@ -897,17 +989,17 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         font-size: 12px;
         border: 0px;
         border-bottom: 1px solid rgba(154, 116, 255, 0.22);
-        padding: 9px;
+        padding: 10px;
         font-weight: 560;
     }}
 
     QLabel[statusPill='true'] {{
         border-radius: 12px;
-        padding: 6px 12px;
-        font-size: 12px;
+        padding: 5px 10px;
+        font-size: 11px;
         font-family: '{tokens.typography['label']}';
         font-weight: 520;
-        min-width: 96px;
+        min-width: 74px;
         border: 1px solid rgba(174, 143, 247, 0.14);
         border-top: 1px solid rgba(223, 207, 255, 0.22);
         background: qlineargradient(x1:0, y1:0, x2:0, y2:1,

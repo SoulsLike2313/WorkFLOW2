@@ -1,0 +1,226 @@
+banter:
+- line_id: L0296
+  language: ko
+  speaker_id: CHR_HANA
+  text: '[E] 키를 눌러 문을 여세요.'
+  voice_link: audio/voice_L0296.wav
+  tags:
+  - npc_banter
+  - lang_ko
+  context: npc_banter
+- line_id: L0297
+  language: zh
+  speaker_id: CHR_AKIRA
+  text: '%PLAYER_NAME%请前往中央平台。'
+  voice_link: ''
+  tags:
+  - npc_banter
+  - lang_zh
+  context: npc_banter
+- line_id: L0298
+  language: en
+  speaker_id: CHR_AELA
+  text: Shop is open, bring 3 crystal shards.
+  voice_link: audio/voice_L0298.wav
+  tags:
+  - npc_banter
+  - lang_en
+  context: npc_banter
+- line_id: L0299
+  language: fr
+  speaker_id: CHR_LUCIEN
+  text: Bonjour, la mission commence dans la zone 393.
+  voice_link: ''
+  tags:
+  - npc_banter
+  - lang_fr
+  context: npc_banter
+- line_id: L0300
+  language: de
+  speaker_id: CHR_GRETA
+  text: Hallo, die Mission im Korridor 400 beginnt jetzt.
+  voice_link: audio/voice_L0300.wav
+  tags:
+  - npc_banter
+  - lang_de
+  context: npc_banter
+- line_id: L0301
+  language: es
+  speaker_id: CHR_SANTIAGO
+  text: Hola, la mision secundaria empieza en nodo 407.
+  voice_link: ''
+  tags:
+  - npc_banter
+  - lang_es
+  context: npc_banter
+- line_id: L0302
+  language: it
+  speaker_id: CHR_VIOLA
+  text: Premi [E] per confermare il percorso.
+  voice_link: audio/voice_L0302.wav
+  tags:
+  - npc_banter
+  - lang_it
+  context: npc_banter
+- line_id: L0303
+  language: pt
+  speaker_id: CHR_DUARTE
+  text: Ola, a missao principal muda no setor 421.
+  voice_link: ''
+  tags:
+  - npc_banter
+  - lang_pt
+  context: npc_banter
+- line_id: L0304
+  language: pl
+  speaker_id: CHR_MAJA
+  text: 'Uwaga: <b>reaktor</b> traci moc.'
+  voice_link: audio/voice_L0304.wav
+  tags:
+  - npc_banter
+  - lang_pl
+  context: npc_banter
+- line_id: L0305
+  language: ja
+  speaker_id: CHR_AKIRA
+  text: '[E]を押してゲートを開いてください。'
+  voice_link: audio/voice_L0305.wav
+  tags:
+  - npc_banter
+  - lang_ja
+  context: npc_banter
+- line_id: L0306
+  language: tr
+  speaker_id: CHR_EMRE
+  text: Dukkan %PLAYER_NAME% icin malzeme ayirdi.
+  voice_link: audio/voice_L0306.wav
+  tags:
+  - npc_banter
+  - lang_tr
+  context: npc_banter
+- line_id: L0307
+  language: ko
+  speaker_id: CHR_HANA
+  text: '[E] 키를 눌러 문을 여세요.'
+  voice_link: ''
+  tags:
+  - npc_banter
+  - lang_ko
+  context: npc_banter
+- line_id: L0308
+  language: zh
+  speaker_id: CHR_EMRE
+  text: 任务将在区域456开始。
+  voice_link: audio/voice_L0308.wav
+  tags:
+  - npc_banter
+  - lang_zh
+  context: npc_banter
+- line_id: L0309
+  language: en
+  speaker_id: CHR_AELA
+  text: 'Warning: <b>reactor</b> heat reached 463.'
+  voice_link: ''
+  tags:
+  - npc_banter
+  - lang_en
+  context: npc_banter
+- line_id: L0310
+  language: fr
+  speaker_id: CHR_LUCIEN
+  text: Le marchand attend %PLAYER_NAME% au pont central.
+  voice_link: audio/voice_L0310.wav
+  tags:
+  - npc_banter
+  - lang_fr
+  context: npc_banter
+- line_id: L0311
+  language: de
+  speaker_id: CHR_GRETA
+  text: Hallo, die Mission im Korridor 477 beginnt jetzt.
+  voice_link: ''
+  tags:
+  - npc_banter
+  - lang_de
+  context: npc_banter
+- line_id: L0312
+  language: es
+  speaker_id: CHR_SANTIAGO
+  text: 'Peligro: el <b>motor</b> pierde energia.'
+  voice_link: audio/voice_L0312.wav
+  tags:
+  - npc_banter
+  - lang_es
+  context: npc_banter
+- line_id: L0313
+  language: it
+  speaker_id: CHR_VIOLA
+  text: Premi [E] per confermare il percorso.
+  voice_link: ''
+  tags:
+  - npc_banter
+  - lang_it
+  context: npc_banter
+- line_id: L0314
+  language: pt
+  speaker_id: CHR_DUARTE
+  text: Pressione [E] para destravar o painel.
+  voice_link: audio/voice_L0314.wav
+  tags:
+  - npc_banter
+  - lang_pt
+  context: npc_banter
+- line_id: L0315
+  language: pl
+  speaker_id: CHR_MAJA
+  text: Czesc, misja boczna jest przy punkcie 505.
+  voice_link: audio/voice_L0315.wav
+  tags:
+  - npc_banter
+  - lang_pl
+  context: npc_banter
+- line_id: L0316
+  language: ja
+  speaker_id: CHR_AKIRA
+  text: 警告：<b>リアクター</b>温度が上昇中です。
+  voice_link: audio/voice_L0316.wav
+  tags:
+  - npc_banter
+  - lang_ja
+  context: npc_banter
+- line_id: L0317
+  language: tr
+  speaker_id: CHR_EMRE
+  text: Dukkan %PLAYER_NAME% icin malzeme ayirdi.
+  voice_link: ''
+  tags:
+  - npc_banter
+  - lang_tr
+  context: npc_banter
+- line_id: L0318
+  language: ko
+  speaker_id: CHR_HANA
+  text: '[E] 키를 눌러 문을 여세요.'
+  voice_link: audio/voice_L0318.wav
+  tags:
+  - npc_banter
+  - lang_ko
+  context: npc_banter
+- line_id: L0319
+  language: zh
+  speaker_id: CHR_HANA
+  text: 按下[E]打开控制台。
+  voice_link: ''
+  tags:
+  - npc_banter
+  - lang_zh
+  context: npc_banter
+- line_id: L0320
+  language: en
+  speaker_id: CHR_AELA
+  text: Press [E] to activate beacon %PLAYER_NAME%.
+  voice_link: audio/voice_L0320.wav
+  tags:
+  - npc_banter
+  - lang_en
+  context: npc_banter

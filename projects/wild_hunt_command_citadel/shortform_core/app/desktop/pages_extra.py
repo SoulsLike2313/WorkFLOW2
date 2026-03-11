@@ -48,10 +48,10 @@ def _safe_dict(value: Any) -> dict[str, Any]:
 def _ru_gate(value: str) -> str:
     mapping = {
         "PASS": "PASS",
-        "PASS_WITH_WARNINGS": "PASS с предупреждениями",
+        "PASS_WITH_WARNINGS": "PASS+",
         "FAIL": "FAIL",
-        "unknown": "неизвестно",
-        "UNKNOWN": "неизвестно",
+        "unknown": "н/д",
+        "UNKNOWN": "н/д",
     }
     return mapping.get(value, value)
 
@@ -114,8 +114,11 @@ class AuditPage(BasePage):
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.table.setWordWrap(False)
+        self.table.setTextElideMode(Qt.TextElideMode.ElideRight)
         self.table.horizontalHeader().setStretchLastSection(True)
-        self.table.horizontalHeader().setDefaultSectionSize(130)
+        self.table.horizontalHeader().setDefaultSectionSize(118)
+        self.table.horizontalHeader().setMinimumSectionSize(84)
         self.table.setObjectName("AuditTimelineTable")
         timeline_layout.addWidget(self.table)
         layout.addWidget(timeline_card, stretch=1)
@@ -200,7 +203,7 @@ class UpdatesPage(BasePage):
         actions = QGridLayout()
         actions.setHorizontalSpacing(GRID_GAP)
         actions.setVerticalSpacing(GRID_GAP)
-        check_btn = MotionButton("Проверить обновления")
+        check_btn = MotionButton("Проверить апдейты")
         check_btn.setObjectName("PrimaryCTA")
         check_btn.setMinimumHeight(ACTION_BUTTON_HEIGHT)
         check_btn.setMinimumWidth(PRIMARY_ACTION_MIN_WIDTH)

@@ -1,0 +1,31 @@
+line_id,language,speaker_id,text,voice_link,tags,context
+L0266,fr,CHR_LUCIEN,Le marchand attend %PLAYER_NAME% au pont central.,audio/voice_L0266.wav,"['radio_chatter', 'lang_fr']",radio_chatter
+L0267,de,CHR_GRETA,Achtung: der <b>Reaktor</b> ist nicht stabil.,,"['radio_chatter', 'lang_de']",radio_chatter
+L0268,es,CHR_SANTIAGO,Pulsa [E] para abrir la compuerta.,audio/voice_L0268.wav,"['radio_chatter', 'lang_es']",radio_chatter
+L0269,it,CHR_VIOLA,Il negozio offre sconti per %PLAYER_NAME%.,,"['radio_chatter', 'lang_it']",radio_chatter
+L0270,pt,CHR_DUARTE,Perigo: o <b>nucleo</b> esta sobrecarga.,audio/voice_L0270.wav,"['radio_chatter', 'lang_pt']",radio_chatter
+L0271,pl,CHR_MAJA,"Czesc, misja boczna jest przy punkcie 197.",,"['radio_chatter', 'lang_pl']",radio_chatter
+L0272,ja,CHR_AKIRA,警告：<b>リアクター</b>温度が上昇中です。,audio/voice_L0272.wav,"['radio_chatter', 'lang_ja']",radio_chatter
+L0273,tr,CHR_EMRE,"Merhaba, gorev 211 bolgesinde basliyor.",,"['radio_chatter', 'lang_tr']",radio_chatter
+L0274,ko,CHR_HANA,[E] 키를 눌러 문을 여세요.,audio/voice_L0274.wav,"['radio_chatter', 'lang_ko']",radio_chatter
+L0275,zh,CHR_DUARTE,警告：<b>反应堆</b>温度过高。,audio/voice_L0275.wav,"['radio_chatter', 'lang_zh']",radio_chatter
+L0276,en,CHR_AELA,"Commander, the gate in Sector 232 is unstable.",audio/voice_L0276.wav,"['radio_chatter', 'lang_en']",radio_chatter
+L0277,fr,CHR_LUCIEN,"Bonjour, la mission commence dans la zone 239.",,"['radio_chatter', 'lang_fr']",radio_chatter
+L0278,de,CHR_GRETA,"Druecke [E], um das Modul zu starten.",audio/voice_L0278.wav,"['radio_chatter', 'lang_de']",radio_chatter
+L0279,es,CHR_SANTIAGO,Peligro: el <b>motor</b> pierde energia.,,"['radio_chatter', 'lang_es']",radio_chatter
+L0280,it,CHR_VIOLA,Pericolo: il <b>reattore</b> vibra troppo.,audio/voice_L0280.wav,"['radio_chatter', 'lang_it']",radio_chatter
+L0281,pt,CHR_DUARTE,Pressione [E] para destravar o painel.,,"['radio_chatter', 'lang_pt']",radio_chatter
+L0282,pl,CHR_MAJA,Uwaga: <b>reaktor</b> traci moc.,audio/voice_L0282.wav,"['radio_chatter', 'lang_pl']",radio_chatter
+L0283,ja,CHR_AKIRA,[E]を押してゲートを開いてください。,,"['radio_chatter', 'lang_ja']",radio_chatter
+L0284,tr,CHR_EMRE,Tehlike: <b>reaktor</b> dengesiz durumda.,audio/voice_L0284.wav,"['radio_chatter', 'lang_tr']",radio_chatter
+L0285,ko,CHR_HANA,%PLAYER_NAME% 는 중앙 통로로 이동하세요.,audio/voice_L0285.wav,"['radio_chatter', 'lang_ko']",radio_chatter
+L0286,zh,CHR_MAJA,警告：<b>反应堆</b>温度过高。,audio/voice_L0286.wav,"['radio_chatter', 'lang_zh']",radio_chatter
+L0287,en,CHR_AELA,"Commander, the gate in Sector 309 is unstable.",,"['radio_chatter', 'lang_en']",radio_chatter
+L0288,fr,CHR_LUCIEN,"Bonjour, la mission commence dans la zone 316.",audio/voice_L0288.wav,"['radio_chatter', 'lang_fr']",radio_chatter
+L0289,de,CHR_GRETA,Bitte bringe %PLAYER_NAME% zum Handelsposten.,,"['radio_chatter', 'lang_de']",radio_chatter
+L0290,es,CHR_SANTIAGO,Peligro: el <b>motor</b> pierde energia.,audio/voice_L0290.wav,"['radio_chatter', 'lang_es']",radio_chatter
+L0291,it,CHR_VIOLA,"Ciao, la missione richiede accesso al livello 337.",,"['radio_chatter', 'lang_it']",radio_chatter
+L0292,pt,CHR_DUARTE,"Ola, a missao principal muda no setor 344.",audio/voice_L0292.wav,"['radio_chatter', 'lang_pt']",radio_chatter
+L0293,pl,CHR_MAJA,Uwaga: <b>reaktor</b> traci moc.,,"['radio_chatter', 'lang_pl']",radio_chatter
+L0294,ja,CHR_AKIRA,[E]を押してゲートを開いてください。,audio/voice_L0294.wav,"['radio_chatter', 'lang_ja']",radio_chatter
+L0295,tr,CHR_EMRE,Tehlike: <b>reaktor</b> dengesiz durumda.,audio/voice_L0295.wav,"['radio_chatter', 'lang_tr']",radio_chatter

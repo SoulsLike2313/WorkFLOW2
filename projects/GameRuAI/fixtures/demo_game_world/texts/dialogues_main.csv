@@ -1,0 +1,61 @@
+line_id,language,speaker_id,text,voice_link,tags,context
+L0036,de,CHR_GRETA,"Hallo, die Mission im Korridor 352 beginnt jetzt.",audio/voice_L0036.wav,"['dialogues_main', 'lang_de']",dialogues_main
+L0037,es,CHR_SANTIAGO,El comerciante espera a %PLAYER_NAME% en la plaza.,,"['dialogues_main', 'lang_es']",dialogues_main
+L0038,it,CHR_VIOLA,"Ciao, la missione richiede accesso al livello 366.",audio/voice_L0038.wav,"['dialogues_main', 'lang_it']",dialogues_main
+L0039,pt,CHR_DUARTE,A loja guarda itens para %PLAYER_NAME%.,,"['dialogues_main', 'lang_pt']",dialogues_main
+L0040,pl,CHR_MAJA,"Czesc, misja boczna jest przy punkcie 380.",audio/voice_L0040.wav,"['dialogues_main', 'lang_pl']",dialogues_main
+L0041,ja,CHR_AKIRA,警告：<b>リアクター</b>温度が上昇中です。,,"['dialogues_main', 'lang_ja']",dialogues_main
+L0042,tr,CHR_EMRE,Tehlike: <b>reaktor</b> dengesiz durumda.,audio/voice_L0042.wav,"['dialogues_main', 'lang_tr']",dialogues_main
+L0043,ko,CHR_HANA,[E] 키를 눌러 문을 여세요.,,"['dialogues_main', 'lang_ko']",dialogues_main
+L0044,zh,CHR_VIOLA,任务将在区域408开始。,audio/voice_L0044.wav,"['dialogues_main', 'lang_zh']",dialogues_main
+L0045,en,CHR_AELA,"Commander, the gate in Sector 415 is unstable.",audio/voice_L0045.wav,"['dialogues_main', 'lang_en']",dialogues_main
+L0046,fr,CHR_LUCIEN,Appuie sur [E] pour ouvrir le terminal.,audio/voice_L0046.wav,"['dialogues_main', 'lang_fr']",dialogues_main
+L0047,de,CHR_GRETA,Achtung: der <b>Reaktor</b> ist nicht stabil.,,"['dialogues_main', 'lang_de']",dialogues_main
+L0048,es,CHR_SANTIAGO,"Hola, la mision secundaria empieza en nodo 436.",audio/voice_L0048.wav,"['dialogues_main', 'lang_es']",dialogues_main
+L0049,it,CHR_VIOLA,Premi [E] per confermare il percorso.,,"['dialogues_main', 'lang_it']",dialogues_main
+L0050,pt,CHR_DUARTE,"Ola, a missao principal muda no setor 450.",audio/voice_L0050.wav,"['dialogues_main', 'lang_pt']",dialogues_main
+L0051,pl,CHR_MAJA,Kupiec czeka na %PLAYER_NAME% przy rynku.,,"['dialogues_main', 'lang_pl']",dialogues_main
+L0052,ja,CHR_AKIRA,警告：<b>リアクター</b>温度が上昇中です。,audio/voice_L0052.wav,"['dialogues_main', 'lang_ja']",dialogues_main
+L0053,tr,CHR_EMRE,Dukkan %PLAYER_NAME% icin malzeme ayirdi.,,"['dialogues_main', 'lang_tr']",dialogues_main
+L0054,ko,CHR_HANA,경고: <b>반응로</b> 온도가 상승합니다.,audio/voice_L0054.wav,"['dialogues_main', 'lang_ko']",dialogues_main
+L0055,zh,CHR_DUARTE,按下[E]打开控制台。,audio/voice_L0055.wav,"['dialogues_main', 'lang_zh']",dialogues_main
+L0056,en,CHR_AELA,Warning: <b>reactor</b> heat reached 492.,audio/voice_L0056.wav,"['dialogues_main', 'lang_en']",dialogues_main
+L0057,fr,CHR_LUCIEN,Le marchand attend %PLAYER_NAME% au pont central.,,"['dialogues_main', 'lang_fr']",dialogues_main
+L0058,de,CHR_GRETA,"Druecke [E], um das Modul zu starten.",audio/voice_L0058.wav,"['dialogues_main', 'lang_de']",dialogues_main
+L0059,es,CHR_SANTIAGO,Peligro: el <b>motor</b> pierde energia.,,"['dialogues_main', 'lang_es']",dialogues_main
+L0060,it,CHR_VIOLA,"Ciao, la missione richiede accesso al livello 520.",audio/voice_L0060.wav,"['dialogues_main', 'lang_it']",dialogues_main
+L0061,pt,CHR_DUARTE,Pressione [E] para destravar o painel.,,"['dialogues_main', 'lang_pt']",dialogues_main
+L0062,pl,CHR_MAJA,"Nacisnij [E], aby otworzyc wlaz.",audio/voice_L0062.wav,"['dialogues_main', 'lang_pl']",dialogues_main
+L0063,ja,CHR_AKIRA,[E]を押してゲートを開いてください。,,"['dialogues_main', 'lang_ja']",dialogues_main
+L0064,tr,CHR_EMRE,Dukkan %PLAYER_NAME% icin malzeme ayirdi.,audio/voice_L0064.wav,"['dialogues_main', 'lang_tr']",dialogues_main
+L0065,ko,CHR_HANA,%PLAYER_NAME% 는 중앙 통로로 이동하세요.,audio/voice_L0065.wav,"['dialogues_main', 'lang_ko']",dialogues_main
+L0066,zh,CHR_MAJA,警告：<b>反应堆</b>温度过高。,audio/voice_L0066.wav,"['dialogues_main', 'lang_zh']",dialogues_main
+L0067,en,CHR_AELA,Press [E] to activate beacon %PLAYER_NAME%.,,"['dialogues_main', 'lang_en']",dialogues_main
+L0068,fr,CHR_LUCIEN,Le marchand attend %PLAYER_NAME% au pont central.,audio/voice_L0068.wav,"['dialogues_main', 'lang_fr']",dialogues_main
+L0069,de,CHR_GRETA,"Hallo, die Mission im Korridor 583 beginnt jetzt.",,"['dialogues_main', 'lang_de']",dialogues_main
+L0070,es,CHR_SANTIAGO,Pulsa [E] para abrir la compuerta.,audio/voice_L0070.wav,"['dialogues_main', 'lang_es']",dialogues_main
+L0071,it,CHR_VIOLA,"Ciao, la missione richiede accesso al livello 597.",,"['dialogues_main', 'lang_it']",dialogues_main
+L0072,pt,CHR_DUARTE,Perigo: o <b>nucleo</b> esta sobrecarga.,audio/voice_L0072.wav,"['dialogues_main', 'lang_pt']",dialogues_main
+L0073,pl,CHR_MAJA,Kupiec czeka na %PLAYER_NAME% przy rynku.,,"['dialogues_main', 'lang_pl']",dialogues_main
+L0074,ja,CHR_AKIRA,警告：<b>リアクター</b>温度が上昇中です。,audio/voice_L0074.wav,"['dialogues_main', 'lang_ja']",dialogues_main
+L0075,tr,CHR_EMRE,"Merhaba, gorev 625 bolgesinde basliyor.",audio/voice_L0075.wav,"['dialogues_main', 'lang_tr']",dialogues_main
+L0076,ko,CHR_HANA,[E] 키를 눌러 문을 여세요.,audio/voice_L0076.wav,"['dialogues_main', 'lang_ko']",dialogues_main
+L0077,zh,CHR_AKIRA,警告：<b>反应堆</b>温度过高。,,"['dialogues_main', 'lang_zh']",dialogues_main
+L0078,en,CHR_AELA,Press [E] to activate beacon %PLAYER_NAME%.,audio/voice_L0078.wav,"['dialogues_main', 'lang_en']",dialogues_main
+L0079,fr,CHR_LUCIEN,Alerte: le signal <b>orbital</b> chute vite.,,"['dialogues_main', 'lang_fr']",dialogues_main
+L0080,de,CHR_GRETA,Bitte bringe %PLAYER_NAME% zum Handelsposten.,audio/voice_L0080.wav,"['dialogues_main', 'lang_de']",dialogues_main
+L0081,es,CHR_SANTIAGO,El comerciante espera a %PLAYER_NAME% en la plaza.,,"['dialogues_main', 'lang_es']",dialogues_main
+L0082,it,CHR_VIOLA,Premi [E] per confermare il percorso.,audio/voice_L0082.wav,"['dialogues_main', 'lang_it']",dialogues_main
+L0083,pt,CHR_DUARTE,Perigo: o <b>nucleo</b> esta sobrecarga.,,"['dialogues_main', 'lang_pt']",dialogues_main
+L0084,pl,CHR_MAJA,"Nacisnij [E], aby otworzyc wlaz.",audio/voice_L0084.wav,"['dialogues_main', 'lang_pl']",dialogues_main
+L0085,ja,CHR_AKIRA,[E]を押してゲートを開いてください。,audio/voice_L0085.wav,"['dialogues_main', 'lang_ja']",dialogues_main
+L0086,tr,CHR_EMRE,Tehlike: <b>reaktor</b> dengesiz durumda.,audio/voice_L0086.wav,"['dialogues_main', 'lang_tr']",dialogues_main
+L0087,ko,CHR_HANA,%PLAYER_NAME% 는 중앙 통로로 이동하세요.,,"['dialogues_main', 'lang_ko']",dialogues_main
+L0088,zh,CHR_EMRE,%PLAYER_NAME%请前往中央平台。,audio/voice_L0088.wav,"['dialogues_main', 'lang_zh']",dialogues_main
+L0089,en,CHR_AELA,Warning: <b>reactor</b> heat reached 723.,,"['dialogues_main', 'lang_en']",dialogues_main
+L0090,fr,CHR_LUCIEN,Appuie sur [E] pour ouvrir le terminal.,audio/voice_L0090.wav,"['dialogues_main', 'lang_fr']",dialogues_main
+L0091,de,CHR_GRETA,"Druecke [E], um das Modul zu starten.",,"['dialogues_main', 'lang_de']",dialogues_main
+L0092,es,CHR_SANTIAGO,El comerciante espera a %PLAYER_NAME% en la plaza.,audio/voice_L0092.wav,"['dialogues_main', 'lang_es']",dialogues_main
+L0093,it,CHR_VIOLA,"Ciao, la missione richiede accesso al livello 751.",,"['dialogues_main', 'lang_it']",dialogues_main
+L0094,pt,CHR_DUARTE,"Ola, a missao principal muda no setor 758.",audio/voice_L0094.wav,"['dialogues_main', 'lang_pt']",dialogues_main
+L0095,pl,CHR_MAJA,"Czesc, misja boczna jest przy punkcie 765.",audio/voice_L0095.wav,"['dialogues_main', 'lang_pl']",dialogues_main

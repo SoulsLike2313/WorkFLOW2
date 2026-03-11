@@ -7,6 +7,7 @@ from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
     QFrame,
     QGraphicsDropShadowEffect,
+    QGridLayout,
     QHBoxLayout,
     QLabel,
     QPushButton,
@@ -131,7 +132,7 @@ class StatusPill(QLabel):
         super().__init__(text)
         self.setProperty("statusPill", "true")
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.setMinimumHeight(26)
+        self.setMinimumHeight(28)
         self._level = level
         self._shadow = QGraphicsDropShadowEffect(self)
         self._shadow.setOffset(0, 0)
@@ -278,10 +279,13 @@ class MetricCard(GlowCard):
 
         self.title = QLabel(title)
         self.title.setObjectName("CardTitle")
+        self.title.setWordWrap(True)
         self.value = QLabel(value)
         self.value.setObjectName("CardValue")
+        self.value.setProperty("cardValueDense", "false")
         self.meta = QLabel(meta)
         self.meta.setObjectName("CardMeta")
+        self.meta.setWordWrap(True)
 
         layout.addWidget(self.title)
         layout.addWidget(self.value)
@@ -291,6 +295,12 @@ class MetricCard(GlowCard):
     def set_data(self, value: str, meta: str = "") -> None:
         self.value.setText(value)
         self.meta.setText(meta)
+        dense = len(value) > 7 or any(ch.isalpha() for ch in value)
+        target = "true" if dense else "false"
+        if self.value.property("cardValueDense") != target:
+            self.value.setProperty("cardValueDense", target)
+            self.value.style().unpolish(self.value)
+            self.value.style().polish(self.value)
 
 
 class SectionHeader(QWidget):
@@ -302,10 +312,12 @@ class SectionHeader(QWidget):
 
         self.title = QLabel(title)
         self.title.setObjectName("SectionTitle")
+        self.title.setWordWrap(True)
         layout.addWidget(self.title)
 
         self.hint = QLabel(hint)
         self.hint.setObjectName("SectionHint")
+        self.hint.setWordWrap(True)
         self.hint.setVisible(bool(hint))
         layout.addWidget(self.hint)
 
@@ -320,12 +332,12 @@ class TopStatusBar(GlowCard):
     def __init__(self) -> None:
         super().__init__(elevated=False)
         self.setObjectName("TopStatusBar")
-        self.setMinimumHeight(76)
+        self.setMinimumHeight(88)
         self._is_loading = False
 
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(22, 15, 22, 15)
-        layout.setSpacing(12)
+        layout.setContentsMargins(20, 12, 20, 12)
+        layout.setSpacing(14)
 
         self.pills: dict[str, StatusPill] = {
             "profiles": StatusPill("профили: --", "info"),
@@ -336,14 +348,23 @@ class TopStatusBar(GlowCard):
             "runtime": StatusPill("система: --", "info"),
             "alerts": StatusPill("сигналы: --", "warn"),
         }
-        for pill in self.pills.values():
-            layout.addWidget(pill)
+        pill_grid = QGridLayout()
+        pill_grid.setHorizontalSpacing(8)
+        pill_grid.setVerticalSpacing(8)
+        order = ["profiles", "sessions", "queue", "verification", "ai", "runtime", "alerts"]
+        for idx, key in enumerate(order):
+            row = 0 if idx < 4 else 1
+            col = idx if idx < 4 else idx - 4
+            self.pills[key].setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+            pill_grid.addWidget(self.pills[key], row, col)
+        pill_grid.setColumnStretch(3, 1)
+        layout.addLayout(pill_grid, stretch=1)
 
-        layout.addStretch(1)
         self.refresh_button = MotionButton("Обновить данные")
         self.refresh_button.setObjectName("PrimaryCTA")
         self.refresh_button.setMinimumHeight(40)
-        self.refresh_button.setMinimumWidth(164)
+        self.refresh_button.setMinimumWidth(156)
+        self.refresh_button.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
         self.refresh_button.clicked.connect(self.refresh_requested.emit)
         layout.addWidget(self.refresh_button)
 
@@ -375,9 +396,9 @@ class TopStatusBar(GlowCard):
         runtime_map = {"ready": "готова", "degraded": "ограничена"}
         verify_map = {
             "PASS": "PASS",
-            "PASS_WITH_WARNINGS": "PASS с предупрежд.",
+            "PASS_WITH_WARNINGS": "PASS+",
             "FAIL": "FAIL",
-            "UNKNOWN": "неизвестно",
+            "UNKNOWN": "н/д",
         }
 
         self.pills["profiles"].set_state(f"профили: {profile_count}", "ok" if profile_count > 0 else "info")
@@ -386,7 +407,7 @@ class TopStatusBar(GlowCard):
 
         verification_level = "ok" if verification == "PASS" else "warn"
         self.pills["verification"].set_state(
-            f"гейт: {verify_map.get(verification, verification)}",
+            f"вериф.: {verify_map.get(verification, verification)}",
             verification_level,
         )
 
@@ -426,8 +447,9 @@ class ContextPanel(GlowCard):
         layout.setContentsMargins(18, 18, 18, 18)
         layout.setSpacing(14)
 
-        title = QLabel("Контекст и следующие действия")
+        title = QLabel("Контекст и действия")
         title.setObjectName("ContextPanelTitle")
+        title.setWordWrap(True)
         layout.addWidget(title)
 
         self.profile_title = QLabel("Профиль не выбран")
@@ -471,7 +493,7 @@ class ContextPanel(GlowCard):
         quick_ai.setMinimumHeight(40)
         quick_ai.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         quick_ai.clicked.connect(lambda: self.action_requested.emit("open_ai_studio"))
-        quick_updates = MotionButton("Проверить обновления")
+        quick_updates = MotionButton("Проверить апдейты")
         quick_updates.setObjectName("OutlineCTA")
         quick_updates.setMinimumHeight(40)
         quick_updates.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)

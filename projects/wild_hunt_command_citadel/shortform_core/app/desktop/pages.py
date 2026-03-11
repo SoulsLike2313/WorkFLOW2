@@ -45,12 +45,12 @@ def _safe_list(value: Any) -> list[Any]:
     return value if isinstance(value, list) else []
 
 
-PAGE_GAP = 16
-ROW_GAP = 12
-GRID_GAP = 10
-CARD_INSET = (16, 14, 16, 14)
+PAGE_GAP = 18
+ROW_GAP = 14
+GRID_GAP = 12
+CARD_INSET = (18, 16, 18, 16)
 ACTION_BUTTON_HEIGHT = 40
-PRIMARY_ACTION_MIN_WIDTH = 170
+PRIMARY_ACTION_MIN_WIDTH = 156
 
 
 def _setup_card_layout(layout: QVBoxLayout) -> None:
@@ -61,10 +61,10 @@ def _setup_card_layout(layout: QVBoxLayout) -> None:
 def _ru_gate(value: str) -> str:
     mapping = {
         "PASS": "PASS",
-        "PASS_WITH_WARNINGS": "PASS с предупреждениями",
+        "PASS_WITH_WARNINGS": "PASS+",
         "FAIL": "FAIL",
-        "UNKNOWN": "неизвестно",
-        "unknown": "неизвестно",
+        "UNKNOWN": "н/д",
+        "unknown": "н/д",
     }
     return mapping.get(value, value)
 
@@ -223,9 +223,9 @@ class DashboardPage(BasePage):
             ("Добавить профиль", "add_profile", "secondary"),
             ("Открыть сессию", "open_session", "secondary"),
             ("Загрузить метрики", "import_metrics", "outline"),
-            ("Сформировать контент-план", "generate_plan", "primary"),
+            ("Собрать контент-план", "generate_plan", "primary"),
             ("Открыть AI-студию", "open_ai_studio", "secondary"),
-            ("Проверить обновления", "check_updates", "outline"),
+            ("Проверить апдейты", "check_updates", "outline"),
         ]
         for idx, (title, action, tone) in enumerate(actions):
             button = MotionButton(title)
@@ -254,7 +254,7 @@ class DashboardPage(BasePage):
 
         audit_card = GlowCard(elevated=False)
         audit_card.setObjectName("DashboardAuditBlock")
-        audit_card.setMinimumWidth(360)
+        audit_card.setMinimumWidth(320)
         audit_layout = QVBoxLayout(audit_card)
         _setup_card_layout(audit_layout)
         audit_header = SectionHeader("Последние события журнала", "Актуальная лента действий")
@@ -262,13 +262,13 @@ class DashboardPage(BasePage):
         audit_layout.addWidget(audit_header)
         self.audit_list = QListWidget()
         self.audit_list.setObjectName("DashboardAuditList")
-        self.audit_list.setSpacing(4)
+        self.audit_list.setSpacing(6)
         self.audit_list.setWordWrap(True)
         audit_layout.addWidget(self.audit_list)
 
         rec_card = GlowCard(elevated=False)
         rec_card.setObjectName("DashboardRecommendationBlock")
-        rec_card.setMinimumWidth(360)
+        rec_card.setMinimumWidth(320)
         rec_layout = QVBoxLayout(rec_card)
         _setup_card_layout(rec_layout)
         rec_header = SectionHeader("Сводка рекомендаций AI", "Приоритетные предложения")
@@ -276,7 +276,7 @@ class DashboardPage(BasePage):
         rec_layout.addWidget(rec_header)
         self.rec_list = QListWidget()
         self.rec_list.setObjectName("DashboardRecommendationList")
-        self.rec_list.setSpacing(5)
+        self.rec_list.setSpacing(6)
         self.rec_list.setWordWrap(True)
         rec_layout.addWidget(self.rec_list)
 
@@ -284,7 +284,7 @@ class DashboardPage(BasePage):
         split.addWidget(rec_card)
         split.setStretchFactor(0, 11)
         split.setStretchFactor(1, 9)
-        split.setSizes([600, 500])
+        split.setSizes([580, 500])
         layout.addWidget(split, stretch=1)
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:
@@ -399,18 +399,114 @@ class ProfilesPage(BasePage):
         actions_layout.addLayout(actions_grid)
         layout.addWidget(actions_card)
 
-        self.table = QTableWidget(0, 7)
+        identity_card = GlowCard(elevated=False)
+        identity_card.setObjectName("ProfilesIdentityBlock")
+        identity_layout = QVBoxLayout(identity_card)
+        _setup_card_layout(identity_layout)
+        identity_layout.addWidget(SectionHeader("Карточка выбранного профиля", "Быстрый срез по состоянию профиля и сессии"))
+
+        identity_body = QHBoxLayout()
+        identity_body.setSpacing(14)
+        self.identity_avatar = QLabel("PR")
+        self.identity_avatar.setObjectName("ProfilesAvatar")
+        self.identity_avatar.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.identity_avatar.setMinimumSize(52, 52)
+        self.identity_avatar.setMaximumSize(52, 52)
+        identity_body.addWidget(self.identity_avatar, alignment=Qt.AlignmentFlag.AlignTop)
+
+        identity_info_col = QVBoxLayout()
+        identity_info_col.setSpacing(7)
+        self.identity_name = QLabel("Профиль не выбран")
+        self.identity_name.setObjectName("ProfilesIdentityName")
+        identity_info_col.addWidget(self.identity_name)
+        self.identity_meta = QLabel("Выберите профиль в таблице, чтобы увидеть контекст и быстрые действия.")
+        self.identity_meta.setObjectName("ProfilesIdentityMeta")
+        self.identity_meta.setWordWrap(True)
+        identity_info_col.addWidget(self.identity_meta)
+        self.identity_aux = QLabel("Последнее обновление: —")
+        self.identity_aux.setObjectName("ProfilesIdentityAux")
+        self.identity_aux.setWordWrap(True)
+        identity_info_col.addWidget(self.identity_aux)
+        identity_body.addLayout(identity_info_col, stretch=2)
+
+        chips_grid = QGridLayout()
+        chips_grid.setHorizontalSpacing(8)
+        chips_grid.setVerticalSpacing(8)
+        self.connection_chip = QLabel("Подключение: —")
+        self.mode_chip = QLabel("Режим: —")
+        self.health_chip = QLabel("Здоровье: —")
+        self.session_chip = QLabel("Сессия: —")
+        for chip in (self.connection_chip, self.mode_chip, self.health_chip, self.session_chip):
+            chip.setProperty("profileStateChip", "true")
+            chip.setProperty("profileStateLevel", "info")
+            chip.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            chip.setMinimumHeight(29)
+        chips_grid.addWidget(self.connection_chip, 0, 0)
+        chips_grid.addWidget(self.mode_chip, 0, 1)
+        chips_grid.addWidget(self.health_chip, 1, 0)
+        chips_grid.addWidget(self.session_chip, 1, 1)
+        identity_body.addLayout(chips_grid, stretch=3)
+        identity_layout.addLayout(identity_body)
+
+        selected_actions = QGridLayout()
+        selected_actions.setHorizontalSpacing(GRID_GAP)
+        selected_actions.setVerticalSpacing(GRID_GAP)
+        connect_selected = MotionButton("Подключить выбранный")
+        connect_selected.setObjectName("PrimaryCTA")
+        connect_selected.setProperty("profilesSelectedAction", "true")
+        connect_selected.setMinimumHeight(ACTION_BUTTON_HEIGHT)
+        connect_selected.clicked.connect(lambda: self.action_requested.emit("connect_profile", self.selected_profile_id()))
+        open_session = MotionButton("Открыть сессию")
+        open_session.setObjectName("SecondaryCTA")
+        open_session.setProperty("profilesSelectedAction", "true")
+        open_session.setMinimumHeight(ACTION_BUTTON_HEIGHT)
+        open_session.clicked.connect(lambda: self.action_requested.emit("open_session", self.selected_profile_id()))
+        open_analytics = MotionButton("Открыть аналитику")
+        open_analytics.setObjectName("OutlineCTA")
+        open_analytics.setProperty("profilesSelectedAction", "true")
+        open_analytics.setMinimumHeight(ACTION_BUTTON_HEIGHT)
+        open_analytics.clicked.connect(lambda: self.action_requested.emit("open_analytics", self.selected_profile_id()))
+        selected_actions.addWidget(connect_selected, 0, 0)
+        selected_actions.addWidget(open_session, 0, 1)
+        selected_actions.addWidget(open_analytics, 0, 2)
+        selected_actions.setColumnStretch(0, 1)
+        selected_actions.setColumnStretch(1, 1)
+        selected_actions.setColumnStretch(2, 1)
+        identity_layout.addLayout(selected_actions)
+        layout.addWidget(identity_card)
+
+        self.table = QTableWidget(0, 8)
         self.table.setObjectName("ProfilesTable")
-        self.table.setHorizontalHeaderLabels(["Профиль", "Платформа", "Подключение", "Режим", "Статус", "Состояние", "Обновлено"])
+        self.table.setHorizontalHeaderLabels(["Профиль", "Платформа", "Подключение", "Режим", "Статус", "Состояние", "Сессия", "Обновлено"])
         self.table.verticalHeader().setVisible(False)
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.table.itemSelectionChanged.connect(self._emit_profile_selected)
         self.table.setAlternatingRowColors(True)
+        self.table.setWordWrap(False)
+        self.table.setTextElideMode(Qt.TextElideMode.ElideRight)
         self.table.horizontalHeader().setStretchLastSection(True)
-        self.table.horizontalHeader().setDefaultSectionSize(132)
+        self.table.horizontalHeader().setDefaultSectionSize(116)
+        self.table.horizontalHeader().setMinimumSectionSize(84)
         layout.addWidget(self.table, stretch=1)
+
+    def _profile_initials(self, name: str) -> str:
+        parts = [part for part in name.replace("-", " ").split() if part]
+        if not parts:
+            return "PR"
+        if len(parts) == 1:
+            return parts[0][:2].upper()
+        return (parts[0][0] + parts[1][0]).upper()
+
+    def _set_profile_chip(self, chip: QLabel, text: str, level: str) -> None:
+        if level not in {"ok", "warn", "danger", "info"}:
+            level = "info"
+        chip.setText(text)
+        if chip.property("profileStateLevel") != level:
+            chip.setProperty("profileStateLevel", level)
+            chip.style().unpolish(chip)
+            chip.style().polish(chip)
 
     def selected_profile_id(self) -> str | None:
         row = self.table.currentRow()
@@ -429,6 +525,8 @@ class ProfilesPage(BasePage):
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:
         items = _safe_list(snapshot.get("profiles"))
         selected = snapshot.get("selected_profile_id")
+        sessions_by_profile = snapshot.get("sessions_by_profile", {})
+        sessions_by_profile = sessions_by_profile if isinstance(sessions_by_profile, dict) else {}
 
         connected = 0
         healthy = 0
@@ -451,7 +549,15 @@ class ProfilesPage(BasePage):
         self.table.setRowCount(0)
         for row, profile in enumerate(items):
             self.table.insertRow(row)
-            name_item = QTableWidgetItem(str(profile.get("display_name", "Без имени")))
+            display_name = str(profile.get("display_name", "Без имени"))
+            profile_id = profile.get("id")
+            session = sessions_by_profile.get(profile_id) or {}
+            session = session if isinstance(session, dict) else {}
+            session_open = bool(session.get("is_open", False))
+            session_runtime = _ru_runtime_state(str(session.get("runtime_state", "closed")))
+
+            marker = self._profile_initials(display_name)
+            name_item = QTableWidgetItem(f"{marker}  {display_name}")
             name_item.setData(Qt.ItemDataRole.UserRole, profile.get("id"))
 
             self.table.setItem(row, 0, name_item)
@@ -460,10 +566,59 @@ class ProfilesPage(BasePage):
             self.table.setItem(row, 3, QTableWidgetItem(_ru_management_mode(str(profile.get("management_mode", "-")))))
             self.table.setItem(row, 4, QTableWidgetItem(_ru_profile_status(str(profile.get("status", "-")))))
             self.table.setItem(row, 5, QTableWidgetItem(_ru_health_state(str(profile.get("health_state", "-")))))
-            self.table.setItem(row, 6, QTableWidgetItem(_fmt_ts(profile.get("updated_at"))))
+            self.table.setItem(row, 6, QTableWidgetItem(f"{'Открыта' if session_open else 'Закрыта'} · {session_runtime}"))
+            self.table.setItem(row, 7, QTableWidgetItem(_fmt_ts(profile.get("updated_at"))))
 
             if selected and profile.get("id") == selected:
                 self.table.selectRow(row)
+
+        selected_profile = None
+        if selected:
+            selected_profile = next((profile for profile in items if profile.get("id") == selected), None)
+        if selected_profile is None and items:
+            selected_profile = items[0]
+
+        if isinstance(selected_profile, dict):
+            profile_id = selected_profile.get("id")
+            display_name = str(selected_profile.get("display_name", "Профиль"))
+            connection = _ru_connection_type(str(selected_profile.get("connection_type", "-")))
+            mode = _ru_management_mode(str(selected_profile.get("management_mode", "-")))
+            health = _ru_health_state(str(selected_profile.get("health_state", "-")))
+            status = _ru_profile_status(str(selected_profile.get("status", "-")))
+            session = sessions_by_profile.get(profile_id) or {}
+            session = session if isinstance(session, dict) else {}
+            session_open = bool(session.get("is_open", False))
+            runtime = _ru_runtime_state(str(session.get("runtime_state", "closed")))
+            updated = _fmt_ts(selected_profile.get("updated_at"))
+
+            self.identity_avatar.setText(self._profile_initials(display_name))
+            self.identity_name.setText(display_name)
+            self.identity_meta.setText(f"{status} · {connection} · режим {mode.lower()}")
+            self.identity_aux.setText(
+                f"Последнее обновление: {updated} · "
+                f"Сессия: {'открыта' if session_open else 'закрыта'} ({runtime})"
+            )
+            self._set_profile_chip(self.connection_chip, f"Подключение: {connection}", "ok" if str(selected_profile.get("status", "")).lower() == "active" else "warn")
+            self._set_profile_chip(self.mode_chip, f"Режим: {mode}", "info")
+            self._set_profile_chip(
+                self.health_chip,
+                f"Здоровье: {health}",
+                "ok" if str(selected_profile.get("health_state", "")).lower() in {"healthy", "ok", "ready"} else "warn",
+            )
+            self._set_profile_chip(
+                self.session_chip,
+                f"Сессия: {'открыта' if session_open else 'закрыта'}",
+                "ok" if session_open else "info",
+            )
+        else:
+            self.identity_avatar.setText("PR")
+            self.identity_name.setText("Профиль не выбран")
+            self.identity_meta.setText("Выберите профиль в таблице, чтобы увидеть контекст и быстрые действия.")
+            self.identity_aux.setText("Последнее обновление: —")
+            self._set_profile_chip(self.connection_chip, "Подключение: —", "info")
+            self._set_profile_chip(self.mode_chip, "Режим: —", "info")
+            self._set_profile_chip(self.health_chip, "Здоровье: —", "info")
+            self._set_profile_chip(self.session_chip, "Сессия: —", "info")
 
 class SessionsPage(BasePage):
     def __init__(self) -> None:
@@ -535,13 +690,13 @@ class SessionsPage(BasePage):
 
         left_card = GlowCard(elevated=False)
         left_card.setObjectName("SessionsRegistryBlock")
-        left_card.setMinimumWidth(340)
+        left_card.setMinimumWidth(300)
         left_layout = QVBoxLayout(left_card)
         _setup_card_layout(left_layout)
         left_layout.addWidget(SectionHeader("Реестр сессий", "Состояние выполнения по каждому профилю"))
         self.session_list = QListWidget()
         self.session_list.setObjectName("SessionsList")
-        self.session_list.setSpacing(4)
+        self.session_list.setSpacing(6)
         self.session_list.setWordWrap(True)
         self.session_list.itemClicked.connect(self._session_clicked)
         left_layout.addWidget(self.session_list)
@@ -549,14 +704,14 @@ class SessionsPage(BasePage):
 
         right_card = GlowCard(elevated=False)
         right_card.setObjectName("SessionsWorkspaceBlock")
-        right_card.setMinimumWidth(430)
+        right_card.setMinimumWidth(380)
         right_layout = QVBoxLayout(right_card)
         _setup_card_layout(right_layout)
 
         self.session_frame = GlowCard(elevated=True)
         self.session_frame.setObjectName("SessionFrame")
         frame_layout = QVBoxLayout(self.session_frame)
-        frame_layout.setContentsMargins(16, 16, 16, 16)
+        frame_layout.setContentsMargins(18, 18, 18, 18)
         frame_layout.setSpacing(ROW_GAP)
 
         self.frame_title = QLabel("Окно сессии 9:16")
@@ -573,7 +728,7 @@ class SessionsPage(BasePage):
         frame_layout.addWidget(self.frame_source)
 
         chip_row = QHBoxLayout()
-        chip_row.setSpacing(8)
+        chip_row.setSpacing(10)
         self.session_runtime_chip = QLabel("Состояние: ожидание")
         self.session_link_chip = QLabel("Источник: не привязан")
         self.session_viewport_chip = QLabel("Пресет: смартфон")
@@ -592,7 +747,7 @@ class SessionsPage(BasePage):
         self.session_preview = QLabel("ПРЕВЬЮ СЕССИИ 9:16\n\nОткройте сессию профиля, чтобы увидеть рабочее состояние.")
         self.session_preview.setObjectName("SessionMobilePreview")
         self.session_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.session_preview.setMinimumSize(280, 450)
+        self.session_preview.setMinimumSize(250, 400)
         self.session_preview.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.session_preview.setWordWrap(True)
         frame_layout.addWidget(self.session_preview)
@@ -600,8 +755,8 @@ class SessionsPage(BasePage):
         context_block = QWidget()
         context_block.setObjectName("SessionContextBlock")
         context_layout = QVBoxLayout(context_block)
-        context_layout.setContentsMargins(10, 10, 10, 10)
-        context_layout.setSpacing(6)
+        context_layout.setContentsMargins(12, 12, 12, 12)
+        context_layout.setSpacing(8)
         self.frame_context = QLabel("Контур сессии ожидает подключения профиля и источника.")
         self.frame_context.setObjectName("SessionContextHint")
         self.frame_context.setWordWrap(True)
@@ -779,8 +934,11 @@ class ContentPage(BasePage):
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.table.setWordWrap(False)
+        self.table.setTextElideMode(Qt.TextElideMode.ElideRight)
         self.table.horizontalHeader().setStretchLastSection(True)
-        self.table.horizontalHeader().setDefaultSectionSize(140)
+        self.table.horizontalHeader().setDefaultSectionSize(128)
+        self.table.horizontalHeader().setMinimumSectionSize(84)
         layout.addWidget(self.table, stretch=1)
 
     def selected_content_id(self) -> str | None:
@@ -889,7 +1047,7 @@ class AnalyticsPage(BasePage):
 
         left = GlowCard(elevated=False)
         left.setObjectName("AnalyticsTopWeakBlock")
-        left.setMinimumWidth(360)
+        left.setMinimumWidth(320)
         left_layout = QVBoxLayout(left)
         _setup_card_layout(left_layout)
         top_header = SectionHeader("Топ-контент", "Лучшие ролики и выбросы")
@@ -897,7 +1055,7 @@ class AnalyticsPage(BasePage):
         left_layout.addWidget(top_header)
         self.top_list = QListWidget()
         self.top_list.setObjectName("AnalyticsTopList")
-        self.top_list.setSpacing(4)
+        self.top_list.setSpacing(6)
         self.top_list.setWordWrap(True)
         left_layout.addWidget(self.top_list)
 
@@ -906,13 +1064,13 @@ class AnalyticsPage(BasePage):
         left_layout.addWidget(weak_header)
         self.weak_list = QListWidget()
         self.weak_list.setObjectName("AnalyticsWeakList")
-        self.weak_list.setSpacing(4)
+        self.weak_list.setSpacing(6)
         self.weak_list.setWordWrap(True)
         left_layout.addWidget(self.weak_list)
 
         right = GlowCard(elevated=False)
         right.setObjectName("AnalyticsInsightsBlock")
-        right.setMinimumWidth(360)
+        right.setMinimumWidth(320)
         right_layout = QVBoxLayout(right)
         _setup_card_layout(right_layout)
         patterns_header = SectionHeader("Паттерны контента", "Темы, форматы, хуки и окна публикации")
@@ -920,7 +1078,7 @@ class AnalyticsPage(BasePage):
         right_layout.addWidget(patterns_header)
         self.patterns_list = QListWidget()
         self.patterns_list.setObjectName("AnalyticsPatternsList")
-        self.patterns_list.setSpacing(4)
+        self.patterns_list.setSpacing(6)
         self.patterns_list.setWordWrap(True)
         right_layout.addWidget(self.patterns_list)
 
@@ -937,7 +1095,7 @@ class AnalyticsPage(BasePage):
         right_layout.addWidget(recs_header)
         self.recommendations_list = QListWidget()
         self.recommendations_list.setObjectName("AnalyticsRecommendationList")
-        self.recommendations_list.setSpacing(4)
+        self.recommendations_list.setSpacing(6)
         self.recommendations_list.setWordWrap(True)
         right_layout.addWidget(self.recommendations_list)
 
@@ -945,7 +1103,7 @@ class AnalyticsPage(BasePage):
         split.addWidget(right)
         split.setStretchFactor(0, 11)
         split.setStretchFactor(1, 9)
-        split.setSizes([600, 500])
+        split.setSizes([560, 500])
         layout.addWidget(split, stretch=1)
 
     def _set_cue_chip(self, chip: QLabel, text: str, level: str) -> None:
@@ -1089,7 +1247,7 @@ class AnalyticsPage(BasePage):
             lines.extend([f"- {item}" for item in _safe_list(plan.get("next_actions"))])
             self.plan_text.setPlainText("\n".join(lines).strip())
         else:
-            self.plan_text.setPlainText("План действий ещё не сформирован. Используйте кнопку «Сформировать контент-план».")
+            self.plan_text.setPlainText("План действий ещё не сформирован. Используйте кнопку «Собрать контент-план».")
 
         self.recommendations_list.clear()
         for idx, rec in enumerate(recs[:10], start=1):
@@ -1166,7 +1324,7 @@ class AIStudioPage(BasePage):
 
         left = GlowCard(elevated=False)
         left.setObjectName("AIRecommendationBlock")
-        left.setMinimumWidth(360)
+        left.setMinimumWidth(320)
         left_layout = QVBoxLayout(left)
         _setup_card_layout(left_layout)
         ai_recs_header = SectionHeader("Рекомендации", "Обоснование, уверенность, альтернативы")
@@ -1174,13 +1332,13 @@ class AIStudioPage(BasePage):
         left_layout.addWidget(ai_recs_header)
         self.recommendations = QListWidget()
         self.recommendations.setObjectName("AIRecommendationList")
-        self.recommendations.setSpacing(5)
+        self.recommendations.setSpacing(6)
         self.recommendations.setWordWrap(True)
         left_layout.addWidget(self.recommendations)
 
         right = GlowCard(elevated=False)
         right.setObjectName("AILearningBlock")
-        right.setMinimumWidth(360)
+        right.setMinimumWidth(320)
         right_layout = QVBoxLayout(right)
         _setup_card_layout(right_layout)
         ai_learn_header = SectionHeader("Сводка обучения", "Что система узнала по результатам")
@@ -1196,7 +1354,7 @@ class AIStudioPage(BasePage):
         right_layout.addWidget(bundle_header)
         self.bundle_list = QListWidget()
         self.bundle_list.setObjectName("AIBundleList")
-        self.bundle_list.setSpacing(5)
+        self.bundle_list.setSpacing(6)
         self.bundle_list.setWordWrap(True)
         right_layout.addWidget(self.bundle_list)
 
@@ -1204,7 +1362,7 @@ class AIStudioPage(BasePage):
         split.addWidget(right)
         split.setStretchFactor(0, 11)
         split.setStretchFactor(1, 9)
-        split.setSizes([600, 500])
+        split.setSizes([560, 500])
         layout.addWidget(split, stretch=1)
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:

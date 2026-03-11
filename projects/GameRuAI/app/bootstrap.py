@@ -74,7 +74,10 @@ class AppServices:
         return {"id": project.id, "name": project.name, "game_path": project.game_path}
 
     def list_projects(self) -> list[dict[str, Any]]:
-        return [project.__dict__ for project in self.repo.list_projects()]
+        return [
+            {"id": project.id, "name": project.name, "game_path": project.game_path}
+            for project in self.repo.list_projects()
+        ]
 
     def scan(self, project_id: int, game_root: Path) -> dict[str, Any]:
         self.repo.clear_project_runtime(project_id)
@@ -196,11 +199,16 @@ class AppServices:
                 from app.core.enums import VoiceAttemptStatus
                 from app.core.models import VoiceAttempt
 
+                try:
+                    output_voice_path = str(output_path.relative_to(self.config.paths.repo_root))
+                except ValueError:
+                    output_voice_path = str(output_path)
+
                 attempt = VoiceAttempt(
                     entry_id=int(entry["id"]),
                     speaker_id=speaker_id,
                     source_voice_path=source_voice_rel,
-                    output_voice_path=str(output_path.relative_to(self.config.paths.repo_root)),
+                    output_voice_path=output_voice_path,
                     status=VoiceAttemptStatus.GENERATED,
                     quality_score=quality,
                     duration_source_ms=source_duration,
