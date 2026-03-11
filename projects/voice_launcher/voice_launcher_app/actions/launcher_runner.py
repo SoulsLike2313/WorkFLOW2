@@ -44,7 +44,7 @@ def run_launcher_play(entry: dict, deps: LauncherRunnerDeps) -> LauncherReport:
     allow_point_fallback = force_point_click or (point_mode == "auto" and war_thunder_point_mode)
 
     default_x_ratio = 0.855 if war_thunder_point_mode else 0.86
-    default_y_ratio = 0.945 if war_thunder_point_mode else 0.90
+    default_y_ratio = 0.915 if war_thunder_point_mode else 0.90
     try:
         point_x_ratio = float(entry.get("point_x_ratio", default_x_ratio))
     except Exception:

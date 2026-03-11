@@ -40,6 +40,7 @@ def _safe_dict(value: Any) -> dict[str, Any]:
 class AuditPage(BasePage):
     def __init__(self) -> None:
         super().__init__()
+        self.setObjectName("AuditPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
@@ -116,6 +117,7 @@ class AuditPage(BasePage):
 class UpdatesPage(BasePage):
     def __init__(self) -> None:
         super().__init__()
+        self.setObjectName("UpdatesPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
@@ -202,6 +204,7 @@ class UpdatesPage(BasePage):
 class SettingsPage(BasePage):
     def __init__(self) -> None:
         super().__init__()
+        self.setObjectName("SettingsPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)

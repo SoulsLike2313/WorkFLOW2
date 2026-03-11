@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from PySide6.QtCore import QEasingCurve, QVariantAnimation, Signal
+from PySide6.QtCore import QEasingCurve, Qt, QVariantAnimation, Signal
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
     QFrame,
@@ -22,13 +22,16 @@ class NavRailButton(QPushButton):
         self.page_key = page_key
         self.setProperty("navButton", "true")
         self.setCheckable(True)
-        self.setCursor(self.cursor())
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setMinimumHeight(44)
 
 
 class StatusPill(QLabel):
     def __init__(self, text: str = "unknown", level: str = "info") -> None:
         super().__init__(text)
         self.setProperty("statusPill", "true")
+        self.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.setMinimumHeight(24)
         self.set_level(level)
 
     def set_level(self, level: str) -> None:
@@ -50,18 +53,19 @@ class GlowCard(QFrame):
         super().__init__()
         self.setProperty("card", "elevated" if elevated else "true")
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.setCursor(Qt.CursorShape.ArrowCursor)
 
         self._shadow = QGraphicsDropShadowEffect(self)
         self._shadow.setOffset(0, 0)
-        self._shadow.setBlurRadius(14)
-        self._shadow.setColor(QColor(143, 109, 255, 45))
+        self._shadow.setBlurRadius(16)
+        self._shadow.setColor(QColor(143, 109, 255, 52))
         self.setGraphicsEffect(self._shadow)
 
         self._anim = QVariantAnimation(self)
-        self._anim.setDuration(170)
+        self._anim.setDuration(180)
         self._anim.setEasingCurve(QEasingCurve.Type.OutCubic)
         self._anim.valueChanged.connect(self._apply_glow)
-        self._current_blur = 14.0
+        self._current_blur = 16.0
 
     def _apply_glow(self, value: Any) -> None:
         blur = float(value)
@@ -69,6 +73,7 @@ class GlowCard(QFrame):
         self._shadow.setBlurRadius(blur)
         alpha = max(35, min(145, int(blur * 5)))
         self._shadow.setColor(QColor(170, 137, 255, alpha))
+        self._shadow.setOffset(0, -0.06 * max(0.0, blur - 14.0))
 
     def _animate_to(self, target: float) -> None:
         self._anim.stop()
@@ -78,11 +83,11 @@ class GlowCard(QFrame):
 
     def enterEvent(self, event) -> None:  # type: ignore[override]
         super().enterEvent(event)
-        self._animate_to(26.0)
+        self._animate_to(28.0)
 
     def leaveEvent(self, event) -> None:  # type: ignore[override]
         super().leaveEvent(event)
-        self._animate_to(14.0)
+        self._animate_to(16.0)
 
     def mousePressEvent(self, event) -> None:  # type: ignore[override]
         super().mousePressEvent(event)
@@ -140,10 +145,11 @@ class TopStatusBar(GlowCard):
     def __init__(self) -> None:
         super().__init__(elevated=False)
         self.setObjectName("TopStatusBar")
+        self.setMinimumHeight(64)
 
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(14, 10, 14, 10)
-        layout.setSpacing(10)
+        layout.setContentsMargins(16, 12, 16, 12)
+        layout.setSpacing(8)
 
         self.pills: dict[str, StatusPill] = {
             "profiles": StatusPill("profiles: --", "info"),
@@ -163,7 +169,17 @@ class TopStatusBar(GlowCard):
         self.refresh_button.clicked.connect(self.refresh_requested.emit)
         layout.addWidget(self.refresh_button)
 
-    def update_state(self, *, profile_count: int, session_count: int, queue_count: int, verification: str, ai_state: str, runtime_state: str, alerts_count: int) -> None:
+    def update_state(
+        self,
+        *,
+        profile_count: int,
+        session_count: int,
+        queue_count: int,
+        verification: str,
+        ai_state: str,
+        runtime_state: str,
+        alerts_count: int,
+    ) -> None:
         self.pills["profiles"].set_state(f"profiles: {profile_count}", "ok" if profile_count > 0 else "info")
         self.pills["sessions"].set_state(f"sessions: {session_count}", "ok" if session_count > 0 else "warn")
         self.pills["queue"].set_state(f"queue: {queue_count}", "warn" if queue_count > 0 else "ok")
@@ -235,6 +251,7 @@ class ContextPanel(GlowCard):
 
         btn_row = QHBoxLayout()
         quick_ai = QPushButton("Open AI Studio")
+        quick_ai.setObjectName("PrimaryCTA")
         quick_ai.clicked.connect(lambda: self.action_requested.emit("open_ai_studio"))
         quick_updates = QPushButton("Check Updates")
         quick_updates.clicked.connect(lambda: self.action_requested.emit("check_updates"))

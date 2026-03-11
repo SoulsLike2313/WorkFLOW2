@@ -55,6 +55,7 @@ class BasePage(QWidget):
 class DashboardPage(BasePage):
     def __init__(self) -> None:
         super().__init__()
+        self.setObjectName("DashboardPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
@@ -173,6 +174,7 @@ class DashboardPage(BasePage):
 class ProfilesPage(BasePage):
     def __init__(self) -> None:
         super().__init__()
+        self.setObjectName("ProfilesPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
@@ -246,6 +248,7 @@ class ProfilesPage(BasePage):
 class SessionsPage(BasePage):
     def __init__(self) -> None:
         super().__init__()
+        self.setObjectName("SessionsPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
@@ -310,8 +313,9 @@ class SessionsPage(BasePage):
         dummy_phone.setAlignment(Qt.AlignmentFlag.AlignCenter)
         dummy_phone.setMinimumSize(280, 500)
         dummy_phone.setStyleSheet(
-            "background: rgba(7,10,18,0.45); border: 1px solid rgba(176,147,255,0.45);"
-            "border-radius: 24px; font-size: 14px; color: #B5BED9;"
+            "background: qlineargradient(x1:0,y1:0,x2:1,y2:1, stop:0 rgba(16,26,42,0.92), stop:1 rgba(12,20,33,0.92)); "
+            "border: 1px solid rgba(192,167,255,0.55); "
+            "border-radius: 24px; font-size: 14px; color: #C8D1EA;"
         )
         frame_layout.addWidget(dummy_phone)
 
@@ -370,6 +374,7 @@ class SessionsPage(BasePage):
 class ContentPage(BasePage):
     def __init__(self) -> None:
         super().__init__()
+        self.setObjectName("ContentPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
@@ -451,6 +456,7 @@ class ContentPage(BasePage):
 class AnalyticsPage(BasePage):
     def __init__(self) -> None:
         super().__init__()
+        self.setObjectName("AnalyticsPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
@@ -563,6 +569,7 @@ class AnalyticsPage(BasePage):
 class AIStudioPage(BasePage):
     def __init__(self) -> None:
         super().__init__()
+        self.setObjectName("AIStudioPage")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
