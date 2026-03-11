@@ -225,7 +225,7 @@ class DashboardPage(BasePage):
             button.setProperty("dashboardQuickButton", "true")
             button.setMinimumHeight(39)
             button.clicked.connect(lambda _=False, a=action: self.action_requested.emit(a, None))
-            (row1 if idx < 3 else row2).addWidget(button)
+            (row1 if idx < 3 else row2).addWidget(button, 1)
 
         quick_layout.addWidget(row1_caption)
         quick_layout.addLayout(row1)
@@ -351,16 +351,18 @@ class ProfilesPage(BasePage):
         actions_layout.setSpacing(10)
         actions_layout.addWidget(SectionHeader("Быстрые действия профилей", "Создание, подключение и переходы в рабочие модули"))
 
-        action_row = QHBoxLayout()
-        action_row.setSpacing(8)
-        for title, action, primary in [
+        actions_grid = QGridLayout()
+        actions_grid.setHorizontalSpacing(8)
+        actions_grid.setVerticalSpacing(8)
+        profile_actions = [
             ("Создать профиль", "add_profile", True),
             ("Подключить профиль", "connect_profile", False),
             ("Открыть сессию", "open_session", True),
             ("Открыть аналитику", "open_analytics", False),
             ("Открыть контент", "open_content", False),
             ("Открыть AI", "open_ai_studio", False),
-        ]:
+        ]
+        for idx, (title, action, primary) in enumerate(profile_actions):
             btn = MotionButton(title)
             if primary:
                 btn.setObjectName("PrimaryCTA")
@@ -371,9 +373,14 @@ class ProfilesPage(BasePage):
             btn.setProperty("profilesQuickAction", "true")
             btn.setMinimumHeight(39)
             btn.clicked.connect(lambda _=False, a=action: self.action_requested.emit(a, self.selected_profile_id()))
-            action_row.addWidget(btn)
-        action_row.addStretch(1)
-        actions_layout.addLayout(action_row)
+            row = idx // 3
+            col = idx % 3
+            actions_grid.addWidget(btn, row, col)
+
+        actions_grid.setColumnStretch(0, 1)
+        actions_grid.setColumnStretch(1, 1)
+        actions_grid.setColumnStretch(2, 1)
+        actions_layout.addLayout(actions_grid)
         layout.addWidget(actions_card)
 
         self.table = QTableWidget(0, 7)
@@ -480,20 +487,22 @@ class SessionsPage(BasePage):
         self.viewport.addItem("iPhone-стиль", "iphone_like")
         self.viewport.addItem("Пользовательский", "custom")
         controls.addWidget(QLabel("Пресет окна:"))
-        controls.addWidget(self.viewport)
+        controls.addWidget(self.viewport, 1)
+        controls.addStretch(1)
 
         open_btn = MotionButton("Открыть сессию")
         open_btn.setObjectName("PrimaryCTA")
         open_btn.setProperty("sessionsAction", "true")
+        open_btn.setMinimumWidth(154)
         open_btn.clicked.connect(lambda: self.action_requested.emit("open_session", self._payload()))
         close_btn = MotionButton("Закрыть сессию")
         close_btn.setObjectName("DangerCTA")
         close_btn.setProperty("sessionsAction", "true")
+        close_btn.setMinimumWidth(154)
         close_btn.clicked.connect(lambda: self.action_requested.emit("close_session", self._payload()))
 
         controls.addWidget(open_btn)
         controls.addWidget(close_btn)
-        controls.addStretch(1)
         controls_layout.addLayout(controls)
         layout.addWidget(controls_card)
 
@@ -542,7 +551,7 @@ class SessionsPage(BasePage):
         self.session_preview = QLabel("SESSION PREVIEW 9:16\n\nОткройте сессию профиля для живого состояния.")
         self.session_preview.setObjectName("SessionMobilePreview")
         self.session_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.session_preview.setMinimumSize(300, 520)
+        self.session_preview.setMinimumSize(270, 430)
         self.session_preview.setWordWrap(True)
         frame_layout.addWidget(self.session_preview)
 
@@ -894,10 +903,12 @@ class AIStudioPage(BasePage):
         gen_btn = MotionButton("Сгенерировать рекомендации")
         gen_btn.setObjectName("PrimaryCTA")
         gen_btn.setProperty("aiAction", "true")
+        gen_btn.setMinimumWidth(190)
         gen_btn.clicked.connect(lambda: self.action_requested.emit("generate_ai_recommendations", None))
         bundle_btn = MotionButton("Собрать пакет генерации")
         bundle_btn.setObjectName("SecondaryCTA")
         bundle_btn.setProperty("aiAction", "true")
+        bundle_btn.setMinimumWidth(190)
         bundle_btn.clicked.connect(lambda: self.action_requested.emit("build_generation_bundle", None))
         action_row.addWidget(gen_btn)
         action_row.addWidget(bundle_btn)

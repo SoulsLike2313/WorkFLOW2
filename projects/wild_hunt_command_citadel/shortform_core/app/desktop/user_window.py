@@ -45,7 +45,7 @@ class UserWorkspaceWindow(QMainWindow):
     def __init__(self, *, api_base_url: str) -> None:
         super().__init__()
         self.api_base_url = api_base_url.rstrip("/")
-        self.setWindowTitle("Shortform: мультипрофильный центр")
+        self.setWindowTitle("Shortform Workspace")
         self.resize(1540, 920)
         self.setMinimumSize(1260, 760)
 
@@ -80,14 +80,14 @@ class UserWorkspaceWindow(QMainWindow):
 
         sidebar = QWidget()
         sidebar.setObjectName("Sidebar")
-        sidebar.setFixedWidth(274)
+        sidebar.setFixedWidth(286)
         sidebar_layout = QVBoxLayout(sidebar)
         sidebar_layout.setContentsMargins(14, 16, 14, 16)
         sidebar_layout.setSpacing(11)
 
-        app_title = QLabel("ЦИТАДЕЛЬ ДИКОЙ ОХОТЫ")
+        app_title = QLabel("Shortform Workspace")
         app_title.setObjectName("AppTitle")
-        app_subtitle = QLabel("Премиальный центр управления профилями, сессиями, аналитикой и AI.")
+        app_subtitle = QLabel("Панель управления профилями, сессиями, аналитикой и AI.")
         app_subtitle.setObjectName("AppSubtitle")
         app_subtitle.setWordWrap(True)
 
@@ -97,7 +97,7 @@ class UserWorkspaceWindow(QMainWindow):
         brand_layout.setContentsMargins(12, 10, 12, 12)
         brand_layout.setSpacing(10)
 
-        emblem = QLabel("W")
+        emblem = QLabel("SF")
         emblem.setObjectName("SidebarEmblem")
         emblem.setAlignment(Qt.AlignmentFlag.AlignCenter)
         emblem.setFixedSize(42, 42)
@@ -142,16 +142,21 @@ class UserWorkspaceWindow(QMainWindow):
 
         split = QSplitter(Qt.Orientation.Horizontal)
         split.setChildrenCollapsible(False)
+        split.setHandleWidth(8)
 
         self.workspace_stack = QStackedWidget()
+        self.workspace_stack.setMinimumWidth(740)
         split.addWidget(self.workspace_stack)
 
         self.context_panel = ContextPanel()
         self.context_panel.action_requested.connect(lambda action: self._on_page_action(action, None))
         self.context_panel.setMinimumWidth(320)
+        self.context_panel.setMaximumWidth(400)
         split.addWidget(self.context_panel)
 
-        split.setSizes([1080, 340])
+        split.setStretchFactor(0, 5)
+        split.setStretchFactor(1, 2)
+        split.setSizes([1120, 340])
         center_layout.addWidget(split, stretch=1)
         layout.addWidget(center, stretch=1)
 

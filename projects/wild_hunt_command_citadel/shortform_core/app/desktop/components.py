@@ -454,16 +454,19 @@ class ContextPanel(GlowCard):
         self.next_actions.setWordWrap(True)
         layout.addWidget(self.next_actions)
 
-        btn_row = QHBoxLayout()
+        btn_col = QVBoxLayout()
+        btn_col.setSpacing(8)
         quick_ai = MotionButton("Открыть AI-студию")
         quick_ai.setObjectName("PrimaryCTA")
+        quick_ai.setMinimumHeight(38)
         quick_ai.clicked.connect(lambda: self.action_requested.emit("open_ai_studio"))
         quick_updates = MotionButton("Проверить обновления")
         quick_updates.setObjectName("OutlineCTA")
+        quick_updates.setMinimumHeight(38)
         quick_updates.clicked.connect(lambda: self.action_requested.emit("check_updates"))
-        btn_row.addWidget(quick_ai)
-        btn_row.addWidget(quick_updates)
-        layout.addLayout(btn_row)
+        btn_col.addWidget(quick_ai)
+        btn_col.addWidget(quick_updates)
+        layout.addLayout(btn_col)
 
         layout.addStretch(1)
 

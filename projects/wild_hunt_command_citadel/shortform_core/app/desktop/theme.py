@@ -51,11 +51,11 @@ def build_theme_tokens() -> ThemeTokens:
             "xl": 22,
         },
         typography={
-            "display": "Segoe UI Variable Display, Segoe UI",
+            "display": "Segoe UI Semibold",
             "title": "Segoe UI Semibold",
             "body": "Segoe UI",
-            "label": "Segoe UI Variable Text, Segoe UI",
-            "metric": "Bahnschrift SemiBold, Segoe UI Variable Display",
+            "label": "Segoe UI",
+            "metric": "Segoe UI Semibold",
             "mono": "Cascadia Mono",
         },
         shadow={
@@ -122,17 +122,16 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
 
     QLabel#AppTitle {{
         font-family: '{tokens.typography['display']}';
-        font-size: 20px;
-        font-weight: 620;
+        font-size: 19px;
+        font-weight: 590;
         color: {c['primary_text']};
-        letter-spacing: 0.4px;
     }}
 
     QLabel#AppSubtitle {{
         color: rgba(163, 175, 205, 0.95);
         font-size: 11px;
         font-family: '{tokens.typography['label']}';
-        font-weight: 470;
+        font-weight: 450;
     }}
 
     QLabel#SidebarRuntimeStatus {{
@@ -158,7 +157,7 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         color: rgba(199, 210, 237, 0.96);
         font-family: '{tokens.typography['label']}';
         font-size: 13px;
-        font-weight: 540;
+        font-weight: 520;
     }}
 
     QPushButton[navButton='true']:hover {{
@@ -176,7 +175,7 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         border-top: 1px solid rgba(237, 223, 255, 0.40);
         border-left: 1px solid rgba(228, 208, 255, 0.82);
         color: {c['primary_text']};
-        padding-left: 17px;
+        padding-left: 16px;
     }}
 
     QPushButton[navButton='true']:pressed {{
@@ -326,12 +325,154 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         border-bottom: 1px solid rgba(9, 13, 21, 0.82);
     }}
 
+    QWidget#ProfilesPage QFrame#MetricCard[profilesMetric='true'] {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(31, 44, 69, 0.98), stop:0.58 rgba(22, 32, 52, 0.98), stop:1 rgba(15, 22, 37, 0.99));
+        border: 1px solid rgba(177, 145, 252, 0.24);
+        border-top: 1px solid rgba(229, 211, 255, 0.34);
+    }}
+
+    QFrame#ProfilesQuickActionsBlock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(27, 40, 64, 0.98), stop:0.56 rgba(19, 29, 47, 0.98), stop:1 rgba(13, 21, 35, 0.99));
+        border: 1px solid rgba(183, 151, 255, 0.22);
+        border-top: 1px solid rgba(233, 216, 255, 0.34);
+    }}
+
+    QFrame#ProfilesQuickActionsBlock QPushButton[profilesQuickAction='true'] {{
+        min-height: 40px;
+        border-radius: 14px;
+    }}
+
+    QTableWidget#ProfilesTable {{
+        border: 1px solid rgba(171, 139, 246, 0.20);
+        border-top: 1px solid rgba(223, 205, 255, 0.30);
+        gridline-color: rgba(141, 116, 214, 0.16);
+    }}
+
+    QTableWidget#ProfilesTable::item:selected {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 rgba(156, 121, 242, 0.34), stop:1 rgba(125, 95, 204, 0.24));
+        border: 1px solid rgba(204, 176, 255, 0.48);
+        color: #F5EEFF;
+    }}
+
+    QFrame#SessionsControlBlock,
+    QFrame#SessionsRegistryBlock,
+    QFrame#SessionsWorkspaceBlock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(24, 35, 56, 0.98), stop:0.56 rgba(17, 26, 43, 0.98), stop:1 rgba(12, 19, 31, 0.99));
+        border: 1px solid rgba(172, 140, 248, 0.20);
+        border-top: 1px solid rgba(223, 207, 255, 0.30);
+    }}
+
+    QWidget#SessionsPage QFrame#MetricCard[sessionsMetric='true'] {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(34, 49, 77, 0.98), stop:0.56 rgba(24, 35, 57, 0.98), stop:1 rgba(16, 24, 40, 0.99));
+        border: 1px solid rgba(184, 152, 255, 0.26);
+        border-top: 1px solid rgba(233, 216, 255, 0.38);
+    }}
+
+    QListWidget#SessionsList::item {{
+        padding: 10px 11px;
+        border-radius: 11px;
+        margin-bottom: 4px;
+        background: rgba(255, 255, 255, 0.012);
+        border: 1px solid transparent;
+    }}
+
+    QListWidget#SessionsList::item:hover {{
+        border: 1px solid rgba(182, 151, 255, 0.32);
+        background: rgba(154, 116, 255, 0.12);
+    }}
+
+    QLabel#SessionMobilePreview {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(18, 28, 45, 0.97), stop:0.5 rgba(14, 22, 36, 0.97), stop:1 rgba(11, 18, 30, 0.97));
+        border: 1px solid rgba(193, 163, 255, 0.54);
+        border-top: 1px solid rgba(236, 222, 255, 0.54);
+        border-radius: 28px;
+        color: rgba(220, 230, 255, 0.95);
+        font-family: '{tokens.typography['label']}';
+        font-size: 13px;
+        font-weight: 540;
+        padding: 16px;
+        line-height: 1.35em;
+    }}
+
+    QWidget#AnalyticsPage QFrame#MetricCard[analyticsMetric='true'] {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(35, 49, 76, 0.99), stop:0.55 rgba(24, 35, 57, 0.99), stop:1 rgba(17, 25, 41, 0.99));
+        border: 1px solid rgba(187, 155, 255, 0.28);
+        border-top: 1px solid rgba(236, 220, 255, 0.40);
+    }}
+
+    QFrame#AnalyticsTopWeakBlock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(23, 34, 54, 0.98), stop:0.56 rgba(16, 24, 39, 0.98), stop:1 rgba(12, 19, 31, 0.99));
+        border: 1px solid rgba(165, 133, 240, 0.18);
+        border-top: 1px solid rgba(216, 199, 255, 0.28);
+    }}
+
+    QFrame#AnalyticsInsightsBlock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(31, 44, 70, 0.99), stop:0.56 rgba(22, 32, 53, 0.99), stop:1 rgba(15, 23, 39, 0.99));
+        border: 1px solid rgba(188, 157, 255, 0.26);
+        border-top: 1px solid rgba(234, 217, 255, 0.38);
+    }}
+
+    QListWidget#AnalyticsTopList::item,
+    QListWidget#AnalyticsWeakList::item,
+    QListWidget#AnalyticsPatternsList::item {{
+        padding: 10px 11px;
+        border-radius: 11px;
+        margin-bottom: 4px;
+        border: 1px solid transparent;
+    }}
+
+    QListWidget#AnalyticsTopList::item {{
+        background: rgba(154, 116, 255, 0.10);
+    }}
+
+    QListWidget#AnalyticsWeakList::item {{
+        background: rgba(255, 184, 92, 0.09);
+    }}
+
+    QListWidget#AnalyticsPatternsList::item {{
+        background: rgba(104, 199, 255, 0.08);
+    }}
+
+    QListWidget#AnalyticsTopList::item:hover,
+    QListWidget#AnalyticsWeakList::item:hover,
+    QListWidget#AnalyticsPatternsList::item:hover {{
+        border: 1px solid rgba(190, 159, 255, 0.34);
+    }}
+
+    QTextEdit#AnalyticsPlanText {{
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(14, 21, 35, 0.99), stop:1 rgba(10, 15, 26, 0.99));
+        border: 1px solid rgba(167, 134, 242, 0.18);
+        border-top: 1px solid rgba(220, 203, 255, 0.28);
+    }}
+
+    QWidget#AIStudioPage QFrame#AIActionBlock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(34, 48, 76, 0.99), stop:0.56 rgba(24, 35, 58, 0.99), stop:1 rgba(16, 24, 41, 0.99));
+        border: 1px solid rgba(195, 164, 255, 0.30);
+        border-top: 1px solid rgba(237, 222, 255, 0.44);
+    }}
+
+    QWidget#AIStudioPage QFrame#MetricCard[aiMetric='true'] {{
+        border: 1px solid rgba(197, 166, 255, 0.32);
+        border-top: 1px solid rgba(238, 223, 255, 0.44);
+    }}
+
     QWidget#DashboardPage QWidget#DashboardOverviewHeader QLabel#SectionTitle,
     QWidget#DashboardPage QWidget#DashboardQuickHeader QLabel#SectionTitle,
     QWidget#DashboardPage QWidget#DashboardAuditHeader QLabel#SectionTitle,
     QWidget#DashboardPage QWidget#DashboardRecommendationHeader QLabel#SectionTitle {{
-        font-size: 18px;
-        font-weight: 630;
+        font-size: 17px;
+        font-weight: 600;
     }}
 
     QWidget#DashboardPage QWidget#DashboardOverviewHeader QLabel#SectionHint,
@@ -351,8 +492,8 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     QLabel#CardValue {{
         color: {c['primary_text']};
         font-family: '{tokens.typography['metric']}';
-        font-size: 31px;
-        font-weight: 620;
+        font-size: 29px;
+        font-weight: 590;
         margin-top: 2px;
         margin-bottom: 1px;
     }}
@@ -375,15 +516,15 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     QLabel#SectionTitle {{
         color: {c['primary_text']};
         font-family: '{tokens.typography['title']}';
-        font-size: 17px;
-        font-weight: 620;
+        font-size: 16px;
+        font-weight: 590;
     }}
 
     QLabel#SectionHint {{
         color: rgba(154, 166, 196, 0.96);
         font-family: '{tokens.typography['label']}';
         font-size: 12px;
-        font-weight: 470;
+        font-weight: 450;
     }}
 
     QPushButton {{
@@ -396,7 +537,7 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         color: {c['primary_text']};
         font-family: '{tokens.typography['label']}';
         font-size: 12px;
-        font-weight: 560;
+        font-weight: 540;
     }}
 
     QPushButton[motionButton='true'] {{
@@ -546,6 +687,28 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     QListWidget#DashboardRecommendationList::item:hover {{
         border: 1px solid rgba(195, 164, 255, 0.34);
         background: rgba(154, 116, 255, 0.16);
+    }}
+
+    QListWidget#AIRecommendationList::item,
+    QListWidget#AIBundleList::item {{
+        padding: 10px 11px;
+        border-radius: 11px;
+        margin-bottom: 4px;
+        border: 1px solid transparent;
+    }}
+
+    QListWidget#AIRecommendationList::item {{
+        background: rgba(154, 116, 255, 0.14);
+    }}
+
+    QListWidget#AIBundleList::item {{
+        background: rgba(104, 199, 255, 0.09);
+    }}
+
+    QListWidget#AIRecommendationList::item:hover,
+    QListWidget#AIBundleList::item:hover {{
+        border: 1px solid rgba(201, 171, 255, 0.38);
+        background: rgba(154, 116, 255, 0.18);
     }}
 
     QTableWidget#AuditTimelineTable,
