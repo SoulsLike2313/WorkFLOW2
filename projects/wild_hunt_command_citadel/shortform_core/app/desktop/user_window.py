@@ -83,15 +83,35 @@ class UserWorkspaceWindow(QMainWindow):
         sidebar.setFixedWidth(274)
         sidebar_layout = QVBoxLayout(sidebar)
         sidebar_layout.setContentsMargins(14, 16, 14, 16)
-        sidebar_layout.setSpacing(10)
+        sidebar_layout.setSpacing(11)
 
         app_title = QLabel("ЦИТАДЕЛЬ ДИКОЙ ОХОТЫ")
         app_title.setObjectName("AppTitle")
         app_subtitle = QLabel("Премиальный центр управления профилями, сессиями, аналитикой и AI.")
         app_subtitle.setObjectName("AppSubtitle")
         app_subtitle.setWordWrap(True)
-        sidebar_layout.addWidget(app_title)
-        sidebar_layout.addWidget(app_subtitle)
+
+        brand_block = QWidget()
+        brand_block.setObjectName("SidebarBrandBlock")
+        brand_layout = QHBoxLayout(brand_block)
+        brand_layout.setContentsMargins(12, 10, 12, 12)
+        brand_layout.setSpacing(10)
+
+        emblem = QLabel("W")
+        emblem.setObjectName("SidebarEmblem")
+        emblem.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        emblem.setFixedSize(42, 42)
+        brand_layout.addWidget(emblem)
+
+        title_block = QWidget()
+        title_layout = QVBoxLayout(title_block)
+        title_layout.setContentsMargins(0, 0, 0, 0)
+        title_layout.setSpacing(1)
+        title_layout.addWidget(app_title)
+        title_layout.addWidget(app_subtitle)
+        brand_layout.addWidget(title_block, stretch=1)
+
+        sidebar_layout.addWidget(brand_block)
 
         self._register_nav_button(sidebar_layout, "dashboard", "Обзор")
         self._register_nav_button(sidebar_layout, "profiles", "Профили")
@@ -105,7 +125,7 @@ class UserWorkspaceWindow(QMainWindow):
         sidebar_layout.addStretch(1)
 
         self.sidebar_status = QLabel("Система: инициализация")
-        self.sidebar_status.setObjectName("SectionHint")
+        self.sidebar_status.setObjectName("SidebarRuntimeStatus")
         self.sidebar_status.setWordWrap(True)
         sidebar_layout.addWidget(self.sidebar_status)
 
@@ -220,6 +240,7 @@ class UserWorkspaceWindow(QMainWindow):
 
     def refresh_workspace(self) -> None:
         started = datetime.now()
+        self.top_status.set_loading(True)
         api_errors: list[str] = []
         try:
             with self._client() as client:
@@ -253,6 +274,7 @@ class UserWorkspaceWindow(QMainWindow):
         except Exception as exc:
             self.sidebar_status.setText(f"Система: ошибка подключения | {exc}")
             diag_log("runtime_logs", "desktop_refresh_exception", level="ERROR", payload={"error": str(exc)})
+            self.top_status.set_loading(False)
             return
 
         profiles = _safe_list(_safe_dict(profiles_payload).get("items"))
@@ -441,6 +463,7 @@ class UserWorkspaceWindow(QMainWindow):
                 "elapsed_ms": elapsed_ms,
             },
         )
+        self.top_status.set_loading(False)
 
     def _push_snapshot(self) -> None:
         for key, page in self._pages.items():

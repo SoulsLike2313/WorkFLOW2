@@ -92,62 +92,99 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     }}
 
     QWidget#Sidebar {{
-        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-            stop:0 #0C1423, stop:1 #0A1120);
-        border-right: 1px solid rgba(154, 116, 255, 0.24);
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(15, 23, 39, 0.98), stop:0.45 rgba(11, 18, 31, 0.98), stop:1 rgba(9, 15, 26, 0.98));
+        border: 1px solid rgba(164, 132, 242, 0.14);
+        border-right: 1px solid rgba(192, 162, 255, 0.24);
+        border-top: 1px solid rgba(226, 210, 255, 0.22);
         border-top-left-radius: {r['lg']}px;
         border-bottom-left-radius: {r['lg']}px;
     }}
 
+    QWidget#SidebarBrandBlock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(30, 43, 68, 0.72), stop:1 rgba(18, 28, 46, 0.70));
+        border: 1px solid rgba(183, 150, 255, 0.20);
+        border-top: 1px solid rgba(234, 217, 255, 0.30);
+        border-radius: 17px;
+    }}
+
+    QLabel#SidebarEmblem {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(147, 114, 235, 0.92), stop:1 rgba(105, 80, 176, 0.92));
+        color: #F9F4FF;
+        border: 1px solid rgba(228, 210, 255, 0.55);
+        border-radius: 21px;
+        font-family: '{tokens.typography['display']}';
+        font-size: 16px;
+        font-weight: 680;
+    }}
+
     QLabel#AppTitle {{
         font-family: '{tokens.typography['display']}';
-        font-size: 27px;
-        font-weight: 650;
+        font-size: 20px;
+        font-weight: 620;
         color: {c['primary_text']};
+        letter-spacing: 0.4px;
     }}
 
     QLabel#AppSubtitle {{
-        color: {c['muted_text']};
-        font-size: 12px;
+        color: rgba(163, 175, 205, 0.95);
+        font-size: 11px;
         font-family: '{tokens.typography['label']}';
-        font-weight: 450;
+        font-weight: 470;
+    }}
+
+    QLabel#SidebarRuntimeStatus {{
+        color: rgba(162, 174, 204, 0.92);
+        font-family: '{tokens.typography['label']}';
+        font-size: 11px;
+        font-weight: 520;
+        padding: 8px 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(170, 138, 245, 0.14);
+        border-top: 1px solid rgba(214, 197, 255, 0.20);
+        background: rgba(20, 30, 49, 0.68);
     }}
 
     QPushButton[navButton='true'] {{
         text-align: left;
-        padding: 12px 14px 12px 16px;
-        border-radius: {r['lg']}px;
-        border: 1px solid rgba(154, 116, 255, 0.10);
+        padding: 11px 13px 11px 15px;
+        border-radius: 15px;
+        border: 1px solid rgba(154, 116, 255, 0.09);
+        border-top: 1px solid rgba(214, 196, 255, 0.11);
         background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-            stop:0 rgba(255,255,255,0.02), stop:1 rgba(255,255,255,0.00));
-        color: {c['secondary_text']};
+            stop:0 rgba(255,255,255,0.018), stop:1 rgba(255,255,255,0.00));
+        color: rgba(199, 210, 237, 0.96);
         font-family: '{tokens.typography['label']}';
         font-size: 13px;
-        font-weight: 520;
+        font-weight: 540;
     }}
 
     QPushButton[navButton='true']:hover {{
         background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-            stop:0 rgba(154, 116, 255, 0.24), stop:1 rgba(154, 116, 255, 0.11));
-        border-color: rgba(184, 149, 255, 0.58);
+            stop:0 rgba(154, 116, 255, 0.28), stop:1 rgba(154, 116, 255, 0.12));
+        border-color: rgba(196, 164, 255, 0.52);
+        border-top: 1px solid rgba(230, 215, 255, 0.32);
         color: {c['primary_text']};
     }}
 
     QPushButton[navButton='true']:checked {{
         background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-            stop:0 rgba(154, 116, 255, 0.34), stop:1 rgba(154, 116, 255, 0.15));
-        border-color: {c['border_active']};
-        border-left: 2px solid rgba(208, 186, 255, 0.88);
+            stop:0 rgba(161, 123, 246, 0.37), stop:0.55 rgba(146, 109, 231, 0.26), stop:1 rgba(120, 91, 196, 0.16));
+        border-color: rgba(202, 173, 255, 0.66);
+        border-top: 1px solid rgba(237, 223, 255, 0.40);
+        border-left: 1px solid rgba(228, 208, 255, 0.82);
         color: {c['primary_text']};
-        padding-left: 18px;
+        padding-left: 17px;
     }}
 
     QPushButton[navButton='true']:pressed {{
-        background: rgba(154, 116, 255, 0.22);
+        background: rgba(154, 116, 255, 0.20);
     }}
 
     QPushButton[navButton='true']:focus {{
-        border-color: rgba(201, 179, 255, 0.78);
+        border-color: rgba(214, 192, 255, 0.74);
     }}
 
     QPushButton[navButton='true']:disabled {{
@@ -158,11 +195,17 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
 
     QWidget#TopStatusBar {{
         background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-            stop:0 rgba(22, 31, 50, 0.98), stop:0.58 rgba(16, 24, 40, 0.98), stop:1 rgba(12, 19, 32, 0.98));
-        border: 1px solid rgba(168, 136, 246, 0.20);
-        border-top: 1px solid rgba(223, 206, 255, 0.30);
+            stop:0 rgba(24, 35, 56, 0.98), stop:0.52 rgba(17, 26, 43, 0.98), stop:1 rgba(13, 21, 35, 0.98));
+        border: 1px solid rgba(176, 145, 250, 0.18);
+        border-top: 1px solid rgba(230, 214, 255, 0.32);
         border-bottom: 1px solid rgba(7, 11, 18, 0.78);
         border-radius: {r['xl']}px;
+    }}
+
+    QWidget#TopStatusBar QPushButton#PrimaryCTA {{
+        min-height: 36px;
+        padding-left: 16px;
+        padding-right: 16px;
     }}
 
     QFrame[card='true'] {{
@@ -181,6 +224,16 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         border-top: 1px solid rgba(224, 207, 255, 0.34);
         border-bottom: 1px solid rgba(8, 12, 20, 0.84);
         border-radius: {r['xl']}px;
+    }}
+
+    QFrame[cardHover='true'] {{
+        border-color: rgba(184, 153, 255, 0.30);
+        border-top: 1px solid rgba(233, 216, 255, 0.42);
+    }}
+
+    QFrame[cardPressed='true'] {{
+        border-color: rgba(170, 140, 240, 0.24);
+        border-top: 1px solid rgba(209, 189, 250, 0.30);
     }}
 
     QFrame#MetricCard {{
@@ -205,6 +258,56 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         border-bottom: 1px solid rgba(8, 12, 19, 0.72);
     }}
 
+    QWidget#DashboardPage QFrame#MetricCard[dashboardMetric='primary'] {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(39, 56, 88, 0.99), stop:0.54 rgba(27, 40, 65, 0.99), stop:1 rgba(18, 27, 45, 0.99));
+        border: 1px solid rgba(196, 165, 255, 0.34);
+        border-top: 1px solid rgba(240, 224, 255, 0.45);
+    }}
+
+    QWidget#DashboardPage QFrame#MetricCard[dashboardMetric='system'] {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(30, 43, 68, 0.98), stop:0.56 rgba(22, 32, 52, 0.98), stop:1 rgba(15, 22, 37, 0.99));
+        border: 1px solid rgba(171, 140, 247, 0.22);
+        border-top: 1px solid rgba(224, 206, 255, 0.34);
+    }}
+
+    QWidget#DashboardPage QFrame#DashboardQuickActions {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(29, 42, 67, 0.98), stop:0.52 rgba(20, 30, 49, 0.98), stop:1 rgba(13, 21, 35, 0.99));
+        border: 1px solid rgba(190, 158, 255, 0.24);
+        border-top: 1px solid rgba(234, 217, 255, 0.36);
+    }}
+
+    QLabel#DashboardRowCaption {{
+        color: rgba(187, 199, 229, 0.95);
+        font-family: '{tokens.typography['label']}';
+        font-size: 11px;
+        font-weight: 560;
+        letter-spacing: 0.3px;
+        padding-left: 2px;
+        margin-top: 2px;
+    }}
+
+    QFrame#DashboardQuickActions QPushButton[dashboardQuickButton='true'] {{
+        min-height: 40px;
+        border-radius: 14px;
+    }}
+
+    QWidget#DashboardPage QFrame#DashboardAuditBlock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(22, 32, 51, 0.98), stop:0.56 rgba(15, 24, 39, 0.98), stop:1 rgba(11, 18, 30, 0.99));
+        border: 1px solid rgba(158, 128, 232, 0.16);
+        border-top: 1px solid rgba(214, 197, 255, 0.24);
+    }}
+
+    QWidget#DashboardPage QFrame#DashboardRecommendationBlock {{
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(34, 48, 77, 0.99), stop:0.56 rgba(24, 35, 58, 0.99), stop:1 rgba(16, 24, 40, 0.99));
+        border: 1px solid rgba(194, 163, 255, 0.28);
+        border-top: 1px solid rgba(236, 221, 255, 0.40);
+    }}
+
     QFrame#DashboardAuditBlock:hover,
     QFrame#DashboardRecommendationBlock:hover,
     QFrame#AuditTimelineBlock:hover,
@@ -221,6 +324,21 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         border: 1px solid rgba(188, 158, 255, 0.28);
         border-top: 1px solid rgba(229, 211, 255, 0.38);
         border-bottom: 1px solid rgba(9, 13, 21, 0.82);
+    }}
+
+    QWidget#DashboardPage QWidget#DashboardOverviewHeader QLabel#SectionTitle,
+    QWidget#DashboardPage QWidget#DashboardQuickHeader QLabel#SectionTitle,
+    QWidget#DashboardPage QWidget#DashboardAuditHeader QLabel#SectionTitle,
+    QWidget#DashboardPage QWidget#DashboardRecommendationHeader QLabel#SectionTitle {{
+        font-size: 18px;
+        font-weight: 630;
+    }}
+
+    QWidget#DashboardPage QWidget#DashboardOverviewHeader QLabel#SectionHint,
+    QWidget#DashboardPage QWidget#DashboardQuickHeader QLabel#SectionHint,
+    QWidget#DashboardPage QWidget#DashboardAuditHeader QLabel#SectionHint,
+    QWidget#DashboardPage QWidget#DashboardRecommendationHeader QLabel#SectionHint {{
+        color: rgba(170, 182, 212, 0.95);
     }}
 
     QLabel#CardTitle {{
@@ -279,6 +397,10 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         font-family: '{tokens.typography['label']}';
         font-size: 12px;
         font-weight: 560;
+    }}
+
+    QPushButton[motionButton='true'] {{
+        border-color: rgba(162, 129, 237, 0.22);
     }}
 
     QPushButton:hover {{
@@ -400,6 +522,32 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         padding: 6px;
     }}
 
+    QListWidget#DashboardAuditList::item,
+    QListWidget#DashboardRecommendationList::item {{
+        padding: 10px 11px;
+        border-radius: 11px;
+        margin-bottom: 4px;
+        border: 1px solid transparent;
+    }}
+
+    QListWidget#DashboardAuditList::item {{
+        background: rgba(255, 255, 255, 0.012);
+    }}
+
+    QListWidget#DashboardRecommendationList::item {{
+        background: rgba(154, 116, 255, 0.08);
+    }}
+
+    QListWidget#DashboardAuditList::item:hover {{
+        border: 1px solid rgba(164, 131, 240, 0.28);
+        background: rgba(154, 116, 255, 0.11);
+    }}
+
+    QListWidget#DashboardRecommendationList::item:hover {{
+        border: 1px solid rgba(195, 164, 255, 0.34);
+        background: rgba(154, 116, 255, 0.16);
+    }}
+
     QTableWidget#AuditTimelineTable,
     QTextEdit#AILearningSummary {{
         background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -425,38 +573,48 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
     }}
 
     QLabel[statusPill='true'] {{
-        border-radius: 11px;
-        padding: 5px 10px;
+        border-radius: 12px;
+        padding: 5px 11px;
         font-size: 11px;
         font-family: '{tokens.typography['label']}';
-        font-weight: 540;
-        min-width: 98px;
-        border: 1px solid rgba(154, 116, 255, 0.22);
-        background: rgba(255, 255, 255, 0.04);
+        font-weight: 560;
+        min-width: 96px;
+        border: 1px solid rgba(174, 143, 247, 0.14);
+        border-top: 1px solid rgba(223, 207, 255, 0.22);
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(30, 41, 66, 0.62), stop:1 rgba(18, 26, 43, 0.62));
     }}
 
     QLabel[statusLevel='ok'] {{
-        color: {c['success']};
-        border-color: rgba(51, 214, 159, 0.50);
-        background: rgba(51, 214, 159, 0.11);
+        color: #8CE5C9;
+        border-color: rgba(78, 221, 173, 0.34);
+        border-top: 1px solid rgba(173, 255, 225, 0.34);
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(36, 97, 79, 0.32), stop:1 rgba(26, 68, 56, 0.24));
     }}
 
     QLabel[statusLevel='warn'] {{
-        color: {c['warning']};
-        border-color: rgba(255, 184, 92, 0.50);
-        background: rgba(255, 184, 92, 0.11);
+        color: #FFD08B;
+        border-color: rgba(255, 192, 110, 0.35);
+        border-top: 1px solid rgba(255, 223, 170, 0.34);
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(109, 80, 33, 0.30), stop:1 rgba(79, 57, 22, 0.22));
     }}
 
     QLabel[statusLevel='danger'] {{
-        color: {c['danger']};
-        border-color: rgba(255, 110, 138, 0.50);
-        background: rgba(255, 110, 138, 0.11);
+        color: #FFA0B5;
+        border-color: rgba(255, 135, 163, 0.36);
+        border-top: 1px solid rgba(255, 198, 214, 0.34);
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(112, 45, 62, 0.30), stop:1 rgba(82, 32, 46, 0.22));
     }}
 
     QLabel[statusLevel='info'] {{
-        color: {c['info']};
-        border-color: rgba(104, 199, 255, 0.50);
-        background: rgba(104, 199, 255, 0.11);
+        color: #8EDBFF;
+        border-color: rgba(132, 210, 255, 0.35);
+        border-top: 1px solid rgba(203, 237, 255, 0.35);
+        background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgba(42, 86, 116, 0.30), stop:1 rgba(29, 63, 86, 0.22));
     }}
 
     QLabel#ContextPanelTitle {{

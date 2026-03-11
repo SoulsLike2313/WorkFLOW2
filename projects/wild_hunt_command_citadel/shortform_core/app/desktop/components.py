@@ -20,6 +20,8 @@ class MotionButton(QPushButton):
     def __init__(self, title: str) -> None:
         super().__init__(title)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.setProperty("motionButton", "true")
 
         self._is_hovered = False
         self._is_pressed = False
@@ -33,7 +35,7 @@ class MotionButton(QPushButton):
         self.setGraphicsEffect(self._shadow)
 
         self._anim = QVariantAnimation(self)
-        self._anim.setDuration(150)
+        self._anim.setDuration(145)
         self._anim.setEasingCurve(QEasingCurve.Type.OutCubic)
         self._anim.valueChanged.connect(self._apply_motion)
 
@@ -64,6 +66,13 @@ class MotionButton(QPushButton):
 
     def _animate_to(self, target: float) -> None:
         self._anim.stop()
+        if self._is_pressed:
+            duration = 105
+        elif self._is_hovered or self._is_focused:
+            duration = 165
+        else:
+            duration = 135
+        self._anim.setDuration(duration)
         self._anim.setStartValue(self._motion_value)
         self._anim.setEndValue(target)
         self._anim.start()
@@ -114,7 +123,7 @@ class NavRailButton(MotionButton):
         self.setProperty("navButton", "true")
         self.setCheckable(True)
         self.toggled.connect(lambda _: self._refresh_motion())
-        self.setMinimumHeight(44)
+        self.setMinimumHeight(46)
 
 
 class StatusPill(QLabel):
@@ -122,7 +131,7 @@ class StatusPill(QLabel):
         super().__init__(text)
         self.setProperty("statusPill", "true")
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.setMinimumHeight(24)
+        self.setMinimumHeight(26)
         self._level = level
         self._shadow = QGraphicsDropShadowEffect(self)
         self._shadow.setOffset(0, 0)
@@ -192,12 +201,14 @@ class GlowCard(QFrame):
         self.setGraphicsEffect(self._shadow)
 
         self._anim = QVariantAnimation(self)
-        self._anim.setDuration(180)
+        self._anim.setDuration(190)
         self._anim.setEasingCurve(QEasingCurve.Type.OutCubic)
         self._anim.valueChanged.connect(self._apply_glow)
         self._current_blur = 14.0
         self._is_hovered = False
         self._is_pressed = False
+        self.setProperty("cardHover", "false")
+        self.setProperty("cardPressed", "false")
 
     def _apply_glow(self, value: Any) -> None:
         blur = float(value)
@@ -215,30 +226,43 @@ class GlowCard(QFrame):
 
     def _target_blur(self) -> float:
         if self._is_pressed:
-            return 10.0
+            return 9.5
         if self._is_hovered:
-            return 22.0
+            return 21.0
         return 14.0
 
     def enterEvent(self, event) -> None:  # type: ignore[override]
         self._is_hovered = True
+        self.setProperty("cardHover", "true")
+        self.style().unpolish(self)
+        self.style().polish(self)
         super().enterEvent(event)
         self._animate_to(self._target_blur())
 
     def leaveEvent(self, event) -> None:  # type: ignore[override]
         self._is_hovered = False
         self._is_pressed = False
+        self.setProperty("cardHover", "false")
+        self.setProperty("cardPressed", "false")
+        self.style().unpolish(self)
+        self.style().polish(self)
         super().leaveEvent(event)
         self._animate_to(self._target_blur())
 
     def mousePressEvent(self, event) -> None:  # type: ignore[override]
         self._is_pressed = True
+        self.setProperty("cardPressed", "true")
+        self.style().unpolish(self)
+        self.style().polish(self)
         self._animate_to(self._target_blur())
         super().mousePressEvent(event)
         self.clicked.emit()
 
     def mouseReleaseEvent(self, event) -> None:  # type: ignore[override]
         self._is_pressed = False
+        self.setProperty("cardPressed", "false")
+        self.style().unpolish(self)
+        self.style().polish(self)
         self._animate_to(self._target_blur())
         super().mouseReleaseEvent(event)
 
@@ -296,12 +320,12 @@ class TopStatusBar(GlowCard):
     def __init__(self) -> None:
         super().__init__(elevated=False)
         self.setObjectName("TopStatusBar")
-        self.setMinimumHeight(64)
+        self.setMinimumHeight(72)
         self._is_loading = False
 
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(16, 12, 16, 12)
-        layout.setSpacing(10)
+        layout.setContentsMargins(18, 14, 18, 14)
+        layout.setSpacing(11)
 
         self.pills: dict[str, StatusPill] = {
             "profiles": StatusPill("профили: --", "info"),
@@ -318,6 +342,7 @@ class TopStatusBar(GlowCard):
         layout.addStretch(1)
         self.refresh_button = MotionButton("Обновить данные")
         self.refresh_button.setObjectName("PrimaryCTA")
+        self.refresh_button.setMinimumWidth(154)
         self.refresh_button.clicked.connect(self.refresh_requested.emit)
         layout.addWidget(self.refresh_button)
 
