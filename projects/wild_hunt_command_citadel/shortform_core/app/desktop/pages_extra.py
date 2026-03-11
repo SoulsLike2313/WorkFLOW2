@@ -96,7 +96,9 @@ class AuditPage(BasePage):
         )
 
         actions.addWidget(refresh_btn)
-        actions.addWidget(QLabel("Уровень:"))
+        filter_label = QLabel("Фильтр:")
+        filter_label.setMinimumWidth(104)
+        actions.addWidget(filter_label)
         actions.addWidget(self.level_filter)
         actions.addStretch(1)
         layout.addWidget(actions_card)
@@ -239,7 +241,7 @@ class UpdatesPage(BasePage):
         patch = _safe_dict(updates.get("patch_result"))
         post = _safe_dict(updates.get("post_verify"))
 
-        current_label = str(ver.get("version_label") or ver.get("version") or "неизвестно")
+        current_label = str(ver.get("version_label") or ver.get("version") or "н/д")
         self.current_version.set_data(current_label, f"build={ver.get('build', '-')}")
 
         avail = str(check.get("available_version") or check.get("available") or "н/д")
@@ -302,12 +304,25 @@ class SettingsPage(BasePage):
         self.db_path = QLabel("-")
         self.verification_state = QLabel("-")
 
-        form.addRow("Режим:", self.mode)
-        form.addRow("Базовый URL API:", self.api_base)
-        form.addRow("Каталог данных:", self.data_dir)
-        form.addRow("Каталог логов:", self.logs_dir)
-        form.addRow("Путь к БД:", self.db_path)
-        form.addRow("Гейт верификации:", self.verification_state)
+        mode_label = QLabel("Режим:")
+        mode_label.setMinimumWidth(104)
+        api_label = QLabel("URL API:")
+        api_label.setMinimumWidth(116)
+        data_label = QLabel("Данные:")
+        data_label.setMinimumWidth(104)
+        logs_label = QLabel("Логи:")
+        logs_label.setMinimumWidth(104)
+        db_label = QLabel("БД:")
+        db_label.setMinimumWidth(104)
+        verification_label = QLabel("Верификация:")
+        verification_label.setMinimumWidth(170)
+
+        form.addRow(mode_label, self.mode)
+        form.addRow(api_label, self.api_base)
+        form.addRow(data_label, self.data_dir)
+        form.addRow(logs_label, self.logs_dir)
+        form.addRow(db_label, self.db_path)
+        form.addRow(verification_label, self.verification_state)
 
         card_layout.addLayout(form)
 

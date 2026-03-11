@@ -34,9 +34,20 @@ class TranslationPanel(QWidget):
         controls.addWidget(self.style_combo)
         controls.addWidget(self.translate_btn)
 
-        self.table = QTableWidget(0, 8)
+        self.table = QTableWidget(0, 10)
         self.table.setHorizontalHeaderLabels(
-            ["Entry ID", "Line ID", "Source Lang", "Source", "Translated", "Quality", "Latency", "Uncertainty"]
+            [
+                "Entry ID",
+                "Line ID",
+                "Source Lang",
+                "Source",
+                "Translated",
+                "Backend",
+                "Reason",
+                "Quality",
+                "Latency",
+                "Uncertainty",
+            ]
         )
 
         correction_form = QFormLayout()
@@ -73,6 +84,8 @@ class TranslationPanel(QWidget):
                 row.get("source_lang"),
                 (row.get("source_text", "")[:65] + "...") if len(row.get("source_text", "")) > 65 else row.get("source_text", ""),
                 (row.get("translated_text", "")[:65] + "...") if len(row.get("translated_text", "")) > 65 else row.get("translated_text", ""),
+                row.get("backend", ""),
+                (row.get("decision_log_json", [""])[0] if row.get("decision_log_json") else ""),
                 row.get("quality_score", 0),
                 row.get("latency_ms", 0),
                 row.get("uncertainty", 0),

@@ -25,6 +25,7 @@ class VoicePanel(QWidget):
         self.generate_btn = QPushButton("Generate Demo Voice Attempts")
         controls.addWidget(self.generate_btn)
         root.addLayout(controls)
+        root.addWidget(QLabel("Voice synthesis mode: MOCK/STUB (technical WAV generation, no real cloning)."))
 
         profile_form = QFormLayout()
         self.speaker_id_edit = QLineEdit()

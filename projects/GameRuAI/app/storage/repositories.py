@@ -450,6 +450,48 @@ class RepositoryHub:
             out.append(item)
         return out
 
+    def list_learning_improvements(self, project_id: int, limit: int = 200) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT
+              e.id AS entry_id,
+              e.line_id,
+              e.source_text,
+              t.translated_text,
+              t.backend,
+              t.translation_status,
+              t.tm_hits_json,
+              t.glossary_hits_json,
+              t.quality_score,
+              t.updated_at
+            FROM translations t
+            JOIN extracted_entries e ON e.id=t.entry_id
+            WHERE t.project_id=?
+              AND (
+                t.backend='translation_memory'
+                OR t.tm_hits_json <> '[]'
+                OR t.glossary_hits_json <> '[]'
+                OR t.translation_status='corrected'
+              )
+            ORDER BY t.updated_at DESC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["tm_hits_json"] = json.loads(item["tm_hits_json"] or "[]")
+            except json.JSONDecodeError:
+                item["tm_hits_json"] = []
+            try:
+                item["glossary_hits_json"] = json.loads(item["glossary_hits_json"] or "[]")
+            except json.JSONDecodeError:
+                item["glossary_hits_json"] = []
+            out.append(item)
+        return out
+
     def upsert_voice_profile(self, project_id: int, speaker_id: str, profile: dict[str, Any]) -> None:
         self.db.execute(
             """

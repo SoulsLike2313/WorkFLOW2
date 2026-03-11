@@ -44,7 +44,8 @@ python -m app.main
 1. Open `Project` tab.
 2. Use `Use Demo Fixture` or set path to `fixtures/demo_game_world`.
 3. Click `Create/Select Project`.
-4. In order: `Scan` -> `Extract Strings` -> `Detect Language` -> `Translate to Russian` -> `Generate Demo Voice Attempts`.
+4. Quick way: click `Run Full Demo Pipeline` (one-click end-to-end).
+5. Manual way: `Scan` -> `Extract Strings` -> `Detect Language` -> `Translate to Russian` -> `Generate Demo Voice Attempts`.
 
 ## Live Demo Mode
 1. Go to `Live Demo` tab.
@@ -81,3 +82,4 @@ python scripts/build_app.py --onefile
 ## Notes
 - Original fixture files are never modified during export.
 - Export artifacts are written into selected output folder (`patch/`, `export_manifest.json`, `diff_report.md`).
+- Voice synthesis in this demo is explicitly `MOCK/STUB` (technical WAV generation, no real voice cloning).

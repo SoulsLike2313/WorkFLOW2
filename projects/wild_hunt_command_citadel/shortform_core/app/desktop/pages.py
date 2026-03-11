@@ -418,6 +418,7 @@ class ProfilesPage(BasePage):
         identity_info_col.setSpacing(7)
         self.identity_name = QLabel("Профиль не выбран")
         self.identity_name.setObjectName("ProfilesIdentityName")
+        self.identity_name.setWordWrap(True)
         identity_info_col.addWidget(self.identity_name)
         self.identity_meta = QLabel("Выберите профиль в таблице, чтобы увидеть контекст и быстрые действия.")
         self.identity_meta.setObjectName("ProfilesIdentityMeta")
@@ -656,7 +657,9 @@ class SessionsPage(BasePage):
         self.viewport.addItem("Android (высокий)", "android_tall")
         self.viewport.addItem("iPhone-стиль", "iphone_like")
         self.viewport.addItem("Пользовательский", "custom")
-        controls_top.addWidget(QLabel("Пресет окна:"))
+        preset_label = QLabel("Вид:")
+        preset_label.setMinimumWidth(66)
+        controls_top.addWidget(preset_label)
         controls_top.addWidget(self.viewport, 1)
         controls_layout.addLayout(controls_top)
 
@@ -716,6 +719,7 @@ class SessionsPage(BasePage):
 
         self.frame_title = QLabel("Окно сессии 9:16")
         self.frame_title.setObjectName("SectionTitle")
+        self.frame_title.setWordWrap(True)
         frame_layout.addWidget(self.frame_title)
 
         self.frame_runtime = QLabel("Активной сессии нет")
@@ -727,8 +731,9 @@ class SessionsPage(BasePage):
         self.frame_source.setObjectName("SectionHint")
         frame_layout.addWidget(self.frame_source)
 
-        chip_row = QHBoxLayout()
-        chip_row.setSpacing(10)
+        chip_grid = QGridLayout()
+        chip_grid.setHorizontalSpacing(10)
+        chip_grid.setVerticalSpacing(8)
         self.session_runtime_chip = QLabel("Состояние: ожидание")
         self.session_link_chip = QLabel("Источник: не привязан")
         self.session_viewport_chip = QLabel("Пресет: смартфон")
@@ -741,8 +746,12 @@ class SessionsPage(BasePage):
             chip.setProperty("sessionChipLevel", level)
             chip.setAlignment(Qt.AlignmentFlag.AlignCenter)
             chip.setMinimumHeight(28)
-            chip_row.addWidget(chip)
-        frame_layout.addLayout(chip_row)
+        chip_grid.addWidget(self.session_runtime_chip, 0, 0)
+        chip_grid.addWidget(self.session_link_chip, 0, 1)
+        chip_grid.addWidget(self.session_viewport_chip, 1, 0, 1, 2)
+        chip_grid.setColumnStretch(0, 1)
+        chip_grid.setColumnStretch(1, 1)
+        frame_layout.addLayout(chip_grid)
 
         self.session_preview = QLabel("ПРЕВЬЮ СЕССИИ 9:16\n\nОткройте сессию профиля, чтобы увидеть рабочее состояние.")
         self.session_preview.setObjectName("SessionMobilePreview")
@@ -844,8 +853,12 @@ class SessionsPage(BasePage):
         self.sessions_open_card.set_data(str(open_sessions), f"из {len(profiles)} профилей")
         self.sessions_selected_card.set_data("Открыта" if is_open else "Закрыта", f"режим: {runtime_state}")
         self.sessions_viewport_card.set_data(viewport_label, "активный профиль")
-        self._set_session_chip(self.session_runtime_chip, f"Состояние: {runtime_state}", "ok" if is_open else "warn")
-        self._set_session_chip(self.session_link_chip, f"Источник: {source_label}", "info" if source_label != "не указан" else "warn")
+        self._set_session_chip(self.session_runtime_chip, f"Статус: {runtime_state}", "ok" if is_open else "warn")
+        self._set_session_chip(
+            self.session_link_chip,
+            f"Источник: {source_label if source_label != 'не указан' else '—'}",
+            "info" if source_label != "не указан" else "warn",
+        )
         self._set_session_chip(self.session_viewport_chip, f"Пресет: {viewport_label}", "info")
 
         self.frame_title.setText(f"Сессия 9:16 | {profile_name}")
@@ -1020,8 +1033,9 @@ class AnalyticsPage(BasePage):
         self.story_subline.setWordWrap(True)
         story_layout.addWidget(self.story_subline)
 
-        cues_row = QHBoxLayout()
-        cues_row.setSpacing(GRID_GAP)
+        cues_grid = QGridLayout()
+        cues_grid.setHorizontalSpacing(GRID_GAP)
+        cues_grid.setVerticalSpacing(8)
         self.trend_chip = QLabel("Тренд: —")
         self.quality_chip = QLabel("Качество: —")
         self.stability_chip = QLabel("Стабильность: —")
@@ -1036,8 +1050,13 @@ class AnalyticsPage(BasePage):
             chip.setProperty("analyticsCueLevel", level)
             chip.setAlignment(Qt.AlignmentFlag.AlignCenter)
             chip.setMinimumHeight(30)
-            cues_row.addWidget(chip)
-        story_layout.addLayout(cues_row)
+        cues_grid.addWidget(self.trend_chip, 0, 0)
+        cues_grid.addWidget(self.quality_chip, 0, 1)
+        cues_grid.addWidget(self.stability_chip, 1, 0)
+        cues_grid.addWidget(self.action_chip, 1, 1)
+        cues_grid.setColumnStretch(0, 1)
+        cues_grid.setColumnStretch(1, 1)
+        story_layout.addLayout(cues_grid)
         layout.addWidget(story_card)
 
         split = QSplitter(Qt.Orientation.Horizontal)

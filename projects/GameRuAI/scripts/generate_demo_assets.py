@@ -5,6 +5,7 @@ import csv
 import json
 import math
 import random
+import re
 import wave
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -271,6 +272,13 @@ def _build_voice_profiles() -> list[dict[str, Any]]:
     return profiles
 
 
+def _assert_no_cyrillic(lines: list[dict[str, Any]]) -> None:
+    cyrillic = re.compile(r"[А-Яа-яЁё]")
+    offenders = [line["line_id"] for line in lines if cyrillic.search(str(line.get("text", "")))]
+    if offenders:
+        raise ValueError(f"Source demo lines must not contain Russian/Cyrillic. Offenders: {offenders[:10]}")
+
+
 def generate_demo_assets(project_root: Path, *, seed: int = 42, line_count: int = 340) -> dict[str, Any]:
     random.seed(seed)
     base = project_root / "fixtures" / "demo_game_world"
@@ -307,6 +315,8 @@ def generate_demo_assets(project_root: Path, *, seed: int = 42, line_count: int 
             all_lines.append(line)
             language_map[line_id] = lang
             line_idx += 1
+
+    _assert_no_cyrillic(all_lines)
 
     # texts/ui.json
     _write_json(texts_dir / "ui.json", {"lines": [line for line in all_lines if line["context"] == "ui"]})

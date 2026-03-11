@@ -120,6 +120,9 @@ class AppServices:
         def _run() -> dict[str, Any]:
             entries = self.repo.list_entries(project_id, limit=100000)
             translated = 0
+            tm_reuse = 0
+            glossary_reuse = 0
+            corrected_rows = 0
             for entry in entries:
                 source_lang = entry.get("detected_lang") or "unknown"
                 decision = self.translator.translate_entry(
@@ -132,6 +135,12 @@ class AppServices:
                 )
                 self.repo.upsert_translation(project_id, decision)
                 translated += 1
+                if decision.backend == "translation_memory" or decision.tm_hits:
+                    tm_reuse += 1
+                if decision.glossary_hits:
+                    glossary_reuse += 1
+                if decision.status.value == "corrected":
+                    corrected_rows += 1
             self.repo.add_adaptation_event(
                 project_id,
                 event_type="batch_translation",
@@ -139,7 +148,23 @@ class AppServices:
                 event_ref=str(translated),
                 details={"backend": backend_name, "style": style, "count": translated},
             )
-            return {"translated": translated}
+            self.repo.add_adaptation_event(
+                project_id,
+                event_type="translation_reuse_summary",
+                event_scope="translation",
+                event_ref=str(translated),
+                details={
+                    "tm_reuse_count": tm_reuse,
+                    "glossary_reuse_count": glossary_reuse,
+                    "corrected_rows": corrected_rows,
+                },
+            )
+            return {
+                "translated": translated,
+                "tm_reuse_count": tm_reuse,
+                "glossary_reuse_count": glossary_reuse,
+                "corrected_rows": corrected_rows,
+            }
 
         return self.job_manager.run_job("translate", _run)
 
@@ -213,7 +238,12 @@ class AppServices:
                     quality_score=quality,
                     duration_source_ms=source_duration,
                     duration_output_ms=int(synth["duration_ms"]),
-                    metadata={"profile": profile, "synthesis": synth, "alignment": alignment},
+                    metadata={
+                        "voice_mode": "mock_stub",
+                        "profile": profile,
+                        "synthesis": synth,
+                        "alignment": alignment,
+                    },
                 )
                 self.repo.add_voice_attempt(project_id, attempt)
                 generated += 1
@@ -276,6 +306,7 @@ class AppServices:
             "corrections": self.correction_tracker.list_recent(project_id, limit=100),
             "adaptation_summary": self.adaptation_rules.summarize(project_id),
             "translation_history": self.history_service.translation_history(project_id, limit=200),
+            "improvement_examples": self.repo.list_learning_improvements(project_id, limit=200),
             "terms": self.glossary_service.list_terms(project_id),
             "tm": self.repo.list_translation_memory(project_id),
         }
@@ -325,7 +356,7 @@ class AppServices:
             voice_status = "skipped"
             if entry.get("voice_link"):
                 self.voice_attempts(project_id, game_root)
-                voice_status = "generated"
+                voice_status = "generated_mock"
 
             yield {
                 "line_id": entry["line_id"],

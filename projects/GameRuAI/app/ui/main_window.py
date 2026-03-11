@@ -76,6 +76,7 @@ class MainWindow(QMainWindow):
 
     def _wire_actions(self) -> None:
         self.project_panel.create_btn.clicked.connect(self.on_create_project)
+        self.project_panel.run_pipeline_btn.clicked.connect(self.on_run_full_pipeline)
 
         self.scan_panel.scan_btn.clicked.connect(self.on_scan)
         self.scan_panel.extract_btn.clicked.connect(self.on_extract)
@@ -116,6 +117,24 @@ class MainWindow(QMainWindow):
             f"Project ready: id={project['id']} name={project['name']} root={project['game_path']}"
         )
         self.live_panel.load_scenes(self.services.load_scenes(game_root))
+        self.refresh_all_views()
+
+    def on_run_full_pipeline(self) -> None:
+        game_root = Path(self.project_panel.game_path_edit.text().strip())
+        if not game_root.exists():
+            QMessageBox.critical(self, "Invalid Path", f"Path does not exist: {game_root}")
+            return
+        summary = self.services.pipeline_end_to_end(
+            self.project_panel.project_name_edit.text().strip() or "GameRuAI Demo Project",
+            game_root,
+        )
+        self.current_project_id = int(summary["project"]["id"])
+        self.current_game_root = game_root
+        self.live_panel.load_scenes(self.services.load_scenes(game_root))
+        self.scan_panel.show_manifest(summary["scan"])
+        self.project_panel.info_label.setText(
+            f"Pipeline done: extracted={summary['extract']['entries_extracted']}, translated={summary['translate']['translated']}, voice={summary['voice']['voice_attempts']}"
+        )
         self.refresh_all_views()
 
     def on_scan(self) -> None:

@@ -39,10 +39,12 @@ class ProjectWizardPanel(QWidget):
         form.addRow("Game Path:", path_row)
 
         self.create_btn = QPushButton("Create/Select Project")
+        self.run_pipeline_btn = QPushButton("Run Full Demo Pipeline")
         self.info_label = QLabel("Select demo game folder and create project.")
 
         layout.addLayout(form)
         layout.addWidget(self.create_btn)
+        layout.addWidget(self.run_pipeline_btn)
         layout.addWidget(self.info_label)
         layout.addStretch(1)
 
