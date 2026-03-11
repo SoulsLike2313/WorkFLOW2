@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import re
 
+from app.core.context_models import TranslationContext
+
 from .base import TranslationBackend
 
 
@@ -20,17 +22,25 @@ TOKEN_MAP = {
 class LocalMockBackend(TranslationBackend):
     name = "local_mock"
 
-    def translate(self, text: str, *, source_lang: str, target_lang: str = "ru", style: str = "neutral") -> str:
+    def translate(
+        self,
+        text: str,
+        *,
+        source_lang: str,
+        target_lang: str = "ru",
+        style: str = "neutral",
+        context: TranslationContext | None = None,
+    ) -> str:
         if source_lang in {"ja", "ko", "zh"}:
             prefix = {"ja": "яп", "ko": "кор", "zh": "кит"}[source_lang]
-            return f"[{prefix}] {text}"
+            suffix = f" [ctx:{context.line_type}]" if context and context.used() else ""
+            return f"[{prefix}] {text}{suffix}"
 
         mapping = TOKEN_MAP.get(source_lang, {})
         tokens = re.findall(r"\w+|\W+", text, flags=re.UNICODE)
         out = []
         for token in tokens:
-            lower = token.lower()
-            replacement = mapping.get(lower)
+            replacement = mapping.get(token.lower())
             out.append(replacement if replacement else token)
         base = "".join(out)
 
@@ -40,4 +50,6 @@ class LocalMockBackend(TranslationBackend):
             "calm": ".",
             "radio": " [радио-канал]",
         }.get(style, "")
+        if context and context.scene_id:
+            style_suffix += f" [scene:{context.scene_id}]"
         return f"{base}{style_suffix}"

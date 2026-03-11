@@ -58,6 +58,9 @@ class TranslationDecision:
     quality_score: float = 0.0
     latency_ms: int = 0
     backend: str = "dummy"
+    fallback_backend: str | None = None
+    context_used: bool = False
+    context_summary: dict[str, Any] = field(default_factory=dict)
     uncertainty: float = 0.0
     decision_log: list[str] = field(default_factory=list)
 

@@ -699,7 +699,7 @@ class SessionsPage(BasePage):
 
         left_card = GlowCard(elevated=False)
         left_card.setObjectName("SessionsRegistryBlock")
-        left_card.setMinimumWidth(300)
+        left_card.setMinimumWidth(280)
         left_layout = QVBoxLayout(left_card)
         _setup_card_layout(left_layout)
         left_layout.addWidget(SectionHeader("Реестр сессий", "Состояние выполнения по каждому профилю"))
@@ -713,7 +713,7 @@ class SessionsPage(BasePage):
 
         right_card = GlowCard(elevated=False)
         right_card.setObjectName("SessionsWorkspaceBlock")
-        right_card.setMinimumWidth(380)
+        right_card.setMinimumWidth(340)
         right_layout = QVBoxLayout(right_card)
         _setup_card_layout(right_layout)
 
@@ -762,7 +762,7 @@ class SessionsPage(BasePage):
         self.session_preview = QLabel("ПРЕВЬЮ СЕССИИ 9:16\n\nОткройте сессию профиля, чтобы увидеть рабочее состояние.")
         self.session_preview.setObjectName("SessionMobilePreview")
         self.session_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.session_preview.setMinimumSize(250, 400)
+        self.session_preview.setMinimumSize(240, 320)
         self.session_preview.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.session_preview.setWordWrap(True)
         frame_layout.addWidget(self.session_preview)

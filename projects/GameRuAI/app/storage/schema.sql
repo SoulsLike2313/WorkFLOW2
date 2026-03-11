@@ -52,6 +52,8 @@ CREATE TABLE IF NOT EXISTS translations (
   quality_score REAL NOT NULL DEFAULT 0,
   latency_ms INTEGER NOT NULL DEFAULT 0,
   backend TEXT NOT NULL,
+  fallback_backend TEXT,
+  context_used INTEGER NOT NULL DEFAULT 0,
   uncertainty REAL NOT NULL DEFAULT 0,
   decision_log_json TEXT NOT NULL DEFAULT '[]',
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -192,3 +194,43 @@ CREATE TABLE IF NOT EXISTS app_settings (
   value_json TEXT NOT NULL,
   updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS companion_sessions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  session_id TEXT NOT NULL UNIQUE,
+  executable_path TEXT NOT NULL,
+  watched_path TEXT NOT NULL,
+  process_pid INTEGER,
+  process_status TEXT NOT NULL,
+  started_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ended_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_companion_sessions_project ON companion_sessions(project_id);
+
+CREATE TABLE IF NOT EXISTS watched_file_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  session_id TEXT NOT NULL,
+  watched_path TEXT NOT NULL,
+  event_type TEXT NOT NULL,
+  file_path TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_watched_events_project ON watched_file_events(project_id);
+CREATE INDEX IF NOT EXISTS idx_watched_events_session ON watched_file_events(session_id);
+
+CREATE TABLE IF NOT EXISTS translation_backend_runs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  entry_id INTEGER REFERENCES extracted_entries(id) ON DELETE SET NULL,
+  requested_backend TEXT NOT NULL,
+  backend_name TEXT NOT NULL,
+  fallback_backend TEXT,
+  latency_ms INTEGER NOT NULL DEFAULT 0,
+  context_used INTEGER NOT NULL DEFAULT 0,
+  fallback_used INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_backend_runs_project ON translation_backend_runs(project_id);
+CREATE INDEX IF NOT EXISTS idx_backend_runs_entry ON translation_backend_runs(entry_id);

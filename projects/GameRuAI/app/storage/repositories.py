@@ -47,6 +47,7 @@ class RepositoryHub:
         tables = [
             "scanned_files",
             "translations",
+            "translation_backend_runs",
             "language_detections",
             "voice_links",
             "voice_attempts",
@@ -82,6 +83,30 @@ class RepositoryHub:
             """,
             payload,
         )
+
+    def upsert_scanned_file(self, scanned_file: ScannedFile) -> None:
+        with self.db.transaction() as cur:
+            cur.execute(
+                "DELETE FROM scanned_files WHERE project_id=? AND file_path=?",
+                (scanned_file.project_id, scanned_file.file_path),
+            )
+            cur.execute(
+                """
+                INSERT INTO scanned_files(
+                  project_id, file_path, file_type, file_ext, size_bytes, sha1, manifest_group, created_at
+                ) VALUES(?,?,?,?,?,?,?,?)
+                """,
+                (
+                    scanned_file.project_id,
+                    scanned_file.file_path,
+                    scanned_file.file_type,
+                    scanned_file.file_ext,
+                    scanned_file.size_bytes,
+                    scanned_file.sha1,
+                    scanned_file.manifest_group,
+                    _now_iso(),
+                ),
+            )
 
     def list_scanned_files(self, project_id: int) -> list[dict[str, Any]]:
         rows = self.db.query(
@@ -159,6 +184,9 @@ class RepositoryHub:
               t.quality_score,
               t.glossary_hits_json,
               t.tm_hits_json,
+              t.backend,
+              t.fallback_backend,
+              t.context_used,
               t.latency_ms,
               t.uncertainty,
               CASE WHEN e.voice_link IS NULL OR TRIM(e.voice_link)='' THEN 0 ELSE 1 END AS has_voice_link,
@@ -195,13 +223,22 @@ class RepositoryHub:
                         item[key] = []
                 else:
                     item[key] = []
+            item["context_used"] = bool(item.get("context_used"))
             parsed.append(item)
         return parsed
 
     def get_entry(self, entry_id: int) -> dict[str, Any] | None:
         row = self.db.query_one(
             """
-            SELECT e.*, l.detected_lang, l.confidence, t.translated_text, t.translation_status
+            SELECT
+              e.*,
+              l.detected_lang,
+              l.confidence,
+              t.translated_text,
+              t.translation_status,
+              t.backend,
+              t.fallback_backend,
+              t.context_used
             FROM extracted_entries e
             LEFT JOIN language_detections l ON l.entry_id = e.id
             LEFT JOIN translations t ON t.entry_id = e.id
@@ -210,6 +247,30 @@ class RepositoryHub:
             (entry_id,),
         )
         return dict(row) if row else None
+
+    def clear_entries_for_file(self, project_id: int, file_path: str) -> None:
+        self.db.execute(
+            "DELETE FROM extracted_entries WHERE project_id=? AND file_path=?",
+            (project_id, file_path),
+        )
+
+    def get_neighbor_texts(self, project_id: int, entry_id: int, window: int = 1) -> list[str]:
+        entry = self.get_entry(entry_id)
+        if not entry:
+            return []
+        file_path = str(entry.get("file_path") or "")
+        start_id = max(1, entry_id - window)
+        end_id = entry_id + window
+        rows = self.db.query(
+            """
+            SELECT id, source_text
+            FROM extracted_entries
+            WHERE project_id=? AND file_path=? AND id BETWEEN ? AND ? AND id<>?
+            ORDER BY id
+            """,
+            (project_id, file_path, start_id, end_id, entry_id),
+        )
+        return [str(row["source_text"]) for row in rows]
 
     def upsert_language_detection(
         self, entry_id: int, project_id: int, detected_lang: str, confidence: float, heuristics: dict[str, Any]
@@ -231,9 +292,10 @@ class RepositoryHub:
             """
             INSERT INTO translations(
               entry_id, project_id, source_lang, translated_text, translation_status,
-              glossary_hits_json, tm_hits_json, quality_score, latency_ms, backend, uncertainty, decision_log_json,
+              glossary_hits_json, tm_hits_json, quality_score, latency_ms, backend, fallback_backend, context_used,
+              uncertainty, decision_log_json,
               created_at, updated_at
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(entry_id) DO UPDATE SET
               source_lang=excluded.source_lang,
               translated_text=excluded.translated_text,
@@ -243,6 +305,8 @@ class RepositoryHub:
               quality_score=excluded.quality_score,
               latency_ms=excluded.latency_ms,
               backend=excluded.backend,
+              fallback_backend=excluded.fallback_backend,
+              context_used=excluded.context_used,
               uncertainty=excluded.uncertainty,
               decision_log_json=excluded.decision_log_json,
               updated_at=excluded.updated_at
@@ -258,6 +322,8 @@ class RepositoryHub:
                 decision.quality_score,
                 decision.latency_ms,
                 decision.backend,
+                decision.fallback_backend,
+                int(decision.context_used),
                 decision.uncertainty,
                 json.dumps(decision.decision_log, ensure_ascii=False),
                 _now_iso(),
@@ -284,6 +350,7 @@ class RepositoryHub:
                     item[key] = json.loads(item[key] or "[]")
                 except json.JSONDecodeError:
                     item[key] = []
+            item["context_used"] = bool(item.get("context_used"))
             out.append(item)
         return out
 
@@ -636,6 +703,162 @@ class RepositoryHub:
             (project_id, limit),
         )
         return [dict(r) for r in rows]
+
+    def add_translation_backend_run(
+        self,
+        *,
+        project_id: int,
+        entry_id: int | None,
+        requested_backend: str,
+        backend_name: str,
+        fallback_backend: str | None,
+        latency_ms: int,
+        context_used: bool,
+        fallback_used: bool,
+    ) -> None:
+        self.db.execute(
+            """
+            INSERT INTO translation_backend_runs(
+              project_id, entry_id, requested_backend, backend_name, fallback_backend,
+              latency_ms, context_used, fallback_used, created_at
+            ) VALUES(?,?,?,?,?,?,?,?,?)
+            """,
+            (
+                project_id,
+                entry_id,
+                requested_backend,
+                backend_name,
+                fallback_backend,
+                latency_ms,
+                int(context_used),
+                int(fallback_used),
+                _now_iso(),
+            ),
+        )
+
+    def list_translation_backend_runs(self, project_id: int, limit: int = 300) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, entry_id, requested_backend, backend_name, fallback_backend,
+                   latency_ms, context_used, fallback_used, created_at
+            FROM translation_backend_runs
+            WHERE project_id=?
+            ORDER BY id DESC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            item["context_used"] = bool(item.get("context_used"))
+            item["fallback_used"] = bool(item.get("fallback_used"))
+            out.append(item)
+        return out
+
+    def create_companion_session(
+        self,
+        *,
+        project_id: int,
+        session_id: str,
+        executable_path: str,
+        watched_path: str,
+        process_status: str,
+        process_pid: int | None,
+    ) -> None:
+        self.db.execute(
+            """
+            INSERT INTO companion_sessions(
+              project_id, session_id, executable_path, watched_path, process_pid, process_status, started_at, ended_at
+            ) VALUES(?,?,?,?,?,?,?,NULL)
+            """,
+            (project_id, session_id, executable_path, watched_path, process_pid, process_status, _now_iso()),
+        )
+
+    def update_companion_session(
+        self,
+        *,
+        session_id: str,
+        process_status: str,
+        process_pid: int | None = None,
+        ended: bool = False,
+    ) -> None:
+        if ended:
+            self.db.execute(
+                """
+                UPDATE companion_sessions
+                SET process_status=?, process_pid=?, ended_at=?
+                WHERE session_id=?
+                """,
+                (process_status, process_pid, _now_iso(), session_id),
+            )
+            return
+        self.db.execute(
+            """
+            UPDATE companion_sessions
+            SET process_status=?, process_pid=COALESCE(?, process_pid)
+            WHERE session_id=?
+            """,
+            (process_status, process_pid, session_id),
+        )
+
+    def get_companion_session(self, session_id: str) -> dict[str, Any] | None:
+        row = self.db.query_one(
+            """
+            SELECT id, project_id, session_id, executable_path, watched_path, process_pid, process_status, started_at, ended_at
+            FROM companion_sessions
+            WHERE session_id=?
+            """,
+            (session_id,),
+        )
+        return dict(row) if row else None
+
+    def list_companion_sessions(self, project_id: int, limit: int = 100) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, project_id, session_id, executable_path, watched_path, process_pid, process_status, started_at, ended_at
+            FROM companion_sessions
+            WHERE project_id=?
+            ORDER BY id DESC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        return [dict(row) for row in rows]
+
+    def add_watched_file_event(
+        self,
+        *,
+        project_id: int,
+        session_id: str,
+        watched_path: str,
+        event_type: str,
+        file_path: str,
+    ) -> None:
+        self.db.execute(
+            """
+            INSERT INTO watched_file_events(project_id, session_id, watched_path, event_type, file_path, created_at)
+            VALUES(?,?,?,?,?,?)
+            """,
+            (project_id, session_id, watched_path, event_type, file_path, _now_iso()),
+        )
+
+    def list_watched_file_events(
+        self, project_id: int, session_id: str | None = None, limit: int = 300
+    ) -> list[dict[str, Any]]:
+        query = """
+            SELECT id, project_id, session_id, watched_path, event_type, file_path, created_at
+            FROM watched_file_events
+            WHERE project_id=?
+        """
+        params: list[Any] = [project_id]
+        if session_id:
+            query += " AND session_id=?"
+            params.append(session_id)
+        query += " ORDER BY id DESC LIMIT ?"
+        params.append(limit)
+        rows = self.db.query(query, tuple(params))
+        return [dict(row) for row in rows]
 
     def set_setting(self, key: str, value: dict[str, Any]) -> None:
         self.db.execute(

@@ -7,12 +7,14 @@ import httpx
 from PySide6.QtCore import QEasingCurve, QPropertyAnimation, QTimer, Qt
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import (
+    QFrame,
     QGraphicsOpacityEffect,
     QHBoxLayout,
     QInputDialog,
     QLabel,
     QMainWindow,
     QMessageBox,
+    QScrollArea,
     QSizePolicy,
     QSplitter,
     QStackedWidget,
@@ -62,6 +64,7 @@ class UserWorkspaceWindow(QMainWindow):
         self._pages: dict[str, BasePage] = {}
         self._page_order: list[str] = []
         self._page_fade_anim: QPropertyAnimation | None = None
+        self._page_fade_target: QWidget | None = None
         self.main_splitter: QSplitter | None = None
 
         self._build_ui()
@@ -234,7 +237,14 @@ class UserWorkspaceWindow(QMainWindow):
             page.action_requested.connect(self._on_page_action)
             self._pages[key] = page
             self._page_order.append(key)
-            self.workspace_stack.addWidget(page)
+            scroll = QScrollArea()
+            scroll.setObjectName(f"{key}_scroll")
+            scroll.setFrameShape(QFrame.Shape.NoFrame)
+            scroll.setWidgetResizable(True)
+            scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+            scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+            scroll.setWidget(page)
+            self.workspace_stack.addWidget(scroll)
 
     def _switch_page(self, key: str) -> None:
         if key not in self._pages:
@@ -249,13 +259,12 @@ class UserWorkspaceWindow(QMainWindow):
     def _animate_page_transition(self, page: QWidget | None) -> None:
         if page is None:
             return
-        if self._page_fade_anim is not None:
-            self._page_fade_anim.stop()
-            self._page_fade_anim = None
+        self._clear_page_fade()
 
         effect = QGraphicsOpacityEffect(page)
         effect.setOpacity(0.0)
         page.setGraphicsEffect(effect)
+        self._page_fade_target = page
 
         anim = QPropertyAnimation(effect, b"opacity", self)
         anim.setDuration(170)
@@ -264,12 +273,23 @@ class UserWorkspaceWindow(QMainWindow):
         anim.setEndValue(1.0)
 
         def _cleanup() -> None:
-            page.setGraphicsEffect(None)
+            if self._page_fade_target is page:
+                page.setGraphicsEffect(None)
+                self._page_fade_target = None
             self._page_fade_anim = None
 
         anim.finished.connect(_cleanup)
         self._page_fade_anim = anim
         anim.start()
+
+    def _clear_page_fade(self) -> None:
+        if self._page_fade_anim is not None:
+            self._page_fade_anim.stop()
+            self._page_fade_anim.deleteLater()
+            self._page_fade_anim = None
+        if self._page_fade_target is not None:
+            self._page_fade_target.setGraphicsEffect(None)
+            self._page_fade_target = None
 
     def _client(self) -> httpx.Client:
         return httpx.Client(base_url=self.api_base_url, timeout=7.0)

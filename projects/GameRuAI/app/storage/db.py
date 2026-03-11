@@ -23,9 +23,21 @@ class Database:
         try:
             script = schema_path.read_text(encoding="utf-8")
             self._conn.executescript(script)
+            self._apply_migrations()
             self._conn.commit()
         except Exception as exc:  # pragma: no cover - catastrophic path
             raise StorageError(f"Failed to initialize schema: {exc}") from exc
+
+    def _apply_migrations(self) -> None:
+        self._ensure_column("translations", "fallback_backend", "TEXT")
+        self._ensure_column("translations", "context_used", "INTEGER NOT NULL DEFAULT 0")
+
+    def _ensure_column(self, table: str, column: str, definition: str) -> None:
+        rows = self.query(f"PRAGMA table_info({table})")
+        existing = {str(row["name"]) for row in rows}
+        if column in existing:
+            return
+        self._conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
 
     @contextmanager
     def transaction(self):
