@@ -1,0 +1,2 @@
+"""API smoke tests."""
+

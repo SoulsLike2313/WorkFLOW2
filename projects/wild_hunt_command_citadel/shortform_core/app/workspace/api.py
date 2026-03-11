@@ -15,12 +15,21 @@ from .models import (
 from .runtime import WorkspaceRuntime
 from .schemas import (
     AddContentItemRequest,
+    AnalyzeAssetRequest,
     AnalyzeFrameRequest,
     AttachSessionSourceRequest,
+    BuildGenerationBundleRequest,
     ConnectProfileRequest,
     CreateProfileRequest,
+    EvaluateContentRequest,
+    GenerateAudioBriefRequest,
     GenerateActionPlanRequest,
+    GenerateRecommendationsRequest,
+    GenerateScriptBriefRequest,
+    GenerateTextBriefRequest,
     GenerateVideoBriefRequest,
+    IngestAIOutcomeFeedbackRequest,
+    IngestAIRecommendationFeedbackRequest,
     ImportMetricsFromFileRequest,
     IngestAIFeedbackRequest,
     IngestMetricsSnapshotRequest,
@@ -332,6 +341,7 @@ def build_workspace_router(runtime: WorkspaceRuntime) -> APIRouter:
             _raise_http(error)
 
     # AI mode
+    @router.post("/ai/analyze/frame")
     @router.post("/ai/perception/analyze")
     def ai_analyze_frame(request: AnalyzeFrameRequest):
         try:
@@ -341,6 +351,16 @@ def build_workspace_router(runtime: WorkspaceRuntime) -> APIRouter:
                 source_ref=request.source_ref,
             )
             return {"frame": frame}
+        except Exception as error:
+            _raise_http(error)
+
+    @router.post("/ai/analyze/asset")
+    def ai_analyze_asset(request: AnalyzeAssetRequest):
+        try:
+            return runtime.ai_perception.analyze_asset_preview(
+                profile_id=request.profile_id,
+                source_ref=request.source_ref,
+            )
         except Exception as error:
             _raise_http(error)
 
@@ -358,10 +378,28 @@ def build_workspace_router(runtime: WorkspaceRuntime) -> APIRouter:
         except Exception as error:
             _raise_http(error)
 
+    @router.post("/ai/evaluate/content")
+    def ai_evaluate_content_request(request: EvaluateContentRequest):
+        try:
+            return runtime.ai_creative.evaluate_content_item(request.content_id)
+        except Exception as error:
+            _raise_http(error)
+
     @router.post("/ai/content/{content_id}/evaluate")
     def ai_evaluate_content(content_id: str):
         try:
             return runtime.ai_creative.evaluate_content_item(content_id)
+        except Exception as error:
+            _raise_http(error)
+
+    @router.post("/ai/recommendations/generate")
+    def ai_generate_recommendations(request: GenerateRecommendationsRequest):
+        try:
+            items = runtime.ai_recommendation.generate_explainable_recommendations(
+                profile_id=request.profile_id,
+                limit=request.limit,
+            )
+            return {"items": items}
         except Exception as error:
             _raise_http(error)
 
@@ -392,6 +430,15 @@ def build_workspace_router(runtime: WorkspaceRuntime) -> APIRouter:
         except Exception as error:
             _raise_http(error)
 
+    @router.get("/profiles/{profile_id}/ai/recommendations")
+    def ai_list_profile_recommendations(profile_id: str, limit: int = Query(default=10, ge=1, le=50)):
+        try:
+            items = runtime.ai_recommendation.generate_explainable_recommendations(profile_id, limit=limit)
+            return {"items": items}
+        except Exception as error:
+            _raise_http(error)
+
+    @router.post("/ai/feedback/ingest")
     @router.post("/ai/feedback")
     def ai_ingest_feedback(request: IngestAIFeedbackRequest):
         try:
@@ -407,10 +454,122 @@ def build_workspace_router(runtime: WorkspaceRuntime) -> APIRouter:
         except Exception as error:
             _raise_http(error)
 
+    @router.post("/ai/feedback/recommendation")
+    def ai_ingest_recommendation_feedback(request: IngestAIRecommendationFeedbackRequest):
+        try:
+            feedback = runtime.ai_learning.ingest_user_feedback(
+                profile_id=request.profile_id,
+                recommendation_id=request.recommendation_id,
+                feedback_status=request.feedback_status,
+                user_notes=request.user_notes,
+                manual_score=request.manual_score,
+            )
+            return {"feedback": feedback}
+        except Exception as error:
+            _raise_http(error)
+
+    @router.post("/ai/feedback/outcome")
+    def ai_ingest_outcome_feedback(request: IngestAIOutcomeFeedbackRequest):
+        try:
+            outcome = runtime.ai_learning.ingest_content_performance_feedback(
+                profile_id=request.profile_id,
+                recommendation_id=request.recommendation_id,
+                content_id=request.content_id,
+                metrics_snapshot_ids=request.metrics_snapshot_ids,
+                outcome_label=request.outcome_label,
+                outcome_summary=request.outcome_summary,
+            )
+            return {"outcome_link": outcome}
+        except Exception as error:
+            _raise_http(error)
+
     @router.get("/ai/profiles/{profile_id}/learning-summary")
     def ai_learning_summary(profile_id: str):
         try:
             return runtime.ai_learning.summarize_learnings(profile_id)
+        except Exception as error:
+            _raise_http(error)
+
+    @router.get("/profiles/{profile_id}/ai/learnings")
+    def ai_profile_learnings(profile_id: str):
+        try:
+            return runtime.ai_learning.summarize_learnings(profile_id)
+        except Exception as error:
+            _raise_http(error)
+
+    @router.post("/profiles/{profile_id}/generation/video-brief")
+    def generation_video_brief(profile_id: str, request: GenerateVideoBriefRequest):
+        try:
+            if request.profile_id != profile_id:
+                raise ValidationError("Request profile_id must match path profile_id.")
+            brief = runtime.generation_prep.generate_video_brief(
+                profile_id=profile_id,
+                content_goal=request.creative_goal,
+                creative_angle=request.visual_style,
+                hook=request.hook,
+                format_target=request.target_format,
+                duration_target=request.target_duration,
+            )
+            return {"brief": brief}
+        except Exception as error:
+            _raise_http(error)
+
+    @router.post("/profiles/{profile_id}/generation/audio-brief")
+    def generation_audio_brief(profile_id: str, request: GenerateAudioBriefRequest):
+        try:
+            brief = runtime.generation_prep.generate_audio_brief(
+                profile_id=profile_id,
+                content_goal=request.content_goal,
+                music_mood=request.music_mood,
+                voice_style=request.voice_style,
+            )
+            return {"brief": brief}
+        except Exception as error:
+            _raise_http(error)
+
+    @router.post("/profiles/{profile_id}/generation/script-brief")
+    def generation_script_brief(profile_id: str, request: GenerateScriptBriefRequest):
+        try:
+            brief = runtime.generation_prep.generate_script_brief(
+                profile_id=profile_id,
+                content_goal=request.content_goal,
+                hook=request.hook,
+                cta=request.cta,
+            )
+            return {"brief": brief}
+        except Exception as error:
+            _raise_http(error)
+
+    @router.post("/profiles/{profile_id}/generation/text-brief")
+    def generation_text_brief(profile_id: str, request: GenerateTextBriefRequest):
+        try:
+            brief = runtime.generation_prep.generate_text_brief(
+                profile_id=profile_id,
+                content_goal=request.content_goal,
+                cta_options=request.cta_options,
+            )
+            return {"brief": brief}
+        except Exception as error:
+            _raise_http(error)
+
+    @router.post("/profiles/{profile_id}/generation/bundles/build")
+    def generation_build_bundle(profile_id: str, request: BuildGenerationBundleRequest):
+        try:
+            bundle = runtime.generation_prep.build_generation_bundle(
+                profile_id=profile_id,
+                content_goal=request.content_goal,
+                creative_angle=request.creative_angle,
+                format_target=request.format_target,
+                duration_target=request.duration_target,
+            )
+            return {"bundle": bundle}
+        except Exception as error:
+            _raise_http(error)
+
+    @router.get("/profiles/{profile_id}/generation/bundles")
+    def generation_list_bundles(profile_id: str, limit: int = Query(default=20, ge=1, le=100)):
+        try:
+            return {"items": runtime.generation_prep.list_generation_bundles(profile_id=profile_id, limit=limit)}
         except Exception as error:
             _raise_http(error)
 

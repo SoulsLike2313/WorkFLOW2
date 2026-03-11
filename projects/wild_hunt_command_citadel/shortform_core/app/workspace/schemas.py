@@ -135,10 +135,24 @@ class AnalyzeFrameRequest(BaseModel):
     source_ref: str
 
 
+class AnalyzeAssetRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    profile_id: str
+    source_ref: str
+
+
 class EvaluateContentRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     content_id: str
+
+
+class GenerateRecommendationsRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    profile_id: str
+    limit: int = Field(default=10, ge=1, le=50)
 
 
 class GenerateVideoBriefRequest(BaseModel):
