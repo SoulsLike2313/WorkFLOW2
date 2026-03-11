@@ -1,0 +1,19 @@
+{
+  "layout_mode": "comfortable",
+  "spacing_scale": 1.05,
+  "radius_scale": 1.0,
+  "glow_intensity": 1.0,
+  "typography_scale": 1.0,
+  "button_presets": {
+    "base_radius": 13,
+    "quick_radius": 15,
+    "base_height": 38,
+    "action_height": 41
+  },
+  "panel_presets": {
+    "card_radius": 22,
+    "elevated_radius": 22,
+    "session_radius": 24,
+    "context_radius": 22
+  }
+}

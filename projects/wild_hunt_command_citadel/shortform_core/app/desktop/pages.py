@@ -870,7 +870,7 @@ class SessionsPage(BasePage):
         self.sessions_open_card.set_data(str(open_sessions), f"из {len(profiles)} профилей")
         self.sessions_selected_card.set_data("Открыта" if is_open else "Закрыта", f"режим: {runtime_state}")
         self.sessions_viewport_card.set_data(viewport_label, "активный профиль")
-        self._set_session_chip(self.session_runtime_chip, "Окно: открыто" if is_open else "Окно: закрыто", "ok" if is_open else "warn")
+        self._set_session_chip(self.session_runtime_chip, "Окн.: откр." if is_open else "Окн.: закр.", "ok" if is_open else "warn")
         self._set_session_chip(
             self.session_link_chip,
             f"Источник: {source_label if source_label != 'не указан' else '—'}",

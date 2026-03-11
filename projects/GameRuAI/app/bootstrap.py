@@ -5,6 +5,7 @@ import wave
 from pathlib import Path
 from typing import Any, Generator
 
+from app.assets.explorer_service import AssetExplorerService
 from app.companion.file_watch_service import FileWatchService
 from app.companion.launcher import CompanionLauncher
 from app.companion.process_monitor import ProcessMonitor
@@ -53,6 +54,7 @@ class AppServices:
 
         self.extractors = ExtractorRegistry()
         self.scanner = ScannerService(self.repo)
+        self.asset_explorer = AssetExplorerService(self.repo)
         self.detector = LanguageDetector()
         self.glossary_service = GlossaryService(self.repo)
         self.memory_service = TranslationMemoryService(self.repo)
@@ -106,7 +108,14 @@ class AppServices:
 
     def scan(self, project_id: int, game_root: Path) -> dict[str, Any]:
         self.repo.clear_project_runtime(project_id)
-        return self.job_manager.run_job("scan", lambda: self.scanner.scan(project_id, game_root))
+
+        def _run() -> dict[str, Any]:
+            manifest = self.scanner.scan(project_id, game_root)
+            asset_summary = self.asset_explorer.index_project_assets(project_id=project_id, game_root=game_root)
+            manifest["asset_index"] = asset_summary
+            return manifest
+
+        return self.job_manager.run_job("scan", _run)
 
     def extract(self, project_id: int, game_root: Path) -> dict[str, Any]:
         def _run() -> dict[str, Any]:
@@ -539,6 +548,24 @@ class AppServices:
     def list_companion_sessions(self, project_id: int) -> list[dict[str, Any]]:
         return self.session_registry.list_by_project(project_id)
 
+    def asset_snapshot(self, project_id: int, *, limit: int = 5000) -> dict[str, Any]:
+        assets = self.asset_explorer.list_index(project_id, limit=limit)
+        reports = self.asset_explorer.list_archive_reports(project_id, suspected_only=False, limit=1000)
+        return {
+            "assets": assets,
+            "archive_reports": reports,
+            "tree": self.asset_explorer.build_tree(project_id),
+            "totals": {
+                "assets": len(assets),
+                "preview_ready": len([row for row in assets if row.get("preview_status") == "ready"]),
+                "metadata_only": len([row for row in assets if row.get("preview_status") != "ready"]),
+                "suspected_containers": len([row for row in reports if row.get("suspected_container")]),
+            },
+        }
+
+    def asset_details(self, project_id: int, file_path: str) -> dict[str, Any]:
+        return self.asset_explorer.get_resource_details(project_id, file_path)
+
     def quick_reindex(self, *, project_id: int, game_root: Path, changed_paths: list[str]) -> int:
         reindexed_entries = 0
         scene_index = self._build_scene_index(game_root)
@@ -561,6 +588,9 @@ class AppServices:
                 manifest_group=rel_path.split("/", 1)[0] if "/" in rel_path else "root",
             )
             self.repo.upsert_scanned_file(scanned_file)
+
+            if file_type not in {"text", "config"} or rel_path.startswith("metadata/"):
+                continue
 
             extractor = self.extractors.get_for_path(path)
             if not extractor:
@@ -608,6 +638,14 @@ class AppServices:
                     context_used=decision.context_used,
                     fallback_used=bool(decision.fallback_backend),
                 )
+
+        # Keep asset research index in sync for changed files (any file type).
+        if changed_paths:
+            self.asset_explorer.index_project_assets(
+                project_id=project_id,
+                game_root=game_root,
+                changed_paths=list(dict.fromkeys(changed_paths)),
+            )
 
         return reindexed_entries
 

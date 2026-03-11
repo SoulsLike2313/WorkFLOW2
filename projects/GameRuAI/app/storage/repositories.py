@@ -5,6 +5,7 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 from typing import Any
 
+from app.assets.preview_models import ArchiveReportRecord, AssetIndexRecord, AssetPreviewRecord
 from app.core.enums import QaSeverity, TranslationStatus
 from app.core.models import (
     ExtractionRecord,
@@ -46,6 +47,9 @@ class RepositoryHub:
     def clear_project_runtime(self, project_id: int) -> None:
         tables = [
             "scanned_files",
+            "asset_previews",
+            "archive_reports",
+            "asset_index",
             "translations",
             "translation_backend_runs",
             "language_detections",
@@ -859,6 +863,199 @@ class RepositoryHub:
         params.append(limit)
         rows = self.db.query(query, tuple(params))
         return [dict(row) for row in rows]
+
+    def clear_asset_research(self, project_id: int) -> None:
+        with self.db.transaction() as cur:
+            cur.execute("DELETE FROM asset_previews WHERE project_id=?", (project_id,))
+            cur.execute("DELETE FROM archive_reports WHERE project_id=?", (project_id,))
+            cur.execute("DELETE FROM asset_index WHERE project_id=?", (project_id,))
+
+    def upsert_asset_index(self, item: AssetIndexRecord) -> None:
+        self.db.execute(
+            """
+            INSERT INTO asset_index(
+              project_id, file_path, asset_type, preview_type, preview_status,
+              metadata_json, suspected_container, relevance_score, updated_at
+            ) VALUES(?,?,?,?,?,?,?,?,?)
+            ON CONFLICT(project_id, file_path) DO UPDATE SET
+              asset_type=excluded.asset_type,
+              preview_type=excluded.preview_type,
+              preview_status=excluded.preview_status,
+              metadata_json=excluded.metadata_json,
+              suspected_container=excluded.suspected_container,
+              relevance_score=excluded.relevance_score,
+              updated_at=excluded.updated_at
+            """,
+            (
+                item.project_id,
+                item.file_path,
+                item.asset_type,
+                item.preview_type,
+                item.preview_status,
+                json.dumps(item.metadata, ensure_ascii=False),
+                int(item.suspected_container),
+                float(item.relevance_score),
+                _now_iso(),
+            ),
+        )
+
+    def upsert_asset_preview(self, item: AssetPreviewRecord) -> None:
+        self.db.execute(
+            """
+            INSERT INTO asset_previews(
+              project_id, file_path, preview_type, preview_status, preview_path, metadata_json, updated_at
+            ) VALUES(?,?,?,?,?,?,?)
+            ON CONFLICT(project_id, file_path, preview_type) DO UPDATE SET
+              preview_status=excluded.preview_status,
+              preview_path=excluded.preview_path,
+              metadata_json=excluded.metadata_json,
+              updated_at=excluded.updated_at
+            """,
+            (
+                item.project_id,
+                item.file_path,
+                item.preview_type,
+                item.preview_status,
+                item.preview_path,
+                json.dumps(item.metadata, ensure_ascii=False),
+                _now_iso(),
+            ),
+        )
+
+    def upsert_archive_report(self, item: ArchiveReportRecord) -> None:
+        self.db.execute(
+            """
+            INSERT INTO archive_reports(
+              project_id, file_path, suspected_container, confidence, reason, metadata_json, updated_at
+            ) VALUES(?,?,?,?,?,?,?)
+            ON CONFLICT(project_id, file_path) DO UPDATE SET
+              suspected_container=excluded.suspected_container,
+              confidence=excluded.confidence,
+              reason=excluded.reason,
+              metadata_json=excluded.metadata_json,
+              updated_at=excluded.updated_at
+            """,
+            (
+                item.project_id,
+                item.file_path,
+                int(item.suspected_container),
+                float(item.confidence),
+                item.reason,
+                json.dumps(item.metadata, ensure_ascii=False),
+                _now_iso(),
+            ),
+        )
+
+    def list_asset_index(self, project_id: int, limit: int = 3000) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, project_id, file_path, asset_type, preview_type, preview_status,
+                   metadata_json, suspected_container, relevance_score, updated_at
+            FROM asset_index
+            WHERE project_id=?
+            ORDER BY relevance_score DESC, file_path ASC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
+            except json.JSONDecodeError:
+                item["metadata_json"] = {}
+            item["suspected_container"] = bool(item.get("suspected_container"))
+            out.append(item)
+        return out
+
+    def get_asset_index(self, project_id: int, file_path: str) -> dict[str, Any] | None:
+        row = self.db.query_one(
+            """
+            SELECT id, project_id, file_path, asset_type, preview_type, preview_status,
+                   metadata_json, suspected_container, relevance_score, updated_at
+            FROM asset_index
+            WHERE project_id=? AND file_path=?
+            """,
+            (project_id, file_path),
+        )
+        if not row:
+            return None
+        item = dict(row)
+        try:
+            item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
+        except json.JSONDecodeError:
+            item["metadata_json"] = {}
+        item["suspected_container"] = bool(item.get("suspected_container"))
+        return item
+
+    def get_asset_preview(self, project_id: int, file_path: str) -> dict[str, Any] | None:
+        row = self.db.query_one(
+            """
+            SELECT id, project_id, file_path, preview_type, preview_status, preview_path, metadata_json, updated_at
+            FROM asset_previews
+            WHERE project_id=? AND file_path=?
+            ORDER BY id DESC
+            LIMIT 1
+            """,
+            (project_id, file_path),
+        )
+        if not row:
+            return None
+        item = dict(row)
+        try:
+            item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
+        except json.JSONDecodeError:
+            item["metadata_json"] = {}
+        return item
+
+    def list_archive_reports(
+        self,
+        project_id: int,
+        *,
+        suspected_only: bool = False,
+        limit: int = 1000,
+    ) -> list[dict[str, Any]]:
+        query = """
+            SELECT id, project_id, file_path, suspected_container, confidence, reason, metadata_json, updated_at
+            FROM archive_reports
+            WHERE project_id=?
+        """
+        params: list[Any] = [project_id]
+        if suspected_only:
+            query += " AND suspected_container=1"
+        query += " ORDER BY suspected_container DESC, confidence DESC, file_path ASC LIMIT ?"
+        params.append(limit)
+        rows = self.db.query(query, tuple(params))
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
+            except json.JSONDecodeError:
+                item["metadata_json"] = {}
+            item["suspected_container"] = bool(item.get("suspected_container"))
+            out.append(item)
+        return out
+
+    def get_archive_report(self, project_id: int, file_path: str) -> dict[str, Any] | None:
+        row = self.db.query_one(
+            """
+            SELECT id, project_id, file_path, suspected_container, confidence, reason, metadata_json, updated_at
+            FROM archive_reports
+            WHERE project_id=? AND file_path=?
+            """,
+            (project_id, file_path),
+        )
+        if not row:
+            return None
+        item = dict(row)
+        try:
+            item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
+        except json.JSONDecodeError:
+            item["metadata_json"] = {}
+        item["suspected_container"] = bool(item.get("suspected_container"))
+        return item
 
     def set_setting(self, key: str, value: dict[str, Any]) -> None:
         self.db.execute(

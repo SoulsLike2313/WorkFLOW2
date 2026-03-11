@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
 
 from app.bootstrap import AppServices
 
+from .asset_explorer_panel import AssetExplorerPanel
 from .companion_panel import CompanionPanel
 from .entries_panel import EntriesPanel
 from .export_panel import ExportPanel
@@ -51,6 +52,7 @@ class MainWindow(QMainWindow):
 
         self.project_panel = ProjectWizardPanel(services.config.paths.fixtures_root)
         self.scan_panel = ScanPanel()
+        self.asset_panel = AssetExplorerPanel()
         self.entries_panel = EntriesPanel()
         self.translation_panel = TranslationPanel()
         self.voice_panel = VoicePanel()
@@ -64,6 +66,7 @@ class MainWindow(QMainWindow):
 
         self.tabs.addTab(self.project_panel, "Project")
         self.tabs.addTab(self.scan_panel, "Scan")
+        self.tabs.addTab(self.asset_panel, "Asset Explorer")
         self.tabs.addTab(self.entries_panel, "Entries")
         self.tabs.addTab(self.translation_panel, "Translation")
         self.tabs.addTab(self.voice_panel, "Voice")
@@ -84,6 +87,9 @@ class MainWindow(QMainWindow):
 
         self.scan_panel.scan_btn.clicked.connect(self.on_scan)
         self.scan_panel.extract_btn.clicked.connect(self.on_extract)
+        self.asset_panel.refresh_btn.clicked.connect(self.on_refresh_assets)
+        self.asset_panel.filter_combo.currentIndexChanged.connect(self.refresh_assets)
+        self.asset_panel.resource_tree.itemSelectionChanged.connect(self.on_asset_selected)
 
         self.entries_panel.detect_btn.clicked.connect(self.on_detect_languages)
         self.entries_panel.refresh_btn.clicked.connect(self.refresh_entries)
@@ -154,6 +160,7 @@ class MainWindow(QMainWindow):
         manifest = self.services.scan(self.current_project_id, self.current_game_root)
         self.scan_panel.show_manifest(manifest)
         self.statusBar().showMessage("Scan complete", 3000)
+        self.refresh_assets()
         self.refresh_jobs()
 
     def on_extract(self) -> None:
@@ -322,6 +329,7 @@ class MainWindow(QMainWindow):
         )
         self.companion_panel.reindex_status.setText(f"Quick re-index: {status.get('quick_reindexed_entries', 0)}")
         self.companion_panel.load_events(status.get("all_events", []))
+        self.refresh_assets()
         self.refresh_companion()
 
     def on_stop_companion(self) -> None:
@@ -357,6 +365,19 @@ class MainWindow(QMainWindow):
         self.live_panel.table.setRowCount(0)
         self._live_timer.start(250)
 
+    def on_refresh_assets(self) -> None:
+        if not self._require_project():
+            return
+        self.refresh_assets()
+
+    def on_asset_selected(self) -> None:
+        if self.current_project_id is None:
+            return
+        file_path = self.asset_panel.selected_file_path()
+        if not file_path:
+            return
+        self.asset_panel.show_details(self.services.asset_details(self.current_project_id, file_path))
+
     def _consume_live_row(self) -> None:
         if self._live_idx >= len(self._live_rows):
             self._live_timer.stop()
@@ -368,6 +389,7 @@ class MainWindow(QMainWindow):
         self._live_idx += 1
 
     def refresh_all_views(self) -> None:
+        self.refresh_assets()
         self.refresh_entries()
         self.refresh_translations()
         self.refresh_voice()
@@ -386,6 +408,12 @@ class MainWindow(QMainWindow):
         search = self.entries_panel.search_edit.text().strip() or None
         rows = self.services.repo.list_entries(self.current_project_id, language=lang_filter, search=search, limit=100000)
         self.entries_panel.load_entries(rows)
+
+    def refresh_assets(self) -> None:
+        if self.current_project_id is None:
+            self.asset_panel.load_snapshot({})
+            return
+        self.asset_panel.load_snapshot(self.services.asset_snapshot(self.current_project_id))
 
     def refresh_translations(self) -> None:
         if self.current_project_id is None:

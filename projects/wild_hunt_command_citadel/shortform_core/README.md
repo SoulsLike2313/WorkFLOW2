@@ -176,6 +176,18 @@ Optional direct test runs:
 .\.venv\Scripts\python.exe -m pytest app/tests_pytest -q
 ```
 
+UI validation entrypoint:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\ui_doctor.py --api-base-url http://127.0.0.1:9
+```
+
+UI validation artifacts:
+- `runtime/ui_validation/<run_id>/ui_validation_summary.json`
+- `runtime/ui_validation/<run_id>/ui_validation_summary.md`
+- `runtime/ui_validation/<run_id>/ui_screenshots_manifest.json`
+- `runtime/ui_validation/<run_id>/screenshots/*`
+
 ## Update / Patch Mode
 
 ### User Update Flow (No Manual API/Ports)

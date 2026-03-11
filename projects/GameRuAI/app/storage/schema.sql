@@ -234,3 +234,45 @@ CREATE TABLE IF NOT EXISTS translation_backend_runs (
 );
 CREATE INDEX IF NOT EXISTS idx_backend_runs_project ON translation_backend_runs(project_id);
 CREATE INDEX IF NOT EXISTS idx_backend_runs_entry ON translation_backend_runs(entry_id);
+
+CREATE TABLE IF NOT EXISTS asset_index (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  file_path TEXT NOT NULL,
+  asset_type TEXT NOT NULL,
+  preview_type TEXT NOT NULL,
+  preview_status TEXT NOT NULL,
+  metadata_json TEXT NOT NULL DEFAULT '{}',
+  suspected_container INTEGER NOT NULL DEFAULT 0,
+  relevance_score REAL NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(project_id, file_path)
+);
+CREATE INDEX IF NOT EXISTS idx_asset_index_project ON asset_index(project_id);
+CREATE INDEX IF NOT EXISTS idx_asset_index_type ON asset_index(asset_type);
+
+CREATE TABLE IF NOT EXISTS asset_previews (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  file_path TEXT NOT NULL,
+  preview_type TEXT NOT NULL,
+  preview_status TEXT NOT NULL,
+  preview_path TEXT,
+  metadata_json TEXT NOT NULL DEFAULT '{}',
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(project_id, file_path, preview_type)
+);
+CREATE INDEX IF NOT EXISTS idx_asset_previews_project ON asset_previews(project_id);
+
+CREATE TABLE IF NOT EXISTS archive_reports (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  file_path TEXT NOT NULL,
+  suspected_container INTEGER NOT NULL DEFAULT 0,
+  confidence REAL NOT NULL DEFAULT 0,
+  reason TEXT NOT NULL,
+  metadata_json TEXT NOT NULL DEFAULT '{}',
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(project_id, file_path)
+);
+CREATE INDEX IF NOT EXISTS idx_archive_reports_project ON archive_reports(project_id);

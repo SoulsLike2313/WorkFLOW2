@@ -67,9 +67,9 @@ class UserWorkspaceWindow(QMainWindow):
         self._page_fade_anim: QPropertyAnimation | None = None
         self._page_fade_target: QWidget | None = None
         self.main_splitter: QSplitter | None = None
+        self._ui_customization = load_ui_customization_profile()
 
         self._build_ui()
-        self._ui_customization = load_ui_customization_profile()
         base_stylesheet = build_stylesheet(build_theme_tokens())
         customization_stylesheet = build_customization_stylesheet(self._ui_customization)
         self.setStyleSheet(base_stylesheet + "\n" + customization_stylesheet)
@@ -91,21 +91,36 @@ class UserWorkspaceWindow(QMainWindow):
         return max(1.0, min(1.6, scale))
 
     def _build_ui(self) -> None:
+        layout_mode = str(self._ui_customization.get("layout_mode", "default"))
+        spacing_scale = float(self._ui_customization.get("spacing_scale", 1.0))
+        if layout_mode == "compact":
+            base_margin = 14
+            base_gap = 14
+        elif layout_mode == "comfortable":
+            base_margin = 18
+            base_gap = 18
+        else:
+            base_margin = 16
+            base_gap = 16
+
+        shell_margin = max(12, int(round(base_margin * spacing_scale)))
+        shell_gap = max(12, int(round(base_gap * spacing_scale)))
+
         root = QWidget()
         root.setObjectName("RootShell")
         self.setCentralWidget(root)
 
         layout = QHBoxLayout(root)
-        layout.setContentsMargins(16, 16, 16, 16)
-        layout.setSpacing(16)
+        layout.setContentsMargins(shell_margin, shell_margin, shell_margin, shell_margin)
+        layout.setSpacing(shell_gap)
 
         sidebar = QWidget()
         sidebar.setObjectName("Sidebar")
         sidebar_width = int(280 + max(0.0, self._ui_scale - 1.0) * 90)
         sidebar.setFixedWidth(max(280, min(340, sidebar_width)))
         sidebar_layout = QVBoxLayout(sidebar)
-        sidebar_layout.setContentsMargins(16, 16, 16, 16)
-        sidebar_layout.setSpacing(12)
+        sidebar_layout.setContentsMargins(shell_margin, shell_margin, shell_margin, shell_margin)
+        sidebar_layout.setSpacing(max(10, int(round(12 * spacing_scale))))
 
         app_title = QLabel("Shortform Workspace")
         app_title.setObjectName("AppTitle")
@@ -158,7 +173,7 @@ class UserWorkspaceWindow(QMainWindow):
         center = QWidget()
         center_layout = QVBoxLayout(center)
         center_layout.setContentsMargins(0, 0, 0, 0)
-        center_layout.setSpacing(12)
+        center_layout.setSpacing(max(10, int(round(12 * spacing_scale))))
 
         self.top_status = TopStatusBar()
         self.top_status.refresh_requested.connect(self.refresh_workspace)
