@@ -1,56 +1,34 @@
-# UI Problem Audit
+﻿# UI Problem Audit
 
-Дата: 2026-03-11  
-Модуль: `shortform_core` desktop UI
+## Scope
+- project: `projects/wild_hunt_command_citadel/shortform_core`
+- mode: machine execution only
+- source artifacts: `ui_snapshot_runner`, `ui_validate`, `ui_doctor`
 
-## Screenshot-driven прогоны этой фазы
+## Run Metadata
+- verify run_id: `verify-20260312T121104Z` (status: `PASS`)
+- snapshot run_id: `20260312_151719` (status: `PASS`)
+- validate run_id: `validate_20260312_151514` (status: `PASS`)
+- doctor run_id: `20260312_151910` (status: `PASS`)
+- matrix: scales `1.0,1.25,1.5`; sizes `1540x920,1366x768,1280x800`
+- covered screens: `dashboard, profiles, sessions, content, analytics, ai_studio, audit, updates, settings`
 
-### Baseline
-- Snapshot run: `20260311_220907` (`PASS`)
-- Путь: `runtime/ui_snapshots/20260311_220907`
+## Machine Findings by Severity
 
-### After corrections
-- Snapshot run: `20260311_221740` (`PASS`)
-- Doctor run: `20260311_221939` (`PASS`)
-- Validate run: `20260311_222150` (`PASS`)
-- Snapshot (внутри validate): `20260311_222355` (`PASS`)
+### critical
+- none
 
-## Найденные системные проблемы
+### major
+- none
 
-### Critical (исторически, закрыты)
-- Риск broken page-state после быстрых переключений экранов.
-- Риск отсутствия критичных CTA в базовой видимости (анти-pattern hover-only).
+### minor
+- none
 
-### Major (закрыты в этой фазе)
-- Недостаточная product-выразительность Dashboard как HUD реальных возможностей ядра.
-- Недостаточный автоматический контроль устойчивости split/layout и context/top-status зон.
-- Недостаточная трассировка screen-level аудита в сводке `ui_validate`.
+## Fact Counters
+- `ui_doctor` severity_counts: `critical=0`, `major=0`, `minor=0`
+- `ui_validate` warnings: `[]`
+- `ui_validate` failures: `[]`
+- screenshots: `81` (`9 screens x 3 sizes x 3 scales`)
 
-### Minor (остаются для ручного visual acceptance)
-- Тонкая типографическая калибровка micro-spacing в длинных текстовых блоках.
-- Финальная оценка “премиальности” на реальном пользовательском окружении.
-
-## Что исправлено
-
-- Dashboard получил явные блоки:
-  - `core_state_summary`,
-  - `next_action_summary`.
-- `ui_doctor` усилен checks:
-  - splitter size/ratio stability;
-  - top status pills completeness;
-  - context panel action/info sufficiency;
-  - dashboard summary presence.
-- `ui_validate` усилен:
-  - screen audit aggregation;
-  - `ui_visual_review.md` per run;
-  - расширенный артефактный manifest (doctor/snapshot links).
-- `ui_snapshot_runner` усилен:
-  - `screens_by_page`,
-  - `latest_run.txt`,
-  - comparison-ready manifests.
-
-## Текущее состояние
-
-- Автоматический UI gate: **PASS**.
-- Критичных/major дефектов по текущим инвариантам не обнаружено.
-- Следующий этап: финальный ручной human acceptance.
+## Status
+- machine UI finding status for this run set: `NO_MACHINE_DETECTED_UI_ISSUES`

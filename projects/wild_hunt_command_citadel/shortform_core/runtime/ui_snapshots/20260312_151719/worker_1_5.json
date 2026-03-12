@@ -1,0 +1,276 @@
+{
+  "scale": "1.5",
+  "sizes": "1540x920,1366x768,1280x800",
+  "screenshots": [
+    {
+      "page": "dashboard",
+      "size": "1540x920",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\dashboard_1540x920_scale_1_5.png",
+      "sha256": "5757928d632a6da1312598fc2593447fe6190d39475fbbb65731910239b8290b",
+      "width": 1540,
+      "height": 920,
+      "captured_at": "2026-03-12T12:18:48.669752+00:00"
+    },
+    {
+      "page": "profiles",
+      "size": "1540x920",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\profiles_1540x920_scale_1_5.png",
+      "sha256": "57455aee2a763a138e55eac02dfdcc2ffbed37ec18e2273de6dece96331c4352",
+      "width": 1540,
+      "height": 920,
+      "captured_at": "2026-03-12T12:18:49.304613+00:00"
+    },
+    {
+      "page": "sessions",
+      "size": "1540x920",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\sessions_1540x920_scale_1_5.png",
+      "sha256": "0ac3f3c4732e04d6464df203e218500de64c994e66d1ab9bb55692bad4eb0e60",
+      "width": 1540,
+      "height": 920,
+      "captured_at": "2026-03-12T12:18:49.944217+00:00"
+    },
+    {
+      "page": "content",
+      "size": "1540x920",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\content_1540x920_scale_1_5.png",
+      "sha256": "60cd5ce4bf7072c36d7f147717eb7c580b2b96d0ee0c7fe14b46f3306c4292ef",
+      "width": 1540,
+      "height": 920,
+      "captured_at": "2026-03-12T12:18:50.534376+00:00"
+    },
+    {
+      "page": "analytics",
+      "size": "1540x920",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\analytics_1540x920_scale_1_5.png",
+      "sha256": "ba986306ab3a92f52ef55c8afde69c8ecb9d6d00288d858b08169696f1ecd8f2",
+      "width": 1540,
+      "height": 920,
+      "captured_at": "2026-03-12T12:18:51.170426+00:00"
+    },
+    {
+      "page": "ai_studio",
+      "size": "1540x920",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\ai_studio_1540x920_scale_1_5.png",
+      "sha256": "1b0b70cace12bb169f0e4a2c4461e191fffd5ce91d53ed5262f949200a36f814",
+      "width": 1540,
+      "height": 920,
+      "captured_at": "2026-03-12T12:18:51.789857+00:00"
+    },
+    {
+      "page": "audit",
+      "size": "1540x920",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\audit_1540x920_scale_1_5.png",
+      "sha256": "e16eadc24db8d6bc3774b4b114648da13a6e0499ad6fab14dee2d7bad8bed908",
+      "width": 1540,
+      "height": 920,
+      "captured_at": "2026-03-12T12:18:52.387895+00:00"
+    },
+    {
+      "page": "updates",
+      "size": "1540x920",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\updates_1540x920_scale_1_5.png",
+      "sha256": "d4add7ea62b08f80dd4073c1146b49bc004a7d775c5650a81f7fd543a8123fa8",
+      "width": 1540,
+      "height": 920,
+      "captured_at": "2026-03-12T12:18:52.994926+00:00"
+    },
+    {
+      "page": "settings",
+      "size": "1540x920",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\settings_1540x920_scale_1_5.png",
+      "sha256": "3e5ed9b7f33d615209a91ead589df245ffdede66287169cab013b71fa4145006",
+      "width": 1540,
+      "height": 920,
+      "captured_at": "2026-03-12T12:18:53.560766+00:00"
+    },
+    {
+      "page": "dashboard",
+      "size": "1366x768",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\dashboard_1366x768_scale_1_5.png",
+      "sha256": "73601d7f22a06b420cb1c0734d6ddcf83a185ab93a533cc5c51fb5f1c61e0d27",
+      "width": 1366,
+      "height": 768,
+      "captured_at": "2026-03-12T12:18:54.445682+00:00"
+    },
+    {
+      "page": "profiles",
+      "size": "1366x768",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\profiles_1366x768_scale_1_5.png",
+      "sha256": "ba5218aa32d474f1e56edb1b88e2dfe3f8c8890a5eb0d660618aa2feeab44563",
+      "width": 1366,
+      "height": 768,
+      "captured_at": "2026-03-12T12:18:55.004062+00:00"
+    },
+    {
+      "page": "sessions",
+      "size": "1366x768",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\sessions_1366x768_scale_1_5.png",
+      "sha256": "7361cf68ea9d636d79310697dddca7647a216e6030a395836d454feb10cc4e2d",
+      "width": 1366,
+      "height": 768,
+      "captured_at": "2026-03-12T12:18:55.584111+00:00"
+    },
+    {
+      "page": "content",
+      "size": "1366x768",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\content_1366x768_scale_1_5.png",
+      "sha256": "a1c561b3fd434df0cc90815994b440433887305133e6c9ad4c28c624d832caaa",
+      "width": 1366,
+      "height": 768,
+      "captured_at": "2026-03-12T12:18:56.124086+00:00"
+    },
+    {
+      "page": "analytics",
+      "size": "1366x768",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\analytics_1366x768_scale_1_5.png",
+      "sha256": "3f6a7728c56fc5b5f5130cc73e176d0eb8295a647619ff7cbe57289e549879c5",
+      "width": 1366,
+      "height": 768,
+      "captured_at": "2026-03-12T12:18:56.707789+00:00"
+    },
+    {
+      "page": "ai_studio",
+      "size": "1366x768",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\ai_studio_1366x768_scale_1_5.png",
+      "sha256": "f79cea12c0cd72d924d76cabb127eeeb2c7f0168f2ea484840b0f838e03f8682",
+      "width": 1366,
+      "height": 768,
+      "captured_at": "2026-03-12T12:18:57.265078+00:00"
+    },
+    {
+      "page": "audit",
+      "size": "1366x768",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\audit_1366x768_scale_1_5.png",
+      "sha256": "b2e5009c518c61e386e443fb496396a2bf675006ef05d7875e03bfd2142195be",
+      "width": 1366,
+      "height": 768,
+      "captured_at": "2026-03-12T12:18:57.802163+00:00"
+    },
+    {
+      "page": "updates",
+      "size": "1366x768",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\updates_1366x768_scale_1_5.png",
+      "sha256": "c2a52375756aff208d0436a7b9a920e024148f7de44d2bd12ceb256777c0865f",
+      "width": 1366,
+      "height": 768,
+      "captured_at": "2026-03-12T12:18:58.344416+00:00"
+    },
+    {
+      "page": "settings",
+      "size": "1366x768",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\settings_1366x768_scale_1_5.png",
+      "sha256": "a4e230af4911dc390155cc854320212cae2a7913bf351415949fa966f11a534e",
+      "width": 1366,
+      "height": 768,
+      "captured_at": "2026-03-12T12:18:58.868141+00:00"
+    },
+    {
+      "page": "dashboard",
+      "size": "1280x800",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\dashboard_1280x800_scale_1_5.png",
+      "sha256": "7f1d51e8d643eee80f3565fb84d1bd28b011c9e8ce9bd3c48620102388c9b807",
+      "width": 1280,
+      "height": 800,
+      "captured_at": "2026-03-12T12:18:59.751591+00:00"
+    },
+    {
+      "page": "profiles",
+      "size": "1280x800",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\profiles_1280x800_scale_1_5.png",
+      "sha256": "736df62519bec5ad6347ae1b9b7994df2b19e27f475ad3942488d019de69f070",
+      "width": 1280,
+      "height": 800,
+      "captured_at": "2026-03-12T12:19:00.302015+00:00"
+    },
+    {
+      "page": "sessions",
+      "size": "1280x800",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\sessions_1280x800_scale_1_5.png",
+      "sha256": "9696e4526d69172e956980391cf2c600f2b630947297bf2334bae5690e43fb57",
+      "width": 1280,
+      "height": 800,
+      "captured_at": "2026-03-12T12:19:00.875389+00:00"
+    },
+    {
+      "page": "content",
+      "size": "1280x800",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\content_1280x800_scale_1_5.png",
+      "sha256": "a0620ec42ba0cd75384e95301f93b59eb738e4754ec330d234923f6d4a10bb4b",
+      "width": 1280,
+      "height": 800,
+      "captured_at": "2026-03-12T12:19:01.406133+00:00"
+    },
+    {
+      "page": "analytics",
+      "size": "1280x800",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\analytics_1280x800_scale_1_5.png",
+      "sha256": "805607c1a02b7d5c9f0fdde625849891708d54d32eddff07d9cd64a17c22e4a4",
+      "width": 1280,
+      "height": 800,
+      "captured_at": "2026-03-12T12:19:01.972409+00:00"
+    },
+    {
+      "page": "ai_studio",
+      "size": "1280x800",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\ai_studio_1280x800_scale_1_5.png",
+      "sha256": "b149b3e47a2ecaf2eb9aa6fef58a26829b6a7b616a18d996dede07669db15628",
+      "width": 1280,
+      "height": 800,
+      "captured_at": "2026-03-12T12:19:02.534213+00:00"
+    },
+    {
+      "page": "audit",
+      "size": "1280x800",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\audit_1280x800_scale_1_5.png",
+      "sha256": "d9ecd9a6154f2570d9ab58d596040eaa6c4ba5666f45eddde1b7143b555c9158",
+      "width": 1280,
+      "height": 800,
+      "captured_at": "2026-03-12T12:19:03.071967+00:00"
+    },
+    {
+      "page": "updates",
+      "size": "1280x800",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\updates_1280x800_scale_1_5.png",
+      "sha256": "8cbbd72294fed00567ed9c205394286646109e30441aa50a2279b80bd07d2c60",
+      "width": 1280,
+      "height": 800,
+      "captured_at": "2026-03-12T12:19:03.609044+00:00"
+    },
+    {
+      "page": "settings",
+      "size": "1280x800",
+      "scale": "1.5",
+      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\screenshots\\scale_1_5\\settings_1280x800_scale_1_5.png",
+      "sha256": "f2c61a205d498f306929d292b000a6e508c904d62c11747cc87302082b5f2913",
+      "width": 1280,
+      "height": 800,
+      "captured_at": "2026-03-12T12:19:04.123941+00:00"
+    }
+  ]
+}

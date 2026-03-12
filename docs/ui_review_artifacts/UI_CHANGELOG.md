@@ -1,50 +1,28 @@
-# UI Changelog
+﻿# UI Changelog
 
-## 2026-03-11 — UI Resilience & Validation Phase
+## 2026-03-12 — Machine Execution Cycle (Facts Only)
 
-### Dashboard / HUD
-- Усилен Dashboard блоком состояния ядра:
-  - `core_state_summary` (readiness + verification + update status),
-  - `next_action_summary` (системные next steps по текущему состоянию).
-- Добавлены стили для новых summary-блоков в `theme.py`.
+### Executed Runs
+- `ui_snapshot_runner`: run_id `20260312_151719`, status `PASS`
+- `ui_validate`: run_id `validate_20260312_151514`, status `PASS`
+- `ui_doctor` (standalone): run_id `20260312_151910`, status `PASS`
 
-### UI Doctor
-- Добавлены проверки:
-  - main splitter stability (left/right width + ratio),
-  - top status bar completeness,
-  - context panel action/info sufficiency,
-  - dashboard core-state/next-actions presence.
-- Расширены summary-метрики:
-  - `screenshots_by_page`,
-  - `issue_categories`.
+### Coverage
+- screens: `dashboard, profiles, sessions, content, analytics, ai_studio, audit, updates, settings`
+- scales: `1.0, 1.25, 1.5`
+- sizes: `1540x920, 1366x768, 1280x800`
+- total screenshots in latest snapshot run: `81`
 
-### UI Snapshot Runner
-- В manifest добавлены `screens_by_page`.
-- Добавлен `runtime/ui_snapshots/latest_run.txt`.
+### Machine Results
+- `ui_validate` warnings: `0`
+- `ui_validate` failures: `0`
+- `ui_doctor` critical/major/minor: `0/0/0`
 
-### UI Compare
-- Добавлен `scripts/ui_compare_runs.py` (active module + root wrapper).
-- Новый compare-пайплайн:
-  - принимает `base_run` и `target_run`,
-  - сравнивает manifest + screenshot hashes,
-  - выдаёт список изменившихся экранов и per-page summary.
-- Артефакты сравнения:
-  - `runtime/ui_compare/<compare_run_id>_<base>_vs_<target>/ui_compare_summary.json`
-  - `runtime/ui_compare/<compare_run_id>_<base>_vs_<target>/ui_compare_summary.md`
-
-### UI Validate
-- Добавлен screen-level audit (`screen_audit`) из doctor issues.
-- Добавлен `ui_visual_review.md` в каждый validate run.
-- Расширены artifact ссылки:
-  - doctor summary/manifest paths,
-  - snapshot summary/manifest paths.
-
-### Review docs
-- Обновлены:
-  - `UI_PROBLEM_AUDIT.md`
-  - `UI_FIX_PLAN.md`
-  - `UI_AUTOMATION_PLAN.md`
-  - `UI_ACCEPTANCE_CHECKLIST.md`
-  - `UI_LAYOUT_BUG_REPORT.md`
-- Добавлен:
-  - `UI_RESILIENCE_REVIEW.md`
+### Artifact Updates
+- updated root pointers:
+  - `projects/wild_hunt_command_citadel/shortform_core/ui_screenshots_manifest.json`
+  - `projects/wild_hunt_command_citadel/shortform_core/ui_validation_summary.json`
+  - `projects/wild_hunt_command_citadel/shortform_core/ui_validation_summary.md`
+- updated runtime pointers:
+  - `runtime/ui_snapshots/latest_run.txt`
+  - `runtime/ui_validation/latest_run.txt`
