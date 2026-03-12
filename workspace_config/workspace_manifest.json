@@ -154,7 +154,7 @@
       "status": "supporting",
       "category": "desktop_tool",
       "type": "desktop_app",
-      "priority": 3,
+      "priority": 2,
       "runtime_namespace": "voice_launcher",
       "port_range": {
         "start": 8100,
@@ -186,7 +186,7 @@
       "status": "experimental",
       "category": "research_prototype",
       "type": "prototype",
-      "priority": 4,
+      "priority": 3,
       "runtime_namespace": "adaptive_trading",
       "port_range": {
         "start": 8200,
@@ -218,7 +218,7 @@
       "status": "experimental",
       "category": "desktop_tool",
       "type": "desktop_app",
-      "priority": 6,
+      "priority": 5,
       "runtime_namespace": "game_ru_ai",
       "port_range": {
         "start": 8400,
@@ -243,6 +243,19 @@
         "python scripts/project_startup.py run --project-slug game_ru_ai --entrypoint verify --startup-kind verify --port-mode fixed"
       ],
       "update_entrypoints": []
+    }
+  ],
+  "non_registry_paths": [
+    {
+      "path": "projects/wild_hunt_command_citadel/shortform_core",
+      "classification": "legacy_internal_layer",
+      "registry_visibility": "excluded_from_project_registry",
+      "owned_by_project": "tiktok_agent_platform",
+      "notes": [
+        "Path exists in repository tree for legacy continuity.",
+        "Path is not an independent workspace project and must not be treated as active/supporting/experimental project scope.",
+        "Canonical project root for this product is projects/wild_hunt_command_citadel/tiktok_agent_platform."
+      ]
     }
   ]
 }

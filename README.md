@@ -84,6 +84,20 @@ Current priority model:
 - `supporting`: `voice_launcher`
 - `experimental`: `adaptive_trading`, `game_ru_ai`
 
+## Canonical Project Registry
+
+Workspace-level projects (and only these) are canonical:
+
+- `tiktok_agent_platform` -> `projects/wild_hunt_command_citadel/tiktok_agent_platform` (`active`)
+- `voice_launcher` -> `projects/voice_launcher` (`supporting`)
+- `adaptive_trading` -> `projects/adaptive_trading` (`experimental`)
+- `game_ru_ai` -> `projects/GameRuAI` (`experimental`)
+
+Tree paths that exist but are non-registry:
+
+- `projects/wild_hunt_command_citadel/shortform_core` is a legacy internal layer path and is not a standalone workspace project.
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/PROJECT_MANIFEST.json` and `projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/PROJECT_MANIFEST.json` are product layer manifests, not workspace project registry entries.
+
 ## Root Entrypoints for the Active Module
 
 Run from repository root (`.`):
