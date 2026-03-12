@@ -1,0 +1,19 @@
+{
+  "repo_name": "WorkFLOW",
+  "checked_at_utc": "2026-03-12T21:07:59.052137+00:00",
+  "checked_branch": "main",
+  "local_head": "8a91c117180b7d4329d2203f261d9f082c411b5d",
+  "origin_main_head": "8a91c117180b7d4329d2203f261d9f082c411b5d",
+  "ahead_count": 0,
+  "behind_count": 0,
+  "sync_status": "IN_SYNC",
+  "working_tree_clean": false,
+  "working_tree_status": "DIRTY",
+  "active_project": {
+    "slug": "tiktok_agent_platform",
+    "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform"
+  },
+  "stage1_consolidation_status": "PASS",
+  "repo_state_agreement": "PARTIAL_MATCH",
+  "mismatches": []
+}
