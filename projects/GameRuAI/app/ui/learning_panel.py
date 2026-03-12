@@ -83,6 +83,9 @@ class LearningPanel(QWidget):
             "adaptation_summary": snapshot.get("adaptation_summary", {}),
             "terms_learned": len(snapshot.get("terms", [])),
             "tm_entries": len(snapshot.get("tm", [])),
+            "evidence_records": len(snapshot.get("evidence", [])),
+            "knowledge_sources": len(snapshot.get("knowledge_sources", [])),
+            "external_reference_events": len(snapshot.get("external_references", [])),
             "recent_corrections": len(corrections),
             "improved_examples_visible": len(improvements),
         }

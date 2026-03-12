@@ -215,6 +215,7 @@ class MainWindow(QMainWindow):
         self.refresh_entries()
         self.refresh_jobs()
         self.refresh_language_hub()
+        self.refresh_language_intelligence()
         self.refresh_hud()
 
     def on_detect_languages(self) -> None:
@@ -329,9 +330,15 @@ class MainWindow(QMainWindow):
             "style_preset": self.voice_panel.style_combo.currentText(),
             "speech_rate": self.voice_panel.rate_spin.value(),
         }
-        self.services.speaker_profiles.update_profile(self.current_project_id, speaker_id, patch)
+        self.services.speaker_profile_bank.update_profile(self.current_project_id, speaker_id, patch)
+        self.services.voice_profile_source.mark_active(
+            self.current_project_id,
+            version="voice-profiles-v1",
+            profile_count=len(self.services.repo.list_voice_profiles(self.current_project_id)),
+        )
         self.refresh_voice()
         self.refresh_learning()
+        self.refresh_audio_lab()
         self.refresh_hud()
 
     def on_add_glossary_term(self) -> None:

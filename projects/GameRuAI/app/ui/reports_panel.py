@@ -32,11 +32,13 @@ class ReportsPanel(QWidget):
         self.uncertain_label = QLabel("Uncertain language: n/a")
         self.voice_label = QLabel("Voice quality/alignment: n/a")
         self.companion_label = QLabel("Companion events: n/a")
+        self.core_label = QLabel("Multimodal core: n/a")
         root.addWidget(self.coverage_label)
         root.addWidget(self.low_quality_label)
         root.addWidget(self.uncertain_label)
         root.addWidget(self.voice_label)
         root.addWidget(self.companion_label)
+        root.addWidget(self.core_label)
 
         self.translation_table = QTableWidget(0, 2)
         self.translation_table.setHorizontalHeaderLabels(["Metric", "Value"])
@@ -60,6 +62,7 @@ class ReportsPanel(QWidget):
         translation = snapshot.get("translation_report", {}) or {}
         project_summary = snapshot.get("project_summary", {}) or {}
         quality = snapshot.get("quality_dashboard", {}) or {}
+        core_summary = snapshot.get("multimodal_core_summary", {}) or {}
 
         metrics_rows = [
             ("entries_total", translation.get("entries_total", 0)),
@@ -104,6 +107,14 @@ class ReportsPanel(QWidget):
         companion = project_summary.get("companion", {}) if project_summary else {}
         self.companion_label.setText(
             f"Companion events: sessions={companion.get('sessions_total', 0)} events={companion.get('watched_events_total', 0)}"
+        )
+        self.core_label.setText(
+            "Multimodal core: "
+            f"assets={core_summary.get('asset_manifest_total', 0)} "
+            f"content_units={core_summary.get('content_units_total', 0)} "
+            f"packages={core_summary.get('translation_packages_total', 0)} "
+            f"sync={core_summary.get('sync_plans_total', 0)} "
+            f"evidence={core_summary.get('evidence_records_total', 0)}"
         )
 
         compact = {

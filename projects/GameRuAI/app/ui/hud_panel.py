@@ -103,6 +103,7 @@ class ProductHudPanel(QWidget):
         self.qa_label = QLabel("QA: n/a")
         self.reports_label = QLabel("Reports: n/a")
         self.bottlenecks_label = QLabel("Language bottlenecks: n/a")
+        self.core_label = QLabel("Core: n/a")
         self.metrics_labels = [
             self.entries_label,
             self.languages_label,
@@ -112,6 +113,7 @@ class ProductHudPanel(QWidget):
             self.qa_label,
             self.reports_label,
             self.bottlenecks_label,
+            self.core_label,
         ]
         for idx, label in enumerate(self.metrics_labels):
             label.setFrameShape(QFrame.StyledPanel)
@@ -194,6 +196,13 @@ class ProductHudPanel(QWidget):
         self.bottlenecks_label.setText(
             "Language bottlenecks: "
             + ", ".join(snapshot.get("language_bottlenecks", []) or ["none"])
+        )
+        self.core_label.setText(
+            "Core: "
+            f"packages={snapshot.get('translation_packages_total', 0)} "
+            f"evidence={snapshot.get('evidence_records_total', 0)} "
+            f"sync={snapshot.get('sync_plans_total', 0)} "
+            f"sources={snapshot.get('knowledge_sources_total', 0)}"
         )
 
         stage_snapshot = snapshot.get("pipeline_stage", {}) or {}

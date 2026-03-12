@@ -282,15 +282,15 @@ class AppServices:
                         "speaker_id": speaker.speaker_id,
                         "status": "uncertain" if insight.uncertain or insight.ambiguous else "ready",
                         "metadata": {
-                            "language_uncertain": insight.uncertain,
-                            "language_ambiguous": insight.ambiguous,
-                            "speaker_confidence": speaker.confidence,
-                            "speaker_reason": speaker.reason,
-                            "subtitle_alignment": subtitle_rel.__dict__,
-                            "emotion_hint": emotion,
-                        },
-                        "provenance": "content_understanding_core",
-                    }
+                        "language_uncertain": insight.uncertain,
+                        "language_ambiguous": insight.ambiguous,
+                        "speaker_confidence": speaker.confidence,
+                        "speaker_reason": speaker.reason,
+                        "subtitle_alignment": asdict(subtitle_rel),
+                        "emotion_hint": emotion,
+                    },
+                    "provenance": "content_understanding_core",
+                }
                 )
 
             self.repo.replace_content_units(project_id, content_units)
@@ -889,6 +889,9 @@ class AppServices:
             "improvement_examples": self.repo.list_learning_improvements(project_id, limit=200),
             "terms": self.glossary_service.list_terms(project_id),
             "tm": self.repo.list_translation_memory(project_id),
+            "evidence": self.repo.list_evidence_records(project_id, limit=200),
+            "knowledge_sources": self.repo.list_knowledge_sources(project_id, limit=200),
+            "external_references": self.repo.list_external_reference_events(project_id, limit=200),
         }
 
     def load_scenes(self, game_root: Path) -> list[dict[str, Any]]:
@@ -1089,16 +1092,22 @@ class AppServices:
         history = self.voice_attempt_history.list_recent(project_id, limit=600)
         groups = self.repo.list_speaker_groups(project_id, limit=200)
         samples = self.repo.list_voice_sample_bank(project_id, limit=5000)
+        audio_results = self.repo.list_audio_analysis_results(project_id, limit=1000)
+        sync_plans = self.repo.list_sync_plans(project_id, limit=1000)
         return {
             "attempts": attempts,
             "history": history,
             "speaker_groups": groups,
             "sample_bank": samples,
+            "audio_analysis": audio_results,
+            "sync_plans": sync_plans,
             "summary": {
                 "attempts_total": len(attempts),
                 "history_total": len(history),
                 "speaker_groups": len(groups),
                 "sample_bank_total": len(samples),
+                "audio_analysis_total": len(audio_results),
+                "sync_plans_total": len(sync_plans),
                 "broken_links": len(
                     [
                         item
@@ -1200,9 +1209,11 @@ class AppServices:
         quality_snapshots = self.repo.list_quality_snapshots(project_id, limit=40)
         translation_report = next((item for item in reports if item.get("report_type") == "translation_report"), None)
         project_summary = next((item for item in reports if item.get("report_type") == "project_summary"), None)
+        multimodal_core = next((item for item in reports if item.get("report_type") == "multimodal_core_summary"), None)
         return {
             "translation_report": (translation_report or {}).get("payload_json", {}),
             "project_summary": (project_summary or {}).get("payload_json", {}),
+            "multimodal_core_summary": (multimodal_core or {}).get("payload_json", {}),
             "language_reports": language_reports,
             "quality_snapshots": quality_snapshots,
             "quality_dashboard": ((project_summary or {}).get("payload_json", {}) or {}).get("quality_dashboard", {}),
@@ -1844,3 +1855,8 @@ class AppServices:
         profile_file = game_root / "metadata" / "voice_profiles.json"
         if profile_file.exists():
             self.speaker_profiles.load_from_metadata(project_id, profile_file)
+        self.voice_profile_source.mark_active(
+            project_id,
+            version="voice-profiles-v1",
+            profile_count=len(self.repo.list_voice_profiles(project_id)),
+        )
