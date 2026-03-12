@@ -1,9 +1,9 @@
 ﻿# UI Fix Plan - GameRuAI
 
 ## Baseline findings source
-- Validation run: `20260312_161125`
-- Doctor run: `20260312_161126`
-- Main issue cluster: `floating_critical_cta` (`261` major findings)
+- Validation run: `20260312_162437`
+- Doctor run: `20260312_162437`
+- Main issue cluster: `floating_critical_cta` (`315` major findings)
 
 ## Priority order
 1. Eliminate repeated `floating_critical_cta` in core workflow screens.

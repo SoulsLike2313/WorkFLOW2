@@ -32,9 +32,9 @@
    Snapshot/Doctor/Validate -> review artifacts -> fix plan -> rerun.
 
 ## Latest automated evidence
-- Validation run: `20260312_161125`
-- Doctor run: `20260312_161126`
-- Snapshot run: `20260312_161728`
+- Validation run: `20260312_162437`
+- Doctor run: `20260312_162437`
+- Snapshot run: `20260312_163109`
 - Validation status: `PASS_WITH_WARNINGS`
 - Doctor status: `PASS_WITH_WARNINGS`
 - Snapshot status: `PASS`
@@ -54,20 +54,21 @@
 
 ## Current findings (from doctor)
 - `critical`: `0`
-- `major`: `261`
+- `major`: `315`
 - `minor`: `0`
 - Dominant issue category: `floating_critical_cta`
 - Dominant issue type: `layout`
 - Most affected screens:
+  - Language Hub (`72`)
   - Companion (`54`)
   - Entries (`54`)
   - Translation (`36`)
   - Voice (`36`)
   - Asset Explorer (`18`)
-  - Language Hub (`18`)
+  - Reports (`18`)
 
 ## Evidence source
 - `ui_screenshots_manifest.json`
 - `ui_validation_summary.json`
-- `runtime/ui_validation/validate_20260312_161125/ui_validation_summary.json`
-- `runtime/ui_validation/20260312_161126/ui_doctor_summary.json`
+- `runtime/ui_validation/validate_20260312_162437/ui_validation_summary.json`
+- `runtime/ui_validation/20260312_162437/ui_doctor_summary.json`

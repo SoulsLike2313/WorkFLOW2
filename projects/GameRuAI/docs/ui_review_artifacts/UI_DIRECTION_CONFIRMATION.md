@@ -21,7 +21,7 @@ Automation validates GameRuAI product states directly, including:
 - Translation, Voice, Reports, Diagnostics, Companion, and pipeline tabs.
 
 ## Current confirmation
-- Last run: `20260312_161125`
+- Last run: `20260312_162437`
 - Validation: `PASS_WITH_WARNINGS`
 - Main open risk: layout consistency (`floating_critical_cta`) across action rows.
 
