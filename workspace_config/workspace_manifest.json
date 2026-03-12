@@ -66,14 +66,14 @@
     "repo_sync_check": "python scripts/check_repo_sync.py --remote origin --branch main"
   },
   "verification_entrypoints": {
-    "active_project_verify": "python -m app.verify",
+    "active_project_verify": "python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint verify --startup-kind verify --port-mode fixed",
     "workspace_validate": "python scripts/validate_workspace.py",
     "repo_sync_check": "powershell -ExecutionPolicy Bypass -File .\\scripts\\check_repo_sync.ps1",
     "repo_sync_check_python": "python scripts/check_repo_sync.py --remote origin --branch main"
   },
   "update_entrypoints": {
-    "active_user_update": "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1",
-    "active_developer_update_api": "python -m app.launcher developer backend"
+    "active_user_update": "python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint update --startup-kind update --port-mode fixed",
+    "active_developer_update_api": "python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint update --startup-kind update --port-mode fixed"
   },
   "bootstrap_rules": {
     "validate_workspace_before_changes": true,
@@ -247,6 +247,16 @@
   ],
   "non_registry_paths": [
     {
+      "path": "projects/wild_hunt_command_citadel",
+      "classification": "project_group_container",
+      "registry_visibility": "excluded_from_project_registry",
+      "owned_by_project": "tiktok_agent_platform",
+      "notes": [
+        "Container directory for grouped product assets.",
+        "Only paths explicitly declared in project_registry are standalone workspace projects."
+      ]
+    },
+    {
       "path": "projects/wild_hunt_command_citadel/shortform_core",
       "classification": "legacy_internal_layer",
       "registry_visibility": "excluded_from_project_registry",
@@ -255,6 +265,34 @@
         "Path exists in repository tree for legacy continuity.",
         "Path is not an independent workspace project and must not be treated as active/supporting/experimental project scope.",
         "Canonical project root for this product is projects/wild_hunt_command_citadel/tiktok_agent_platform."
+      ]
+    }
+  ],
+  "layer_manifest_registry": [
+    {
+      "parent_project_slug": "tiktok_agent_platform",
+      "layer_slug": "tiktok_agent_core_layer",
+      "layer_name": "TikTok Agent Core Layer",
+      "layer_type": "internal_layer_manifest",
+      "manifest_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/PROJECT_MANIFEST.json",
+      "root_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core",
+      "workspace_project_registry_membership": "excluded_by_design",
+      "notes": [
+        "Layer manifest is machine-readable for internal product layering only.",
+        "Layer manifest must not be interpreted as standalone workspace project."
+      ]
+    },
+    {
+      "parent_project_slug": "tiktok_agent_platform",
+      "layer_slug": "tiktok_agent_app_layer",
+      "layer_name": "TikTok Agent App Layer",
+      "layer_type": "internal_layer_manifest",
+      "manifest_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/PROJECT_MANIFEST.json",
+      "root_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent",
+      "workspace_project_registry_membership": "excluded_by_design",
+      "notes": [
+        "Layer manifest is machine-readable for internal product layering only.",
+        "Layer manifest must not be interpreted as standalone workspace project."
       ]
     }
   ]

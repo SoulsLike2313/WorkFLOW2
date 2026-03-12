@@ -1,61 +1,75 @@
 ﻿# REPO TRUTH RECONCILIATION REPORT
 
-## Scope
-- README.md
-- workspace_config/workspace_manifest.json
-- workspace_config/codex_manifest.json
-- All PROJECT_MANIFEST.json files under projects/
-- Visible repository tree at root and projects/
-
-## Reconciliation Run
-- run_id: reconcile-20260312T200944Z
-- branch: main
+## Scope Checked
+- `README.md`
+- `workspace_config/workspace_manifest.json`
+- `workspace_config/codex_manifest.json`
+- `projects/**/PROJECT_MANIFEST.json`
+- Physical tree under `projects/`
+- `scripts/project_startup.py`
+- Existing review artifacts related to workspace/normalization/repo truth
 
 ## Discrepancies Found
-1. Priority mismatch between workspace registry and project manifests.
-- voice_launcher priority in workspace registry: 3
-- voice_launcher priority in project manifest: 2
-- adaptive_trading priority in workspace registry: 4
-- adaptive_trading priority in project manifest: 3
-- game_ru_ai priority in workspace registry: 6
-- game_ru_ai priority in project manifest: 5
+1. Workspace verification/update entrypoints were stale at root level.
+- `verification_entrypoints.active_project_verify` pointed to `python -m app.verify`.
+- `update_entrypoints.active_user_update` pointed to `.\\run_update.ps1` (file not present at repository root).
+- `update_entrypoints.active_developer_update_api` pointed to `python -m app.launcher developer backend` (not canonical root entrypoint).
 
-2. Tree visibility ambiguity for non-registry path.
-- Path exists: projects/wild_hunt_command_citadel/shortform_core
-- Path was not explicitly classified in root-level truth map.
-- Risk: machine can interpret it as independent project scope.
+2. Non-registry classification was incomplete.
+- `projects/wild_hunt_command_citadel/shortform_core` was classified, but container path `projects/wild_hunt_command_citadel` was not explicitly classified.
 
-3. Layer manifest ambiguity inside active project.
-- Files exist:
-  - projects/wild_hunt_command_citadel/tiktok_agent_platform/core/PROJECT_MANIFEST.json
-  - projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/PROJECT_MANIFEST.json
-- These manifests are layer-level manifests and not workspace project registry entries.
-- This rule was implicit, not explicit in root README.
+3. Layer manifest classification was implicit, not machine-explicit in workspace manifest.
+- Layer manifests existed physically:
+  - `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/PROJECT_MANIFEST.json`
+  - `projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/PROJECT_MANIFEST.json`
+- They were excluded from project registry by behavior, but not explicitly indexed as layer manifests.
+
+4. Legacy normalization artifacts contained stale active-module phrasing (`.../tiktok_agent_platform/core` as active project).
 
 ## Corrections Applied
-1. workspace_config/workspace_manifest.json updated.
-- project_registry.voice_launcher.priority: 3 -> 2
-- project_registry.adaptive_trading.priority: 4 -> 3
-- project_registry.game_ru_ai.priority: 6 -> 5
-- Added non_registry_paths classification for:
-  - projects/wild_hunt_command_citadel/shortform_core
+1. Updated `workspace_config/workspace_manifest.json`:
+- `verification_entrypoints.active_project_verify` -> canonical root verify command for `tiktok_agent_platform`.
+- `update_entrypoints.active_user_update` -> canonical root update command for `tiktok_agent_platform`.
+- `update_entrypoints.active_developer_update_api` -> canonical root update command for `tiktok_agent_platform`.
+- Added `non_registry_paths` entry for `projects/wild_hunt_command_citadel` as `project_group_container`.
+- Added `layer_manifest_registry` with explicit entries for:
+  - `tiktok_agent_core_layer`
+  - `tiktok_agent_app_layer`
 
-2. README.md updated.
-- Added canonical project registry mapping slug -> path -> status.
-- Added explicit non-registry clarifications for:
-  - projects/wild_hunt_command_citadel/shortform_core
-  - core/agent layer PROJECT_MANIFEST files inside tiktok_agent_platform
+2. Updated `README.md`:
+- Explicit non-registry container path classification for `projects/wild_hunt_command_citadel`.
+- Added source-of-truth precedence order.
+- Added explicit canonical root user-mode entrypoint command.
 
-## Source of Truth After Reconciliation
-- Workspace map: README.md
-- Workspace registry and statuses: workspace_config/workspace_manifest.json
-- Machine onboarding policy: workspace_config/codex_manifest.json
-- Project-level truth: each projects/**/PROJECT_MANIFEST.json
+3. Updated stale normalization artifacts to current canonical active project wording:
+- `docs/review_artifacts/README_BEFORE_AFTER_SUMMARY.md`
+- `docs/review_artifacts/README_NORMALIZATION_CHECKLIST.md`
+- `docs/review_artifacts/README_REWRITE_RATIONALE.md`
+- `docs/review_artifacts/ROOT_REPO_NORMALIZATION.md`
 
-## Validation Result
-- README active project: tiktok_agent_platform
-- workspace_manifest active_project: tiktok_agent_platform
-- Registry slugs and paths exist in repository tree.
-- Registry status index aligns with project manifest statuses for canonical workspace projects.
-- Canonical/non-canonical path interpretation is explicitly documented.
-- workspace validation run: runtime/workspace_validation/workspace-validate-20260312T200944Z
+## Canonical Active Project
+- slug: `tiktok_agent_platform`
+- path: `projects/wild_hunt_command_citadel/tiktok_agent_platform`
+- status: `active`
+
+## Canonical Non-Registry Paths
+- `projects/wild_hunt_command_citadel` (`project_group_container`)
+- `projects/wild_hunt_command_citadel/shortform_core` (`legacy_internal_layer`)
+
+## Canonical Layer Manifests (Not Workspace Projects)
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/PROJECT_MANIFEST.json` (`tiktok_agent_core_layer`)
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/PROJECT_MANIFEST.json` (`tiktok_agent_app_layer`)
+
+## Root Entrypoint Validation
+- command checked:
+  - `python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint user --startup-kind user --port-mode fixed --dry-run`
+- result: `PASS`
+- run_id: `tiktok_agent_platform-startup-20260312T203150Z`
+
+## Workspace Validation
+- command: `python scripts/validate_workspace.py`
+- result: `PASS`
+- run_dir: `runtime/workspace_validation/workspace-validate-20260312T203506Z`
+
+## Residual Risks
+- Historical migration/restructure artifacts still contain legacy context by design; canonical interpretation order is now explicit in root README and workspace manifest.

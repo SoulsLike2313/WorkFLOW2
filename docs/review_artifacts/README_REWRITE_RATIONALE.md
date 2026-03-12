@@ -8,7 +8,7 @@ A complete rewrite was chosen to:
 
 ## Design decisions in the new root README
 1. Keep only current repository reality:
-   - active module fixed to `projects/wild_hunt_command_citadel/tiktok_agent_platform/core`.
+   - active project fixed to `projects/wild_hunt_command_citadel/tiktok_agent_platform`.
 
 2. Separate responsibility levels:
    - root README = repository map + entrypoint map,
@@ -19,12 +19,12 @@ A complete rewrite was chosen to:
    - developer mode explicit and separate.
 
 4. Keep verification policy unambiguous:
-   - canonical verify entrypoint is `python -m app.verify`,
+   - canonical verify entrypoint is `python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint verify --startup-kind verify --port-mode fixed`,
    - manual testing allowed only on `PASS`.
 
 5. Keep update/patch flow usable for non-developer users:
-   - local `run_update.ps1` flow shown directly,
-   - developer endpoint flow retained only as integration/debug note.
+   - canonical root update flow shown via `project_startup.py` and active project slug,
+   - update command aligned with workspace registry entrypoints.
 
 ## Expected outcome
 - lower documentation drift,

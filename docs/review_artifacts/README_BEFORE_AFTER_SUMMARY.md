@@ -7,12 +7,12 @@
 
 ## After (new root README)
 - root README is strictly repository map + canonical entrypoint guide;
-- active module explicitly declared as `projects/wild_hunt_command_citadel/tiktok_agent_platform/core`;
+- active project explicitly declared as `projects/wild_hunt_command_citadel/tiktok_agent_platform`;
 - environment setup is shown before launcher commands;
 - user mode and developer mode are clearly separated;
 - verification gate policy is explicit and strict;
 - update flow is split into user-facing local script path and developer integration note;
-- canonical deep docs are explicitly referenced (`shortform_core/README.md`, `shortform_core/CODEX.md`).
+- canonical deep docs are explicitly referenced from the active project root and layer manifests.
 
 ## Removed or normalized section behavior
 - normalized vague secondary/legacy framing into explicit component responsibility;

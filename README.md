@@ -95,12 +95,28 @@ Workspace-level projects (and only these) are canonical:
 
 Tree paths that exist but are non-registry:
 
+- `projects/wild_hunt_command_citadel` is a project-group container path and is not a standalone workspace project.
 - `projects/wild_hunt_command_citadel/shortform_core` is a legacy internal layer path and is not a standalone workspace project.
 - `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/PROJECT_MANIFEST.json` and `projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/PROJECT_MANIFEST.json` are product layer manifests, not workspace project registry entries.
+
+## Source of Truth Order
+
+If any document conflicts, interpret repository truth in this order:
+
+1. `workspace_config/workspace_manifest.json` (active project, statuses, registry, non-registry paths, layer manifest registry)
+2. canonical `PROJECT_MANIFEST.json` for each registry project
+3. this `README.md` as root navigation map
+4. review artifacts in `docs/review_artifacts/` as evidence logs, not registry authority
 
 ## Root Entrypoints for the Active Module
 
 Run from repository root (`.`):
+
+Canonical user-mode root entrypoint:
+
+```powershell
+python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint user --startup-kind user --port-mode fixed
+```
 
 User mode:
 

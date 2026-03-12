@@ -25,4 +25,4 @@
 - [x] Developer mode entrypoint documented
 - [x] Canonical verify entrypoint documented
 - [x] Required verification artifacts documented
-- [x] Root README points to `tiktok_agent_platform/core` docs for deep technical details
+- [x] Root README points to active project root `tiktok_agent_platform` and classifies layer manifests explicitly
