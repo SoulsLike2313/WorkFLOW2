@@ -1,9 +1,9 @@
-﻿# UI Acceptance Checklist - GameRuAI
+# UI Acceptance Checklist - GameRuAI
 
 ## Baseline under review
-- Validation run: `20260312_162437`
-- Doctor run: `20260312_162437`
-- Snapshot run: `20260312_163109`
+- Validation run: `20260312_163846`
+- Doctor run: `20260312_163846`
+- Snapshot run: `20260312_164518`
 
 ## Core screen coverage
 - [x] All main screens are present in tab navigation.
@@ -53,5 +53,5 @@
 ## Sign-off
 - Reviewer: automation + manual review required
 - Date: 2026-03-12
-- Run ID: `20260312_162437`
+- Run ID: `20260312_163846`
 - Decision: `PASS_WITH_WARNINGS` (not release sign-off)

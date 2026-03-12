@@ -547,3 +547,514 @@ def _run_worker(args: argparse.Namespace) -> int:
         if page_key == "settings":
             return [button for button in visible_buttons if button.objectName() in {"PrimaryCTA", "OutlineCTA"}]
         return [button for button in visible_buttons if button.objectName() in {"PrimaryCTA", "SecondaryCTA", "OutlineCTA", "DangerCTA"}]
+
+    for width, height in sizes:
+        size_label = f"{width}x{height}"
+        window.resize(width, height)
+        window.show()
+        wait_ms(260)
+        record_step(
+            screen="dashboard",
+            action="boot_window",
+            result="pass",
+            notes=f"window shown at {size_label} scale={args.scale}",
+        )
+
+        splitter = getattr(window, "main_splitter", None)
+        if splitter is None:
+            add_issue(
+                severity="critical",
+                category="layout",
+                issue_type="missing_main_splitter",
+                page="all",
+                description="Main splitter is missing from workspace window.",
+                widget=None,
+                size_label=size_label,
+            )
+        else:
+            split_sizes = splitter.sizes()
+            if len(split_sizes) == 2:
+                left_size, right_size = split_sizes
+                total = max(1, left_size + right_size)
+                right_ratio = right_size / total
+                splitter_ratios.append((size_label, right_ratio))
+                if left_size < 640:
+                    add_issue(
+                        severity="major",
+                        category="layout",
+                        issue_type="central_panel_too_small",
+                        page="all",
+                        description=f"Central panel width is too small ({left_size}px).",
+                        widget=splitter,
+                        size_label=size_label,
+                        acceptance_blocker=True,
+                    )
+                if right_size < 280:
+                    add_issue(
+                        severity="major",
+                        category="layout",
+                        issue_type="context_panel_conflict",
+                        page="all",
+                        description=f"Context panel width is too small ({right_size}px).",
+                        widget=splitter,
+                        size_label=size_label,
+                        acceptance_blocker=True,
+                    )
+                if right_ratio < 0.18 or right_ratio > 0.42:
+                    add_issue(
+                        severity="major",
+                        category="layout",
+                        issue_type="splitter_ratio_unstable",
+                        page="all",
+                        description=f"Context panel ratio outside expected range ({right_ratio:.2f}).",
+                        widget=splitter,
+                        size_label=size_label,
+                        acceptance_blocker=False,
+                    )
+
+        top_status = getattr(window, "top_status", None)
+        if top_status is None or not top_status.isVisible():
+            add_issue(
+                severity="critical",
+                category="visibility",
+                issue_type="missing_top_status_bar",
+                page="all",
+                description="Top status bar is not visible.",
+                widget=top_status if isinstance(top_status, QWidget) else None,
+                size_label=size_label,
+            )
+        else:
+            pills = getattr(top_status, "pills", {})
+            if not isinstance(pills, dict) or len(pills) < 5:
+                add_issue(
+                    severity="major",
+                    category="product_clarity",
+                    issue_type="insufficient_status_pills",
+                    page="all",
+                    description="Top status bar does not expose enough status pills.",
+                    widget=top_status,
+                    size_label=size_label,
+                    acceptance_blocker=False,
+                )
+
+        context_panel = getattr(window, "context_panel", None)
+        if context_panel is None or not context_panel.isVisible():
+            add_issue(
+                severity="critical",
+                category="visibility",
+                issue_type="missing_context_panel",
+                page="all",
+                description="Context panel is not visible.",
+                widget=context_panel if isinstance(context_panel, QWidget) else None,
+                size_label=size_label,
+            )
+        else:
+            context_actions = [btn for btn in context_panel.findChildren(QPushButton) if btn.isVisible()]
+            if len(context_actions) < 2:
+                add_issue(
+                    severity="major",
+                    category="cta",
+                    issue_type="context_actions_missing",
+                    page="all",
+                    description="Context panel has fewer than 2 visible actions.",
+                    widget=context_panel,
+                    size_label=size_label,
+                    acceptance_blocker=True,
+                )
+
+        for page_key in PAGE_KEYS:
+            window._switch_page(page_key)
+            wait_ms(320)
+            record_step(
+                screen=page_key,
+                action="switch_page",
+                result="pass",
+                notes=f"page switched at {size_label}",
+            )
+
+            screenshot_ref = capture_page(page_key, size_label)
+            record_step(
+                screen=page_key,
+                action="capture_layout_check",
+                result="pass",
+                notes="layout check screenshot captured",
+                screenshot_ref=screenshot_ref,
+            )
+
+            page_widget = window._pages.get(page_key)
+            if page_widget is None:
+                add_issue(
+                    severity="critical",
+                    category="layout",
+                    issue_type="missing_page",
+                    page=page_key,
+                    description="Page widget is missing in workspace registry.",
+                    widget=None,
+                    size_label=size_label,
+                )
+                continue
+
+            effect = page_widget.graphicsEffect()
+            if isinstance(effect, QGraphicsOpacityEffect) and effect.opacity() < 0.95:
+                add_issue(
+                    severity="critical",
+                    category="visibility",
+                    issue_type="stuck_opacity",
+                    page=page_key,
+                    description=f"Page opacity is {effect.opacity():.2f}; expected >= 0.95.",
+                    widget=page_widget,
+                    size_label=size_label,
+                )
+
+            required_controls = find_required_controls(page_key, page_widget)
+            expected_min = 1
+            if page_key in {"dashboard", "profiles"}:
+                expected_min = 4
+            elif page_key in {"sessions", "ai_studio", "updates", "settings", "content"}:
+                expected_min = 2
+            if len(required_controls) < expected_min:
+                add_issue(
+                    severity="critical",
+                    category="cta",
+                    issue_type="missing_critical_cta",
+                    page=page_key,
+                    description=f"Only {len(required_controls)} required controls visible; expected >= {expected_min}.",
+                    widget=page_widget,
+                    size_label=size_label,
+                )
+
+            for button in required_controls:
+                if not button.isVisible():
+                    continue
+                before = button.isVisible() and button.width() > 0 and button.height() > 0
+                QTest.mouseMove(button, button.rect().center())
+                wait_ms(50)
+                QTest.mouseMove(page_widget, QPoint(5, 5))
+                wait_ms(50)
+                after = button.isVisible() and button.width() > 0 and button.height() > 0
+                if before and not after:
+                    add_issue(
+                        severity="critical",
+                        category="visibility",
+                        issue_type="hover_only_critical_control",
+                        page=page_key,
+                        description=f"Control '{button.text()}' disappears outside hover state.",
+                        widget=button,
+                        size_label=size_label,
+                    )
+
+            item_views = [view for view in page_widget.findChildren(QAbstractItemView) if view.isVisible()]
+            if item_views:
+                for view in item_views:
+                    view.clearSelection()
+                wait_ms(80)
+                selected_count = sum(len(view.selectedIndexes()) for view in item_views)
+                if selected_count > 0:
+                    add_issue(
+                        severity="major",
+                        category="visibility",
+                        issue_type="selection_state_stuck",
+                        page=page_key,
+                        description=f"Selection persisted after clearSelection (indexes={selected_count}).",
+                        widget=item_views[0],
+                        size_label=size_label,
+                        acceptance_blocker=False,
+                    )
+                all_empty = True
+                for view in item_views:
+                    count = 0
+                    if hasattr(view, "count"):
+                        count = int(getattr(view, "count")())
+                    elif hasattr(view, "rowCount"):
+                        count = int(getattr(view, "rowCount")())
+                    elif view.model() is not None:
+                        count = int(view.model().rowCount())
+                    if count > 0:
+                        all_empty = False
+                if all_empty:
+                    helper_labels = []
+                    for label in page_widget.findChildren(QLabel):
+                        if not label.isVisible():
+                            continue
+                        text = _safe_str(label.text()).lower()
+                        if any(token in text for token in ("нет", "пока", "ожид", "добав")):
+                            helper_labels.append(label)
+                    if not helper_labels:
+                        add_issue(
+                            severity="major",
+                            category="product_clarity",
+                            issue_type="broken_empty_state",
+                            page=page_key,
+                            description="Item views are empty but no helper empty-state copy is visible.",
+                            widget=page_widget,
+                            size_label=size_label,
+                            acceptance_blocker=True,
+                        )
+
+            page_rect = page_widget.rect()
+            check_widgets: list[QWidget] = []
+            for widget_type in (QPushButton, QComboBox, QTextEdit, QTableWidget, QListWidget):
+                check_widgets.extend(page_widget.findChildren(widget_type))
+            interactive = [widget for widget in check_widgets if widget.isVisible()]
+
+            for widget in interactive:
+                top_left = widget.mapTo(page_widget, QPoint(0, 0))
+                rect = QRect(top_left, widget.size())
+                if rect.right() > page_rect.right() + 2 or rect.bottom() > page_rect.bottom() + 2:
+                    add_issue(
+                        severity="major",
+                        category="layout",
+                        issue_type="out_of_bounds",
+                        page=page_key,
+                        description="Interactive widget extends beyond page bounds.",
+                        widget=widget,
+                        size_label=size_label,
+                        acceptance_blocker=True,
+                    )
+                if rect.left() < -2 or rect.top() < -2:
+                    add_issue(
+                        severity="major",
+                        category="layout",
+                        issue_type="negative_position",
+                        page=page_key,
+                        description="Interactive widget has negative position relative to page.",
+                        widget=widget,
+                        size_label=size_label,
+                        acceptance_blocker=True,
+                    )
+
+            for i in range(len(interactive)):
+                a = interactive[i]
+                for j in range(i + 1, len(interactive)):
+                    b = interactive[j]
+                    if a.parentWidget() is None or b.parentWidget() is None:
+                        continue
+                    if a.parentWidget() is not b.parentWidget():
+                        continue
+                    rect_a = QRect(a.mapTo(page_widget, QPoint(0, 0)), a.size())
+                    rect_b = QRect(b.mapTo(page_widget, QPoint(0, 0)), b.size())
+                    overlap = rect_a.intersected(rect_b)
+                    if overlap.isValid() and overlap.width() * overlap.height() > 24:
+                        add_issue(
+                            severity="major",
+                            category="layout",
+                            issue_type="sibling_overlap",
+                            page=page_key,
+                            description="Sibling controls overlap inside the same container.",
+                            widget=a,
+                            size_label=size_label,
+                            acceptance_blocker=True,
+                        )
+                        continue
+                    y_overlap = not (rect_a.bottom() < rect_b.top() or rect_b.bottom() < rect_a.top())
+                    x_overlap = not (rect_a.right() < rect_b.left() or rect_b.right() < rect_a.left())
+                    if y_overlap:
+                        gap = max(rect_b.left() - rect_a.right(), rect_a.left() - rect_b.right())
+                        if 0 <= gap <= 2:
+                            add_issue(
+                                severity="major",
+                                category="spacing",
+                                issue_type="near_overlap_horizontal",
+                                page=page_key,
+                                description="Dangerously tight horizontal gap between sibling controls.",
+                                widget=a,
+                                size_label=size_label,
+                                acceptance_blocker=False,
+                                likely_false_positive=True,
+                            )
+                    if x_overlap:
+                        gap = max(rect_b.top() - rect_a.bottom(), rect_a.top() - rect_b.bottom())
+                        if 0 <= gap <= 2:
+                            add_issue(
+                                severity="major",
+                                category="spacing",
+                                issue_type="near_overlap_vertical",
+                                page=page_key,
+                                description="Dangerously tight vertical gap between sibling controls.",
+                                widget=a,
+                                size_label=size_label,
+                                acceptance_blocker=False,
+                                likely_false_positive=True,
+                            )
+
+            visible_buttons = [btn for btn in page_widget.findChildren(QPushButton) if btn.isVisible()]
+            cta_buttons = [btn for btn in visible_buttons if btn.objectName() in {"PrimaryCTA", "SecondaryCTA", "OutlineCTA", "DangerCTA"}]
+            for button in visible_buttons:
+                text = _safe_str(button.text()).replace("&", "")
+                if not text:
+                    continue
+                clipped = button.width() + 1 < button.sizeHint().width()
+                if clipped:
+                    issue_type = "critical_button_clipping" if button in cta_buttons else "button_clipping"
+                    add_issue(
+                        severity="major",
+                        category="cta",
+                        issue_type=issue_type,
+                        page=page_key,
+                        description=f"Button text likely clipped: '{text[:80]}'",
+                        widget=button,
+                        size_label=size_label,
+                        acceptance_blocker=issue_type == "critical_button_clipping",
+                    )
+
+            for label in page_widget.findChildren(QLabel):
+                if not label.isVisible() or label.wordWrap():
+                    continue
+                text = _safe_str(label.text())
+                if not text:
+                    continue
+                clipped = label.width() + 1 < label.sizeHint().width()
+                if clipped:
+                    has_cyrillic = any("а" <= ch.lower() <= "я" for ch in text)
+                    issue_type = "critical_text_clipping" if has_cyrillic and len(text) > 14 else "text_clipping"
+                    add_issue(
+                        severity="major",
+                        category="localization" if has_cyrillic else "typography",
+                        issue_type=issue_type,
+                        page=page_key,
+                        description=f"Label text likely clipped: '{text[:80]}'",
+                        widget=label,
+                        size_label=size_label,
+                        acceptance_blocker=issue_type == "critical_text_clipping",
+                    )
+
+            if cta_buttons:
+                centers = []
+                for button in cta_buttons:
+                    center = button.mapTo(page_widget, button.rect().center())
+                    centers.append((button, center))
+                for button, center in centers:
+                    nearest = None
+                    for other_button, other_center in centers:
+                        if other_button is button:
+                            continue
+                        dist = abs(center.x() - other_center.x()) + abs(center.y() - other_center.y())
+                        nearest = dist if nearest is None else min(nearest, dist)
+                    if nearest is None:
+                        continue
+                    if nearest > max(220, int(page_rect.width() * 0.42)):
+                        add_issue(
+                            severity="major",
+                            category="cta",
+                            issue_type="floating_cta_risk",
+                            page=page_key,
+                            description="CTA appears isolated from the action group layout.",
+                            widget=button,
+                            size_label=size_label,
+                            acceptance_blocker=False,
+                            likely_false_positive=True,
+                        )
+
+            if page_key == "sessions":
+                preview = page_widget.findChild(QLabel, "SessionMobilePreview")
+                if preview is None or not preview.isVisible():
+                    add_issue(
+                        severity="major",
+                        category="session_realism",
+                        issue_type="session_placeholder_broken",
+                        page=page_key,
+                        description="Session mobile preview block is missing.",
+                        widget=page_widget,
+                        size_label=size_label,
+                        acceptance_blocker=True,
+                    )
+                else:
+                    preview_text = _safe_str(preview.text())
+                    if len(preview_text) < 38:
+                        add_issue(
+                            severity="major",
+                            category="session_realism",
+                            issue_type="session_placeholder_broken",
+                            page=page_key,
+                            description="Session preview copy is too short and looks placeholder-like.",
+                            widget=preview,
+                            size_label=size_label,
+                            acceptance_blocker=True,
+                        )
+
+            if page_key == "analytics":
+                required_lists = [
+                    page_widget.findChild(QListWidget, "AnalyticsTopList"),
+                    page_widget.findChild(QListWidget, "AnalyticsWeakList"),
+                    page_widget.findChild(QListWidget, "AnalyticsRecommendationList"),
+                ]
+                if any(lst is None for lst in required_lists):
+                    add_issue(
+                        severity="major",
+                        category="analytics_readability",
+                        issue_type="analytics_blocks_missing",
+                        page=page_key,
+                        description="One or more analytics list blocks are missing.",
+                        widget=page_widget,
+                        size_label=size_label,
+                        acceptance_blocker=False,
+                    )
+                else:
+                    visible_lists = [lst for lst in required_lists if lst is not None and lst.isVisible()]
+                    if len(visible_lists) < 3:
+                        add_issue(
+                            severity="major",
+                            category="analytics_readability",
+                            issue_type="analytics_blocks_hidden",
+                            page=page_key,
+                            description="Analytics list blocks are not all visible.",
+                            widget=page_widget,
+                            size_label=size_label,
+                            acceptance_blocker=False,
+                        )
+
+    if len(splitter_ratios) >= 2:
+        values = [ratio for _, ratio in splitter_ratios]
+        spread = max(values) - min(values)
+        if spread > 0.18:
+            add_issue(
+                severity="major",
+                category="resize",
+                issue_type="severe_resize_instability",
+                page="all",
+                description=f"Splitter ratio swing is too high across size matrix ({spread:.2f}).",
+                widget=getattr(window, "main_splitter", None),
+                size_label="all",
+                acceptance_blocker=True,
+            )
+
+    window.close()
+    app.quit()
+
+    payload = {
+        "scale": args.scale,
+        "sizes": args.sizes,
+        "issues": [issue.as_dict() for issue in issues],
+        "screenshots": screenshots,
+        "walkthrough_trace": walkthrough,
+    }
+    worker_output = Path(args.worker_output).resolve()
+    worker_output.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    return 0
+
+
+def _build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="UI Doctor: validate layout, visibility and interaction invariants.")
+    parser.add_argument("--worker", action="store_true", help="Run in worker mode (internal).")
+    parser.add_argument("--scale", default="1.0", help="Single UI scale for worker mode.")
+    parser.add_argument("--scales", default="1.0,1.25,1.5", help="Comma-separated UI scales for master mode.")
+    parser.add_argument("--sizes", default="1540x920,1366x768,1280x800", help="Comma-separated window sizes.")
+    parser.add_argument("--api-base-url", default="http://127.0.0.1:9", help="API base URL for UI startup.")
+    parser.add_argument("--output-dir", default="runtime/ui_validation", help="Output directory for UI validation runs.")
+    parser.add_argument("--run-dir", default="", help="Run directory for worker mode.")
+    parser.add_argument("--worker-output", default="", help="Worker JSON output path.")
+    return parser
+
+
+def main() -> int:
+    parser = _build_parser()
+    args = parser.parse_args()
+    if args.worker:
+        if not args.worker_output or not args.run_dir:
+            parser.error("--worker-output and --run-dir are required in worker mode.")
+        return _run_worker(args)
+    return _run_master(args)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

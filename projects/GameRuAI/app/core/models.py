@@ -66,6 +66,32 @@ class TranslationDecision:
 
 
 @dataclass(slots=True)
+class TranslationCandidate:
+    text: str
+    backend: str
+    score: float
+    note: str = ""
+
+
+@dataclass(slots=True)
+class TranslationPackage:
+    entry_id: int
+    source_text: str
+    source_lang: str
+    context_summary: dict[str, Any]
+    chosen_backend: str
+    fallback_used: bool
+    glossary_hits: list[dict[str, Any]] = field(default_factory=list)
+    tm_hits: list[dict[str, Any]] = field(default_factory=list)
+    alternatives: list[dict[str, Any]] = field(default_factory=list)
+    confidence: float = 0.0
+    quality_score: float = 0.0
+    warnings: list[str] = field(default_factory=list)
+    final_translation: str = ""
+    reference_checks: list[dict[str, Any]] = field(default_factory=list)
+
+
+@dataclass(slots=True)
 class VoiceAttempt:
     entry_id: int
     speaker_id: str

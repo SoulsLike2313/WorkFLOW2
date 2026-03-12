@@ -1,8 +1,8 @@
-﻿# UI Fix Plan - GameRuAI
+# UI Fix Plan - GameRuAI
 
 ## Baseline findings source
-- Validation run: `20260312_162437`
-- Doctor run: `20260312_162437`
+- Validation run: `20260312_163846`
+- Doctor run: `20260312_163846`
 - Main issue cluster: `floating_critical_cta` (`315` major findings)
 
 ## Priority order

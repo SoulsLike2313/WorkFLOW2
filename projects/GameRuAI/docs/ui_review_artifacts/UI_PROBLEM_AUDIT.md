@@ -1,4 +1,4 @@
-﻿# UI Problem Audit - GameRuAI
+# UI Problem Audit - GameRuAI
 
 ## Product screens under audit
 - Top Product HUD
@@ -32,9 +32,9 @@
    Snapshot/Doctor/Validate -> review artifacts -> fix plan -> rerun.
 
 ## Latest automated evidence
-- Validation run: `20260312_162437`
-- Doctor run: `20260312_162437`
-- Snapshot run: `20260312_163109`
+- Validation run: `20260312_163846`
+- Doctor run: `20260312_163846`
+- Snapshot run: `20260312_164518`
 - Validation status: `PASS_WITH_WARNINGS`
 - Doctor status: `PASS_WITH_WARNINGS`
 - Snapshot status: `PASS`
@@ -70,5 +70,5 @@
 ## Evidence source
 - `ui_screenshots_manifest.json`
 - `ui_validation_summary.json`
-- `runtime/ui_validation/validate_20260312_162437/ui_validation_summary.json`
-- `runtime/ui_validation/20260312_162437/ui_doctor_summary.json`
+- `runtime/ui_validation/validate_20260312_163846/ui_validation_summary.json`
+- `runtime/ui_validation/20260312_163846/ui_doctor_summary.json`

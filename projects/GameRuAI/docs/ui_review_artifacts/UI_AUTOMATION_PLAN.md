@@ -1,4 +1,4 @@
-﻿# UI Automation Plan - GameRuAI
+# UI Automation Plan - GameRuAI
 
 ## Automation components
 - `scripts/ui_snapshot_runner.py`
@@ -30,10 +30,10 @@
 3. Validator merges outputs and writes root artifacts.
 
 ## Last completed run
-- Validation run: `20260312_162437`
+- Validation run: `20260312_163846`
 - Result: `PASS_WITH_WARNINGS`
-- Doctor run: `20260312_162437`
-- Snapshot run: `20260312_163109`
+- Doctor run: `20260312_163846`
+- Snapshot run: `20260312_164518`
 - Snapshot coverage: `16` screens / `24` states / `210` captures
 - Combined manifest captures (doctor + snapshot): `420`
 

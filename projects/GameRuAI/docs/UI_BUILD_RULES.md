@@ -1,4 +1,4 @@
-﻿# UI Build Rules - GameRuAI
+# UI Build Rules - GameRuAI
 
 ## Product scope
 These rules are specific to GameRuAI desktop workflow screens:
@@ -7,9 +7,9 @@ These rules are specific to GameRuAI desktop workflow screens:
   Learning, Glossary, QA, Reports, Diagnostics, Export, Jobs / Logs, Live Demo, Companion.
 
 ## Validated baseline run
-- Validation run: `20260312_162437`
-- Doctor run: `20260312_162437`
-- Snapshot run: `20260312_163109`
+- Validation run: `20260312_163846`
+- Doctor run: `20260312_163846`
+- Snapshot run: `20260312_164518`
 - Status: `PASS_WITH_WARNINGS` (`ui_doctor`) + `PASS` (`ui_snapshot_runner`)
 - Snapshot coverage: `16` screens / `24` product states / `210` captures
 

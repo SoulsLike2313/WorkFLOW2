@@ -1,8 +1,9 @@
 {
-  "run_id": "20260312_161111",
-  "status": "PASS",
-  "path": "runtime/ui_validation/20260312_161111",
-  "summary_path": "runtime/ui_validation/20260312_161111/ui_validation_summary.json",
-  "manifest_path": "runtime/ui_validation/20260312_161111/ui_screenshots_manifest.json",
-  "timestamp": "2026-03-12T13:13:14.550205+00:00"
+  "run_id": "20260312_165455",
+  "status": "FAIL",
+  "path": "runtime/ui_validation/validate_20260312_165455",
+  "summary_path": "runtime/ui_validation/validate_20260312_165455/ui_validation_summary.json",
+  "manifest_path": "runtime/ui_validation/validate_20260312_165455/ui_screenshots_manifest.json",
+  "walkthrough_trace_path": "runtime/ui_validation/validate_20260312_165455/ui_walkthrough_trace.json",
+  "timestamp": "2026-03-12T13:59:23.967084+00:00"
 }

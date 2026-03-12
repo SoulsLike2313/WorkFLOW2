@@ -1,4 +1,4 @@
-﻿# UI Direction Confirmation - GameRuAI
+# UI Direction Confirmation - GameRuAI
 
 ## Confirmed UI direction
 - Operations-first desktop workflow with transparent pipeline status.
@@ -21,7 +21,7 @@ Automation validates GameRuAI product states directly, including:
 - Translation, Voice, Reports, Diagnostics, Companion, and pipeline tabs.
 
 ## Current confirmation
-- Last run: `20260312_162437`
+- Last run: `20260312_163846`
 - Validation: `PASS_WITH_WARNINGS`
 - Main open risk: layout consistency (`floating_critical_cta`) across action rows.
 

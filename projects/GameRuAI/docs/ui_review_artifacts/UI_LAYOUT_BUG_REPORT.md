@@ -1,9 +1,9 @@
-﻿# UI Layout Bug Report - GameRuAI
+# UI Layout Bug Report - GameRuAI
 
 ## Baseline run
-- Validation run: `20260312_162437`
-- Doctor run: `20260312_162437`
-- Snapshot run: `20260312_163109`
+- Validation run: `20260312_163846`
+- Doctor run: `20260312_163846`
+- Snapshot run: `20260312_164518`
 - Status: `PASS_WITH_WARNINGS`
 
 ## Observed defect clusters
@@ -17,11 +17,11 @@
 | major | layout | floating_critical_cta | Translation / Voice | loaded/correction + no-selection/active-selection | all scales and all sizes | Translation/voice control rows remain anchored and stable | CTA controls reported as floating across tested states | Normalize action rows and avoid detached containers |
 
 ## Reference screenshots
-- `runtime/ui_validation/20260312_162437/screenshots/scale_1_0/doctor__language_hub__overview_loaded__1600x960__scale_1_0.png`
-- `runtime/ui_validation/20260312_162437/screenshots/scale_1_0/doctor__language_hub__review_and_stress_loaded__1600x960__scale_1_0.png`
-- `runtime/ui_validation/20260312_162437/screenshots/scale_1_0/doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png`
-- `runtime/ui_validation/20260312_162437/screenshots/scale_1_0/doctor__entries__many_items_loaded__1600x960__scale_1_0.png`
-- `runtime/ui_validation/20260312_162437/screenshots/scale_1_0/doctor__translation__loaded_translations__1600x960__scale_1_0.png`
+- `runtime/ui_validation/20260312_163846/screenshots/scale_1_0/doctor__language_hub__overview_loaded__1600x960__scale_1_0.png`
+- `runtime/ui_validation/20260312_163846/screenshots/scale_1_0/doctor__language_hub__review_and_stress_loaded__1600x960__scale_1_0.png`
+- `runtime/ui_validation/20260312_163846/screenshots/scale_1_0/doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png`
+- `runtime/ui_validation/20260312_163846/screenshots/scale_1_0/doctor__entries__many_items_loaded__1600x960__scale_1_0.png`
+- `runtime/ui_validation/20260312_163846/screenshots/scale_1_0/doctor__translation__loaded_translations__1600x960__scale_1_0.png`
 
 ## Notes
 - No critical blockers detected in this run.

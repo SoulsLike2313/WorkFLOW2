@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .backends.argos_backend import ArgosBackend
+from .backends.cloud_adapter import CloudAdapterBackend
+from .backends.local_nllb_backend import LocalNllbBackend
 from .backends.transformers_backend import TransformersBackend
 from .base import TranslationBackend
 from .dummy_backend import DummyBackend
@@ -25,6 +27,8 @@ class TranslatorRouter:
             "dummy": DummyBackend(),
             "argos": ArgosBackend(),
             "transformers": TransformersBackend(),
+            "local_nllb": LocalNllbBackend(),
+            "cloud_adapter": CloudAdapterBackend(),
         }
         self.default_backend = "local_mock"
 
