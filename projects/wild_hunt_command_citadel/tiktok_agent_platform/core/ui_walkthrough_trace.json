@@ -1,7 +1,7 @@
 {
-  "run_id": "20260312_200601",
-  "doctor_run_id": "20260312_200601",
-  "snapshot_run_id": "20260312_200821",
+  "run_id": "20260312_215804",
+  "doctor_run_id": "20260312_215804",
+  "snapshot_run_id": "20260312_220024",
   "steps": [
     {
       "run_id": "",
@@ -11,7 +11,7 @@
       "action": "boot_window",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:41.514009+00:00",
+      "timestamp": "2026-03-12T19:00:45.142934+00:00",
       "notes": "window shown at 1540x920 scale=1.0"
     },
     {
@@ -21,8 +21,8 @@
       "screen": "dashboard",
       "action": "capture_initial_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/dashboard_initial_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:41.985369+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/dashboard_initial_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:45.619850+00:00",
       "notes": "initial dashboard state captured"
     },
     {
@@ -33,7 +33,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:42.311846+00:00",
+      "timestamp": "2026-03-12T19:00:45.946934+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -43,8 +43,8 @@
       "screen": "dashboard",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/dashboard_loaded_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:42.457404+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/dashboard_loaded_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:46.091853+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -54,8 +54,8 @@
       "screen": "dashboard",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/dashboard_no_selection_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:42.704693+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/dashboard_no_selection_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:46.339854+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -66,7 +66,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:42.704693+00:00",
+      "timestamp": "2026-03-12T19:00:46.340853+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -77,7 +77,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:42.704693+00:00",
+      "timestamp": "2026-03-12T19:00:46.340853+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -88,7 +88,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:42.705202+00:00",
+      "timestamp": "2026-03-12T19:00:46.340853+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -99,7 +99,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:43.040523+00:00",
+      "timestamp": "2026-03-12T19:00:46.675933+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -109,8 +109,8 @@
       "screen": "profiles",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/profiles_loaded_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:43.184605+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/profiles_loaded_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:46.821067+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -120,8 +120,8 @@
       "screen": "profiles",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/profiles_no_selection_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:43.430882+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/profiles_no_selection_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:47.068850+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -132,7 +132,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:43.430882+00:00",
+      "timestamp": "2026-03-12T19:00:47.068850+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -143,7 +143,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:43.430882+00:00",
+      "timestamp": "2026-03-12T19:00:47.068850+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -154,7 +154,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:43.431391+00:00",
+      "timestamp": "2026-03-12T19:00:47.068850+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -165,7 +165,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:43.762064+00:00",
+      "timestamp": "2026-03-12T19:00:47.403934+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -175,8 +175,8 @@
       "screen": "sessions",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/sessions_loaded_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:43.916077+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/sessions_loaded_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:47.557848+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -186,8 +186,8 @@
       "screen": "sessions",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/sessions_no_selection_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:44.177018+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/sessions_no_selection_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:47.808855+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -198,7 +198,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:44.177018+00:00",
+      "timestamp": "2026-03-12T19:00:47.808855+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -208,8 +208,8 @@
       "screen": "sessions",
       "action": "capture_empty_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/sessions_empty_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:44.330829+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/sessions_empty_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:47.962822+00:00",
       "notes": "empty state detected and captured"
     },
     {
@@ -220,7 +220,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:44.330829+00:00",
+      "timestamp": "2026-03-12T19:00:47.962822+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -231,7 +231,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:44.666881+00:00",
+      "timestamp": "2026-03-12T19:00:48.291789+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -241,8 +241,8 @@
       "screen": "content",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/content_loaded_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:44.797763+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/content_loaded_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:48.425628+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -252,8 +252,8 @@
       "screen": "content",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/content_no_selection_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:45.028543+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/content_no_selection_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:48.654715+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -264,7 +264,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:45.028543+00:00",
+      "timestamp": "2026-03-12T19:00:48.654715+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -275,7 +275,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:45.028543+00:00",
+      "timestamp": "2026-03-12T19:00:48.654715+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -286,7 +286,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:45.029052+00:00",
+      "timestamp": "2026-03-12T19:00:48.654715+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -297,7 +297,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:45.357698+00:00",
+      "timestamp": "2026-03-12T19:00:48.989937+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -307,8 +307,8 @@
       "screen": "analytics",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/analytics_loaded_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:45.511572+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/analytics_loaded_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:49.145850+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -318,8 +318,8 @@
       "screen": "analytics",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/analytics_no_selection_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:45.758574+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/analytics_no_selection_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:49.392709+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -330,7 +330,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:45.758574+00:00",
+      "timestamp": "2026-03-12T19:00:49.392709+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -341,7 +341,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:45.758574+00:00",
+      "timestamp": "2026-03-12T19:00:49.392709+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -352,7 +352,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:45.759083+00:00",
+      "timestamp": "2026-03-12T19:00:49.393708+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -363,7 +363,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:46.096168+00:00",
+      "timestamp": "2026-03-12T19:00:49.731499+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -373,8 +373,8 @@
       "screen": "ai_studio",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/ai_studio_loaded_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:46.245293+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/ai_studio_loaded_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:49.878019+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -384,8 +384,8 @@
       "screen": "ai_studio",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/ai_studio_no_selection_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:46.488003+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/ai_studio_no_selection_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:50.126208+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -396,7 +396,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:46.488003+00:00",
+      "timestamp": "2026-03-12T19:00:50.126208+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -407,7 +407,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:46.488003+00:00",
+      "timestamp": "2026-03-12T19:00:50.126208+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -418,7 +418,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:46.488003+00:00",
+      "timestamp": "2026-03-12T19:00:50.126717+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -429,7 +429,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:46.818191+00:00",
+      "timestamp": "2026-03-12T19:00:50.457282+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -439,8 +439,8 @@
       "screen": "audit",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/audit_loaded_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:46.947706+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/audit_loaded_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:50.588707+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -450,8 +450,8 @@
       "screen": "audit",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/audit_no_selection_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:47.179777+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/audit_no_selection_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:50.819618+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -462,7 +462,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:47.179777+00:00",
+      "timestamp": "2026-03-12T19:00:50.819618+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -473,7 +473,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:47.179777+00:00",
+      "timestamp": "2026-03-12T19:00:50.819618+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -484,7 +484,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:47.180283+00:00",
+      "timestamp": "2026-03-12T19:00:50.820617+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -495,7 +495,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:47.511927+00:00",
+      "timestamp": "2026-03-12T19:00:51.153955+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -505,8 +505,8 @@
       "screen": "updates",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/updates_loaded_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:47.649229+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/updates_loaded_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:51.290258+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -517,7 +517,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:47.649743+00:00",
+      "timestamp": "2026-03-12T19:00:51.290258+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -528,7 +528,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:47.649743+00:00",
+      "timestamp": "2026-03-12T19:00:51.290258+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -539,7 +539,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:47.649743+00:00",
+      "timestamp": "2026-03-12T19:00:51.290258+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -550,7 +550,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:47.649743+00:00",
+      "timestamp": "2026-03-12T19:00:51.290258+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -561,7 +561,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:47.975016+00:00",
+      "timestamp": "2026-03-12T19:00:51.614850+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -571,8 +571,8 @@
       "screen": "settings",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/settings_loaded_state_1540x920_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:48.097619+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/settings_loaded_state_1540x920_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:51.736144+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -583,7 +583,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:48.097619+00:00",
+      "timestamp": "2026-03-12T19:00:51.736144+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -594,7 +594,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:48.097619+00:00",
+      "timestamp": "2026-03-12T19:00:51.736144+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -605,7 +605,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:48.097619+00:00",
+      "timestamp": "2026-03-12T19:00:51.736144+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -616,7 +616,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:48.097619+00:00",
+      "timestamp": "2026-03-12T19:00:51.737143+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -627,7 +627,7 @@
       "action": "boot_window",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:48.420400+00:00",
+      "timestamp": "2026-03-12T19:00:52.065948+00:00",
       "notes": "window shown at 1366x768 scale=1.0"
     },
     {
@@ -637,8 +637,8 @@
       "screen": "dashboard",
       "action": "capture_initial_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/dashboard_initial_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:48.867874+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/dashboard_initial_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:52.515973+00:00",
       "notes": "initial dashboard state captured"
     },
     {
@@ -649,7 +649,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:49.202336+00:00",
+      "timestamp": "2026-03-12T19:00:52.843162+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -659,8 +659,8 @@
       "screen": "dashboard",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/dashboard_loaded_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:49.327361+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/dashboard_loaded_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:52.970169+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -670,8 +670,8 @@
       "screen": "dashboard",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/dashboard_no_selection_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:49.542950+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/dashboard_no_selection_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:53.198211+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -682,7 +682,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:49.542950+00:00",
+      "timestamp": "2026-03-12T19:00:53.198211+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -693,7 +693,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:49.542950+00:00",
+      "timestamp": "2026-03-12T19:00:53.198211+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -704,7 +704,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:49.543459+00:00",
+      "timestamp": "2026-03-12T19:00:53.198211+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -715,7 +715,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:49.877617+00:00",
+      "timestamp": "2026-03-12T19:00:53.522940+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -725,8 +725,8 @@
       "screen": "profiles",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/profiles_loaded_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:49.991732+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/profiles_loaded_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:53.634130+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -736,8 +736,8 @@
       "screen": "profiles",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/profiles_no_selection_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:50.206857+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/profiles_no_selection_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:53.836293+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -748,7 +748,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:50.206857+00:00",
+      "timestamp": "2026-03-12T19:00:53.837293+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -759,7 +759,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:50.206857+00:00",
+      "timestamp": "2026-03-12T19:00:53.837293+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -770,7 +770,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:50.206857+00:00",
+      "timestamp": "2026-03-12T19:00:53.837293+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -781,7 +781,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:50.543862+00:00",
+      "timestamp": "2026-03-12T19:00:54.176938+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -791,8 +791,8 @@
       "screen": "sessions",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/sessions_loaded_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:50.669642+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/sessions_loaded_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:54.304073+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -802,8 +802,8 @@
       "screen": "sessions",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/sessions_no_selection_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:50.898637+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/sessions_no_selection_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:54.533157+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -814,7 +814,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:50.898637+00:00",
+      "timestamp": "2026-03-12T19:00:54.533157+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -824,8 +824,8 @@
       "screen": "sessions",
       "action": "capture_empty_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/sessions_empty_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:51.023601+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/sessions_empty_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:54.656087+00:00",
       "notes": "empty state detected and captured"
     },
     {
@@ -836,7 +836,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:51.024111+00:00",
+      "timestamp": "2026-03-12T19:00:54.656087+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -847,7 +847,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:51.357358+00:00",
+      "timestamp": "2026-03-12T19:00:54.982886+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -857,8 +857,8 @@
       "screen": "content",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/content_loaded_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:51.463893+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/content_loaded_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:55.090220+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -868,8 +868,8 @@
       "screen": "content",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/content_no_selection_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:51.663173+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/content_no_selection_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:55.290111+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -880,7 +880,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:51.663173+00:00",
+      "timestamp": "2026-03-12T19:00:55.290111+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -891,7 +891,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:51.663173+00:00",
+      "timestamp": "2026-03-12T19:00:55.291110+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -902,7 +902,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:51.663173+00:00",
+      "timestamp": "2026-03-12T19:00:55.291110+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -913,7 +913,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:51.986674+00:00",
+      "timestamp": "2026-03-12T19:00:55.615943+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -923,8 +923,8 @@
       "screen": "analytics",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/analytics_loaded_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:52.103043+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/analytics_loaded_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:55.732878+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -934,8 +934,8 @@
       "screen": "analytics",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/analytics_no_selection_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:52.318888+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/analytics_no_selection_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:55.948227+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -946,7 +946,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:52.318888+00:00",
+      "timestamp": "2026-03-12T19:00:55.948227+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -957,7 +957,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:52.318888+00:00",
+      "timestamp": "2026-03-12T19:00:55.948227+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -968,7 +968,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:52.319401+00:00",
+      "timestamp": "2026-03-12T19:00:55.948227+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -979,7 +979,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:52.651185+00:00",
+      "timestamp": "2026-03-12T19:00:56.279940+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -989,8 +989,8 @@
       "screen": "ai_studio",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/ai_studio_loaded_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:52.763334+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/ai_studio_loaded_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:56.392044+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1000,8 +1000,8 @@
       "screen": "ai_studio",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/ai_studio_no_selection_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:52.979116+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/ai_studio_no_selection_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:56.608135+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -1012,7 +1012,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:52.979116+00:00",
+      "timestamp": "2026-03-12T19:00:56.608135+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -1023,7 +1023,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:52.979116+00:00",
+      "timestamp": "2026-03-12T19:00:56.608135+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -1034,7 +1034,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:52.979116+00:00",
+      "timestamp": "2026-03-12T19:00:56.608135+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1045,7 +1045,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:53.312889+00:00",
+      "timestamp": "2026-03-12T19:00:56.932941+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -1055,8 +1055,8 @@
       "screen": "audit",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/audit_loaded_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:53.418538+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/audit_loaded_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:57.037880+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1066,8 +1066,8 @@
       "screen": "audit",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/audit_no_selection_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:53.620431+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/audit_no_selection_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:57.237885+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -1078,7 +1078,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:53.620431+00:00",
+      "timestamp": "2026-03-12T19:00:57.237885+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -1089,7 +1089,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:53.620431+00:00",
+      "timestamp": "2026-03-12T19:00:57.237885+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -1100,7 +1100,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:53.620431+00:00",
+      "timestamp": "2026-03-12T19:00:57.237885+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1111,7 +1111,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:53.946178+00:00",
+      "timestamp": "2026-03-12T19:00:57.567432+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -1121,8 +1121,8 @@
       "screen": "updates",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/updates_loaded_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:54.058909+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/updates_loaded_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:57.680370+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1133,7 +1133,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:54.059908+00:00",
+      "timestamp": "2026-03-12T19:00:57.680370+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -1144,7 +1144,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:54.059908+00:00",
+      "timestamp": "2026-03-12T19:00:57.680370+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -1155,7 +1155,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:54.059908+00:00",
+      "timestamp": "2026-03-12T19:00:57.680370+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -1166,7 +1166,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:54.059908+00:00",
+      "timestamp": "2026-03-12T19:00:57.680370+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1177,7 +1177,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:54.390854+00:00",
+      "timestamp": "2026-03-12T19:00:58.001944+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -1187,8 +1187,8 @@
       "screen": "settings",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/settings_loaded_state_1366x768_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:54.490211+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/settings_loaded_state_1366x768_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:58.100889+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1199,7 +1199,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:54.490211+00:00",
+      "timestamp": "2026-03-12T19:00:58.100889+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -1210,7 +1210,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:54.490211+00:00",
+      "timestamp": "2026-03-12T19:00:58.100889+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -1221,7 +1221,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:54.490211+00:00",
+      "timestamp": "2026-03-12T19:00:58.100889+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -1232,7 +1232,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:54.490211+00:00",
+      "timestamp": "2026-03-12T19:00:58.100889+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1243,7 +1243,7 @@
       "action": "boot_window",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:54.819633+00:00",
+      "timestamp": "2026-03-12T19:00:58.434055+00:00",
       "notes": "window shown at 1280x800 scale=1.0"
     },
     {
@@ -1253,8 +1253,8 @@
       "screen": "dashboard",
       "action": "capture_initial_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/dashboard_initial_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:55.265431+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/dashboard_initial_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:58.882871+00:00",
       "notes": "initial dashboard state captured"
     },
     {
@@ -1265,7 +1265,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:55.590828+00:00",
+      "timestamp": "2026-03-12T19:00:59.210944+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -1275,8 +1275,8 @@
       "screen": "dashboard",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/dashboard_loaded_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:55.713442+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/dashboard_loaded_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:59.333423+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1286,8 +1286,8 @@
       "screen": "dashboard",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/dashboard_no_selection_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:55.928537+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/dashboard_no_selection_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:59.550874+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -1298,7 +1298,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:55.928537+00:00",
+      "timestamp": "2026-03-12T19:00:59.550874+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -1309,7 +1309,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:55.928537+00:00",
+      "timestamp": "2026-03-12T19:00:59.550874+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -1320,7 +1320,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:55.929046+00:00",
+      "timestamp": "2026-03-12T19:00:59.550874+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1331,7 +1331,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:56.251861+00:00",
+      "timestamp": "2026-03-12T19:00:59.876112+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -1341,8 +1341,8 @@
       "screen": "profiles",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/profiles_loaded_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:56.363191+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/profiles_loaded_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:00:59.987965+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1352,8 +1352,8 @@
       "screen": "profiles",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/profiles_no_selection_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:56.580642+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/profiles_no_selection_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:00.203878+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -1364,7 +1364,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:56.580642+00:00",
+      "timestamp": "2026-03-12T19:01:00.203878+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -1375,7 +1375,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:56.581151+00:00",
+      "timestamp": "2026-03-12T19:01:00.203878+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -1386,7 +1386,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:56.581151+00:00",
+      "timestamp": "2026-03-12T19:01:00.203878+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1397,7 +1397,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:56.913477+00:00",
+      "timestamp": "2026-03-12T19:01:00.542054+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -1407,8 +1407,8 @@
       "screen": "sessions",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/sessions_loaded_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:57.037562+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/sessions_loaded_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:00.664983+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1418,8 +1418,8 @@
       "screen": "sessions",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/sessions_no_selection_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:57.255314+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/sessions_no_selection_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:00.881877+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -1430,7 +1430,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:57.255314+00:00",
+      "timestamp": "2026-03-12T19:01:00.881877+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -1440,8 +1440,8 @@
       "screen": "sessions",
       "action": "capture_empty_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/sessions_empty_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:57.378512+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/sessions_empty_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:01.004807+00:00",
       "notes": "empty state detected and captured"
     },
     {
@@ -1452,7 +1452,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:57.378512+00:00",
+      "timestamp": "2026-03-12T19:01:01.004807+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1463,7 +1463,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:57.714923+00:00",
+      "timestamp": "2026-03-12T19:01:01.343613+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -1473,8 +1473,8 @@
       "screen": "content",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/content_loaded_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:57.819838+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/content_loaded_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:01.447689+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1484,8 +1484,8 @@
       "screen": "content",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/content_no_selection_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:58.020704+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/content_no_selection_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:01.650148+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -1496,7 +1496,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:58.020704+00:00",
+      "timestamp": "2026-03-12T19:01:01.650148+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -1507,7 +1507,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:58.021216+00:00",
+      "timestamp": "2026-03-12T19:01:01.650148+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -1518,7 +1518,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:58.021216+00:00",
+      "timestamp": "2026-03-12T19:01:01.650148+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1529,7 +1529,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:58.347122+00:00",
+      "timestamp": "2026-03-12T19:01:01.980022+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -1539,8 +1539,8 @@
       "screen": "analytics",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/analytics_loaded_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:58.462053+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/analytics_loaded_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:02.094197+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1550,8 +1550,8 @@
       "screen": "analytics",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/analytics_no_selection_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:58.677193+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/analytics_no_selection_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:02.309681+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -1562,7 +1562,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:58.677193+00:00",
+      "timestamp": "2026-03-12T19:01:02.309681+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -1573,7 +1573,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:58.677193+00:00",
+      "timestamp": "2026-03-12T19:01:02.309681+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -1584,7 +1584,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:58.677701+00:00",
+      "timestamp": "2026-03-12T19:01:02.309681+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1595,7 +1595,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:59.008895+00:00",
+      "timestamp": "2026-03-12T19:01:02.649846+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -1605,8 +1605,8 @@
       "screen": "ai_studio",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/ai_studio_loaded_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:59.119543+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/ai_studio_loaded_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:02.761128+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1616,8 +1616,8 @@
       "screen": "ai_studio",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/ai_studio_no_selection_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:59.321196+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/ai_studio_no_selection_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:02.975845+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -1628,7 +1628,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:59.321196+00:00",
+      "timestamp": "2026-03-12T19:01:02.975845+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -1639,7 +1639,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:59.321196+00:00",
+      "timestamp": "2026-03-12T19:01:02.975845+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -1650,7 +1650,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:59.321196+00:00",
+      "timestamp": "2026-03-12T19:01:02.976354+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1661,7 +1661,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:59.658411+00:00",
+      "timestamp": "2026-03-12T19:01:03.303271+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -1671,8 +1671,8 @@
       "screen": "audit",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/audit_loaded_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:59.762025+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/audit_loaded_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:03.406212+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1682,8 +1682,8 @@
       "screen": "audit",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/audit_no_selection_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:08:59.964662+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/audit_no_selection_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:03.605846+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -1694,7 +1694,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:59.964662+00:00",
+      "timestamp": "2026-03-12T19:01:03.605846+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -1705,7 +1705,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:59.964662+00:00",
+      "timestamp": "2026-03-12T19:01:03.606845+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -1716,7 +1716,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:08:59.965172+00:00",
+      "timestamp": "2026-03-12T19:01:03.606845+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1727,7 +1727,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:00.291893+00:00",
+      "timestamp": "2026-03-12T19:01:03.936044+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -1737,8 +1737,8 @@
       "screen": "updates",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/updates_loaded_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:09:00.402362+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/updates_loaded_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:04.046013+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1749,7 +1749,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:00.402362+00:00",
+      "timestamp": "2026-03-12T19:01:04.046013+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -1760,7 +1760,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:00.402362+00:00",
+      "timestamp": "2026-03-12T19:01:04.046013+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -1771,7 +1771,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:00.402362+00:00",
+      "timestamp": "2026-03-12T19:01:04.046013+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -1782,7 +1782,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:00.403362+00:00",
+      "timestamp": "2026-03-12T19:01:04.046013+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1793,7 +1793,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:00.738137+00:00",
+      "timestamp": "2026-03-12T19:01:04.369172+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -1803,8 +1803,8 @@
       "screen": "settings",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_0/settings_loaded_state_1280x800_scale_1_0.png",
-      "timestamp": "2026-03-12T17:09:00.835390+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_0/settings_loaded_state_1280x800_scale_1_0.png",
+      "timestamp": "2026-03-12T19:01:04.467222+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1815,7 +1815,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:00.835390+00:00",
+      "timestamp": "2026-03-12T19:01:04.467222+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -1826,7 +1826,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:00.835390+00:00",
+      "timestamp": "2026-03-12T19:01:04.467222+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -1837,7 +1837,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:00.835390+00:00",
+      "timestamp": "2026-03-12T19:01:04.467222+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -1848,7 +1848,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:00.835390+00:00",
+      "timestamp": "2026-03-12T19:01:04.467222+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1859,7 +1859,7 @@
       "action": "boot_window",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:21.227660+00:00",
+      "timestamp": "2026-03-12T19:01:25.007960+00:00",
       "notes": "window shown at 1540x920 scale=1.25"
     },
     {
@@ -1869,8 +1869,8 @@
       "screen": "dashboard",
       "action": "capture_initial_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/dashboard_initial_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:21.766233+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/dashboard_initial_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:25.548843+00:00",
       "notes": "initial dashboard state captured"
     },
     {
@@ -1881,7 +1881,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:22.088304+00:00",
+      "timestamp": "2026-03-12T19:01:25.873086+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -1891,8 +1891,8 @@
       "screen": "dashboard",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/dashboard_loaded_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:22.299198+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/dashboard_loaded_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:26.088292+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1902,8 +1902,8 @@
       "screen": "dashboard",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/dashboard_no_selection_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:22.608597+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/dashboard_no_selection_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:26.394747+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -1914,7 +1914,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:22.608597+00:00",
+      "timestamp": "2026-03-12T19:01:26.394747+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -1925,7 +1925,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:22.608597+00:00",
+      "timestamp": "2026-03-12T19:01:26.394747+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -1936,7 +1936,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:22.608597+00:00",
+      "timestamp": "2026-03-12T19:01:26.394747+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -1947,7 +1947,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:22.934851+00:00",
+      "timestamp": "2026-03-12T19:01:26.724005+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -1957,8 +1957,8 @@
       "screen": "profiles",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/profiles_loaded_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:23.143309+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/profiles_loaded_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:26.930589+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -1968,8 +1968,8 @@
       "screen": "profiles",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/profiles_no_selection_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:23.451422+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/profiles_no_selection_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:27.243015+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -1980,7 +1980,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:23.451422+00:00",
+      "timestamp": "2026-03-12T19:01:27.243015+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -1991,7 +1991,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:23.451422+00:00",
+      "timestamp": "2026-03-12T19:01:27.243015+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -2002,7 +2002,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:23.451931+00:00",
+      "timestamp": "2026-03-12T19:01:27.243015+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2013,7 +2013,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:23.778442+00:00",
+      "timestamp": "2026-03-12T19:01:27.576988+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -2023,8 +2023,8 @@
       "screen": "sessions",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/sessions_loaded_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:24.006803+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/sessions_loaded_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:27.802859+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2034,8 +2034,8 @@
       "screen": "sessions",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/sessions_no_selection_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:24.344671+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/sessions_no_selection_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:28.125980+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -2046,7 +2046,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:24.344671+00:00",
+      "timestamp": "2026-03-12T19:01:28.125980+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -2056,8 +2056,8 @@
       "screen": "sessions",
       "action": "capture_empty_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/sessions_empty_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:24.573317+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/sessions_empty_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:28.352850+00:00",
       "notes": "empty state detected and captured"
     },
     {
@@ -2068,7 +2068,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:24.573317+00:00",
+      "timestamp": "2026-03-12T19:01:28.352850+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2079,7 +2079,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:24.901886+00:00",
+      "timestamp": "2026-03-12T19:01:28.687527+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -2089,8 +2089,8 @@
       "screen": "content",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/content_loaded_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:25.093769+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/content_loaded_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:28.877419+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2100,8 +2100,8 @@
       "screen": "content",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/content_no_selection_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:25.384317+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/content_no_selection_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:29.174974+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -2112,7 +2112,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:25.384317+00:00",
+      "timestamp": "2026-03-12T19:01:29.174974+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -2123,7 +2123,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:25.384317+00:00",
+      "timestamp": "2026-03-12T19:01:29.174974+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -2134,7 +2134,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:25.384827+00:00",
+      "timestamp": "2026-03-12T19:01:29.175973+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2145,7 +2145,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:25.716915+00:00",
+      "timestamp": "2026-03-12T19:01:29.507949+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -2155,8 +2155,8 @@
       "screen": "analytics",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/analytics_loaded_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:25.943328+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/analytics_loaded_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:29.732821+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2166,8 +2166,8 @@
       "screen": "analytics",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/analytics_no_selection_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:26.265416+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/analytics_no_selection_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:30.055929+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -2178,7 +2178,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:26.265416+00:00",
+      "timestamp": "2026-03-12T19:01:30.055929+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -2189,7 +2189,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:26.265416+00:00",
+      "timestamp": "2026-03-12T19:01:30.055929+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -2200,7 +2200,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:26.265925+00:00",
+      "timestamp": "2026-03-12T19:01:30.055929+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2211,7 +2211,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:26.593700+00:00",
+      "timestamp": "2026-03-12T19:01:30.387798+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -2221,8 +2221,8 @@
       "screen": "ai_studio",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/ai_studio_loaded_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:26.806167+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/ai_studio_loaded_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:30.603525+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2232,8 +2232,8 @@
       "screen": "ai_studio",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/ai_studio_no_selection_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:27.114547+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/ai_studio_no_selection_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:30.911161+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -2244,7 +2244,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:27.114547+00:00",
+      "timestamp": "2026-03-12T19:01:30.911161+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -2255,7 +2255,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:27.114547+00:00",
+      "timestamp": "2026-03-12T19:01:30.911161+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -2266,7 +2266,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:27.115056+00:00",
+      "timestamp": "2026-03-12T19:01:30.911161+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2277,7 +2277,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:27.442791+00:00",
+      "timestamp": "2026-03-12T19:01:31.235967+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -2287,8 +2287,8 @@
       "screen": "audit",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/audit_loaded_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:27.635989+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/audit_loaded_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:31.426820+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2298,8 +2298,8 @@
       "screen": "audit",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/audit_no_selection_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:27.929533+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/audit_no_selection_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:31.721844+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -2310,7 +2310,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:27.929533+00:00",
+      "timestamp": "2026-03-12T19:01:31.721844+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -2321,7 +2321,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:27.929533+00:00",
+      "timestamp": "2026-03-12T19:01:31.721844+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -2332,7 +2332,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:27.929533+00:00",
+      "timestamp": "2026-03-12T19:01:31.721844+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2343,7 +2343,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:28.259212+00:00",
+      "timestamp": "2026-03-12T19:01:32.058969+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -2353,8 +2353,8 @@
       "screen": "updates",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/updates_loaded_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:28.462347+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/updates_loaded_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:32.261665+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2365,7 +2365,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:28.462347+00:00",
+      "timestamp": "2026-03-12T19:01:32.261665+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -2376,7 +2376,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:28.462347+00:00",
+      "timestamp": "2026-03-12T19:01:32.261665+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -2387,7 +2387,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:28.462347+00:00",
+      "timestamp": "2026-03-12T19:01:32.261665+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -2398,7 +2398,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:28.462347+00:00",
+      "timestamp": "2026-03-12T19:01:32.261665+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2409,7 +2409,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:28.798916+00:00",
+      "timestamp": "2026-03-12T19:01:32.584914+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -2419,8 +2419,8 @@
       "screen": "settings",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/settings_loaded_state_1540x920_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:28.979399+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/settings_loaded_state_1540x920_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:32.763811+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2431,7 +2431,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:28.979399+00:00",
+      "timestamp": "2026-03-12T19:01:32.763811+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -2442,7 +2442,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:28.979399+00:00",
+      "timestamp": "2026-03-12T19:01:32.763811+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -2453,7 +2453,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:28.979399+00:00",
+      "timestamp": "2026-03-12T19:01:32.763811+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -2464,7 +2464,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:28.979908+00:00",
+      "timestamp": "2026-03-12T19:01:32.763811+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2475,7 +2475,7 @@
       "action": "boot_window",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:29.310538+00:00",
+      "timestamp": "2026-03-12T19:01:33.094970+00:00",
       "notes": "window shown at 1366x768 scale=1.25"
     },
     {
@@ -2485,8 +2485,8 @@
       "screen": "dashboard",
       "action": "capture_initial_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/dashboard_initial_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:29.813409+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/dashboard_initial_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:33.599596+00:00",
       "notes": "initial dashboard state captured"
     },
     {
@@ -2497,7 +2497,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:30.141888+00:00",
+      "timestamp": "2026-03-12T19:01:33.929698+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -2507,8 +2507,8 @@
       "screen": "dashboard",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/dashboard_loaded_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:30.322394+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/dashboard_loaded_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:34.109032+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2518,8 +2518,8 @@
       "screen": "dashboard",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/dashboard_no_selection_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:30.599306+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/dashboard_no_selection_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:34.385943+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -2530,7 +2530,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:30.599306+00:00",
+      "timestamp": "2026-03-12T19:01:34.385943+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -2541,7 +2541,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:30.599306+00:00",
+      "timestamp": "2026-03-12T19:01:34.385943+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -2552,7 +2552,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:30.599306+00:00",
+      "timestamp": "2026-03-12T19:01:34.386942+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2563,7 +2563,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:30.936735+00:00",
+      "timestamp": "2026-03-12T19:01:34.717972+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -2573,8 +2573,8 @@
       "screen": "profiles",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/profiles_loaded_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:31.099549+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/profiles_loaded_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:34.879109+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2584,8 +2584,8 @@
       "screen": "profiles",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/profiles_no_selection_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:31.361331+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/profiles_no_selection_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:35.143147+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -2596,7 +2596,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:31.361339+00:00",
+      "timestamp": "2026-03-12T19:01:35.143147+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -2607,7 +2607,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:31.361339+00:00",
+      "timestamp": "2026-03-12T19:01:35.143147+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -2618,7 +2618,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:31.361339+00:00",
+      "timestamp": "2026-03-12T19:01:35.144147+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2629,7 +2629,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:31.691029+00:00",
+      "timestamp": "2026-03-12T19:01:35.472969+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -2639,8 +2639,8 @@
       "screen": "sessions",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/sessions_loaded_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:31.876418+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/sessions_loaded_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:35.655864+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2650,8 +2650,8 @@
       "screen": "sessions",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/sessions_no_selection_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:32.155309+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/sessions_no_selection_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:35.934335+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -2662,7 +2662,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:32.155309+00:00",
+      "timestamp": "2026-03-12T19:01:35.934335+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -2672,8 +2672,8 @@
       "screen": "sessions",
       "action": "capture_empty_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/sessions_empty_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:32.340787+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/sessions_empty_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:36.117868+00:00",
       "notes": "empty state detected and captured"
     },
     {
@@ -2684,7 +2684,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:32.340787+00:00",
+      "timestamp": "2026-03-12T19:01:36.117868+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2695,7 +2695,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:32.678554+00:00",
+      "timestamp": "2026-03-12T19:01:36.444971+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -2705,8 +2705,8 @@
       "screen": "content",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/content_loaded_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:32.833549+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/content_loaded_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:36.599881+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2716,8 +2716,8 @@
       "screen": "content",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/content_no_selection_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:33.080130+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/content_no_selection_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:36.846128+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -2728,7 +2728,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:33.080130+00:00",
+      "timestamp": "2026-03-12T19:01:36.846128+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -2739,7 +2739,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:33.080130+00:00",
+      "timestamp": "2026-03-12T19:01:36.846128+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -2750,7 +2750,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:33.080130+00:00",
+      "timestamp": "2026-03-12T19:01:36.846128+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2761,7 +2761,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:33.418033+00:00",
+      "timestamp": "2026-03-12T19:01:37.172972+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -2771,8 +2771,8 @@
       "screen": "analytics",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/analytics_loaded_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:33.586350+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/analytics_loaded_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:37.339778+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2782,8 +2782,8 @@
       "screen": "analytics",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/analytics_no_selection_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:33.847994+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/analytics_no_selection_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:37.602548+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -2794,7 +2794,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:33.847994+00:00",
+      "timestamp": "2026-03-12T19:01:37.602548+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -2805,7 +2805,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:33.847994+00:00",
+      "timestamp": "2026-03-12T19:01:37.602548+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -2816,7 +2816,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:33.848502+00:00",
+      "timestamp": "2026-03-12T19:01:37.602548+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2827,7 +2827,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:34.174049+00:00",
+      "timestamp": "2026-03-12T19:01:37.930575+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -2837,8 +2837,8 @@
       "screen": "ai_studio",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/ai_studio_loaded_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:34.336601+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/ai_studio_loaded_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:38.090591+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2848,8 +2848,8 @@
       "screen": "ai_studio",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/ai_studio_no_selection_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:34.599368+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/ai_studio_no_selection_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:38.351321+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -2860,7 +2860,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:34.599368+00:00",
+      "timestamp": "2026-03-12T19:01:38.351321+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -2871,7 +2871,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:34.599368+00:00",
+      "timestamp": "2026-03-12T19:01:38.351321+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -2882,7 +2882,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:34.599368+00:00",
+      "timestamp": "2026-03-12T19:01:38.351321+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2893,7 +2893,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:34.929811+00:00",
+      "timestamp": "2026-03-12T19:01:38.686367+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -2903,8 +2903,8 @@
       "screen": "audit",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/audit_loaded_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:35.083582+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/audit_loaded_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:38.837281+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2914,8 +2914,8 @@
       "screen": "audit",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/audit_no_selection_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:35.328331+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/audit_no_selection_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:39.085139+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -2926,7 +2926,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:35.328331+00:00",
+      "timestamp": "2026-03-12T19:01:39.085139+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -2937,7 +2937,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:35.328331+00:00",
+      "timestamp": "2026-03-12T19:01:39.085139+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -2948,7 +2948,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:35.328331+00:00",
+      "timestamp": "2026-03-12T19:01:39.085139+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -2959,7 +2959,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:35.655454+00:00",
+      "timestamp": "2026-03-12T19:01:39.411805+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -2969,8 +2969,8 @@
       "screen": "updates",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/updates_loaded_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:35.820834+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/updates_loaded_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:39.573371+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -2981,7 +2981,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:35.820834+00:00",
+      "timestamp": "2026-03-12T19:01:39.573371+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -2992,7 +2992,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:35.820834+00:00",
+      "timestamp": "2026-03-12T19:01:39.573371+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -3003,7 +3003,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:35.820834+00:00",
+      "timestamp": "2026-03-12T19:01:39.573371+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -3014,7 +3014,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:35.820834+00:00",
+      "timestamp": "2026-03-12T19:01:39.573371+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3025,7 +3025,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:36.148559+00:00",
+      "timestamp": "2026-03-12T19:01:39.907451+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -3035,8 +3035,8 @@
       "screen": "settings",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/settings_loaded_state_1366x768_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:36.293188+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/settings_loaded_state_1366x768_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:40.049370+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3047,7 +3047,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:36.293188+00:00",
+      "timestamp": "2026-03-12T19:01:40.049370+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -3058,7 +3058,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:36.293188+00:00",
+      "timestamp": "2026-03-12T19:01:40.049370+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -3069,7 +3069,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:36.293188+00:00",
+      "timestamp": "2026-03-12T19:01:40.049370+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -3080,7 +3080,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:36.293188+00:00",
+      "timestamp": "2026-03-12T19:01:40.049370+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3091,7 +3091,7 @@
       "action": "boot_window",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:36.625762+00:00",
+      "timestamp": "2026-03-12T19:01:40.384852+00:00",
       "notes": "window shown at 1280x800 scale=1.25"
     },
     {
@@ -3101,8 +3101,8 @@
       "screen": "dashboard",
       "action": "capture_initial_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/dashboard_initial_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:37.141222+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/dashboard_initial_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:40.885114+00:00",
       "notes": "initial dashboard state captured"
     },
     {
@@ -3113,7 +3113,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:37.470763+00:00",
+      "timestamp": "2026-03-12T19:01:41.207250+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -3123,8 +3123,8 @@
       "screen": "dashboard",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/dashboard_loaded_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:37.645971+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/dashboard_loaded_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:41.380481+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3134,8 +3134,8 @@
       "screen": "dashboard",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/dashboard_no_selection_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:37.924742+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/dashboard_no_selection_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:41.661114+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -3146,7 +3146,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:37.924742+00:00",
+      "timestamp": "2026-03-12T19:01:41.661114+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -3157,7 +3157,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:37.924742+00:00",
+      "timestamp": "2026-03-12T19:01:41.661114+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -3168,7 +3168,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:37.924742+00:00",
+      "timestamp": "2026-03-12T19:01:41.661114+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3179,7 +3179,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:38.257592+00:00",
+      "timestamp": "2026-03-12T19:01:41.997977+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -3189,8 +3189,8 @@
       "screen": "profiles",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/profiles_loaded_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:38.419262+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/profiles_loaded_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:42.158063+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3200,8 +3200,8 @@
       "screen": "profiles",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/profiles_no_selection_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:38.681178+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/profiles_no_selection_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:42.421581+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -3212,7 +3212,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:38.681178+00:00",
+      "timestamp": "2026-03-12T19:01:42.421581+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -3223,7 +3223,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:38.681178+00:00",
+      "timestamp": "2026-03-12T19:01:42.421581+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -3234,7 +3234,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:38.681178+00:00",
+      "timestamp": "2026-03-12T19:01:42.421581+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3245,7 +3245,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:39.012751+00:00",
+      "timestamp": "2026-03-12T19:01:42.753976+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -3255,8 +3255,8 @@
       "screen": "sessions",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/sessions_loaded_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:39.199475+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/sessions_loaded_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:42.934875+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3266,8 +3266,8 @@
       "screen": "sessions",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/sessions_no_selection_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:39.486307+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/sessions_no_selection_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:43.215093+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -3278,7 +3278,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:39.486307+00:00",
+      "timestamp": "2026-03-12T19:01:43.215093+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -3288,8 +3288,8 @@
       "screen": "sessions",
       "action": "capture_empty_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/sessions_empty_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:39.668403+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/sessions_empty_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:43.395221+00:00",
       "notes": "empty state detected and captured"
     },
     {
@@ -3300,7 +3300,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:39.668403+00:00",
+      "timestamp": "2026-03-12T19:01:43.395221+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3311,7 +3311,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:39.996354+00:00",
+      "timestamp": "2026-03-12T19:01:43.727975+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -3321,8 +3321,8 @@
       "screen": "content",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/content_loaded_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:40.147898+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/content_loaded_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:43.877892+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3332,8 +3332,8 @@
       "screen": "content",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/content_no_selection_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:40.393585+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/content_no_selection_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:44.125387+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -3344,7 +3344,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:40.393585+00:00",
+      "timestamp": "2026-03-12T19:01:44.125387+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -3355,7 +3355,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:40.393585+00:00",
+      "timestamp": "2026-03-12T19:01:44.125387+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -3366,7 +3366,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:40.393585+00:00",
+      "timestamp": "2026-03-12T19:01:44.125387+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3377,7 +3377,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:40.717520+00:00",
+      "timestamp": "2026-03-12T19:01:44.451916+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -3387,8 +3387,8 @@
       "screen": "analytics",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/analytics_loaded_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:40.881703+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/analytics_loaded_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:44.616130+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3398,8 +3398,8 @@
       "screen": "analytics",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/analytics_no_selection_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:41.143925+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/analytics_no_selection_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:44.878886+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -3410,7 +3410,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:41.143925+00:00",
+      "timestamp": "2026-03-12T19:01:44.878886+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -3421,7 +3421,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:41.143925+00:00",
+      "timestamp": "2026-03-12T19:01:44.878886+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -3432,7 +3432,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:41.143925+00:00",
+      "timestamp": "2026-03-12T19:01:44.878886+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3443,7 +3443,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:41.470338+00:00",
+      "timestamp": "2026-03-12T19:01:45.211222+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -3453,8 +3453,8 @@
       "screen": "ai_studio",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/ai_studio_loaded_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:41.631273+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/ai_studio_loaded_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:45.370538+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3464,8 +3464,8 @@
       "screen": "ai_studio",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/ai_studio_no_selection_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:41.891432+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/ai_studio_no_selection_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:45.634888+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -3476,7 +3476,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:41.891432+00:00",
+      "timestamp": "2026-03-12T19:01:45.634888+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -3487,7 +3487,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:41.891432+00:00",
+      "timestamp": "2026-03-12T19:01:45.634888+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -3498,7 +3498,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:41.891941+00:00",
+      "timestamp": "2026-03-12T19:01:45.634888+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3509,7 +3509,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:42.220891+00:00",
+      "timestamp": "2026-03-12T19:01:45.970097+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -3519,8 +3519,8 @@
       "screen": "audit",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/audit_loaded_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:42.372474+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/audit_loaded_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:46.120013+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3530,8 +3530,8 @@
       "screen": "audit",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/audit_no_selection_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:42.616074+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/audit_no_selection_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:46.369749+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -3542,7 +3542,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:42.616074+00:00",
+      "timestamp": "2026-03-12T19:01:46.369749+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -3553,7 +3553,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:42.616074+00:00",
+      "timestamp": "2026-03-12T19:01:46.369749+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -3564,7 +3564,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:42.616074+00:00",
+      "timestamp": "2026-03-12T19:01:46.369749+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3575,7 +3575,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:42.943065+00:00",
+      "timestamp": "2026-03-12T19:01:46.697979+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -3585,8 +3585,8 @@
       "screen": "updates",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/updates_loaded_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:43.104800+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/updates_loaded_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:46.856890+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3597,7 +3597,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:43.104800+00:00",
+      "timestamp": "2026-03-12T19:01:46.856890+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -3608,7 +3608,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:43.104800+00:00",
+      "timestamp": "2026-03-12T19:01:46.856890+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -3619,7 +3619,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:43.104800+00:00",
+      "timestamp": "2026-03-12T19:01:46.856890+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -3630,7 +3630,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:43.104800+00:00",
+      "timestamp": "2026-03-12T19:01:46.856890+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3641,7 +3641,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:43.436428+00:00",
+      "timestamp": "2026-03-12T19:01:47.179983+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -3651,8 +3651,8 @@
       "screen": "settings",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_25/settings_loaded_state_1280x800_scale_1_25.png",
-      "timestamp": "2026-03-12T17:09:43.578103+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_25/settings_loaded_state_1280x800_scale_1_25.png",
+      "timestamp": "2026-03-12T19:01:47.321906+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3663,7 +3663,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:43.578103+00:00",
+      "timestamp": "2026-03-12T19:01:47.321906+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -3674,7 +3674,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:43.578103+00:00",
+      "timestamp": "2026-03-12T19:01:47.321906+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -3685,7 +3685,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:43.578103+00:00",
+      "timestamp": "2026-03-12T19:01:47.321906+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -3696,7 +3696,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:09:43.578103+00:00",
+      "timestamp": "2026-03-12T19:01:47.321906+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3707,7 +3707,7 @@
       "action": "boot_window",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:04.029369+00:00",
+      "timestamp": "2026-03-12T19:02:07.799372+00:00",
       "notes": "window shown at 1540x920 scale=1.5"
     },
     {
@@ -3717,8 +3717,8 @@
       "screen": "dashboard",
       "action": "capture_initial_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/dashboard_initial_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:04.647954+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/dashboard_initial_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:08.423277+00:00",
       "notes": "initial dashboard state captured"
     },
     {
@@ -3729,7 +3729,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:04.983987+00:00",
+      "timestamp": "2026-03-12T19:02:08.747515+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -3739,8 +3739,8 @@
       "screen": "dashboard",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/dashboard_loaded_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:05.269980+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/dashboard_loaded_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:09.036370+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3750,8 +3750,8 @@
       "screen": "dashboard",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/dashboard_no_selection_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:05.655815+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/dashboard_no_selection_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:09.420429+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -3762,7 +3762,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:05.655815+00:00",
+      "timestamp": "2026-03-12T19:02:09.420429+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -3773,7 +3773,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:05.655815+00:00",
+      "timestamp": "2026-03-12T19:02:09.420429+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -3784,7 +3784,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:05.656815+00:00",
+      "timestamp": "2026-03-12T19:02:09.420938+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3795,7 +3795,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:05.989071+00:00",
+      "timestamp": "2026-03-12T19:02:09.751736+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -3805,8 +3805,8 @@
       "screen": "profiles",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/profiles_loaded_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:06.275741+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/profiles_loaded_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:10.032433+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3816,8 +3816,8 @@
       "screen": "profiles",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/profiles_no_selection_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:06.655151+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/profiles_no_selection_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:10.417767+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -3828,7 +3828,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:06.655151+00:00",
+      "timestamp": "2026-03-12T19:02:10.417767+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -3839,7 +3839,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:06.655151+00:00",
+      "timestamp": "2026-03-12T19:02:10.418278+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -3850,7 +3850,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:06.655660+00:00",
+      "timestamp": "2026-03-12T19:02:10.418278+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3861,7 +3861,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:06.984557+00:00",
+      "timestamp": "2026-03-12T19:02:10.758073+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -3871,8 +3871,8 @@
       "screen": "sessions",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/sessions_loaded_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:07.294379+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/sessions_loaded_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:11.063046+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3882,8 +3882,8 @@
       "screen": "sessions",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/sessions_no_selection_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:07.706408+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/sessions_no_selection_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:11.466848+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -3894,7 +3894,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:07.706408+00:00",
+      "timestamp": "2026-03-12T19:02:11.466848+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -3904,8 +3904,8 @@
       "screen": "sessions",
       "action": "capture_empty_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/sessions_empty_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:08.012190+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/sessions_empty_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:11.784851+00:00",
       "notes": "empty state detected and captured"
     },
     {
@@ -3916,7 +3916,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:08.012699+00:00",
+      "timestamp": "2026-03-12T19:02:11.785850+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3927,7 +3927,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:08.339205+00:00",
+      "timestamp": "2026-03-12T19:02:12.122076+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -3937,8 +3937,8 @@
       "screen": "content",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/content_loaded_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:08.596624+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/content_loaded_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:12.379223+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -3948,8 +3948,8 @@
       "screen": "content",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/content_no_selection_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:08.951492+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/content_no_selection_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:12.734349+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -3960,7 +3960,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:08.952005+00:00",
+      "timestamp": "2026-03-12T19:02:12.734349+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -3971,7 +3971,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:08.952005+00:00",
+      "timestamp": "2026-03-12T19:02:12.734349+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -3982,7 +3982,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:08.952005+00:00",
+      "timestamp": "2026-03-12T19:02:12.734349+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -3993,7 +3993,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:09.291830+00:00",
+      "timestamp": "2026-03-12T19:02:13.066690+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -4003,8 +4003,8 @@
       "screen": "analytics",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/analytics_loaded_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:09.593613+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/analytics_loaded_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:13.367051+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4014,8 +4014,8 @@
       "screen": "analytics",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/analytics_no_selection_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:09.993322+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/analytics_no_selection_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:13.770415+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -4026,7 +4026,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:09.993322+00:00",
+      "timestamp": "2026-03-12T19:02:13.770415+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -4037,7 +4037,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:09.993322+00:00",
+      "timestamp": "2026-03-12T19:02:13.770415+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -4048,7 +4048,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:09.993832+00:00",
+      "timestamp": "2026-03-12T19:02:13.770929+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4059,7 +4059,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:10.321091+00:00",
+      "timestamp": "2026-03-12T19:02:14.101144+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -4069,8 +4069,8 @@
       "screen": "ai_studio",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/ai_studio_loaded_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:10.613449+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/ai_studio_loaded_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:14.388327+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4080,8 +4080,8 @@
       "screen": "ai_studio",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/ai_studio_no_selection_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:10.994110+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/ai_studio_no_selection_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:14.773954+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -4092,7 +4092,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:10.994110+00:00",
+      "timestamp": "2026-03-12T19:02:14.773954+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -4103,7 +4103,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:10.994110+00:00",
+      "timestamp": "2026-03-12T19:02:14.773954+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -4114,7 +4114,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:10.995109+00:00",
+      "timestamp": "2026-03-12T19:02:14.773954+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4125,7 +4125,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:11.320531+00:00",
+      "timestamp": "2026-03-12T19:02:15.101487+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -4135,8 +4135,8 @@
       "screen": "audit",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/audit_loaded_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:11.581767+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/audit_loaded_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:15.363121+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4146,8 +4146,8 @@
       "screen": "audit",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/audit_no_selection_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:11.997106+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/audit_no_selection_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:15.719322+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -4158,7 +4158,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:11.997106+00:00",
+      "timestamp": "2026-03-12T19:02:15.719322+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -4169,7 +4169,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:11.997106+00:00",
+      "timestamp": "2026-03-12T19:02:15.719322+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -4180,7 +4180,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:11.997626+00:00",
+      "timestamp": "2026-03-12T19:02:15.719322+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4191,7 +4191,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:12.334062+00:00",
+      "timestamp": "2026-03-12T19:02:16.046882+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -4201,8 +4201,8 @@
       "screen": "updates",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/updates_loaded_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:12.658269+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/updates_loaded_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:16.323388+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4213,7 +4213,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:12.658269+00:00",
+      "timestamp": "2026-03-12T19:02:16.323388+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -4224,7 +4224,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:12.658269+00:00",
+      "timestamp": "2026-03-12T19:02:16.323388+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -4235,7 +4235,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:12.658269+00:00",
+      "timestamp": "2026-03-12T19:02:16.323388+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -4246,7 +4246,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:12.658269+00:00",
+      "timestamp": "2026-03-12T19:02:16.323388+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4257,7 +4257,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:12.994768+00:00",
+      "timestamp": "2026-03-12T19:02:16.648774+00:00",
       "notes": "page switched for 1540x920"
     },
     {
@@ -4267,8 +4267,8 @@
       "screen": "settings",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/settings_loaded_state_1540x920_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:13.247178+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/settings_loaded_state_1540x920_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:16.889161+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4279,7 +4279,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:13.247178+00:00",
+      "timestamp": "2026-03-12T19:02:16.889161+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -4290,7 +4290,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:13.247178+00:00",
+      "timestamp": "2026-03-12T19:02:16.889161+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -4301,7 +4301,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:13.247178+00:00",
+      "timestamp": "2026-03-12T19:02:16.889161+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -4312,7 +4312,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:13.247687+00:00",
+      "timestamp": "2026-03-12T19:02:16.890161+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4323,7 +4323,7 @@
       "action": "boot_window",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:13.577484+00:00",
+      "timestamp": "2026-03-12T19:02:17.221001+00:00",
       "notes": "window shown at 1366x768 scale=1.5"
     },
     {
@@ -4333,8 +4333,8 @@
       "screen": "dashboard",
       "action": "capture_initial_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/dashboard_initial_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:14.151672+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/dashboard_initial_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:17.793976+00:00",
       "notes": "initial dashboard state captured"
     },
     {
@@ -4345,7 +4345,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:14.484949+00:00",
+      "timestamp": "2026-03-12T19:02:18.128003+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -4355,8 +4355,8 @@
       "screen": "dashboard",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/dashboard_loaded_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:14.719967+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/dashboard_loaded_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:18.361871+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4366,8 +4366,8 @@
       "screen": "dashboard",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/dashboard_no_selection_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:15.060183+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/dashboard_no_selection_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:18.687830+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -4378,7 +4378,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:15.060693+00:00",
+      "timestamp": "2026-03-12T19:02:18.687830+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -4389,7 +4389,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:15.060693+00:00",
+      "timestamp": "2026-03-12T19:02:18.687830+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -4400,7 +4400,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:15.060693+00:00",
+      "timestamp": "2026-03-12T19:02:18.687830+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4411,7 +4411,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:15.392209+00:00",
+      "timestamp": "2026-03-12T19:02:19.024000+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -4421,8 +4421,8 @@
       "screen": "profiles",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/profiles_loaded_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:15.605600+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/profiles_loaded_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:19.235974+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4432,8 +4432,8 @@
       "screen": "profiles",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/profiles_no_selection_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:15.910968+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/profiles_no_selection_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:19.542881+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -4444,7 +4444,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:15.910968+00:00",
+      "timestamp": "2026-03-12T19:02:19.542881+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -4455,7 +4455,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:15.910968+00:00",
+      "timestamp": "2026-03-12T19:02:19.542881+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -4466,7 +4466,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:15.911477+00:00",
+      "timestamp": "2026-03-12T19:02:19.542881+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4477,7 +4477,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:16.250103+00:00",
+      "timestamp": "2026-03-12T19:02:19.869911+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -4487,8 +4487,8 @@
       "screen": "sessions",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/sessions_loaded_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:16.494314+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/sessions_loaded_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:20.113278+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4498,8 +4498,8 @@
       "screen": "sessions",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/sessions_no_selection_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:16.829813+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/sessions_no_selection_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:20.453847+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -4510,7 +4510,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:16.829813+00:00",
+      "timestamp": "2026-03-12T19:02:20.453847+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -4520,8 +4520,8 @@
       "screen": "sessions",
       "action": "capture_empty_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/sessions_empty_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:17.072650+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/sessions_empty_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:20.696385+00:00",
       "notes": "empty state detected and captured"
     },
     {
@@ -4532,7 +4532,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:17.072650+00:00",
+      "timestamp": "2026-03-12T19:02:20.697384+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4543,7 +4543,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:17.399349+00:00",
+      "timestamp": "2026-03-12T19:02:21.032477+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -4553,8 +4553,8 @@
       "screen": "content",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/content_loaded_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:17.603085+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/content_loaded_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:21.235773+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4564,8 +4564,8 @@
       "screen": "content",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/content_no_selection_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:17.909831+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/content_no_selection_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:21.530598+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -4576,7 +4576,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:17.909831+00:00",
+      "timestamp": "2026-03-12T19:02:21.530598+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -4587,7 +4587,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:17.910335+00:00",
+      "timestamp": "2026-03-12T19:02:21.530598+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -4598,7 +4598,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:17.910341+00:00",
+      "timestamp": "2026-03-12T19:02:21.530598+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4609,7 +4609,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:18.243953+00:00",
+      "timestamp": "2026-03-12T19:02:21.855007+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -4619,8 +4619,8 @@
       "screen": "analytics",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/analytics_loaded_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:18.461235+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/analytics_loaded_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:22.073912+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4630,8 +4630,8 @@
       "screen": "analytics",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/analytics_no_selection_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:18.770328+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/analytics_no_selection_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:22.405171+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -4642,7 +4642,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:18.770328+00:00",
+      "timestamp": "2026-03-12T19:02:22.405171+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -4653,7 +4653,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:18.770328+00:00",
+      "timestamp": "2026-03-12T19:02:22.405171+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -4664,7 +4664,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:18.770834+00:00",
+      "timestamp": "2026-03-12T19:02:22.405171+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4675,7 +4675,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:19.105131+00:00",
+      "timestamp": "2026-03-12T19:02:22.739007+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -4685,8 +4685,8 @@
       "screen": "ai_studio",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/ai_studio_loaded_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:19.316386+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/ai_studio_loaded_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:22.950751+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4696,8 +4696,8 @@
       "screen": "ai_studio",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/ai_studio_no_selection_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:19.625313+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/ai_studio_no_selection_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:23.265884+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -4708,7 +4708,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:19.625313+00:00",
+      "timestamp": "2026-03-12T19:02:23.265884+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -4719,7 +4719,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:19.625313+00:00",
+      "timestamp": "2026-03-12T19:02:23.265884+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -4730,7 +4730,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:19.625822+00:00",
+      "timestamp": "2026-03-12T19:02:23.265884+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4741,7 +4741,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:19.952054+00:00",
+      "timestamp": "2026-03-12T19:02:23.589006+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -4751,8 +4751,8 @@
       "screen": "audit",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/audit_loaded_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:20.155287+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/audit_loaded_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:23.797885+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4762,8 +4762,8 @@
       "screen": "audit",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/audit_no_selection_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:20.462192+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/audit_no_selection_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:24.106578+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -4774,7 +4774,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:20.462192+00:00",
+      "timestamp": "2026-03-12T19:02:24.106578+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -4785,7 +4785,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:20.462192+00:00",
+      "timestamp": "2026-03-12T19:02:24.106578+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -4796,7 +4796,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:20.463192+00:00",
+      "timestamp": "2026-03-12T19:02:24.107577+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4807,7 +4807,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:20.795824+00:00",
+      "timestamp": "2026-03-12T19:02:24.440659+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -4817,8 +4817,8 @@
       "screen": "updates",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/updates_loaded_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:21.014013+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/updates_loaded_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:24.657826+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4829,7 +4829,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:21.014013+00:00",
+      "timestamp": "2026-03-12T19:02:24.657826+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -4840,7 +4840,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:21.014013+00:00",
+      "timestamp": "2026-03-12T19:02:24.657826+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -4851,7 +4851,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:21.014013+00:00",
+      "timestamp": "2026-03-12T19:02:24.657826+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -4862,7 +4862,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:21.014013+00:00",
+      "timestamp": "2026-03-12T19:02:24.658825+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4873,7 +4873,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:21.347691+00:00",
+      "timestamp": "2026-03-12T19:02:24.982007+00:00",
       "notes": "page switched for 1366x768"
     },
     {
@@ -4883,8 +4883,8 @@
       "screen": "settings",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/settings_loaded_state_1366x768_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:21.539262+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/settings_loaded_state_1366x768_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:25.172639+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4895,7 +4895,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:21.539262+00:00",
+      "timestamp": "2026-03-12T19:02:25.173639+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -4906,7 +4906,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:21.539262+00:00",
+      "timestamp": "2026-03-12T19:02:25.173639+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -4917,7 +4917,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:21.539262+00:00",
+      "timestamp": "2026-03-12T19:02:25.173639+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -4928,7 +4928,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:21.539262+00:00",
+      "timestamp": "2026-03-12T19:02:25.173639+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -4939,7 +4939,7 @@
       "action": "boot_window",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:21.875088+00:00",
+      "timestamp": "2026-03-12T19:02:25.510008+00:00",
       "notes": "window shown at 1280x800 scale=1.5"
     },
     {
@@ -4949,8 +4949,8 @@
       "screen": "dashboard",
       "action": "capture_initial_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/dashboard_initial_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:22.444461+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/dashboard_initial_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:26.063055+00:00",
       "notes": "initial dashboard state captured"
     },
     {
@@ -4961,7 +4961,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:22.765902+00:00",
+      "timestamp": "2026-03-12T19:02:26.390591+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -4971,8 +4971,8 @@
       "screen": "dashboard",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/dashboard_loaded_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:22.996669+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/dashboard_loaded_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:26.620602+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -4982,8 +4982,8 @@
       "screen": "dashboard",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/dashboard_no_selection_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:23.320083+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/dashboard_no_selection_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:26.944175+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -4994,7 +4994,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:23.320083+00:00",
+      "timestamp": "2026-03-12T19:02:26.945175+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -5005,7 +5005,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:23.320083+00:00",
+      "timestamp": "2026-03-12T19:02:26.945175+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -5016,7 +5016,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:23.320083+00:00",
+      "timestamp": "2026-03-12T19:02:26.945175+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -5027,7 +5027,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:23.643774+00:00",
+      "timestamp": "2026-03-12T19:02:27.271011+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -5037,8 +5037,8 @@
       "screen": "profiles",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/profiles_loaded_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:23.855774+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/profiles_loaded_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:27.484257+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -5048,8 +5048,8 @@
       "screen": "profiles",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/profiles_no_selection_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:24.161684+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/profiles_no_selection_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:27.790888+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -5060,7 +5060,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:24.162193+00:00",
+      "timestamp": "2026-03-12T19:02:27.790888+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -5071,7 +5071,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:24.162193+00:00",
+      "timestamp": "2026-03-12T19:02:27.790888+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -5082,7 +5082,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:24.162193+00:00",
+      "timestamp": "2026-03-12T19:02:27.790888+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -5093,7 +5093,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:24.493342+00:00",
+      "timestamp": "2026-03-12T19:02:28.124010+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -5103,8 +5103,8 @@
       "screen": "sessions",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/sessions_loaded_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:24.733450+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/sessions_loaded_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:28.363874+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -5114,8 +5114,8 @@
       "screen": "sessions",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/sessions_no_selection_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:25.072647+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/sessions_no_selection_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:28.705568+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -5126,7 +5126,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:25.072647+00:00",
+      "timestamp": "2026-03-12T19:02:28.705568+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -5136,8 +5136,8 @@
       "screen": "sessions",
       "action": "capture_empty_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/sessions_empty_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:25.312199+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/sessions_empty_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:28.974283+00:00",
       "notes": "empty state detected and captured"
     },
     {
@@ -5148,7 +5148,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:25.313196+00:00",
+      "timestamp": "2026-03-12T19:02:28.974283+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -5159,7 +5159,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:25.650094+00:00",
+      "timestamp": "2026-03-12T19:02:29.314009+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -5169,8 +5169,8 @@
       "screen": "content",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/content_loaded_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:25.863252+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/content_loaded_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:29.513894+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -5180,8 +5180,8 @@
       "screen": "content",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/content_no_selection_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:26.191583+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/content_no_selection_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:29.807486+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -5192,7 +5192,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:26.192116+00:00",
+      "timestamp": "2026-03-12T19:02:29.807486+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -5203,7 +5203,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:26.192116+00:00",
+      "timestamp": "2026-03-12T19:02:29.807486+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -5214,7 +5214,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:26.192116+00:00",
+      "timestamp": "2026-03-12T19:02:29.808485+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -5225,7 +5225,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:26.528169+00:00",
+      "timestamp": "2026-03-12T19:02:30.132229+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -5235,8 +5235,8 @@
       "screen": "analytics",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/analytics_loaded_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:26.767566+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/analytics_loaded_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:30.344434+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -5246,8 +5246,8 @@
       "screen": "analytics",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/analytics_no_selection_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:27.104987+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/analytics_no_selection_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:30.656892+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -5258,7 +5258,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:27.104987+00:00",
+      "timestamp": "2026-03-12T19:02:30.656892+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -5269,7 +5269,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:27.104987+00:00",
+      "timestamp": "2026-03-12T19:02:30.656892+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -5280,7 +5280,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:27.104987+00:00",
+      "timestamp": "2026-03-12T19:02:30.657891+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -5291,7 +5291,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:27.431861+00:00",
+      "timestamp": "2026-03-12T19:02:30.983011+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -5301,8 +5301,8 @@
       "screen": "ai_studio",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/ai_studio_loaded_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:27.640984+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/ai_studio_loaded_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:31.191584+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -5312,8 +5312,8 @@
       "screen": "ai_studio",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/ai_studio_no_selection_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:27.952620+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/ai_studio_no_selection_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:31.503510+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -5324,7 +5324,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:27.952620+00:00",
+      "timestamp": "2026-03-12T19:02:31.503510+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -5335,7 +5335,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:27.952620+00:00",
+      "timestamp": "2026-03-12T19:02:31.503510+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -5346,7 +5346,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:27.953619+00:00",
+      "timestamp": "2026-03-12T19:02:31.503510+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -5357,7 +5357,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:28.280020+00:00",
+      "timestamp": "2026-03-12T19:02:31.834840+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -5367,8 +5367,8 @@
       "screen": "audit",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/audit_loaded_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:28.480092+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/audit_loaded_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:32.035532+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -5378,8 +5378,8 @@
       "screen": "audit",
       "action": "verify_no_selection_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/audit_no_selection_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:28.773693+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/audit_no_selection_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:32.330282+00:00",
       "notes": "selected indexes after clearSelection=0"
     },
     {
@@ -5390,7 +5390,7 @@
       "action": "capture_dense_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:28.773693+00:00",
+      "timestamp": "2026-03-12T19:02:32.330282+00:00",
       "notes": "visible item views exist but not enough rows/items for dense probe"
     },
     {
@@ -5401,7 +5401,7 @@
       "action": "capture_empty_state",
       "result": "not_available",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:28.773693+00:00",
+      "timestamp": "2026-03-12T19:02:32.330282+00:00",
       "notes": "page contains loaded rows/items; empty state not available"
     },
     {
@@ -5412,7 +5412,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:28.774202+00:00",
+      "timestamp": "2026-03-12T19:02:32.330282+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -5423,7 +5423,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:29.108969+00:00",
+      "timestamp": "2026-03-12T19:02:32.654014+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -5433,8 +5433,8 @@
       "screen": "updates",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/updates_loaded_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:29.319891+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/updates_loaded_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:32.865601+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -5445,7 +5445,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:29.319891+00:00",
+      "timestamp": "2026-03-12T19:02:32.865601+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -5456,7 +5456,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:29.319891+00:00",
+      "timestamp": "2026-03-12T19:02:32.865601+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -5467,7 +5467,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:29.319891+00:00",
+      "timestamp": "2026-03-12T19:02:32.865601+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -5478,7 +5478,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:29.319891+00:00",
+      "timestamp": "2026-03-12T19:02:32.865601+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     },
     {
@@ -5489,7 +5489,7 @@
       "action": "switch_page",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:29.646699+00:00",
+      "timestamp": "2026-03-12T19:02:33.196013+00:00",
       "notes": "page switched for 1280x800"
     },
     {
@@ -5499,8 +5499,8 @@
       "screen": "settings",
       "action": "capture_loaded_state",
       "result": "pass",
-      "screenshot_ref": "runtime/ui_snapshots/20260312_200821/screenshots/scale_1_5/settings_loaded_state_1280x800_scale_1_5.png",
-      "timestamp": "2026-03-12T17:10:29.835405+00:00",
+      "screenshot_ref": "runtime/ui_snapshots/20260312_220024/screenshots/scale_1_5/settings_loaded_state_1280x800_scale_1_5.png",
+      "timestamp": "2026-03-12T19:02:33.385216+00:00",
       "notes": "loaded state captured"
     },
     {
@@ -5511,7 +5511,7 @@
       "action": "verify_no_selection_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:29.835405+00:00",
+      "timestamp": "2026-03-12T19:02:33.385216+00:00",
       "notes": "page has no visible item views"
     },
     {
@@ -5522,7 +5522,7 @@
       "action": "capture_dense_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:29.835405+00:00",
+      "timestamp": "2026-03-12T19:02:33.385216+00:00",
       "notes": "page has no list/table widgets"
     },
     {
@@ -5533,7 +5533,7 @@
       "action": "capture_empty_state",
       "result": "not_applicable",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:29.835405+00:00",
+      "timestamp": "2026-03-12T19:02:33.385216+00:00",
       "notes": "page has no item views for empty-state detection"
     },
     {
@@ -5544,7 +5544,7 @@
       "action": "capture_anomaly_state",
       "result": "pass",
       "screenshot_ref": null,
-      "timestamp": "2026-03-12T17:10:29.835405+00:00",
+      "timestamp": "2026-03-12T19:02:33.385216+00:00",
       "notes": "no clipping anomalies detected by snapshot probe"
     }
   ]
