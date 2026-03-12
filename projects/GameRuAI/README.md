@@ -18,6 +18,8 @@ Current MVP includes translation + learning loop, companion mode, asset research
   - pipeline stage status (`scan/extract/detect/translate/voice/export/reports/diagnostics`)
   - companion session visibility
   - translation/language/QA/voice summary metrics
+  - language bottlenecks summary
+  - quick actions (`Scan`, `Detect`, `Translate`, `Voice`, `Export`, `Reports`)
 - Language Hub panel:
   - language overview
   - language queue
@@ -25,6 +27,7 @@ Current MVP includes translation + learning loop, companion mode, asset research
   - uncertain/mixed review block
   - localization stress block
   - language flow summary
+  - action buttons to jump to uncertain/stress entries and translation workbench
 - Translation pipeline with backend fallback and context visibility.
 - Learning loop (manual correction -> TM/glossary reuse).
 - Companion mode (safe sidecar, file watch, quick re-index).

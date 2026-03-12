@@ -96,6 +96,12 @@ class MainWindow(QMainWindow):
     def _wire_actions(self) -> None:
         self.project_panel.create_btn.clicked.connect(self.on_create_project)
         self.project_panel.run_pipeline_btn.clicked.connect(self.on_run_full_pipeline)
+        self.hud_panel.quick_scan_btn.clicked.connect(self.on_scan)
+        self.hud_panel.quick_detect_btn.clicked.connect(self.on_detect_languages)
+        self.hud_panel.quick_translate_btn.clicked.connect(self.on_translate)
+        self.hud_panel.quick_voice_btn.clicked.connect(self.on_voice_attempts)
+        self.hud_panel.quick_export_btn.clicked.connect(self.on_export)
+        self.hud_panel.quick_reports_btn.clicked.connect(self.on_generate_reports)
 
         self.scan_panel.scan_btn.clicked.connect(self.on_scan)
         self.scan_panel.extract_btn.clicked.connect(self.on_extract)
@@ -108,6 +114,9 @@ class MainWindow(QMainWindow):
         self.entries_panel.lang_filter.currentIndexChanged.connect(self.refresh_entries)
         self.entries_panel.search_edit.returnPressed.connect(self.refresh_entries)
         self.language_hub_panel.refresh_btn.clicked.connect(self.refresh_language_hub)
+        self.language_hub_panel.focus_uncertain_btn.clicked.connect(self.on_language_focus_uncertain)
+        self.language_hub_panel.focus_stress_btn.clicked.connect(self.on_language_focus_stress)
+        self.language_hub_panel.open_translation_btn.clicked.connect(self.on_language_open_translation)
 
         self.translation_panel.translate_btn.clicked.connect(self.on_translate)
         self.translation_panel.apply_correction_btn.clicked.connect(self.on_apply_correction)
@@ -314,7 +323,35 @@ class MainWindow(QMainWindow):
         self.services.add_glossary_term(self.current_project_id, source, target, lang)
         self.refresh_glossary()
         self.refresh_learning()
+        self.refresh_hud()
         self.refresh_language_hub()
+
+    def on_language_focus_uncertain(self) -> None:
+        if not self._require_project():
+            return
+        idx = self.entries_panel.lang_filter.findText("unknown")
+        if idx >= 0:
+            self.entries_panel.lang_filter.setCurrentIndex(idx)
+        self.entries_panel.search_edit.setText("")
+        self.refresh_entries()
+        self._switch_tab("Entries")
+        self.statusBar().showMessage("Focused uncertain language rows in Entries.", 3000)
+
+    def on_language_focus_stress(self) -> None:
+        if not self._require_project():
+            return
+        self.entries_panel.lang_filter.setCurrentText("all")
+        self.entries_panel.search_edit.setText("%PLAYER_NAME% {money} [E] <b>")
+        self.refresh_entries()
+        self._switch_tab("Entries")
+        self.statusBar().showMessage("Focused localization stress rows in Entries.", 3000)
+
+    def on_language_open_translation(self) -> None:
+        if not self._require_project():
+            return
+        self.refresh_translations()
+        self._switch_tab("Translation")
+        self.statusBar().showMessage("Opened Translation workbench from Language Hub.", 2500)
 
     def on_run_qa(self) -> None:
         if not self._require_project():
@@ -596,3 +633,10 @@ class MainWindow(QMainWindow):
                 requested_backend=self.translation_panel.backend_combo.currentText(),
             )
         )
+
+    def _switch_tab(self, tab_name: str) -> bool:
+        for idx in range(self.tabs.count()):
+            if self.tabs.tabText(idx) == tab_name:
+                self.tabs.setCurrentIndex(idx)
+                return True
+        return False

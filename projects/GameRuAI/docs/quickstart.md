@@ -28,6 +28,8 @@ python -m app.main
 - Voice prep: `Voice` -> `Generate Demo Voice Attempts`
 - Language control center: `Language Hub` -> review overview/queue/review/stress/flow blocks
 - Top HUD: always visible for project stage, backend state, QA/report/voice readiness
+- Use HUD quick actions for fast stage transitions (`Scan`, `Detect`, `Translate`, `Voice`, `Export`, `Reports`)
+- Use Language Hub actions for triage (`Focus Uncertain`, `Focus Stress`, `Open Translation Workbench`)
 
 ## 6) Reports and diagnostics
 1. Open `Reports` tab -> click `Generate Reports`.

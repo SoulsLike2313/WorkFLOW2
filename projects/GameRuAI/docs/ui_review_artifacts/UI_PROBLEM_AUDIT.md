@@ -1,10 +1,12 @@
 ﻿# UI Problem Audit - GameRuAI
 
 ## Product screens under audit
+- Top Product HUD
 - Project
 - Scan
 - Asset Explorer
 - Entries
+- Language Hub
 - Translation
 - Voice
 - Learning
@@ -19,47 +21,53 @@
 
 ## Critical user flows
 1. Core localization flow:
-   Project -> Scan -> Entries -> Translation -> Voice -> Reports -> Export.
+   Project -> Scan -> Entries -> Language Hub -> Translation -> Voice -> Reports -> Export.
 2. Learning visibility flow:
    Translation correction -> Learning history -> Glossary/TM reuse.
 3. Companion flow:
    Companion setup -> watch events visibility -> diagnostics impact.
 4. Asset research flow:
    Asset tree -> active file metadata/preview fallback.
+5. UI-QA loop:
+   Snapshot/Doctor/Validate -> review artifacts -> fix plan -> rerun.
 
 ## Latest automated evidence
-- Validation run: `20260312_152940`
-- Doctor run: `20260312_152940`
-- Snapshot run: `20260312_153507`
+- Validation run: `20260312_155348`
+- Doctor run: `20260312_155348`
+- Snapshot run: `20260312_155949`
 - Validation status: `PASS_WITH_WARNINGS`
 - Doctor status: `PASS_WITH_WARNINGS`
 - Snapshot status: `PASS`
-- Captures (snapshot manifest): `192`
-- Covered screens: `15`
-- Covered screen/state pairs: `22`
+- Snapshot captures: `210`
+- Combined captures (doctor + snapshot manifest): `420`
+- Covered screens: `16`
+- Covered screen/state pairs: `24`
 
 ## Critical UI zones
-- Project onboarding controls and status text.
+- HUD project/backend/language/pipeline summary zone.
+- Language Hub overview/queue/backend status blocks.
+- Language Hub review/stress/flow blocks.
 - Translation backend/context status line and correction form.
 - Voice attempt table + preview/duration widgets.
 - Reports quality widgets and Diagnostics backend table.
 - Companion session controls and events table.
 
 ## Current findings (from doctor)
-- No `critical` issues detected in this run.
-- `major` issues: `243`.
-- Dominant issue category: `floating_critical_cta`.
-- Dominant issue type: `layout`.
-- Most affected screens by count:
+- `critical`: `0`
+- `major`: `261`
+- `minor`: `0`
+- Dominant issue category: `floating_critical_cta`
+- Dominant issue type: `layout`
+- Most affected screens:
   - Companion (`54`)
   - Entries (`54`)
   - Translation (`36`)
   - Voice (`36`)
   - Asset Explorer (`18`)
+  - Language Hub (`18`)
 
 ## Evidence source
 - `ui_screenshots_manifest.json`
 - `ui_validation_summary.json`
-- `runtime/ui_validation/validate_20260312_152940/ui_validation_summary.json`
-- `runtime/ui_validation/20260312_152940/ui_doctor_summary.json`
-
+- `runtime/ui_validation/validate_20260312_155348/ui_validation_summary.json`
+- `runtime/ui_validation/20260312_155348/ui_doctor_summary.json`

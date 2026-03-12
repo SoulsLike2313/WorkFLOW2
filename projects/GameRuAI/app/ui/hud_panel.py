@@ -5,7 +5,9 @@ from PySide6.QtWidgets import (
     QFrame,
     QGridLayout,
     QGroupBox,
+    QHBoxLayout,
     QLabel,
+    QPushButton,
     QProgressBar,
     QVBoxLayout,
     QWidget,
@@ -37,6 +39,27 @@ class ProductHudPanel(QWidget):
         context_layout.addWidget(self.next_action_label, 0, 3)
         context_layout.addWidget(self.language_map_label, 1, 3)
         root.addWidget(context_box)
+
+        actions_box = QGroupBox("Primary Actions")
+        actions_layout = QHBoxLayout(actions_box)
+        self.quick_scan_btn = QPushButton("1) Scan")
+        self.quick_detect_btn = QPushButton("2) Detect")
+        self.quick_translate_btn = QPushButton("3) Translate")
+        self.quick_voice_btn = QPushButton("4) Voice")
+        self.quick_export_btn = QPushButton("5) Export")
+        self.quick_reports_btn = QPushButton("6) Reports")
+        self.quick_actions = [
+            self.quick_scan_btn,
+            self.quick_detect_btn,
+            self.quick_translate_btn,
+            self.quick_voice_btn,
+            self.quick_export_btn,
+            self.quick_reports_btn,
+        ]
+        for button in self.quick_actions:
+            actions_layout.addWidget(button)
+        actions_layout.addStretch(1)
+        root.addWidget(actions_box)
 
         status_box = QGroupBox("Pipeline + Quality Status")
         status_layout = QGridLayout(status_box)
@@ -79,6 +102,7 @@ class ProductHudPanel(QWidget):
         self.voice_label = QLabel("Voice prep: n/a")
         self.qa_label = QLabel("QA: n/a")
         self.reports_label = QLabel("Reports: n/a")
+        self.bottlenecks_label = QLabel("Language bottlenecks: n/a")
         self.metrics_labels = [
             self.entries_label,
             self.languages_label,
@@ -87,6 +111,7 @@ class ProductHudPanel(QWidget):
             self.voice_label,
             self.qa_label,
             self.reports_label,
+            self.bottlenecks_label,
         ]
         for idx, label in enumerate(self.metrics_labels):
             label.setFrameShape(QFrame.StyledPanel)
@@ -109,6 +134,8 @@ class ProductHudPanel(QWidget):
             for label in self.metrics_labels:
                 prefix = label.text().split(":", 1)[0]
                 label.setText(f"{prefix}: n/a")
+            for button in self.quick_actions:
+                button.setEnabled(False)
             self.entries_label.setText("Entries: 0")
             self.languages_label.setText("Languages: 0")
             self.translated_label.setText("Translated: 0")
@@ -164,3 +191,15 @@ class ProductHudPanel(QWidget):
             "Reports: "
             f"{snapshot.get('reports_status', 'n/a')} | diagnostics={snapshot.get('diagnostics_status', 'n/a')}"
         )
+        self.bottlenecks_label.setText(
+            "Language bottlenecks: "
+            + ", ".join(snapshot.get("language_bottlenecks", []) or ["none"])
+        )
+
+        stage_snapshot = snapshot.get("pipeline_stage", {}) or {}
+        self.quick_scan_btn.setEnabled(stage_snapshot.get("scan") != "done")
+        self.quick_detect_btn.setEnabled(stage_snapshot.get("extract") in {"done", "partial"})
+        self.quick_translate_btn.setEnabled(stage_snapshot.get("detect") in {"done", "partial"})
+        self.quick_voice_btn.setEnabled(stage_snapshot.get("translate") in {"done", "partial"})
+        self.quick_export_btn.setEnabled(stage_snapshot.get("translate") in {"done", "partial"})
+        self.quick_reports_btn.setEnabled(True)

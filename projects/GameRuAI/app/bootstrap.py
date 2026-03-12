@@ -840,6 +840,16 @@ class AppServices:
         language_map = ", ".join(
             f"{lang}:{count}" for lang, count in sorted(language_distribution.items(), key=lambda item: (-item[1], item[0]))[:8]
         ) or "n/a"
+        lang_pending = Counter()
+        for row in entries:
+            lang = str(row.get("detected_lang") or "unknown")
+            has_translation = bool(str(row.get("translated_text") or "").strip())
+            low_confidence = float(row.get("language_confidence") or 0.0) < 0.75
+            if (not has_translation) or low_confidence or lang in {"unknown", "mixed"}:
+                lang_pending[lang] += 1
+        language_bottlenecks = [
+            f"{lang}:{count}" for lang, count in sorted(lang_pending.items(), key=lambda item: (-item[1], item[0]))[:4]
+        ]
 
         active_backend = backend_runs[0]["backend_name"] if backend_runs else requested_backend
         fallback_backend = next(
@@ -900,6 +910,7 @@ class AppServices:
             "active_backend": active_backend,
             "fallback_backend": fallback_backend,
             "language_map": language_map,
+            "language_bottlenecks": language_bottlenecks,
             "pipeline_stage": pipeline_stage,
             "entries_total": entries_total,
             "languages_total": languages_total,

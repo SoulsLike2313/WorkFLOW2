@@ -1,9 +1,9 @@
 ﻿# UI Fix Plan - GameRuAI
 
 ## Baseline findings source
-- Validation run: `20260312_152940`
-- Doctor run: `20260312_152940`
-- Main issue: `floating_critical_cta` (243 major findings)
+- Validation run: `20260312_155348`
+- Doctor run: `20260312_155348`
+- Main issue cluster: `floating_critical_cta` (`261` major findings)
 
 ## Priority order
 1. Eliminate repeated `floating_critical_cta` in core workflow screens.
@@ -11,8 +11,10 @@
 3. Manual polish pass for dense table screens at `1366x768` and `1280x800`.
 
 ## Screen-level actions
+- Language Hub
+  - Keep `Refresh Language Blocks` anchored inside fixed toolbar container.
 - Asset Explorer
-  - Rebuild header CTA row (`Refresh Asset Index`) inside a single persistent parent layout.
+  - Rebuild header CTA row (`Refresh Asset Index`) inside a persistent parent layout.
 - Companion
   - Place `Launch/Poll/Stop` in one stable horizontal layout with explicit min widths.
 - Entries
@@ -31,6 +33,5 @@
 
 ## Exit criteria for this plan
 - `ui_doctor` returns `PASS` or low, explained `PASS_WITH_WARNINGS`.
-- No repeated `floating_critical_cta` in core tabs.
+- No repeated `floating_critical_cta` in core tabs and Language Hub.
 - Manual acceptance checklist updated with checked layout/scaling blocks.
-

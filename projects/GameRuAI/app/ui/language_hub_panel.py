@@ -22,8 +22,14 @@ class LanguageHubPanel(QWidget):
 
         controls = QHBoxLayout()
         self.refresh_btn = QPushButton("Refresh Language Blocks")
+        self.focus_uncertain_btn = QPushButton("Focus Uncertain In Entries")
+        self.focus_stress_btn = QPushButton("Focus Stress In Entries")
+        self.open_translation_btn = QPushButton("Open Translation Workbench")
         self.status_label = QLabel("Language hub: n/a")
         controls.addWidget(self.refresh_btn)
+        controls.addWidget(self.focus_uncertain_btn)
+        controls.addWidget(self.focus_stress_btn)
+        controls.addWidget(self.open_translation_btn)
         controls.addWidget(self.status_label)
         controls.addStretch(1)
         root.addLayout(controls)
@@ -100,6 +106,9 @@ class LanguageHubPanel(QWidget):
             fill_table(self.flow_table, [])
             self.status_label.setText("Language hub: no active project")
             self.flow_info.setText("Flow: n/a")
+            self.focus_uncertain_btn.setEnabled(False)
+            self.focus_stress_btn.setEnabled(False)
+            self.open_translation_btn.setEnabled(False)
             for label in self.backend_labels:
                 prefix = label.text().split(":", 1)[0]
                 label.setText(f"{prefix}: n/a")
@@ -190,3 +199,6 @@ class LanguageHubPanel(QWidget):
             f"reviewed={snapshot.get('reviewed_total', 0)} "
             f"exported_jobs={snapshot.get('exported_total', 0)}"
         )
+        self.focus_uncertain_btn.setEnabled(bool(review_rows))
+        self.focus_stress_btn.setEnabled(bool(stress_rows))
+        self.open_translation_btn.setEnabled(bool(snapshot.get("translated_total", 0) or snapshot.get("detected_total", 0)))

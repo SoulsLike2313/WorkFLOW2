@@ -1,8 +1,8 @@
 {
-  "run_id": "20260312_155538",
+  "run_id": "20260312_160910",
   "status": "PASS",
-  "path": "runtime/ui_snapshots/20260312_155538",
-  "manifest_path": "runtime/ui_snapshots/20260312_155538/ui_screenshots_manifest.json",
-  "summary_path": "runtime/ui_snapshots/20260312_155538/ui_snapshot_summary.json",
-  "timestamp": "2026-03-12T12:57:23.296917+00:00"
+  "path": "runtime/ui_snapshots/20260312_160910",
+  "manifest_path": "runtime/ui_snapshots/20260312_160910/ui_screenshots_manifest.json",
+  "summary_path": "runtime/ui_snapshots/20260312_160910/ui_snapshot_summary.json",
+  "timestamp": "2026-03-12T13:10:55.169819+00:00"
 }

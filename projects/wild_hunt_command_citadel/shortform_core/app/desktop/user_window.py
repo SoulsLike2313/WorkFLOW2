@@ -193,7 +193,7 @@ class UserWorkspaceWindow(QMainWindow):
 
         self.context_panel = ContextPanel()
         self.context_panel.action_requested.connect(lambda action: self._on_page_action(action, None))
-        self.context_panel.setMinimumWidth(272)
+        self.context_panel.setMinimumWidth(280)
         self.context_panel.setMaximumWidth(368)
         split.addWidget(self.context_panel)
 
@@ -215,7 +215,7 @@ class UserWorkspaceWindow(QMainWindow):
             return
 
         min_left = 720
-        min_right = 272
+        min_right = 280
         target_right = int(total * 0.255)
         right = max(min_right, min(364, target_right))
         if total - right < min_left:
@@ -230,7 +230,7 @@ class UserWorkspaceWindow(QMainWindow):
         sizes = self.main_splitter.sizes()
         if len(sizes) != 2:
             return
-        if sizes[0] < 706 or sizes[1] < 272:
+        if sizes[0] < 706 or sizes[1] < 280:
             self._rebalance_main_splitter()
 
     def _register_nav_button(self, layout: QVBoxLayout, key: str, label: str) -> None:

@@ -346,6 +346,21 @@ def _run_worker(args: argparse.Namespace) -> int:
                 _add_issue("critical", "state_expected_loaded", k, s, st, "Loaded project state missing current_project_id.", size_label, shot_path)
             if "n/a" in window.hud_panel.project_label.text().lower() or "n/a" in window.hud_panel.language_map_label.text().lower():
                 _add_issue("major", "state_summary_missing", k, s, st, "HUD project/language summary is not populated.", size_label, shot_path, window.hud_panel)
+            if "n/a" in window.hud_panel.bottlenecks_label.text().lower():
+                _add_issue("major", "state_summary_missing", k, s, st, "HUD bottlenecks summary is not populated.", size_label, shot_path, window.hud_panel)
+            for button in window.hud_panel.quick_actions:
+                if not button.isVisible() or button.width() <= 0 or button.height() <= 0:
+                    _add_issue(
+                        "major",
+                        "missing_critical_cta",
+                        k,
+                        s,
+                        st,
+                        f"HUD quick action is not visible: {button.text()}",
+                        size_label,
+                        shot_path,
+                        button,
+                    )
         elif k == "scan_manifest_loaded":
             if not window.scan_panel.manifest_view.toPlainText().strip() or window.scan_panel.table.rowCount() <= 0:
                 _add_issue("major", "state_expected_loaded", k, s, st, "Scan loaded state is empty.", size_label, shot_path, window.scan_panel.table)

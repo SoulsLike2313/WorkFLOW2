@@ -12,29 +12,15 @@
   - Validates manifest schema and required scenario coverage.
   - Publishes canonical root artifacts.
 
-## Product scenario set
-- `Project::initial_empty`
-- `Project::pipeline_loaded_ready`
-- `Scan::manifest_loaded`
-- `Asset Explorer::tree_loaded_no_selection`
-- `Asset Explorer::active_selection_metadata`
-- `Entries::many_items_loaded`
-- `Entries::filtered_language_fr`
-- `Entries::long_search_query`
-- `Translation::loaded_translations`
-- `Translation::correction_form_long_content`
-- `Voice::no_selection`
-- `Voice::active_selection_details`
-- `Learning::loaded_history`
-- `Glossary::loaded_terms`
-- `QA::findings_loaded`
-- `Reports::dashboard_loaded`
-- `Diagnostics::backend_metrics_loaded`
-- `Export::export_log_loaded`
-- `Jobs / Logs::jobs_payload_loaded`
-- `Live Demo::scene_selected_ready`
-- `Companion::idle_no_session`
-- `Companion::configured_invalid_executable`
+## Product scenario set (current)
+- Project: `initial_empty`, `pipeline_loaded_ready`
+- Scan: `manifest_loaded`
+- Asset Explorer: `tree_loaded_no_selection`, `active_selection_metadata`
+- Entries: `many_items_loaded`, `filtered_language_fr`, `long_search_query`
+- Language Hub: `overview_loaded`, `review_and_stress_loaded`
+- Translation: `loaded_translations`, `correction_form_long_content`
+- Voice: `no_selection`, `active_selection_details`
+- Learning, Glossary, QA, Reports, Diagnostics, Export, Jobs / Logs, Live Demo, Companion
 
 ## Run pipeline
 1. `python scripts/ui_validate.py`
@@ -44,11 +30,12 @@
 3. Validator merges outputs and writes root artifacts.
 
 ## Last completed run
-- Validation run: `20260312_152940`
+- Validation run: `20260312_155348`
 - Result: `PASS_WITH_WARNINGS`
-- Doctor run: `20260312_152940`
-- Snapshot run: `20260312_153507`
-- Snapshot coverage: `15` screens / `22` states / `192` captures
+- Doctor run: `20260312_155348`
+- Snapshot run: `20260312_155949`
+- Snapshot coverage: `16` screens / `24` states / `210` captures
+- Combined manifest captures (doctor + snapshot): `420`
 
 ## Artifact contract
 - Root outputs:
@@ -59,4 +46,3 @@
   - `runtime/ui_validation/latest_run.txt`
   - `runtime/ui_validation/<validate_run_id>/...`
   - `runtime/ui_snapshots/<snapshot_run_id>/...`
-
