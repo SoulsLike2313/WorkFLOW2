@@ -1,34 +1,60 @@
 # Architecture
 
-## Layers
-- `app/bootstrap.py`: central application orchestration and end-to-end pipeline entrypoints.
-- `app/storage/`: SQLite schema and repositories.
-- `app/scanner/`: file scan + manifest.
-- `app/extractors/`: format-specific text extractors (`txt/json/xml/csv/ini/yaml`).
-- `app/language/`: heuristic language detection.
-- `app/translator/`: backend routing, glossary injection, TM lookup, postprocess, quality score.
-- `app/voice/`: speaker profile metadata, mock synthesis, alignment and quality scoring.
-- `app/learning/`: feedback loop, correction tracking, adaptation history.
-- `app/qa/`: quality checks and finding persistence.
-- `app/patcher/`: patch export manifest + diff report.
-- `app/ui/`: PySide6 tabs bound to real services.
+## Product Layers
+- `A. Asset Intelligence Core` (`app/assets/asset_intelligence.py`, `asset_manifest.py`, `asset_types.py`, `container_heuristics.py`, `relevance_scoring.py`)
+- `B. Content Understanding Core` (`app/understanding/*`)
+- `C. Translation Core` (`app/translator/*`, backend adapters + policy + package evidence)
+- `D. Speech & Voice Core` (`app/audio/*`, `app/voice/*`)
+- `E. Sync & Rebuild Core` (`app/sync/*`)
+- `F. Evidence & Learning Core` (`app/learning/evidence_store.py`, `correction_memory.py`, `adaptation_engine.py`, `confidence_tracking.py`, `regression_memory.py`, `external_reference_log.py`)
+- `G. Source-of-Truth Manager` (`app/knowledge/*`)
+- `H. Product Dashboards / Review Labs` (`app/ui/language_intelligence_panel.py`, `audio_analysis_lab_panel.py`, `evidence_review_panel.py`, `sync_review_panel.py`)
 
-## Data Flow
-1. Scan files -> save to `scanned_files`.
-2. Extract entries -> save to `extracted_entries` + `voice_links`.
-3. Detect language -> save to `language_detections`.
-4. Translate -> save to `translations`; remember in `translation_memory`.
-5. Voice attempts -> save to `voice_attempts`.
-6. Feedback corrections -> `correction_history` + adaptation events + TM/glossary updates.
-7. QA -> `qa_findings`.
-8. Export -> `export_jobs` + files on disk.
+## Storage (Core Additions)
+New persistent blocks in `app/storage/schema.sql`:
+- `asset_manifest`
+- `content_units`
+- `scene_groups`
+- `transcript_segments`
+- `sync_plans`
+- `translation_packages`
+- `knowledge_sources`
+- `external_reference_events`
+- `evidence_records`
+- `audio_analysis_results`
 
-## Learning Model (MVP)
-Learning is transparent rule adaptation, not model retraining:
-- glossary terms,
-- translation memory reuse,
-- user corrections,
-- style presets,
-- speaker profile updates,
-- quality scoring,
-- adaptation event logs.
+All tables include project linkage and timestamps; core records include confidence/status/provenance fields.
+
+## Runtime Modes
+- `Batch mode` (`app/runtime/batch_pipeline.py`) - working
+- `Near-real-time mode` (`app/runtime/realtime_pipeline.py`) - partial/foundation
+- `Session-time companion mode` (`app/runtime/session_pipeline.py`) - foundation on top of existing companion flow
+
+## End-to-End Data Flow (Current)
+1. Scan -> `scanned_files` + `asset_manifest`
+2. Extract -> `extracted_entries`
+3. Detect/understand -> `language_detections` + `content_units` + `scene_groups`
+4. Translate -> `translations` + `translation_backend_runs` + `translation_packages` + evidence
+5. Voice prep -> `voice_attempts` + `voice_sample_bank` + `audio_analysis_results` + `transcript_segments` + `sync_plans`
+6. Learning/evidence -> `correction_history`, `adaptation_events`, `evidence_records`, `external_reference_events`
+7. Reports/export -> `project_reports`, `quality_snapshots`, `export_jobs`
+
+## Honest Status
+- Working:
+  - existing MVP pipeline (scan/extract/detect/translate/voice/export)
+  - translation package persistence + evidence trail
+  - source registry persistence
+  - audio/sync prep data persistence
+  - new review-lab UI tabs with live data from storage
+- Partial:
+  - near-real-time architecture layer
+  - advanced backend adapters (`argos`, `transformers`, `local_nllb`, `cloud_adapter`) depending on local availability
+- Foundation only:
+  - plugin-style asset registry
+  - transcript and scene orchestration for broader media domains
+- Demo/fallback:
+  - voice synthesis (`mock_demo_tts_stub`)
+- Research-only:
+  - image text detection (candidate signals, no full OCR)
+  - video semantics (metadata-level only)
+

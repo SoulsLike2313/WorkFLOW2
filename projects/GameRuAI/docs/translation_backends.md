@@ -1,53 +1,46 @@
-﻿# Translation Backends
+# Translation Backends
 
-## Working Architecture
+## Working Core
 - Router: `app/translator/router.py`
-- Backends:
-  - `app/translator/local_mock_backend.py`
-  - `app/translator/dummy_backend.py`
-  - `app/translator/backends/argos_backend.py`
-  - `app/translator/backends/transformers_backend.py`
 - Orchestrator: `app/translator/realtime_orchestrator.py`
-- Context builder/model:
-  - `app/translator/context_builder.py`
-  - `app/core/context_models.py`
+- Context: `app/translator/context_builder.py`, `app/core/context_models.py`
+- Policy + evidence:
+  - `app/translator/translation_policies.py`
+  - `app/translator/evidence_router.py`
+  - `app/translator/reference_compare.py`
 
-## Backend Selection
-`TranslatorRouter.resolve(requested_backend)` returns active backend plus fallback metadata.
-If optional backend is unavailable, fallback is explicit and logged.
+## Available Adapters
+- `local_mock` - working default backend
+- `dummy` - safe fallback backend
+- `argos` - optional adapter (fallback if dependency missing)
+- `transformers` - optional adapter (fallback if dependency missing)
+- `local_nllb` - foundation adapter (dependency-gated)
+- `cloud_adapter` - foundation adapter (env-gated, disabled by default)
+- `policy_auto` (UI mode) - chooses backend by policy, still fallback-safe
 
-## Persisted Transparency Data
-Per translation/backend run:
-- requested backend
-- active backend
-- fallback flag and fallback backend
-- latency
-- context-used flag
-- TM/glossary usage
-- quality/uncertainty
+## Translation Package Architecture
+Each line can be stored as `translation_packages` with:
+- source text/language
+- context summary
+- chosen backend + fallback flag
+- glossary/TM hits
+- alternatives (policy candidates)
+- quality/confidence
+- warnings
+- final translation
+- reference compare payload (when available)
 
-Tables:
+## Transparency
+Persisted tables:
 - `translations`
 - `translation_backend_runs`
-- `backend_diagnostics` (aggregated report view)
-
-## Diagnostics and Metrics
-Reports layer calculates:
-- backend usage distribution
-- avg/min/max/p95 latency
-- fallback rate
-- context usage rate
-- glossary hit rate
-- TM hit rate
-- uncertain language rate
-- low-quality translation counts
-
-UI:
-- `Translation` tab (line-level transparency)
-- `Reports` tab (project translation metrics)
-- `Diagnostics` tab (backend aggregated diagnostics)
+- `translation_packages`
+- `external_reference_events`
+- `evidence_records`
 
 ## Honest Status
-- `local_mock`/`dummy` are primary local demo backends.
-- `argos`/`transformers` are optional adapters and may fallback if dependencies are missing.
-- No production-grade MT claims in this MVP.
+- Working: local mock pipeline with full transparency and package persistence.
+- Partial: optional advanced adapters depending on local environment.
+- Foundation only: cloud/local-nllb adapters as extensible interfaces.
+- No production MT claim.
+

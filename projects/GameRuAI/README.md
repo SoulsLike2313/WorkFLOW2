@@ -37,11 +37,27 @@ Current MVP includes translation + learning loop, companion mode, asset research
   - translation metrics and backend diagnostics
   - language distribution and uncertainty report
   - voice/QA/companion quality summaries
+- Multimodal Core (new):
+  - Asset Intelligence Core (`asset_manifest`, media grouping, relevance, container suspicion)
+  - Content Understanding Core (`content_units`, scene groups, speaker/subtitle/emotion hints)
+  - Translation Package Core (`translation_packages`, backend policy routing, evidence package per line)
+  - Speech & Voice Analysis Foundation (`audio_analysis_results`, transcript segments, source-vs-generated compare)
+  - Sync-Aware Planning (`sync_plans`, subtitle/audio fit and rebuild risk)
+  - Evidence & Learning Core (`evidence_records`, correction/evidence trail, confidence tracking)
+  - Source-of-Truth Manager (`knowledge_sources`, source versions/status/health)
+  - Product Review Labs in UI:
+    - `Language Intelligence`
+    - `Audio Analysis Lab`
+    - `Evidence Review`
+    - `Sync Review`
 
 ## Honest Status
 - Voice synthesis in current MVP is `mock_demo_tts_stub` (demo/mock preparation layer).
 - Reports are based on actual stored pipeline data.
 - No production-grade dubbing claims.
+- Image-text and video understanding are currently foundation/research-only (candidate detection + metadata).
+- `cloud_adapter` and `local_nllb` backends are adapter foundations with graceful fallback; local mock remains the default working backend.
+- Real-time full streaming is not implemented; current modes are batch + near-real-time/session foundations.
 
 ## Install
 ```powershell
@@ -70,6 +86,9 @@ python -m app.main
 2. Run `Scan` (or one-click `Run Full Demo Pipeline`).
 3. Check top `Project HUD` for current stage and next action.
 4. Open `Language Hub` for language map, queue, uncertain lines, and localization stress.
+5. Open `Language Intelligence` for content-unit level language visibility and bottlenecks.
+6. Open `Evidence Review` to inspect translation packages, reference checks, and decision trail.
+7. Open `Audio Analysis Lab` and `Sync Review` to inspect prep-layer audio/sync evidence.
 
 ## Reports And Diagnostics UI
 1. Open `Reports` tab -> click `Generate Reports`.
