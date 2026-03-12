@@ -36,6 +36,19 @@ Top-level purpose:
 - `workspace_config/`: machine-readable workspace governance and templates.
 - `runtime/`: generated runtime and diagnostics artifacts.
 
+## Task Governance Layer
+
+Strict machine task governance is defined in:
+
+- `workspace_config/TASK_RULES.md`
+- `workspace_config/task_manifest.schema.json`
+- `workspace_config/AGENT_EXECUTION_POLICY.md`
+- `workspace_config/MACHINE_REPO_READING_RULES.md`
+
+Acceptance gate:
+
+- no strict parameters -> no task acceptance.
+
 ## Project Priority and Status
 
 Status source of truth:

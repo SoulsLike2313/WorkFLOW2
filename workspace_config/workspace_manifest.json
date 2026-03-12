@@ -23,6 +23,14 @@
     "scripts_root": "scripts",
     "runtime_root": "runtime"
   },
+  "task_governance": {
+    "strict_task_acceptance": true,
+    "no_strict_parameters_no_acceptance": true,
+    "task_rules_path": "workspace_config/TASK_RULES.md",
+    "task_manifest_schema_path": "workspace_config/task_manifest.schema.json",
+    "agent_execution_policy_path": "workspace_config/AGENT_EXECUTION_POLICY.md",
+    "machine_repo_reading_rules_path": "workspace_config/MACHINE_REPO_READING_RULES.md"
+  },
   "isolation_policy": {
     "strict_isolation_required": true,
     "allow_silent_fallback": false,

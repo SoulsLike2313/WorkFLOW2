@@ -123,3 +123,13 @@ Workspace validation must fail if:
 - Root README is workspace map.
 - Project README is project-level source of truth.
 - Manifests are authoritative machine-readable contracts.
+
+## Task governance policy
+1. Task intake is governed by:
+   - `workspace_config/TASK_RULES.md`
+   - `workspace_config/task_manifest.schema.json`
+   - `workspace_config/AGENT_EXECUTION_POLICY.md`
+   - `workspace_config/MACHINE_REPO_READING_RULES.md`
+2. Tasks without strict parameters are not accepted.
+3. Cross-project or cross-module edits are forbidden unless explicitly declared in task scope.
+4. Output must match declared task artifacts only.

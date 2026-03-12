@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "workspace_config/task_manifest.schema.json",
+  "title": "Codex Task Manifest",
+  "description": "Strict machine-readable task contract for scoped repository work.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "task_type",
+    "target_scope",
+    "target_projects",
+    "target_modules",
+    "allowed_paths",
+    "forbidden_paths",
+    "expected_outputs",
+    "acceptance_criteria",
+    "validation_steps",
+    "post_conditions",
+    "notes"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,120}$",
+      "description": "Stable unique identifier for the task."
+    },
+    "task_type": {
+      "type": "string",
+      "enum": [
+        "build",
+        "audit",
+        "validate",
+        "integrate",
+        "remove",
+        "report"
+      ],
+      "description": "Execution mode. Must be explicit."
+    },
+    "target_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "level",
+        "selector",
+        "exact_goal"
+      ],
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": [
+            "workspace",
+            "project",
+            "module",
+            "path",
+            "file"
+          ]
+        },
+        "selector": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Exact target identifier (slug/module/path/file)."
+        },
+        "exact_goal": {
+          "type": "string",
+          "minLength": 10
+        }
+      }
+    },
+    "target_projects": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Allowed project slugs for modification."
+    },
+    "target_modules": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Allowed module identifiers for modification."
+    },
+    "allowed_paths": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^(?![A-Za-z]:\\\\)(?!/).+"
+      }
+    },
+    "forbidden_paths": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^(?![A-Za-z]:\\\\)(?!/).+"
+      }
+    },
+    "expected_outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "kind",
+          "required"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^(?![A-Za-z]:\\\\)(?!/).+"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "file",
+              "folder",
+              "manifest",
+              "report",
+              "runtime_artifact",
+              "other"
+            ]
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "json",
+              "md",
+              "txt",
+              "yaml",
+              "csv",
+              "png",
+              "other"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 5
+      }
+    },
+    "validation_steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "command",
+          "success_condition"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "command": {
+            "type": "string",
+            "minLength": 1
+          },
+          "success_condition": {
+            "type": "string",
+            "minLength": 3
+          }
+        }
+      }
+    },
+    "post_conditions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 5
+      }
+    },
+    "notes": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "do_not_do": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 3
+      },
+      "description": "Explicit forbidden actions for this task."
+    },
+    "ambiguities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Unresolved ambiguities explicitly tracked during execution."
+    }
+  }
+}

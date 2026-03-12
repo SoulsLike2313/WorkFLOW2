@@ -2,17 +2,21 @@
 
 ## Mandatory startup order
 1. Read `workspace_config/workspace_manifest.json`.
-2. Run `python scripts/validate_workspace.py`.
-3. Resolve `active_project` from workspace manifest.
-4. Read active `PROJECT_MANIFEST.json`.
-5. Read active project `README.md` and `CODEX.md`.
-6. Run active verification entrypoint before manual test claims.
-7. Run startup preflight for the project before launch commands.
+2. Read `workspace_config/MACHINE_REPO_READING_RULES.md`.
+3. Read `workspace_config/TASK_RULES.md`.
+4. Read `workspace_config/AGENT_EXECUTION_POLICY.md`.
+5. Run `python scripts/validate_workspace.py`.
+6. Resolve `active_project` from workspace manifest.
+7. Read active `PROJECT_MANIFEST.json`.
+8. Read active project `README.md` and `CODEX.md`.
+9. Run active verification entrypoint before manual test claims.
+10. Run startup preflight for the project before launch commands.
 
 ## Active project policy
 - Analyze active project first.
 - Legacy/archived projects are touched only on explicit user request.
 - Do not infer project scope from folder names; use manifests.
+- Do not accept broad tasks without strict scope parameters.
 
 ## Bootstrap command
 ```powershell
