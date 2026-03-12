@@ -1,7 +1,7 @@
 # Machine Readability Audit
 
-- run_id: `full-platform-audit-20260312T221421Z`
-- generated_at_utc: `2026-03-12T22:14:21.535248+00:00`
+- run_id: `full-platform-audit-20260312T221721Z`
+- generated_at_utc: `2026-03-12T22:17:21.943491+00:00`
 - status: `PASS`
 
 ## Required Platform Files

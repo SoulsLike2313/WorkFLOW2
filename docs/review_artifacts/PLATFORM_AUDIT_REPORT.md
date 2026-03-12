@@ -1,7 +1,7 @@
 # Platform Audit Report
 
-- run_id: `full-platform-audit-20260312T221421Z`
-- generated_at_utc: `2026-03-12T22:14:21.535248+00:00`
+- run_id: `full-platform-audit-20260312T221721Z`
+- generated_at_utc: `2026-03-12T22:17:21.943491+00:00`
 - audited_projects: `tiktok_agent_platform, game_ru_ai`
 - checked_shared_systems: `ui_qa_toolkit, verification_toolkit, reporting_toolkit, localization_toolkit, audit_observability_toolkit, update_patch_toolkit, security_baseline`
 - overall_status: `FAIL`
@@ -11,7 +11,7 @@
 | section | status | evidence_path_or_run |
 |---|---|---|
 | `workspace_governance` | PASS | `workspace_config/workspace_manifest.json` |
-| `github_sync_policy` | FAIL | `runtime/repo_sync_checks/repo-sync-20260312T215553Z.json/repo_sync_summary.json` |
+| `github_sync_policy` | PASS_WITH_WARNINGS | `runtime/repo_sync_checks/repo-sync-20260312T215553Z.json` |
 | `machine_readability` | PASS | `workspace_config/workspace_manifest.json` |
 | `shared_systems_registry` | PASS | `workspace_config/shared_systems_registry.json` |
 | `install_remove_architecture` | PASS | `scripts/install_system.py; scripts/remove_system.py` |
@@ -28,7 +28,7 @@
 ## Run References
 
 - workspace_validate_run: `workspace-validate-20260312T215553Z`
-- repo_sync_run: `missing`
+- repo_sync_run: `repo-sync-20260312T215553Z`
 - module_install_remove_run: `module-library-hardening-20260312T215356Z`
 - tiktok_readiness_run: `tiktok_agent_platform-startup-20260312T215753Z`
 - tiktok_verification_run: `verify-20260312T215801Z`
