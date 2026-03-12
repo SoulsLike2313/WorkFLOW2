@@ -1,0 +1,88 @@
+{
+  "run_id": "shared-systems-check-20260312T175132Z",
+  "timestamp": "2026-03-12T17:51:32.316306+00:00",
+  "workspace_manifest": "workspace_config/workspace_manifest.json",
+  "codex_manifest": "workspace_config/codex_manifest.json",
+  "shared_registry": "workspace_config/shared_systems_registry.json",
+  "projects": {
+    "tiktok_agent_platform": {
+      "output_dir": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z",
+      "verification_run_id": "verify-20260312T170537Z",
+      "verification_status": "PASS",
+      "readiness_run_id": "tiktok_agent_platform-startup-20260312T170554Z",
+      "readiness_status": "READY",
+      "ui_run_id": "20260312_200601",
+      "ui_status": "PASS",
+      "ui_run_dir": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/ui_validation/validate_20260312_200601",
+      "required_files": {
+        "verification_summary.json": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/verification_summary.json",
+        "verification_summary.md": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/verification_summary.md",
+        "readiness_summary.json": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/readiness_summary.json",
+        "consolidated_status.json": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/consolidated_status.json",
+        "diagnostics_manifest.json": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/diagnostics_manifest.json",
+        "test_results.json": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/test_results.json",
+        "ui_validation_summary.json": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/ui_validation_summary.json",
+        "ui_validation_summary.md": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/ui_validation_summary.md",
+        "ui_screenshots_manifest.json": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/ui_screenshots_manifest.json"
+      },
+      "extra_files": {
+        "localization_check_summary.json": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/localization_check_summary.json",
+        "reporting_checks_summary.json": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/reporting_checks_summary.json",
+        "audit_diagnostics_summary.json": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/audit_diagnostics_summary.json",
+        "install_remove_summary.json": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/install_remove_summary.json",
+        "manifest_integrity_summary.json": "runtime/projects/tiktok_agent_platform/shared_systems_checks/shared-systems-check-20260312T175132Z/manifest_integrity_summary.json"
+      }
+    },
+    "game_ru_ai": {
+      "output_dir": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z",
+      "verification_run_id": "verify-game_ru_ai-20260312T175132Z",
+      "verification_status": "PASS",
+      "readiness_run_id": "game_ru_ai-startup-20260312T174820Z",
+      "readiness_status": "READY",
+      "ui_run_id": "20260312_173011",
+      "ui_status": "PASS_WITH_WARNINGS",
+      "ui_run_dir": "projects/GameRuAI/runtime/ui_validation/validate_20260312_173011",
+      "required_files": {
+        "verification_summary.json": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/verification_summary.json",
+        "verification_summary.md": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/verification_summary.md",
+        "readiness_summary.json": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/readiness_summary.json",
+        "consolidated_status.json": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/consolidated_status.json",
+        "diagnostics_manifest.json": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/diagnostics_manifest.json",
+        "test_results.json": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/test_results.json",
+        "ui_validation_summary.json": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/ui_validation_summary.json",
+        "ui_validation_summary.md": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/ui_validation_summary.md",
+        "ui_screenshots_manifest.json": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/ui_screenshots_manifest.json"
+      },
+      "extra_files": {
+        "localization_check_summary.json": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/localization_check_summary.json",
+        "reporting_checks_summary.json": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/reporting_checks_summary.json",
+        "audit_diagnostics_summary.json": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/audit_diagnostics_summary.json",
+        "install_remove_summary.json": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/install_remove_summary.json",
+        "manifest_integrity_summary.json": "runtime/projects/game_ru_ai/shared_systems_checks/shared-systems-check-20260312T175132Z/manifest_integrity_summary.json"
+      }
+    }
+  },
+  "systems_catalog": [
+    "ui_qa_toolkit",
+    "verification_toolkit",
+    "reporting_toolkit",
+    "localization_toolkit",
+    "audit_observability_toolkit",
+    "update_patch_toolkit",
+    "security_baseline"
+  ],
+  "required_systems": [
+    "ui_qa_toolkit",
+    "verification_toolkit",
+    "reporting_toolkit",
+    "localization_toolkit",
+    "audit_observability_toolkit"
+  ],
+  "library_status": "PASS",
+  "notes": {
+    "tiktok_project_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform",
+    "russifier_project_path": "projects/GameRuAI",
+    "ui_checks_reused_existing_runs": true,
+    "heavy_reruns_avoided_when_artifacts_existed": true
+  }
+}
