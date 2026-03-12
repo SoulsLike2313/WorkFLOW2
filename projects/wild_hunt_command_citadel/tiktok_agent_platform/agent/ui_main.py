@@ -1751,11 +1751,11 @@ class MainWindow(QMainWindow):
         return box
 
     def _default_core_root(self) -> Path:
-        current_app_root = Path(__file__).resolve().parents[1]
-        sibling_core = current_app_root / "shortform_core"
+        agent_root = Path(__file__).resolve().parents[1]
+        sibling_core = agent_root.parent / "core"
         if sibling_core.exists():
             return sibling_core
-        legacy_core = Path(__file__).resolve().parents[2] / "active_projects" / "shortform_core"
+        legacy_core = Path(__file__).resolve().parents[1] / "shortform_core"
         return legacy_core
 
     def _build_core_box(self) -> QGroupBox:
@@ -1768,7 +1768,7 @@ class MainWindow(QMainWindow):
         layout.setColumnStretch(1, 1)
 
         self.core_root_input = QLineEdit(str(self.core_root))
-        self.core_root_input.setPlaceholderText("Путь к корню shortform_core")
+        self.core_root_input.setPlaceholderText("Путь к корню core layer")
         root_pick_button = QPushButton("Папка")
         root_pick_button.clicked.connect(self._pick_core_root)
         layout.addWidget(QLabel("Корень core:"), 0, 0)

@@ -1,0 +1,118 @@
+{
+  "schema_version": "2.1.0",
+  "name": "TikTok Agent Platform",
+  "slug": "tiktok_agent_platform",
+  "description": "Unified TikTok agent product with a core intelligence/runtime layer and an agent application layer in one project.",
+  "status": "active",
+  "category": "platform_core",
+  "type": "desktop_app",
+  "priority": 1,
+  "root_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform",
+  "readme_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/README.md",
+  "runtime_namespace": "tiktok_agent_platform",
+  "port_range": {
+    "start": 8000,
+    "end": 8399
+  },
+  "port_mode_default": "fixed",
+  "service_ports": {
+    "api_port": 8000,
+    "ui_bridge_port": 8310,
+    "update_port": 8020,
+    "health_port": 8030
+  },
+  "runtime_paths": {
+    "runtime_dir": "runtime/projects/tiktok_agent_platform",
+    "log_dir": "runtime/projects/tiktok_agent_platform/logs",
+    "data_dir": "runtime/projects/tiktok_agent_platform/data",
+    "cache_dir": "runtime/projects/tiktok_agent_platform/cache",
+    "temp_dir": "runtime/projects/tiktok_agent_platform/temp",
+    "diagnostics_dir": "runtime/projects/tiktok_agent_platform/diagnostics",
+    "update_artifacts_dir": "runtime/projects/tiktok_agent_platform/update_artifacts",
+    "verification_dir": "runtime/projects/tiktok_agent_platform/verification"
+  },
+  "state_paths": {
+    "db_path": "runtime/projects/tiktok_agent_platform/db/tiktok_agent_platform.db",
+    "state_path": "runtime/projects/tiktok_agent_platform/state/runtime_state.json"
+  },
+  "health_path": "/workspace/health",
+  "env_overrides": {
+    "SFCO_PROJECT_ROOT": "{project_root}/core",
+    "SFCO_API_HOST": "127.0.0.1",
+    "SFCO_API_PORT": "{service_ports.api_port}",
+    "SFCO_LOGS_DIR": "{project_root}/core/runtime/logs",
+    "SFCO_OUTPUT_DIR": "{project_root}/core/runtime/output",
+    "SFCO_VERIFICATION_DIR": "{project_root}/core/runtime/verification",
+    "SFCO_PATCH_DIR": "{project_root}/core/runtime/patches",
+    "SFCO_DATABASE_PATH": "{project_root}/core/runtime/shortform_core.db",
+    "SFCO_WORKSPACE_STATE_PATH": "{project_root}/core/runtime/workspace_state.db",
+    "SFCO_TIKTOK_SNAPSHOT_DIR": "{project_root}/core/external_data/tiktok_automation_snapshot",
+    "TIKTOK_AUTOMATION_RUNTIME_DIR": "{project_root}/agent/runtime",
+    "TIKTOK_AUTOMATION_LOG_DIR": "{project_root}/agent/runtime/logs",
+    "TIKTOK_AUTOMATION_DATA_DIR": "{project_root}/agent/runtime/data",
+    "TIKTOK_AUTOMATION_CACHE_DIR": "{project_root}/agent/runtime/cache",
+    "TIKTOK_AUTOMATION_TEMP_DIR": "{project_root}/agent/runtime/temp",
+    "TIKTOK_CORE_ROOT": "{project_root}/core"
+  },
+  "main_entrypoints": [
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode user -PortMode fixed",
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode developer -PortMode fixed",
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -PortMode fixed"
+  ],
+  "verification_entrypoints": [
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -PortMode fixed"
+  ],
+  "user_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode user -PortMode fixed",
+  "developer_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode developer -PortMode fixed",
+  "update_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode update -PortMode fixed -ManifestPath <manifest.json>",
+  "config_files": [
+    "core/CODEX.md",
+    "core/requirements.txt",
+    "agent/requirements.txt",
+    "agent/settings.py"
+  ],
+  "runtime_dirs": [
+    "runtime/projects/tiktok_agent_platform",
+    "runtime/projects/tiktok_agent_platform/logs",
+    "runtime/projects/tiktok_agent_platform/data",
+    "runtime/projects/tiktok_agent_platform/cache",
+    "runtime/projects/tiktok_agent_platform/temp",
+    "runtime/projects/tiktok_agent_platform/diagnostics",
+    "runtime/projects/tiktok_agent_platform/update_artifacts",
+    "runtime/projects/tiktok_agent_platform/verification",
+    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime",
+    "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/runtime"
+  ],
+  "log_dirs": [
+    "runtime/projects/tiktok_agent_platform/logs",
+    "runtime/projects/tiktok_agent_platform/diagnostics",
+    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/logs",
+    "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/runtime/logs"
+  ],
+  "data_dirs": [
+    "runtime/projects/tiktok_agent_platform/data",
+    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/external_data",
+    "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/runtime/data"
+  ],
+  "dependencies_file": "core/requirements.txt",
+  "owner": "workflow-core-team",
+  "maturity_level": "production_candidate",
+  "tags": [
+    "tiktok",
+    "agent",
+    "core-and-app",
+    "desktop",
+    "verification-gated"
+  ],
+  "product_layers": {
+    "core_layer_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core",
+    "agent_layer_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent",
+    "core_manifest_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/PROJECT_MANIFEST.json",
+    "agent_manifest_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/PROJECT_MANIFEST.json"
+  },
+  "notes": [
+    "This project consolidates former shortform_core and tiktok_automation_app into one product architecture.",
+    "Manual testing is allowed only when verification gate is PASS.",
+    "Core and agent layers are isolated as submodules but operated as one product project."
+  ]
+}
