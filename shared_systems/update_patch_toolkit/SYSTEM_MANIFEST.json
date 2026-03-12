@@ -1,0 +1,69 @@
+﻿{
+    "name":  "Update Patch Toolkit",
+    "slug":  "update_patch_toolkit",
+    "purpose":  "Reusable update and patch lifecycle controls",
+    "category":  "update_management",
+    "description":  "Provides update manifest patterns, patch bundle flow templates, post-update verification checks, and update audit summaries.",
+    "required_project_inputs":  [
+                                    "project_slug",
+                                    "project_manifest_path",
+                                    "project_root",
+                                    "project_type"
+                                ],
+    "optional_project_inputs":  [
+                                    "runtime_namespace",
+                                    "ui_entrypoint",
+                                    "reporting_dir",
+                                    "locale_config_path"
+                                ],
+    "files_to_create":  [
+                            "systems/update_patch_toolkit/README.md",
+                            "systems/update_patch_toolkit/config/system_config.json",
+                            "systems/update_patch_toolkit/validation/validation_contract.json"
+                        ],
+    "files_to_update":  [
+                            "PROJECT_MANIFEST.json:installed_systems",
+                            "PROJECT_MANIFEST.json:installed_system_status",
+                            "PROJECT_MANIFEST.json:install_history",
+                            "workspace_config/workspace_manifest.json:project_system_index",
+                            "workspace_config/shared_systems_registry.json:project_installations"
+                        ],
+    "runtime_outputs":  [
+                            "runtime/projects/{project_slug}/systems/update_patch_toolkit/install_summary.json",
+                            "runtime/projects/{project_slug}/systems/update_patch_toolkit/validation_summary.json"
+                        ],
+    "validation_entrypoints":  [
+                                   "python scripts/install_system.py --project-slug \u003cslug\u003e --system-slug update_patch_toolkit --dry-run",
+                                   "python scripts/remove_system.py --project-slug \u003cslug\u003e --system-slug update_patch_toolkit --dry-run"
+                               ],
+    "integration_steps":  [
+                              "Validate compatibility against supported_project_types for update_patch_toolkit",
+                              "Create project integration root under systems/\u003csystem_slug\u003e",
+                              "Attach templates/examples/validation assets into project integration root",
+                              "Update project and workspace manifests with installed system state",
+                              "Execute post-install checks and persist install summary"
+                          ],
+    "post_install_checks":  [
+                                "integration_root_exists",
+                                "project_manifest_contains_installed_slug",
+                                "workspace_project_system_index_updated",
+                                "install_summary_written"
+                            ],
+    "uninstall_steps":  [
+                            "Validate system is currently installed in target project",
+                            "Remove project integration root for system slug",
+                            "Detach slug from project installed_systems and status maps",
+                            "Update workspace and shared registry installation state",
+                            "Execute post-remove checks and persist remove summary"
+                        ],
+    "notes":  [
+                  "Installed through workspace-level install/remove scripts only.",
+                  "Manual file copy without manifest updates is not valid integration."
+              ],
+    "maturity_level":  "partial",
+    "supported_project_types":  [
+                                    "desktop_app",
+                                    "backend_service",
+                                    "tool"
+                                ]
+}

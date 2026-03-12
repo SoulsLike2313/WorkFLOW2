@@ -1,0 +1,10 @@
+﻿{
+    "module_slug":  "verification_toolkit",
+    "required_checks":  [
+                            "integration_root_exists",
+                            "project_manifest_contains_slug",
+                            "workspace_registry_updated"
+                        ],
+    "post_install_required":  true,
+    "post_remove_required":  true
+}

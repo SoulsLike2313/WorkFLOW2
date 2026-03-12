@@ -1,0 +1,90 @@
+﻿{
+    "schema_version":  "1.0.0",
+    "shared_systems_root":  "shared_systems",
+    "install_workflow":  {
+                             "script":  "scripts/install_system.py",
+                             "mode":  "machine_enforced"
+                         },
+    "remove_workflow":  {
+                            "script":  "scripts/remove_system.py",
+                            "mode":  "machine_enforced"
+                        },
+    "systems":  [
+                    {
+                        "slug":  "ui_qa_toolkit",
+                        "name":  "UI QA Toolkit",
+                        "category":  "quality_assurance",
+                        "maturity_level":  "beta",
+                        "manifest_path":  "shared_systems/ui_qa_toolkit/SYSTEM_MANIFEST.json",
+                        "readme_path":  "shared_systems/ui_qa_toolkit/README.md",
+                        "integration_guide_path":  "shared_systems/ui_qa_toolkit/integration_guide.md",
+                        "status":  "available"
+                    },
+                    {
+                        "slug":  "verification_toolkit",
+                        "name":  "Verification Toolkit",
+                        "category":  "verification",
+                        "maturity_level":  "stable",
+                        "manifest_path":  "shared_systems/verification_toolkit/SYSTEM_MANIFEST.json",
+                        "readme_path":  "shared_systems/verification_toolkit/README.md",
+                        "integration_guide_path":  "shared_systems/verification_toolkit/integration_guide.md",
+                        "status":  "available"
+                    },
+                    {
+                        "slug":  "reporting_toolkit",
+                        "name":  "Reporting Toolkit",
+                        "category":  "reporting",
+                        "maturity_level":  "beta",
+                        "manifest_path":  "shared_systems/reporting_toolkit/SYSTEM_MANIFEST.json",
+                        "readme_path":  "shared_systems/reporting_toolkit/README.md",
+                        "integration_guide_path":  "shared_systems/reporting_toolkit/integration_guide.md",
+                        "status":  "available"
+                    },
+                    {
+                        "slug":  "localization_toolkit",
+                        "name":  "Localization Toolkit",
+                        "category":  "localization",
+                        "maturity_level":  "beta",
+                        "manifest_path":  "shared_systems/localization_toolkit/SYSTEM_MANIFEST.json",
+                        "readme_path":  "shared_systems/localization_toolkit/README.md",
+                        "integration_guide_path":  "shared_systems/localization_toolkit/integration_guide.md",
+                        "status":  "available"
+                    },
+                    {
+                        "slug":  "audit_observability_toolkit",
+                        "name":  "Audit Observability Toolkit",
+                        "category":  "observability",
+                        "maturity_level":  "beta",
+                        "manifest_path":  "shared_systems/audit_observability_toolkit/SYSTEM_MANIFEST.json",
+                        "readme_path":  "shared_systems/audit_observability_toolkit/README.md",
+                        "integration_guide_path":  "shared_systems/audit_observability_toolkit/integration_guide.md",
+                        "status":  "available"
+                    },
+                    {
+                        "slug":  "update_patch_toolkit",
+                        "name":  "Update Patch Toolkit",
+                        "category":  "update_management",
+                        "maturity_level":  "partial",
+                        "manifest_path":  "shared_systems/update_patch_toolkit/SYSTEM_MANIFEST.json",
+                        "readme_path":  "shared_systems/update_patch_toolkit/README.md",
+                        "integration_guide_path":  "shared_systems/update_patch_toolkit/integration_guide.md",
+                        "status":  "available"
+                    },
+                    {
+                        "slug":  "security_baseline",
+                        "name":  "Security Baseline",
+                        "category":  "security",
+                        "maturity_level":  "partial",
+                        "manifest_path":  "shared_systems/security_baseline/SYSTEM_MANIFEST.json",
+                        "readme_path":  "shared_systems/security_baseline/README.md",
+                        "integration_guide_path":  "shared_systems/security_baseline/integration_guide.md",
+                        "status":  "available"
+                    }
+                ],
+    "project_installations":  {
+
+                              },
+    "history":  [
+
+                ]
+}

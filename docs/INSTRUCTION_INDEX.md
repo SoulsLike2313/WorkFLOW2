@@ -35,6 +35,7 @@ If this order is not completed, task status is `REJECTED`.
 | `workspace_config/TASK_RULES.md` | Strict task acceptance gate | P0 | machine, codex, product reviewer |
 | `workspace_config/task_manifest.schema.json` | Machine-readable task manifest contract | P0 | machine, codex, developer |
 | `workspace_config/TASK_INTAKE_REFERENCE.md` | Intake validity criteria and refusal templates | P0 | machine, codex, developer, product reviewer |
+| `workspace_config/shared_systems_registry.json` | Shared module registry and project installation map | P0 | machine, codex, developer |
 | `workspace_config/AGENT_EXECUTION_POLICY.md` | Strict execution boundaries and anti-side-work rules | P0 | machine, codex, product reviewer |
 | `workspace_config/MACHINE_REPO_READING_RULES.md` | Deterministic repository reading policy | P0 | machine, codex |
 | `workspace_config/PROJECT_RULES.md` | Workspace project lifecycle and isolation standards | P1 | machine, codex, developer |
@@ -45,6 +46,9 @@ If this order is not completed, task status is `REJECTED`.
 | `projects/wild_hunt_command_citadel/tiktok_agent_platform/CODEX.md` | Active project execution contract | P2 | codex, developer |
 | `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/CODEX.md` | Core-layer execution and verification contract | P2 | codex, developer |
 | `workspace_config/templates/project_template/*.json` | New-project scaffold contracts | P2 | machine, developer |
+| `scripts/install_system.py` | Machine install workflow for shared systems | P2 | machine, codex, developer |
+| `scripts/remove_system.py` | Machine remove workflow for shared systems | P2 | machine, codex, developer |
+| `shared_systems/*/SYSTEM_MANIFEST.json` | Shared system source of truth per module | P2 | machine, codex, developer |
 | `docs/CHECKPOINT.md` | Historical checkpoint log | P3 | developer |
 | `docs/DEV_CONTINUITY.md` | Historical continuity note | P3 | developer |
 | `docs/review_artifacts/*.md` | Evidence and review outputs; not policy authority | P3 | product reviewer, developer |

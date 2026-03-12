@@ -31,6 +31,12 @@
     "agent_execution_policy_path": "workspace_config/AGENT_EXECUTION_POLICY.md",
     "machine_repo_reading_rules_path": "workspace_config/MACHINE_REPO_READING_RULES.md"
   },
+  "shared_systems": {
+    "root_path": "shared_systems",
+    "registry_path": "workspace_config/shared_systems_registry.json",
+    "install_script": "scripts/install_system.py",
+    "remove_script": "scripts/remove_system.py"
+  },
   "isolation_policy": {
     "strict_isolation_required": true,
     "allow_silent_fallback": false,
@@ -50,6 +56,8 @@
     "workspace_bootstrap": "powershell -ExecutionPolicy Bypass -File .\\scripts\\bootstrap_workspace.ps1",
     "workspace_validate": "python scripts/validate_workspace.py",
     "new_project_generator": "python scripts/new_project.py",
+    "install_system": "python scripts/install_system.py --project-slug <slug> --system-slug <system_slug>",
+    "remove_system": "python scripts/remove_system.py --project-slug <slug> --system-slug <system_slug>",
     "project_startup_prepare": "python scripts/project_startup.py prepare --project-slug <slug>",
     "project_startup_run_user": "python scripts/project_startup.py run --project-slug <slug> --entrypoint user --startup-kind user",
     "project_startup_run_developer": "python scripts/project_startup.py run --project-slug <slug> --entrypoint developer --startup-kind developer"
@@ -85,6 +93,7 @@
     "archived": [],
     "legacy": []
   },
+  "project_system_index": {},
   "project_registry": [
     {
       "slug": "tiktok_agent_platform",

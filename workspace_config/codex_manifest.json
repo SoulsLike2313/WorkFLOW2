@@ -46,6 +46,9 @@
     "task_rules_path": "workspace_config/TASK_RULES.md",
     "task_manifest_schema_path": "workspace_config/task_manifest.schema.json",
     "task_intake_reference_path": "workspace_config/TASK_INTAKE_REFERENCE.md",
+    "shared_systems_registry_path": "workspace_config/shared_systems_registry.json",
+    "install_workflow_script": "scripts/install_system.py",
+    "remove_workflow_script": "scripts/remove_system.py",
     "agent_execution_policy_path": "workspace_config/AGENT_EXECUTION_POLICY.md",
     "machine_repo_reading_rules_path": "workspace_config/MACHINE_REPO_READING_RULES.md",
     "refusal_format": [
@@ -80,10 +83,13 @@
     "workspace_config/TASK_INTAKE_REFERENCE.md",
     "workspace_config/AGENT_EXECUTION_POLICY.md",
     "workspace_config/MACHINE_REPO_READING_RULES.md",
+    "workspace_config/shared_systems_registry.json",
     "docs/INSTRUCTION_INDEX.md",
     "workspace_config/PROJECT_RULES.md",
     "scripts/bootstrap_workspace.ps1",
     "scripts/validate_workspace.py",
+    "scripts/install_system.py",
+    "scripts/remove_system.py",
     "scripts/new_project.py",
     "scripts/project_startup.py",
     "scripts/run_project.ps1"

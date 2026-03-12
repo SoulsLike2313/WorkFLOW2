@@ -32,6 +32,7 @@ Top-level purpose:
 
 - `docs/`: repository-level documentation and review artifacts.
 - `projects/`: project source roots.
+- `shared_systems/`: portable reusable system modules.
 - `scripts/`: workspace bootstrap, validation, startup, and utility scripts.
 - `workspace_config/`: machine-readable workspace governance and templates.
 - `runtime/`: generated runtime and diagnostics artifacts.
@@ -45,6 +46,7 @@ Strict machine task governance is defined in:
 - `workspace_config/TASK_INTAKE_REFERENCE.md`
 - `workspace_config/AGENT_EXECUTION_POLICY.md`
 - `workspace_config/MACHINE_REPO_READING_RULES.md`
+- `workspace_config/shared_systems_registry.json`
 
 Acceptance gate:
 
@@ -64,6 +66,11 @@ Mandatory pre-task read gate:
 9. relevant project `README.md`
 10. relevant `CODEX.md` if present
 11. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+
+Shared system workflows:
+
+- install: `python scripts/install_system.py --project-slug <slug> --system-slug <system_slug>`
+- remove: `python scripts/remove_system.py --project-slug <slug> --system-slug <system_slug>`
 
 ## Project Priority and Status
 

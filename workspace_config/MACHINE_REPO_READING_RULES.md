@@ -70,6 +70,7 @@ Do not infer installed systems from folder names only.
 2. Codex manifest: `workspace_config/codex_manifest.json`
 3. Project manifests: `projects/**/PROJECT_MANIFEST.json`
 4. System manifests: `shared_systems/**/SYSTEM_MANIFEST.json`
+5. Shared systems registry: `workspace_config/shared_systems_registry.json`
 
 ## Rule 8: Verification Entrypoint Detection
 
