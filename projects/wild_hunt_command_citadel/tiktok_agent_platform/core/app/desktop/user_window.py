@@ -496,7 +496,7 @@ class UserWorkspaceWindow(QMainWindow):
 
         runtime_config = {
             "mode": "user",
-            "db_path": _safe_dict(root_health).get("database_path", "runtime/shortform_core.db"),
+            "db_path": _safe_dict(root_health).get("database_path", "runtime/tiktok_agent_platform_core.db"),
             "logs_dir": "runtime/logs",
             "data_dir": "runtime",
         }

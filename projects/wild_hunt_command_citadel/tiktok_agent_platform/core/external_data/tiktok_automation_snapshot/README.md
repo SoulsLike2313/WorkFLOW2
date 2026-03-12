@@ -12,7 +12,7 @@
 
 ## Установка
 ```powershell
-cd E:\CVVCODEX\tiktok_automation_app
+cd E:\CVVCODEX\projects\wild_hunt_command_citadel\tiktok_agent_platform\agent
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
@@ -21,7 +21,7 @@ python -m playwright install chromium
 
 ## Запуск
 ```powershell
-cd E:\CVVCODEX\tiktok_automation_app
+cd E:\CVVCODEX\projects\wild_hunt_command_citadel\tiktok_agent_platform\agent
 .venv\Scripts\Activate.ps1
 python app.py
 ```

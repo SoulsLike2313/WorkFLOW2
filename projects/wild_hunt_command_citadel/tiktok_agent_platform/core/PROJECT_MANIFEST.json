@@ -50,14 +50,14 @@
   "main_entrypoints": [
     "powershell -ExecutionPolicy Bypass -File .\\run_user.ps1 -PortMode fixed",
     "powershell -ExecutionPolicy Bypass -File .\\run_developer.ps1 -PortMode fixed",
-    "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1 -Mode check -PortMode fixed -ManifestPath <manifest.json>"
+    "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1 -Mode check -PortMode fixed"
   ],
   "verification_entrypoints": [
     "python -m app.verify"
   ],
   "user_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_user.ps1 -PortMode fixed",
   "developer_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_developer.ps1 -PortMode fixed",
-  "update_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1 -Mode check -PortMode fixed -ManifestPath <manifest.json>",
+  "update_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1 -Mode check -PortMode fixed",
   "config_files": [
     "CODEX.md",
     "PROMPT_FOR_CODEX.txt",

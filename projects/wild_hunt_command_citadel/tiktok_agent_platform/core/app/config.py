@@ -49,7 +49,7 @@ class StorageConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     project_root: Path = PROJECT_ROOT
-    database_path: Path = PROJECT_ROOT / "runtime" / "shortform_core.db"
+    database_path: Path = PROJECT_ROOT / "runtime" / "tiktok_agent_platform_core.db"
     workspace_state_path: Path = PROJECT_ROOT / "runtime" / "workspace_state.db"
     output_dir: Path = PROJECT_ROOT / "runtime" / "output"
     logs_dir: Path = PROJECT_ROOT / "runtime" / "logs"
@@ -127,7 +127,7 @@ def load_config(env: Mapping[str, str] | None = None) -> AppConfig:
 
     storage = StorageConfig(
         project_root=_env_path(source, "SFCO_PROJECT_ROOT", PROJECT_ROOT),
-        database_path=_env_path(source, "SFCO_DATABASE_PATH", PROJECT_ROOT / "runtime" / "shortform_core.db"),
+        database_path=_env_path(source, "SFCO_DATABASE_PATH", PROJECT_ROOT / "runtime" / "tiktok_agent_platform_core.db"),
         workspace_state_path=_env_path(source, "SFCO_WORKSPACE_STATE_PATH", PROJECT_ROOT / "runtime" / "workspace_state.db"),
         output_dir=_env_path(source, "SFCO_OUTPUT_DIR", PROJECT_ROOT / "runtime" / "output"),
         logs_dir=_env_path(source, "SFCO_LOGS_DIR", PROJECT_ROOT / "runtime" / "logs"),

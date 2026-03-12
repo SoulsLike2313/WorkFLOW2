@@ -1755,8 +1755,10 @@ class MainWindow(QMainWindow):
         sibling_core = agent_root.parent / "core"
         if sibling_core.exists():
             return sibling_core
-        legacy_core = Path(__file__).resolve().parents[1] / "shortform_core"
-        return legacy_core
+        legacy_core = agent_root.parent.parent / "shortform_core"
+        if legacy_core.exists():
+            return legacy_core
+        return sibling_core
 
     def _build_core_box(self) -> QGroupBox:
         box = QGroupBox("AI / Core Integration")
@@ -2235,7 +2237,7 @@ class MainWindow(QMainWindow):
             self.output_dir_input.setText(path)
 
     def _pick_core_root(self) -> None:
-        path = QFileDialog.getExistingDirectory(self, "Выбрать папку shortform_core", str(self.core_root))
+        path = QFileDialog.getExistingDirectory(self, "Выбрать папку core layer", str(self.core_root))
         if path:
             self.core_root_input.setText(path)
 

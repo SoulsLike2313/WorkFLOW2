@@ -71,7 +71,13 @@ powershell -ExecutionPolicy Bypass -File .\run_project.ps1 -Mode verify -PortMod
 Update/patch flow (core layer):
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\run_project.ps1 -Mode update -PortMode fixed -ManifestPath <manifest.json>
+powershell -ExecutionPolicy Bypass -File .\run_project.ps1 -Mode update -PortMode fixed
+```
+
+Optional:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run_project.ps1 -Mode update -PortMode fixed -ManifestPath .\path\to\manifest.json
 ```
 
 ## Layer-Specific Modes

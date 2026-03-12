@@ -44,7 +44,7 @@
     "SFCO_OUTPUT_DIR": "{project_root}/core/runtime/output",
     "SFCO_VERIFICATION_DIR": "{project_root}/core/runtime/verification",
     "SFCO_PATCH_DIR": "{project_root}/core/runtime/patches",
-    "SFCO_DATABASE_PATH": "{project_root}/core/runtime/shortform_core.db",
+    "SFCO_DATABASE_PATH": "{project_root}/core/runtime/tiktok_agent_platform_core.db",
     "SFCO_WORKSPACE_STATE_PATH": "{project_root}/core/runtime/workspace_state.db",
     "SFCO_TIKTOK_SNAPSHOT_DIR": "{project_root}/core/external_data/tiktok_automation_snapshot",
     "TIKTOK_AUTOMATION_RUNTIME_DIR": "{project_root}/agent/runtime",
@@ -64,7 +64,7 @@
   ],
   "user_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode user -PortMode fixed",
   "developer_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode developer -PortMode fixed",
-  "update_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode update -PortMode fixed -ManifestPath <manifest.json>",
+  "update_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode update -PortMode fixed",
   "config_files": [
     "core/CODEX.md",
     "core/requirements.txt",

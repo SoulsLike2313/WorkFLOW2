@@ -6,7 +6,7 @@ pythonwPath = scriptDir & "\.venv\Scripts\pythonw.exe"
 appPath = scriptDir & "\app.py"
 
 If Not fso.FileExists(pythonwPath) Then
-    MsgBox "Virtual environment not found. Run setup first in tiktok_automation_app.", 48, "Missing .venv"
+    MsgBox "Virtual environment not found. Run setup first in tiktok_agent_platform\\agent.", 48, "Missing .venv"
     WScript.Quit 1
 End If
 
