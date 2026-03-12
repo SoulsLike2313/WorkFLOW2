@@ -38,6 +38,8 @@ If this order is not completed, task status is `REJECTED`.
 | `workspace_config/shared_systems_registry.json` | Shared module registry and project installation map | P0 | machine, codex, developer |
 | `workspace_config/AGENT_EXECUTION_POLICY.md` | Strict execution boundaries and anti-side-work rules | P0 | machine, codex, product reviewer |
 | `workspace_config/MACHINE_REPO_READING_RULES.md` | Deterministic repository reading policy | P0 | machine, codex |
+| `workspace_config/GITHUB_SYNC_POLICY.md` | GitHub visibility and sync completion policy | P0 | machine, codex, product reviewer |
+| `workspace_config/COMPLETION_GATE_RULES.md` | Hard completion gate for commit/push/repo-visible outputs | P0 | machine, codex, product reviewer |
 | `workspace_config/PROJECT_RULES.md` | Workspace project lifecycle and isolation standards | P1 | machine, codex, developer |
 | `workspace_config/codex_bootstrap.md` | Bootstrap sequence for execution startup | P1 | codex, developer |
 | `workspace_config/UI_BUILD_RULES.md` | Workspace-level UI constraints (requires normalization) | P1 | codex, developer |
@@ -48,6 +50,7 @@ If this order is not completed, task status is `REJECTED`.
 | `workspace_config/templates/project_template/*.json` | New-project scaffold contracts | P2 | machine, developer |
 | `scripts/install_system.py` | Machine install workflow for shared systems | P2 | machine, codex, developer |
 | `scripts/remove_system.py` | Machine remove workflow for shared systems | P2 | machine, codex, developer |
+| `scripts/check_repo_sync.py` | Machine repo sync gate (branch/head/push/path visibility) | P2 | machine, codex, developer |
 | `shared_systems/*/SYSTEM_MANIFEST.json` | Shared system source of truth per module | P2 | machine, codex, developer |
 | `docs/CHECKPOINT.md` | Historical checkpoint log | P3 | developer |
 | `docs/DEV_CONTINUITY.md` | Historical continuity note | P3 | developer |

@@ -29,7 +29,9 @@
     "task_rules_path": "workspace_config/TASK_RULES.md",
     "task_manifest_schema_path": "workspace_config/task_manifest.schema.json",
     "agent_execution_policy_path": "workspace_config/AGENT_EXECUTION_POLICY.md",
-    "machine_repo_reading_rules_path": "workspace_config/MACHINE_REPO_READING_RULES.md"
+    "machine_repo_reading_rules_path": "workspace_config/MACHINE_REPO_READING_RULES.md",
+    "github_sync_policy_path": "workspace_config/GITHUB_SYNC_POLICY.md",
+    "completion_gate_rules_path": "workspace_config/COMPLETION_GATE_RULES.md"
   },
   "shared_systems": {
     "root_path": "shared_systems",
@@ -60,12 +62,14 @@
     "remove_system": "python scripts/remove_system.py --project-slug <slug> --system-slug <system_slug>",
     "project_startup_prepare": "python scripts/project_startup.py prepare --project-slug <slug>",
     "project_startup_run_user": "python scripts/project_startup.py run --project-slug <slug> --entrypoint user --startup-kind user",
-    "project_startup_run_developer": "python scripts/project_startup.py run --project-slug <slug> --entrypoint developer --startup-kind developer"
+    "project_startup_run_developer": "python scripts/project_startup.py run --project-slug <slug> --entrypoint developer --startup-kind developer",
+    "repo_sync_check": "python scripts/check_repo_sync.py --remote origin --branch main"
   },
   "verification_entrypoints": {
     "active_project_verify": "python -m app.verify",
     "workspace_validate": "python scripts/validate_workspace.py",
-    "repo_sync_check": "powershell -ExecutionPolicy Bypass -File .\\scripts\\check_repo_sync.ps1"
+    "repo_sync_check": "powershell -ExecutionPolicy Bypass -File .\\scripts\\check_repo_sync.ps1",
+    "repo_sync_check_python": "python scripts/check_repo_sync.py --remote origin --branch main"
   },
   "update_entrypoints": {
     "active_user_update": "powershell -ExecutionPolicy Bypass -File .\\run_update.ps1",

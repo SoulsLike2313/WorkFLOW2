@@ -67,7 +67,12 @@
       "- <ambiguity_item>",
       "WILL_NOT_DO:",
       "- anything outside confirmed scope"
-    ]
+    ],
+    "github_sync_policy_path": "workspace_config/GITHUB_SYNC_POLICY.md",
+    "completion_gate_rules_path": "workspace_config/COMPLETION_GATE_RULES.md",
+    "repo_sync_check_script": "scripts/check_repo_sync.py",
+    "repo_visible_completion_required": true,
+    "local_only_artifacts_not_accepted": true
   },
   "scope_controls": {
     "allow_cross_project_changes_without_request": false,
@@ -92,7 +97,10 @@
     "scripts/remove_system.py",
     "scripts/new_project.py",
     "scripts/project_startup.py",
-    "scripts/run_project.ps1"
+    "scripts/run_project.ps1",
+    "workspace_config/GITHUB_SYNC_POLICY.md",
+    "workspace_config/COMPLETION_GATE_RULES.md",
+    "scripts/check_repo_sync.py"
   ],
   "required_active_project_files": [
     "projects/wild_hunt_command_citadel/tiktok_agent_platform/PROJECT_MANIFEST.json",
