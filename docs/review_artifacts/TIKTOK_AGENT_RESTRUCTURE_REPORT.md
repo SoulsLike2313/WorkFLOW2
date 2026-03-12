@@ -59,10 +59,18 @@ Machine checks executed after restructure are listed in:
 
 - `docs/review_artifacts/TIKTOK_AGENT_MIGRATION_NOTES.md`
 
+Latest verification snapshot:
+
+- workspace integrity: `PASS` (`workspace-validate-20260312T154614Z`)
+- unified verify gate: `PASS` (`verify-20260312T154621Z`)
+- update flow dry check: `PASS` (`tiktok_agent_platform-startup-20260312T155116Z`)
+- UI-QA validation: `PASS` (`validate_20260312_184639`)
+
 ## Status Summary
 
 - consolidated structure: complete
 - workspace registry migration: complete
 - core/agent entrypoint rewiring: complete
 - path/docs rewiring: complete
-- residual sensitivity: local lock on old `shortform_core` folder in current workstation session (non-repo artifact)
+- transient entrypoint failures encountered during migration: resolved
+- residual sensitivity: local non-tracked `shortform_core` folder remains in workstation tree; auto-removal command was blocked by policy in this session
