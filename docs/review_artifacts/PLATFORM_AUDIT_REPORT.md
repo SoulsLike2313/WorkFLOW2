@@ -1,67 +1,37 @@
 # Platform Audit Report
 
-- run_id: `platform-audit-20260312T192732Z`
-- timestamp: `2026-03-12T19:27:32.627704+00:00`
-
-## Platform Assessment
-- overall_status: `PASS_WITH_WARNINGS`
+- run_id: `full-platform-audit-20260312T221421Z`
+- generated_at_utc: `2026-03-12T22:14:21.535248+00:00`
 - audited_projects: `tiktok_agent_platform, game_ru_ai`
-- shared_systems_checked: `ui_qa_toolkit, verification_toolkit, reporting_toolkit, localization_toolkit, audit_observability_toolkit, update_patch_toolkit, security_baseline`
+- checked_shared_systems: `ui_qa_toolkit, verification_toolkit, reporting_toolkit, localization_toolkit, audit_observability_toolkit, update_patch_toolkit, security_baseline`
+- overall_status: `FAIL`
 
-## Checks Passed
-- `tiktok_agent_platform` `verification`: PASS
-- `tiktok_agent_platform` `readiness`: PASS
-- `tiktok_agent_platform` `ui_qa`: PASS
-- `tiktok_agent_platform` `reporting`: PASS
-- `tiktok_agent_platform` `localization`: PASS
-- `tiktok_agent_platform` `audit`: PASS
-- `tiktok_agent_platform` `manifest_integrity`: PASS
-- `tiktok_agent_platform` `runtime_diagnostics_paths`: PASS
-- `tiktok_agent_platform` `machine_docs_consistency`: PASS
-- `tiktok_agent_platform` `source_of_truth_integrity`: PASS
-- `game_ru_ai` `verification`: PASS
-- `game_ru_ai` `readiness`: PASS
-- `game_ru_ai` `reporting`: PASS
-- `game_ru_ai` `localization`: PASS
-- `game_ru_ai` `audit`: PASS
-- `game_ru_ai` `manifest_integrity`: PASS
-- `game_ru_ai` `runtime_diagnostics_paths`: PASS
-- `game_ru_ai` `machine_docs_consistency`: PASS
-- `game_ru_ai` `source_of_truth_integrity`: PASS
+## Platform Sections
 
-## Checks Not Passed
-- `tiktok_agent_platform` `install_remove_compatibility`: PASS_WITH_WARNINGS
-- `game_ru_ai` `ui_qa`: PASS_WITH_WARNINGS
-- `game_ru_ai` `install_remove_compatibility`: PASS_WITH_WARNINGS
+| section | status | evidence_path_or_run |
+|---|---|---|
+| `workspace_governance` | PASS | `workspace_config/workspace_manifest.json` |
+| `github_sync_policy` | FAIL | `runtime/repo_sync_checks/repo-sync-20260312T215553Z.json/repo_sync_summary.json` |
+| `machine_readability` | PASS | `workspace_config/workspace_manifest.json` |
+| `shared_systems_registry` | PASS | `workspace_config/shared_systems_registry.json` |
+| `install_remove_architecture` | PASS | `scripts/install_system.py; scripts/remove_system.py` |
+| `module_maturity` | PASS_WITH_WARNINGS | `docs/review_artifacts/MODULE_MATURITY_MATRIX.md` |
+| `instruction_layer` | PASS | `docs/review_artifacts/MACHINE_INSTRUCTION_AUDIT.md` |
 
-## Critical Gaps
-- none
+## Project Findings
 
-## Major Gaps
-- `ui_qa_toolkit`
-- `verification_toolkit`
-- `reporting_toolkit`
-- `localization_toolkit`
-- `audit_observability_toolkit`
-- `update_patch_toolkit`
-- `security_baseline`
+| project | verification | readiness | ui_qa | reporting | localization | audit_observability | manifest_integrity | installed_systems_integrity | runtime_health | diagnostics_summary | install_remove_compatibility | status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `tiktok_agent_platform` | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| `game_ru_ai` | FAIL | PASS | FAIL | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | FAIL |
 
-## Partial Stub
-- ui_qa_toolkit: no_executable_module_tests
-- verification_toolkit: no_executable_module_tests
-- reporting_toolkit: no_executable_module_tests
-- localization_toolkit: no_executable_module_tests
-- audit_observability_toolkit: no_executable_module_tests
-- update_patch_toolkit: not_integrated_in_target_projects, no_executable_module_tests
-- security_baseline: not_integrated_in_target_projects, no_executable_module_tests
+## Run References
 
-## Machine Readability
-- workspace_validation_status: `PASS`
-- machine_readable_status: `PASS`
-
-## GitHub Sync Readiness
-- github_sync_ready_status: `PASS`
-- repo_sync_gate_run_id: `repo-sync-20260312T193149Z`
-
-## Install Remove Architecture
-- install_remove_working_status: `PASS`
+- workspace_validate_run: `workspace-validate-20260312T215553Z`
+- repo_sync_run: `missing`
+- module_install_remove_run: `module-library-hardening-20260312T215356Z`
+- tiktok_readiness_run: `tiktok_agent_platform-startup-20260312T215753Z`
+- tiktok_verification_run: `verify-20260312T215801Z`
+- game_readiness_run: `game_ru_ai-startup-20260312T215753Z`
+- game_verification_run: `game_ru_ai-startup-20260312T215800Z`
+- game_verification_result: `verification_command_timeout`

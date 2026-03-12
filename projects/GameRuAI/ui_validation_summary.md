@@ -1,16 +1,16 @@
 # UI Validation Summary
 
-- Run ID: `20260312_220842`
-- Started: `2026-03-12T19:08:42.295407+00:00`
-- Finished: `2026-03-12T19:18:54.505418+00:00`
-- Duration: `612.21s`
-- Overall status: `PASS_WITH_WARNINGS`
-- Manual acceptance recommended: `True`
+- Run ID: `20260313_010351`
+- Started: `2026-03-12T22:03:51.144098+00:00`
+- Finished: `2026-03-12T22:10:49.292720+00:00`
+- Duration: `418.15s`
+- Overall status: `FAIL`
+- Manual acceptance recommended: `False`
 
 ## Sub-runs
 
-- ui_doctor: run=`20260312_220842` status=`PASS_WITH_WARNINGS`
-- ui_snapshot_runner: run=`20260312_221538` status=`PASS`
+- ui_doctor: run=`20260313_010351` status=`PASS_WITH_WARNINGS`
+- ui_snapshot_runner: run=`None` status=`SKIPPED`
 
 ## Screen Audit
 
@@ -57,17 +57,17 @@
 - root_summary_json: `E:\CVVCODEX\projects\GameRuAI\ui_validation_summary.json`
 - root_summary_md: `E:\CVVCODEX\projects\GameRuAI\ui_validation_summary.md`
 - root_screenshots_manifest: `E:\CVVCODEX\projects\GameRuAI\ui_screenshots_manifest.json`
-- validate_run_dir: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\validate_20260312_220842`
+- validate_run_dir: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\validate_20260313_010351`
 - latest_run_txt: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\latest_run.txt`
-- doctor_summary_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\20260312_220842\ui_doctor_summary.json`
-- doctor_manifest_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\20260312_220842\ui_screenshots_manifest.json`
-- snapshot_summary_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_snapshots\20260312_221538\ui_snapshot_summary.json`
-- snapshot_manifest_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_snapshots\20260312_221538\ui_screenshots_manifest.json`
+- doctor_summary_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\20260313_010351\ui_doctor_summary.json`
+- doctor_manifest_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\20260313_010351\ui_screenshots_manifest.json`
+- snapshot_summary_json: ``
+- snapshot_manifest_json: ``
 
 ## Warnings
 
-- none
+- snapshot manifest has low capture count (0), expected at least 24
 
 ## Failures
 
-- none
+- snapshot manifest missing required product states: ['Project|initial_empty', 'Project|pipeline_loaded_ready', 'Scan|manifest_loaded', 'Asset Explorer|tree_loaded_no_selection', 'Asset Explorer|active_selection_metadata', 'Entries|many_items_loaded', 'Entries|filtered_language_fr', 'Entries|long_search_query', 'Language Hub|overview_loaded', 'Language Hub|review_and_stress_loaded', 'Translation|loaded_translations', 'Translation|correction_form_long_content', 'Voice|no_selection', 'Voice|active_selection_details', 'Learning|loaded_history', 'Glossary|loaded_terms', 'QA|findings_loaded', 'Reports|dashboard_loaded', 'Diagnostics|backend_metrics_loaded', 'Export|export_log_loaded', 'Jobs / Logs|jobs_payload_loaded', 'Live Demo|scene_selected_ready', 'Companion|idle_no_session', 'Companion|configured_invalid_executable']
