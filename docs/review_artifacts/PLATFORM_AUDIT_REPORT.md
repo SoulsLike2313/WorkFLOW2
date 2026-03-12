@@ -60,7 +60,8 @@
 - machine_readable_status: `PASS`
 
 ## GitHub Sync Readiness
-- github_sync_ready_status: `PENDING_SYNC_GATE_CHECK`
+- github_sync_ready_status: `PASS`
+- repo_sync_gate_run_id: `repo-sync-20260312T193149Z`
 
 ## Install Remove Architecture
 - install_remove_working_status: `PASS`
