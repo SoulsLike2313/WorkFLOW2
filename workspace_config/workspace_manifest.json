@@ -2,7 +2,7 @@
   "schema_version": "2.1.0",
   "workspace_slug": "workflow",
   "workspace_name": "WorkFLOW Multi-Project Workspace",
-  "active_project": "shortform_core",
+  "active_project": "tiktok_agent_platform",
   "status_values": [
     "active",
     "supporting",
@@ -65,7 +65,7 @@
   },
   "project_status_index": {
     "active": [
-      "shortform_core"
+      "tiktok_agent_platform"
     ],
     "supporting": [
       "voice_launcher"
@@ -75,43 +75,41 @@
       "game_ru_ai"
     ],
     "archived": [],
-    "legacy": [
-      "tiktok_automation_app"
-    ]
+    "legacy": []
   },
   "project_registry": [
     {
-      "slug": "shortform_core",
-      "name": "Shortform Core Workspace",
+      "slug": "tiktok_agent_platform",
+      "name": "TikTok Agent Platform",
       "status": "active",
       "category": "platform_core",
       "type": "desktop_app",
       "priority": 1,
-      "runtime_namespace": "shortform_core",
+      "runtime_namespace": "tiktok_agent_platform",
       "port_range": {
-        "start": 8000,
-        "end": 8099
+        "start": 8500,
+        "end": 8599
       },
       "port_mode_default": "fixed",
       "service_ports": {
-        "api_port": 8000,
-        "ui_bridge_port": 8010,
-        "update_port": 8020,
-        "health_port": 8030
+        "api_port": 8500,
+        "ui_bridge_port": 8510,
+        "update_port": 8520,
+        "health_port": 8530
       },
-      "root_path": "projects/wild_hunt_command_citadel/shortform_core",
-      "manifest_path": "projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json",
-      "readme_path": "projects/wild_hunt_command_citadel/shortform_core/README.md",
+      "root_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform",
+      "manifest_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/PROJECT_MANIFEST.json",
+      "readme_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/README.md",
       "main_entrypoints": [
-        "python scripts/project_startup.py run --project-slug shortform_core --entrypoint user --startup-kind user --port-mode fixed",
-        "python scripts/project_startup.py run --project-slug shortform_core --entrypoint developer --startup-kind developer --port-mode fixed",
-        "python scripts/project_startup.py run --project-slug shortform_core --entrypoint verify --startup-kind verify --port-mode fixed"
+        "python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint user --startup-kind user --port-mode fixed",
+        "python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint developer --startup-kind developer --port-mode fixed",
+        "python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint verify --startup-kind verify --port-mode fixed"
       ],
       "verification_entrypoints": [
-        "python -m app.verify"
+        "powershell -ExecutionPolicy Bypass -File .\\projects\\wild_hunt_command_citadel\\tiktok_agent_platform\\run_project.ps1 -Mode verify -PortMode fixed"
       ],
       "update_entrypoints": [
-        "python scripts/project_startup.py run --project-slug shortform_core --entrypoint update --startup-kind update --port-mode fixed"
+        "python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint update --startup-kind update --port-mode fixed"
       ]
     },
     {
@@ -120,7 +118,7 @@
       "status": "supporting",
       "category": "desktop_tool",
       "type": "desktop_app",
-      "priority": 2,
+      "priority": 3,
       "runtime_namespace": "voice_launcher",
       "port_range": {
         "start": 8100,
@@ -152,7 +150,7 @@
       "status": "experimental",
       "category": "research_prototype",
       "type": "prototype",
-      "priority": 3,
+      "priority": 4,
       "runtime_namespace": "adaptive_trading",
       "port_range": {
         "start": 8200,
@@ -179,44 +177,12 @@
       "update_entrypoints": []
     },
     {
-      "slug": "tiktok_automation_app",
-      "name": "TikTok Automation App",
-      "status": "legacy",
-      "category": "legacy_product",
-      "type": "desktop_app",
-      "priority": 4,
-      "runtime_namespace": "tiktok_automation_app",
-      "port_range": {
-        "start": 8300,
-        "end": 8399
-      },
-      "port_mode_default": "fixed",
-      "service_ports": {
-        "api_port": 8300,
-        "ui_bridge_port": 8310,
-        "update_port": 8320,
-        "health_port": 8330
-      },
-      "root_path": "projects/wild_hunt_command_citadel/tiktok_automation_app",
-      "manifest_path": "projects/wild_hunt_command_citadel/tiktok_automation_app/PROJECT_MANIFEST.json",
-      "readme_path": "projects/wild_hunt_command_citadel/tiktok_automation_app/README.md",
-      "main_entrypoints": [
-        "python scripts/project_startup.py run --project-slug tiktok_automation_app --entrypoint user --startup-kind user --port-mode fixed",
-        "python scripts/project_startup.py run --project-slug tiktok_automation_app --entrypoint developer --startup-kind developer --port-mode fixed",
-        "python scripts/project_startup.py run --project-slug tiktok_automation_app --entrypoint verify --startup-kind verify --port-mode fixed"
-      ],
-      "verification_entrypoints": [
-        "python -m py_compile app.py automation_engine.py ui_main.py"
-      ],
-      "update_entrypoints": []
-    },
-    {
       "slug": "game_ru_ai",
       "name": "GameRuAI",
       "status": "experimental",
       "category": "desktop_tool",
       "type": "desktop_app",
-      "priority": 5,
+      "priority": 6,
       "runtime_namespace": "game_ru_ai",
       "port_range": {
         "start": 8400,

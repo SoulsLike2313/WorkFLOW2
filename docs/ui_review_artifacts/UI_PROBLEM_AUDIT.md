@@ -1,7 +1,7 @@
 ﻿# UI Problem Audit
 
 ## Scope
-- Active module: `projects/wild_hunt_command_citadel/shortform_core`
+- Active module: `projects/wild_hunt_command_citadel/tiktok_agent_platform/core`
 - Focus: UI automation blind spots, walkthrough coverage, machine-readable artifacts.
 - Date: 2026-03-12.
 
@@ -27,11 +27,11 @@
 - none
 
 ## Machine-readable references
-- `projects/wild_hunt_command_citadel/shortform_core/ui_validation_summary.json`
-- `projects/wild_hunt_command_citadel/shortform_core/ui_screenshots_manifest.json`
-- `projects/wild_hunt_command_citadel/shortform_core/ui_walkthrough_trace.json`
-- `projects/wild_hunt_command_citadel/shortform_core/runtime/ui_validation/validate_20260312_170515/`
-- `projects/wild_hunt_command_citadel/shortform_core/runtime/ui_snapshots/20260312_170735/`
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/ui_validation_summary.json`
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/ui_screenshots_manifest.json`
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/ui_walkthrough_trace.json`
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/ui_validation/validate_20260312_170515/`
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/ui_snapshots/20260312_170735/`
 
 ## Verified blind spots that still remain
 - Semantic visual quality still requires human review.

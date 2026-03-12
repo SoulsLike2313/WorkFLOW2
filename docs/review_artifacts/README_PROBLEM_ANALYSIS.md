@@ -36,7 +36,7 @@ Markers checked first:
    - endpoint-level details belong to active module docs and should be referenced, not over-specified.
 
 4. Gap:
-   - no explicit statement that root README is a map while runtime contracts are maintained in `shortform_core` docs.
+   - no explicit statement that root README is a map while runtime contracts are maintained in `tiktok_agent_platform/core` docs.
    Why problematic:
    - increases chance of root/module documentation divergence over time.
 

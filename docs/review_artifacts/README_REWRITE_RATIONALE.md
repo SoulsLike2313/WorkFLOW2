@@ -8,7 +8,7 @@ A complete rewrite was chosen to:
 
 ## Design decisions in the new root README
 1. Keep only current repository reality:
-   - active module fixed to `projects/wild_hunt_command_citadel/shortform_core`.
+   - active module fixed to `projects/wild_hunt_command_citadel/tiktok_agent_platform/core`.
 
 2. Separate responsibility levels:
    - root README = repository map + entrypoint map,

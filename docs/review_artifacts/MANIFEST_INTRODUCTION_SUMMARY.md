@@ -6,10 +6,10 @@
 - `workspace_config/codex_manifest.json`
 
 2. Project level:
-- `projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json`
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/PROJECT_MANIFEST.json`
 - `projects/voice_launcher/PROJECT_MANIFEST.json`
 - `projects/adaptive_trading/PROJECT_MANIFEST.json`
-- `projects/wild_hunt_command_citadel/tiktok_automation_app/PROJECT_MANIFEST.json`
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/PROJECT_MANIFEST.json`
 
 ## Why manifests are required
 - machine-readable project registration,

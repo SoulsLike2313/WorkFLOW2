@@ -13,7 +13,7 @@ This artifact covers root-level normalization only.
 ## What Was Corrected
 1. Root README was fully rewritten as a repository map.
 2. Active module was made explicit and primary:
-   - `projects/wild_hunt_command_citadel/shortform_core`
+   - `projects/wild_hunt_command_citadel/tiktok_agent_platform/core`
 3. Root-level responsibilities were clarified for:
    - `docs/`
    - `projects/`

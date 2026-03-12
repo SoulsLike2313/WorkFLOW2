@@ -1,10 +1,10 @@
-$ErrorActionPreference = "Stop"
-
 param(
     [ValidateSet("user", "developer")]
     [string]$Mode = "user",
     [switch]$SkipVerify
 )
+
+$ErrorActionPreference = "Stop"
 
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $projectRoot

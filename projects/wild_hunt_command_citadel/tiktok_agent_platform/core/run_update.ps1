@@ -13,11 +13,11 @@ $ErrorActionPreference = "Stop"
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $projectRoot
 
-if (-not (Test-Path ".venv\Scripts\python.exe")) {
-    throw "Missing virtual environment. Run run_setup.ps1 first."
-}
-
 $pythonExe = Join-Path $projectRoot ".venv\Scripts\python.exe"
+if (-not (Test-Path $pythonExe)) {
+    $pythonExe = "python"
+    Write-Host "[warn] .venv not found, falling back to system python."
+}
 $cursor = $projectRoot
 $repoRoot = $null
 while ($true) {

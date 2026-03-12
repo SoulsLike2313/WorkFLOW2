@@ -11,15 +11,15 @@
   "readme_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/README.md",
   "runtime_namespace": "tiktok_agent_platform",
   "port_range": {
-    "start": 8000,
-    "end": 8399
+    "start": 8500,
+    "end": 8599
   },
   "port_mode_default": "fixed",
   "service_ports": {
-    "api_port": 8000,
-    "ui_bridge_port": 8310,
-    "update_port": 8020,
-    "health_port": 8030
+    "api_port": 8500,
+    "ui_bridge_port": 8510,
+    "update_port": 8520,
+    "health_port": 8530
   },
   "runtime_paths": {
     "runtime_dir": "runtime/projects/tiktok_agent_platform",

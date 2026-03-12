@@ -11,7 +11,8 @@ def main() -> int:
         repo_root
         / "projects"
         / "wild_hunt_command_citadel"
-        / "shortform_core"
+        / "tiktok_agent_platform"
+        / "core"
         / "scripts"
         / "ui_compare_runs.py"
     )

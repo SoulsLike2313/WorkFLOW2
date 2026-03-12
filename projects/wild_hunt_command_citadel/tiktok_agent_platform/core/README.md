@@ -1,4 +1,4 @@
-# shortform_core
+﻿# Core Layer (TikTok Agent Platform)
 
 Modular Python workspace for short-form account operations:
 - multi-profile management (configurable limit, default `MAX_PROFILES=10`)
@@ -20,7 +20,7 @@ Important safety scope:
 
 Run all commands from:
 
-`projects/wild_hunt_command_citadel/shortform_core`
+`projects/wild_hunt_command_citadel/tiktok_agent_platform/core`
 
 ## Current Structure
 
@@ -96,7 +96,7 @@ run_update.ps1
 ## User Mode (Desktop)
 
 ```powershell
-cd projects/wild_hunt_command_citadel/shortform_core
+cd projects/wild_hunt_command_citadel/tiktok_agent_platform/core
 powershell -ExecutionPolicy Bypass -File .\run_user.ps1 -PortMode fixed
 ```
 
@@ -113,7 +113,7 @@ What happens:
 Setup and show developer commands:
 
 ```powershell
-cd projects/wild_hunt_command_citadel/shortform_core
+cd projects/wild_hunt_command_citadel/tiktok_agent_platform/core
 powershell -ExecutionPolicy Bypass -File .\run_developer.ps1 -PortMode fixed
 ```
 
@@ -136,7 +136,7 @@ Canonical verify entrypoint:
 Run full verification pipeline:
 
 ```powershell
-cd projects/wild_hunt_command_citadel/shortform_core
+cd projects/wild_hunt_command_citadel/tiktok_agent_platform/core
 .\.venv\Scripts\python.exe -m app.verify
 ```
 
@@ -195,7 +195,7 @@ UI validation artifacts:
 Use script flow from project root:
 
 ```powershell
-cd projects/wild_hunt_command_citadel/shortform_core
+cd projects/wild_hunt_command_citadel/tiktok_agent_platform/core
 ```
 
 1) Check manifest compatibility:
@@ -281,7 +281,7 @@ runtime/
 
 - `SFCO_MAX_PROFILES` (default: `10`)
 - `SFCO_API_HOST` (default: `127.0.0.1`)
-- `SFCO_API_PORT` (selected from `shortform_core` range `8000-8099`, default `8000` in fixed mode)
+- `SFCO_API_PORT` (selected from `tiktok_agent_platform/core` range `8000-8099`, default `8000` in fixed mode)
 - `SFCO_DATABASE_PATH`
 - `SFCO_WORKSPACE_STATE_PATH`
 - `SFCO_OUTPUT_DIR`
@@ -387,3 +387,5 @@ Workspace endpoints:
 ```powershell
 .\.venv\Scripts\python.exe -c "from fastapi.testclient import TestClient; from app.api import app; c=TestClient(app); print(c.get('/workspace/health').status_code)"
 ```
+
+

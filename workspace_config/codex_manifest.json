@@ -1,4 +1,4 @@
-﻿{
+{
   "schema_version": "2.0.0",
   "manifest_id": "workflow-codex-onboarding",
   "workspace_manifest_path": "workspace_config/workspace_manifest.json",
@@ -6,7 +6,7 @@
   "bootstrap_doc_path": "workspace_config/codex_bootstrap.md",
   "analysis_priorities": {
     "active_project_first": true,
-    "active_project_slug": "shortform_core",
+    "active_project_slug": "tiktok_agent_platform",
     "legacy_or_archived_only_on_request": true,
     "validate_workspace_first": true,
     "use_project_manifests_not_guessing": true,
@@ -41,8 +41,8 @@
     "scripts/run_project.ps1"
   ],
   "required_active_project_files": [
-    "projects/wild_hunt_command_citadel/shortform_core/PROJECT_MANIFEST.json",
-    "projects/wild_hunt_command_citadel/shortform_core/README.md",
-    "projects/wild_hunt_command_citadel/shortform_core/CODEX.md"
+    "projects/wild_hunt_command_citadel/tiktok_agent_platform/PROJECT_MANIFEST.json",
+    "projects/wild_hunt_command_citadel/tiktok_agent_platform/README.md",
+    "projects/wild_hunt_command_citadel/tiktok_agent_platform/CODEX.md"
   ]
 }

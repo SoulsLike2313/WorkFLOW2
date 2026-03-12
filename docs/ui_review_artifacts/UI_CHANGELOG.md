@@ -3,9 +3,9 @@
 ## 2026-03-12 — UI QA hardening pass
 
 ### Scripts updated
-- `projects/wild_hunt_command_citadel/shortform_core/scripts/ui_snapshot_runner.py`
-- `projects/wild_hunt_command_citadel/shortform_core/scripts/ui_validate.py`
-- `projects/wild_hunt_command_citadel/shortform_core/scripts/ui_doctor.py`
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/scripts/ui_snapshot_runner.py`
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/scripts/ui_validate.py`
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/scripts/ui_doctor.py`
 
 ### Automation changes
 - Walkthrough trace now produced and persisted.

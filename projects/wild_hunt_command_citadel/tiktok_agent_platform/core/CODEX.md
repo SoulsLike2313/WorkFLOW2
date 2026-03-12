@@ -1,8 +1,8 @@
-# CODEX.md
+﻿# CODEX.md
 
 ## Project Identity
 
-`shortform_core` is a modular decision-support workspace for short-form content operations.
+`tiktok_agent_platform/core` is a modular decision-support workspace for short-form content operations.
 
 Primary direction:
 - multi-profile workspace
@@ -17,7 +17,7 @@ Safety and compliance scope:
 - use provider abstractions for future official integrations
 
 Project root:
-- `projects/wild_hunt_command_citadel/shortform_core`
+- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core`
 
 Path policy:
 - use paths relative to this root
@@ -141,3 +141,4 @@ app/workspace/
 - Keep stubs honest with explicit `not_implemented` states.
 - Preserve deterministic fallback behavior for local testing.
 - Keep docs and run scripts aligned with current repository path.
+

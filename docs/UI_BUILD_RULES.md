@@ -1,6 +1,6 @@
 ﻿# UI Build Rules
 
-Active module: `projects/wild_hunt_command_citadel/shortform_core`
+Active module: `projects/wild_hunt_command_citadel/tiktok_agent_platform/core`
 
 ## 1. Artifact portability
 - Machine artifacts must use repo-relative paths only.
@@ -75,3 +75,4 @@ These remain manual-only checks:
 - semantic visual quality,
 - physical monitor contrast perception,
 - perceived motion smoothness.
+

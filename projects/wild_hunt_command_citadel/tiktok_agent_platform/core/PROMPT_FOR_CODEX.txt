@@ -1,7 +1,7 @@
-You are building a modular Python project for a short-form content operations agent.
+﻿You are building a modular Python project for a short-form content operations agent.
 
 Repository location note:
-- this project root is `projects/wild_hunt_command_citadel/shortform_core`
+- this project root is `projects/wild_hunt_command_citadel/tiktok_agent_platform/core`
 - all commands/examples should be written relative to this project root
 - avoid absolute machine-specific Windows paths
 
@@ -61,3 +61,4 @@ Requirements:
 - machine-readable outputs
 - FastAPI + SQLite ready
 - no anti-detection or evasion features
+

@@ -7,7 +7,7 @@
 
 ## After (new root README)
 - root README is strictly repository map + canonical entrypoint guide;
-- active module explicitly declared as `projects/wild_hunt_command_citadel/shortform_core`;
+- active module explicitly declared as `projects/wild_hunt_command_citadel/tiktok_agent_platform/core`;
 - environment setup is shown before launcher commands;
 - user mode and developer mode are clearly separated;
 - verification gate policy is explicit and strict;

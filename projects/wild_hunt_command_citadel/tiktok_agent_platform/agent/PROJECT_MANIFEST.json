@@ -1,15 +1,15 @@
 {
   "schema_version": "2.1.0",
-  "name": "TikTok Automation App",
-  "slug": "tiktok_automation_app",
-  "description": "Legacy desktop implementation retained for migration reference and historical compatibility.",
-  "status": "legacy",
-  "category": "legacy_product",
+  "name": "TikTok Agent App Layer",
+  "slug": "tiktok_agent_app_layer",
+  "description": "Agent/application layer of the unified TikTok Agent Platform.",
+  "status": "supporting",
+  "category": "desktop_tool",
   "type": "desktop_app",
-  "priority": 4,
-  "root_path": "projects/wild_hunt_command_citadel/tiktok_automation_app",
-  "readme_path": "projects/wild_hunt_command_citadel/tiktok_automation_app/README.md",
-  "runtime_namespace": "tiktok_automation_app",
+  "priority": 2,
+  "root_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent",
+  "readme_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/README.md",
+  "runtime_namespace": "tiktok_agent_platform_agent",
   "port_range": {
     "start": 8300,
     "end": 8399
@@ -22,18 +22,18 @@
     "health_port": 8330
   },
   "runtime_paths": {
-    "runtime_dir": "runtime/projects/tiktok_automation_app",
-    "log_dir": "runtime/projects/tiktok_automation_app/logs",
-    "data_dir": "runtime/projects/tiktok_automation_app/data",
-    "cache_dir": "runtime/projects/tiktok_automation_app/cache",
-    "temp_dir": "runtime/projects/tiktok_automation_app/temp",
-    "diagnostics_dir": "runtime/projects/tiktok_automation_app/diagnostics",
-    "update_artifacts_dir": "runtime/projects/tiktok_automation_app/update_artifacts",
-    "verification_dir": "runtime/projects/tiktok_automation_app/verification"
+    "runtime_dir": "runtime/projects/tiktok_agent_platform_agent",
+    "log_dir": "runtime/projects/tiktok_agent_platform_agent/logs",
+    "data_dir": "runtime/projects/tiktok_agent_platform_agent/data",
+    "cache_dir": "runtime/projects/tiktok_agent_platform_agent/cache",
+    "temp_dir": "runtime/projects/tiktok_agent_platform_agent/temp",
+    "diagnostics_dir": "runtime/projects/tiktok_agent_platform_agent/diagnostics",
+    "update_artifacts_dir": "runtime/projects/tiktok_agent_platform_agent/update_artifacts",
+    "verification_dir": "runtime/projects/tiktok_agent_platform_agent/verification"
   },
   "state_paths": {
-    "db_path": "runtime/projects/tiktok_automation_app/db/tiktok_automation_app.db",
-    "state_path": "runtime/projects/tiktok_automation_app/state/runtime_state.json"
+    "db_path": "runtime/projects/tiktok_agent_platform_agent/db/tiktok_agent_platform_agent.db",
+    "state_path": "runtime/projects/tiktok_agent_platform_agent/state/runtime_state.json"
   },
   "health_path": "/health",
   "env_overrides": {
@@ -59,32 +59,32 @@
     "settings.py"
   ],
   "runtime_dirs": [
-    "runtime/projects/tiktok_automation_app",
-    "runtime/projects/tiktok_automation_app/logs",
-    "runtime/projects/tiktok_automation_app/data",
-    "runtime/projects/tiktok_automation_app/cache",
-    "runtime/projects/tiktok_automation_app/temp",
-    "runtime/projects/tiktok_automation_app/diagnostics",
-    "runtime/projects/tiktok_automation_app/update_artifacts",
-    "runtime/projects/tiktok_automation_app/verification"
+    "runtime/projects/tiktok_agent_platform_agent",
+    "runtime/projects/tiktok_agent_platform_agent/logs",
+    "runtime/projects/tiktok_agent_platform_agent/data",
+    "runtime/projects/tiktok_agent_platform_agent/cache",
+    "runtime/projects/tiktok_agent_platform_agent/temp",
+    "runtime/projects/tiktok_agent_platform_agent/diagnostics",
+    "runtime/projects/tiktok_agent_platform_agent/update_artifacts",
+    "runtime/projects/tiktok_agent_platform_agent/verification"
   ],
   "log_dirs": [
-    "runtime/projects/tiktok_automation_app/logs",
-    "runtime/projects/tiktok_automation_app/diagnostics"
+    "runtime/projects/tiktok_agent_platform_agent/logs",
+    "runtime/projects/tiktok_agent_platform_agent/diagnostics"
   ],
   "data_dirs": [
-    "runtime/projects/tiktok_automation_app/data"
+    "runtime/projects/tiktok_agent_platform_agent/data"
   ],
   "dependencies_file": "requirements.txt",
   "owner": "legacy-owner",
   "maturity_level": "legacy_maintenance",
   "tags": [
-    "legacy",
+    "agent-layer",
     "desktop",
-    "migration-source"
+    "tiktok"
   ],
   "notes": [
-    "Legacy project: no new feature development planned.",
+    "This manifest represents the application layer inside the unified TikTok Agent Platform.",
     "Runtime namespace and ports are isolated by workspace startup preflight."
   ]
 }

@@ -35,13 +35,13 @@ if (-not (Test-Path $agentRoot)) {
 function Invoke-CoreRun {
     param(
         [string]$ScriptName,
-        [hashtable]$Args = @{}
+        [hashtable]$ScriptParams = @{}
     )
     $scriptPath = Join-Path $coreRoot $ScriptName
     if (-not (Test-Path $scriptPath)) {
         throw "Core script not found: $scriptPath"
     }
-    & powershell -ExecutionPolicy Bypass -File $scriptPath @Args
+    & powershell -ExecutionPolicy Bypass -File $scriptPath @ScriptParams
     if ($LASTEXITCODE -ne 0) {
         throw "Core script failed: $ScriptName (exit $LASTEXITCODE)"
     }
@@ -61,15 +61,15 @@ function Invoke-AgentMode {
 
 switch ($Mode) {
     "core-user" {
-        Invoke-CoreRun -ScriptName "run_user.ps1" -Args @{ PortMode = $PortMode }
+        Invoke-CoreRun -ScriptName "run_user.ps1" -ScriptParams @{ PortMode = $PortMode }
         exit 0
     }
     "core-developer" {
-        Invoke-CoreRun -ScriptName "run_developer.ps1" -Args @{ PortMode = $PortMode }
+        Invoke-CoreRun -ScriptName "run_developer.ps1" -ScriptParams @{ PortMode = $PortMode }
         exit 0
     }
     "core-verify" {
-        Invoke-CoreRun -ScriptName "run_verify.ps1" -Args @{ PortMode = $PortMode }
+        Invoke-CoreRun -ScriptName "run_verify.ps1" -ScriptParams @{ PortMode = $PortMode }
         exit 0
     }
     "agent-user" {
@@ -93,18 +93,18 @@ switch ($Mode) {
         exit 0
     }
     "update" {
-        $args = @{
+        $updateParams = @{
             Mode = "check"
             PortMode = $PortMode
         }
         if (-not [string]::IsNullOrWhiteSpace($ManifestPath)) {
-            $args["ManifestPath"] = $ManifestPath
+            $updateParams["ManifestPath"] = $ManifestPath
         }
         if (-not [string]::IsNullOrWhiteSpace($BundlePath)) {
-            $args["BundlePath"] = $BundlePath
+            $updateParams["BundlePath"] = $BundlePath
         }
         if (-not [string]::IsNullOrWhiteSpace($TargetVersion)) {
-            $args["TargetVersion"] = $TargetVersion
+            $updateParams["TargetVersion"] = $TargetVersion
         }
 
         $updateMode = "check"
@@ -113,15 +113,18 @@ switch ($Mode) {
         } elseif ([string]::IsNullOrWhiteSpace($ManifestPath) -and [string]::IsNullOrWhiteSpace($BundlePath)) {
             $updateMode = "post-verify"
         }
-        $args["Mode"] = $updateMode
-        Invoke-CoreRun -ScriptName "run_update.ps1" -Args $args
+        $updateParams["Mode"] = $updateMode
+        Invoke-CoreRun -ScriptName "run_update.ps1" -ScriptParams $updateParams
         exit 0
     }
     "verify" {
-        Invoke-CoreRun -ScriptName "run_verify.ps1" -Args @{ PortMode = $PortMode }
+        Invoke-CoreRun -ScriptName "run_verify.ps1" -ScriptParams @{ PortMode = $PortMode }
         Invoke-AgentMode -AgentMode "verify"
 
         $pythonExe = Join-Path $coreRoot ".venv\Scripts\python.exe"
+        if (-not (Test-Path $pythonExe)) {
+            $pythonExe = "python"
+        }
         $uiValidateScript = Join-Path $coreRoot "scripts\ui_validate.py"
         if ((Test-Path $pythonExe) -and (Test-Path $uiValidateScript)) {
             & $pythonExe $uiValidateScript --api-base-url "http://127.0.0.1:9"

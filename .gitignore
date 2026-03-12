@@ -23,7 +23,7 @@ startup_trace.log
 
 # Local project data
 %APPDATA%/
-projects/wild_hunt_command_citadel/tiktok_automation_app/output/
+projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/output/
 projects/voice_launcher/appdata_snapshot/
 projects/voice_launcher/commands.json
 projects/voice_launcher/settings.json

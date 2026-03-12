@@ -7,7 +7,15 @@ from pathlib import Path
 
 def main() -> int:
     repo_root = Path(__file__).resolve().parents[1]
-    target = repo_root / "projects" / "wild_hunt_command_citadel" / "shortform_core" / "scripts" / "ui_validate.py"
+    target = (
+        repo_root
+        / "projects"
+        / "wild_hunt_command_citadel"
+        / "tiktok_agent_platform"
+        / "core"
+        / "scripts"
+        / "ui_validate.py"
+    )
     if not target.exists():
         print(f"Target script not found: {target}")
         return 2

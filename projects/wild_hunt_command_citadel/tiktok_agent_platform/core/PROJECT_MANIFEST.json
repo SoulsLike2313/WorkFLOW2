@@ -1,15 +1,15 @@
 {
   "schema_version": "2.1.0",
-  "name": "Shortform Core Workspace",
-  "slug": "shortform_core",
-  "description": "Primary modular desktop workspace with internal API lifecycle, verification gate, readiness model, and update/patch flow.",
-  "status": "active",
+  "name": "TikTok Agent Core Layer",
+  "slug": "tiktok_agent_core_layer",
+  "description": "Core platform layer of the unified TikTok Agent Platform with verification, readiness, and update/patch flows.",
+  "status": "supporting",
   "category": "platform_core",
   "type": "desktop_app",
   "priority": 1,
-  "root_path": "projects/wild_hunt_command_citadel/shortform_core",
-  "readme_path": "projects/wild_hunt_command_citadel/shortform_core/README.md",
-  "runtime_namespace": "shortform_core",
+  "root_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core",
+  "readme_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/README.md",
+  "runtime_namespace": "tiktok_agent_platform_core",
   "port_range": {
     "start": 8000,
     "end": 8099
@@ -22,18 +22,18 @@
     "health_port": 8030
   },
   "runtime_paths": {
-    "runtime_dir": "runtime/projects/shortform_core",
-    "log_dir": "runtime/projects/shortform_core/logs",
-    "data_dir": "runtime/projects/shortform_core/data",
-    "cache_dir": "runtime/projects/shortform_core/cache",
-    "temp_dir": "runtime/projects/shortform_core/temp",
-    "diagnostics_dir": "runtime/projects/shortform_core/diagnostics",
-    "update_artifacts_dir": "runtime/projects/shortform_core/update_artifacts",
-    "verification_dir": "runtime/projects/shortform_core/verification"
+    "runtime_dir": "runtime/projects/tiktok_agent_platform_core",
+    "log_dir": "runtime/projects/tiktok_agent_platform_core/logs",
+    "data_dir": "runtime/projects/tiktok_agent_platform_core/data",
+    "cache_dir": "runtime/projects/tiktok_agent_platform_core/cache",
+    "temp_dir": "runtime/projects/tiktok_agent_platform_core/temp",
+    "diagnostics_dir": "runtime/projects/tiktok_agent_platform_core/diagnostics",
+    "update_artifacts_dir": "runtime/projects/tiktok_agent_platform_core/update_artifacts",
+    "verification_dir": "runtime/projects/tiktok_agent_platform_core/verification"
   },
   "state_paths": {
-    "db_path": "runtime/projects/shortform_core/db/shortform_core.db",
-    "state_path": "runtime/projects/shortform_core/state/workspace_state.db"
+    "db_path": "runtime/projects/tiktok_agent_platform_core/db/tiktok_agent_platform_core.db",
+    "state_path": "runtime/projects/tiktok_agent_platform_core/state/workspace_state.db"
   },
   "health_path": "/workspace/health",
   "env_overrides": {
@@ -64,33 +64,34 @@
     "requirements.txt"
   ],
   "runtime_dirs": [
-    "runtime/projects/shortform_core",
-    "runtime/projects/shortform_core/logs",
-    "runtime/projects/shortform_core/data",
-    "runtime/projects/shortform_core/cache",
-    "runtime/projects/shortform_core/temp",
-    "runtime/projects/shortform_core/diagnostics",
-    "runtime/projects/shortform_core/update_artifacts",
-    "runtime/projects/shortform_core/verification"
+    "runtime/projects/tiktok_agent_platform_core",
+    "runtime/projects/tiktok_agent_platform_core/logs",
+    "runtime/projects/tiktok_agent_platform_core/data",
+    "runtime/projects/tiktok_agent_platform_core/cache",
+    "runtime/projects/tiktok_agent_platform_core/temp",
+    "runtime/projects/tiktok_agent_platform_core/diagnostics",
+    "runtime/projects/tiktok_agent_platform_core/update_artifacts",
+    "runtime/projects/tiktok_agent_platform_core/verification"
   ],
   "log_dirs": [
-    "runtime/projects/shortform_core/logs",
-    "runtime/projects/shortform_core/diagnostics"
+    "runtime/projects/tiktok_agent_platform_core/logs",
+    "runtime/projects/tiktok_agent_platform_core/diagnostics"
   ],
   "data_dirs": [
-    "runtime/projects/shortform_core/data",
+    "runtime/projects/tiktok_agent_platform_core/data",
     "external_data"
   ],
   "dependencies_file": "requirements.txt",
   "owner": "workflow-core-team",
   "maturity_level": "production_candidate",
   "tags": [
-    "workspace",
+    "core-layer",
     "verification-gated",
     "desktop",
     "api"
   ],
   "notes": [
+    "This manifest represents the core layer inside the unified TikTok Agent Platform.",
     "Manual testing is allowed only when verification gate is PASS.",
     "Runtime namespace and ports are isolated by workspace startup preflight."
   ]
