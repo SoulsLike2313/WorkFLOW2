@@ -2,11 +2,15 @@
 
 ## Automation components
 - `scripts/ui_snapshot_runner.py`
-  - captures product scenarios by `screen_name` + `state_name`.
+  - Captures product scenarios by `screen_name` + `state_name`.
+  - Produces screenshot manifest entries with: `run_id`, `screen_name`, `state_name`, `screenshot_path`, `timestamp`, `notes`.
 - `scripts/ui_doctor.py`
-  - runs product-specific diagnostics with severity/type/recommendation.
+  - Runs product-specific diagnostics and classifies findings as `critical` / `major` / `minor`.
+  - Adds `issue_type` and `recommendation` fields.
 - `scripts/ui_validate.py`
-  - orchestrates doctor+snapshot and validates scenario coverage/artifact schema.
+  - Orchestrates doctor + snapshot.
+  - Validates manifest schema and required scenario coverage.
+  - Publishes canonical root artifacts.
 
 ## Product scenario set
 - `Project::initial_empty`
@@ -32,8 +36,26 @@
 - `Companion::idle_no_session`
 - `Companion::configured_invalid_executable`
 
-## Execution order
-1. Run product snapshot scenarios.
-2. Run doctor diagnostics on same scenario set.
-3. Validate artifact schema + required scenario coverage.
-4. Publish canonical root artifacts and latest run pointer.
+## Run pipeline
+1. `python scripts/ui_validate.py`
+2. Validator runs:
+   - `python scripts/ui_doctor.py --scales 1.0,1.25,1.5 --sizes 1600x960,1366x768,1280x800`
+   - `python scripts/ui_snapshot_runner.py --scales 1.0,1.25,1.5 --sizes 1600x960,1366x768,1280x800`
+3. Validator merges outputs and writes root artifacts.
+
+## Last completed run
+- Validation run: `20260312_150606`
+- Result: `PASS_WITH_WARNINGS`
+- Doctor run: `20260312_150607`
+- Snapshot run: `20260312_151135`
+- Snapshot coverage: `15` screens / `22` states / `192` captures
+
+## Artifact contract
+- Root outputs:
+  - `ui_validation_summary.json`
+  - `ui_validation_summary.md`
+  - `ui_screenshots_manifest.json`
+- Runtime outputs:
+  - `runtime/ui_validation/latest_run.txt`
+  - `runtime/ui_validation/<validate_run_id>/...`
+  - `runtime/ui_snapshots/<snapshot_run_id>/...`
