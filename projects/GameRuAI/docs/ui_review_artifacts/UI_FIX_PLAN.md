@@ -1,16 +1,20 @@
-﻿# UI Fix Plan
+﻿# UI Fix Plan - GameRuAI
 
-## Priority Model
-1. Critical blockers (task flow breakage).
-2. Major usability degradations.
-3. Minor visual consistency issues.
+## Priority order
+1. Critical flow blockers (`critical`): missing CTA/navigation/state break.
+2. Major usability defects (`major`): overflow/clipping/empty loaded states.
+3. Minor polish defects (`minor`): spacing/readability hierarchy issues.
 
-## Fix Workflow
-1. Reproduce via run artifact screenshot.
-2. Patch the minimal affected panel/layout.
-3. Re-run `ui_validate`.
-4. Confirm issue removed from summary.
-5. Log change in `UI_CHANGELOG.md`.
+## Fix strategy by problem type
+- `navigation`: restore tab registration/order in `MainWindow`.
+- `cta`: keep CTA visible and anchored in layout containers.
+- `layout` / `overflow`: tune splitter sizes, size policies, and parent layout constraints.
+- `state_handling`: ensure state transitions call the required refresh/update paths.
+- `localization` / `typography`: update text fit rules and font coverage.
 
-## Regression Guard
-Do not merge UI fixes without a fresh validation run and updated run pointer.
+## Loop
+1. Reproduce from screenshot + scenario key (`screen::state`).
+2. Apply minimal patch to relevant panel.
+3. Re-run `python scripts/ui_validate.py`.
+4. Verify issue removal in doctor/validation summaries.
+5. Log result in `UI_CHANGELOG.md`.

@@ -1,23 +1,29 @@
-﻿# UI Layout Bug Report
+﻿# UI Layout Bug Report - GameRuAI
 
-## Template
+## Mandatory fields
 - Run ID:
-- Tab:
-- Viewport (size/scale):
-- Severity:
+- Screen:
+- State:
+- Viewport (`size` / `scale`):
+- Severity (`critical` / `major` / `minor`):
+- Type (`layout` / `cta` / `visibility` / `spacing` / `typography` / `overflow` / `localization` / `state_handling` / `navigation`):
 - Category:
 - Expected behavior:
 - Actual behavior:
 - Screenshot path:
-- Related issue id/category:
+- Fix recommendation:
 
-## Typical Categories
+## GameRuAI-specific categories
 - `missing_critical_cta`
 - `hover_only_critical_cta`
+- `floating_critical_cta`
 - `text_clipping`
 - `button_clipping`
 - `overflow_out_of_bounds`
 - `sibling_overlap`
-- `resize_instability`
 - `splitter_collapse`
-- `empty_or_broken_zone`
+- `state_expected_loaded`
+- `state_expected_empty`
+- `state_selection_missing`
+- `localization_missing_ru_content`
+- `navigation_missing_screen`

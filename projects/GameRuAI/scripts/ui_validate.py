@@ -10,8 +10,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.ui_qa_product import expected_state_keys
+
 VALIDATION_ROOT = PROJECT_ROOT / "runtime" / "ui_validation"
 SNAPSHOT_ROOT = PROJECT_ROOT / "runtime" / "ui_snapshots"
 
@@ -22,6 +26,51 @@ def _now_iso() -> str:
 
 def _read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _normalize_captures(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    captures = manifest.get("captures")
+    if isinstance(captures, list):
+        return [item for item in captures if isinstance(item, dict)]
+    screenshots = manifest.get("screenshots")
+    if isinstance(screenshots, list):
+        return [item for item in screenshots if isinstance(item, dict)]
+    return []
+
+
+def _validate_snapshot_manifest(
+    *,
+    manifest: dict[str, Any],
+    expected_states: list[str],
+) -> tuple[list[str], list[str], list[dict[str, Any]]]:
+    failures: list[str] = []
+    warnings: list[str] = []
+    captures = _normalize_captures(manifest)
+
+    required_fields = ["run_id", "screen_name", "state_name", "screenshot_path", "timestamp", "notes"]
+    seen_states: set[str] = set()
+    for index, capture in enumerate(captures):
+        for field in required_fields:
+            value = capture.get(field)
+            if value is None or str(value).strip() == "":
+                failures.append(f"snapshot manifest capture[{index}] missing required field '{field}'")
+        state_key = f"{capture.get('screen_name', '')}|{capture.get('state_name', '')}"
+        seen_states.add(state_key)
+
+        screenshot_path = Path(str(capture.get("screenshot_path") or ""))
+        if not screenshot_path.exists():
+            failures.append(f"snapshot manifest capture[{index}] screenshot missing: {screenshot_path}")
+
+    missing_states = [state for state in expected_states if state not in seen_states]
+    if missing_states:
+        failures.append(f"snapshot manifest missing required product states: {missing_states}")
+
+    if len(captures) < max(10, len(expected_states)):
+        warnings.append(
+            f"snapshot manifest has low capture count ({len(captures)}), expected at least {max(10, len(expected_states))}"
+        )
+
+    return failures, warnings, captures
 
 
 def _extract_run_dir(stdout_text: str) -> Path | None:
@@ -68,6 +117,24 @@ def _render_md(summary: dict[str, Any]) -> str:
         for tab_name, counts in sorted(screen_audit.items()):
             lines.append(
                 f"- {tab_name}: critical={counts.get('critical', 0)}, major={counts.get('major', 0)}, minor={counts.get('minor', 0)}"
+            )
+
+    lines.extend(["", "## Issues By Type", ""])
+    issues_by_type = summary.get("issues_by_type", {})
+    if not issues_by_type:
+        lines.append("- no issue type breakdown")
+    else:
+        for issue_type, count in sorted(issues_by_type.items()):
+            lines.append(f"- {issue_type}: {count}")
+
+    lines.extend(["", "## Top Issues", ""])
+    top_issues = summary.get("top_issues", [])
+    if not top_issues:
+        lines.append("- none")
+    else:
+        for issue in top_issues[:20]:
+            lines.append(
+                f"- [{issue.get('severity')}] {issue.get('screen_name')}::{issue.get('state_name')} / {issue.get('category')}: {issue.get('description')}"
             )
 
     lines.extend(["", "## Artifacts", ""])
@@ -198,6 +265,17 @@ def main() -> int:
             else:
                 warnings.append("ui_snapshot_runner screenshot manifest is missing.")
 
+    snapshot_validation_failures: list[str] = []
+    snapshot_validation_warnings: list[str] = []
+    snapshot_captures: list[dict[str, Any]] = []
+    if snapshot_manifest:
+        snapshot_validation_failures, snapshot_validation_warnings, snapshot_captures = _validate_snapshot_manifest(
+            manifest=snapshot_manifest,
+            expected_states=expected_state_keys(),
+        )
+        failures.extend(snapshot_validation_failures)
+        warnings.extend(snapshot_validation_warnings)
+
     doctor_status = str(doctor_summary.get("overall_status", "FAIL"))
     snapshot_status = str(snapshot_summary.get("status", "PASS")) if snapshot_summary else "SKIPPED"
 
@@ -210,9 +288,7 @@ def main() -> int:
 
     combined_screenshots: list[dict[str, Any]] = []
     for source_name, manifest in (("ui_doctor", doctor_manifest), ("ui_snapshot_runner", snapshot_manifest)):
-        for shot in manifest.get("screenshots", []):
-            if not isinstance(shot, dict):
-                continue
+        for shot in _normalize_captures(manifest):
             item = dict(shot)
             item["source"] = source_name
             combined_screenshots.append(item)
@@ -222,12 +298,15 @@ def main() -> int:
         "generated_at": _now_iso(),
         "doctor_run_id": doctor_summary.get("run_id"),
         "snapshot_run_id": snapshot_summary.get("run_id"),
+        "captures": combined_screenshots,
         "screenshots": combined_screenshots,
     }
 
     finished_at = _now_iso()
     duration_seconds = round(time.time() - validate_started, 2)
-    screen_audit = doctor_summary.get("tab_issue_counts", {}) if isinstance(doctor_summary, dict) else {}
+    screen_audit = doctor_summary.get("issues_by_screen", {}) if isinstance(doctor_summary, dict) else {}
+    issues_by_type = doctor_summary.get("issues_by_type", {}) if isinstance(doctor_summary, dict) else {}
+    top_issues = doctor_summary.get("top_issues", []) if isinstance(doctor_summary, dict) else []
 
     summary = {
         "run_id": validate_run_id,
@@ -252,6 +331,9 @@ def main() -> int:
         "warnings": warnings,
         "failures": failures,
         "screen_audit": screen_audit,
+        "issues_by_type": issues_by_type,
+        "top_issues": top_issues[:30],
+        "snapshot_capture_count": len(snapshot_captures),
         "artifacts": {
             "root_summary_json": str((PROJECT_ROOT / "ui_validation_summary.json").resolve()),
             "root_summary_md": str((PROJECT_ROOT / "ui_validation_summary.md").resolve()),
