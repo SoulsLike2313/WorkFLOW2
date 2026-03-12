@@ -17,11 +17,13 @@ Before any task execution, Codex must read in this exact order:
 4. `workspace_config/TASK_RULES.md`
 5. `workspace_config/AGENT_EXECUTION_POLICY.md`
 6. `workspace_config/MACHINE_REPO_READING_RULES.md`
-7. `docs/INSTRUCTION_INDEX.md`
-8. relevant `PROJECT_MANIFEST.json`
-9. relevant project `README.md`
-10. relevant `CODEX.md` if present
-11. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+7. `workspace_config/GITHUB_SYNC_POLICY.md`
+8. `workspace_config/COMPLETION_GATE_RULES.md`
+9. `docs/INSTRUCTION_INDEX.md`
+10. relevant `PROJECT_MANIFEST.json`
+11. relevant project `README.md`
+12. relevant `CODEX.md` if present
+13. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 If this order is not completed, task status is `REJECTED`.
 
