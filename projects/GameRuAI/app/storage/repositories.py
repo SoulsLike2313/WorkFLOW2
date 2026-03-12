@@ -50,6 +50,16 @@ class RepositoryHub:
             "asset_previews",
             "archive_reports",
             "asset_index",
+            "asset_manifest",
+            "content_units",
+            "scene_groups",
+            "transcript_segments",
+            "sync_plans",
+            "translation_packages",
+            "knowledge_sources",
+            "external_reference_events",
+            "evidence_records",
+            "audio_analysis_results",
             "translations",
             "translation_backend_runs",
             "backend_diagnostics",
@@ -1396,6 +1406,528 @@ class RepositoryHub:
             item["metadata_json"] = {}
         item["suspected_container"] = bool(item.get("suspected_container"))
         return item
+
+    def replace_asset_manifest(self, project_id: int, assets: list[dict[str, Any]]) -> None:
+        with self.db.transaction() as cur:
+            cur.execute("DELETE FROM asset_manifest WHERE project_id=?", (project_id,))
+            for row in assets:
+                cur.execute(
+                    """
+                    INSERT INTO asset_manifest(
+                      project_id, file_path, media_type, content_role, extension, size_bytes,
+                      relevance_score, suspected_container, status, confidence, provenance,
+                      version_tag, metadata_json, created_at, updated_at
+                    ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    """,
+                    (
+                        project_id,
+                        str(row.get("file_path") or ""),
+                        str(row.get("media_type") or "binary"),
+                        str(row.get("content_role") or "unknown"),
+                        str(row.get("extension") or "unknown"),
+                        int(row.get("size_bytes") or 0),
+                        float(row.get("relevance_score") or 0.0),
+                        int(bool(row.get("suspected_container"))),
+                        str(row.get("status") or "indexed"),
+                        float((row.get("metadata") or {}).get("container_confidence", 0.0)),
+                        str((row.get("metadata") or {}).get("provenance", "asset_intelligence_core")),
+                        str((row.get("metadata") or {}).get("version_tag", "v1")),
+                        json.dumps(row.get("metadata", {}), ensure_ascii=False),
+                        _now_iso(),
+                        _now_iso(),
+                    ),
+                )
+
+    def list_asset_manifest(self, project_id: int, limit: int = 5000) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, file_path, media_type, content_role, extension, size_bytes, relevance_score,
+                   suspected_container, status, confidence, provenance, version_tag, metadata_json, created_at, updated_at
+            FROM asset_manifest
+            WHERE project_id=?
+            ORDER BY relevance_score DESC, file_path ASC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
+            except json.JSONDecodeError:
+                item["metadata_json"] = {}
+            item["suspected_container"] = bool(item.get("suspected_container"))
+            out.append(item)
+        return out
+
+    def replace_content_units(self, project_id: int, units: list[dict[str, Any]]) -> None:
+        with self.db.transaction() as cur:
+            cur.execute("DELETE FROM content_units WHERE project_id=?", (project_id,))
+            for item in units:
+                cur.execute(
+                    """
+                    INSERT INTO content_units(
+                      project_id, entry_id, line_id, file_path, content_type, source_lang, confidence,
+                      scene_id, speaker_id, status, provenance, metadata_json, created_at, updated_at
+                    ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    """,
+                    (
+                        project_id,
+                        item.get("entry_id"),
+                        str(item.get("line_id") or ""),
+                        str(item.get("file_path") or ""),
+                        str(item.get("content_type") or "unknown"),
+                        str(item.get("source_lang") or "unknown"),
+                        float(item.get("confidence") or 0.0),
+                        str(item.get("scene_id") or "") or None,
+                        str(item.get("speaker_id") or "") or None,
+                        str(item.get("status") or "analyzed"),
+                        str(item.get("provenance") or "content_understanding_core"),
+                        json.dumps(item.get("metadata", {}), ensure_ascii=False),
+                        _now_iso(),
+                        _now_iso(),
+                    ),
+                )
+
+    def list_content_units(self, project_id: int, limit: int = 5000) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, entry_id, line_id, file_path, content_type, source_lang, confidence, scene_id, speaker_id,
+                   status, provenance, metadata_json, created_at, updated_at
+            FROM content_units
+            WHERE project_id=?
+            ORDER BY id DESC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
+            except json.JSONDecodeError:
+                item["metadata_json"] = {}
+            out.append(item)
+        return out
+
+    def replace_scene_groups_v2(self, project_id: int, groups: list[dict[str, Any]]) -> None:
+        with self.db.transaction() as cur:
+            cur.execute("DELETE FROM scene_groups WHERE project_id=?", (project_id,))
+            for item in groups:
+                line_ids = item.get("line_ids") or item.get("metadata", {}).get("line_ids", [])
+                speaker_ids = item.get("speaker_ids") or item.get("metadata", {}).get("speaker_ids", [])
+                cur.execute(
+                    """
+                    INSERT INTO scene_groups(
+                      project_id, scene_id, line_count, speaker_count, status, confidence, provenance, metadata_json, created_at, updated_at
+                    ) VALUES(?,?,?,?,?,?,?,?,?,?)
+                    """,
+                    (
+                        project_id,
+                        str(item.get("scene_id") or ""),
+                        int(item.get("line_count") or len(line_ids)),
+                        int(item.get("speaker_count") or len(speaker_ids)),
+                        str(item.get("status") or "ready"),
+                        float(item.get("confidence") or 0.7),
+                        str(item.get("provenance") or "scene_model"),
+                        json.dumps(item.get("metadata", {}), ensure_ascii=False),
+                        _now_iso(),
+                        _now_iso(),
+                    ),
+                )
+
+    def list_scene_groups_v2(self, project_id: int, limit: int = 500) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, scene_id, line_count, speaker_count, status, confidence, provenance, metadata_json, created_at, updated_at
+            FROM scene_groups
+            WHERE project_id=?
+            ORDER BY scene_id ASC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
+            except json.JSONDecodeError:
+                item["metadata_json"] = {}
+            out.append(item)
+        return out
+
+    def replace_transcript_segments(self, project_id: int, segments: list[dict[str, Any]]) -> None:
+        with self.db.transaction() as cur:
+            cur.execute("DELETE FROM transcript_segments WHERE project_id=?", (project_id,))
+            for item in segments:
+                cur.execute(
+                    """
+                    INSERT INTO transcript_segments(
+                      project_id, entry_id, line_id, segment_id, start_ms, end_ms, confidence, provenance, metadata_json, created_at
+                    ) VALUES(?,?,?,?,?,?,?,?,?,?)
+                    """,
+                    (
+                        project_id,
+                        item.get("entry_id"),
+                        str(item.get("line_id") or ""),
+                        int(item.get("segment_id") or 0),
+                        int(item.get("start_ms") or 0),
+                        int(item.get("end_ms") or 0),
+                        float(item.get("confidence") or item.get("link_confidence") or 0.0),
+                        str(item.get("provenance") or "audio_analysis"),
+                        json.dumps(item.get("metadata", {}), ensure_ascii=False),
+                        _now_iso(),
+                    ),
+                )
+
+    def list_transcript_segments(self, project_id: int, limit: int = 5000) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, entry_id, line_id, segment_id, start_ms, end_ms, confidence, provenance, metadata_json, created_at
+            FROM transcript_segments
+            WHERE project_id=?
+            ORDER BY id DESC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
+            except json.JSONDecodeError:
+                item["metadata_json"] = {}
+            out.append(item)
+        return out
+
+    def add_sync_plan(
+        self,
+        *,
+        project_id: int,
+        entry_id: int | None,
+        line_id: str,
+        source_duration_ms: int,
+        target_duration_ms: int,
+        delta_ms: int,
+        recommended_adjustment: str,
+        confidence: float,
+        status: str,
+        payload: dict[str, Any],
+    ) -> None:
+        self.db.execute(
+            """
+            INSERT INTO sync_plans(
+              project_id, entry_id, line_id, source_duration_ms, target_duration_ms, delta_ms,
+              recommended_adjustment, confidence, status, provenance, payload_json, created_at
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            (
+                project_id,
+                entry_id,
+                line_id,
+                source_duration_ms,
+                target_duration_ms,
+                delta_ms,
+                recommended_adjustment,
+                confidence,
+                status,
+                "sync_core",
+                json.dumps(payload, ensure_ascii=False),
+                _now_iso(),
+            ),
+        )
+
+    def list_sync_plans(self, project_id: int, limit: int = 1000) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, entry_id, line_id, source_duration_ms, target_duration_ms, delta_ms, recommended_adjustment,
+                   confidence, status, provenance, payload_json, created_at
+            FROM sync_plans
+            WHERE project_id=?
+            ORDER BY id DESC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["payload_json"] = json.loads(item.get("payload_json") or "{}")
+            except json.JSONDecodeError:
+                item["payload_json"] = {}
+            out.append(item)
+        return out
+
+    def add_translation_package(
+        self,
+        *,
+        project_id: int,
+        entry_id: int | None,
+        backend_name: str,
+        fallback_used: bool,
+        confidence: float,
+        quality_score: float,
+        status: str,
+        package: dict[str, Any],
+    ) -> None:
+        self.db.execute(
+            """
+            INSERT INTO translation_packages(
+              project_id, entry_id, backend_name, fallback_used, confidence, quality_score, status, package_json, created_at
+            ) VALUES(?,?,?,?,?,?,?,?,?)
+            """,
+            (
+                project_id,
+                entry_id,
+                backend_name,
+                int(fallback_used),
+                confidence,
+                quality_score,
+                status,
+                json.dumps(package, ensure_ascii=False),
+                _now_iso(),
+            ),
+        )
+
+    def list_translation_packages(self, project_id: int, limit: int = 2000) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, entry_id, backend_name, fallback_used, confidence, quality_score, status, package_json, created_at
+            FROM translation_packages
+            WHERE project_id=?
+            ORDER BY id DESC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            item["fallback_used"] = bool(item.get("fallback_used"))
+            try:
+                item["package_json"] = json.loads(item.get("package_json") or "{}")
+            except json.JSONDecodeError:
+                item["package_json"] = {}
+            out.append(item)
+        return out
+
+    def upsert_knowledge_source(
+        self,
+        *,
+        project_id: int,
+        source_key: str,
+        source_type: str,
+        version: str,
+        status: str,
+        metadata: dict[str, Any],
+    ) -> None:
+        self.db.execute(
+            """
+            INSERT INTO knowledge_sources(
+              project_id, source_key, source_type, version_tag, source_status, health_state, metadata_json, provenance, created_at, updated_at
+            ) VALUES(?,?,?,?,?,?,?,?,?,?)
+            ON CONFLICT(project_id, source_key) DO UPDATE SET
+              source_type=excluded.source_type,
+              version_tag=excluded.version_tag,
+              source_status=excluded.source_status,
+              health_state=excluded.health_state,
+              metadata_json=excluded.metadata_json,
+              updated_at=excluded.updated_at
+            """,
+            (
+                project_id,
+                source_key,
+                source_type,
+                version,
+                status,
+                "ok" if status in {"active", "refreshed"} else "warning",
+                json.dumps(metadata, ensure_ascii=False),
+                "source_of_truth",
+                _now_iso(),
+                _now_iso(),
+            ),
+        )
+
+    def list_knowledge_sources(self, project_id: int, limit: int = 300) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, source_key, source_type, version_tag, source_status, health_state, metadata_json, provenance, created_at, updated_at
+            FROM knowledge_sources
+            WHERE project_id=?
+            ORDER BY source_type ASC, source_key ASC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["metadata_json"] = json.loads(item.get("metadata_json") or "{}")
+            except json.JSONDecodeError:
+                item["metadata_json"] = {}
+            out.append(item)
+        return out
+
+    def add_external_reference_event(
+        self,
+        *,
+        project_id: int,
+        entry_id: int | None,
+        provider: str,
+        payload: dict[str, Any],
+        confidence: float = 0.0,
+        status: str = "logged",
+    ) -> None:
+        self.db.execute(
+            """
+            INSERT INTO external_reference_events(project_id, entry_id, provider, status, confidence, payload_json, created_at)
+            VALUES(?,?,?,?,?,?,?)
+            """,
+            (
+                project_id,
+                entry_id,
+                provider,
+                status,
+                confidence,
+                json.dumps(payload, ensure_ascii=False),
+                _now_iso(),
+            ),
+        )
+
+    def list_external_reference_events(self, project_id: int, limit: int = 500) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, entry_id, provider, status, confidence, payload_json, created_at
+            FROM external_reference_events
+            WHERE project_id=?
+            ORDER BY id DESC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["payload_json"] = json.loads(item.get("payload_json") or "{}")
+            except json.JSONDecodeError:
+                item["payload_json"] = {}
+            out.append(item)
+        return out
+
+    def add_evidence_record(
+        self,
+        *,
+        project_id: int,
+        evidence_type: str,
+        entity_ref: str,
+        confidence: float,
+        status: str,
+        payload: dict[str, Any],
+    ) -> None:
+        self.db.execute(
+            """
+            INSERT INTO evidence_records(project_id, evidence_type, entity_ref, confidence, status, payload_json, provenance, created_at)
+            VALUES(?,?,?,?,?,?,?,?)
+            """,
+            (
+                project_id,
+                evidence_type,
+                entity_ref,
+                confidence,
+                status,
+                json.dumps(payload, ensure_ascii=False),
+                "evidence_learning_core",
+                _now_iso(),
+            ),
+        )
+
+    def list_evidence_records(self, project_id: int, limit: int = 1000) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, evidence_type, entity_ref, confidence, status, payload_json, provenance, created_at
+            FROM evidence_records
+            WHERE project_id=?
+            ORDER BY id DESC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["payload_json"] = json.loads(item.get("payload_json") or "{}")
+            except json.JSONDecodeError:
+                item["payload_json"] = {}
+            out.append(item)
+        return out
+
+    def add_audio_analysis_result(
+        self,
+        *,
+        project_id: int,
+        entry_id: int | None,
+        source_file: str,
+        generated_file: str | None,
+        source_duration_ms: int,
+        generated_duration_ms: int,
+        delta_ms: int,
+        quality_score: float,
+        confidence: float,
+        status: str,
+        payload: dict[str, Any],
+    ) -> None:
+        self.db.execute(
+            """
+            INSERT INTO audio_analysis_results(
+              project_id, entry_id, source_file, generated_file, source_duration_ms, generated_duration_ms, delta_ms,
+              quality_score, confidence, status, payload_json, created_at
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            (
+                project_id,
+                entry_id,
+                source_file,
+                generated_file,
+                source_duration_ms,
+                generated_duration_ms,
+                delta_ms,
+                quality_score,
+                confidence,
+                status,
+                json.dumps(payload, ensure_ascii=False),
+                _now_iso(),
+            ),
+        )
+
+    def list_audio_analysis_results(self, project_id: int, limit: int = 1000) -> list[dict[str, Any]]:
+        rows = self.db.query(
+            """
+            SELECT id, entry_id, source_file, generated_file, source_duration_ms, generated_duration_ms, delta_ms,
+                   quality_score, confidence, status, payload_json, created_at
+            FROM audio_analysis_results
+            WHERE project_id=?
+            ORDER BY id DESC
+            LIMIT ?
+            """,
+            (project_id, limit),
+        )
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            item = dict(row)
+            try:
+                item["payload_json"] = json.loads(item.get("payload_json") or "{}")
+            except json.JSONDecodeError:
+                item["payload_json"] = {}
+            out.append(item)
+        return out
 
     def set_setting(self, key: str, value: dict[str, Any]) -> None:
         self.db.execute(

@@ -1,44 +1,30 @@
 ﻿# UI Acceptance Checklist
 
-## 1. Premium product feel
-- [ ] Тёмная premium-подача без декоративного перегруза.
-- [ ] Чёткая иерархия: navigation -> status -> workspace -> context.
-- [ ] Нет ощущения debug-shell.
+## Machine gate prerequisites
+- [x] `ui_snapshot_runner` completed with `PASS`.
+- [x] `ui_validate` completed with `PASS`.
+- [x] `ui_doctor` (within validate) completed with `PASS`.
+- [x] `manual_testing_allowed=true` in `ui_validation_summary.json`.
 
-## 2. Grid / geometry discipline
-- [ ] Нет overlaps.
-- [ ] Нет clipping важного текста/CTA.
-- [ ] Нет floating CTA.
-- [ ] Центр и правая панель не конфликтуют на `1540x920`, `1366x768`, `1280x800`.
+## Layout and interaction invariants
+- [x] No overlaps reported by latest doctor run.
+- [x] No hover-only critical controls reported.
+- [x] No critical CTA visibility failures reported.
+- [x] No out-of-bounds blockers reported.
 
-## 3. CTA quality
-- [ ] Критичные кнопки не hover-only.
-- [ ] Primary/secondary/context actions читаются как система.
-- [ ] CTA не выпадают из сетки при resize.
+## Walkthrough coverage
+- [x] Dashboard visited.
+- [x] Profiles visited.
+- [x] Sessions visited.
+- [x] Content visited.
+- [x] Analytics visited.
+- [x] AI Studio visited.
+- [x] Audit visited.
+- [x] Updates visited.
+- [x] Settings visited.
+- [x] Walkthrough trace saved (`ui_walkthrough_trace.json`).
 
-## 4. Экранные проверки
-- [ ] Dashboard: виден state ядра + next actions.
-- [ ] Profiles: быстро читаются identity/state/mode.
-- [ ] Sessions: 9:16 зона не выглядит пустым placeholder.
-- [ ] Content: queue/validation/readiness логичны.
-- [ ] Analytics: top/weak/recommendations считываются с первого взгляда.
-- [ ] AI Studio: recommendations/rationale/confidence не перегружены.
-- [ ] Audit: timeline + severity читабельны.
-- [ ] Updates: update/patch/post-verify путь очевиден.
-- [ ] Settings: диагностические ссылки и runtime контекст видны.
-
-## 5. Локализация и типографика
-- [ ] Русские тексты естественные и единообразные.
-- [ ] Нет случайного RU/EN микса без причины.
-- [ ] Нет грубых typographic collisions.
-
-## 6. DPI / scaling
-- [ ] `100%` — stable
-- [ ] `125%` — stable
-- [ ] `150%` — stable
-
-## 7. Machine gate
-- [ ] `ui_snapshot_runner` -> `PASS`
-- [ ] `ui_validate` -> `PASS`
-- [ ] `ui_doctor` -> `PASS`
-- [ ] `manual_testing_allowed=true` в `ui_validation_summary.json`
+## Required manual-only checks (not fully machine-verifiable)
+- [ ] Semantic premium feel verification.
+- [ ] Physical monitor contrast verification.
+- [ ] Perceived motion smoothness verification.

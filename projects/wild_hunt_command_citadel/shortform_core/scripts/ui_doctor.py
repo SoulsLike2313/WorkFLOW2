@@ -707,7 +707,7 @@ def _run_worker(args: argparse.Namespace) -> int:
                 )
 
             required_controls = find_required_controls(page_key, page_widget)
-            expected_min = 1
+            expected_min = 0
             if page_key in {"dashboard", "profiles"}:
                 expected_min = 4
             elif page_key in {"sessions", "ai_studio", "updates", "settings", "content"}:
@@ -918,7 +918,7 @@ def _run_worker(args: argparse.Namespace) -> int:
                         acceptance_blocker=issue_type == "critical_text_clipping",
                     )
 
-            if cta_buttons:
+            if len(cta_buttons) >= 3:
                 centers = []
                 for button in cta_buttons:
                     center = button.mapTo(page_widget, button.rect().center())

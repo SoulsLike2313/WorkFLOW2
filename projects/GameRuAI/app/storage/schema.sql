@@ -370,3 +370,166 @@ CREATE TABLE IF NOT EXISTS archive_reports (
   UNIQUE(project_id, file_path)
 );
 CREATE INDEX IF NOT EXISTS idx_archive_reports_project ON archive_reports(project_id);
+
+CREATE TABLE IF NOT EXISTS asset_manifest (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  file_path TEXT NOT NULL,
+  media_type TEXT NOT NULL,
+  content_role TEXT NOT NULL,
+  extension TEXT NOT NULL,
+  size_bytes INTEGER NOT NULL DEFAULT 0,
+  relevance_score REAL NOT NULL DEFAULT 0,
+  suspected_container INTEGER NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'indexed',
+  confidence REAL NOT NULL DEFAULT 0,
+  provenance TEXT NOT NULL DEFAULT 'asset_intelligence_core',
+  version_tag TEXT NOT NULL DEFAULT 'v1',
+  metadata_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(project_id, file_path)
+);
+CREATE INDEX IF NOT EXISTS idx_asset_manifest_project ON asset_manifest(project_id);
+CREATE INDEX IF NOT EXISTS idx_asset_manifest_media ON asset_manifest(media_type);
+
+CREATE TABLE IF NOT EXISTS content_units (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  entry_id INTEGER REFERENCES extracted_entries(id) ON DELETE SET NULL,
+  line_id TEXT NOT NULL,
+  file_path TEXT NOT NULL,
+  content_type TEXT NOT NULL,
+  source_lang TEXT NOT NULL DEFAULT 'unknown',
+  confidence REAL NOT NULL DEFAULT 0,
+  scene_id TEXT,
+  speaker_id TEXT,
+  status TEXT NOT NULL DEFAULT 'analyzed',
+  provenance TEXT NOT NULL DEFAULT 'content_understanding_core',
+  metadata_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_content_units_project ON content_units(project_id);
+CREATE INDEX IF NOT EXISTS idx_content_units_line ON content_units(project_id, line_id);
+
+CREATE TABLE IF NOT EXISTS scene_groups (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  scene_id TEXT NOT NULL,
+  line_count INTEGER NOT NULL DEFAULT 0,
+  speaker_count INTEGER NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'ready',
+  confidence REAL NOT NULL DEFAULT 0,
+  provenance TEXT NOT NULL DEFAULT 'scene_model',
+  metadata_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(project_id, scene_id)
+);
+CREATE INDEX IF NOT EXISTS idx_scene_groups_project ON scene_groups(project_id);
+
+CREATE TABLE IF NOT EXISTS transcript_segments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  entry_id INTEGER REFERENCES extracted_entries(id) ON DELETE SET NULL,
+  line_id TEXT NOT NULL,
+  segment_id INTEGER NOT NULL DEFAULT 0,
+  start_ms INTEGER NOT NULL DEFAULT 0,
+  end_ms INTEGER NOT NULL DEFAULT 0,
+  confidence REAL NOT NULL DEFAULT 0,
+  provenance TEXT NOT NULL DEFAULT 'audio_analysis',
+  metadata_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_transcript_segments_project ON transcript_segments(project_id);
+
+CREATE TABLE IF NOT EXISTS sync_plans (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  entry_id INTEGER REFERENCES extracted_entries(id) ON DELETE SET NULL,
+  line_id TEXT,
+  source_duration_ms INTEGER NOT NULL DEFAULT 0,
+  target_duration_ms INTEGER NOT NULL DEFAULT 0,
+  delta_ms INTEGER NOT NULL DEFAULT 0,
+  recommended_adjustment TEXT NOT NULL,
+  confidence REAL NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'planned',
+  provenance TEXT NOT NULL DEFAULT 'sync_core',
+  payload_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_sync_plans_project ON sync_plans(project_id);
+
+CREATE TABLE IF NOT EXISTS translation_packages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  entry_id INTEGER REFERENCES extracted_entries(id) ON DELETE SET NULL,
+  backend_name TEXT NOT NULL,
+  fallback_used INTEGER NOT NULL DEFAULT 0,
+  confidence REAL NOT NULL DEFAULT 0,
+  quality_score REAL NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'generated',
+  package_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_translation_packages_project ON translation_packages(project_id);
+CREATE INDEX IF NOT EXISTS idx_translation_packages_entry ON translation_packages(project_id, entry_id);
+
+CREATE TABLE IF NOT EXISTS knowledge_sources (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  source_key TEXT NOT NULL,
+  source_type TEXT NOT NULL,
+  version_tag TEXT NOT NULL,
+  source_status TEXT NOT NULL,
+  health_state TEXT NOT NULL DEFAULT 'ok',
+  metadata_json TEXT NOT NULL DEFAULT '{}',
+  provenance TEXT NOT NULL DEFAULT 'source_of_truth',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(project_id, source_key)
+);
+CREATE INDEX IF NOT EXISTS idx_knowledge_sources_project ON knowledge_sources(project_id);
+
+CREATE TABLE IF NOT EXISTS external_reference_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  entry_id INTEGER REFERENCES extracted_entries(id) ON DELETE SET NULL,
+  provider TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'logged',
+  confidence REAL NOT NULL DEFAULT 0,
+  payload_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_external_reference_events_project ON external_reference_events(project_id);
+
+CREATE TABLE IF NOT EXISTS evidence_records (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  evidence_type TEXT NOT NULL,
+  entity_ref TEXT NOT NULL,
+  confidence REAL NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'recorded',
+  payload_json TEXT NOT NULL DEFAULT '{}',
+  provenance TEXT NOT NULL DEFAULT 'evidence_learning_core',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_evidence_records_project ON evidence_records(project_id);
+
+CREATE TABLE IF NOT EXISTS audio_analysis_results (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  entry_id INTEGER REFERENCES extracted_entries(id) ON DELETE SET NULL,
+  source_file TEXT NOT NULL,
+  generated_file TEXT,
+  source_duration_ms INTEGER NOT NULL DEFAULT 0,
+  generated_duration_ms INTEGER NOT NULL DEFAULT 0,
+  delta_ms INTEGER NOT NULL DEFAULT 0,
+  quality_score REAL NOT NULL DEFAULT 0,
+  confidence REAL NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'analyzed',
+  payload_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_audio_analysis_results_project ON audio_analysis_results(project_id);

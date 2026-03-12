@@ -1,27 +1,25 @@
 ﻿# UI Direction Confirmation
 
-## Подтверждённый вектор
-- Tactical AAA Command Center + Premium Minimal Metallic.
-- Баланс: `80% premium control center + 20% controlled sci-fi glow`.
-- База: dark graphite / near-black.
-- Акценты: violet / metallic purple.
-- Glow: точечный (focus/active/AI/primary), без neon overload.
+## Confirmed product direction
+- Tactical AAA Command Center.
+- Premium Minimal Metallic.
+- Dark graphite base with controlled violet accents.
 
-## Что исключено
-- Witcher / Wild Hunt / fantasy / lore-branding.
-- Старый debug-shell feel.
-- Плавающие CTA и хаотичная геометрия.
-- Hover-only critical controls.
-- Грубые «пластиковые» кнопки.
+## Explicit exclusions
+- No Witcher / Wild Hunt / fantasy branding.
+- No retro sci-fi skin style.
+- No debug-shell behavior as product UX.
+- No floating critical CTA.
+- No hover-only critical controls.
 
-## Product-first трактовка
-Premium UI = не только визуальный стиль, а связка:
-1. читаемая информационная иерархия,
-2. предсказуемая сетка и CTA-логика,
-3. устойчивость на resize/DPI,
-4. machine-проверяемость через screenshot/validation цикл.
+## Direction to validation mapping
+- Direction is enforced through machine checks where possible:
+  - layout invariants,
+  - CTA visibility invariants,
+  - walkthrough coverage,
+  - state coverage,
+  - blocker-based gate.
 
-## Подтверждение на текущем цикле
-- `ui_validate` (`20260312_160707`) -> `PASS`
-- `ui_doctor` (`20260312_161111`) -> `PASS`
-- `ui_snapshot_runner` (`20260312_160910`) -> `PASS`
+## Latest evidence
+- Validate run `20260312_170515`: `PASS`.
+- Machine checks reported no critical/major/minor issues in latest gate run.

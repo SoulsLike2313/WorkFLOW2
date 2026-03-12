@@ -3,10 +3,14 @@ from __future__ import annotations
 import json
 import wave
 from collections import Counter, defaultdict
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Generator
 
+from app.assets.asset_intelligence import AssetIntelligenceCore
 from app.assets.explorer_service import AssetExplorerService
+from app.audio.analysis_service import AudioAnalysisService
+from app.audio.source_audio_compare import compare_audio_metadata
 from app.companion.file_watch_service import FileWatchService
 from app.companion.launcher import CompanionLauncher
 from app.companion.process_monitor import ProcessMonitor
@@ -16,11 +20,24 @@ from app.core.models import ExportResult, ScannedFile
 from app.extractors.registry import ExtractorRegistry
 from app.glossary.models import GlossaryTerm
 from app.glossary.service import GlossaryService
+from app.knowledge.external_reference_source import ExternalReferenceSource
+from app.knowledge.glossary_source import GlossarySource
+from app.knowledge.locale_rules_source import LocaleRulesSource
+from app.knowledge.source_refresh import SourceRefreshService
+from app.knowledge.source_registry import SourceRegistry
+from app.knowledge.tm_source import TmSource
+from app.knowledge.voice_profile_source import VoiceProfileSource
 from app.language.detector import LanguageDetector
 from app.learning.adaptation_rules import AdaptationRules
+from app.learning.adaptation_engine import AdaptationEngine
+from app.learning.confidence_tracking import track_confidence
 from app.learning.correction_tracker import CorrectionTracker
+from app.learning.correction_memory import CorrectionMemory
+from app.learning.evidence_store import EvidenceStore
+from app.learning.external_reference_log import ExternalReferenceLog
 from app.learning.feedback_service import FeedbackService
 from app.learning.history_service import HistoryService
+from app.learning.regression_memory import RegressionMemory
 from app.logging_setup import setup_logging
 from app.memory.service import TranslationMemoryService
 from app.patcher.exporter import Exporter
@@ -28,23 +45,42 @@ from app.qa.service import QaService
 from app.reports.backend_diagnostics import build_backend_diagnostics
 from app.reports.project_summary import build_project_summary
 from app.reports.translation_report import build_translation_report
+from app.runtime.batch_pipeline import BatchPipeline
+from app.runtime.realtime_pipeline import RealtimePipeline
+from app.runtime.session_pipeline import SessionPipeline
 from app.scanner.scanner_service import ScannerService
 from app.scanner.file_classifier import classify_file
 from app.storage.db import Database
 from app.storage.repositories import RepositoryHub
+from app.sync.audio_sync import plan_audio_sync
+from app.sync.rebuild_plan import build_rebuild_plan
+from app.sync.subtitle_sync import plan_subtitle_sync
 from app.translator.context_builder import TranslationContextBuilder
+from app.translator.evidence_router import EvidenceRouter
 from app.translator.glossary_injector import GlossaryInjector
 from app.translator.memory_lookup import MemoryLookup
+from app.translator.reference_compare import compare_with_references
 from app.translator.realtime_orchestrator import RealtimeOrchestrator
 from app.translator.router import TranslatorRouter
+from app.translator.translation_policies import TranslationPolicies
+from app.understanding.content_classifier import ContentClassifier
+from app.understanding.emotion_hints import infer_emotion_hint
+from app.understanding.image_text_candidates import detect_image_text_candidate
+from app.understanding.language_analysis import LanguageAnalysisService
+from app.understanding.scene_model import SceneModelService
+from app.understanding.speaker_identity import SpeakerIdentityService
+from app.understanding.subtitle_alignment import SubtitleAlignmentService
 from app.voice.attempt_history import VoiceAttemptHistoryService
 from app.voice.audio_post import alignment_plan
 from app.voice.duration_planner import plan_duration
 from app.voice.preview_player import VoicePreviewPlayer
 from app.voice.quality_score import score_voice_attempt
+from app.voice.dubbing_prep import build_dubbing_prep
+from app.voice.speaker_profile_bank import SpeakerProfileBank
 from app.voice.speaker_grouping import SpeakerGroupingService
 from app.voice.speaker_profile import SpeakerProfileService
 from app.voice.synthesis_mock import MockVoiceSynthesizer
+from app.voice.voice_comparison import compare_source_and_generated
 from app.voice.voice_sample_bank import VoiceSampleBankService
 from app.voice.voice_linker import VoiceLinker
 from app.workers.job_manager import JobManager
@@ -64,39 +100,76 @@ class AppServices:
         self.extractors = ExtractorRegistry()
         self.scanner = ScannerService(self.repo)
         self.asset_explorer = AssetExplorerService(self.repo)
+        self.asset_intelligence = AssetIntelligenceCore(self.repo)
         self.detector = LanguageDetector()
+        self.language_analysis = LanguageAnalysisService(self.detector)
+        self.content_classifier = ContentClassifier()
+        self.scene_model = SceneModelService()
+        self.speaker_identity = SpeakerIdentityService()
+        self.subtitle_alignment = SubtitleAlignmentService()
         self.glossary_service = GlossaryService(self.repo)
         self.memory_service = TranslationMemoryService(self.repo)
         self.context_builder = TranslationContextBuilder(self.repo)
+        self.translation_policies = TranslationPolicies()
+        self.evidence_router = EvidenceRouter()
         self.translator = RealtimeOrchestrator(
             translator_router=TranslatorRouter(),
             glossary_injector=GlossaryInjector(self.glossary_service),
             memory_lookup=MemoryLookup(self.memory_service),
             memory_service=self.memory_service,
         )
+        self.source_registry = SourceRegistry(self.repo)
+        self.glossary_source = GlossarySource(self.source_registry)
+        self.tm_source = TmSource(self.source_registry)
+        self.locale_rules_source = LocaleRulesSource(self.source_registry)
+        self.voice_profile_source = VoiceProfileSource(self.source_registry)
+        self.external_reference_source = ExternalReferenceSource(self.source_registry)
+        self.source_refresh = SourceRefreshService(self.source_registry)
+        self.evidence_store = EvidenceStore(self.repo)
+        self.correction_memory = CorrectionMemory(self.repo)
+        self.adaptation_engine_v2 = AdaptationEngine()
+        self.external_reference_log = ExternalReferenceLog(self.repo)
+        self.regression_memory = RegressionMemory(self.repo)
         self.feedback_service = FeedbackService(self.repo, self.glossary_service)
         self.correction_tracker = CorrectionTracker(self.repo)
         self.adaptation_rules = AdaptationRules(self.repo)
         self.history_service = HistoryService(self.repo)
         self.speaker_profiles = SpeakerProfileService(self.repo)
+        self.speaker_profile_bank = SpeakerProfileBank(self.repo)
         self.voice_linker = VoiceLinker(self.repo)
         self.speaker_grouping = SpeakerGroupingService()
         self.voice_sample_bank = VoiceSampleBankService(self.repo)
         self.voice_attempt_history = VoiceAttemptHistoryService(self.repo)
         self.voice_preview_player = VoicePreviewPlayer()
         self.voice_synthesizer = MockVoiceSynthesizer()
+        self.audio_analysis = AudioAnalysisService()
+        self.batch_pipeline = BatchPipeline()
+        self.realtime_pipeline = RealtimePipeline()
+        self.session_pipeline = SessionPipeline()
         self.qa_service = QaService(self.repo)
         self.exporter = Exporter(self.repo)
         self.process_monitor = ProcessMonitor()
         self.session_registry = SessionRegistry(self.repo)
         self.file_watch_service = FileWatchService(self.repo)
         self.companion_launcher = CompanionLauncher(self.session_registry, self.process_monitor)
+        self._register_default_knowledge_sources()
 
     def close(self) -> None:
         self.db.close()
 
     def ensure_project(self, name: str, game_root: Path) -> dict[str, Any]:
         project = self.repo.ensure_project(name, str(game_root))
+        pid = int(project.id)
+        self.locale_rules_source.mark_active(pid, version="locale-rules-v1", locale="ru-RU")
+        self.glossary_source.mark_active(pid, version="glossary-v1", term_count=len(self.glossary_service.list_terms(pid)))
+        self.tm_source.mark_active(pid, version="tm-v1", entries_count=len(self.repo.list_translation_memory(pid)))
+        self.voice_profile_source.mark_active(pid, version="voice-profiles-v1", profile_count=len(self.repo.list_voice_profiles(pid)))
+        self.external_reference_source.mark_state(
+            pid,
+            version="reference-checks-v1",
+            status="foundation_only",
+            provider="internal_reference_compare",
+        )
         return {"id": project.id, "name": project.name, "game_path": project.game_path}
 
     def list_projects(self) -> list[dict[str, Any]]:
@@ -125,7 +198,13 @@ class AppServices:
         def _run() -> dict[str, Any]:
             manifest = self.scanner.scan(project_id, game_root)
             asset_summary = self.asset_explorer.index_project_assets(project_id=project_id, game_root=game_root)
+            intelligence_manifest = self.asset_intelligence.build_and_store_manifest(project_id=project_id, game_root=game_root)
             manifest["asset_index"] = asset_summary
+            manifest["asset_intelligence"] = {
+                "assets_total": intelligence_manifest.get("assets_total", 0),
+                "by_media_type": intelligence_manifest.get("by_media_type", {}),
+                "by_content_role": intelligence_manifest.get("by_content_role", {}),
+            }
             return manifest
 
         return self.job_manager.run_job("scan", _run)
@@ -155,16 +234,98 @@ class AppServices:
     def detect_languages(self, project_id: int) -> dict[str, Any]:
         def _run() -> dict[str, Any]:
             entries = self.repo.list_entries(project_id, limit=100000)
+            game_root = self._resolve_project_game_root(project_id)
+            scenes = self.load_scenes(game_root)
+            scene_index = self._build_scene_index(game_root)
+            entry_map = {str(row.get("line_id") or ""): row for row in entries}
+            content_units: list[dict[str, Any]] = []
             for entry in entries:
-                result = self.detector.detect(entry["source_text"])
+                insight = self.language_analysis.analyze(entry["source_text"])
                 self.repo.upsert_language_detection(
                     entry_id=int(entry["id"]),
                     project_id=project_id,
-                    detected_lang=result.language,
-                    confidence=result.confidence,
-                    heuristics=result.details,
+                    detected_lang=insight.language,
+                    confidence=insight.confidence,
+                    heuristics=insight.details,
                 )
-            return {"detected": len(entries)}
+                scene_id = scene_index.get(str(entry.get("line_id") or ""))
+                tags = entry.get("tags_json") if isinstance(entry.get("tags_json"), list) else []
+                content = self.content_classifier.classify(
+                    entry_id=int(entry["id"]),
+                    line_id=str(entry.get("line_id") or ""),
+                    file_path=str(entry.get("file_path") or ""),
+                    source_text=str(entry.get("source_text") or ""),
+                    speaker_id=str(entry.get("speaker_id") or "") or None,
+                    tags=tags,
+                    scene_id=scene_id,
+                )
+                speaker = self.speaker_identity.infer(
+                    entry_speaker_id=content.speaker_id,
+                    metadata_speaker=str((entry.get("metadata_json") or {}).get("speaker_id") or "") or None,
+                    scene_hint=scene_id,
+                )
+                subtitle_rel = self.subtitle_alignment.align(
+                    line_id=content.line_id,
+                    voice_link=str(entry.get("voice_link") or ""),
+                    content_type=content.content_type,
+                )
+                emotion = infer_emotion_hint(str(entry.get("source_text") or ""))
+                content_units.append(
+                    {
+                        "entry_id": content.entry_id,
+                        "line_id": content.line_id,
+                        "file_path": content.file_path,
+                        "content_type": content.content_type,
+                        "source_lang": insight.language,
+                        "confidence": round((content.confidence + insight.confidence) / 2, 4),
+                        "scene_id": scene_id,
+                        "speaker_id": speaker.speaker_id,
+                        "status": "uncertain" if insight.uncertain or insight.ambiguous else "ready",
+                        "metadata": {
+                            "language_uncertain": insight.uncertain,
+                            "language_ambiguous": insight.ambiguous,
+                            "speaker_confidence": speaker.confidence,
+                            "speaker_reason": speaker.reason,
+                            "subtitle_alignment": subtitle_rel.__dict__,
+                            "emotion_hint": emotion,
+                        },
+                        "provenance": "content_understanding_core",
+                    }
+                )
+
+            self.repo.replace_content_units(project_id, content_units)
+            scene_groups = self.scene_model.build_scene_groups(scenes, entry_map)
+            self.repo.replace_scene_groups_v2(
+                project_id,
+                [
+                    {
+                        "scene_id": group.scene_id,
+                        "line_count": len(group.line_ids),
+                        "speaker_count": len(group.speaker_ids),
+                        "status": "ready",
+                        "confidence": 0.78 if group.line_ids else 0.4,
+                        "metadata": {
+                            **group.metadata,
+                            "line_ids": group.line_ids,
+                            "speaker_ids": group.speaker_ids,
+                        },
+                    }
+                    for group in scene_groups
+                ],
+            )
+            self.evidence_store.record(
+                project_id=project_id,
+                evidence_type="content_understanding_pass",
+                entity_ref=f"detect:{len(entries)}",
+                confidence=0.75,
+                status="working",
+                payload={
+                    "detected_entries": len(entries),
+                    "content_units": len(content_units),
+                    "scene_groups": len(scene_groups),
+                },
+            )
+            return {"detected": len(entries), "content_units": len(content_units), "scene_groups": len(scene_groups)}
 
         return self.job_manager.run_job("detect", _run)
 
@@ -173,6 +334,13 @@ class AppServices:
             entries = self.repo.list_entries(project_id, limit=100000)
             game_root = self._resolve_project_game_root(project_id)
             scene_index = self._build_scene_index(game_root)
+            corrections = self.repo.list_corrections(project_id, limit=2000)
+            correction_refs: dict[str, list[str]] = defaultdict(list)
+            for row in corrections:
+                key = str(row.get("before_text") or "").strip().lower()
+                value = str(row.get("after_text") or "").strip()
+                if key and value:
+                    correction_refs[key].append(value)
             translated = 0
             tm_reuse = 0
             glossary_reuse = 0
@@ -189,12 +357,16 @@ class AppServices:
                     style_preset=style,
                     scene_index=scene_index,
                 )
+                policy = self.translation_policies.select(source_lang=str(source_lang), context=context)
+                requested_backend = backend_name
+                if backend_name == "policy_auto":
+                    requested_backend = policy.backend_preference[0]
                 decision = self.translator.translate_entry(
                     project_id=project_id,
                     entry_id=int(entry["id"]),
                     source_text=entry["source_text"],
                     source_lang=str(source_lang),
-                    backend_name=backend_name,
+                    backend_name=requested_backend,
                     style=style,
                     context=context,
                 )
@@ -202,12 +374,82 @@ class AppServices:
                 self.repo.add_translation_backend_run(
                     project_id=project_id,
                     entry_id=int(entry["id"]),
-                    requested_backend=backend_name,
+                    requested_backend=requested_backend,
                     backend_name=decision.backend,
                     fallback_backend=decision.fallback_backend,
                     latency_ms=decision.latency_ms,
                     context_used=decision.context_used,
                     fallback_used=bool(decision.fallback_backend),
+                )
+                references = [str(hit.get("target_text") or "") for hit in decision.tm_hits[:3] if hit.get("target_text")]
+                references.extend(correction_refs.get(str(entry.get("source_text") or "").strip().lower(), [])[:3])
+                reference_checks = compare_with_references(decision.translated_text, references) if references else []
+                if reference_checks:
+                    self.external_reference_log.record(
+                        project_id=project_id,
+                        entry_id=int(entry["id"]),
+                        provider="internal_reference_compare",
+                        payload={"checks": reference_checks},
+                    )
+
+                translation_package = self.evidence_router.build_package(
+                    entry_id=int(entry["id"]),
+                    source_text=str(entry["source_text"]),
+                    source_lang=str(source_lang),
+                    context_summary=context.as_dict() if context else {},
+                    chosen_backend=decision.backend,
+                    fallback_used=bool(decision.fallback_backend),
+                    glossary_hits=decision.glossary_hits,
+                    tm_hits=decision.tm_hits,
+                    alternatives=[
+                        {"backend": candidate, "note": "policy_candidate"}
+                        for candidate in policy.backend_preference
+                        if candidate != decision.backend
+                    ][:3],
+                    quality_score=decision.quality_score,
+                    uncertainty=decision.uncertainty,
+                    final_translation=decision.translated_text,
+                    reference_checks=reference_checks,
+                )
+                self.repo.add_translation_package(
+                    project_id=project_id,
+                    entry_id=int(entry["id"]),
+                    backend_name=decision.backend,
+                    fallback_used=bool(decision.fallback_backend),
+                    confidence=translation_package.confidence,
+                    quality_score=decision.quality_score,
+                    status="generated",
+                    package=asdict(translation_package),
+                )
+                conf_state = track_confidence(
+                    confidence=translation_package.confidence,
+                    uncertainty=decision.uncertainty,
+                )
+                self.evidence_store.record(
+                    project_id=project_id,
+                    evidence_type="translation_package",
+                    entity_ref=f"entry:{int(entry['id'])}",
+                    confidence=translation_package.confidence,
+                    status="working",
+                    payload={
+                        "backend": decision.backend,
+                        "fallback_backend": decision.fallback_backend,
+                        "quality_score": decision.quality_score,
+                        "warnings": translation_package.warnings,
+                        "confidence_state": conf_state,
+                    },
+                )
+                previous_quality = float(entry.get("quality_score") or 0.0)
+                adaptation_eval = self.adaptation_engine_v2.evaluate_improvement(
+                    previous_quality=previous_quality,
+                    current_quality=decision.quality_score,
+                )
+                self.repo.add_adaptation_event(
+                    project_id,
+                    event_type="translation_quality_delta",
+                    event_scope="translation",
+                    event_ref=str(entry["id"]),
+                    details=adaptation_eval,
                 )
                 self.logger.info(
                     "translation_backend_run",
@@ -216,7 +458,7 @@ class AppServices:
                         "project_id": project_id,
                         "entry_id": int(entry["id"]),
                         "details": {
-                            "requested_backend": backend_name,
+                            "requested_backend": requested_backend,
                             "active_backend": decision.backend,
                             "fallback_backend": decision.fallback_backend,
                             "latency_ms": decision.latency_ms,
@@ -288,11 +530,38 @@ class AppServices:
             user_note=user_note,
             add_to_glossary=glossary_term,
         )
+        self.evidence_store.record(
+            project_id=project_id,
+            evidence_type="user_correction",
+            entity_ref=f"entry:{entry_id}",
+            confidence=0.98,
+            status="working",
+            payload={
+                "corrected_text": corrected_text,
+                "user_note": user_note or "",
+                "glossary_term": glossary_term or [],
+            },
+        )
+        self.tm_source.mark_active(
+            project_id,
+            version="tm-v1",
+            entries_count=len(self.repo.list_translation_memory(project_id)),
+        )
+        self.glossary_source.mark_active(
+            project_id,
+            version="glossary-v1",
+            term_count=len(self.glossary_service.list_terms(project_id)),
+        )
 
     def add_glossary_term(self, project_id: int, source: str, target: str, source_lang: str = "any") -> None:
         self.glossary_service.add_term(
             project_id,
             GlossaryTerm(source_term=source, target_term=target, source_lang=source_lang, priority=30),
+        )
+        self.glossary_source.mark_active(
+            project_id,
+            version="glossary-v1",
+            term_count=len(self.glossary_service.list_terms(project_id)),
         )
 
     def voice_attempts(self, project_id: int, game_root: Path) -> dict[str, Any]:
@@ -317,6 +586,8 @@ class AppServices:
             avg_alignment = 0.0
             avg_quality = 0.0
             avg_confidence = 0.0
+            sync_plan_count = 0
+            transcript_segments: list[dict[str, Any]] = []
 
             for entry in valid_entries:
                 translated_text = (entry.get("translated_text") or "").strip()
@@ -357,6 +628,22 @@ class AppServices:
                 )
                 alignment = alignment_plan(source_duration, int(synth["duration_ms"]))
                 planner_alignment_ratio = float(duration_plan.alignment_ratio)
+                dubbing_prep = build_dubbing_prep(
+                    source_duration_ms=source_duration,
+                    translated_text=translated_text,
+                    emotion=str(profile.get("emotion_bias", "neutral")),
+                    style=str(profile.get("style_preset", "neutral")),
+                    speech_rate=float(profile.get("speech_rate", 1.0)),
+                )
+                audio_sync = plan_audio_sync(
+                    source_duration_ms=source_duration,
+                    generated_duration_ms=int(synth["duration_ms"]),
+                )
+                subtitle_sync = plan_subtitle_sync(
+                    source_duration_ms=source_duration,
+                    translated_text=translated_text,
+                )
+                rebuild_plan = build_rebuild_plan(audio_sync=audio_sync, subtitle_sync=subtitle_sync)
                 quality = score_voice_attempt(
                     has_translation=True,
                     alignment_ratio=float(alignment["ratio"]),
@@ -398,6 +685,10 @@ class AppServices:
                         "synthesis": synth,
                         "alignment": alignment,
                         "duration_plan": duration_plan.as_dict(),
+                        "dubbing_prep": dubbing_prep,
+                        "audio_sync": audio_sync,
+                        "subtitle_sync": subtitle_sync,
+                        "rebuild_plan": rebuild_plan,
                         "linking": {
                             "strategy": entry.get("linking_strategy", "speaker_id+metadata+scene"),
                             "reason": entry.get("link_reason", ""),
@@ -409,6 +700,71 @@ class AppServices:
                     },
                 )
                 self.repo.add_voice_attempt(project_id, attempt)
+                source_analysis = self.audio_analysis.analyze(
+                    source_voice_path,
+                    line_id=str(entry.get("line_id") or ""),
+                    transcript_text=str(entry.get("source_text") or ""),
+                )
+                generated_analysis = self.audio_analysis.analyze(
+                    output_path,
+                    line_id=str(entry.get("line_id") or ""),
+                    transcript_text=translated_text,
+                )
+                audio_compare = compare_source_and_generated(
+                    source_analysis.get("summary", {}),
+                    generated_analysis.get("summary", {}),
+                )
+                self.repo.add_audio_analysis_result(
+                    project_id=project_id,
+                    entry_id=int(entry["id"]),
+                    source_file=source_voice_rel,
+                    generated_file=output_voice_path,
+                    source_duration_ms=int(source_analysis.get("summary", {}).get("duration_ms", source_duration)),
+                    generated_duration_ms=int(generated_analysis.get("summary", {}).get("duration_ms", synth["duration_ms"])),
+                    delta_ms=int(audio_compare.get("delta_ms", 0)),
+                    quality_score=float(audio_compare.get("quality", quality)),
+                    confidence=confidence,
+                    status=str(audio_compare.get("status", "aligned")),
+                    payload={
+                        "source_summary": source_analysis.get("summary", {}),
+                        "generated_summary": generated_analysis.get("summary", {}),
+                        "comparison": audio_compare,
+                    },
+                )
+                self.repo.add_sync_plan(
+                    project_id=project_id,
+                    entry_id=int(entry["id"]),
+                    line_id=str(entry.get("line_id") or ""),
+                    source_duration_ms=source_duration,
+                    target_duration_ms=int(synth["duration_ms"]),
+                    delta_ms=int(audio_sync.get("delta_ms", 0)),
+                    recommended_adjustment=str(audio_sync.get("recommended_adjustment", "none")),
+                    confidence=float(audio_sync.get("confidence", 0.0)),
+                    status=str(audio_sync.get("status", "needs_review")),
+                    payload={
+                        "audio_sync": audio_sync,
+                        "subtitle_sync": subtitle_sync,
+                        "rebuild_plan": rebuild_plan,
+                        "dubbing_prep": dubbing_prep,
+                    },
+                )
+                sync_plan_count += 1
+                for segment in source_analysis.get("transcript_links", []):
+                    transcript_segments.append(
+                        {
+                            "entry_id": int(entry["id"]),
+                            "line_id": str(entry.get("line_id") or ""),
+                            "segment_id": int(segment.get("segment_id") or 0),
+                            "start_ms": int(segment.get("start_ms") or 0),
+                            "end_ms": int(segment.get("end_ms") or 0),
+                            "link_confidence": float(segment.get("link_confidence") or 0.0),
+                            "provenance": "audio_analysis",
+                            "metadata": {
+                                "token_estimate": segment.get("token_estimate", 0),
+                                "source_file": source_voice_rel,
+                            },
+                        }
+                    )
                 self.voice_attempt_history.record(
                     project_id=project_id,
                     entry_id=int(entry["id"]),
@@ -431,6 +787,22 @@ class AppServices:
                 avg_alignment += float(alignment["ratio"])
                 avg_quality += quality
                 avg_confidence += confidence
+                self.evidence_store.record(
+                    project_id=project_id,
+                    evidence_type="voice_attempt",
+                    entity_ref=f"entry:{int(entry['id'])}",
+                    confidence=confidence,
+                    status="working",
+                    payload={
+                        "speaker_id": speaker_id,
+                        "synthesis_mode": "mock_demo_tts_stub",
+                        "quality_score": quality,
+                        "alignment_ratio": planner_alignment_ratio,
+                        "sync_status": audio_sync.get("status", "n/a"),
+                    },
+                )
+
+            self.repo.replace_transcript_segments(project_id, transcript_segments)
 
             self.repo.add_adaptation_event(
                 project_id,
@@ -444,6 +816,8 @@ class AppServices:
                     "broken_links": len([item for item in entries if not item.get("link_valid", True)]),
                     "sample_bank_total": sample_summary["samples_total"],
                     "speaker_groups": len(groups),
+                    "sync_plans": sync_plan_count,
+                    "transcript_segments": len(transcript_segments),
                     "synthesis_mode": "mock_demo_tts_stub",
                 },
             )
@@ -454,6 +828,8 @@ class AppServices:
                 "broken_links": len([item for item in entries if not item.get("link_valid", True)]),
                 "speaker_groups": len(groups),
                 "sample_bank_total": sample_summary["samples_total"],
+                "sync_plans": sync_plan_count,
+                "transcript_segments": len(transcript_segments),
                 "synthesis_mode": "mock_demo_tts_stub",
                 "avg_alignment_ratio": round(avg_alignment / max(1, generated), 3),
                 "avg_quality_score": round(avg_quality / max(1, generated), 3),
@@ -664,15 +1040,35 @@ class AppServices:
     def asset_snapshot(self, project_id: int, *, limit: int = 5000) -> dict[str, Any]:
         assets = self.asset_explorer.list_index(project_id, limit=limit)
         reports = self.asset_explorer.list_archive_reports(project_id, suspected_only=False, limit=1000)
+        manifest_assets = self.repo.list_asset_manifest(project_id, limit=limit)
+        image_candidates = []
+        for row in assets:
+            metadata = row.get("metadata_json") or {}
+            abs_path = Path(str(metadata.get("absolute_path") or ""))
+            if not abs_path:
+                continue
+            candidate = detect_image_text_candidate(abs_path)
+            if candidate.get("is_image"):
+                image_candidates.append(
+                    {
+                        "file_path": row.get("file_path"),
+                        "candidate_text_overlay": candidate.get("candidate_text_overlay"),
+                        "confidence": candidate.get("confidence"),
+                    }
+                )
         return {
             "assets": assets,
+            "asset_manifest": manifest_assets,
             "archive_reports": reports,
+            "image_text_candidates": image_candidates,
             "tree": self.asset_explorer.build_tree(project_id),
             "totals": {
                 "assets": len(assets),
+                "manifest_assets": len(manifest_assets),
                 "preview_ready": len([row for row in assets if row.get("preview_status") == "ready"]),
                 "metadata_only": len([row for row in assets if row.get("preview_status") != "ready"]),
                 "suspected_containers": len([row for row in reports if row.get("suspected_container")]),
+                "image_text_candidates": len([row for row in image_candidates if row.get("candidate_text_overlay")]),
             },
         }
 
@@ -734,6 +1130,13 @@ class AppServices:
         companion_sessions = self.repo.list_companion_sessions(project_id, limit=1000)
         watched_events = self.repo.list_watched_file_events(project_id, limit=100000)
         asset_rows = self.repo.list_asset_index(project_id, limit=100000)
+        asset_manifest = self.repo.list_asset_manifest(project_id, limit=100000)
+        content_units = self.repo.list_content_units(project_id, limit=100000)
+        sync_plans = self.repo.list_sync_plans(project_id, limit=100000)
+        translation_packages = self.repo.list_translation_packages(project_id, limit=100000)
+        knowledge_sources = self.repo.list_knowledge_sources(project_id, limit=1000)
+        evidence_records = self.repo.list_evidence_records(project_id, limit=100000)
+        audio_analysis_results = self.repo.list_audio_analysis_results(project_id, limit=100000)
 
         translation_report = build_translation_report(entries, translations)
         backend_diag = build_backend_diagnostics(backend_runs)
@@ -750,6 +1153,16 @@ class AppServices:
             watched_events=watched_events,
             asset_index=asset_rows,
         )
+        multimodal_core_summary = {
+            "asset_manifest_total": len(asset_manifest),
+            "content_units_total": len(content_units),
+            "translation_packages_total": len(translation_packages),
+            "sync_plans_total": len(sync_plans),
+            "audio_analysis_total": len(audio_analysis_results),
+            "knowledge_sources_total": len(knowledge_sources),
+            "evidence_records_total": len(evidence_records),
+        }
+        summary["multimodal_core"] = multimodal_core_summary
 
         language_payload = summary.get("language", {})
         self.repo.upsert_language_report(
@@ -763,6 +1176,11 @@ class AppServices:
         self.repo.replace_backend_diagnostics(project_id, backend_diag)
         self.repo.add_project_report(project_id=project_id, report_type="translation_report", payload=translation_report)
         self.repo.add_project_report(project_id=project_id, report_type="project_summary", payload=summary)
+        self.repo.add_project_report(
+            project_id=project_id,
+            report_type="multimodal_core_summary",
+            payload=multimodal_core_summary,
+        )
         self.repo.add_quality_snapshot(
             project_id=project_id,
             snapshot_type="quality_dashboard",
@@ -797,6 +1215,91 @@ class AppServices:
             "quality_snapshots": self.repo.list_quality_snapshots(project_id, limit=80),
         }
 
+    def language_intelligence_snapshot(self, project_id: int) -> dict[str, Any]:
+        content_units = self.repo.list_content_units(project_id, limit=100000)
+        entries = self.repo.list_entries(project_id, limit=100000)
+        manifest = self.repo.list_asset_manifest(project_id, limit=100000)
+        language_counter = Counter(str(row.get("source_lang") or row.get("detected_lang") or "unknown") for row in content_units or entries)
+        uncertain_rows = [
+            row
+            for row in content_units
+            if str(row.get("status") or "") == "uncertain"
+            or float(row.get("confidence") or 0.0) < 0.75
+        ]
+        translated = len([row for row in entries if str(row.get("translated_text") or "").strip()])
+        bottlenecks = Counter(
+            str(row.get("source_lang") or "unknown")
+            for row in content_units
+            if str(row.get("status") or "") != "ready"
+        )
+        return {
+            "language_distribution": dict(sorted(language_counter.items(), key=lambda item: (-item[1], item[0]))),
+            "uncertain_units": uncertain_rows[:300],
+            "coverage": {
+                "entries_total": len(entries),
+                "translated_total": translated,
+                "coverage_rate": round(translated / max(1, len(entries)), 4),
+            },
+            "bottlenecks": dict(sorted(bottlenecks.items(), key=lambda item: (-item[1], item[0]))),
+            "asset_media_distribution": dict(Counter(str(row.get("media_type") or "unknown") for row in manifest)),
+        }
+
+    def audio_analysis_lab_snapshot(self, project_id: int) -> dict[str, Any]:
+        audio_results = self.repo.list_audio_analysis_results(project_id, limit=1000)
+        transcript_segments = self.repo.list_transcript_segments(project_id, limit=2000)
+        speaker_groups = self.repo.list_speaker_groups(project_id, limit=500)
+        voice_attempts = self.repo.list_voice_attempts(project_id, limit=1000)
+        sync_plans = self.repo.list_sync_plans(project_id, limit=1000)
+        comparison_status = Counter(str(row.get("status") or "unknown") for row in audio_results)
+        avg_quality = round(
+            sum(float(row.get("quality_score") or 0.0) for row in audio_results) / max(1, len(audio_results)),
+            4,
+        )
+        return {
+            "audio_results": audio_results,
+            "transcript_segments": transcript_segments,
+            "speaker_groups": speaker_groups,
+            "voice_attempts": voice_attempts,
+            "sync_plans": sync_plans,
+            "comparison_status": dict(comparison_status),
+            "avg_quality": avg_quality,
+            "synthesis_mode": "mock_demo_tts_stub",
+            "lab_status": "working" if audio_results else "partial",
+        }
+
+    def evidence_review_snapshot(self, project_id: int) -> dict[str, Any]:
+        packages = self.repo.list_translation_packages(project_id, limit=1200)
+        evidence = self.repo.list_evidence_records(project_id, limit=1200)
+        references = self.repo.list_external_reference_events(project_id, limit=500)
+        corrections = self.repo.list_corrections(project_id, limit=500)
+        adaptation = self.repo.list_adaptation_events(project_id, limit=500)
+        return {
+            "translation_packages": packages,
+            "evidence_records": evidence,
+            "external_references": references,
+            "corrections": corrections,
+            "adaptation_events": adaptation,
+            "knowledge_sources": self.repo.list_knowledge_sources(project_id, limit=200),
+        }
+
+    def sync_review_snapshot(self, project_id: int) -> dict[str, Any]:
+        sync_plans = self.repo.list_sync_plans(project_id, limit=1200)
+        high_risk = [row for row in sync_plans if str((row.get("payload_json") or {}).get("audio_sync", {}).get("sync_risk")) == "high"]
+        subtitle_issues = [
+            row
+            for row in sync_plans
+            if str((row.get("payload_json") or {}).get("subtitle_sync", {}).get("status")) in {"too_fast_for_reading", "borderline"}
+        ]
+        return {
+            "sync_plans": sync_plans,
+            "high_risk_count": len(high_risk),
+            "subtitle_issue_count": len(subtitle_issues),
+            "export_risk_summary": {
+                "high": len(high_risk),
+                "medium_or_low": max(0, len(sync_plans) - len(high_risk)),
+            },
+        }
+
     def hud_snapshot(
         self,
         project_id: int,
@@ -821,6 +1324,10 @@ class AppServices:
         reports = self.repo.list_project_reports(project_id, limit=20)
         diagnostics = self.repo.list_backend_diagnostics(project_id, limit=20)
         sessions = self.repo.list_companion_sessions(project_id, limit=120)
+        translation_packages = self.repo.list_translation_packages(project_id, limit=5000)
+        evidence_records = self.repo.list_evidence_records(project_id, limit=5000)
+        sync_plans = self.repo.list_sync_plans(project_id, limit=5000)
+        knowledge_sources = self.repo.list_knowledge_sources(project_id, limit=500)
 
         entries_total = len(entries)
         detected_total = len([row for row in entries if str(row.get("detected_lang") or "").strip() != ""])
@@ -928,6 +1435,10 @@ class AppServices:
             "companion_session_id": companion_session_id,
             "translation_coverage_rate": round(translated_total / max(1, entries_total), 4),
             "uncertain_rate": round(uncertain_total / max(1, entries_total), 4),
+            "translation_packages_total": len(translation_packages),
+            "evidence_records_total": len(evidence_records),
+            "sync_plans_total": len(sync_plans),
+            "knowledge_sources_total": len(knowledge_sources),
             "next_action": next_action,
         }
 
@@ -1298,6 +1809,11 @@ class AppServices:
             )
 
         return reindexed_entries
+
+    def _register_default_knowledge_sources(self) -> None:
+        # Global app-level defaults are recorded per project when project exists.
+        # This function keeps the intent explicit for architecture transparency.
+        return
 
     @staticmethod
     def _wav_duration_ms(path: Path) -> int:

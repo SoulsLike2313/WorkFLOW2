@@ -1,30 +1,27 @@
 ﻿# UI Fix Plan
 
-## Цель текущей итерации
-Не добавлять новые функции, а закрыть системные UI-риски и нормализовать UI-QA артефакты.
+## Scope of this corrective cycle
+- Fix automation blind spots and false PASS risks.
+- Keep focus on UI-QA system behavior and machine evidence.
 
-## Приоритеты
-### Priority 1 — Artifact portability
-- Убрать machine-local absolute paths из summary/manifest/latest pointers.
-- Зафиксировать repo-relative path contract.
+## Executed corrections
+1. `ui_snapshot_runner`
+- Added state coverage capture (`initial/loaded/no_selection/dense/empty/anomaly`).
+- Added walkthrough trace output (`ui_walkthrough_trace.json`).
+- Added richer screenshot metadata (`importance`, `scenario_reference`).
 
-### Priority 2 — Critical/Major UI geometry
-- Устранить splitter-конфликт между main workspace и context panel.
-- Убрать clipping в Sessions.
-- Убрать clipping CTA в AI Studio.
+2. `ui_validate`
+- Added walkthrough/state coverage validation logic.
+- Added strict check lists (`passed_checks`, `warned_checks`, `failed_checks`).
+- Added root walkthrough artifact publication.
+- Added explicit PASS/PASS_WITH_WARNINGS/FAIL gate behavior.
 
-### Priority 3 — Доказательство через прогоны
-- Запустить новый `snapshot -> validate -> doctor` цикл.
-- Сохранить новые run_id и статусы в документации.
+3. `ui_doctor`
+- Added acceptance-blocker classification and issue taxonomy.
+- Added grouped screen/category summaries.
+- Added walkthrough trace output.
+- Reduced false positives in CTA checks.
 
-## Что сделано
-- Обновлены `scripts/ui_snapshot_runner.py`, `scripts/ui_validate.py`, `scripts/ui_doctor.py`.
-- Добавлены `latest_run.{txt,json}` для `ui_doctor`.
-- `manual_testing_allowed` и строгий gate в `ui_validate` (только `PASS`).
-- Исправлены UI-проблемы, выявленные в run `20260312_160134`.
-
-## Верификация
-- Baseline warning run: `20260312_160134` (`PASS_WITH_WARNINGS`).
-- Fixed run (validate): `20260312_160707` (`PASS`).
-- Fixed run (doctor): `20260312_161111` (`PASS`).
-- Snapshot evidence: `20260312_160910` (`PASS`).
+## Outcome
+- Latest validate run (`20260312_170515`) is `PASS` with no warnings/failures.
+- Machine evidence available in run directories and root summary artifacts.

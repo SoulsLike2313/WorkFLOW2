@@ -15,12 +15,15 @@ from PySide6.QtWidgets import (
 from app.bootstrap import AppServices
 
 from .asset_explorer_panel import AssetExplorerPanel
+from .audio_analysis_lab_panel import AudioAnalysisLabPanel
 from .companion_panel import CompanionPanel
 from .diagnostics_panel import DiagnosticsPanel
+from .evidence_review_panel import EvidenceReviewPanel
 from .entries_panel import EntriesPanel
 from .export_panel import ExportPanel
 from .glossary_panel import GlossaryPanel
 from .jobs_panel import JobsPanel
+from .language_intelligence_panel import LanguageIntelligencePanel
 from .language_hub_panel import LanguageHubPanel
 from .learning_panel import LearningPanel
 from .live_demo_panel import LiveDemoPanel
@@ -28,6 +31,7 @@ from .project_wizard import ProjectWizardPanel
 from .qa_panel import QaPanel
 from .reports_panel import ReportsPanel
 from .scan_panel import ScanPanel
+from .sync_review_panel import SyncReviewPanel
 from .translation_panel import TranslationPanel
 from .voice_panel import VoicePanel
 from .hud_panel import ProductHudPanel
@@ -68,6 +72,10 @@ class MainWindow(QMainWindow):
         self.qa_panel = QaPanel()
         self.reports_panel = ReportsPanel()
         self.diagnostics_panel = DiagnosticsPanel()
+        self.language_intelligence_panel = LanguageIntelligencePanel()
+        self.audio_analysis_lab_panel = AudioAnalysisLabPanel()
+        self.evidence_review_panel = EvidenceReviewPanel()
+        self.sync_review_panel = SyncReviewPanel()
         self.export_panel = ExportPanel(str(services.config.paths.exports_dir))
         self.jobs_panel = JobsPanel()
         self.live_panel = LiveDemoPanel()
@@ -85,6 +93,10 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.qa_panel, "QA")
         self.tabs.addTab(self.reports_panel, "Reports")
         self.tabs.addTab(self.diagnostics_panel, "Diagnostics")
+        self.tabs.addTab(self.language_intelligence_panel, "Language Intelligence")
+        self.tabs.addTab(self.audio_analysis_lab_panel, "Audio Analysis Lab")
+        self.tabs.addTab(self.evidence_review_panel, "Evidence Review")
+        self.tabs.addTab(self.sync_review_panel, "Sync Review")
         self.tabs.addTab(self.export_panel, "Export")
         self.tabs.addTab(self.jobs_panel, "Jobs / Logs")
         self.tabs.addTab(self.live_panel, "Live Demo")
@@ -131,6 +143,10 @@ class MainWindow(QMainWindow):
         self.reports_panel.generate_btn.clicked.connect(self.on_generate_reports)
         self.reports_panel.refresh_btn.clicked.connect(self.refresh_reports)
         self.diagnostics_panel.refresh_btn.clicked.connect(self.refresh_diagnostics)
+        self.language_intelligence_panel.refresh_btn.clicked.connect(self.refresh_language_intelligence)
+        self.audio_analysis_lab_panel.refresh_btn.clicked.connect(self.refresh_audio_lab)
+        self.evidence_review_panel.refresh_btn.clicked.connect(self.refresh_evidence_review)
+        self.sync_review_panel.refresh_btn.clicked.connect(self.refresh_sync_review)
         self.export_panel.export_btn.clicked.connect(self.on_export)
         self.jobs_panel.refresh_btn.clicked.connect(self.refresh_jobs)
         self.live_panel.start_btn.clicked.connect(self.on_start_live_demo)
@@ -226,6 +242,8 @@ class MainWindow(QMainWindow):
         self.refresh_learning()
         self.refresh_reports()
         self.refresh_diagnostics()
+        self.refresh_language_intelligence()
+        self.refresh_evidence_review()
         self.refresh_jobs()
         self.refresh_language_hub()
         self.refresh_hud()
@@ -263,6 +281,8 @@ class MainWindow(QMainWindow):
         self.refresh_learning()
         self.refresh_glossary()
         self.refresh_language_hub()
+        self.refresh_evidence_review()
+        self.refresh_language_intelligence()
         self.refresh_hud()
 
     def on_voice_attempts(self) -> None:
@@ -279,6 +299,9 @@ class MainWindow(QMainWindow):
         self.refresh_learning()
         self.refresh_reports()
         self.refresh_diagnostics()
+        self.refresh_audio_lab()
+        self.refresh_sync_review()
+        self.refresh_evidence_review()
         self.refresh_jobs()
         self.refresh_hud()
 
@@ -363,6 +386,10 @@ class MainWindow(QMainWindow):
         self.refresh_qa()
         self.refresh_reports()
         self.refresh_diagnostics()
+        self.refresh_language_intelligence()
+        self.refresh_audio_lab()
+        self.refresh_evidence_review()
+        self.refresh_sync_review()
         self.refresh_hud()
 
     def on_generate_reports(self) -> None:
@@ -391,6 +418,8 @@ class MainWindow(QMainWindow):
         )
         self.refresh_reports()
         self.refresh_diagnostics()
+        self.refresh_sync_review()
+        self.refresh_evidence_review()
         self.refresh_jobs()
         self.refresh_hud()
 
@@ -509,6 +538,10 @@ class MainWindow(QMainWindow):
         self.refresh_qa()
         self.refresh_reports()
         self.refresh_diagnostics()
+        self.refresh_language_intelligence()
+        self.refresh_audio_lab()
+        self.refresh_evidence_review()
+        self.refresh_sync_review()
         self.refresh_jobs()
         self.refresh_companion()
         self.refresh_hud()
@@ -589,6 +622,30 @@ class MainWindow(QMainWindow):
             self.services.generate_reports(self.current_project_id)
             snapshot = self.services.diagnostics_snapshot(self.current_project_id)
         self.diagnostics_panel.load_diagnostics(snapshot)
+
+    def refresh_language_intelligence(self) -> None:
+        if self.current_project_id is None:
+            self.language_intelligence_panel.load_snapshot({})
+            return
+        self.language_intelligence_panel.load_snapshot(self.services.language_intelligence_snapshot(self.current_project_id))
+
+    def refresh_audio_lab(self) -> None:
+        if self.current_project_id is None:
+            self.audio_analysis_lab_panel.load_snapshot({})
+            return
+        self.audio_analysis_lab_panel.load_snapshot(self.services.audio_analysis_lab_snapshot(self.current_project_id))
+
+    def refresh_evidence_review(self) -> None:
+        if self.current_project_id is None:
+            self.evidence_review_panel.load_snapshot({})
+            return
+        self.evidence_review_panel.load_snapshot(self.services.evidence_review_snapshot(self.current_project_id))
+
+    def refresh_sync_review(self) -> None:
+        if self.current_project_id is None:
+            self.sync_review_panel.load_snapshot({})
+            return
+        self.sync_review_panel.load_snapshot(self.services.sync_review_snapshot(self.current_project_id))
 
     def refresh_jobs(self) -> None:
         if self.current_project_id is None:

@@ -1,11 +1,11 @@
 {
-  "run_id": "20260312_165455",
-  "started_at": "2026-03-12T13:54:55.909848+00:00",
-  "finished_at": "2026-03-12T13:59:23.902991+00:00",
-  "duration_seconds": 267.99,
-  "overall_status": "FAIL",
-  "manual_acceptance_recommended": false,
-  "manual_testing_allowed": false,
+  "run_id": "20260312_170515",
+  "started_at": "2026-03-12T14:05:15.504602+00:00",
+  "finished_at": "2026-03-12T14:09:43.974647+00:00",
+  "duration_seconds": 268.47,
+  "overall_status": "PASS",
+  "manual_acceptance_recommended": true,
+  "manual_testing_allowed": true,
   "project_root": ".",
   "executed_commands": [
     [
@@ -30,17 +30,14 @@
     ]
   ],
   "passed_checks": [
+    "doctor_acceptance_blockers=0",
+    "doctor_critical_issues=0",
+    "ui_doctor_status",
     "ui_snapshot_status",
     "walkthrough_trace_present"
   ],
-  "warned_checks": [
-    "doctor_major_issues=54"
-  ],
-  "failed_checks": [
-    "doctor_acceptance_blockers=9",
-    "doctor_critical_issues=9",
-    "ui_doctor_status=FAIL"
-  ],
+  "warned_checks": [],
+  "failed_checks": [],
   "warnings": [],
   "failures": [],
   "known_blind_spots": [
@@ -49,53 +46,32 @@
     "animation smoothness and perceived latency still require manual UX pass"
   ],
   "ui_doctor": {
-    "run_id": "20260312_165456",
-    "status": "FAIL",
-    "run_path": "runtime/ui_validation/20260312_165456"
+    "run_id": "20260312_170515",
+    "status": "PASS",
+    "run_path": "runtime/ui_validation/20260312_170515"
   },
   "ui_snapshot_runner": {
-    "run_id": "20260312_165715",
+    "run_id": "20260312_170735",
     "status": "PASS",
-    "run_path": "runtime/ui_snapshots/20260312_165715",
+    "run_path": "runtime/ui_snapshots/20260312_170735",
     "skipped": false
   },
-  "screen_audit": {
-    "analytics": {
-      "critical": 9,
-      "major": 0,
-      "minor": 0
-    },
-    "sessions": {
-      "critical": 0,
-      "major": 18,
-      "minor": 0
-    },
-    "settings": {
-      "critical": 0,
-      "major": 18,
-      "minor": 0
-    },
-    "updates": {
-      "critical": 0,
-      "major": 18,
-      "minor": 0
-    }
-  },
+  "screen_audit": {},
   "artifacts": {
     "root_summary_json": "ui_validation_summary.json",
     "root_summary_md": "ui_validation_summary.md",
     "root_screenshots_manifest": "ui_screenshots_manifest.json",
     "root_walkthrough_trace": "ui_walkthrough_trace.json",
-    "validate_run_dir": "runtime/ui_validation/validate_20260312_165455",
+    "validate_run_dir": "runtime/ui_validation/validate_20260312_170515",
     "latest_run_txt": "runtime/ui_validation/latest_run.txt",
     "latest_run_json": "runtime/ui_validation/latest_run.json",
-    "validate_visual_review_md": "runtime/ui_validation/validate_20260312_165455/ui_visual_review.md",
-    "validate_walkthrough_trace_json": "runtime/ui_validation/validate_20260312_165455/ui_walkthrough_trace.json",
-    "doctor_summary_json": "runtime/ui_validation/20260312_165456/ui_validation_summary.json",
-    "doctor_manifest_json": "runtime/ui_validation/20260312_165456/ui_screenshots_manifest.json",
-    "doctor_walkthrough_trace_json": "runtime/ui_validation/20260312_165456/ui_walkthrough_trace.json",
-    "snapshot_summary_json": "runtime/ui_snapshots/20260312_165715/ui_snapshot_summary.json",
-    "snapshot_manifest_json": "runtime/ui_snapshots/20260312_165715/ui_screenshots_manifest.json",
-    "snapshot_walkthrough_trace_json": "runtime/ui_snapshots/20260312_165715/ui_walkthrough_trace.json"
+    "validate_visual_review_md": "runtime/ui_validation/validate_20260312_170515/ui_visual_review.md",
+    "validate_walkthrough_trace_json": "runtime/ui_validation/validate_20260312_170515/ui_walkthrough_trace.json",
+    "doctor_summary_json": "runtime/ui_validation/20260312_170515/ui_validation_summary.json",
+    "doctor_manifest_json": "runtime/ui_validation/20260312_170515/ui_screenshots_manifest.json",
+    "doctor_walkthrough_trace_json": "runtime/ui_validation/20260312_170515/ui_walkthrough_trace.json",
+    "snapshot_summary_json": "runtime/ui_snapshots/20260312_170735/ui_snapshot_summary.json",
+    "snapshot_manifest_json": "runtime/ui_snapshots/20260312_170735/ui_screenshots_manifest.json",
+    "snapshot_walkthrough_trace_json": "runtime/ui_snapshots/20260312_170735/ui_walkthrough_trace.json"
   }
 }

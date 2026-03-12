@@ -31,7 +31,7 @@ class TranslationPanel(QWidget):
 
         controls = QHBoxLayout()
         self.backend_combo = QComboBox()
-        self.backend_combo.addItems(["local_mock", "dummy", "argos", "transformers"])
+        self.backend_combo.addItems(["local_mock", "dummy", "argos", "transformers", "local_nllb", "cloud_adapter", "policy_auto"])
         self.style_combo = QComboBox()
         self.style_combo.addItems(["neutral", "dramatic", "calm", "radio"])
         self.translate_btn = QPushButton("Translate to Russian")

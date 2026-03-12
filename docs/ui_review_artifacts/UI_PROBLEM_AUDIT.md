@@ -1,41 +1,39 @@
 ﻿# UI Problem Audit
 
-## Контекст
-- Активный модуль: `projects/wild_hunt_command_citadel/shortform_core`
-- Режим: screenshot-driven + machine validation
-- Источники: `ui_snapshot_runner`, `ui_validate`, `ui_doctor`
+## Scope
+- Active module: `projects/wild_hunt_command_citadel/shortform_core`
+- Focus: UI automation blind spots, walkthrough coverage, machine-readable artifacts.
+- Date: 2026-03-12.
 
-## Актуальные прогоны
-- `ui_snapshot_runner`: `20260312_160910` (`PASS`)
-- `ui_validate`: `20260312_160707` (`PASS`)
-- `ui_doctor`: `20260312_161111` (`PASS`)
-- Матрица: `scales=1.0,1.25,1.5`; `sizes=1540x920,1366x768,1280x800`
+## Baseline blind spots (before this pass)
+1. `ui_snapshot_runner` captured mostly loaded states and had no explicit walkthrough trace for product actions.
+2. `ui_validate` did not enforce state/scenario coverage strongly enough.
+3. `ui_doctor` had false-positive risk in CTA checks and weak separation of blockers vs non-blockers.
+4. PASS could be emitted without explicit walkthrough action coverage.
 
-## Что было найдено до corrective pass (run `20260312_160134`)
+## Current verification evidence
+- `ui_snapshot_runner`: run `20260312_170735`, status `PASS`.
+- `ui_validate`: run `20260312_170515`, status `PASS`.
+- `ui_doctor`: run `20260312_170515` (inside validate), status `PASS`.
+
+## Findings from latest run set
 ### Critical
-- нет
+- none
 
 ### Major
-- `all`: `splitter_right_too_small` (контекстная панель слишком узкая на `1366x768` и `1280x800`)
-- `sessions`: `text_clipping` (обрезка подписи источника)
-- `ai_studio`: `button_clipping` (обрезка CTA "Сгенерировать рекомендации")
+- none
 
 ### Minor
-- нет
+- none
 
-## Что подтверждено после corrective pass
-- В run `20260312_161111` (`ui_doctor`) severity-counters: `critical=0`, `major=0`, `minor=0`.
-- В run `20260312_160707` (`ui_validate`) warnings/failures: пусто.
-- `manual_testing_allowed=true` в `ui_validation_summary.json`.
-
-## Проверяемые артефакты (repo-relative)
+## Machine-readable references
 - `projects/wild_hunt_command_citadel/shortform_core/ui_validation_summary.json`
-- `projects/wild_hunt_command_citadel/shortform_core/ui_validation_summary.md`
 - `projects/wild_hunt_command_citadel/shortform_core/ui_screenshots_manifest.json`
-- `projects/wild_hunt_command_citadel/shortform_core/runtime/ui_validation/validate_20260312_160707/`
-- `projects/wild_hunt_command_citadel/shortform_core/runtime/ui_validation/20260312_161111/`
-- `projects/wild_hunt_command_citadel/shortform_core/runtime/ui_snapshots/20260312_160910/`
+- `projects/wild_hunt_command_citadel/shortform_core/ui_walkthrough_trace.json`
+- `projects/wild_hunt_command_citadel/shortform_core/runtime/ui_validation/validate_20260312_170515/`
+- `projects/wild_hunt_command_citadel/shortform_core/runtime/ui_snapshots/20260312_170735/`
 
-## Итог
-- Machine status: `PASS`.
-- Системные major-проблемы из предыдущего цикла закрыты в новых прогонах.
+## Verified blind spots that still remain
+- Semantic visual quality still requires human review.
+- Display/hardware contrast perception is outside machine checks.
+- Perceived animation smoothness still requires human review.

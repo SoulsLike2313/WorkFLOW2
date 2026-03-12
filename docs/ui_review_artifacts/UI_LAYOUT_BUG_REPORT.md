@@ -1,20 +1,20 @@
 ﻿# UI Layout Bug Report
 
-## Источник данных
-- Baseline с проблемами: `runtime/ui_validation/20260312_160134/ui_validation_summary.json`
-- Подтверждение исправлений: `runtime/ui_validation/20260312_161111/ui_validation_summary.json`
+## Run references
+- Baseline with blind spots: `runtime/ui_validation/20260312_165931/ui_validation_summary.json`
+- Corrected run: `runtime/ui_validation/20260312_170515/ui_validation_summary.json`
 
-## Layout Issues (история)
-| screen | block | issue | severity | likely cause | fix status | evidence |
-|---|---|---|---|---|---|---|
-| all | main splitter | `splitter_right_too_small` | major | жёстко заниженный minimum для context panel | fixed | 160134 -> 161111 |
-| sessions | session chips | `text_clipping` | major | плотная двухколоночная сетка chip-блока на малой ширине | fixed | 160134 -> 161111 |
-| ai_studio | action row | `button_clipping` | major | длинный CTA в двухколоночном ряду при high scale | fixed | 160134 -> 161111 |
+## Layout issue register
+| screen | issue_type | severity | status | evidence |
+|---|---|---|---|---|
+| analytics | missing_critical_cta (false positive) | critical | resolved in detector logic | 165931 -> 170515 |
+| sessions/updates/settings | floating_cta_risk over-detection | major | reduced by rule hardening | 165931 -> 170515 |
 
-## Текущее состояние
-- Run `20260312_161111`: layout anomalies не обнаружены (`critical=0`, `major=0`, `minor=0`).
+## Current layout status (latest)
+- `critical=0`, `major=0`, `minor=0` in run `20260312_170515`.
+- No acceptance blockers in latest validate run.
 
-## Артефакты
-- `runtime/ui_validation/20260312_160134/ui_screenshots_manifest.json`
-- `runtime/ui_validation/20260312_161111/ui_screenshots_manifest.json`
-- `runtime/ui_compare/latest_run.json` (если сравнение запускалось отдельно)
+## Artifact links
+- `projects/wild_hunt_command_citadel/shortform_core/runtime/ui_validation/20260312_170515/ui_screenshots_manifest.json`
+- `projects/wild_hunt_command_citadel/shortform_core/runtime/ui_validation/20260312_170515/ui_walkthrough_trace.json`
+- `projects/wild_hunt_command_citadel/shortform_core/runtime/ui_validation/validate_20260312_170515/ui_validation_summary.json`
