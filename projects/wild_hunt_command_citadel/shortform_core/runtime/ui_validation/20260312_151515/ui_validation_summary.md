@@ -1,4 +1,4 @@
-# UI Validation Summary
+﻿# UI Validation Summary
 
 - Run ID: `20260312_151515`
 - Status: `PASS`
@@ -30,6 +30,7 @@
 
 ## Artifacts
 
-- screenshots_manifest: `E:\CVVCODEX\projects\wild_hunt_command_citadel\shortform_core\runtime\ui_validation\20260312_151515\ui_screenshots_manifest.json`
-- summary_json: `E:\CVVCODEX\projects\wild_hunt_command_citadel\shortform_core\runtime\ui_validation\20260312_151515\ui_validation_summary.json`
-- summary_md: `E:\CVVCODEX\projects\wild_hunt_command_citadel\shortform_core\runtime\ui_validation\20260312_151515\ui_validation_summary.md`
+- screenshots_manifest: `runtime\ui_validation\20260312_151515\ui_screenshots_manifest.json`
+- summary_json: `runtime\ui_validation\20260312_151515\ui_validation_summary.json`
+- summary_md: `runtime\ui_validation\20260312_151515\ui_validation_summary.md`
+

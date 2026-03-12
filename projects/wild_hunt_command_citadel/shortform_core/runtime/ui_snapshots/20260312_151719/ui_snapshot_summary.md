@@ -1,4 +1,4 @@
-# UI Snapshot Summary
+﻿# UI Snapshot Summary
 
 - Run ID: `20260312_151719`
 - Label: `snapshot`
@@ -10,5 +10,6 @@
 
 ## Artifacts
 
-- Manifest: `E:\CVVCODEX\projects\wild_hunt_command_citadel\shortform_core\runtime\ui_snapshots\20260312_151719\ui_screenshots_manifest.json`
-- Screenshots dir: `E:\CVVCODEX\projects\wild_hunt_command_citadel\shortform_core\runtime\ui_snapshots\20260312_151719\screenshots`
+- Manifest: `runtime\ui_snapshots\20260312_151719\ui_screenshots_manifest.json`
+- Screenshots dir: `runtime\ui_snapshots\20260312_151719\screenshots`
+

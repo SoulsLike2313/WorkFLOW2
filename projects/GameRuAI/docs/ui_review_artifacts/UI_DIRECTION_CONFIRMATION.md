@@ -2,15 +2,16 @@
 
 ## Confirmed UI direction
 - Operations-first desktop workflow with transparent pipeline status.
-- Product HUD first: users should see project stage and next action immediately.
+- HUD first: users should see project state and next action immediately.
 - Language bottlenecks must be visible as first-class product blocks.
 - Reproducible UI-QA loop using machine-readable run artifacts.
 
 ## Product-specific UX priorities
-- Users must quickly understand pipeline readiness and next action.
-- Language Hub must expose uncertain lines, queue, and localization stress.
-- Critical translation/voice/companion controls must be discoverable without hover.
-- Reports/diagnostics must stay legible under realistic data volume.
+- Users quickly understand localization readiness from HUD.
+- Language Hub shows queue/review/stress so uncertain lines are not hidden.
+- Workflow shortcuts reduce navigation friction (`Focus Uncertain`, `Focus Stress`, `Open Translation`).
+- Critical translation/voice/companion controls stay discoverable without hover.
+- Reports/diagnostics stay legible under realistic data volume.
 
 ## Scenario coverage baseline
 Automation validates GameRuAI product states directly, including:
@@ -20,7 +21,7 @@ Automation validates GameRuAI product states directly, including:
 - Translation, Voice, Reports, Diagnostics, Companion, and pipeline tabs.
 
 ## Current confirmation
-- Last run: `20260312_155348`
+- Last run: `20260312_161125`
 - Validation: `PASS_WITH_WARNINGS`
 - Main open risk: layout consistency (`floating_critical_cta`) across action rows.
 

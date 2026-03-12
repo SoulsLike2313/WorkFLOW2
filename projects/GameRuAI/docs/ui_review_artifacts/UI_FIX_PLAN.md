@@ -1,8 +1,8 @@
 ﻿# UI Fix Plan - GameRuAI
 
 ## Baseline findings source
-- Validation run: `20260312_155348`
-- Doctor run: `20260312_155348`
+- Validation run: `20260312_161125`
+- Doctor run: `20260312_161126`
 - Main issue cluster: `floating_critical_cta` (`261` major findings)
 
 ## Priority order
@@ -12,7 +12,7 @@
 
 ## Screen-level actions
 - Language Hub
-  - Keep `Refresh Language Blocks` anchored inside fixed toolbar container.
+  - Keep action row (`Refresh`, `Focus Uncertain`, `Focus Stress`, `Open Translation`) inside one fixed toolbar container.
 - Asset Explorer
   - Rebuild header CTA row (`Refresh Asset Index`) inside a persistent parent layout.
 - Companion

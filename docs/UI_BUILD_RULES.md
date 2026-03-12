@@ -1,77 +1,82 @@
-# UI Build Rules
+﻿# UI Build Rules
 
-Канонические правила для active module:  
+Канонический документ для active module:  
 `projects/wild_hunt_command_citadel/shortform_core`
 
 ## 1. Product Direction
 - Tactical AAA Command Center + Premium Minimal Metallic.
 - 80% premium control center + 20% controlled sci-fi glow.
-- No Witcher/Wild Hunt/fantasy branding.
-- No retro cheap sci-fi, no plastic UI, no debug-shell feel.
+- Запрещено: Witcher/Wild Hunt/lore-branding, cheap retro sci-fi, debug-shell aesthetics.
 
-## 2. HUD Truthfulness Rules
-- Dashboard обязан показывать реальные operational states:
-  - readiness,
-  - verification,
-  - active profiles/sessions,
-  - content queue,
-  - AI/update status,
-  - next actions.
-- Пустые “красивые” блоки без product-смысла запрещены.
+## 2. Artifact Portability Rules
+- В machine artifacts запрещены machine-local absolute paths (`E:\...`).
+- Разрешены только repo-relative пути (`runtime/...`, `ui_validation_summary.json`, и т.д.).
+- Обязательно поддерживать:
+  - `runtime/ui_snapshots/latest_run.{txt,json}`
+  - `runtime/ui_validation/latest_run.{txt,json}`
 
-## 3. Grid & Composition Rules
-- Стабильная shell-структура: sidebar / top status / workspace / context panel.
-- Единые внешние и внутренние отступы.
-- CTA должны быть встроены в композицию блока, не “плавать”.
-- Split-панели обязаны иметь безопасные min sizes и ratio.
+## 3. Screenshot Manifest Contract
+Каждый screenshot entry обязан содержать:
+- `screen_name`
+- `state_name`
+- `screenshot_path` (repo-relative)
+- `timestamp`
+- `notes`
+- `tags`
+- `severity_reference`
+- `issue_reference`
 
-## 4. Spacing & Rhythm Rules
-- Использовать scale-токены, а не случайные числа.
-- Сохранять вертикальный rhythm между секциями.
-- Не жертвовать информативностью ради пустоты.
+## 4. Grid & Composition
+- Shell-структура неизменна: sidebar / top-status / workspace / context panel.
+- CTA должны быть встроены в panel-grid, без floating placement.
+- Splitter должен сохранять безопасные min widths для обеих колонок.
 
-## 5. Typography Rules
-- Ясная иерархия: display/title/body/helper/metric.
-- Русские тексты должны быть естественными и читабельными.
-- Длинные строки не должны ломать layout.
+## 5. CTA Rules
+- Критичные CTA не могут быть hover-only.
+- Primary/secondary/context hierarchy обязательна.
+- Длинные CTA обязаны иметь anti-clipping стратегию (grid/stack/label policy).
 
-## 6. Interaction Rules
-- No hover-only critical controls.
-- Hover/focus/pressed состояния обязательны и предсказуемы.
-- Primary/secondary/context action hierarchy обязательна.
+## 6. Typography Rules
+- Чёткая иерархия: section title / hint / metric value / helper text.
+- Русские тексты должны быть естественными и не ломать layout.
+- Типографика не должна быть «дубовой» или визуально агрессивной.
 
 ## 7. Layout Invariants
 - No overlaps.
-- No clipping ключевых CTA/статусов.
-- No broken containers.
-- No detached action groups.
+- No clipping ключевых CTA и state-labels.
 - No out-of-bounds interactive widgets.
+- No detached action groups.
 
-## 8. Scaling Rules
-- Проверки минимум на 100%, 125%, 150%.
-- UI должен оставаться читаемым и стабильным при каждом масштабе.
+## 8. DPI / Scaling Matrix
+Обязательные проверки:
+- `100%`
+- `125%`
+- `150%`
 
-## 9. Extensibility Rules
-- Новые блоки добавляются через переиспользуемые компоненты, не через one-off hacks.
-- Новые панели должны иметь:
-  - явную цель,
-  - явные CTA,
-  - ясный статус.
-- Изменения должны быть локальными и не ломать весь экран.
+Для каждого масштаба проверяются:
+- русские тексты,
+- кнопки и pills,
+- cards/panels,
+- sidebar/context panel,
+- long strings,
+- overflow/clipping риски.
 
-## 10. Screenshot-driven Loop (Mandatory)
-Перед финальным визуальным ревью обязательно:
-1. `ui_snapshot_runner` (baseline/after).
-2. `ui_doctor` (layout + interaction checks).
-3. `ui_validate` (consolidated gate + artifacts).
-4. `ui_compare_runs` (base vs target visual delta).
+## 9. Machine Gate
+Канонический gate: `scripts/ui_validate.py`
+- `PASS` -> ручной тест разрешён.
+- `PASS_WITH_WARNINGS` или `FAIL` -> ручной тест запрещён.
+
+## 10. Mandatory Pipeline
+1. `scripts/ui_snapshot_runner.py`
+2. `scripts/ui_validate.py`
+3. `scripts/ui_doctor.py`
+4. (опционально) `scripts/ui_compare_runs.py`
 
 ## 11. Required Artifacts
-- `runtime/ui_snapshots/<run_id>/...`
-- `runtime/ui_validation/<run_id>/...`
 - `ui_validation_summary.json`
 - `ui_validation_summary.md`
 - `ui_screenshots_manifest.json`
+- `runtime/ui_snapshots/<run_id>/...`
+- `runtime/ui_validation/<run_id>/...`
+- `runtime/ui_validation/validate_<run_id>/...`
 - `runtime/ui_validation/latest_run.txt`
-
-Без этих артефактов UI готовность не подтверждается.

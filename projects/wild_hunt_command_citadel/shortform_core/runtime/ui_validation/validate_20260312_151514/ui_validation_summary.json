@@ -1,15 +1,15 @@
-{
+﻿{
   "run_id": "20260312_151514",
   "started_at": "2026-03-12T12:15:14.973724+00:00",
   "finished_at": "2026-03-12T12:19:04.274784+00:00",
   "duration_seconds": 229.3,
   "overall_status": "PASS",
   "manual_acceptance_recommended": true,
-  "project_root": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core",
+  "project_root": ".",
   "executed_commands": [
     [
-      "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\.venv\\Scripts\\python.exe",
-      "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\scripts\\ui_doctor.py",
+      ".venv\\Scripts\\python.exe",
+      "scripts\\ui_doctor.py",
       "--scales",
       "1.0,1.25,1.5",
       "--sizes",
@@ -18,8 +18,8 @@
       "http://127.0.0.1:9"
     ],
     [
-      "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\.venv\\Scripts\\python.exe",
-      "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\scripts\\ui_snapshot_runner.py",
+      ".venv\\Scripts\\python.exe",
+      "scripts\\ui_snapshot_runner.py",
       "--scales",
       "1.0,1.25,1.5",
       "--sizes",
@@ -31,27 +31,28 @@
   "ui_doctor": {
     "run_id": "20260312_151515",
     "status": "PASS",
-    "run_path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515"
+    "run_path": "runtime\\ui_validation\\20260312_151515"
   },
   "ui_snapshot_runner": {
     "run_id": "20260312_151719",
     "status": "PASS",
-    "run_path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719",
+    "run_path": "runtime\\ui_snapshots\\20260312_151719",
     "skipped": false
   },
   "warnings": [],
   "failures": [],
   "screen_audit": {},
   "artifacts": {
-    "root_summary_json": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\ui_validation_summary.json",
-    "root_summary_md": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\ui_validation_summary.md",
-    "root_screenshots_manifest": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\ui_screenshots_manifest.json",
-    "validate_run_dir": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\validate_20260312_151514",
-    "latest_run_txt": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\latest_run.txt",
-    "validate_visual_review_md": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\validate_20260312_151514\\ui_visual_review.md",
-    "doctor_summary_json": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\ui_validation_summary.json",
-    "doctor_manifest_json": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\ui_screenshots_manifest.json",
-    "snapshot_summary_json": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\ui_snapshot_summary.json",
-    "snapshot_manifest_json": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_snapshots\\20260312_151719\\ui_screenshots_manifest.json"
+    "root_summary_json": "ui_validation_summary.json",
+    "root_summary_md": "ui_validation_summary.md",
+    "root_screenshots_manifest": "ui_screenshots_manifest.json",
+    "validate_run_dir": "runtime\\ui_validation\\validate_20260312_151514",
+    "latest_run_txt": "runtime\\ui_validation\\latest_run.txt",
+    "validate_visual_review_md": "runtime\\ui_validation\\validate_20260312_151514\\ui_visual_review.md",
+    "doctor_summary_json": "runtime\\ui_validation\\20260312_151515\\ui_validation_summary.json",
+    "doctor_manifest_json": "runtime\\ui_validation\\20260312_151515\\ui_screenshots_manifest.json",
+    "snapshot_summary_json": "runtime\\ui_snapshots\\20260312_151719\\ui_snapshot_summary.json",
+    "snapshot_manifest_json": "runtime\\ui_snapshots\\20260312_151719\\ui_screenshots_manifest.json"
   }
 }
+

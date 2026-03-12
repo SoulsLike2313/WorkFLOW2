@@ -30,10 +30,10 @@
 3. Validator merges outputs and writes root artifacts.
 
 ## Last completed run
-- Validation run: `20260312_155348`
+- Validation run: `20260312_161125`
 - Result: `PASS_WITH_WARNINGS`
-- Doctor run: `20260312_155348`
-- Snapshot run: `20260312_155949`
+- Doctor run: `20260312_161126`
+- Snapshot run: `20260312_161728`
 - Snapshot coverage: `16` screens / `24` states / `210` captures
 - Combined manifest captures (doctor + snapshot): `420`
 

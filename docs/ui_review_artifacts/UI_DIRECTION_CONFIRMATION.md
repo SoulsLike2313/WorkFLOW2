@@ -1,23 +1,27 @@
-# UI Direction Confirmation
+﻿# UI Direction Confirmation
 
-Подтверждённый вектор интерфейса:
-
-- Tactical AAA Command Center.
-- Premium Minimal Metallic.
+## Подтверждённый вектор
+- Tactical AAA Command Center + Premium Minimal Metallic.
 - Баланс: `80% premium control center + 20% controlled sci-fi glow`.
 - База: dark graphite / near-black.
-- Акценты: violet/purple metallic.
-- Glow: только на meaningful states (active/focus/primary/context), без neon overload.
+- Акценты: violet / metallic purple.
+- Glow: точечный (focus/active/AI/primary), без neon overload.
 
-## Явные запреты
-- No Witcher / Wild Hunt / fantasy / lore branding.
-- No cheap retro sci-fi skin.
-- No debug-shell visual language.
-- No floating CTA.
-- No hover-only critical controls.
-- No plastic buttons и грубые толстые outlines.
+## Что исключено
+- Witcher / Wild Hunt / fantasy / lore-branding.
+- Старый debug-shell feel.
+- Плавающие CTA и хаотичная геометрия.
+- Hover-only critical controls.
+- Грубые «пластиковые» кнопки.
 
 ## Product-first трактовка
-- Красота без стабильной геометрии не считается качеством.
-- Premium UI = читаемость + иерархия + предсказуемые действия + устойчивая сетка.
-- Каждая панель должна иметь ясную продуктовую роль (context, action, insight, status).
+Premium UI = не только визуальный стиль, а связка:
+1. читаемая информационная иерархия,
+2. предсказуемая сетка и CTA-логика,
+3. устойчивость на resize/DPI,
+4. machine-проверяемость через screenshot/validation цикл.
+
+## Подтверждение на текущем цикле
+- `ui_validate` (`20260312_160707`) -> `PASS`
+- `ui_doctor` (`20260312_161111`) -> `PASS`
+- `ui_snapshot_runner` (`20260312_160910`) -> `PASS`

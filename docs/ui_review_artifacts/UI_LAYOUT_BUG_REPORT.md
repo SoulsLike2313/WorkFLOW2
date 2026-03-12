@@ -1,29 +1,20 @@
 ﻿# UI Layout Bug Report
 
-## Scope
-- project: `projects/wild_hunt_command_citadel/shortform_core`
-- source run: `ui_doctor` run_id `20260312_151910`
-- status: `PASS`
+## Источник данных
+- Baseline с проблемами: `runtime/ui_validation/20260312_160134/ui_validation_summary.json`
+- Подтверждение исправлений: `runtime/ui_validation/20260312_161111/ui_validation_summary.json`
 
-## Screen Coverage
-- dashboard
-- profiles
-- sessions
-- content
-- analytics
-- ai_studio
-- audit
-- updates
-- settings
+## Layout Issues (история)
+| screen | block | issue | severity | likely cause | fix status | evidence |
+|---|---|---|---|---|---|---|
+| all | main splitter | `splitter_right_too_small` | major | жёстко заниженный minimum для context panel | fixed | 160134 -> 161111 |
+| sessions | session chips | `text_clipping` | major | плотная двухколоночная сетка chip-блока на малой ширине | fixed | 160134 -> 161111 |
+| ai_studio | action row | `button_clipping` | major | длинный CTA в двухколоночном ряду при high scale | fixed | 160134 -> 161111 |
 
-## Layout Issue Table
+## Текущее состояние
+- Run `20260312_161111`: layout anomalies не обнаружены (`critical=0`, `major=0`, `minor=0`).
 
-| screen | block | issue | severity | status | run_id |
-|---|---|---|---|---|---|
-| all | all validated blocks | no machine-detected layout anomalies | none | checked | 20260312_151910 |
-
-## Recorded Counters
-- critical: `0`
-- major: `0`
-- minor: `0`
-- failed_workers: `[]`
+## Артефакты
+- `runtime/ui_validation/20260312_160134/ui_screenshots_manifest.json`
+- `runtime/ui_validation/20260312_161111/ui_screenshots_manifest.json`
+- `runtime/ui_compare/latest_run.json` (если сравнение запускалось отдельно)

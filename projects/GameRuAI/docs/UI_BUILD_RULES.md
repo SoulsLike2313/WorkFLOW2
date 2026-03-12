@@ -7,9 +7,9 @@ These rules are specific to GameRuAI desktop workflow screens:
   Learning, Glossary, QA, Reports, Diagnostics, Export, Jobs / Logs, Live Demo, Companion.
 
 ## Validated baseline run
-- Validation run: `20260312_155348`
-- Doctor run: `20260312_155348`
-- Snapshot run: `20260312_155949`
+- Validation run: `20260312_161125`
+- Doctor run: `20260312_161126`
+- Snapshot run: `20260312_161728`
 - Status: `PASS_WITH_WARNINGS` (`ui_doctor`) + `PASS` (`ui_snapshot_runner`)
 - Snapshot coverage: `16` screens / `24` product states / `210` captures
 
@@ -24,6 +24,7 @@ These rules are specific to GameRuAI desktop workflow screens:
 - HUD must expose pipeline stage statuses (`scan/extract/detect/translate/voice/export/reports/diagnostics`).
 - HUD must expose companion session status and next action hint.
 - HUD metrics must include entries/languages/translated/uncertain/voice/QA/report state.
+- HUD must expose language bottlenecks and quick actions.
 
 ## CTA placement rules
 - Critical CTA controls must remain visible without hover.
@@ -32,7 +33,7 @@ These rules are specific to GameRuAI desktop workflow screens:
   - Project: `Create/Select Project`, `Run Full Demo Pipeline`
   - Scan: `Run Scan`, `Extract Strings`
   - Entries: `Detect Language`, `Refresh`
-  - Language Hub: `Refresh Language Blocks`
+  - Language Hub: `Refresh Language Blocks`, `Focus Uncertain In Entries`, `Focus Stress In Entries`, `Open Translation Workbench`
   - Translation: `Translate to Russian`, `Apply Correction`
   - Voice: `Generate Demo Voice Attempts`, `Update Speaker Profile`
   - Reports: `Generate Reports`, `Refresh Reports`

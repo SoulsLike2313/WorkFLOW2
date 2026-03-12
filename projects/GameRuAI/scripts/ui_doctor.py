@@ -23,7 +23,12 @@ REQUIRED_CTA_BY_SCREEN: dict[str, list[str]] = {
     "Scan": ["Run Scan", "Extract Strings"],
     "Asset Explorer": ["Refresh Asset Index"],
     "Entries": ["Detect Language", "Refresh"],
-    "Language Hub": ["Refresh Language Blocks"],
+    "Language Hub": [
+        "Refresh Language Blocks",
+        "Focus Uncertain In Entries",
+        "Focus Stress In Entries",
+        "Open Translation Workbench",
+    ],
     "Translation": ["Translate to Russian", "Apply Correction"],
     "Voice": ["Generate Demo Voice Attempts", "Update Speaker Profile"],
     "Learning": ["Refresh Learning Snapshot"],
@@ -387,6 +392,18 @@ def _run_worker(args: argparse.Namespace) -> int:
             backend_text = " ".join(label.text().lower() for label in window.language_hub_panel.backend_labels)
             if "n/a" in backend_text:
                 _add_issue("major", "state_summary_missing", k, s, st, "Language backend status block has unresolved n/a values.", size_label, shot_path, window.language_hub_panel)
+            if not window.language_hub_panel.open_translation_btn.isEnabled():
+                _add_issue(
+                    "major",
+                    "state_summary_missing",
+                    k,
+                    s,
+                    st,
+                    "Language Hub translation shortcut is disabled in loaded state.",
+                    size_label,
+                    shot_path,
+                    window.language_hub_panel.open_translation_btn,
+                )
         elif k == "language_hub_review_focus":
             if window.language_hub_panel.review_table.rowCount() <= 0:
                 _add_issue("major", "state_expected_loaded", k, s, st, "Language review block has no rows.", size_label, shot_path, window.language_hub_panel.review_table)
@@ -394,6 +411,30 @@ def _run_worker(args: argparse.Namespace) -> int:
                 _add_issue("major", "state_expected_loaded", k, s, st, "Localization stress block has no rows.", size_label, shot_path, window.language_hub_panel.stress_table)
             if window.language_hub_panel.flow_table.rowCount() < 5:
                 _add_issue("major", "state_summary_missing", k, s, st, "Language flow summary does not expose all pipeline stages.", size_label, shot_path, window.language_hub_panel.flow_table)
+            if not window.language_hub_panel.focus_uncertain_btn.isEnabled():
+                _add_issue(
+                    "major",
+                    "state_summary_missing",
+                    k,
+                    s,
+                    st,
+                    "Language Hub uncertain-focus action is disabled in review-focused state.",
+                    size_label,
+                    shot_path,
+                    window.language_hub_panel.focus_uncertain_btn,
+                )
+            if not window.language_hub_panel.focus_stress_btn.isEnabled():
+                _add_issue(
+                    "major",
+                    "state_summary_missing",
+                    k,
+                    s,
+                    st,
+                    "Language Hub stress-focus action is disabled in review-focused state.",
+                    size_label,
+                    shot_path,
+                    window.language_hub_panel.focus_stress_btn,
+                )
         elif k == "translation_loaded":
             if window.translation_panel.table.rowCount() <= 0:
                 _add_issue("major", "state_expected_loaded", k, s, st, "Translation table is empty.", size_label, shot_path, window.translation_panel.table)

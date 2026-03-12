@@ -1,28 +1,25 @@
 ﻿# UI Changelog
 
-## 2026-03-12 — Machine Execution Cycle (Facts Only)
+## 2026-03-12 — UI-QA normalization + corrective pass
 
-### Executed Runs
-- `ui_snapshot_runner`: run_id `20260312_151719`, status `PASS`
-- `ui_validate`: run_id `validate_20260312_151514`, status `PASS`
-- `ui_doctor` (standalone): run_id `20260312_151910`, status `PASS`
+### 1) Artifact system
+- `ui_snapshot_runner`: screenshot entries расширены (`screen_name`, `state_name`, `screenshot_path`, `timestamp`, `notes`, `tags`, `severity_reference`, `issue_reference`).
+- `ui_doctor`: добавлены `latest_run.txt` и `latest_run.json`.
+- `ui_validate`: consolidated summary приведён к repo-relative paths, добавлен `manual_testing_allowed`, ужесточён gate.
+- Все новые run-артефакты пишутся без абсолютных `E:\...` путей.
 
-### Coverage
-- screens: `dashboard, profiles, sessions, content, analytics, ai_studio, audit, updates, settings`
-- scales: `1.0, 1.25, 1.5`
-- sizes: `1540x920, 1366x768, 1280x800`
-- total screenshots in latest snapshot run: `81`
+### 2) Corrective UI changes
+- `UserWorkspaceWindow`: скорректирован баланс splitter и ширины context panel.
+- `Dashboard`: quick-actions переведены в устойчивую grid-схему (2 колонки).
+- `Profiles/Analytics/AI Studio`: metric area приведена к grid (2x2) для high-scale устойчивости.
+- `Sessions`: chip-компоновка переведена в вертикальный стек, preview стал более информативным.
+- `AI Studio`: CTA-row переведён в вертикальную схему, длинный CTA сокращён.
 
-### Machine Results
-- `ui_validate` warnings: `0`
-- `ui_validate` failures: `0`
-- `ui_doctor` critical/major/minor: `0/0/0`
+### 3) Machine runs
+- `ui_snapshot_runner`: `20260312_160910` -> `PASS`
+- `ui_validate`: `20260312_160707` -> `PASS`
+- `ui_doctor`: `20260312_161111` -> `PASS`
 
-### Artifact Updates
-- updated root pointers:
-  - `projects/wild_hunt_command_citadel/shortform_core/ui_screenshots_manifest.json`
-  - `projects/wild_hunt_command_citadel/shortform_core/ui_validation_summary.json`
-  - `projects/wild_hunt_command_citadel/shortform_core/ui_validation_summary.md`
-- updated runtime pointers:
-  - `runtime/ui_snapshots/latest_run.txt`
-  - `runtime/ui_validation/latest_run.txt`
+### 4) Regression evidence
+- До фиксов: `20260312_160134` -> `PASS_WITH_WARNINGS` (12 major)
+- После фиксов: `20260312_161111` -> `PASS` (0 issues)

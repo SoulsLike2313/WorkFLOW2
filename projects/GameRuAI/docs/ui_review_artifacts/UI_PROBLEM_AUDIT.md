@@ -32,9 +32,9 @@
    Snapshot/Doctor/Validate -> review artifacts -> fix plan -> rerun.
 
 ## Latest automated evidence
-- Validation run: `20260312_155348`
-- Doctor run: `20260312_155348`
-- Snapshot run: `20260312_155949`
+- Validation run: `20260312_161125`
+- Doctor run: `20260312_161126`
+- Snapshot run: `20260312_161728`
 - Validation status: `PASS_WITH_WARNINGS`
 - Doctor status: `PASS_WITH_WARNINGS`
 - Snapshot status: `PASS`
@@ -44,9 +44,9 @@
 - Covered screen/state pairs: `24`
 
 ## Critical UI zones
-- HUD project/backend/language/pipeline summary zone.
+- HUD project/backend/language/pipeline summary zone + quick actions.
 - Language Hub overview/queue/backend status blocks.
-- Language Hub review/stress/flow blocks.
+- Language Hub review/stress/flow blocks + triage action buttons.
 - Translation backend/context status line and correction form.
 - Voice attempt table + preview/duration widgets.
 - Reports quality widgets and Diagnostics backend table.
@@ -69,5 +69,5 @@
 ## Evidence source
 - `ui_screenshots_manifest.json`
 - `ui_validation_summary.json`
-- `runtime/ui_validation/validate_20260312_155348/ui_validation_summary.json`
-- `runtime/ui_validation/20260312_155348/ui_doctor_summary.json`
+- `runtime/ui_validation/validate_20260312_161125/ui_validation_summary.json`
+- `runtime/ui_validation/20260312_161126/ui_doctor_summary.json`

@@ -1,45 +1,44 @@
-# UI Acceptance Checklist
+﻿# UI Acceptance Checklist
 
-## A. Product-grade baseline
-- [ ] Интерфейс выглядит как premium command center, не как debug shell.
-- [ ] Dashboard честно отражает состояние ядра (не пустые декоративные блоки).
-- [ ] Пользователь сразу понимает “где я” и “что делать дальше”.
+## 1. Premium product feel
+- [ ] Тёмная premium-подача без декоративного перегруза.
+- [ ] Чёткая иерархия: navigation -> status -> workspace -> context.
+- [ ] Нет ощущения debug-shell.
 
-## B. Layout integrity
+## 2. Grid / geometry discipline
 - [ ] Нет overlaps.
-- [ ] Нет clipping ключевых CTA/метрик.
-- [ ] Нет floating CTA вне своей панели.
-- [ ] Main workspace и context panel устойчивы на resize.
-- [ ] Нет broken/empty page states после быстрых переключений.
+- [ ] Нет clipping важного текста/CTA.
+- [ ] Нет floating CTA.
+- [ ] Центр и правая панель не конфликтуют на `1540x920`, `1366x768`, `1280x800`.
 
-## C. Interaction quality
-- [ ] Нет hover-only critical controls.
-- [ ] Hover/focus/pressed читаемы и стабильны.
-- [ ] CTA hierarchy понятна: primary / secondary / contextual.
+## 3. CTA quality
+- [ ] Критичные кнопки не hover-only.
+- [ ] Primary/secondary/context actions читаются как система.
+- [ ] CTA не выпадают из сетки при resize.
 
-## D. Screen-specific checks
-- [ ] Dashboard: core-state + next-actions читаются быстро.
-- [ ] Profiles: profile identity и quick actions считываются без перегруза.
-- [ ] Sessions: frame и surrounding controls выглядят устойчиво.
-- [ ] Content: queue/validation/readiness логично связаны.
-- [ ] Analytics: top/weak/recommendations читаются как actionable блоки.
-- [ ] AI Studio: rationale/confidence/ideas читаются без шума.
-- [ ] Audit: timeline и severity читаются мгновенно.
-- [ ] Updates: update flow и post-verify статус понятны.
-- [ ] Settings: ссылки на runtime/diagnostics не теряются.
+## 4. Экранные проверки
+- [ ] Dashboard: виден state ядра + next actions.
+- [ ] Profiles: быстро читаются identity/state/mode.
+- [ ] Sessions: 9:16 зона не выглядит пустым placeholder.
+- [ ] Content: queue/validation/readiness логичны.
+- [ ] Analytics: top/weak/recommendations считываются с первого взгляда.
+- [ ] AI Studio: recommendations/rationale/confidence не перегружены.
+- [ ] Audit: timeline + severity читабельны.
+- [ ] Updates: update/patch/post-verify путь очевиден.
+- [ ] Settings: диагностические ссылки и runtime контекст видны.
 
-## E. Localization / readability
-- [ ] Русский текст естественный и продуктовый.
+## 5. Локализация и типографика
+- [ ] Русские тексты естественные и единообразные.
 - [ ] Нет случайного RU/EN микса без причины.
-- [ ] Длинные русские строки не ломают layout.
+- [ ] Нет грубых typographic collisions.
 
-## F. Scaling / DPI
-- [ ] Проверка 100% пройдена.
-- [ ] Проверка 125% пройдена.
-- [ ] Проверка 150% пройдена.
+## 6. DPI / scaling
+- [ ] `100%` — stable
+- [ ] `125%` — stable
+- [ ] `150%` — stable
 
-## G. Final gate
-- [ ] `ui_doctor` -> PASS.
-- [ ] `ui_snapshot_runner` -> PASS.
-- [ ] `ui_validate` -> PASS.
-- [ ] Только после этого разрешён final human sign-off.
+## 7. Machine gate
+- [ ] `ui_snapshot_runner` -> `PASS`
+- [ ] `ui_validate` -> `PASS`
+- [ ] `ui_doctor` -> `PASS`
+- [ ] `manual_testing_allowed=true` в `ui_validation_summary.json`

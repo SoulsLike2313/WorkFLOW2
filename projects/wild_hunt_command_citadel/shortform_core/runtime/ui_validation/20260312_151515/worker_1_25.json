@@ -1,4 +1,4 @@
-{
+﻿{
   "scale": "1.25",
   "sizes": "1540x920,1366x768,1280x800",
   "issues": [],
@@ -7,163 +7,163 @@
       "scale": "1.25",
       "page": "dashboard",
       "size": "1540x920",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\dashboard_1540x920.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\dashboard_1540x920.png"
     },
     {
       "scale": "1.25",
       "page": "profiles",
       "size": "1540x920",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\profiles_1540x920.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\profiles_1540x920.png"
     },
     {
       "scale": "1.25",
       "page": "sessions",
       "size": "1540x920",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\sessions_1540x920.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\sessions_1540x920.png"
     },
     {
       "scale": "1.25",
       "page": "content",
       "size": "1540x920",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\content_1540x920.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\content_1540x920.png"
     },
     {
       "scale": "1.25",
       "page": "analytics",
       "size": "1540x920",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\analytics_1540x920.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\analytics_1540x920.png"
     },
     {
       "scale": "1.25",
       "page": "ai_studio",
       "size": "1540x920",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\ai_studio_1540x920.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\ai_studio_1540x920.png"
     },
     {
       "scale": "1.25",
       "page": "audit",
       "size": "1540x920",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\audit_1540x920.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\audit_1540x920.png"
     },
     {
       "scale": "1.25",
       "page": "updates",
       "size": "1540x920",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\updates_1540x920.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\updates_1540x920.png"
     },
     {
       "scale": "1.25",
       "page": "settings",
       "size": "1540x920",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\settings_1540x920.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\settings_1540x920.png"
     },
     {
       "scale": "1.25",
       "page": "dashboard",
       "size": "1366x768",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\dashboard_1366x768.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\dashboard_1366x768.png"
     },
     {
       "scale": "1.25",
       "page": "profiles",
       "size": "1366x768",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\profiles_1366x768.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\profiles_1366x768.png"
     },
     {
       "scale": "1.25",
       "page": "sessions",
       "size": "1366x768",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\sessions_1366x768.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\sessions_1366x768.png"
     },
     {
       "scale": "1.25",
       "page": "content",
       "size": "1366x768",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\content_1366x768.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\content_1366x768.png"
     },
     {
       "scale": "1.25",
       "page": "analytics",
       "size": "1366x768",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\analytics_1366x768.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\analytics_1366x768.png"
     },
     {
       "scale": "1.25",
       "page": "ai_studio",
       "size": "1366x768",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\ai_studio_1366x768.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\ai_studio_1366x768.png"
     },
     {
       "scale": "1.25",
       "page": "audit",
       "size": "1366x768",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\audit_1366x768.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\audit_1366x768.png"
     },
     {
       "scale": "1.25",
       "page": "updates",
       "size": "1366x768",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\updates_1366x768.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\updates_1366x768.png"
     },
     {
       "scale": "1.25",
       "page": "settings",
       "size": "1366x768",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\settings_1366x768.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\settings_1366x768.png"
     },
     {
       "scale": "1.25",
       "page": "dashboard",
       "size": "1280x800",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\dashboard_1280x800.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\dashboard_1280x800.png"
     },
     {
       "scale": "1.25",
       "page": "profiles",
       "size": "1280x800",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\profiles_1280x800.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\profiles_1280x800.png"
     },
     {
       "scale": "1.25",
       "page": "sessions",
       "size": "1280x800",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\sessions_1280x800.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\sessions_1280x800.png"
     },
     {
       "scale": "1.25",
       "page": "content",
       "size": "1280x800",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\content_1280x800.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\content_1280x800.png"
     },
     {
       "scale": "1.25",
       "page": "analytics",
       "size": "1280x800",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\analytics_1280x800.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\analytics_1280x800.png"
     },
     {
       "scale": "1.25",
       "page": "ai_studio",
       "size": "1280x800",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\ai_studio_1280x800.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\ai_studio_1280x800.png"
     },
     {
       "scale": "1.25",
       "page": "audit",
       "size": "1280x800",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\audit_1280x800.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\audit_1280x800.png"
     },
     {
       "scale": "1.25",
       "page": "updates",
       "size": "1280x800",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\updates_1280x800.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\updates_1280x800.png"
     },
     {
       "scale": "1.25",
       "page": "settings",
       "size": "1280x800",
-      "path": "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core\\runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\settings_1280x800.png"
+      "path": "runtime\\ui_validation\\20260312_151515\\screenshots\\scale_1_25\\settings_1280x800.png"
     }
   ]
 }
