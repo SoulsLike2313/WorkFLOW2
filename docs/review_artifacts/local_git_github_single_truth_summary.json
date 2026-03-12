@@ -1,0 +1,127 @@
+{
+  "repo_name": "WorkFLOW",
+  "checked_at_utc": "2026-03-12T21:36:45.938000+00:00",
+  "checked_branch": "main",
+  "local_head": "a8ca0681a14a7da30d0b1d58e8faedf4862e2144",
+  "origin_main_head": "a8ca0681a14a7da30d0b1d58e8faedf4862e2144",
+  "sync_status": "IN_SYNC",
+  "ahead_count": 0,
+  "behind_count": 0,
+  "working_tree_status": "CLEAN",
+  "local_state": {
+    "root_dirs": [
+      ".git",
+      "docs",
+      "projects",
+      "runtime",
+      "scripts",
+      "shared_systems",
+      "workspace_config"
+    ],
+    "priority_paths": {
+      "shortform_core": {
+        "path": "projects/wild_hunt_command_citadel/shortform_core",
+        "local_exists": true,
+        "local_files": 11166,
+        "tracked_files": 0,
+        "origin_files": 0,
+        "ignored_local_files": 11166
+      },
+      "tiktok_agent_platform": {
+        "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform",
+        "local_exists": true,
+        "local_files": 18009,
+        "tracked_files": 387,
+        "origin_files": 387,
+        "ignored_local_files": 17622
+      },
+      "game_ru_ai": {
+        "path": "projects/GameRuAI",
+        "local_exists": true,
+        "local_files": 4308,
+        "tracked_files": 525,
+        "origin_files": 525,
+        "ignored_local_files": 3783
+      }
+    }
+  },
+  "git_state": {
+    "tracked_project_manifest_count": 6,
+    "status_short": []
+  },
+  "github_visible_state": {
+    "root_tree": [
+      ".gitignore",
+      "README.md",
+      "docs",
+      "projects",
+      "scripts",
+      "shared_systems",
+      "workspace_config"
+    ],
+    "projects_tree": [
+      "projects"
+    ],
+    "priority_paths": {
+      "shortform_core": {
+        "origin_files": 0
+      },
+      "tiktok_agent_platform": {
+        "origin_files": 387
+      },
+      "game_ru_ai": {
+        "origin_files": 525
+      }
+    }
+  },
+  "canonical_active_project": {
+    "slug": "tiktok_agent_platform",
+    "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform"
+  },
+  "canonical_project_inventory": [
+    {
+      "slug": "tiktok_agent_platform",
+      "name": "TikTok Agent Platform",
+      "status": "active",
+      "root_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform",
+      "priority": 1
+    },
+    {
+      "slug": "voice_launcher",
+      "name": "Voice Launcher",
+      "status": "supporting",
+      "root_path": "projects/voice_launcher",
+      "priority": 2
+    },
+    {
+      "slug": "adaptive_trading",
+      "name": "Adaptive Trading",
+      "status": "experimental",
+      "root_path": "projects/adaptive_trading",
+      "priority": 3
+    },
+    {
+      "slug": "game_ru_ai",
+      "name": "GameRuAI",
+      "status": "experimental",
+      "root_path": "projects/GameRuAI",
+      "priority": 5
+    }
+  ],
+  "mismatches_found": [
+    {
+      "id": "M1",
+      "type": "local_vs_git_vs_github_path_truth",
+      "details": "shortform_core existed only as local ignored residue while previous canonical wording could be interpreted as repo-visible path."
+    }
+  ],
+  "mismatches_fixed": [
+    {
+      "id": "M1",
+      "fix": "Aligned README and workspace_manifest to classify shortform_core as local-only ignored legacy residue (tracked_by_git=false, github_visible=false)."
+    }
+  ],
+  "remaining_gaps": [],
+  "stage1_consolidation_status": "PASS",
+  "final_agreement_status": "MATCH"
+}
