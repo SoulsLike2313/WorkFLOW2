@@ -96,7 +96,7 @@ Workspace-level projects (and only these) are canonical:
 Tree paths that exist but are non-registry:
 
 - `projects/wild_hunt_command_citadel` is a project-group container path and is not a standalone workspace project.
-- `projects/wild_hunt_command_citadel/shortform_core` is a legacy internal layer path and is not a standalone workspace project.
+- `projects/wild_hunt_command_citadel/shortform_core` is a local legacy residue path (if present on workstation), ignored by git and not GitHub-visible; it is not part of workspace project inventory.
 - `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/PROJECT_MANIFEST.json` and `projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/PROJECT_MANIFEST.json` are product layer manifests, not workspace project registry entries.
 
 ## Source of Truth Order

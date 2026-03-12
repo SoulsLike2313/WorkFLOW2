@@ -258,12 +258,16 @@
     },
     {
       "path": "projects/wild_hunt_command_citadel/shortform_core",
-      "classification": "legacy_internal_layer",
+      "classification": "local_legacy_residue",
       "registry_visibility": "excluded_from_project_registry",
       "owned_by_project": "tiktok_agent_platform",
+      "tracked_by_git": false,
+      "github_visible": false,
+      "local_presence": "may_exist_if_not_cleaned",
       "notes": [
-        "Path exists in repository tree for legacy continuity.",
-        "Path is not an independent workspace project and must not be treated as active/supporting/experimental project scope.",
+        "Path is local residue from earlier migration context.",
+        "Path is ignored by git and is not part of repository-tracked inventory.",
+        "Path must not be treated as active/supporting/experimental workspace project scope.",
         "Canonical project root for this product is projects/wild_hunt_command_citadel/tiktok_agent_platform."
       ]
     }
