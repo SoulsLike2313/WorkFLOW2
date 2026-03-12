@@ -1,0 +1,8 @@
+{
+  "run_id": "install-20260312T170124Z-tiktok_agent_platform-ui_qa_toolkit",
+  "project_slug": "tiktok_agent_platform",
+  "system_slug": "ui_qa_toolkit",
+  "installed_at": "2026-03-12T17:01:24.679970+00:00",
+  "system_manifest_path": "shared_systems/ui_qa_toolkit/SYSTEM_MANIFEST.json",
+  "module_root": "shared_systems/ui_qa_toolkit"
+}

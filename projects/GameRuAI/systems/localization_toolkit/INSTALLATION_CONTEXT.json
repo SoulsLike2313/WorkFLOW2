@@ -1,0 +1,8 @@
+{
+  "run_id": "install-20260312T170125Z-game_ru_ai-localization_toolkit",
+  "project_slug": "game_ru_ai",
+  "system_slug": "localization_toolkit",
+  "installed_at": "2026-03-12T17:01:25.756914+00:00",
+  "system_manifest_path": "shared_systems/localization_toolkit/SYSTEM_MANIFEST.json",
+  "module_root": "shared_systems/localization_toolkit"
+}

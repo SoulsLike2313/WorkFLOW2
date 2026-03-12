@@ -1,0 +1,2 @@
+generated_by=install_system.py
+system_slug=reporting_toolkit

@@ -1,90 +1,268 @@
-﻿{
-    "schema_version":  "1.0.0",
-    "shared_systems_root":  "shared_systems",
-    "install_workflow":  {
-                             "script":  "scripts/install_system.py",
-                             "mode":  "machine_enforced"
-                         },
-    "remove_workflow":  {
-                            "script":  "scripts/remove_system.py",
-                            "mode":  "machine_enforced"
-                        },
-    "systems":  [
-                    {
-                        "slug":  "ui_qa_toolkit",
-                        "name":  "UI QA Toolkit",
-                        "category":  "quality_assurance",
-                        "maturity_level":  "beta",
-                        "manifest_path":  "shared_systems/ui_qa_toolkit/SYSTEM_MANIFEST.json",
-                        "readme_path":  "shared_systems/ui_qa_toolkit/README.md",
-                        "integration_guide_path":  "shared_systems/ui_qa_toolkit/integration_guide.md",
-                        "status":  "available"
-                    },
-                    {
-                        "slug":  "verification_toolkit",
-                        "name":  "Verification Toolkit",
-                        "category":  "verification",
-                        "maturity_level":  "stable",
-                        "manifest_path":  "shared_systems/verification_toolkit/SYSTEM_MANIFEST.json",
-                        "readme_path":  "shared_systems/verification_toolkit/README.md",
-                        "integration_guide_path":  "shared_systems/verification_toolkit/integration_guide.md",
-                        "status":  "available"
-                    },
-                    {
-                        "slug":  "reporting_toolkit",
-                        "name":  "Reporting Toolkit",
-                        "category":  "reporting",
-                        "maturity_level":  "beta",
-                        "manifest_path":  "shared_systems/reporting_toolkit/SYSTEM_MANIFEST.json",
-                        "readme_path":  "shared_systems/reporting_toolkit/README.md",
-                        "integration_guide_path":  "shared_systems/reporting_toolkit/integration_guide.md",
-                        "status":  "available"
-                    },
-                    {
-                        "slug":  "localization_toolkit",
-                        "name":  "Localization Toolkit",
-                        "category":  "localization",
-                        "maturity_level":  "beta",
-                        "manifest_path":  "shared_systems/localization_toolkit/SYSTEM_MANIFEST.json",
-                        "readme_path":  "shared_systems/localization_toolkit/README.md",
-                        "integration_guide_path":  "shared_systems/localization_toolkit/integration_guide.md",
-                        "status":  "available"
-                    },
-                    {
-                        "slug":  "audit_observability_toolkit",
-                        "name":  "Audit Observability Toolkit",
-                        "category":  "observability",
-                        "maturity_level":  "beta",
-                        "manifest_path":  "shared_systems/audit_observability_toolkit/SYSTEM_MANIFEST.json",
-                        "readme_path":  "shared_systems/audit_observability_toolkit/README.md",
-                        "integration_guide_path":  "shared_systems/audit_observability_toolkit/integration_guide.md",
-                        "status":  "available"
-                    },
-                    {
-                        "slug":  "update_patch_toolkit",
-                        "name":  "Update Patch Toolkit",
-                        "category":  "update_management",
-                        "maturity_level":  "partial",
-                        "manifest_path":  "shared_systems/update_patch_toolkit/SYSTEM_MANIFEST.json",
-                        "readme_path":  "shared_systems/update_patch_toolkit/README.md",
-                        "integration_guide_path":  "shared_systems/update_patch_toolkit/integration_guide.md",
-                        "status":  "available"
-                    },
-                    {
-                        "slug":  "security_baseline",
-                        "name":  "Security Baseline",
-                        "category":  "security",
-                        "maturity_level":  "partial",
-                        "manifest_path":  "shared_systems/security_baseline/SYSTEM_MANIFEST.json",
-                        "readme_path":  "shared_systems/security_baseline/README.md",
-                        "integration_guide_path":  "shared_systems/security_baseline/integration_guide.md",
-                        "status":  "available"
-                    }
-                ],
-    "project_installations":  {
-
-                              },
-    "history":  [
-
-                ]
+{
+  "schema_version": "1.0.0",
+  "shared_systems_root": "shared_systems",
+  "install_workflow": {
+    "script": "scripts/install_system.py",
+    "mode": "machine_enforced"
+  },
+  "remove_workflow": {
+    "script": "scripts/remove_system.py",
+    "mode": "machine_enforced"
+  },
+  "systems": [
+    {
+      "slug": "ui_qa_toolkit",
+      "name": "UI QA Toolkit",
+      "category": "quality_assurance",
+      "maturity_level": "beta",
+      "manifest_path": "shared_systems/ui_qa_toolkit/SYSTEM_MANIFEST.json",
+      "readme_path": "shared_systems/ui_qa_toolkit/README.md",
+      "integration_guide_path": "shared_systems/ui_qa_toolkit/integration_guide.md",
+      "status": "available"
+    },
+    {
+      "slug": "verification_toolkit",
+      "name": "Verification Toolkit",
+      "category": "verification",
+      "maturity_level": "stable",
+      "manifest_path": "shared_systems/verification_toolkit/SYSTEM_MANIFEST.json",
+      "readme_path": "shared_systems/verification_toolkit/README.md",
+      "integration_guide_path": "shared_systems/verification_toolkit/integration_guide.md",
+      "status": "available"
+    },
+    {
+      "slug": "reporting_toolkit",
+      "name": "Reporting Toolkit",
+      "category": "reporting",
+      "maturity_level": "beta",
+      "manifest_path": "shared_systems/reporting_toolkit/SYSTEM_MANIFEST.json",
+      "readme_path": "shared_systems/reporting_toolkit/README.md",
+      "integration_guide_path": "shared_systems/reporting_toolkit/integration_guide.md",
+      "status": "available"
+    },
+    {
+      "slug": "localization_toolkit",
+      "name": "Localization Toolkit",
+      "category": "localization",
+      "maturity_level": "beta",
+      "manifest_path": "shared_systems/localization_toolkit/SYSTEM_MANIFEST.json",
+      "readme_path": "shared_systems/localization_toolkit/README.md",
+      "integration_guide_path": "shared_systems/localization_toolkit/integration_guide.md",
+      "status": "available"
+    },
+    {
+      "slug": "audit_observability_toolkit",
+      "name": "Audit Observability Toolkit",
+      "category": "observability",
+      "maturity_level": "beta",
+      "manifest_path": "shared_systems/audit_observability_toolkit/SYSTEM_MANIFEST.json",
+      "readme_path": "shared_systems/audit_observability_toolkit/README.md",
+      "integration_guide_path": "shared_systems/audit_observability_toolkit/integration_guide.md",
+      "status": "available"
+    },
+    {
+      "slug": "update_patch_toolkit",
+      "name": "Update Patch Toolkit",
+      "category": "update_management",
+      "maturity_level": "partial",
+      "manifest_path": "shared_systems/update_patch_toolkit/SYSTEM_MANIFEST.json",
+      "readme_path": "shared_systems/update_patch_toolkit/README.md",
+      "integration_guide_path": "shared_systems/update_patch_toolkit/integration_guide.md",
+      "status": "available"
+    },
+    {
+      "slug": "security_baseline",
+      "name": "Security Baseline",
+      "category": "security",
+      "maturity_level": "partial",
+      "manifest_path": "shared_systems/security_baseline/SYSTEM_MANIFEST.json",
+      "readme_path": "shared_systems/security_baseline/README.md",
+      "integration_guide_path": "shared_systems/security_baseline/integration_guide.md",
+      "status": "available"
+    }
+  ],
+  "project_installations": {
+    "tiktok_agent_platform": {
+      "ui_qa_toolkit": {
+        "status": "installed",
+        "run_id": "install-20260312T170124Z-tiktok_agent_platform-ui_qa_toolkit",
+        "timestamp": "2026-03-12T17:01:24.679970+00:00"
+      },
+      "verification_toolkit": {
+        "status": "installed",
+        "run_id": "install-20260312T170124Z-tiktok_agent_platform-verification_toolkit",
+        "timestamp": "2026-03-12T17:01:24.797465+00:00"
+      },
+      "reporting_toolkit": {
+        "status": "installed",
+        "run_id": "install-20260312T170133Z-tiktok_agent_platform-reporting_toolkit",
+        "timestamp": "2026-03-12T17:01:33.500123+00:00"
+      },
+      "localization_toolkit": {
+        "status": "installed",
+        "run_id": "install-20260312T170125Z-tiktok_agent_platform-localization_toolkit",
+        "timestamp": "2026-03-12T17:01:25.073947+00:00"
+      },
+      "audit_observability_toolkit": {
+        "status": "installed",
+        "run_id": "install-20260312T170125Z-tiktok_agent_platform-audit_observability_toolkit",
+        "timestamp": "2026-03-12T17:01:25.218221+00:00"
+      }
+    },
+    "game_ru_ai": {
+      "ui_qa_toolkit": {
+        "status": "installed",
+        "run_id": "install-20260312T170125Z-game_ru_ai-ui_qa_toolkit",
+        "timestamp": "2026-03-12T17:01:25.356142+00:00"
+      },
+      "verification_toolkit": {
+        "status": "installed",
+        "run_id": "install-20260312T170125Z-game_ru_ai-verification_toolkit",
+        "timestamp": "2026-03-12T17:01:25.485068+00:00"
+      },
+      "reporting_toolkit": {
+        "status": "installed",
+        "run_id": "install-20260312T170133Z-game_ru_ai-reporting_toolkit",
+        "timestamp": "2026-03-12T17:01:33.763972+00:00"
+      },
+      "localization_toolkit": {
+        "status": "installed",
+        "run_id": "install-20260312T170125Z-game_ru_ai-localization_toolkit",
+        "timestamp": "2026-03-12T17:01:25.756914+00:00"
+      },
+      "audit_observability_toolkit": {
+        "status": "installed",
+        "run_id": "install-20260312T170125Z-game_ru_ai-audit_observability_toolkit",
+        "timestamp": "2026-03-12T17:01:25.895834+00:00"
+      }
+    }
+  },
+  "history": [
+    {
+      "run_id": "install-20260312T170124Z-tiktok_agent_platform-ui_qa_toolkit",
+      "action": "install",
+      "project_slug": "tiktok_agent_platform",
+      "system_slug": "ui_qa_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:24.679970+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "install-20260312T170124Z-tiktok_agent_platform-verification_toolkit",
+      "action": "install",
+      "project_slug": "tiktok_agent_platform",
+      "system_slug": "verification_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:24.797465+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "install-20260312T170124Z-tiktok_agent_platform-reporting_toolkit",
+      "action": "install",
+      "project_slug": "tiktok_agent_platform",
+      "system_slug": "reporting_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:24.936026+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "install-20260312T170125Z-tiktok_agent_platform-localization_toolkit",
+      "action": "install",
+      "project_slug": "tiktok_agent_platform",
+      "system_slug": "localization_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:25.073947+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "install-20260312T170125Z-tiktok_agent_platform-audit_observability_toolkit",
+      "action": "install",
+      "project_slug": "tiktok_agent_platform",
+      "system_slug": "audit_observability_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:25.218221+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "install-20260312T170125Z-game_ru_ai-ui_qa_toolkit",
+      "action": "install",
+      "project_slug": "game_ru_ai",
+      "system_slug": "ui_qa_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:25.356142+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "install-20260312T170125Z-game_ru_ai-verification_toolkit",
+      "action": "install",
+      "project_slug": "game_ru_ai",
+      "system_slug": "verification_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:25.485068+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "install-20260312T170125Z-game_ru_ai-reporting_toolkit",
+      "action": "install",
+      "project_slug": "game_ru_ai",
+      "system_slug": "reporting_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:25.620992+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "install-20260312T170125Z-game_ru_ai-localization_toolkit",
+      "action": "install",
+      "project_slug": "game_ru_ai",
+      "system_slug": "localization_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:25.756914+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "install-20260312T170125Z-game_ru_ai-audit_observability_toolkit",
+      "action": "install",
+      "project_slug": "game_ru_ai",
+      "system_slug": "audit_observability_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:25.895834+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "remove-20260312T170133Z-tiktok_agent_platform-reporting_toolkit",
+      "action": "remove",
+      "project_slug": "tiktok_agent_platform",
+      "system_slug": "reporting_toolkit",
+      "status": "removed",
+      "timestamp": "2026-03-12T17:01:33.374533+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "install-20260312T170133Z-tiktok_agent_platform-reporting_toolkit",
+      "action": "install",
+      "project_slug": "tiktok_agent_platform",
+      "system_slug": "reporting_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:33.500123+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "remove-20260312T170133Z-game_ru_ai-reporting_toolkit",
+      "action": "remove",
+      "project_slug": "game_ru_ai",
+      "system_slug": "reporting_toolkit",
+      "status": "removed",
+      "timestamp": "2026-03-12T17:01:33.636046+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "install-20260312T170133Z-game_ru_ai-reporting_toolkit",
+      "action": "install",
+      "project_slug": "game_ru_ai",
+      "system_slug": "reporting_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:33.763972+00:00",
+      "dry_run": false
+    }
+  ]
 }

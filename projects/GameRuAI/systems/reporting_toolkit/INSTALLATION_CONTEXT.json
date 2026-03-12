@@ -1,0 +1,8 @@
+{
+  "run_id": "install-20260312T170133Z-game_ru_ai-reporting_toolkit",
+  "project_slug": "game_ru_ai",
+  "system_slug": "reporting_toolkit",
+  "installed_at": "2026-03-12T17:01:33.763972+00:00",
+  "system_manifest_path": "shared_systems/reporting_toolkit/SYSTEM_MANIFEST.json",
+  "module_root": "shared_systems/reporting_toolkit"
+}

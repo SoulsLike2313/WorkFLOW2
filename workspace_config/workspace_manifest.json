@@ -93,7 +93,22 @@
     "archived": [],
     "legacy": []
   },
-  "project_system_index": {},
+  "project_system_index": {
+    "tiktok_agent_platform": {
+      "ui_qa_toolkit": "installed",
+      "verification_toolkit": "installed",
+      "reporting_toolkit": "installed",
+      "localization_toolkit": "installed",
+      "audit_observability_toolkit": "installed"
+    },
+    "game_ru_ai": {
+      "ui_qa_toolkit": "installed",
+      "verification_toolkit": "installed",
+      "reporting_toolkit": "installed",
+      "localization_toolkit": "installed",
+      "audit_observability_toolkit": "installed"
+    }
+  },
   "project_registry": [
     {
       "slug": "tiktok_agent_platform",

@@ -1,0 +1,8 @@
+﻿{
+    "module_slug":  "localization_toolkit",
+    "generated_from":  "shared_systems template",
+    "required":  [
+                     "project_manifest_update",
+                     "validation_hook"
+                 ]
+}

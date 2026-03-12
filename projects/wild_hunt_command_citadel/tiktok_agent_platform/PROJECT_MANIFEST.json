@@ -114,5 +114,90 @@
     "This project consolidates former shortform_core and tiktok_automation_app into one product architecture.",
     "Manual testing is allowed only when verification gate is PASS.",
     "Core and agent layers are isolated as submodules but operated as one product project."
-  ]
+  ],
+  "installed_systems": [
+    "audit_observability_toolkit",
+    "localization_toolkit",
+    "reporting_toolkit",
+    "ui_qa_toolkit",
+    "verification_toolkit"
+  ],
+  "installed_system_status": {
+    "ui_qa_toolkit": "installed",
+    "verification_toolkit": "installed",
+    "reporting_toolkit": "installed",
+    "localization_toolkit": "installed",
+    "audit_observability_toolkit": "installed"
+  },
+  "install_history": [
+    {
+      "run_id": "install-20260312T170124Z-tiktok_agent_platform-ui_qa_toolkit",
+      "action": "install",
+      "system_slug": "ui_qa_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:24.679970+00:00",
+      "dry_run": false,
+      "already_installed": false
+    },
+    {
+      "run_id": "install-20260312T170124Z-tiktok_agent_platform-verification_toolkit",
+      "action": "install",
+      "system_slug": "verification_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:24.797465+00:00",
+      "dry_run": false,
+      "already_installed": false
+    },
+    {
+      "run_id": "install-20260312T170124Z-tiktok_agent_platform-reporting_toolkit",
+      "action": "install",
+      "system_slug": "reporting_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:24.936026+00:00",
+      "dry_run": false,
+      "already_installed": false
+    },
+    {
+      "run_id": "install-20260312T170125Z-tiktok_agent_platform-localization_toolkit",
+      "action": "install",
+      "system_slug": "localization_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:25.073947+00:00",
+      "dry_run": false,
+      "already_installed": false
+    },
+    {
+      "run_id": "install-20260312T170125Z-tiktok_agent_platform-audit_observability_toolkit",
+      "action": "install",
+      "system_slug": "audit_observability_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:25.218221+00:00",
+      "dry_run": false,
+      "already_installed": false
+    },
+    {
+      "run_id": "remove-20260312T170133Z-tiktok_agent_platform-reporting_toolkit",
+      "action": "remove",
+      "system_slug": "reporting_toolkit",
+      "status": "removed",
+      "timestamp": "2026-03-12T17:01:33.374533+00:00",
+      "dry_run": false
+    },
+    {
+      "run_id": "install-20260312T170133Z-tiktok_agent_platform-reporting_toolkit",
+      "action": "install",
+      "system_slug": "reporting_toolkit",
+      "status": "installed",
+      "timestamp": "2026-03-12T17:01:33.500123+00:00",
+      "dry_run": false,
+      "already_installed": false
+    }
+  ],
+  "system_validation_status": {
+    "ui_qa_toolkit": "pass_post_install",
+    "verification_toolkit": "pass_post_install",
+    "reporting_toolkit": "pass_post_install",
+    "localization_toolkit": "pass_post_install",
+    "audit_observability_toolkit": "pass_post_install"
+  }
 }

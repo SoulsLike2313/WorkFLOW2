@@ -1,0 +1,13 @@
+﻿{
+    "project_slug":  "example_project",
+    "project_type":  "desktop_app",
+    "required_inputs":  [
+                            "project_manifest_path",
+                            "project_root",
+                            "runtime_namespace"
+                        ],
+    "optional_inputs":  [
+                            "ui_entrypoint",
+                            "report_dir"
+                        ]
+}

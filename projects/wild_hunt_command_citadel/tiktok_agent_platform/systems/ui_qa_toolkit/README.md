@@ -1,0 +1,2 @@
+generated_by=install_system.py
+system_slug=ui_qa_toolkit

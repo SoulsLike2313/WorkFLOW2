@@ -1,0 +1,8 @@
+{
+  "run_id": "install-20260312T170125Z-game_ru_ai-audit_observability_toolkit",
+  "project_slug": "game_ru_ai",
+  "system_slug": "audit_observability_toolkit",
+  "installed_at": "2026-03-12T17:01:25.895834+00:00",
+  "system_manifest_path": "shared_systems/audit_observability_toolkit/SYSTEM_MANIFEST.json",
+  "module_root": "shared_systems/audit_observability_toolkit"
+}

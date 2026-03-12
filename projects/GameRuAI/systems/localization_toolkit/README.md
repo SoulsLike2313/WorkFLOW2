@@ -1,0 +1,2 @@
+generated_by=install_system.py
+system_slug=localization_toolkit

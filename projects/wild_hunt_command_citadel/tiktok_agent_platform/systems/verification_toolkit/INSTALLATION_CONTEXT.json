@@ -1,0 +1,8 @@
+{
+  "run_id": "install-20260312T170124Z-tiktok_agent_platform-verification_toolkit",
+  "project_slug": "tiktok_agent_platform",
+  "system_slug": "verification_toolkit",
+  "installed_at": "2026-03-12T17:01:24.797465+00:00",
+  "system_manifest_path": "shared_systems/verification_toolkit/SYSTEM_MANIFEST.json",
+  "module_root": "shared_systems/verification_toolkit"
+}
