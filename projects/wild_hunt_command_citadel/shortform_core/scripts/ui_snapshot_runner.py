@@ -34,6 +34,14 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _repo_relative(path: Path) -> str:
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(PROJECT_ROOT.resolve()).as_posix()
+    except ValueError:
+        return resolved.as_posix()
+
+
 def _parse_sizes(raw: str) -> list[tuple[int, int]]:
     result: list[tuple[int, int]] = []
     for token in raw.split(","):
@@ -117,7 +125,25 @@ def _run_master(args: argparse.Namespace) -> int:
             "--worker-output",
             str(worker_output),
         ]
-        commands.append(command)
+        commands.append(
+            [
+                "python",
+                "scripts/ui_snapshot_runner.py",
+                "--worker",
+                "--scale",
+                scale,
+                "--sizes",
+                args.sizes,
+                "--api-base-url",
+                args.api_base_url,
+                "--wait-ms",
+                str(args.wait_ms),
+                "--run-dir",
+                _repo_relative(run_dir),
+                "--worker-output",
+                _repo_relative(worker_output),
+            ]
+        )
 
         env = os.environ.copy()
         env["QT_QPA_PLATFORM"] = "offscreen"
@@ -172,8 +198,8 @@ def _run_master(args: argparse.Namespace) -> int:
         "sizes": args.sizes,
         "screenshot_count": len(all_screenshots),
         "failed_workers": failed_workers,
-        "manifest_path": str(manifest_path.resolve()),
-        "screenshots_dir": str((run_dir / "screenshots").resolve()),
+        "manifest_path": _repo_relative(manifest_path),
+        "screenshots_dir": _repo_relative(run_dir / "screenshots"),
         "commands": commands,
     }
     summary_json = run_dir / "ui_snapshot_summary.json"
@@ -184,15 +210,15 @@ def _run_master(args: argparse.Namespace) -> int:
     latest = {
         "run_id": run_id,
         "status": status,
-        "path": str(run_dir.resolve()),
-        "manifest_path": str(manifest_path.resolve()),
-        "summary_path": str(summary_json.resolve()),
+        "path": _repo_relative(run_dir),
+        "manifest_path": _repo_relative(manifest_path),
+        "summary_path": _repo_relative(summary_json),
         "timestamp": finished_at,
     }
     (output_root / "latest_run.json").write_text(json.dumps(latest, ensure_ascii=False, indent=2), encoding="utf-8")
-    (output_root / "latest_run.txt").write_text(str(run_dir.resolve()) + "\n", encoding="utf-8")
+    (output_root / "latest_run.txt").write_text(_repo_relative(run_dir) + "\n", encoding="utf-8")
 
-    print(str(run_dir.resolve()))
+    print(_repo_relative(run_dir))
     print(f"UI snapshot status: {status}")
     return 0 if status == "PASS" else 2
 
@@ -229,16 +255,30 @@ def _run_worker(args: argparse.Namespace) -> int:
             file_name = f"{page_key}_{size_label}_scale_{args.scale.replace('.', '_')}.png"
             out_path = screenshots_dir / file_name
             image.save(str(out_path))
+            captured_at = _now_iso()
             screenshots.append(
                 {
+                    "screen_name": page_key,
+                    "state_name": f"loaded/{size_label}/scale_{args.scale}",
                     "page": page_key,
                     "size": size_label,
                     "scale": args.scale,
-                    "path": str(out_path.resolve()),
+                    "path": _repo_relative(out_path),
+                    "screenshot_path": _repo_relative(out_path),
                     "sha256": _hash_file(out_path),
                     "width": width,
                     "height": height,
-                    "captured_at": _now_iso(),
+                    "timestamp": captured_at,
+                    "captured_at": captured_at,
+                    "notes": "auto-captured loaded workspace state",
+                    "tags": [
+                        "ui_snapshot",
+                        f"screen:{page_key}",
+                        f"size:{size_label}",
+                        f"scale:{args.scale}",
+                    ],
+                    "severity_reference": None,
+                    "issue_reference": None,
                 }
             )
 

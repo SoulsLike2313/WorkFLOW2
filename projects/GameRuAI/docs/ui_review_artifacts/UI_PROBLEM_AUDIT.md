@@ -28,9 +28,9 @@
    Asset tree -> active file metadata/preview fallback.
 
 ## Latest automated evidence
-- Validation run: `20260312_150606`
-- Doctor run: `20260312_150607`
-- Snapshot run: `20260312_151135`
+- Validation run: `20260312_152940`
+- Doctor run: `20260312_152940`
+- Snapshot run: `20260312_153507`
 - Validation status: `PASS_WITH_WARNINGS`
 - Doctor status: `PASS_WITH_WARNINGS`
 - Snapshot status: `PASS`
@@ -60,5 +60,6 @@
 ## Evidence source
 - `ui_screenshots_manifest.json`
 - `ui_validation_summary.json`
-- `runtime/ui_validation/validate_20260312_150606/ui_validation_summary.json`
-- `runtime/ui_validation/20260312_150607/ui_doctor_summary.json`
+- `runtime/ui_validation/validate_20260312_152940/ui_validation_summary.json`
+- `runtime/ui_validation/20260312_152940/ui_doctor_summary.json`
+

@@ -6,9 +6,9 @@ These rules are specific to GameRuAI desktop workflow screens:
   QA, Reports, Diagnostics, Export, Jobs / Logs, Live Demo, Companion.
 
 ## Validated baseline run
-- Validation run: `20260312_150606`
-- Doctor run: `20260312_150607`
-- Snapshot run: `20260312_151135`
+- Validation run: `20260312_152940`
+- Doctor run: `20260312_152940`
+- Snapshot run: `20260312_153507`
 - Status: `PASS_WITH_WARNINGS` (`ui_doctor`) + `PASS` (`ui_snapshot_runner`)
 
 ## Navigation invariants
@@ -76,3 +76,4 @@ At each preset:
 - `ui_validation_summary.md`
 - `ui_screenshots_manifest.json`
 - `runtime/ui_validation/latest_run.txt`
+

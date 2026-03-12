@@ -70,6 +70,14 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _repo_relative(path: Path) -> str:
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(PROJECT_ROOT.resolve()).as_posix()
+    except ValueError:
+        return resolved.as_posix()
+
+
 def _parse_sizes(raw: str) -> list[tuple[int, int]]:
     result: list[tuple[int, int]] = []
     for token in raw.split(","):
@@ -122,7 +130,23 @@ def _run_master(args: argparse.Namespace) -> int:
             "--run-dir",
             str(run_dir),
         ]
-        commands.append(cmd)
+        commands.append(
+            [
+                "python",
+                "scripts/ui_doctor.py",
+                "--worker",
+                "--scale",
+                scale,
+                "--sizes",
+                args.sizes,
+                "--api-base-url",
+                args.api_base_url,
+                "--worker-output",
+                _repo_relative(worker_json),
+                "--run-dir",
+                _repo_relative(run_dir),
+            ]
+        )
         env = os.environ.copy()
         env["QT_QPA_PLATFORM"] = "offscreen"
         env["QT_SCALE_FACTOR"] = scale
@@ -195,7 +219,7 @@ def _run_master(args: argparse.Namespace) -> int:
         "duration_seconds": duration_seconds,
         "overall_status": overall_status,
         "manual_acceptance_recommended": overall_status != "FAIL",
-        "project_root": str(project_root),
+        "project_root": ".",
         "scales": scales,
         "sizes": args.sizes,
         "commands": commands,
@@ -205,9 +229,9 @@ def _run_master(args: argparse.Namespace) -> int:
         "screenshots_by_page": shots_by_page,
         "issues": all_issues,
         "artifacts": {
-            "screenshots_manifest": str((run_dir / "ui_screenshots_manifest.json").resolve()),
-            "summary_json": str((run_dir / "ui_validation_summary.json").resolve()),
-            "summary_md": str((run_dir / "ui_validation_summary.md").resolve()),
+            "screenshots_manifest": _repo_relative(run_dir / "ui_screenshots_manifest.json"),
+            "summary_json": _repo_relative(run_dir / "ui_validation_summary.json"),
+            "summary_md": _repo_relative(run_dir / "ui_validation_summary.md"),
         },
     }
 
@@ -228,7 +252,7 @@ def _run_master(args: argparse.Namespace) -> int:
         _render_summary_md(summary),
         encoding="utf-8",
     )
-    print(str(run_dir))
+    print(_repo_relative(run_dir))
     print(f"UI validation status: {overall_status}")
     return 0 if overall_status != "FAIL" else 2
 
@@ -485,12 +509,27 @@ def _run_worker(args: argparse.Namespace) -> int:
 
             screenshot_path = screenshots_dir / f"{page_key}_{size_label}.png"
             window.grab().save(str(screenshot_path))
+            captured_at = _now_iso()
             screenshots.append(
                 {
+                    "screen_name": page_key,
+                    "state_name": f"layout_check/{size_label}/scale_{args.scale}",
                     "scale": args.scale,
                     "page": page_key,
                     "size": size_label,
-                    "path": str(screenshot_path.resolve()),
+                    "path": _repo_relative(screenshot_path),
+                    "screenshot_path": _repo_relative(screenshot_path),
+                    "timestamp": captured_at,
+                    "captured_at": captured_at,
+                    "notes": "auto-captured during ui_doctor layout checks",
+                    "tags": [
+                        "ui_doctor",
+                        f"screen:{page_key}",
+                        f"size:{size_label}",
+                        f"scale:{args.scale}",
+                    ],
+                    "severity_reference": None,
+                    "issue_reference": None,
                 }
             )
 

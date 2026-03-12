@@ -23,10 +23,11 @@ The automation now validates GameRuAI product states directly:
 - Learning / Glossary / QA / Reports / Diagnostics / Export / Jobs / Live Demo / Companion
 
 ## Current confirmation
-- Last run: `20260312_150606`
+- Last run: `20260312_152940`
 - Validation: `PASS_WITH_WARNINGS`
 - Main open risk: major layout consistency (`floating_critical_cta`).
 
 ## Scope boundaries
 - This layer validates UI structure/state handling; it does not guarantee business semantics.
 - Manual visual acceptance is still mandatory before release freeze.
+

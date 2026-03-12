@@ -1,8 +1,8 @@
 {
-  "run_id": "20260312_150606",
-  "started_at": "2026-03-12T12:06:06.966996+00:00",
-  "finished_at": "2026-03-12T12:14:05.440847+00:00",
-  "duration_seconds": 478.47,
+  "run_id": "20260312_152940",
+  "started_at": "2026-03-12T12:29:40.531545+00:00",
+  "finished_at": "2026-03-12T12:37:36.973761+00:00",
+  "duration_seconds": 476.44,
   "overall_status": "PASS_WITH_WARNINGS",
   "manual_acceptance_recommended": true,
   "project_root": "E:\\CVVCODEX\\projects\\GameRuAI",
@@ -29,14 +29,14 @@
     ]
   ],
   "ui_doctor": {
-    "run_id": "20260312_150607",
+    "run_id": "20260312_152940",
     "status": "PASS_WITH_WARNINGS",
-    "run_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607"
+    "run_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940"
   },
   "ui_snapshot_runner": {
-    "run_id": "20260312_151135",
+    "run_id": "20260312_153507",
     "status": "PASS",
-    "run_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_snapshots\\20260312_151135",
+    "run_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_snapshots\\20260312_153507",
     "skipped": false
   },
   "warnings": [],
@@ -103,7 +103,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1600x960",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__asset_explorer__active_selection_metadata__1600x960__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__asset_explorer__active_selection_metadata__1600x960__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -116,7 +116,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__asset_explorer__active_selection_metadata__1366x768__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__asset_explorer__active_selection_metadata__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -129,7 +129,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1280x800",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__asset_explorer__active_selection_metadata__1280x800__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__asset_explorer__active_selection_metadata__1280x800__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -142,7 +142,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1600x960",
       "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_25\\doctor__asset_explorer__active_selection_metadata__1600x960__scale_1_25.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_25\\doctor__asset_explorer__active_selection_metadata__1600x960__scale_1_25.png"
     },
     {
       "severity": "major",
@@ -155,7 +155,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_25\\doctor__asset_explorer__active_selection_metadata__1366x768__scale_1_25.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_25\\doctor__asset_explorer__active_selection_metadata__1366x768__scale_1_25.png"
     },
     {
       "severity": "major",
@@ -168,7 +168,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1280x800",
       "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_25\\doctor__asset_explorer__active_selection_metadata__1280x800__scale_1_25.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_25\\doctor__asset_explorer__active_selection_metadata__1280x800__scale_1_25.png"
     },
     {
       "severity": "major",
@@ -181,7 +181,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1600x960",
       "scale": "1.5",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_5\\doctor__asset_explorer__active_selection_metadata__1600x960__scale_1_5.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_5\\doctor__asset_explorer__active_selection_metadata__1600x960__scale_1_5.png"
     },
     {
       "severity": "major",
@@ -194,7 +194,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.5",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_5\\doctor__asset_explorer__active_selection_metadata__1366x768__scale_1_5.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_5\\doctor__asset_explorer__active_selection_metadata__1366x768__scale_1_5.png"
     },
     {
       "severity": "major",
@@ -207,7 +207,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1280x800",
       "scale": "1.5",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_5\\doctor__asset_explorer__active_selection_metadata__1280x800__scale_1_5.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_5\\doctor__asset_explorer__active_selection_metadata__1280x800__scale_1_5.png"
     },
     {
       "severity": "major",
@@ -220,7 +220,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1600x960",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__asset_explorer__tree_loaded_no_selection__1600x960__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__asset_explorer__tree_loaded_no_selection__1600x960__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -233,7 +233,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__asset_explorer__tree_loaded_no_selection__1366x768__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__asset_explorer__tree_loaded_no_selection__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -246,7 +246,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1280x800",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__asset_explorer__tree_loaded_no_selection__1280x800__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__asset_explorer__tree_loaded_no_selection__1280x800__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -259,7 +259,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1600x960",
       "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_25\\doctor__asset_explorer__tree_loaded_no_selection__1600x960__scale_1_25.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_25\\doctor__asset_explorer__tree_loaded_no_selection__1600x960__scale_1_25.png"
     },
     {
       "severity": "major",
@@ -272,7 +272,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_25\\doctor__asset_explorer__tree_loaded_no_selection__1366x768__scale_1_25.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_25\\doctor__asset_explorer__tree_loaded_no_selection__1366x768__scale_1_25.png"
     },
     {
       "severity": "major",
@@ -285,7 +285,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1280x800",
       "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_25\\doctor__asset_explorer__tree_loaded_no_selection__1280x800__scale_1_25.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_25\\doctor__asset_explorer__tree_loaded_no_selection__1280x800__scale_1_25.png"
     },
     {
       "severity": "major",
@@ -298,7 +298,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1600x960",
       "scale": "1.5",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_5\\doctor__asset_explorer__tree_loaded_no_selection__1600x960__scale_1_5.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_5\\doctor__asset_explorer__tree_loaded_no_selection__1600x960__scale_1_5.png"
     },
     {
       "severity": "major",
@@ -311,7 +311,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.5",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_5\\doctor__asset_explorer__tree_loaded_no_selection__1366x768__scale_1_5.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_5\\doctor__asset_explorer__tree_loaded_no_selection__1366x768__scale_1_5.png"
     },
     {
       "severity": "major",
@@ -324,7 +324,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1280x800",
       "scale": "1.5",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_5\\doctor__asset_explorer__tree_loaded_no_selection__1280x800__scale_1_5.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_5\\doctor__asset_explorer__tree_loaded_no_selection__1280x800__scale_1_5.png"
     },
     {
       "severity": "major",
@@ -337,7 +337,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1600x960",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -350,7 +350,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1600x960",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -363,7 +363,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1600x960",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -376,7 +376,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1366x768__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -389,7 +389,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1366x768__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -402,7 +402,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1366x768__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -415,7 +415,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1280x800",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1280x800__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1280x800__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -428,7 +428,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1280x800",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1280x800__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1280x800__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -441,7 +441,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1280x800",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1280x800__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1280x800__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -454,7 +454,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1600x960",
       "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_25\\doctor__companion__configured_invalid_executable__1600x960__scale_1_25.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_25\\doctor__companion__configured_invalid_executable__1600x960__scale_1_25.png"
     },
     {
       "severity": "major",
@@ -467,7 +467,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1600x960",
       "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_25\\doctor__companion__configured_invalid_executable__1600x960__scale_1_25.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_25\\doctor__companion__configured_invalid_executable__1600x960__scale_1_25.png"
     },
     {
       "severity": "major",
@@ -480,7 +480,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1600x960",
       "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\screenshots\\scale_1_25\\doctor__companion__configured_invalid_executable__1600x960__scale_1_25.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\screenshots\\scale_1_25\\doctor__companion__configured_invalid_executable__1600x960__scale_1_25.png"
     }
   ],
   "snapshot_capture_count": 192,
@@ -488,11 +488,11 @@
     "root_summary_json": "E:\\CVVCODEX\\projects\\GameRuAI\\ui_validation_summary.json",
     "root_summary_md": "E:\\CVVCODEX\\projects\\GameRuAI\\ui_validation_summary.md",
     "root_screenshots_manifest": "E:\\CVVCODEX\\projects\\GameRuAI\\ui_screenshots_manifest.json",
-    "validate_run_dir": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\validate_20260312_150606",
+    "validate_run_dir": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\validate_20260312_152940",
     "latest_run_txt": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\latest_run.txt",
-    "doctor_summary_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\ui_doctor_summary.json",
-    "doctor_manifest_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_150607\\ui_screenshots_manifest.json",
-    "snapshot_summary_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_snapshots\\20260312_151135\\ui_snapshot_summary.json",
-    "snapshot_manifest_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_snapshots\\20260312_151135\\ui_screenshots_manifest.json"
+    "doctor_summary_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\ui_doctor_summary.json",
+    "doctor_manifest_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260312_152940\\ui_screenshots_manifest.json",
+    "snapshot_summary_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_snapshots\\20260312_153507\\ui_snapshot_summary.json",
+    "snapshot_manifest_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_snapshots\\20260312_153507\\ui_screenshots_manifest.json"
   }
 }

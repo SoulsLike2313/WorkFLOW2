@@ -1,8 +1,8 @@
 ﻿# UI Fix Plan - GameRuAI
 
 ## Baseline findings source
-- Validation run: `20260312_150606`
-- Doctor run: `20260312_150607`
+- Validation run: `20260312_152940`
+- Doctor run: `20260312_152940`
 - Main issue: `floating_critical_cta` (243 major findings)
 
 ## Priority order
@@ -33,3 +33,4 @@
 - `ui_doctor` returns `PASS` or low, explained `PASS_WITH_WARNINGS`.
 - No repeated `floating_critical_cta` in core tabs.
 - Manual acceptance checklist updated with checked layout/scaling blocks.
+

@@ -1,16 +1,16 @@
 # UI Validation Summary
 
-- Run ID: `20260312_150606`
-- Started: `2026-03-12T12:06:06.966996+00:00`
-- Finished: `2026-03-12T12:14:05.440847+00:00`
-- Duration: `478.47s`
+- Run ID: `20260312_152940`
+- Started: `2026-03-12T12:29:40.531545+00:00`
+- Finished: `2026-03-12T12:37:36.973761+00:00`
+- Duration: `476.44s`
 - Overall status: `PASS_WITH_WARNINGS`
 - Manual acceptance recommended: `True`
 
 ## Sub-runs
 
-- ui_doctor: run=`20260312_150607` status=`PASS_WITH_WARNINGS`
-- ui_snapshot_runner: run=`20260312_151135` status=`PASS`
+- ui_doctor: run=`20260312_152940` status=`PASS_WITH_WARNINGS`
+- ui_snapshot_runner: run=`20260312_153507` status=`PASS`
 
 ## Screen Audit
 
@@ -56,12 +56,12 @@
 - root_summary_json: `E:\CVVCODEX\projects\GameRuAI\ui_validation_summary.json`
 - root_summary_md: `E:\CVVCODEX\projects\GameRuAI\ui_validation_summary.md`
 - root_screenshots_manifest: `E:\CVVCODEX\projects\GameRuAI\ui_screenshots_manifest.json`
-- validate_run_dir: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\validate_20260312_150606`
+- validate_run_dir: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\validate_20260312_152940`
 - latest_run_txt: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\latest_run.txt`
-- doctor_summary_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\20260312_150607\ui_doctor_summary.json`
-- doctor_manifest_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\20260312_150607\ui_screenshots_manifest.json`
-- snapshot_summary_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_snapshots\20260312_151135\ui_snapshot_summary.json`
-- snapshot_manifest_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_snapshots\20260312_151135\ui_screenshots_manifest.json`
+- doctor_summary_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\20260312_152940\ui_doctor_summary.json`
+- doctor_manifest_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\20260312_152940\ui_screenshots_manifest.json`
+- snapshot_summary_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_snapshots\20260312_153507\ui_snapshot_summary.json`
+- snapshot_manifest_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_snapshots\20260312_153507\ui_screenshots_manifest.json`
 
 ## Warnings
 

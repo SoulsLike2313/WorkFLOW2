@@ -1,8 +1,8 @@
 ﻿# UI Layout Bug Report - GameRuAI
 
 ## Baseline run
-- Validation run: `20260312_150606`
-- Doctor run: `20260312_150607`
+- Validation run: `20260312_152940`
+- Doctor run: `20260312_152940`
 - Status: `PASS_WITH_WARNINGS`
 
 ## Observed defect clusters
@@ -16,12 +16,13 @@
 | major | layout | floating_critical_cta | Voice | no_selection / active_selection_details | all scales and all sizes | Voice action buttons remain anchored in control pane | CTA controls reported as floating while switching selection state | Stabilize voice control row and avoid detached containers |
 
 ## Reference screenshots
-- `runtime/ui_validation/20260312_150607/screenshots/scale_1_0/doctor__asset_explorer__tree_loaded_no_selection__1600x960__scale_1_0.png`
-- `runtime/ui_validation/20260312_150607/screenshots/scale_1_0/doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png`
-- `runtime/ui_validation/20260312_150607/screenshots/scale_1_0/doctor__entries__many_items_loaded__1600x960__scale_1_0.png`
-- `runtime/ui_validation/20260312_150607/screenshots/scale_1_0/doctor__translation__loaded_translations__1600x960__scale_1_0.png`
-- `runtime/ui_validation/20260312_150607/screenshots/scale_1_0/doctor__voice__active_selection_details__1600x960__scale_1_0.png`
+- `runtime/ui_validation/20260312_152940/screenshots/scale_1_0/doctor__asset_explorer__tree_loaded_no_selection__1600x960__scale_1_0.png`
+- `runtime/ui_validation/20260312_152940/screenshots/scale_1_0/doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png`
+- `runtime/ui_validation/20260312_152940/screenshots/scale_1_0/doctor__entries__many_items_loaded__1600x960__scale_1_0.png`
+- `runtime/ui_validation/20260312_152940/screenshots/scale_1_0/doctor__translation__loaded_translations__1600x960__scale_1_0.png`
+- `runtime/ui_validation/20260312_152940/screenshots/scale_1_0/doctor__voice__active_selection_details__1600x960__scale_1_0.png`
 
 ## Notes
 - This run did not detect critical blockers, but major layout warnings remain systematic.
 - Failures are product-specific and tied to main working screens, not cosmetic side screens.
+
