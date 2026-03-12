@@ -1,68 +1,104 @@
-# Task Rules (Machine-Gated)
+# Task Rules (Hard Contract)
 
-## Rule 0: Hard Gate
+## Execution Gate (Mandatory Before Any Task)
+
+Task execution is forbidden until Codex reads instruction/governance files in this exact order:
+
+1. `README.md`
+2. `workspace_config/workspace_manifest.json`
+3. `workspace_config/codex_manifest.json`
+4. `workspace_config/TASK_RULES.md`
+5. `workspace_config/AGENT_EXECUTION_POLICY.md`
+6. `workspace_config/MACHINE_REPO_READING_RULES.md`
+7. `docs/INSTRUCTION_INDEX.md`
+8. relevant `PROJECT_MANIFEST.json`
+9. relevant project `README.md`
+10. relevant `CODEX.md` (if present)
+11. relevant `SYSTEM_MANIFEST.json` (if shared system is involved)
+
+If this gate is not completed: task status is `REJECTED`.
+
+## Rule 0
+
 `No strict parameters = no task acceptance.`
 
-Any serious task is blocked until all required parameters are present and unambiguous.
+## Required Task Contract
 
-## Required Task Parameters
+A task is accepted only if all fields below are explicit:
 
-A task is accepted only if it explicitly defines:
-
-1. `target_scope`
-2. `exact_goal`
-3. `exact_project_or_module`
-4. `allowed_files_or_folders`
-5. `forbidden_areas`
-6. `expected_outputs_or_artifacts`
+1. `exact_goal`
+2. `exact_target_scope`
+3. `target_project_or_module`
+4. `allowed_paths`
+5. `forbidden_paths`
+6. `expected_outputs`
 7. `acceptance_criteria`
-8. `mode` (`build` | `audit` | `validate` | `integrate` | `remove` | `report`)
+8. `validation_steps`
 9. `do_not_do`
+10. `task_mode` (`build` | `audit` | `validate` | `integrate` | `remove` | `report`)
 
-For machine tasks, the canonical structure is:
+Canonical machine format:
 
 - `workspace_config/task_manifest.schema.json`
+- `workspace_config/TASK_INTAKE_REFERENCE.md`
 
-## Acceptance Decision States
+## Acceptance States
 
-Only these states are valid:
+Only these intake states are valid:
 
-1. `ACCEPTED`
+1. `REJECTED`
 2. `PARTIAL_ACCEPTED`
-3. `REJECTED`
+3. `ACCEPTED`
 
 Decision logic:
 
-1. If any required parameter is missing: `REJECTED`.
-2. If parameters conflict (`allowed_paths` intersect `forbidden_paths`): `REJECTED`.
-3. If goal is broad but one safe subset is explicitly bounded: `PARTIAL_ACCEPTED` (execute only the bounded subset).
-4. If all required parameters are strict and non-conflicting: `ACCEPTED`.
+1. Missing required fields: `REJECTED`.
+2. Conflicting boundaries (`allowed_paths` intersects `forbidden_paths`): `REJECTED`.
+3. Undefined acceptance criteria or validation steps: `REJECTED`.
+4. Partially strict contract with bounded subset: `PARTIAL_ACCEPTED`.
+5. Fully strict and non-conflicting contract: `ACCEPTED`.
 
-## Ambiguity Handling
+## Refusal Protocol (Machine-Enforced)
 
-If the request is ambiguous:
+When rejected, response format is mandatory:
 
-1. Do not expand scope by assumption.
-2. Do not perform side work.
-3. Execute only the confirmed narrow scope.
-4. Mark unresolved items as `ambiguities`.
+```text
+STATUS: REJECTED
+REASON: insufficient task contract
+MISSING:
+- <missing_parameter_1>
+- <missing_parameter_2>
+ACTION REQUIRED:
+- resubmit task with strict parameters
+```
 
-## Scope Isolation Rules
+## Partial Acceptance Protocol (Machine-Enforced)
 
-1. If task targets one project, do not modify other projects.
-2. If task targets one module, do not modify sibling modules.
-3. Paths outside `allowed_paths` are out of scope.
-4. Any external change detected during execution must be recorded as `external_unrelated_changes`.
+When partially accepted, response format is mandatory:
 
-## Output Contract Rules
+```text
+STATUS: PARTIAL_ACCEPTED
+LIMITED_SCOPE:
+- <only_confirmed_scope_item_1>
+- <only_confirmed_scope_item_2>
+AMBIGUITIES:
+- <ambiguity_1>
+- <ambiguity_2>
+WILL_NOT_DO:
+- anything outside confirmed scope
+```
 
-1. Generate only outputs listed in `expected_outputs`.
-2. Do not create extra reports/files outside declared outputs.
-3. Acceptance is valid only when every `acceptance_criteria` item is satisfied or explicitly marked failed with reason.
+Execution rules for `PARTIAL_ACCEPTED`:
 
-## Forbidden Behaviors
+1. Scope expansion is forbidden.
+2. Side work is forbidden.
+3. Unrequested artifacts are forbidden.
+4. Only confirmed scope is executable.
 
-1. Silent refactor outside declared scope.
-2. Hidden task expansion.
-3. Placeholder completion claims without machine-run checks.
-4. Reinterpretation of undefined requirements as implicit permission.
+## Hard Prohibitions
+
+1. No silent scope expansion.
+2. No side work.
+3. No unrequested artifacts.
+4. No silent refactor outside scope.
+5. No completion claim without acceptance criteria and validation evidence.

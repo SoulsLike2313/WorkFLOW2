@@ -1,88 +1,106 @@
-# Machine Repo Reading Rules
+# Machine Repo Reading Rules (Execution Gate)
 
-## Purpose
-Define deterministic reading order and source-of-truth resolution for machine agents reading this repository (including via GitHub URL).
+## Rule 1: Task Start Is Forbidden Without Read Gate
 
-## Deterministic Reading Order
+Codex must complete this exact order before any task analysis or code change:
 
-Always read in this order:
+1. `README.md`
+2. `workspace_config/workspace_manifest.json`
+3. `workspace_config/codex_manifest.json`
+4. `workspace_config/TASK_RULES.md`
+5. `workspace_config/AGENT_EXECUTION_POLICY.md`
+6. `workspace_config/MACHINE_REPO_READING_RULES.md`
+7. `docs/INSTRUCTION_INDEX.md`
+8. relevant `PROJECT_MANIFEST.json`
+9. relevant project `README.md`
+10. relevant `CODEX.md` if present
+11. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
-1. `README.md` (workspace map)
-2. `workspace_config/workspace_manifest.json` (workspace registry)
-3. `workspace_config/codex_manifest.json` (machine onboarding policy)
-4. `workspace_config/TASK_RULES.md` (task acceptance gate)
-5. `workspace_config/AGENT_EXECUTION_POLICY.md` (execution constraints)
-6. target `PROJECT_MANIFEST.json` (project source of truth)
-7. target project `README.md` + `CODEX.md`
-8. `shared_systems/*/SYSTEM_MANIFEST.json` (if directory exists)
+If any mandatory step is skipped, task status is `REJECTED`.
 
-## Source of Truth Resolution
+## Rule 2: Source of Truth Resolution
 
-1. Root README = workspace map.
-2. `workspace_manifest.json` = project registry + active project status.
-3. `codex_manifest.json` = machine onboarding and scope controls.
-4. `PROJECT_MANIFEST.json` = project truth contract.
-5. `SYSTEM_MANIFEST.json` = shared system truth contract.
+1. root `README.md` = workspace map
+2. `workspace_config/workspace_manifest.json` = workspace registry
+3. `workspace_config/codex_manifest.json` = machine onboarding policy
+4. `PROJECT_MANIFEST.json` = project source of truth
+5. `SYSTEM_MANIFEST.json` = shared system source of truth
 
-If documents conflict, higher-priority source above wins.
+Conflict rule: higher item in this list wins.
 
-## Rule Set
+## Rule 3: Active Project Detection
 
-### 1. Determine active project
-- Read `workspace_config/workspace_manifest.json`.
-- Use `active_project` slug.
-- Resolve `project_registry[].manifest_path` for that slug.
+1. Read `workspace_config/workspace_manifest.json`.
+2. Resolve `active_project`.
+3. Resolve matching `project_registry[].manifest_path`.
 
-### 2. Determine shared systems
-- If `shared_systems/` exists: enumerate direct child folders.
-- For each folder, require `SYSTEM_MANIFEST.json`.
-- If `shared_systems/` does not exist: shared systems are `not configured`.
+No directory-name guessing is allowed.
 
-### 3. Determine project status
-- Use `project_registry[].status` as primary source.
-- `project_status_index` is consistency mirror, not primary source.
+## Rule 4: Shared Systems Detection
 
-### 4. Determine installed systems in each project
-- Read project `PROJECT_MANIFEST.json`.
-- If field `installed_systems` exists: use it.
-- If field missing: status is `unknown/not-declared` (do not guess).
+1. Check `shared_systems/`.
+2. For each child folder, require `SYSTEM_MANIFEST.json`.
+3. If folder or manifest is missing, report `not_configured` or `incomplete_registry`.
 
-### 5. Determine manifests
-- Workspace manifest: `workspace_config/workspace_manifest.json`
-- Codex manifest: `workspace_config/codex_manifest.json`
-- Project manifest(s): `projects/**/PROJECT_MANIFEST.json`
-- System manifest(s): `shared_systems/**/SYSTEM_MANIFEST.json`
+## Rule 5: Project Status Detection
 
-### 6. Determine verification entrypoints
-- Project-level: `PROJECT_MANIFEST.json -> verification_entrypoints`.
-- Workspace-level: `workspace_manifest.json -> verification_entrypoints`.
-- If both exist, project-level is execution target for that project.
+Primary source:
 
-### 7. Determine install/remove workflows
-- Expected install scripts:
-  - `scripts/install_system.py` or `scripts/install_system.ps1`
-- Expected remove scripts:
-  - `scripts/remove_system.py` or `scripts/remove_system.ps1`
-- If missing, declare workflow as `not implemented`.
+- `project_registry[].status`
 
-### 8. Determine source-of-truth docs for execution
-- Task intake: `workspace_config/TASK_RULES.md` + `workspace_config/task_manifest.schema.json`
-- Agent behavior: `workspace_config/AGENT_EXECUTION_POLICY.md`
-- Repo reading: this file
+Secondary mirror:
 
-## GitHub-Link Readability Constraints
+- `project_status_index`
 
-To keep repository machine-readable from remote URL:
+If mismatch exists, treat registry as authoritative and report mismatch.
 
-1. Paths in manifests must be repo-relative.
-2. Avoid machine-local absolute paths in governance files.
-3. Keep required contracts in stable locations under `workspace_config/`.
-4. Use explicit slugs and explicit status values only.
+## Rule 6: Installed Systems Detection
 
-## Non-Guessing Rule
+Per project:
 
-If a required contract field is missing, agent must return:
+1. Read project `PROJECT_MANIFEST.json`.
+2. Use `installed_systems` if present.
+3. If missing, report `unknown_not_declared`.
 
-- `insufficient_contract_data`
+Do not infer installed systems from folder names only.
 
-and must not infer missing data from naming conventions alone.
+## Rule 7: Manifest Detection
+
+1. Workspace manifest: `workspace_config/workspace_manifest.json`
+2. Codex manifest: `workspace_config/codex_manifest.json`
+3. Project manifests: `projects/**/PROJECT_MANIFEST.json`
+4. System manifests: `shared_systems/**/SYSTEM_MANIFEST.json`
+
+## Rule 8: Verification Entrypoint Detection
+
+1. Project-level source: `PROJECT_MANIFEST.json -> verification_entrypoints`
+2. Workspace-level source: `workspace_manifest.json -> verification_entrypoints`
+3. For project execution, project-level entrypoint is mandatory.
+
+## Rule 9: Install/Remove Workflow Detection
+
+Install workflow source:
+
+- `scripts/install_system.py` or `scripts/install_system.ps1`
+
+Remove workflow source:
+
+- `scripts/remove_system.py` or `scripts/remove_system.ps1`
+
+If scripts are absent, workflow status is `not_implemented`.
+
+## Rule 10: Non-Guessing Failure Contract
+
+If required contract data is missing, Codex must emit:
+
+- `STATUS: REJECTED`
+- `REASON: insufficient_contract_data`
+
+and must not execute speculative edits.
+
+## Rule 11: Task Contract Enforcement Outcomes
+
+1. Without strict task contract: task is `REJECTED`.
+2. Without scope boundaries: code changes are forbidden.
+3. Without acceptance criteria: completion claim is forbidden.
+4. Without validation steps: confirmation claim is forbidden.

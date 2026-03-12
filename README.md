@@ -42,12 +42,28 @@ Strict machine task governance is defined in:
 
 - `workspace_config/TASK_RULES.md`
 - `workspace_config/task_manifest.schema.json`
+- `workspace_config/TASK_INTAKE_REFERENCE.md`
 - `workspace_config/AGENT_EXECUTION_POLICY.md`
 - `workspace_config/MACHINE_REPO_READING_RULES.md`
 
 Acceptance gate:
 
 - no strict parameters -> no task acceptance.
+- missing strict task contract -> `STATUS: REJECTED`, `REASON: insufficient task contract`.
+
+Mandatory pre-task read gate:
+
+1. `README.md`
+2. `workspace_config/workspace_manifest.json`
+3. `workspace_config/codex_manifest.json`
+4. `workspace_config/TASK_RULES.md`
+5. `workspace_config/AGENT_EXECUTION_POLICY.md`
+6. `workspace_config/MACHINE_REPO_READING_RULES.md`
+7. `docs/INSTRUCTION_INDEX.md`
+8. relevant `PROJECT_MANIFEST.json`
+9. relevant project `README.md`
+10. relevant `CODEX.md` if present
+11. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 ## Project Priority and Status
 

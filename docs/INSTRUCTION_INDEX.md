@@ -7,6 +7,24 @@
 - `P2`: domain/layer-specific contracts.
 - `P3`: historical/supporting notes (non-authoritative for routing).
 
+## Mandatory Pre-Task Read Order
+
+Before any task execution, Codex must read in this exact order:
+
+1. `README.md`
+2. `workspace_config/workspace_manifest.json`
+3. `workspace_config/codex_manifest.json`
+4. `workspace_config/TASK_RULES.md`
+5. `workspace_config/AGENT_EXECUTION_POLICY.md`
+6. `workspace_config/MACHINE_REPO_READING_RULES.md`
+7. `docs/INSTRUCTION_INDEX.md`
+8. relevant `PROJECT_MANIFEST.json`
+9. relevant project `README.md`
+10. relevant `CODEX.md` if present
+11. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+
+If this order is not completed, task status is `REJECTED`.
+
 ## Index
 
 | File | Role | Priority | Target Audience |
@@ -16,6 +34,7 @@
 | `workspace_config/codex_manifest.json` | Machine onboarding order and scope controls | P0 | machine, codex |
 | `workspace_config/TASK_RULES.md` | Strict task acceptance gate | P0 | machine, codex, product reviewer |
 | `workspace_config/task_manifest.schema.json` | Machine-readable task manifest contract | P0 | machine, codex, developer |
+| `workspace_config/TASK_INTAKE_REFERENCE.md` | Intake validity criteria and refusal templates | P0 | machine, codex, developer, product reviewer |
 | `workspace_config/AGENT_EXECUTION_POLICY.md` | Strict execution boundaries and anti-side-work rules | P0 | machine, codex, product reviewer |
 | `workspace_config/MACHINE_REPO_READING_RULES.md` | Deterministic repository reading policy | P0 | machine, codex |
 | `workspace_config/PROJECT_RULES.md` | Workspace project lifecycle and isolation standards | P1 | machine, codex, developer |

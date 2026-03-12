@@ -1,82 +1,98 @@
-# Agent Execution Policy (Strict Scope)
+# Agent Execution Policy (Machine-Enforced)
 
-## Purpose
-Define mandatory execution behavior for Codex in this repository.
+## Rule 1: Pre-Task Read Gate
 
-## Mandatory Execution Sequence
+Codex must not execute any task until the read order defined in:
 
-Execution must always follow this order:
+- `workspace_config/TASK_RULES.md`
+- `workspace_config/MACHINE_REPO_READING_RULES.md`
+
+is completed.
+
+If read gate is not completed: status is `REJECTED`.
+
+## Rule 2: Strict Contract Gate
+
+Codex must reject tasks without strict parameters.
+
+Missing any of the following is a hard rejection:
+
+1. exact goal
+2. exact target scope
+3. target project or module
+4. allowed paths
+5. forbidden paths
+6. expected outputs
+7. acceptance criteria
+8. validation steps
+9. explicit do-not-do block
+
+Without exact target scope, code changes are forbidden.
+
+## Rule 3: Mandatory Execution Sequence
+
+Execution order is fixed:
 
 1. `scope_analysis`
-2. `execution`
-3. `validation`
-4. `exact_output_delivery`
+2. `contract_verdict` (`REJECTED` | `PARTIAL_ACCEPTED` | `ACCEPTED`)
+3. `bounded_execution`
+4. `validation_execution`
+5. `exact_output_delivery`
 
-No step may be skipped.
+Skipping or reordering is forbidden.
 
-## Phase 1: scope_analysis (Machine-Readable)
+## Rule 4: Refusal Behavior
 
-Before code changes:
+On rejection, Codex must emit exact refusal format:
 
-1. Resolve task mode (`build` | `audit` | `validate` | `integrate` | `remove` | `report`).
-2. Resolve exact target (`project/module/path`).
-3. Resolve `allowed_paths` and `forbidden_paths`.
-4. Resolve exact `expected_outputs`.
-5. Resolve exact `acceptance_criteria`.
+```text
+STATUS: REJECTED
+REASON: insufficient task contract
+MISSING:
+- <missing_parameter_1>
+- <missing_parameter_2>
+ACTION REQUIRED:
+- resubmit task with strict parameters
+```
 
-If any item is missing: do not accept full task execution.
+## Rule 5: Partial Acceptance Behavior
 
-## Phase 2: execution (Bounded)
+If and only if a bounded subset is strict, Codex may use `PARTIAL_ACCEPTED`.
 
-1. Modify only files inside `allowed_paths`.
-2. Do not modify files in `forbidden_paths`.
-3. Do not run side workflows not requested in task scope.
-4. Do not generate artifacts outside declared `expected_outputs`.
+Mandatory output format:
 
-## Phase 3: validation (Required)
+```text
+STATUS: PARTIAL_ACCEPTED
+LIMITED_SCOPE:
+- <confirmed_scope_item_1>
+- <confirmed_scope_item_2>
+AMBIGUITIES:
+- <ambiguity_1>
+- <ambiguity_2>
+WILL_NOT_DO:
+- anything outside confirmed scope
+```
 
-1. Execute listed validation commands only.
-2. Report pass/fail per acceptance criterion.
-3. If validation cannot run, return explicit blocked reason.
+## Rule 6: Bounded Execution Controls
 
-No "integration complete" claim is allowed without machine-run evidence.
+1. No side work.
+2. No silent scope expansion.
+3. No unrequested artifacts.
+4. No silent refactor outside allowed paths.
+5. No cross-project edits unless explicitly in scope.
+6. No cross-module edits unless explicitly in scope.
 
-## Phase 4: exact_output_delivery
+## Rule 7: Validation and Completion Controls
 
-1. Return only requested deliverables.
-2. Include exact changed files and exact validation outcomes.
-3. Mark unresolved criteria explicitly.
+1. Without acceptance criteria, completion claim is forbidden.
+2. Without validation steps, confirmation claim is forbidden.
+3. Validation must run against declared validation steps.
+4. Any unmet criterion must be reported as failed, not omitted.
 
-## Hard Restrictions
+## Rule 8: External Unrelated Changes
 
-1. No scope drift.
-2. No silent refactor outside target scope.
-3. No hidden expansion of requirements.
-4. No unrelated cleanup without explicit approval.
-5. No implicit cross-project edits.
+If external unrelated changes are detected:
 
-## Project and Module Isolation
-
-1. If task targets one project, other projects are read-only.
-2. If task targets one module, sibling modules are read-only.
-3. Cross-project or cross-module changes require explicit task parameters.
-
-## External Unrelated Changes
-
-If unrelated local changes are detected:
-
-1. Mark them as `external_unrelated_changes`.
-2. Do not revert them.
-3. Do not mix them into task claims.
-
-## Decision States
-
-Allowed execution states:
-
-1. `accepted`
-2. `partial_accepted`
-3. `blocked`
-4. `completed`
-5. `completed_with_gaps`
-
-These states must map to explicit evidence (changes + validation outputs).
+1. Mark as `external_unrelated_changes`.
+2. Keep excluded from task scope and task claims.
+3. Do not revert unless explicitly requested.
