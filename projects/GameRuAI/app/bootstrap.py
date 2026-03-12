@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import wave
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Generator
 
@@ -794,6 +795,414 @@ class AppServices:
             "backend_diagnostics": self.repo.list_backend_diagnostics(project_id, limit=200),
             "project_reports": self.repo.list_project_reports(project_id, limit=80),
             "quality_snapshots": self.repo.list_quality_snapshots(project_id, limit=80),
+        }
+
+    def hud_snapshot(
+        self,
+        project_id: int,
+        *,
+        game_root: Path | None = None,
+        current_companion_session_id: str | None = None,
+        requested_backend: str = "local_mock",
+    ) -> dict[str, Any]:
+        project_row = next((p for p in self.repo.list_projects() if int(p.id) == int(project_id)), None)
+        if not project_row:
+            return {}
+
+        resolved_game_root = Path(project_row.game_path) if project_row.game_path else (game_root or self.config.paths.fixtures_root)
+        scanned_files = self.repo.list_scanned_files(project_id)
+        entries = self.repo.list_entries(project_id, limit=100000)
+        translations = self.repo.list_translations(project_id)
+        backend_runs = self.repo.list_translation_backend_runs(project_id, limit=8000)
+        voice_attempts = self.repo.list_voice_attempts(project_id, limit=100000)
+        voice_samples = self.repo.list_voice_sample_bank(project_id, limit=100000)
+        qa_findings = self.repo.list_qa_findings(project_id, limit=100000)
+        export_jobs = self.repo.list_export_jobs(project_id, limit=300)
+        reports = self.repo.list_project_reports(project_id, limit=20)
+        diagnostics = self.repo.list_backend_diagnostics(project_id, limit=20)
+        sessions = self.repo.list_companion_sessions(project_id, limit=120)
+
+        entries_total = len(entries)
+        detected_total = len([row for row in entries if str(row.get("detected_lang") or "").strip() != ""])
+        translated_total = len([row for row in translations if (row.get("translated_text") or "").strip()])
+        voice_linked_total = len([row for row in entries if bool(row.get("has_voice_link"))])
+        uncertain_total = len(
+            [
+                row
+                for row in entries
+                if str(row.get("detected_lang") or "unknown") in {"unknown", "mixed"}
+                or float(row.get("language_confidence") or 0.0) < 0.75
+            ]
+        )
+
+        language_distribution = Counter(str(row.get("detected_lang") or "unknown") for row in entries)
+        languages_total = len(language_distribution)
+        language_map = ", ".join(
+            f"{lang}:{count}" for lang, count in sorted(language_distribution.items(), key=lambda item: (-item[1], item[0]))[:8]
+        ) or "n/a"
+
+        active_backend = backend_runs[0]["backend_name"] if backend_runs else requested_backend
+        fallback_backend = next(
+            (str(row.get("fallback_backend")) for row in backend_runs if str(row.get("fallback_backend") or "").strip()),
+            "-",
+        )
+        qa_errors = len([row for row in qa_findings if str(row.get("severity") or "").lower() == "error"])
+        qa_warnings = len([row for row in qa_findings if str(row.get("severity") or "").lower() == "warning"])
+
+        companion = None
+        if current_companion_session_id:
+            companion = next((row for row in sessions if str(row.get("session_id")) == current_companion_session_id), None)
+        if companion is None and sessions:
+            companion = sessions[0]
+        companion_status = str((companion or {}).get("process_status") or "idle")
+        companion_session_id = str((companion or {}).get("session_id") or "no-session")
+
+        def _stage(done: bool, partial: bool = False) -> str:
+            if done:
+                return "done"
+            if partial:
+                return "partial"
+            return "pending"
+
+        pipeline_stage = {
+            "scan": _stage(bool(scanned_files)),
+            "extract": _stage(entries_total > 0),
+            "detect": _stage(detected_total >= max(1, entries_total), detected_total > 0),
+            "translate": _stage(translated_total >= max(1, entries_total), translated_total > 0),
+            "voice": _stage(voice_linked_total > 0 and len(voice_attempts) >= voice_linked_total, len(voice_attempts) > 0),
+            "export": _stage(any(str(row.get("status")) == "done" for row in export_jobs)),
+            "reports": _stage(bool(reports)),
+            "diagnostics": _stage(bool(diagnostics)),
+        }
+
+        next_action = "review QA/report results"
+        if pipeline_stage["scan"] == "pending":
+            next_action = "run Scan to index files"
+        elif pipeline_stage["extract"] == "pending":
+            next_action = "run Extract Strings"
+        elif pipeline_stage["detect"] == "pending":
+            next_action = "run Detect Language"
+        elif pipeline_stage["translate"] == "pending":
+            next_action = "run Translate to Russian"
+        elif uncertain_total > 0:
+            next_action = "review uncertain language lines"
+        elif pipeline_stage["voice"] == "pending":
+            next_action = "generate voice preparation attempts"
+        elif pipeline_stage["export"] == "pending":
+            next_action = "export patch output"
+        elif qa_errors > 0:
+            next_action = "fix critical QA errors before export"
+
+        return {
+            "project_id": int(project_row.id),
+            "project_name": project_row.name,
+            "game_path": str(resolved_game_root),
+            "active_backend": active_backend,
+            "fallback_backend": fallback_backend,
+            "language_map": language_map,
+            "pipeline_stage": pipeline_stage,
+            "entries_total": entries_total,
+            "languages_total": languages_total,
+            "translated_total": translated_total,
+            "uncertain_total": uncertain_total,
+            "voice_attempts_total": len(voice_attempts),
+            "voice_broken_links": len(
+                [row for row in voice_samples if not bool((row.get("metadata_json") or {}).get("link_valid", True))]
+            ),
+            "qa_errors": qa_errors,
+            "qa_warnings": qa_warnings,
+            "reports_status": "ready" if reports else "missing",
+            "diagnostics_status": "ready" if diagnostics else "missing",
+            "companion_status": companion_status,
+            "companion_session_id": companion_session_id,
+            "translation_coverage_rate": round(translated_total / max(1, entries_total), 4),
+            "uncertain_rate": round(uncertain_total / max(1, entries_total), 4),
+            "next_action": next_action,
+        }
+
+    def language_hub_snapshot(self, project_id: int, *, requested_backend: str = "local_mock") -> dict[str, Any]:
+        entries = self.repo.list_entries(project_id, limit=100000)
+        backend_runs = self.repo.list_translation_backend_runs(project_id, limit=15000)
+        corrections = self.repo.list_corrections(project_id, limit=100000)
+        export_jobs = self.repo.list_export_jobs(project_id, limit=1000)
+
+        if not entries:
+            return {
+                "overview": [],
+                "queue": [],
+                "review": [],
+                "stress": [],
+                "flow_summary": [],
+                "backend_status": {
+                    "active_backend": requested_backend,
+                    "fallback_backend": "-",
+                    "available_backends": self.translator.translator_router.available_backends(),
+                    "avg_latency_ms": 0,
+                    "p95_latency_ms": 0,
+                    "context_usage_rate": 0.0,
+                    "fallback_used": 0,
+                    "mode": "mock/fallback",
+                },
+                "languages_total": 0,
+                "uncertain_total": 0,
+                "detected_total": 0,
+                "translated_total": 0,
+                "reviewed_total": 0,
+                "exported_total": 0,
+            }
+
+        entry_lang: dict[int, str] = {}
+        lang_stats: dict[str, dict[str, Any]] = defaultdict(
+            lambda: {
+                "lines": 0,
+                "translated": 0,
+                "needs_review": 0,
+                "confidence_sum": 0.0,
+            }
+        )
+        source_targets: dict[str, set[str]] = defaultdict(set)
+        review_rows: list[dict[str, Any]] = []
+        stress_rows: list[dict[str, Any]] = []
+
+        for row in entries:
+            entry_id = int(row.get("id") or 0)
+            lang = str(row.get("detected_lang") or "unknown")
+            entry_lang[entry_id] = lang
+            source_text = str(row.get("source_text") or "")
+            translated_text = str(row.get("translated_text") or "")
+            confidence = float(row.get("language_confidence") or 0.0)
+            context_type = str(row.get("context_type") or "unknown")
+            placeholders = row.get("placeholders_json") or []
+            tags = row.get("tags_json") or []
+
+            stats = lang_stats[lang]
+            stats["lines"] += 1
+            stats["confidence_sum"] += confidence
+            if translated_text.strip():
+                stats["translated"] += 1
+            uncertain = lang in {"unknown", "mixed"} or confidence < 0.75
+            if uncertain:
+                stats["needs_review"] += 1
+                review_rows.append(
+                    {
+                        "entry_id": entry_id,
+                        "line_id": row.get("line_id", ""),
+                        "lang": lang,
+                        "confidence": round(confidence, 3),
+                        "issue": "mixed/unknown" if lang in {"unknown", "mixed"} else "low_confidence",
+                        "file_path": row.get("file_path", ""),
+                    }
+                )
+
+            if context_type in {"ui", "system", "tutorial"} and len(source_text.strip()) <= 4:
+                review_rows.append(
+                    {
+                        "entry_id": entry_id,
+                        "line_id": row.get("line_id", ""),
+                        "lang": lang,
+                        "confidence": round(confidence, 3),
+                        "issue": "short_ui_string",
+                        "file_path": row.get("file_path", ""),
+                    }
+                )
+
+            source_key = source_text.strip().lower()
+            if source_key and translated_text.strip():
+                source_targets[source_key].add(translated_text.strip().lower())
+
+            source_len = len(source_text)
+            translated_len = len(translated_text)
+            placeholder_count = len(placeholders)
+            tag_count = len(tags)
+            overflow_risk = translated_len > max(40, int(source_len * 1.35))
+            long_line = source_len >= 90 or translated_len >= 110
+            if overflow_risk or long_line or placeholder_count > 0 or tag_count > 0:
+                risk_tokens: list[str] = []
+                if overflow_risk:
+                    risk_tokens.append("overflow")
+                if long_line:
+                    risk_tokens.append("long")
+                if placeholder_count > 0:
+                    risk_tokens.append("placeholders")
+                if tag_count > 0:
+                    risk_tokens.append("tags")
+                stress_rows.append(
+                    {
+                        "line_id": row.get("line_id", ""),
+                        "lang": lang,
+                        "source_len": source_len,
+                        "translated_len": translated_len,
+                        "placeholders": placeholder_count,
+                        "tags": tag_count,
+                        "risk": ",".join(risk_tokens),
+                        "file_path": row.get("file_path", ""),
+                    }
+                )
+
+        repeated_conflicts = {
+            source_key for source_key, targets in source_targets.items() if len(targets) > 1 and source_key
+        }
+        if repeated_conflicts:
+            for row in entries:
+                source_key = str(row.get("source_text") or "").strip().lower()
+                if source_key in repeated_conflicts:
+                    review_rows.append(
+                        {
+                            "entry_id": int(row.get("id") or 0),
+                            "line_id": row.get("line_id", ""),
+                            "lang": str(row.get("detected_lang") or "unknown"),
+                            "confidence": round(float(row.get("language_confidence") or 0.0), 3),
+                            "issue": "repeated_translation_conflict",
+                            "file_path": row.get("file_path", ""),
+                        }
+                    )
+
+        last_processed: dict[str, str] = {}
+        for run in backend_runs:
+            entry_id = int(run.get("entry_id") or 0)
+            lang = entry_lang.get(entry_id)
+            if not lang:
+                continue
+            created_at = str(run.get("created_at") or "")
+            if created_at and created_at > last_processed.get(lang, ""):
+                last_processed[lang] = created_at
+
+        overview_rows = []
+        queue_rows = []
+        for lang, stats in sorted(lang_stats.items(), key=lambda item: (-item[1]["lines"], item[0])):
+            lines = int(stats["lines"])
+            translated = int(stats["translated"])
+            needs_review = int(stats["needs_review"])
+            avg_conf = round(float(stats["confidence_sum"]) / max(1, lines), 3)
+            coverage = round(translated / max(1, lines), 3)
+            pending = max(0, lines - translated)
+
+            if pending == 0 and needs_review == 0:
+                queue_status = "done"
+                priority = "low"
+                next_step = "none"
+            elif needs_review > 0:
+                queue_status = "review"
+                priority = "high" if (needs_review / max(1, lines)) >= 0.25 else "medium"
+                next_step = "open Language Review block"
+            else:
+                queue_status = "queued"
+                priority = "high" if pending > 30 else "medium"
+                next_step = "run Translate to Russian"
+
+            overview_rows.append(
+                {
+                    "language": lang,
+                    "lines": lines,
+                    "avg_confidence": avg_conf,
+                    "translated": translated,
+                    "needs_review": needs_review,
+                    "coverage": coverage,
+                }
+            )
+            queue_rows.append(
+                {
+                    "language": lang,
+                    "pending": pending,
+                    "priority": priority,
+                    "status": queue_status,
+                    "errors": needs_review,
+                    "last_processed": last_processed.get(lang, "-"),
+                    "next_step": next_step,
+                }
+            )
+
+        latencies = [int(run.get("latency_ms") or 0) for run in backend_runs]
+        p95_latency_ms = 0
+        avg_latency_ms = 0
+        if latencies:
+            sorted_lat = sorted(latencies)
+            avg_latency_ms = int(sum(sorted_lat) / max(1, len(sorted_lat)))
+            idx = max(0, min(len(sorted_lat) - 1, int(len(sorted_lat) * 0.95) - 1))
+            p95_latency_ms = int(sorted_lat[idx])
+
+        active_backend = backend_runs[0]["backend_name"] if backend_runs else requested_backend
+        fallback_backend = next(
+            (str(run.get("fallback_backend")) for run in backend_runs if str(run.get("fallback_backend") or "").strip()),
+            "-",
+        )
+        context_used_count = len([run for run in backend_runs if bool(run.get("context_used"))])
+        fallback_used_count = len([run for run in backend_runs if bool(run.get("fallback_used"))])
+        mode = "advanced"
+        if active_backend in {"local_mock", "dummy"}:
+            mode = "mock/fallback"
+        elif fallback_used_count > 0:
+            mode = "fallback"
+
+        entries_total = len(entries)
+        detected_total = len([row for row in entries if str(row.get("detected_lang") or "").strip() != ""])
+        normalized_total = len([row for row in entries if str(row.get("source_text") or "").strip() != ""])
+        translated_total = len([row for row in entries if str(row.get("translated_text") or "").strip() != ""])
+        reviewed_total = len(corrections)
+        exported_total = len([row for row in export_jobs if str(row.get("status") or "") == "done"])
+
+        def _flow_stage(stage: str, done_count: int, total: int, notes: str) -> dict[str, Any]:
+            if total <= 0:
+                status = "pending"
+            elif done_count >= total:
+                status = "done"
+            elif done_count > 0:
+                status = "partial"
+            else:
+                status = "pending"
+            return {
+                "stage": stage,
+                "progress": f"{done_count}/{total}",
+                "status": status,
+                "notes": notes,
+            }
+
+        flow_rows = [
+            _flow_stage("detected", detected_total, entries_total, "language detection completed"),
+            _flow_stage("normalized", normalized_total, entries_total, "placeholder/tag normalization tracked"),
+            _flow_stage("translated", translated_total, entries_total, "RU translation availability"),
+            _flow_stage("reviewed", reviewed_total, translated_total or entries_total, "manual corrections and review"),
+            _flow_stage("exported", exported_total, max(1, exported_total), "patch export history"),
+        ]
+
+        review_rows.sort(
+            key=lambda item: (
+                0 if str(item.get("issue")) in {"mixed/unknown", "low_confidence"} else 1,
+                str(item.get("file_path") or ""),
+                str(item.get("line_id") or ""),
+            )
+        )
+        stress_rows.sort(
+            key=lambda item: (
+                0 if "overflow" in str(item.get("risk")) else 1,
+                -int(item.get("translated_len") or 0),
+            )
+        )
+
+        return {
+            "overview": overview_rows[:40],
+            "queue": queue_rows[:40],
+            "review": review_rows[:220],
+            "stress": stress_rows[:220],
+            "flow_summary": flow_rows,
+            "backend_status": {
+                "active_backend": active_backend,
+                "fallback_backend": fallback_backend,
+                "available_backends": self.translator.translator_router.available_backends(),
+                "avg_latency_ms": avg_latency_ms,
+                "p95_latency_ms": p95_latency_ms,
+                "context_usage_rate": round(context_used_count / max(1, len(backend_runs)), 3),
+                "fallback_used": fallback_used_count,
+                "mode": mode,
+            },
+            "languages_total": len(lang_stats),
+            "uncertain_total": len(
+                [row for row in entries if str(row.get("detected_lang") or "unknown") in {"unknown", "mixed"}]
+            ),
+            "detected_total": detected_total,
+            "translated_total": translated_total,
+            "reviewed_total": reviewed_total,
+            "exported_total": exported_total,
         }
 
     def quick_reindex(self, *, project_id: int, game_root: Path, changed_paths: list[str]) -> int:

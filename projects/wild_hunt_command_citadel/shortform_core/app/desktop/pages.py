@@ -45,10 +45,10 @@ def _safe_list(value: Any) -> list[Any]:
     return value if isinstance(value, list) else []
 
 
-PAGE_GAP = 18
-ROW_GAP = 14
+PAGE_GAP = 20
+ROW_GAP = 15
 GRID_GAP = 12
-CARD_INSET = (18, 16, 18, 16)
+CARD_INSET = (20, 18, 20, 18)
 ACTION_BUTTON_HEIGHT = 40
 PRIMARY_ACTION_MIN_WIDTH = 156
 
@@ -209,15 +209,8 @@ class DashboardPage(BasePage):
         quick_header.setObjectName("DashboardQuickHeader")
         quick_layout.addWidget(quick_header)
 
-        row1 = QHBoxLayout()
-        row2 = QHBoxLayout()
-        row1.setSpacing(GRID_GAP)
-        row2.setSpacing(GRID_GAP)
-
-        row1_caption = QLabel("Запуск рабочего цикла")
-        row1_caption.setObjectName("DashboardRowCaption")
-        row2_caption = QLabel("Планирование и контроль")
-        row2_caption.setObjectName("DashboardRowCaption")
+        actions_caption = QLabel("Ключевые действия цикла")
+        actions_caption.setObjectName("DashboardRowCaption")
         quick_hint = QLabel("Рекомендуемый порядок: профиль -> сессия -> метрики -> план -> AI.")
         quick_hint.setObjectName("SectionHint")
         quick_hint.setWordWrap(True)
@@ -244,6 +237,9 @@ class DashboardPage(BasePage):
             ("Открыть AI-студию", "open_ai_studio", "secondary"),
             ("Проверить апдейты", "check_updates", "outline"),
         ]
+        actions_grid = QGridLayout()
+        actions_grid.setHorizontalSpacing(GRID_GAP)
+        actions_grid.setVerticalSpacing(GRID_GAP)
         for idx, (title, action, tone) in enumerate(actions):
             button = MotionButton(title)
             if tone == "primary":
@@ -256,12 +252,14 @@ class DashboardPage(BasePage):
             button.setMinimumHeight(ACTION_BUTTON_HEIGHT)
             button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
             button.clicked.connect(lambda _=False, a=action: self.action_requested.emit(a, None))
-            (row1 if idx < 3 else row2).addWidget(button, 1)
+            row = idx // 2
+            col = idx % 2
+            actions_grid.addWidget(button, row, col)
+        actions_grid.setColumnStretch(0, 1)
+        actions_grid.setColumnStretch(1, 1)
 
-        quick_layout.addWidget(row1_caption)
-        quick_layout.addLayout(row1)
-        quick_layout.addWidget(row2_caption)
-        quick_layout.addLayout(row2)
+        quick_layout.addWidget(actions_caption)
+        quick_layout.addLayout(actions_grid)
         quick_layout.addWidget(quick_hint)
         quick_layout.addSpacing(4)
         quick_layout.addWidget(core_state_caption)
@@ -278,7 +276,7 @@ class DashboardPage(BasePage):
 
         audit_card = GlowCard(elevated=False)
         audit_card.setObjectName("DashboardAuditBlock")
-        audit_card.setMinimumWidth(320)
+        audit_card.setMinimumWidth(286)
         audit_layout = QVBoxLayout(audit_card)
         _setup_card_layout(audit_layout)
         audit_header = SectionHeader("Последние события журнала", "Актуальная лента действий")
@@ -292,7 +290,7 @@ class DashboardPage(BasePage):
 
         rec_card = GlowCard(elevated=False)
         rec_card.setObjectName("DashboardRecommendationBlock")
-        rec_card.setMinimumWidth(320)
+        rec_card.setMinimumWidth(286)
         rec_layout = QVBoxLayout(rec_card)
         _setup_card_layout(rec_layout)
         rec_header = SectionHeader("Сводка рекомендаций AI", "Приоритетные предложения")
@@ -308,7 +306,7 @@ class DashboardPage(BasePage):
         split.addWidget(rec_card)
         split.setStretchFactor(0, 11)
         split.setStretchFactor(1, 9)
-        split.setSizes([580, 500])
+        split.setSizes([560, 440])
         layout.addWidget(split, stretch=1)
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:
@@ -404,20 +402,26 @@ class ProfilesPage(BasePage):
         header.setObjectName("ProfilesHeader")
         layout.addWidget(header)
 
-        summary = QHBoxLayout()
-        summary.setSpacing(ROW_GAP)
+        summary = QGridLayout()
+        summary.setHorizontalSpacing(ROW_GAP)
+        summary.setVerticalSpacing(ROW_GAP)
         self.profile_total_card = MetricCard("Профилей", "0", "в рабочем реестре")
         self.profile_connected_card = MetricCard("Подключено", "0", "активные связи")
         self.profile_healthy_card = MetricCard("Стабильные", "0", "состояние: стабильно")
         self.profile_attention_card = MetricCard("Требуют внимания", "0", "сигналы и отключения")
-        for card in (
+        summary_cards = (
             self.profile_total_card,
             self.profile_connected_card,
             self.profile_healthy_card,
             self.profile_attention_card,
-        ):
+        )
+        for idx, card in enumerate(summary_cards):
             card.setProperty("profilesMetric", "true")
-            summary.addWidget(card)
+            row = idx // 2
+            col = idx % 2
+            summary.addWidget(card, row, col)
+        summary.setColumnStretch(0, 1)
+        summary.setColumnStretch(1, 1)
         layout.addLayout(summary)
 
         actions_card = GlowCard(elevated=False)
@@ -769,7 +773,7 @@ class SessionsPage(BasePage):
 
         right_card = GlowCard(elevated=False)
         right_card.setObjectName("SessionsWorkspaceBlock")
-        right_card.setMinimumWidth(340)
+        right_card.setMinimumWidth(306)
         right_layout = QVBoxLayout(right_card)
         _setup_card_layout(right_layout)
 
@@ -816,12 +820,22 @@ class SessionsPage(BasePage):
         chip_grid.setColumnStretch(1, 1)
         frame_layout.addLayout(chip_grid)
 
-        self.session_preview = QLabel("ПРЕВЬЮ СЕССИИ 9:16\n\nОткройте сессию профиля, чтобы увидеть рабочее состояние.")
+        self.session_preview = QLabel()
         self.session_preview.setObjectName("SessionMobilePreview")
-        self.session_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.session_preview.setMinimumSize(240, 320)
+        self.session_preview.setTextFormat(Qt.TextFormat.RichText)
+        self.session_preview.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        self.session_preview.setMinimumSize(240, 338)
         self.session_preview.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.session_preview.setWordWrap(True)
+        self.session_preview.setText(
+            self._render_session_preview(
+                is_open=False,
+                profile_name="Профиль не выбран",
+                runtime_state="ожидание",
+                viewport_label="Смартфон (по умолчанию)",
+                source_label="не указан",
+            )
+        )
         frame_layout.addWidget(self.session_preview)
 
         self.session_telemetry = QLabel("Телеметрия: синхронизация — | ввод — | поток —")
@@ -879,6 +893,35 @@ class SessionsPage(BasePage):
             chip.setProperty("sessionChipLevel", level)
             chip.style().unpolish(chip)
             chip.style().polish(chip)
+
+    def _render_session_preview(
+        self,
+        *,
+        is_open: bool,
+        profile_name: str,
+        runtime_state: str,
+        viewport_label: str,
+        source_label: str,
+    ) -> str:
+        status_text = "ONLINE" if is_open else "OFFLINE"
+        state_chip = "#33D69F" if is_open else "#FFB85C"
+        runtime = runtime_state.capitalize()
+        source = source_label if source_label and source_label != "не указан" else "не привязан"
+        mode_hint = (
+            "Сессия готова к рабочему циклу: контент, аналитика, AI-план."
+            if is_open
+            else "Запустите окно профиля, чтобы активировать рабочий контур."
+        )
+        return (
+            "<div style='line-height:1.35em;'>"
+            f"<div style='font-size:11px; color:{state_chip}; font-weight:700; letter-spacing:0.6px;'>{status_text}</div>"
+            f"<div style='font-size:14px; font-weight:600; margin-top:3px;'>Session 9:16 · {profile_name}</div>"
+            f"<div style='font-size:12px; margin-top:8px;'>Состояние: <b>{runtime}</b></div>"
+            f"<div style='font-size:12px;'>Пресет: <b>{viewport_label}</b></div>"
+            f"<div style='font-size:12px;'>Источник: <b>{source}</b></div>"
+            f"<div style='font-size:12px; margin-top:12px; opacity:0.9;'>{mode_hint}</div>"
+            "</div>"
+        )
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:
         self.session_list.clear()
@@ -943,11 +986,13 @@ class SessionsPage(BasePage):
         self.frame_source.setText(f"Источник: {source_label}\nID: {source_id}")
         if is_open:
             self.session_preview.setText(
-                f"АКТИВНАЯ СЕССИЯ 9:16\n\n{profile_name}\n\n"
-                f"Состояние: {runtime_state}\n"
-                f"Пресет: {viewport_label}\n"
-                f"Источник: {source_label}\n\n"
-                "Контур готов к рабочим действиям в режиме управления."
+                self._render_session_preview(
+                    is_open=True,
+                    profile_name=str(profile_name),
+                    runtime_state=str(runtime_state),
+                    viewport_label=str(viewport_label),
+                    source_label=str(source_label),
+                )
             )
             self.session_telemetry.setText("Телеметрия: синхронизация стабильна | ввод доступен | поток 9:16 активен")
             self.session_activity.setText("Активность: окно открыто, источник привязан, рабочая сессия готова к контентным операциям.")
@@ -955,10 +1000,13 @@ class SessionsPage(BasePage):
             self.frame_next_step.setText("Следующий шаг: откройте «Контент» для очереди публикаций или «Аналитику» для оценки динамики.")
         else:
             self.session_preview.setText(
-                "ПРЕВЬЮ СЕССИИ 9:16\n\n"
-                "Сессия не открыта.\n"
-                "Выберите профиль в реестре и нажмите «Открыть сессию».\n\n"
-                "Рамка подготовлена и ожидает подключение источника."
+                self._render_session_preview(
+                    is_open=False,
+                    profile_name=str(profile_name),
+                    runtime_state=str(runtime_state),
+                    viewport_label=str(viewport_label),
+                    source_label=str(source_label),
+                )
             )
             if selected_profile_id:
                 self.session_telemetry.setText("Телеметрия: синхронизация отсутствует | ввод недоступен | поток остановлен")
@@ -1097,18 +1145,21 @@ class AnalyticsPage(BasePage):
         analytics_header.setObjectName("AnalyticsHeader")
         layout.addWidget(analytics_header)
 
-        row = QHBoxLayout()
-        row.setSpacing(ROW_GAP)
+        row = QGridLayout()
+        row.setHorizontalSpacing(ROW_GAP)
+        row.setVerticalSpacing(ROW_GAP)
         self.views_card = MetricCard("Окно просмотров", "0", "результат профиля")
         self.engagement_card = MetricCard("Вовлечённость", "0", "суммарно за окно")
         self.momentum_card = MetricCard("Моментум", "0", "оценка динамики")
         self.top_card = MetricCard("Топ-контент", "0", "ранжирование по весам")
-        for card in (self.views_card, self.engagement_card, self.momentum_card, self.top_card):
+        analytics_cards = (self.views_card, self.engagement_card, self.momentum_card, self.top_card)
+        for idx, card in enumerate(analytics_cards):
             card.setProperty("analyticsMetric", "true")
-        row.addWidget(self.views_card)
-        row.addWidget(self.engagement_card)
-        row.addWidget(self.momentum_card)
-        row.addWidget(self.top_card)
+            metric_row = idx // 2
+            metric_col = idx % 2
+            row.addWidget(card, metric_row, metric_col)
+        row.setColumnStretch(0, 1)
+        row.setColumnStretch(1, 1)
         layout.addLayout(row)
 
         story_card = GlowCard(elevated=False)
@@ -1165,7 +1216,7 @@ class AnalyticsPage(BasePage):
 
         left = GlowCard(elevated=False)
         left.setObjectName("AnalyticsTopWeakBlock")
-        left.setMinimumWidth(320)
+        left.setMinimumWidth(286)
         left_layout = QVBoxLayout(left)
         _setup_card_layout(left_layout)
         top_header = SectionHeader("Топ-контент", "Лучшие ролики и выбросы")
@@ -1188,7 +1239,7 @@ class AnalyticsPage(BasePage):
 
         right = GlowCard(elevated=False)
         right.setObjectName("AnalyticsInsightsBlock")
-        right.setMinimumWidth(320)
+        right.setMinimumWidth(286)
         right_layout = QVBoxLayout(right)
         _setup_card_layout(right_layout)
         patterns_header = SectionHeader("Паттерны контента", "Темы, форматы, хуки и окна публикации")
@@ -1221,7 +1272,7 @@ class AnalyticsPage(BasePage):
         split.addWidget(right)
         split.setStretchFactor(0, 11)
         split.setStretchFactor(1, 9)
-        split.setSizes([560, 500])
+        split.setSizes([540, 430])
         layout.addWidget(split, stretch=1)
 
     def _set_cue_chip(self, chip: QLabel, text: str, level: str) -> None:
@@ -1400,18 +1451,21 @@ class AIStudioPage(BasePage):
         ai_header.setObjectName("AIStudioHeader")
         layout.addWidget(ai_header)
 
-        cards = QHBoxLayout()
-        cards.setSpacing(ROW_GAP)
+        cards = QGridLayout()
+        cards.setHorizontalSpacing(ROW_GAP)
+        cards.setVerticalSpacing(ROW_GAP)
         self.rec_count_card = MetricCard("Рекомендации", "0", "активный список")
         self.learning_card = MetricCard("Записи обучения", "0", "цикл обратной связи")
         self.bundle_card = MetricCard("Пакеты генерации", "0", "конвейер брифов")
         self.confidence_card = MetricCard("Средняя уверенность", "0.00", "доверие к рекомендациям")
-        for card in (self.rec_count_card, self.learning_card, self.bundle_card, self.confidence_card):
+        ai_cards = (self.rec_count_card, self.learning_card, self.bundle_card, self.confidence_card)
+        for idx, card in enumerate(ai_cards):
             card.setProperty("aiMetric", "true")
-        cards.addWidget(self.rec_count_card)
-        cards.addWidget(self.learning_card)
-        cards.addWidget(self.bundle_card)
-        cards.addWidget(self.confidence_card)
+            metric_row = idx // 2
+            metric_col = idx % 2
+            cards.addWidget(card, metric_row, metric_col)
+        cards.setColumnStretch(0, 1)
+        cards.setColumnStretch(1, 1)
         layout.addLayout(cards)
 
         action_card = GlowCard(elevated=False)
@@ -1455,7 +1509,7 @@ class AIStudioPage(BasePage):
 
         left = GlowCard(elevated=False)
         left.setObjectName("AIRecommendationBlock")
-        left.setMinimumWidth(320)
+        left.setMinimumWidth(286)
         left_layout = QVBoxLayout(left)
         _setup_card_layout(left_layout)
         ai_recs_header = SectionHeader("Рекомендации", "Обоснование, уверенность, альтернативы")
@@ -1469,7 +1523,7 @@ class AIStudioPage(BasePage):
 
         right = GlowCard(elevated=False)
         right.setObjectName("AILearningBlock")
-        right.setMinimumWidth(320)
+        right.setMinimumWidth(286)
         right_layout = QVBoxLayout(right)
         _setup_card_layout(right_layout)
         ai_learn_header = SectionHeader("Сводка обучения", "Что система узнала по результатам")
@@ -1493,7 +1547,7 @@ class AIStudioPage(BasePage):
         split.addWidget(right)
         split.setStretchFactor(0, 11)
         split.setStretchFactor(1, 9)
-        split.setSizes([560, 500])
+        split.setSizes([540, 430])
         layout.addWidget(split, stretch=1)
 
     def update_snapshot(self, snapshot: dict[str, Any]) -> None:

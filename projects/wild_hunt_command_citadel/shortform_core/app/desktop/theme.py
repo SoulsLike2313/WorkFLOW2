@@ -51,12 +51,12 @@ def build_theme_tokens() -> ThemeTokens:
             "xl": 22,
         },
         typography={
-            "display": "Segoe UI Semibold",
-            "title": "Segoe UI Semibold",
-            "body": "Segoe UI",
-            "label": "Segoe UI",
-            "metric": "Segoe UI Semibold",
-            "mono": "Cascadia Mono",
+            "display": "Arial",
+            "title": "Arial",
+            "body": "Arial",
+            "label": "Arial",
+            "metric": "Arial",
+            "mono": "Consolas",
         },
         shadow={
             "soft": "rgba(0, 0, 0, 0.55)",

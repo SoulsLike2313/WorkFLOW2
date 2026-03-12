@@ -65,6 +65,7 @@ def _render_md(summary: dict[str, Any]) -> str:
         f"- Duration: `{summary.get('duration_seconds')}s`",
         f"- Overall status: `{summary.get('overall_status')}`",
         f"- Manual acceptance recommended: `{summary.get('manual_acceptance_recommended')}`",
+        f"- Manual testing allowed: `{summary.get('manual_testing_allowed')}`",
         "",
         "## Sub-runs",
         "",
@@ -198,7 +199,7 @@ def _render_visual_review_md(summary: dict[str, Any]) -> str:
     if status == "FAIL":
         lines.append("- Автоматический гейт не пройден: ручной acceptance запрещён.")
     elif status == "PASS_WITH_WARNINGS":
-        lines.append("- Есть предупреждения: нужен прицельный ручной visual review.")
+        lines.append("- Гейт с предупреждениями: ручной acceptance заблокирован до выхода на PASS.")
     else:
         lines.append("- Гейт пройден. Выполните финальный ручной visual acceptance перед freeze.")
     return "\n".join(lines).strip() + "\n"
@@ -398,7 +399,8 @@ def main() -> int:
         "finished_at": finished_at,
         "duration_seconds": duration,
         "overall_status": overall_status,
-        "manual_acceptance_recommended": overall_status != "FAIL",
+        "manual_acceptance_recommended": overall_status == "PASS",
+        "manual_testing_allowed": overall_status == "PASS",
         "project_root": ".",
         "executed_commands": executed_commands,
         "ui_doctor": {

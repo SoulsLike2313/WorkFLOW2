@@ -21,6 +21,7 @@ from .entries_panel import EntriesPanel
 from .export_panel import ExportPanel
 from .glossary_panel import GlossaryPanel
 from .jobs_panel import JobsPanel
+from .language_hub_panel import LanguageHubPanel
 from .learning_panel import LearningPanel
 from .live_demo_panel import LiveDemoPanel
 from .project_wizard import ProjectWizardPanel
@@ -29,6 +30,7 @@ from .reports_panel import ReportsPanel
 from .scan_panel import ScanPanel
 from .translation_panel import TranslationPanel
 from .voice_panel import VoicePanel
+from .hud_panel import ProductHudPanel
 
 
 class MainWindow(QMainWindow):
@@ -48,7 +50,9 @@ class MainWindow(QMainWindow):
 
         root = QWidget()
         root_layout = QVBoxLayout(root)
+        self.hud_panel = ProductHudPanel()
         self.tabs = QTabWidget()
+        root_layout.addWidget(self.hud_panel)
         root_layout.addWidget(self.tabs)
         self.setCentralWidget(root)
 
@@ -56,6 +60,7 @@ class MainWindow(QMainWindow):
         self.scan_panel = ScanPanel()
         self.asset_panel = AssetExplorerPanel()
         self.entries_panel = EntriesPanel()
+        self.language_hub_panel = LanguageHubPanel()
         self.translation_panel = TranslationPanel()
         self.voice_panel = VoicePanel()
         self.learning_panel = LearningPanel()
@@ -72,6 +77,7 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.scan_panel, "Scan")
         self.tabs.addTab(self.asset_panel, "Asset Explorer")
         self.tabs.addTab(self.entries_panel, "Entries")
+        self.tabs.addTab(self.language_hub_panel, "Language Hub")
         self.tabs.addTab(self.translation_panel, "Translation")
         self.tabs.addTab(self.voice_panel, "Voice")
         self.tabs.addTab(self.learning_panel, "Learning")
@@ -101,6 +107,7 @@ class MainWindow(QMainWindow):
         self.entries_panel.refresh_btn.clicked.connect(self.refresh_entries)
         self.entries_panel.lang_filter.currentIndexChanged.connect(self.refresh_entries)
         self.entries_panel.search_edit.returnPressed.connect(self.refresh_entries)
+        self.language_hub_panel.refresh_btn.clicked.connect(self.refresh_language_hub)
 
         self.translation_panel.translate_btn.clicked.connect(self.on_translate)
         self.translation_panel.apply_correction_btn.clicked.connect(self.on_apply_correction)
@@ -172,6 +179,8 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage("Scan complete", 3000)
         self.refresh_assets()
         self.refresh_jobs()
+        self.refresh_language_hub()
+        self.refresh_hud()
 
     def on_extract(self) -> None:
         if not self._require_project():
@@ -180,6 +189,8 @@ class MainWindow(QMainWindow):
         self.scan_panel.info_label.setText(f"Extract complete: {result['entries_extracted']} entries")
         self.refresh_entries()
         self.refresh_jobs()
+        self.refresh_language_hub()
+        self.refresh_hud()
 
     def on_detect_languages(self) -> None:
         if not self._require_project():
@@ -188,6 +199,8 @@ class MainWindow(QMainWindow):
         self.entries_panel.info_label.setText(f"Language detection complete: {result['detected']} rows")
         self.refresh_entries()
         self.refresh_jobs()
+        self.refresh_language_hub()
+        self.refresh_hud()
 
     def on_translate(self) -> None:
         if not self._require_project():
@@ -205,6 +218,8 @@ class MainWindow(QMainWindow):
         self.refresh_reports()
         self.refresh_diagnostics()
         self.refresh_jobs()
+        self.refresh_language_hub()
+        self.refresh_hud()
 
     def on_apply_correction(self) -> None:
         if not self._require_project():
@@ -238,6 +253,8 @@ class MainWindow(QMainWindow):
         self.refresh_entries()
         self.refresh_learning()
         self.refresh_glossary()
+        self.refresh_language_hub()
+        self.refresh_hud()
 
     def on_voice_attempts(self) -> None:
         if not self._require_project():
@@ -254,6 +271,7 @@ class MainWindow(QMainWindow):
         self.refresh_reports()
         self.refresh_diagnostics()
         self.refresh_jobs()
+        self.refresh_hud()
 
     def on_voice_attempt_selected(self) -> None:
         if self.current_project_id is None:
@@ -282,6 +300,7 @@ class MainWindow(QMainWindow):
         self.services.speaker_profiles.update_profile(self.current_project_id, speaker_id, patch)
         self.refresh_voice()
         self.refresh_learning()
+        self.refresh_hud()
 
     def on_add_glossary_term(self) -> None:
         if not self._require_project():
@@ -295,6 +314,7 @@ class MainWindow(QMainWindow):
         self.services.add_glossary_term(self.current_project_id, source, target, lang)
         self.refresh_glossary()
         self.refresh_learning()
+        self.refresh_language_hub()
 
     def on_run_qa(self) -> None:
         if not self._require_project():
@@ -306,6 +326,7 @@ class MainWindow(QMainWindow):
         self.refresh_qa()
         self.refresh_reports()
         self.refresh_diagnostics()
+        self.refresh_hud()
 
     def on_generate_reports(self) -> None:
         if not self._require_project():
@@ -313,6 +334,7 @@ class MainWindow(QMainWindow):
         self.services.generate_reports(self.current_project_id)
         self.refresh_reports()
         self.refresh_diagnostics()
+        self.refresh_hud()
 
     def on_export(self) -> None:
         if not self._require_project():
@@ -333,6 +355,7 @@ class MainWindow(QMainWindow):
         self.refresh_reports()
         self.refresh_diagnostics()
         self.refresh_jobs()
+        self.refresh_hud()
 
     def on_launch_companion(self) -> None:
         if not self._require_project():
@@ -356,6 +379,7 @@ class MainWindow(QMainWindow):
             f"Session status: {session.get('process_status')} ({self.current_companion_session_id})"
         )
         self.refresh_companion()
+        self.refresh_hud()
 
     def on_poll_companion(self) -> None:
         if not self._require_project() or not self.current_companion_session_id:
@@ -375,6 +399,7 @@ class MainWindow(QMainWindow):
         self.refresh_reports()
         self.refresh_diagnostics()
         self.refresh_companion()
+        self.refresh_hud()
 
     def on_stop_companion(self) -> None:
         if not self._require_project() or not self.current_companion_session_id:
@@ -387,6 +412,7 @@ class MainWindow(QMainWindow):
             f"Session status: {session.get('process_status')} ({self.current_companion_session_id})"
         )
         self.refresh_companion()
+        self.refresh_hud()
 
     def on_start_live_demo(self) -> None:
         if not self._require_project():
@@ -408,6 +434,7 @@ class MainWindow(QMainWindow):
         self.live_panel.log_view.clear()
         self.live_panel.table.setRowCount(0)
         self._live_timer.start(250)
+        self.refresh_hud()
 
     def on_refresh_assets(self) -> None:
         if not self._require_project():
@@ -428,6 +455,8 @@ class MainWindow(QMainWindow):
             self.refresh_entries()
             self.refresh_translations()
             self.refresh_voice()
+            self.refresh_language_hub()
+            self.refresh_hud()
             return
         self.live_panel.append_live_row(self._live_rows[self._live_idx])
         self._live_idx += 1
@@ -435,6 +464,7 @@ class MainWindow(QMainWindow):
     def refresh_all_views(self) -> None:
         self.refresh_assets()
         self.refresh_entries()
+        self.refresh_language_hub()
         self.refresh_translations()
         self.refresh_voice()
         self.refresh_learning()
@@ -444,6 +474,7 @@ class MainWindow(QMainWindow):
         self.refresh_diagnostics()
         self.refresh_jobs()
         self.refresh_companion()
+        self.refresh_hud()
 
     def refresh_entries(self) -> None:
         if self.current_project_id is None:
@@ -502,6 +533,16 @@ class MainWindow(QMainWindow):
             snapshot = self.services.reports_snapshot(self.current_project_id)
         self.reports_panel.load_reports(snapshot)
 
+    def refresh_language_hub(self) -> None:
+        if self.current_project_id is None:
+            self.language_hub_panel.load_snapshot({})
+            return
+        snapshot = self.services.language_hub_snapshot(
+            self.current_project_id,
+            requested_backend=self.translation_panel.backend_combo.currentText(),
+        )
+        self.language_hub_panel.load_snapshot(snapshot)
+
     def refresh_diagnostics(self) -> None:
         if self.current_project_id is None:
             self.diagnostics_panel.load_diagnostics({})
@@ -542,3 +583,16 @@ class MainWindow(QMainWindow):
         else:
             events = self.services.repo.list_watched_file_events(self.current_project_id, limit=300)
         self.companion_panel.load_events(events)
+
+    def refresh_hud(self) -> None:
+        if self.current_project_id is None:
+            self.hud_panel.load_snapshot({})
+            return
+        self.hud_panel.load_snapshot(
+            self.services.hud_snapshot(
+                self.current_project_id,
+                game_root=self.current_game_root,
+                current_companion_session_id=self.current_companion_session_id,
+                requested_backend=self.translation_panel.backend_combo.currentText(),
+            )
+        )

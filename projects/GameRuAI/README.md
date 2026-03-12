@@ -12,6 +12,19 @@ Current MVP includes translation + learning loop, companion mode, asset research
 - pathlib
 
 ## Working Modules
+- Product HUD (top status shell):
+  - project/game path context
+  - active backend + fallback visibility
+  - pipeline stage status (`scan/extract/detect/translate/voice/export/reports/diagnostics`)
+  - companion session visibility
+  - translation/language/QA/voice summary metrics
+- Language Hub panel:
+  - language overview
+  - language queue
+  - backend status block
+  - uncertain/mixed review block
+  - localization stress block
+  - language flow summary
 - Translation pipeline with backend fallback and context visibility.
 - Learning loop (manual correction -> TM/glossary reuse).
 - Companion mode (safe sidecar, file watch, quick re-index).
@@ -52,6 +65,8 @@ python -m app.main
 ## Open Demo Project
 1. `Project` tab -> set `fixtures/demo_game_world` -> `Create/Select Project`.
 2. Run `Scan` (or one-click `Run Full Demo Pipeline`).
+3. Check top `Project HUD` for current stage and next action.
+4. Open `Language Hub` for language map, queue, uncertain lines, and localization stress.
 
 ## Reports And Diagnostics UI
 1. Open `Reports` tab -> click `Generate Reports`.

@@ -23,6 +23,7 @@ REQUIRED_CTA_BY_SCREEN: dict[str, list[str]] = {
     "Scan": ["Run Scan", "Extract Strings"],
     "Asset Explorer": ["Refresh Asset Index"],
     "Entries": ["Detect Language", "Refresh"],
+    "Language Hub": ["Refresh Language Blocks"],
     "Translation": ["Translate to Russian", "Apply Correction"],
     "Voice": ["Generate Demo Voice Attempts", "Update Speaker Profile"],
     "Learning": ["Refresh Learning Snapshot"],
@@ -343,6 +344,8 @@ def _run_worker(args: argparse.Namespace) -> int:
         elif k == "project_loaded_pipeline":
             if window.current_project_id is None:
                 _add_issue("critical", "state_expected_loaded", k, s, st, "Loaded project state missing current_project_id.", size_label, shot_path)
+            if "n/a" in window.hud_panel.project_label.text().lower() or "n/a" in window.hud_panel.language_map_label.text().lower():
+                _add_issue("major", "state_summary_missing", k, s, st, "HUD project/language summary is not populated.", size_label, shot_path, window.hud_panel)
         elif k == "scan_manifest_loaded":
             if not window.scan_panel.manifest_view.toPlainText().strip() or window.scan_panel.table.rowCount() <= 0:
                 _add_issue("major", "state_expected_loaded", k, s, st, "Scan loaded state is empty.", size_label, shot_path, window.scan_panel.table)
@@ -361,6 +364,21 @@ def _run_worker(args: argparse.Namespace) -> int:
         elif k == "entries_long_search":
             if len(window.entries_panel.search_edit.text()) < 25:
                 _add_issue("minor", "state_summary_missing", k, s, st, "Long search text not applied.", size_label, shot_path, window.entries_panel.search_edit)
+        elif k == "language_hub_overview":
+            if window.language_hub_panel.overview_table.rowCount() <= 0:
+                _add_issue("major", "state_expected_loaded", k, s, st, "Language overview table is empty.", size_label, shot_path, window.language_hub_panel.overview_table)
+            if window.language_hub_panel.queue_table.rowCount() <= 0:
+                _add_issue("major", "state_expected_loaded", k, s, st, "Language queue table is empty.", size_label, shot_path, window.language_hub_panel.queue_table)
+            backend_text = " ".join(label.text().lower() for label in window.language_hub_panel.backend_labels)
+            if "n/a" in backend_text:
+                _add_issue("major", "state_summary_missing", k, s, st, "Language backend status block has unresolved n/a values.", size_label, shot_path, window.language_hub_panel)
+        elif k == "language_hub_review_focus":
+            if window.language_hub_panel.review_table.rowCount() <= 0:
+                _add_issue("major", "state_expected_loaded", k, s, st, "Language review block has no rows.", size_label, shot_path, window.language_hub_panel.review_table)
+            if window.language_hub_panel.stress_table.rowCount() <= 0:
+                _add_issue("major", "state_expected_loaded", k, s, st, "Localization stress block has no rows.", size_label, shot_path, window.language_hub_panel.stress_table)
+            if window.language_hub_panel.flow_table.rowCount() < 5:
+                _add_issue("major", "state_summary_missing", k, s, st, "Language flow summary does not expose all pipeline stages.", size_label, shot_path, window.language_hub_panel.flow_table)
         elif k == "translation_loaded":
             if window.translation_panel.table.rowCount() <= 0:
                 _add_issue("major", "state_expected_loaded", k, s, st, "Translation table is empty.", size_label, shot_path, window.translation_panel.table)

@@ -26,6 +26,8 @@ python -m app.main
 - Companion: `Companion` tab -> launch session -> edit file -> poll status
 - Asset research: `Asset Explorer` -> `Refresh Asset Index` -> inspect file
 - Voice prep: `Voice` -> `Generate Demo Voice Attempts`
+- Language control center: `Language Hub` -> review overview/queue/review/stress/flow blocks
+- Top HUD: always visible for project stage, backend state, QA/report/voice readiness
 
 ## 6) Reports and diagnostics
 1. Open `Reports` tab -> click `Generate Reports`.

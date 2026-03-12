@@ -116,8 +116,9 @@ class UserWorkspaceWindow(QMainWindow):
 
         sidebar = QWidget()
         sidebar.setObjectName("Sidebar")
-        sidebar_width = int(280 + max(0.0, self._ui_scale - 1.0) * 90)
-        sidebar.setFixedWidth(max(280, min(340, sidebar_width)))
+        sidebar_base = int(252 + max(0.0, self._ui_scale - 1.0) * 62)
+        sidebar.setMinimumWidth(max(236, min(276, sidebar_base)))
+        sidebar.setMaximumWidth(max(264, min(316, sidebar_base + 24)))
         sidebar_layout = QVBoxLayout(sidebar)
         sidebar_layout.setContentsMargins(shell_margin, shell_margin, shell_margin, shell_margin)
         sidebar_layout.setSpacing(max(10, int(round(12 * spacing_scale))))
@@ -192,13 +193,13 @@ class UserWorkspaceWindow(QMainWindow):
 
         self.context_panel = ContextPanel()
         self.context_panel.action_requested.connect(lambda action: self._on_page_action(action, None))
-        self.context_panel.setMinimumWidth(308)
-        self.context_panel.setMaximumWidth(420)
+        self.context_panel.setMinimumWidth(272)
+        self.context_panel.setMaximumWidth(368)
         split.addWidget(self.context_panel)
 
         split.setStretchFactor(0, 12)
-        split.setStretchFactor(1, 5)
-        split.setSizes([980, 360])
+        split.setStretchFactor(1, 4)
+        split.setSizes([1010, 330])
         center_layout.addWidget(split, stretch=1)
         layout.addWidget(center, stretch=1)
 
@@ -213,10 +214,10 @@ class UserWorkspaceWindow(QMainWindow):
         if total <= 0:
             return
 
-        min_left = 700
-        min_right = 308
-        target_right = int(total * 0.28)
-        right = max(min_right, min(404, target_right))
+        min_left = 720
+        min_right = 272
+        target_right = int(total * 0.255)
+        right = max(min_right, min(364, target_right))
         if total - right < min_left:
             right = max(min_right, total - min_left)
         left = max(min_left, total - right)
@@ -229,7 +230,7 @@ class UserWorkspaceWindow(QMainWindow):
         sizes = self.main_splitter.sizes()
         if len(sizes) != 2:
             return
-        if sizes[0] < 690 or sizes[1] < 300:
+        if sizes[0] < 706 or sizes[1] < 272:
             self._rebalance_main_splitter()
 
     def _register_nav_button(self, layout: QVBoxLayout, key: str, label: str) -> None:

@@ -66,6 +66,18 @@ def scenario_catalog() -> list[UiQaScenario]:
             notes="Long query with placeholders/tags applied to stress search toolbar layout.",
         ),
         UiQaScenario(
+            key="language_hub_overview",
+            screen_name="Language Hub",
+            state_name="overview_loaded",
+            notes="Language overview/queue/backend block populated from project metrics.",
+        ),
+        UiQaScenario(
+            key="language_hub_review_focus",
+            screen_name="Language Hub",
+            state_name="review_and_stress_loaded",
+            notes="Language review and localization stress blocks populated for manual triage.",
+        ),
+        UiQaScenario(
             key="translation_loaded",
             screen_name="Translation",
             state_name="loaded_translations",
@@ -285,6 +297,16 @@ def apply_scenario_state(window: Any, scenario: UiQaScenario, *, project_name: s
             "Очень длинная ручная правка перевода для проверки читаемости формы и поведения поля при большом объеме текста."
         )
         window.translation_panel.correction_note.setText("UI QA prefill state")
+
+    elif scenario.key == "language_hub_overview":
+        window.refresh_language_hub()
+
+    elif scenario.key == "language_hub_review_focus":
+        window.refresh_language_hub()
+        if window.language_hub_panel.review_table.rowCount() > 0:
+            window.language_hub_panel.review_table.setCurrentCell(0, 0)
+        if window.language_hub_panel.stress_table.rowCount() > 0:
+            window.language_hub_panel.stress_table.setCurrentCell(0, 0)
 
     elif scenario.key == "voice_no_selection":
         window.refresh_voice()

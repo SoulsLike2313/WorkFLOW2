@@ -218,7 +218,7 @@ def _run_master(args: argparse.Namespace) -> int:
         "finished_at": finished_at,
         "duration_seconds": duration_seconds,
         "overall_status": overall_status,
-        "manual_acceptance_recommended": overall_status != "FAIL",
+        "manual_acceptance_recommended": overall_status == "PASS",
         "project_root": ".",
         "scales": scales,
         "sizes": args.sizes,
@@ -237,6 +237,8 @@ def _run_master(args: argparse.Namespace) -> int:
 
     manifest = {
         "run_id": run_id,
+        "generated_at": finished_at,
+        "review_scope": "ui_doctor",
         "screenshots": all_shots,
         "screenshots_by_page": shots_by_page,
     }
@@ -252,6 +254,19 @@ def _run_master(args: argparse.Namespace) -> int:
         _render_summary_md(summary),
         encoding="utf-8",
     )
+    latest_payload = {
+        "run_id": run_id,
+        "status": overall_status,
+        "path": _repo_relative(run_dir),
+        "summary_path": _repo_relative(run_dir / "ui_validation_summary.json"),
+        "manifest_path": _repo_relative(run_dir / "ui_screenshots_manifest.json"),
+        "timestamp": finished_at,
+    }
+    (output_root / "latest_run.json").write_text(
+        json.dumps(latest_payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    (output_root / "latest_run.txt").write_text(_repo_relative(run_dir) + "\n", encoding="utf-8")
     print(_repo_relative(run_dir))
     print(f"UI validation status: {overall_status}")
     return 0 if overall_status != "FAIL" else 2
