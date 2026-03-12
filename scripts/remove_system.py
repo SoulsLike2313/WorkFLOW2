@@ -61,6 +61,19 @@ def resolve_system_manifest_path(repo_root: Path, shared_registry: dict[str, Any
     return manifest_path
 
 
+def ensure_project_system_fields(project_manifest: dict[str, Any]) -> None:
+    if not isinstance(project_manifest.get("installed_systems"), list):
+        project_manifest["installed_systems"] = []
+    if not isinstance(project_manifest.get("installed_system_status"), dict):
+        project_manifest["installed_system_status"] = {}
+    if not isinstance(project_manifest.get("system_validation_status"), dict):
+        project_manifest["system_validation_status"] = {}
+    if not isinstance(project_manifest.get("install_history"), list):
+        project_manifest["install_history"] = []
+    if not isinstance(project_manifest.get("remove_history"), list):
+        project_manifest["remove_history"] = []
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Remove shared system module from a project.")
     parser.add_argument("--project-slug", required=True, help="Target project slug from workspace registry.")
@@ -78,6 +91,12 @@ def main() -> int:
     project_root = repo_root / str(project.get("root_path", "")).strip()
     project_manifest_path = repo_root / str(project.get("manifest_path", "")).strip()
     project_manifest = load_json(project_manifest_path)
+    ensure_project_system_fields(project_manifest)
+    if str(project_manifest.get("slug", "")).strip() != args.project_slug:
+        raise ValueError(
+            f"Project manifest slug mismatch: expected '{args.project_slug}', "
+            f"got '{project_manifest.get('slug', '')}'."
+        )
 
     registry_path, shared_registry = resolve_shared_registry(repo_root, workspace)
     system_manifest_path = resolve_system_manifest_path(repo_root, shared_registry, args.system_slug)
@@ -95,11 +114,13 @@ def main() -> int:
             "system_slug": args.system_slug,
             "reason": "system_not_installed_in_project_manifest",
             "project_manifest_path": normalize_rel(str(project_manifest_path.relative_to(repo_root))),
+            "dry_run": args.dry_run,
+            "safe_noop": True,
         }
         summary_path = repo_root / "runtime" / "shared_systems" / "remove_runs" / f"{run_id}.json"
         write_json(summary_path, summary)
         print(json.dumps(summary, ensure_ascii=False, indent=2))
-        return 1
+        return 0 if args.dry_run else 1
 
     integration_root = project_root / "systems" / args.system_slug
     removed_paths: list[str] = []
@@ -122,8 +143,8 @@ def main() -> int:
     status_map[args.system_slug] = "removed"
     project_manifest["installed_system_status"] = status_map
 
-    install_history = list(project_manifest.get("install_history", []))
-    install_history.append(
+    remove_history = list(project_manifest.get("remove_history", []))
+    remove_history.append(
         {
             "run_id": run_id,
             "action": "remove",
@@ -131,9 +152,10 @@ def main() -> int:
             "status": "removed",
             "timestamp": iso(started),
             "dry_run": args.dry_run,
+            "source": "scripts/remove_system.py",
         }
     )
-    project_manifest["install_history"] = install_history
+    project_manifest["remove_history"] = remove_history
 
     system_validation_status = dict(project_manifest.get("system_validation_status", {}))
     system_validation_status[args.system_slug] = "pending_post_remove"
@@ -198,6 +220,22 @@ def main() -> int:
         "shared_registry_path": normalize_rel(str(registry_path.relative_to(repo_root))),
         "system_manifest_path": normalize_rel(str(system_manifest_path.relative_to(repo_root))),
         "removed_paths": sorted(set(removed_paths)),
+        "compatibility_checks": {
+            "project_slug_in_workspace_registry": True,
+            "project_manifest_slug_match": True,
+            "system_manifest_resolved": True,
+            "safe_remove_mode": "controlled",
+        },
+        "planned_manifest_updates": {
+            "project_manifest": [
+                "installed_systems",
+                "installed_system_status",
+                "system_validation_status",
+                "remove_history",
+            ],
+            "workspace_manifest": ["project_system_index"],
+            "shared_systems_registry": ["project_installations", "history"],
+        },
         "post_remove_checks": post_checks,
         "uninstall_steps": uninstall_steps,
         "warnings": warnings,

@@ -142,14 +142,6 @@
       "already_installed": false
     },
     {
-      "run_id": "remove-20260312T170133Z-game_ru_ai-reporting_toolkit",
-      "action": "remove",
-      "system_slug": "reporting_toolkit",
-      "status": "removed",
-      "timestamp": "2026-03-12T17:01:33.636046+00:00",
-      "dry_run": false
-    },
-    {
       "run_id": "install-20260312T170133Z-game_ru_ai-reporting_toolkit",
       "action": "install",
       "system_slug": "reporting_toolkit",
@@ -165,5 +157,15 @@
     "reporting_toolkit": "pass_post_install",
     "localization_toolkit": "pass_post_install",
     "audit_observability_toolkit": "pass_post_install"
-  }
+  },
+  "remove_history": [
+    {
+      "run_id": "remove-20260312T170133Z-game_ru_ai-reporting_toolkit",
+      "action": "remove",
+      "system_slug": "reporting_toolkit",
+      "status": "removed",
+      "timestamp": "2026-03-12T17:01:33.636046+00:00",
+      "dry_run": false
+    }
+  ]
 }

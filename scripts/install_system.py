@@ -78,6 +78,19 @@ def resolve_system(shared_registry: dict[str, Any], system_slug: str) -> dict[st
     return matches[0]
 
 
+def ensure_project_system_fields(project_manifest: dict[str, Any]) -> None:
+    if not isinstance(project_manifest.get("installed_systems"), list):
+        project_manifest["installed_systems"] = []
+    if not isinstance(project_manifest.get("installed_system_status"), dict):
+        project_manifest["installed_system_status"] = {}
+    if not isinstance(project_manifest.get("system_validation_status"), dict):
+        project_manifest["system_validation_status"] = {}
+    if not isinstance(project_manifest.get("install_history"), list):
+        project_manifest["install_history"] = []
+    if not isinstance(project_manifest.get("remove_history"), list):
+        project_manifest["remove_history"] = []
+
+
 def ensure_system_manifest(system_manifest: dict[str, Any], system_slug: str) -> None:
     missing = [field for field in REQUIRED_SYSTEM_FIELDS if field not in system_manifest]
     if missing:
@@ -162,6 +175,12 @@ def main() -> int:
     project_root = repo_root / str(project.get("root_path", "")).strip()
     project_manifest_path = repo_root / str(project.get("manifest_path", "")).strip()
     project_manifest = load_json(project_manifest_path)
+    ensure_project_system_fields(project_manifest)
+    if str(project_manifest.get("slug", "")).strip() != args.project_slug:
+        raise ValueError(
+            f"Project manifest slug mismatch: expected '{args.project_slug}', "
+            f"got '{project_manifest.get('slug', '')}'."
+        )
     integration_root = project_root / "systems" / args.system_slug
     module_root = system_manifest_path.parent
 
@@ -223,6 +242,7 @@ def main() -> int:
             "timestamp": iso(started),
             "dry_run": args.dry_run,
             "already_installed": already_installed,
+            "source": "scripts/install_system.py",
         }
     )
     project_manifest["install_history"] = install_history
@@ -299,6 +319,22 @@ def main() -> int:
         "system_manifest_path": normalize_rel(str(system_manifest_path.relative_to(repo_root))),
         "created_files": sorted(set(created_files)),
         "copied_assets": sorted(set(copied_assets)),
+        "compatibility_checks": {
+            "project_slug_in_workspace_registry": True,
+            "project_manifest_slug_match": True,
+            "project_type_supported": True,
+            "system_manifest_contract_valid": True,
+        },
+        "planned_manifest_updates": {
+            "project_manifest": [
+                "installed_systems",
+                "installed_system_status",
+                "system_validation_status",
+                "install_history",
+            ],
+            "workspace_manifest": ["shared_systems", "project_system_index"],
+            "shared_systems_registry": ["project_installations", "history"],
+        },
         "post_install_checks": post_checks,
         "dry_run": args.dry_run,
         "already_installed": already_installed,
