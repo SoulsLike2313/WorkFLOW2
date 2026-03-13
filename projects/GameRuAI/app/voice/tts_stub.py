@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import math
+import sys
 import wave
+from array import array
 from pathlib import Path
 
 
@@ -17,8 +19,13 @@ class TtsStubGenerator:
             wav_file.setsampwidth(2)
             wav_file.setframerate(sample_rate)
 
-            frames = bytearray()
-            for idx in range(total_samples):
-                value = int(amplitude * math.sin(2 * math.pi * frequency * (idx / sample_rate)))
-                frames += int(value).to_bytes(2, byteorder="little", signed=True)
-            wav_file.writeframes(frames)
+            samples = array(
+                "h",
+                (
+                    int(amplitude * math.sin(2 * math.pi * frequency * (idx / sample_rate)))
+                    for idx in range(total_samples)
+                ),
+            )
+            if sys.byteorder != "little":
+                samples.byteswap()
+            wav_file.writeframes(samples.tobytes())
