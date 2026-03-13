@@ -19,22 +19,22 @@
 ## Verification Fix Applied
 - changed file: `projects/GameRuAI/app/voice/tts_stub.py`
 - change:
-  - replaced per-sample byte concatenation with `array('h')` buffer generation and direct frame write.
+  - bound `math.sin` to local variable inside waveform loop to reduce per-sample compute overhead.
 - measured hot test timings:
-  - `test_reports_generation.py`: `~88s` -> `55.37s`
-  - `test_voice_preparation_pipeline.py`: `~88s` -> `61.46s`
+  - `test_reports_generation.py`: `~88s` -> `53.7s`
+  - `test_voice_preparation_pipeline.py`: `~88s` -> `54.09s`
 
 ## New Verification Run
-- run_id: `game_ru_ai-startup-20260313T014233Z`
+- run_id: `game_ru_ai-startup-20260313T020923Z`
 - command: `python -m pytest -q`
 - exit_code: `0`
 - status: `PASS`
 - collected tests: `76`
-- duration_seconds: `357.94`
+- duration_seconds: `324.3`
 - artifacts:
   - `projects/GameRuAI/verification_summary.json`
   - `projects/GameRuAI/verification_summary.md`
-  - `runtime/projects/game_ru_ai/verification/verify-20260313T014233Z/verification_summary.json`
+  - `runtime/projects/game_ru_ai/verification/verify-20260313T020923Z/verification_summary.json`
 
 ## UI Snapshot Pipeline Failure
 - failing reference run_id: `20260313_010949`
@@ -44,9 +44,9 @@
   - required snapshot state validation still executed against empty manifest (`snapshot_capture_count=0`)
 
 ## UI Fix Applied
-- changed file: `projects/GameRuAI/scripts/ui_validate.py`
-- change:
-  - when `--skip-snapshots` is used, snapshot manifest validation is skipped explicitly (warning path), no false required-state failure.
+- code change in this cycle: none
+- execution fix:
+  - rerun performed without `--skip-snapshots`, so `ui_snapshot_runner` executed and required product states were captured.
 - rerun mode used for actual fix validation:
   - no skip flag (full doctor + snapshot pipeline)
 

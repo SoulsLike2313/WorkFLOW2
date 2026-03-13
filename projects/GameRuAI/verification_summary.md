@@ -1,11 +1,11 @@
 # GameRuAI Verification Summary
 
-- verification_run_id: `game_ru_ai-startup-20260313T014233Z`
+- verification_run_id: `game_ru_ai-startup-20260313T020923Z`
 - status: `PASS`
 - exit_code: `0`
 - verification_command: `python -m pytest -q`
 - collected_tests: `76`
-- pytest_duration_seconds: `357.94`
+- pytest_duration_seconds: `324.3`
 
 ## Timeout Cause (historical run)
 
@@ -15,9 +15,9 @@
 
 ## Fix Applied
 
-- `projects/GameRuAI/app/voice/tts_stub.py`: switched to `array('h')` waveform buffer generation with direct `writeframes`, removing per-sample byte concatenation overhead.
+- `projects/GameRuAI/app/voice/tts_stub.py`: bound `math.sin` to local variable in the waveform loop to reduce per-sample compute overhead.
 
 ## Hot Tests (before/after)
 
-- `tests/integration/test_reports_generation.py`: `~88s` -> `55.37s`
-- `tests/integration/test_voice_preparation_pipeline.py`: `~88s` -> `61.46s`
+- `tests/integration/test_reports_generation.py`: `~88s` -> `53.7s`
+- `tests/integration/test_voice_preparation_pipeline.py`: `~88s` -> `54.09s`
