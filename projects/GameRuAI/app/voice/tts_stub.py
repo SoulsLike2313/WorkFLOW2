@@ -13,6 +13,7 @@ class TtsStubGenerator:
         sample_rate = 22050
         total_samples = int(sample_rate * (duration_ms / 1000.0))
         amplitude = int(32767 * max(0.05, min(volume, 0.95)))
+        angular_step = (2 * math.pi * frequency) / sample_rate
 
         with wave.open(str(output_path), "wb") as wav_file:
             wav_file.setnchannels(1)
@@ -22,7 +23,7 @@ class TtsStubGenerator:
             samples = array(
                 "h",
                 (
-                    int(amplitude * math.sin(2 * math.pi * frequency * (idx / sample_rate)))
+                    int(amplitude * math.sin(angular_step * idx))
                     for idx in range(total_samples)
                 ),
             )

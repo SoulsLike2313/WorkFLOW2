@@ -227,7 +227,7 @@ def main() -> int:
             warnings.append("ui_doctor screenshot manifest is missing.")
 
     snapshot_summary: dict[str, Any] = {}
-    snapshot_manifest: dict[str, Any] = {"screenshots": []}
+    snapshot_manifest: dict[str, Any] = {}
     snapshot_run_dir: Path | None = None
     snapshot_summary_path: Path | None = None
     snapshot_manifest_path: Path | None = None
@@ -268,7 +268,9 @@ def main() -> int:
     snapshot_validation_failures: list[str] = []
     snapshot_validation_warnings: list[str] = []
     snapshot_captures: list[dict[str, Any]] = []
-    if snapshot_manifest:
+    if args.skip_snapshots:
+        warnings.append("ui_snapshot_runner skipped by flag; snapshot manifest validation skipped.")
+    elif snapshot_manifest:
         snapshot_validation_failures, snapshot_validation_warnings, snapshot_captures = _validate_snapshot_manifest(
             manifest=snapshot_manifest,
             expected_states=expected_state_keys(),

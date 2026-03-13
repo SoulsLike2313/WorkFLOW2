@@ -1,94 +1,100 @@
 {
-  "run_id": "20260313_010351",
-  "started_at": "2026-03-12T22:03:51.144098+00:00",
-  "finished_at": "2026-03-12T22:10:49.292720+00:00",
-  "duration_seconds": 418.15,
-  "overall_status": "FAIL",
-  "manual_acceptance_recommended": false,
+  "run_id": "20260313_045243",
+  "started_at": "2026-03-13T01:52:43.534556+00:00",
+  "finished_at": "2026-03-13T01:54:12.662405+00:00",
+  "duration_seconds": 89.13,
+  "overall_status": "PASS_WITH_WARNINGS",
+  "manual_acceptance_recommended": true,
   "project_root": "E:\\CVVCODEX\\projects\\GameRuAI",
   "executed_commands": [
     [
       "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
       "E:\\CVVCODEX\\projects\\GameRuAI\\scripts\\ui_doctor.py",
       "--scales",
-      "1.0,1.25,1.5",
+      "1.0",
       "--sizes",
-      "1600x960,1366x768,1280x800",
+      "1366x768",
+      "--project-name",
+      "GameRuAI UI-QA Project"
+    ],
+    [
+      "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "E:\\CVVCODEX\\projects\\GameRuAI\\scripts\\ui_snapshot_runner.py",
+      "--scales",
+      "1.0",
+      "--sizes",
+      "1366x768",
       "--project-name",
       "GameRuAI UI-QA Project"
     ]
   ],
   "ui_doctor": {
-    "run_id": "20260313_010351",
+    "run_id": "20260313_045243",
     "status": "PASS_WITH_WARNINGS",
-    "run_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351"
+    "run_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243"
   },
   "ui_snapshot_runner": {
-    "run_id": null,
-    "status": "SKIPPED",
-    "run_path": "",
-    "skipped": true
+    "run_id": "20260313_045340",
+    "status": "PASS",
+    "run_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_snapshots\\20260313_045340",
+    "skipped": false
   },
-  "warnings": [
-    "snapshot manifest has low capture count (0), expected at least 24"
-  ],
-  "failures": [
-    "snapshot manifest missing required product states: ['Project|initial_empty', 'Project|pipeline_loaded_ready', 'Scan|manifest_loaded', 'Asset Explorer|tree_loaded_no_selection', 'Asset Explorer|active_selection_metadata', 'Entries|many_items_loaded', 'Entries|filtered_language_fr', 'Entries|long_search_query', 'Language Hub|overview_loaded', 'Language Hub|review_and_stress_loaded', 'Translation|loaded_translations', 'Translation|correction_form_long_content', 'Voice|no_selection', 'Voice|active_selection_details', 'Learning|loaded_history', 'Glossary|loaded_terms', 'QA|findings_loaded', 'Reports|dashboard_loaded', 'Diagnostics|backend_metrics_loaded', 'Export|export_log_loaded', 'Jobs / Logs|jobs_payload_loaded', 'Live Demo|scene_selected_ready', 'Companion|idle_no_session', 'Companion|configured_invalid_executable']"
-  ],
+  "warnings": [],
+  "failures": [],
   "screen_audit": {
     "Asset Explorer": {
       "critical": 0,
-      "major": 18,
+      "major": 2,
       "minor": 0
     },
     "Companion": {
       "critical": 0,
-      "major": 54,
+      "major": 6,
       "minor": 0
     },
     "Entries": {
       "critical": 0,
-      "major": 54,
+      "major": 6,
       "minor": 0
     },
     "Export": {
       "critical": 0,
-      "major": 9,
+      "major": 1,
       "minor": 0
     },
     "Glossary": {
       "critical": 0,
-      "major": 9,
+      "major": 1,
       "minor": 0
     },
     "Language Hub": {
       "critical": 0,
-      "major": 72,
+      "major": 8,
       "minor": 0
     },
     "Live Demo": {
       "critical": 0,
-      "major": 9,
+      "major": 1,
       "minor": 0
     },
     "Reports": {
       "critical": 0,
-      "major": 18,
+      "major": 2,
       "minor": 0
     },
     "Translation": {
       "critical": 0,
-      "major": 36,
+      "major": 4,
       "minor": 0
     },
     "Voice": {
       "critical": 0,
-      "major": 36,
+      "major": 4,
       "minor": 0
     }
   },
   "issues_by_type": {
-    "layout": 315
+    "layout": 35
   },
   "top_issues": [
     {
@@ -100,126 +106,9 @@
       "state_name": "active_selection_metadata",
       "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_active_selection]",
       "widget": "QPushButton::anon",
-      "screen_size": "1600x960",
-      "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__asset_explorer__active_selection_metadata__1600x960__scale_1_0.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "active_selection_metadata",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_active_selection]",
-      "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__asset_explorer__active_selection_metadata__1366x768__scale_1_0.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "active_selection_metadata",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_active_selection]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1280x800",
-      "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__asset_explorer__active_selection_metadata__1280x800__scale_1_0.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "active_selection_metadata",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_active_selection]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1600x960",
-      "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_25\\doctor__asset_explorer__active_selection_metadata__1600x960__scale_1_25.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "active_selection_metadata",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_active_selection]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1366x768",
-      "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_25\\doctor__asset_explorer__active_selection_metadata__1366x768__scale_1_25.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "active_selection_metadata",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_active_selection]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1280x800",
-      "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_25\\doctor__asset_explorer__active_selection_metadata__1280x800__scale_1_25.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "active_selection_metadata",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_active_selection]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1600x960",
-      "scale": "1.5",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_5\\doctor__asset_explorer__active_selection_metadata__1600x960__scale_1_5.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "active_selection_metadata",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_active_selection]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1366x768",
-      "scale": "1.5",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_5\\doctor__asset_explorer__active_selection_metadata__1366x768__scale_1_5.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "active_selection_metadata",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_active_selection]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1280x800",
-      "scale": "1.5",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_5\\doctor__asset_explorer__active_selection_metadata__1280x800__scale_1_5.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "tree_loaded_no_selection",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_tree_loaded]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1600x960",
-      "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__asset_explorer__tree_loaded_no_selection__1600x960__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__asset_explorer__active_selection_metadata__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -232,137 +121,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__asset_explorer__tree_loaded_no_selection__1366x768__scale_1_0.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "tree_loaded_no_selection",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_tree_loaded]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1280x800",
-      "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__asset_explorer__tree_loaded_no_selection__1280x800__scale_1_0.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "tree_loaded_no_selection",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_tree_loaded]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1600x960",
-      "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_25\\doctor__asset_explorer__tree_loaded_no_selection__1600x960__scale_1_25.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "tree_loaded_no_selection",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_tree_loaded]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1366x768",
-      "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_25\\doctor__asset_explorer__tree_loaded_no_selection__1366x768__scale_1_25.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "tree_loaded_no_selection",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_tree_loaded]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1280x800",
-      "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_25\\doctor__asset_explorer__tree_loaded_no_selection__1280x800__scale_1_25.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "tree_loaded_no_selection",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_tree_loaded]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1600x960",
-      "scale": "1.5",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_5\\doctor__asset_explorer__tree_loaded_no_selection__1600x960__scale_1_5.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "tree_loaded_no_selection",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_tree_loaded]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1366x768",
-      "scale": "1.5",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_5\\doctor__asset_explorer__tree_loaded_no_selection__1366x768__scale_1_5.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Asset Explorer",
-      "state_name": "tree_loaded_no_selection",
-      "description": "CTA not anchored to layout: Refresh Asset Index [scenario=asset_tree_loaded]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1280x800",
-      "scale": "1.5",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_5\\doctor__asset_explorer__tree_loaded_no_selection__1280x800__scale_1_5.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Companion",
-      "state_name": "configured_invalid_executable",
-      "description": "CTA not anchored to layout: Launch Companion Session [scenario=companion_invalid_exec]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1600x960",
-      "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Companion",
-      "state_name": "configured_invalid_executable",
-      "description": "CTA not anchored to layout: Poll Status / Watch [scenario=companion_invalid_exec]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1600x960",
-      "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png"
-    },
-    {
-      "severity": "major",
-      "category": "floating_critical_cta",
-      "issue_type": "layout",
-      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Companion",
-      "state_name": "configured_invalid_executable",
-      "description": "CTA not anchored to layout: Stop Session [scenario=companion_invalid_exec]",
-      "widget": "QPushButton::anon",
-      "screen_size": "1600x960",
-      "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1600x960__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__asset_explorer__tree_loaded_no_selection__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -375,7 +134,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1366x768__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -388,7 +147,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1366x768__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -401,7 +160,7 @@
       "widget": "QPushButton::anon",
       "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1366x768__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -409,12 +168,12 @@
       "issue_type": "layout",
       "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
       "screen_name": "Companion",
-      "state_name": "configured_invalid_executable",
-      "description": "CTA not anchored to layout: Launch Companion Session [scenario=companion_invalid_exec]",
+      "state_name": "idle_no_session",
+      "description": "CTA not anchored to layout: Launch Companion Session [scenario=companion_idle]",
       "widget": "QPushButton::anon",
-      "screen_size": "1280x800",
+      "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1280x800__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__companion__idle_no_session__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -422,12 +181,12 @@
       "issue_type": "layout",
       "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
       "screen_name": "Companion",
-      "state_name": "configured_invalid_executable",
-      "description": "CTA not anchored to layout: Poll Status / Watch [scenario=companion_invalid_exec]",
+      "state_name": "idle_no_session",
+      "description": "CTA not anchored to layout: Poll Status / Watch [scenario=companion_idle]",
       "widget": "QPushButton::anon",
-      "screen_size": "1280x800",
+      "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1280x800__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__companion__idle_no_session__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
@@ -435,63 +194,310 @@
       "issue_type": "layout",
       "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
       "screen_name": "Companion",
-      "state_name": "configured_invalid_executable",
-      "description": "CTA not anchored to layout: Stop Session [scenario=companion_invalid_exec]",
+      "state_name": "idle_no_session",
+      "description": "CTA not anchored to layout: Stop Session [scenario=companion_idle]",
       "widget": "QPushButton::anon",
-      "screen_size": "1280x800",
+      "screen_size": "1366x768",
       "scale": "1.0",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_0\\doctor__companion__configured_invalid_executable__1280x800__scale_1_0.png"
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__companion__idle_no_session__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
       "category": "floating_critical_cta",
       "issue_type": "layout",
       "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Companion",
-      "state_name": "configured_invalid_executable",
-      "description": "CTA not anchored to layout: Launch Companion Session [scenario=companion_invalid_exec]",
+      "screen_name": "Entries",
+      "state_name": "filtered_language_fr",
+      "description": "CTA not anchored to layout: Detect Language [scenario=entries_filtered_fr]",
       "widget": "QPushButton::anon",
-      "screen_size": "1600x960",
-      "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_25\\doctor__companion__configured_invalid_executable__1600x960__scale_1_25.png"
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__entries__filtered_language_fr__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
       "category": "floating_critical_cta",
       "issue_type": "layout",
       "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Companion",
-      "state_name": "configured_invalid_executable",
-      "description": "CTA not anchored to layout: Poll Status / Watch [scenario=companion_invalid_exec]",
+      "screen_name": "Entries",
+      "state_name": "filtered_language_fr",
+      "description": "CTA not anchored to layout: Refresh [scenario=entries_filtered_fr]",
       "widget": "QPushButton::anon",
-      "screen_size": "1600x960",
-      "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_25\\doctor__companion__configured_invalid_executable__1600x960__scale_1_25.png"
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__entries__filtered_language_fr__1366x768__scale_1_0.png"
     },
     {
       "severity": "major",
       "category": "floating_critical_cta",
       "issue_type": "layout",
       "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
-      "screen_name": "Companion",
-      "state_name": "configured_invalid_executable",
-      "description": "CTA not anchored to layout: Stop Session [scenario=companion_invalid_exec]",
+      "screen_name": "Entries",
+      "state_name": "long_search_query",
+      "description": "CTA not anchored to layout: Detect Language [scenario=entries_long_search]",
       "widget": "QPushButton::anon",
-      "screen_size": "1600x960",
-      "scale": "1.25",
-      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\screenshots\\scale_1_25\\doctor__companion__configured_invalid_executable__1600x960__scale_1_25.png"
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__entries__long_search_query__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Entries",
+      "state_name": "long_search_query",
+      "description": "CTA not anchored to layout: Refresh [scenario=entries_long_search]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__entries__long_search_query__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Entries",
+      "state_name": "many_items_loaded",
+      "description": "CTA not anchored to layout: Detect Language [scenario=entries_many_items]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__entries__many_items_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Entries",
+      "state_name": "many_items_loaded",
+      "description": "CTA not anchored to layout: Refresh [scenario=entries_many_items]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__entries__many_items_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Export",
+      "state_name": "export_log_loaded",
+      "description": "CTA not anchored to layout: Export Patch Output [scenario=export_log_loaded]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__export__export_log_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Glossary",
+      "state_name": "loaded_terms",
+      "description": "CTA not anchored to layout: Add Term [scenario=glossary_loaded]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__glossary__loaded_terms__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Language Hub",
+      "state_name": "overview_loaded",
+      "description": "CTA not anchored to layout: Refresh Language Blocks [scenario=language_hub_overview]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__language_hub__overview_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Language Hub",
+      "state_name": "overview_loaded",
+      "description": "CTA not anchored to layout: Focus Uncertain In Entries [scenario=language_hub_overview]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__language_hub__overview_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Language Hub",
+      "state_name": "overview_loaded",
+      "description": "CTA not anchored to layout: Focus Stress In Entries [scenario=language_hub_overview]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__language_hub__overview_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Language Hub",
+      "state_name": "overview_loaded",
+      "description": "CTA not anchored to layout: Open Translation Workbench [scenario=language_hub_overview]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__language_hub__overview_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Language Hub",
+      "state_name": "review_and_stress_loaded",
+      "description": "CTA not anchored to layout: Refresh Language Blocks [scenario=language_hub_review_focus]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__language_hub__review_and_stress_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Language Hub",
+      "state_name": "review_and_stress_loaded",
+      "description": "CTA not anchored to layout: Focus Uncertain In Entries [scenario=language_hub_review_focus]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__language_hub__review_and_stress_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Language Hub",
+      "state_name": "review_and_stress_loaded",
+      "description": "CTA not anchored to layout: Focus Stress In Entries [scenario=language_hub_review_focus]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__language_hub__review_and_stress_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Language Hub",
+      "state_name": "review_and_stress_loaded",
+      "description": "CTA not anchored to layout: Open Translation Workbench [scenario=language_hub_review_focus]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__language_hub__review_and_stress_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Live Demo",
+      "state_name": "scene_selected_ready",
+      "description": "CTA not anchored to layout: Start Live Demo [scenario=live_scene_selected]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__live_demo__scene_selected_ready__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Reports",
+      "state_name": "dashboard_loaded",
+      "description": "CTA not anchored to layout: Generate Reports [scenario=reports_loaded]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__reports__dashboard_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Reports",
+      "state_name": "dashboard_loaded",
+      "description": "CTA not anchored to layout: Refresh Reports [scenario=reports_loaded]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__reports__dashboard_loaded__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Translation",
+      "state_name": "correction_form_long_content",
+      "description": "CTA not anchored to layout: Translate to Russian [scenario=translation_correction_prefilled]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__translation__correction_form_long_content__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Translation",
+      "state_name": "correction_form_long_content",
+      "description": "CTA not anchored to layout: Apply Correction [scenario=translation_correction_prefilled]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__translation__correction_form_long_content__1366x768__scale_1_0.png"
+    },
+    {
+      "severity": "major",
+      "category": "floating_critical_cta",
+      "issue_type": "layout",
+      "recommendation": "Attach CTA to layout container; avoid absolute geometry drift.",
+      "screen_name": "Translation",
+      "state_name": "loaded_translations",
+      "description": "CTA not anchored to layout: Translate to Russian [scenario=translation_loaded]",
+      "widget": "QPushButton::anon",
+      "screen_size": "1366x768",
+      "scale": "1.0",
+      "screenshot_path": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\screenshots\\scale_1_0\\doctor__translation__loaded_translations__1366x768__scale_1_0.png"
     }
   ],
-  "snapshot_capture_count": 0,
+  "snapshot_capture_count": 24,
   "artifacts": {
     "root_summary_json": "E:\\CVVCODEX\\projects\\GameRuAI\\ui_validation_summary.json",
     "root_summary_md": "E:\\CVVCODEX\\projects\\GameRuAI\\ui_validation_summary.md",
     "root_screenshots_manifest": "E:\\CVVCODEX\\projects\\GameRuAI\\ui_screenshots_manifest.json",
-    "validate_run_dir": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\validate_20260313_010351",
+    "validate_run_dir": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\validate_20260313_045243",
     "latest_run_txt": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\latest_run.txt",
-    "doctor_summary_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\ui_doctor_summary.json",
-    "doctor_manifest_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_010351\\ui_screenshots_manifest.json",
-    "snapshot_summary_json": "",
-    "snapshot_manifest_json": ""
+    "doctor_summary_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\ui_doctor_summary.json",
+    "doctor_manifest_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_validation\\20260313_045243\\ui_screenshots_manifest.json",
+    "snapshot_summary_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_snapshots\\20260313_045340\\ui_snapshot_summary.json",
+    "snapshot_manifest_json": "E:\\CVVCODEX\\projects\\GameRuAI\\runtime\\ui_snapshots\\20260313_045340\\ui_screenshots_manifest.json"
   }
 }
