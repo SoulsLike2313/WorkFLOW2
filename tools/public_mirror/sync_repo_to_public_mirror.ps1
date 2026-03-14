@@ -190,27 +190,37 @@ if ($runtimeState -ne $null) {
     }
 }
 
-$mirrorFiles = Get-ChildItem -Path $MirrorPath -Recurse -File -Force -ErrorAction SilentlyContinue
-$totalMirroredFiles = ($mirrorFiles | Measure-Object).Count
+$totalMirroredFiles = (Get-ChildItem -Path $MirrorPath -Recurse -File -Force -ErrorAction SilentlyContinue | Measure-Object).Count
 $syncTime = (Get-Date).ToUniversalTime().ToString("o")
 
 $manifestPath = Join-Path $MirrorPath "PUBLIC_FILE_MANIFEST.json"
 if (-not $SkipFileManifest) {
-    $manifest = [ordered]@{
-        generated_at_utc = $syncTime
-        mirror_path = $MirrorPath
-        total_files = $totalMirroredFiles
-        files = @(
-            $mirrorFiles | ForEach-Object {
-                [ordered]@{
-                    path = ($_.FullName.Substring($MirrorPath.Length) -replace "^[\\/]+", "" -replace "\\", "/")
-                    size_bytes = $_.Length
-                    last_write_utc = $_.LastWriteTimeUtc.ToString("o")
-                }
-            }
-        )
+    $manifestLines = New-Object System.Collections.Generic.List[string]
+    $manifestLines.Add("{")
+    $manifestLines.Add(("  ""generated_at_utc"": ""{0}""," -f $syncTime))
+    $manifestLines.Add(("  ""mirror_path"": ""{0}""," -f ($MirrorPath -replace "\\", "\\\\")))
+    $manifestLines.Add(("  ""total_files"": {0}," -f $totalMirroredFiles))
+    $manifestLines.Add("  ""files"": [")
+
+    $first = $true
+    $filesForManifest = Get-ChildItem -Path $MirrorPath -Recurse -File -Force -ErrorAction SilentlyContinue
+    foreach ($fileItem in $filesForManifest) {
+        if ($fileItem.Name -eq "PUBLIC_FILE_MANIFEST.json") {
+            continue
+        }
+        $relPath = ($fileItem.FullName.Substring($MirrorPath.Length) -replace "^[\\/]+", "" -replace "\\", "/")
+        $escaped = $relPath.Replace("\", "\\").Replace("""", "\""")
+        if ($first) {
+            $manifestLines.Add(("    ""{0}""" -f $escaped))
+            $first = $false
+        }
+        else {
+            $manifestLines.Add(("    ,""{0}""" -f $escaped))
+        }
     }
-    $manifest | ConvertTo-Json -Depth 6 | Set-Content -Path $manifestPath -Encoding UTF8
+    $manifestLines.Add("  ]")
+    $manifestLines.Add("}")
+    Set-Content -Path $manifestPath -Value $manifestLines -Encoding UTF8
 }
 
 $stateJsonPath = Join-Path $MirrorPath "PUBLIC_REPO_STATE.json"
