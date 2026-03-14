@@ -1,0 +1,73 @@
+﻿{
+    "generated_at":  "2026-03-14T12:30:42.2922551+03:00",
+    "host":  "DESKTOP-1V26009",
+    "all_disks":  [
+                      {
+                          "Number":  1,
+                          "FriendlyName":  "KINGSTON SKC3000S/1024G",
+                          "SerialNumber":  "0000_0000_0000_0000_4868_3400_0000_0000.",
+                          "BusType":  "NVMe",
+                          "PartitionStyle":  "GPT",
+                          "OperationalStatus":  "Online",
+                          "HealthStatus":  "Healthy",
+                          "Size":  1000204886016,
+                          "IsBoot":  false,
+                          "IsSystem":  false,
+                          "IsReadOnly":  false
+                      },
+                      {
+                          "Number":  0,
+                          "FriendlyName":  "KINGSTON SNVS/250G",
+                          "SerialNumber":  "AA000000000000000330_00000001.",
+                          "BusType":  "NVMe",
+                          "PartitionStyle":  "GPT",
+                          "OperationalStatus":  "Online",
+                          "HealthStatus":  "Healthy",
+                          "Size":  250059350016,
+                          "IsBoot":  true,
+                          "IsSystem":  true,
+                          "IsReadOnly":  false
+                      },
+                      {
+                          "Number":  2,
+                          "FriendlyName":  "USB Disk 2.0",
+                          "SerialNumber":  "1606191170169578935",
+                          "BusType":  "USB",
+                          "PartitionStyle":  "MBR",
+                          "OperationalStatus":  "Online",
+                          "HealthStatus":  "Healthy",
+                          "Size":  31142707200,
+                          "IsBoot":  false,
+                          "IsSystem":  false,
+                          "IsReadOnly":  false
+                      }
+                  ],
+    "usb_candidates":  [
+                           {
+                               "DiskNumber":  2,
+                               "FriendlyName":  "USB Disk 2.0",
+                               "SerialNumber":  "1606191170169578935",
+                               "BusType":  "USB",
+                               "SizeGB":  29,
+                               "IsBoot":  false,
+                               "IsSystem":  false,
+                               "DriveLetters":  "D"
+                           }
+                       ],
+    "selected_target":  {
+                            "DiskNumber":  2,
+                            "FriendlyName":  "USB Disk 2.0",
+                            "SerialNumber":  "1606191170169578935",
+                            "BusType":  "USB",
+                            "SizeGB":  29,
+                            "IsBoot":  false,
+                            "IsSystem":  false,
+                            "DriveLetters":  "D"
+                        },
+    "selection_rules":  [
+                            "BusType=USB",
+                            "Size\u003e=8GB",
+                            "IsBoot=false",
+                            "IsSystem=false"
+                        ]
+}
