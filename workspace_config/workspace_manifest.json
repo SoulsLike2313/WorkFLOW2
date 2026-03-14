@@ -29,6 +29,8 @@
     "strict_task_acceptance": true,
     "no_strict_parameters_no_acceptance": true,
     "task_rules_path": "workspace_config/TASK_RULES.md",
+    "execution_admission_policy_path": "workspace_config/EXECUTION_ADMISSION_POLICY.md",
+    "task_source_policy_path": "workspace_config/TASK_SOURCE_POLICY.md",
     "task_manifest_schema_path": "workspace_config/task_manifest.schema.json",
     "agent_execution_policy_path": "workspace_config/AGENT_EXECUTION_POLICY.md",
     "machine_repo_reading_rules_path": "workspace_config/MACHINE_REPO_READING_RULES.md",
@@ -36,7 +38,22 @@
     "project_audit_policy_path": "workspace_config/PROJECT_AUDIT_POLICY.md",
     "test_agent_execution_policy_path": "workspace_config/TEST_AGENT_EXECUTION_POLICY.md",
     "github_sync_policy_path": "workspace_config/GITHUB_SYNC_POLICY.md",
-    "completion_gate_rules_path": "workspace_config/COMPLETION_GATE_RULES.md"
+    "completion_gate_rules_path": "workspace_config/COMPLETION_GATE_RULES.md",
+    "current_platform_state_path": "docs/CURRENT_PLATFORM_STATE.md",
+    "next_canonical_step_path": "docs/NEXT_CANONICAL_STEP.md",
+    "machine_changelog_path": "docs/MACHINE_CHANGELOG.md",
+    "mandatory_post_task_git_finalization": true,
+    "post_task_git_finalization_order": [
+      "git add",
+      "git commit",
+      "git push"
+    ],
+    "allowed_rejection_reasons": [
+      "insufficient-contract",
+      "non-canonical",
+      "out-of-scope"
+    ],
+    "only_strict_repo_compliant_prompts_executable": true
   },
   "shared_systems": {
     "root_path": "shared_systems",
@@ -88,6 +105,10 @@
     "load_project_manifest_before_analysis": true,
     "do_not_guess_project_scope": true,
     "legacy_archived_only_on_explicit_request": true,
+    "enforce_execution_admission_policy": true,
+    "enforce_task_source_policy": true,
+    "enforce_current_platform_state": true,
+    "enforce_next_canonical_step": true,
     "manual_testing_gate": "PASS_or_PASS_WITH_WARNINGS_from_platform_test_agent_with_repo_visible_audit_evidence",
     "manual_testing_gate_owner": "platform_test_agent",
     "manual_testing_gate_enforced": true

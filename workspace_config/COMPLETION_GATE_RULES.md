@@ -11,10 +11,13 @@ A task is complete only when all conditions below are `PASS`.
 5. outputs are readable by repo-relative paths in GitHub
 6. acceptance criteria are confirmed
 7. validation steps are executed
+8. post-task git finalization sequence is completed (`git add` -> `git commit` -> `git push`)
 
 ## Hard Rule
 
 No repo-visible result = no completion.
+
+No post-task git add/commit/push = no completion.
 
 ## Mandatory Status Mapping
 
@@ -30,3 +33,18 @@ Final completion must include:
 3. `HEAD` and `origin/main` comparison result
 4. verified repo-visible paths
 5. executed validation steps and run ids
+6. proof of post-task git finalization:
+   - `git add` performed on task scope
+   - `git commit` created
+   - `git push` completed to remote
+
+## Mandatory Finalization Order
+
+Order is strict and cannot be skipped:
+
+1. `git add`
+2. `git commit`
+3. `git push`
+4. sync verification (`HEAD == origin/<branch>`, clean worktree)
+
+Any order violation => `NOT_COMPLETED`.

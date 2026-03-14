@@ -8,22 +8,30 @@ Task execution is forbidden until Codex reads instruction/governance files in th
 2. `workspace_config/workspace_manifest.json`
 3. `workspace_config/codex_manifest.json`
 4. `workspace_config/TASK_RULES.md`
-5. `workspace_config/AGENT_EXECUTION_POLICY.md`
-6. `workspace_config/MACHINE_REPO_READING_RULES.md`
-7. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-8. `workspace_config/PROJECT_AUDIT_POLICY.md`
-9. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-10. `docs/INSTRUCTION_INDEX.md`
-11. relevant `PROJECT_MANIFEST.json`
-12. relevant project `README.md`
-13. relevant `CODEX.md` (if present)
-14. relevant `SYSTEM_MANIFEST.json` (if shared system is involved)
+5. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
+6. `workspace_config/TASK_SOURCE_POLICY.md`
+7. `workspace_config/AGENT_EXECUTION_POLICY.md`
+8. `workspace_config/MACHINE_REPO_READING_RULES.md`
+9. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+10. `workspace_config/PROJECT_AUDIT_POLICY.md`
+11. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+12. `workspace_config/GITHUB_SYNC_POLICY.md`
+13. `workspace_config/COMPLETION_GATE_RULES.md`
+14. `docs/INSTRUCTION_INDEX.md`
+15. `docs/CURRENT_PLATFORM_STATE.md`
+16. `docs/NEXT_CANONICAL_STEP.md`
+17. relevant `PROJECT_MANIFEST.json`
+18. relevant project `README.md`
+19. relevant `CODEX.md` (if present)
+20. relevant `SYSTEM_MANIFEST.json` (if shared system is involved)
 
 If this gate is not completed: task status is `REJECTED`.
 
 ## Rule 0
 
 `No strict parameters = no task acceptance.`
+
+`Only strict repo-compliant prompts are executable.`
 
 ## Required Task Contract
 
@@ -48,6 +56,10 @@ Canonical machine format:
 
 - `workspace_config/task_manifest.schema.json`
 - `workspace_config/TASK_INTAKE_REFERENCE.md`
+- `workspace_config/EXECUTION_ADMISSION_POLICY.md`
+- `workspace_config/TASK_SOURCE_POLICY.md`
+- `docs/CURRENT_PLATFORM_STATE.md`
+- `docs/NEXT_CANONICAL_STEP.md`
 
 ## Acceptance States
 
@@ -62,8 +74,10 @@ Decision logic:
 1. Missing required fields: `REJECTED`.
 2. Conflicting boundaries (`allowed_paths` intersects `forbidden_paths`): `REJECTED`.
 3. Undefined acceptance criteria or validation steps: `REJECTED`.
-4. Partially strict contract with bounded subset: `PARTIAL_ACCEPTED`.
-5. Fully strict and non-conflicting contract: `ACCEPTED`.
+4. Request does not match canonical workflow or current platform state: `REJECTED`.
+5. Request is out of scope for declared target paths: `REJECTED`.
+6. Partially strict contract with bounded subset: `PARTIAL_ACCEPTED`.
+7. Fully strict, canonical, and non-conflicting contract: `ACCEPTED`.
 
 ## Refusal Protocol (Machine-Enforced)
 
@@ -71,12 +85,13 @@ When rejected, response format is mandatory:
 
 ```text
 STATUS: REJECTED
-REASON: insufficient task contract
+REASON: insufficient-contract | non-canonical | out-of-scope
 MISSING:
 - <missing_parameter_1>
 - <missing_parameter_2>
 ACTION REQUIRED:
 - resubmit task with strict parameters
+NO EXECUTION
 ```
 
 ## Partial Acceptance Protocol (Machine-Enforced)
@@ -109,6 +124,19 @@ Execution rules for `PARTIAL_ACCEPTED`:
 3. No unrequested artifacts.
 4. No silent refactor outside scope.
 5. No completion claim without acceptance criteria and validation evidence.
+6. No execution for non-canonical or out-of-scope requests.
+7. No execution for broad creative asks without strict contract (for example: "write a game", "improve everything", "make something beautiful").
+8. No completion claim without post-task `git add` -> `git commit` -> `git push`.
+
+## Mandatory Post-Task Git Finalization
+
+After each completed task, this sequence is required:
+
+1. `git add <allowed_task_paths>`
+2. `git commit -m "<task-scoped message>"`
+3. `git push origin <active_branch>`
+
+Without this sequence, task status must remain `NOT_COMPLETED`.
 
 ## Prompt Output Enforcement (Mandatory)
 

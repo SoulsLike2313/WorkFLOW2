@@ -15,18 +15,22 @@ Before any task execution, Codex must read in this exact order:
 2. `workspace_config/workspace_manifest.json`
 3. `workspace_config/codex_manifest.json`
 4. `workspace_config/TASK_RULES.md`
-5. `workspace_config/AGENT_EXECUTION_POLICY.md`
-6. `workspace_config/MACHINE_REPO_READING_RULES.md`
-7. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-8. `workspace_config/PROJECT_AUDIT_POLICY.md`
-9. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-10. `workspace_config/GITHUB_SYNC_POLICY.md`
-11. `workspace_config/COMPLETION_GATE_RULES.md`
-12. `docs/INSTRUCTION_INDEX.md`
-13. relevant `PROJECT_MANIFEST.json`
-14. relevant project `README.md`
-15. relevant `CODEX.md` if present
-16. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+5. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
+6. `workspace_config/TASK_SOURCE_POLICY.md`
+7. `workspace_config/AGENT_EXECUTION_POLICY.md`
+8. `workspace_config/MACHINE_REPO_READING_RULES.md`
+9. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+10. `workspace_config/PROJECT_AUDIT_POLICY.md`
+11. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+12. `workspace_config/GITHUB_SYNC_POLICY.md`
+13. `workspace_config/COMPLETION_GATE_RULES.md`
+14. `docs/INSTRUCTION_INDEX.md`
+15. `docs/CURRENT_PLATFORM_STATE.md`
+16. `docs/NEXT_CANONICAL_STEP.md`
+17. relevant `PROJECT_MANIFEST.json`
+18. relevant project `README.md`
+19. relevant `CODEX.md` if present
+20. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 If this order is not completed, task status is `REJECTED`.
 
@@ -38,6 +42,8 @@ If this order is not completed, task status is `REJECTED`.
 | `workspace_config/workspace_manifest.json` | Project registry, active project, status model | P0 | machine, codex, developer |
 | `workspace_config/codex_manifest.json` | Machine onboarding order and scope controls | P0 | machine, codex |
 | `workspace_config/TASK_RULES.md` | Strict task acceptance gate | P0 | machine, codex, product reviewer |
+| `workspace_config/EXECUTION_ADMISSION_POLICY.md` | Hard execution admission gate and refusal contract | P0 | machine, codex, product reviewer |
+| `workspace_config/TASK_SOURCE_POLICY.md` | Authoritative task-source filter and executable request classes | P0 | machine, codex, product reviewer |
 | `workspace_config/task_manifest.schema.json` | Machine-readable task manifest contract | P0 | machine, codex, developer |
 | `workspace_config/TASK_INTAKE_REFERENCE.md` | Intake validity criteria and refusal templates | P0 | machine, codex, developer, product reviewer |
 | `workspace_config/shared_systems_registry.json` | Shared module registry and project installation map | P0 | machine, codex, developer |
@@ -48,6 +54,9 @@ If this order is not completed, task status is `REJECTED`.
 | `workspace_config/TEST_AGENT_EXECUTION_POLICY.md` | Tester-agent lane execution policy and output contract | P0 | machine, codex, developer |
 | `workspace_config/GITHUB_SYNC_POLICY.md` | GitHub visibility and sync completion policy | P0 | machine, codex, product reviewer |
 | `workspace_config/COMPLETION_GATE_RULES.md` | Hard completion gate for commit/push/repo-visible outputs | P0 | machine, codex, product reviewer |
+| `docs/CURRENT_PLATFORM_STATE.md` | Canonical machine snapshot of active priority and project states | P0 | machine, codex, developer, product reviewer |
+| `docs/NEXT_CANONICAL_STEP.md` | Canonical immediate execution direction ("what do we do next") | P0 | machine, codex, product reviewer |
+| `docs/MACHINE_CHANGELOG.md` | Machine continuity log of accepted platform truth changes | P1 | machine, codex, developer, product reviewer |
 | `workspace_config/PROJECT_RULES.md` | Workspace project lifecycle and isolation standards | P1 | machine, codex, developer |
 | `workspace_config/codex_bootstrap.md` | Bootstrap sequence for execution startup | P1 | codex, developer |
 | `workspace_config/UI_BUILD_RULES.md` | Workspace-level UI constraints (requires normalization) | P1 | codex, developer |

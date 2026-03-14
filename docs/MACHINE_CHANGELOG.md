@@ -1,0 +1,9 @@
+# Machine Changelog
+
+Machine continuity log for repository truth transitions.
+
+| date_utc | run_id | commit | accepted_change | canonical_effect | platform_truth_change | project_status_change | module_layer_change | governance_change | next_became_canonical |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `2026-03-12` | `module-library-hardening-20260312T215356Z` | `0505d21292ab21d09dd84e74ba16ed4521fac68d` | `shared systems library baseline and install/remove architecture verified` | `shared_systems became canonical module library` | `workspace recognizes install/remove flow and shared registry` | `tiktok_agent_platform` and `game_ru_ai` declared with installed systems | `ui_qa`, `verification`, `reporting`, `localization`, `audit_observability` installed baseline | `shared_systems_registry and flow docs used as authority` | `full platform audit` |
+| `2026-03-12` | `full-platform-audit-20260312T221721Z` | `0505d21292ab21d09dd84e74ba16ed4521fac68d` | `platform and target-project audit contour recorded` | `platform status map and maturity matrix became evidence-backed` | `platform sections classified PASS/PASS_WITH_WARNINGS/FAIL` | `tiktok_agent_platform` audit status PASS; `game_ru_ai` verification/UI-QA FAIL findings recorded | `update_patch_toolkit and security_baseline remained partial` | `audit artifacts became canonical evidence references` | `sync clean-up then focused GameRuAI fix cycle` |
+| `2026-03-14` | `machine-alignment-hardening-20260314` | `1d1ed7064393177d604b7cd0b0ec30e1ab1cd1e0` | `execution admission and task source hard gates added` | `single machine alignment contract introduced for intake/execution` | `current state + next step defined as canonical machine snapshot` | `no status reassignment in this change` | `no module inventory change in this change` | `EXECUTION_ADMISSION_POLICY and TASK_SOURCE_POLICY added; read-order hardened` | `GameRuAI focused fix cycle` |

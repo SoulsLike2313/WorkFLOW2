@@ -5,7 +5,11 @@
 Codex must not execute any task until the read order defined in:
 
 - `workspace_config/TASK_RULES.md`
+- `workspace_config/EXECUTION_ADMISSION_POLICY.md`
+- `workspace_config/TASK_SOURCE_POLICY.md`
 - `workspace_config/MACHINE_REPO_READING_RULES.md`
+- `docs/CURRENT_PLATFORM_STATE.md`
+- `docs/NEXT_CANONICAL_STEP.md`
 
 is completed.
 
@@ -29,15 +33,18 @@ Missing any of the following is a hard rejection:
 
 Without exact target scope, code changes are forbidden.
 
+Without canonical workflow alignment, execution is forbidden.
+
 ## Rule 3: Mandatory Execution Sequence
 
 Execution order is fixed:
 
 1. `scope_analysis`
 2. `contract_verdict` (`REJECTED` | `PARTIAL_ACCEPTED` | `ACCEPTED`)
-3. `bounded_execution`
-4. `validation_execution`
-5. `exact_output_delivery`
+3. `canonical_workflow_alignment_check`
+4. `bounded_execution`
+5. `validation_execution`
+6. `exact_output_delivery`
 
 Skipping or reordering is forbidden.
 
@@ -47,12 +54,13 @@ On rejection, Codex must emit exact refusal format:
 
 ```text
 STATUS: REJECTED
-REASON: insufficient task contract
+REASON: insufficient-contract | non-canonical | out-of-scope
 MISSING:
 - <missing_parameter_1>
 - <missing_parameter_2>
 ACTION REQUIRED:
 - resubmit task with strict parameters
+NO EXECUTION
 ```
 
 ## Rule 5: Partial Acceptance Behavior
@@ -81,6 +89,7 @@ WILL_NOT_DO:
 4. No silent refactor outside allowed paths.
 5. No cross-project edits unless explicitly in scope.
 6. No cross-module edits unless explicitly in scope.
+7. No broad creative execution asks without strict repo contract.
 
 ## Rule 7: Validation and Completion Controls
 
@@ -88,6 +97,8 @@ WILL_NOT_DO:
 2. Without validation steps, confirmation claim is forbidden.
 3. Validation must run against declared validation steps.
 4. Any unmet criterion must be reported as failed, not omitted.
+5. No completion claim when task is non-canonical to `docs/NEXT_CANONICAL_STEP.md` unless task explicitly updates canonical step documents.
+6. No completion claim without post-task `git add` -> `git commit` -> `git push`.
 
 ## Rule 8: External Unrelated Changes
 
@@ -130,3 +141,29 @@ Source:
 When operating as `platform_test_agent`, execution must follow lane order and output contract from:
 
 - `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+
+## Rule 12: Canonical Workflow Boundary
+
+If request conflicts with:
+
+- `docs/CURRENT_PLATFORM_STATE.md`, or
+- `docs/NEXT_CANONICAL_STEP.md`
+
+Codex must return:
+
+```text
+STATUS: REJECTED
+REASON: non-canonical
+NO EXECUTION
+```
+
+## Rule 13: Mandatory Post-Task Git Finalization
+
+For every completed task, Codex must perform and verify:
+
+1. `git add <allowed_task_paths>`
+2. `git commit -m "<task-scoped message>"`
+3. `git push origin <active_branch>`
+4. sync check (`HEAD == origin/<active_branch>`)
+
+If any item is missing, status is `NOT_COMPLETED`.

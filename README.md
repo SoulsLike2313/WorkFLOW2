@@ -47,6 +47,8 @@ Top-level purpose:
 Strict machine task governance is defined in:
 
 - `workspace_config/TASK_RULES.md`
+- `workspace_config/EXECUTION_ADMISSION_POLICY.md`
+- `workspace_config/TASK_SOURCE_POLICY.md`
 - `workspace_config/task_manifest.schema.json`
 - `workspace_config/TASK_INTAKE_REFERENCE.md`
 - `workspace_config/AGENT_EXECUTION_POLICY.md`
@@ -55,11 +57,18 @@ Strict machine task governance is defined in:
 - `workspace_config/PROJECT_AUDIT_POLICY.md`
 - `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
 - `workspace_config/shared_systems_registry.json`
+- `docs/CURRENT_PLATFORM_STATE.md`
+- `docs/NEXT_CANONICAL_STEP.md`
+- `docs/MACHINE_CHANGELOG.md`
 
 Acceptance gate:
 
 - no strict parameters -> no task acceptance.
-- missing strict task contract -> `STATUS: REJECTED`, `REASON: insufficient task contract`.
+- only strict repo-compliant prompts are executable.
+- missing strict task contract -> `STATUS: REJECTED`, `REASON: insufficient-contract`.
+- non-canonical request -> `STATUS: REJECTED`, `REASON: non-canonical`.
+- out-of-scope request -> `STATUS: REJECTED`, `REASON: out-of-scope`.
+- no post-task `git add` -> `git commit` -> `git push` => task is `NOT_COMPLETED`.
 
 Mandatory pre-task read gate:
 
@@ -67,16 +76,22 @@ Mandatory pre-task read gate:
 2. `workspace_config/workspace_manifest.json`
 3. `workspace_config/codex_manifest.json`
 4. `workspace_config/TASK_RULES.md`
-5. `workspace_config/AGENT_EXECUTION_POLICY.md`
-6. `workspace_config/MACHINE_REPO_READING_RULES.md`
-7. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-8. `workspace_config/PROJECT_AUDIT_POLICY.md`
-9. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-10. `docs/INSTRUCTION_INDEX.md`
-11. relevant `PROJECT_MANIFEST.json`
-12. relevant project `README.md`
-13. relevant `CODEX.md` if present
-14. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+5. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
+6. `workspace_config/TASK_SOURCE_POLICY.md`
+7. `workspace_config/AGENT_EXECUTION_POLICY.md`
+8. `workspace_config/MACHINE_REPO_READING_RULES.md`
+9. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+10. `workspace_config/PROJECT_AUDIT_POLICY.md`
+11. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+12. `workspace_config/GITHUB_SYNC_POLICY.md`
+13. `workspace_config/COMPLETION_GATE_RULES.md`
+14. `docs/INSTRUCTION_INDEX.md`
+15. `docs/CURRENT_PLATFORM_STATE.md`
+16. `docs/NEXT_CANONICAL_STEP.md`
+17. relevant `PROJECT_MANIFEST.json`
+18. relevant project `README.md`
+19. relevant `CODEX.md` if present
+20. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 Shared system workflows:
 
@@ -96,6 +111,12 @@ Current priority model:
 - `experimental`: `adaptive_trading`
 - `manual_testing_blocked`: `tiktok_agent_platform`
 - `audit_required`: `game_ru_ai`
+
+Canonical state/next-step references:
+
+- current state snapshot: `docs/CURRENT_PLATFORM_STATE.md`
+- canonical next step: `docs/NEXT_CANONICAL_STEP.md`
+- continuity log: `docs/MACHINE_CHANGELOG.md`
 
 ## Canonical Project Registry
 
