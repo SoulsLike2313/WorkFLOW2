@@ -1,0 +1,38 @@
+﻿{
+    "generated_at":  "2026-03-14T13:52:05.1385237+03:00",
+    "source_type":  "official_microsoft_media_creation_tool",
+    "official_source":  {
+                            "microsoft_fwdlink":  "https://go.microsoft.com/fwlink/?LinkId=691209",
+                            "resolved_download_url":  "https://download.microsoft.com/download/9/e/a/9eac306f-d134-4609-9c58-35d1638c2363/MediaCreationTool_22H2.exe",
+                            "source_domain":  "microsoft.com"
+                        },
+    "local_iso_check":  {
+                            "searched_roots":  [
+                                                   "C:\\Users\\PC\\Downloads",
+                                                   "C:\\Users\\PC\\Desktop",
+                                                   "C:\\Users\\PC\\Documents",
+                                                   "C:\\Users\\Public\\Downloads"
+                                               ],
+                            "found_count":  0,
+                            "found_items":  [
+
+                                            ]
+                        },
+    "media_creation_tool":  {
+                                "path":  "E:\\CVVCODEX\\setup_assets\\windows10pro\\MediaCreationTool_22H2.exe",
+                                "size_bytes":  19463448,
+                                "sha256":  "690C8A63769D444FAD47B7DDECEE7F24C9333AA735D0BD46587D0DF5CF15CDE5",
+                                "downloaded_from":  "https://download.microsoft.com/download/9/e/a/9eac306f-d134-4609-9c58-35d1638c2363/MediaCreationTool_22H2.exe"
+                            },
+    "iso":  {
+                "used":  false,
+                "path":  null,
+                "size_bytes":  null,
+                "sha256":  null
+            },
+    "compliance":  {
+                       "official_source_only":  true,
+                       "no_third_party_images":  true,
+                       "no_activation_bypass":  true
+                   }
+}

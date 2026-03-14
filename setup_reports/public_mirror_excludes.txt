@@ -5,9 +5,12 @@
 .env
 .env.*
 .git/
+.venv/
+__pycache__/
 credentials*
 id_ed25519
 id_rsa
+projects/wild_hunt_command_citadel/shortform_core/
 projects/wild_hunt_command_citadel/shortform_core/.venv/Lib/site-packages/certifi/cacert.pem
 projects/wild_hunt_command_citadel/shortform_core/.venv/Lib/site-packages/pip/_vendor/certifi/cacert.pem
 projects/wild_hunt_command_citadel/shortform_core/.venv/Lib/site-packages/pip/_vendor/pygments/__pycache__/token.cpython-312.pyc
@@ -35,3 +38,4 @@ projects/wild_hunt_command_citadel/tiktok_agent_platform/core/.venv/Lib/site-pac
 projects/wild_hunt_command_citadel/tiktok_agent_platform/core/.venv/Lib/site-packages/yaml/tokens.py
 secrets.*
 token*
+venv/
