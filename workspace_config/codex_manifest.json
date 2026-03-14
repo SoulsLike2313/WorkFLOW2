@@ -7,6 +7,7 @@
   "analysis_priorities": {
     "active_project_first": true,
     "active_project_slug": "platform_test_agent",
+    "platform_priority_model": "tester_agent_first",
     "legacy_or_archived_only_on_request": true,
     "validate_workspace_first": true,
     "use_project_manifests_not_guessing": true,
@@ -29,6 +30,7 @@
     "read workspace_config/MACHINE_REPO_READING_RULES.md",
     "read workspace_config/PROMPT_OUTPUT_POLICY.md",
     "read workspace_config/PROJECT_AUDIT_POLICY.md",
+    "read workspace_config/TEST_AGENT_EXECUTION_POLICY.md",
     "read workspace_config/GITHUB_SYNC_POLICY.md",
     "read workspace_config/COMPLETION_GATE_RULES.md",
     "read docs/INSTRUCTION_INDEX.md",
@@ -56,6 +58,7 @@
     "task_intake_reference_path": "workspace_config/TASK_INTAKE_REFERENCE.md",
     "prompt_output_policy_path": "workspace_config/PROMPT_OUTPUT_POLICY.md",
     "project_audit_policy_path": "workspace_config/PROJECT_AUDIT_POLICY.md",
+    "test_agent_execution_policy_path": "workspace_config/TEST_AGENT_EXECUTION_POLICY.md",
     "shared_systems_registry_path": "workspace_config/shared_systems_registry.json",
     "install_workflow_script": "scripts/install_system.py",
     "remove_workflow_script": "scripts/remove_system.py",
@@ -89,6 +92,18 @@
     "require_status_boundary_awareness": true,
     "require_manifest_updates_on_status_change": true
   },
+  "audit_admission_model": {
+    "owner_project_slug": "platform_test_agent",
+    "guarded_statuses": [
+      "audit_required",
+      "manual_testing_blocked"
+    ],
+    "manual_testing_allowed_statuses": [
+      "PASS",
+      "PASS_WITH_WARNINGS"
+    ],
+    "repo_visible_audit_evidence_required": true
+  },
   "required_repo_files": [
     "README.md",
     "workspace_config/workspace_manifest.json",
@@ -98,6 +113,7 @@
     "workspace_config/TASK_INTAKE_REFERENCE.md",
     "workspace_config/PROMPT_OUTPUT_POLICY.md",
     "workspace_config/PROJECT_AUDIT_POLICY.md",
+    "workspace_config/TEST_AGENT_EXECUTION_POLICY.md",
     "workspace_config/AGENT_EXECUTION_POLICY.md",
     "workspace_config/MACHINE_REPO_READING_RULES.md",
     "workspace_config/shared_systems_registry.json",

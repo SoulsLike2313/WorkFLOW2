@@ -4,7 +4,8 @@ param(
     [ValidateSet("intake", "audit", "verify")]
     [string]$Mode = "intake",
     [string]$TargetProjectPath = "",
-    [string]$TargetProjectSlug = ""
+    [string]$TargetProjectSlug = "",
+    [switch]$ExecuteVerification
 )
 
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -27,9 +28,7 @@ while ($true) {
 Set-Location $repoRoot
 
 if ($Mode -eq "intake") {
-    python .\scripts\validate_workspace.py
-    python .\scripts\check_repo_sync.py --remote origin --branch main
-    Write-Output "platform_test_agent intake complete"
+    python .\projects\platform_test_agent\scripts\test_agent_core.py --mode intake --target-project-path $TargetProjectPath --target-project-slug $TargetProjectSlug
     exit $LASTEXITCODE
 }
 
@@ -37,7 +36,9 @@ if ($Mode -eq "verify") {
     if ([string]::IsNullOrWhiteSpace($TargetProjectSlug)) {
         throw "TargetProjectSlug is required for verify mode."
     }
-    python .\scripts\project_startup.py run --project-slug $TargetProjectSlug --entrypoint verify --startup-kind verify --port-mode fixed
+    $execFlag = ""
+    if ($ExecuteVerification) { $execFlag = "--execute-verification" }
+    python .\projects\platform_test_agent\scripts\test_agent_core.py --mode verify --target-project-slug $TargetProjectSlug $execFlag
     exit $LASTEXITCODE
 }
 
@@ -49,11 +50,7 @@ if ([string]::IsNullOrWhiteSpace($TargetProjectPath)) {
     throw "TargetProjectPath is required for audit mode."
 }
 
-python .\scripts\validate_workspace.py
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-
-python .\scripts\project_startup.py run --project-slug $TargetProjectSlug --entrypoint verify --startup-kind verify --port-mode fixed
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-
-Write-Output "platform_test_agent audit baseline complete for $TargetProjectSlug ($TargetProjectPath)"
-exit 0
+$execFlag = ""
+if ($ExecuteVerification) { $execFlag = "--execute-verification" }
+python .\projects\platform_test_agent\scripts\test_agent_core.py --mode audit --target-project-path $TargetProjectPath --target-project-slug $TargetProjectSlug $execFlag
+exit $LASTEXITCODE

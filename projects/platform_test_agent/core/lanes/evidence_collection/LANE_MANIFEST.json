@@ -1,0 +1,19 @@
+{
+    "lane_name":  "Evidence Collection",
+    "lane_slug":  "evidence_collection",
+    "purpose":  "Normalize and index all lane evidence into machine-readable inventory",
+    "required_shared_systems":  [
+                                    "reporting_toolkit",
+                                    "audit_observability_toolkit"
+                                ],
+    "required_inputs":  [
+                            "lane_artifacts",
+                            "screenshot_manifests",
+                            "log_paths"
+                        ],
+    "lane_outputs":  [
+                         "runtime/projects/platform_test_agent/audit_reports/{run_id}/evidence_manifest.json"
+                     ],
+    "status":  "bootstrap_ready"
+}
+

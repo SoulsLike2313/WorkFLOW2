@@ -1,0 +1,19 @@
+{
+    "lane_name":  "Localization Audit Lane",
+    "lane_slug":  "localization_audit_lane",
+    "purpose":  "Run localization checks and text-fit contracts",
+    "required_shared_systems":  [
+                                    "localization_toolkit",
+                                    "reporting_toolkit"
+                                ],
+    "required_inputs":  [
+                            "locale_config",
+                            "localization_contracts",
+                            "text_fit_rules"
+                        ],
+    "lane_outputs":  [
+                         "runtime/projects/platform_test_agent/audit_reports/{run_id}/localization_audit_lane.json"
+                     ],
+    "status":  "bootstrap_ready"
+}
+

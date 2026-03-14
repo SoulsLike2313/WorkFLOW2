@@ -52,5 +52,6 @@ Authoritative files:
 1. `workspace_config/workspace_manifest.json`
 2. `workspace_config/codex_manifest.json`
 3. `workspace_config/PROJECT_AUDIT_POLICY.md`
-4. target project `PROJECT_MANIFEST.json`
-5. audit report artifacts in `docs/review_artifacts/`
+4. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+5. target project `PROJECT_MANIFEST.json`
+6. audit report artifacts in `docs/review_artifacts/`

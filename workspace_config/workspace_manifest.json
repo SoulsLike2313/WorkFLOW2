@@ -34,6 +34,7 @@
     "machine_repo_reading_rules_path": "workspace_config/MACHINE_REPO_READING_RULES.md",
     "prompt_output_policy_path": "workspace_config/PROMPT_OUTPUT_POLICY.md",
     "project_audit_policy_path": "workspace_config/PROJECT_AUDIT_POLICY.md",
+    "test_agent_execution_policy_path": "workspace_config/TEST_AGENT_EXECUTION_POLICY.md",
     "github_sync_policy_path": "workspace_config/GITHUB_SYNC_POLICY.md",
     "completion_gate_rules_path": "workspace_config/COMPLETION_GATE_RULES.md"
   },
@@ -72,7 +73,7 @@
     "repo_sync_check": "python scripts/check_repo_sync.py --remote origin --branch main"
   },
   "verification_entrypoints": {
-    "active_project_verify": "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode verify -TargetProjectSlug tiktok_agent_platform",
+    "active_project_verify": "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>",
     "workspace_validate": "python scripts/validate_workspace.py",
     "repo_sync_check": "powershell -ExecutionPolicy Bypass -File .\\scripts\\check_repo_sync.ps1",
     "repo_sync_check_python": "python scripts/check_repo_sync.py --remote origin --branch main"

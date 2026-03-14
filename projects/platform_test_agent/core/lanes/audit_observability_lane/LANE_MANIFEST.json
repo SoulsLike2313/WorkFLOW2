@@ -1,0 +1,20 @@
+{
+    "lane_name":  "Audit Observability Lane",
+    "lane_slug":  "audit_observability_lane",
+    "purpose":  "Collect structured logs, diagnostics manifests, and audit timeline",
+    "required_shared_systems":  [
+                                    "audit_observability_toolkit",
+                                    "reporting_toolkit"
+                                ],
+    "required_inputs":  [
+                            "diagnostics_paths",
+                            "structured_logs",
+                            "event_timeline"
+                        ],
+    "lane_outputs":  [
+                         "runtime/projects/platform_test_agent/audit_reports/{run_id}/audit_observability_lane.json",
+                         "runtime/projects/platform_test_agent/audit_reports/{run_id}/diagnostics_manifest.json"
+                     ],
+    "status":  "bootstrap_ready"
+}
+

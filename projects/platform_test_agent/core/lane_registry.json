@@ -1,0 +1,29 @@
+{
+    "project_slug":  "platform_test_agent",
+    "lane_order":  [
+                       "project_intake",
+                       "verification_lane",
+                       "readiness_lane",
+                       "ui_audit_lane",
+                       "reporting_lane",
+                       "localization_audit_lane",
+                       "audit_observability_lane",
+                       "evidence_collection",
+                       "final_admission_gate"
+                   ],
+    "lanes_root":  "projects/platform_test_agent/core/lanes",
+    "lane_manifest_pattern":  "projects/platform_test_agent/core/lanes/\u003clane_slug\u003e/LANE_MANIFEST.json",
+    "future_lanes":  [
+                         {
+                             "source_system":  "update_patch_toolkit",
+                             "integration_status":  "partial_future_lane",
+                             "lane_slug":  "update_patch_lane"
+                         },
+                         {
+                             "source_system":  "security_baseline",
+                             "integration_status":  "partial_future_lane",
+                             "lane_slug":  "security_baseline_lane"
+                         }
+                     ]
+}
+

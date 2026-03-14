@@ -3,10 +3,10 @@
   "name": "TikTok Agent Platform",
   "slug": "tiktok_agent_platform",
   "description": "Unified TikTok agent product with a core intelligence/runtime layer and an agent application layer in one project.",
-  "status": "active",
+  "status": "manual_testing_blocked",
   "category": "platform_core",
   "type": "desktop_app",
-  "priority": 1,
+  "priority": 4,
   "root_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform",
   "readme_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/README.md",
   "runtime_namespace": "tiktok_agent_platform",
@@ -112,9 +112,20 @@
   },
   "notes": [
     "This project consolidates former shortform_core and tiktok_automation_app into one product architecture.",
-    "Manual testing is allowed only when verification gate is PASS.",
+    "Manual testing is blocked until platform_test_agent final audit status is PASS or PASS_WITH_WARNINGS with repo-visible evidence.",
     "Core and agent layers are isolated as submodules but operated as one product project."
   ],
+  "audit_admission": {
+    "tester_agent_slug": "platform_test_agent",
+    "audit_state": "audit_required",
+    "manual_testing_status": "manual_testing_blocked",
+    "admission_status": "blocked",
+    "required_final_statuses": [
+      "PASS",
+      "PASS_WITH_WARNINGS"
+    ],
+    "repo_visible_summaries_required": true
+  },
   "installed_systems": [
     "audit_observability_toolkit",
     "localization_toolkit",

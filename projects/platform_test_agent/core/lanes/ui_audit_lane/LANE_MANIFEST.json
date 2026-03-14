@@ -1,0 +1,21 @@
+{
+    "lane_name":  "UI Audit Lane",
+    "lane_slug":  "ui_audit_lane",
+    "purpose":  "Execute UI-QA checks and screenshot capture when UI is applicable",
+    "required_shared_systems":  [
+                                    "ui_qa_toolkit",
+                                    "reporting_toolkit"
+                                ],
+    "required_inputs":  [
+                            "ui_entrypoints",
+                            "ui_capable_project",
+                            "ui_build_rules"
+                        ],
+    "lane_outputs":  [
+                         "runtime/ui_validation/*",
+                         "runtime/ui_snapshots/*",
+                         "runtime/projects/platform_test_agent/audit_reports/{run_id}/ui_audit_lane.json"
+                     ],
+    "status":  "bootstrap_ready"
+}
+

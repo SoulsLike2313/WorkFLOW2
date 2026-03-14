@@ -1,0 +1,19 @@
+{
+    "lane_name":  "Reporting Lane",
+    "lane_slug":  "reporting_lane",
+    "purpose":  "Build consolidated machine summaries from lane outputs",
+    "required_shared_systems":  [
+                                    "reporting_toolkit"
+                                ],
+    "required_inputs":  [
+                            "lane_results",
+                            "diagnostics_manifests",
+                            "test_results"
+                        ],
+    "lane_outputs":  [
+                         "runtime/projects/platform_test_agent/audit_reports/{run_id}/consolidated_status.json",
+                         "runtime/projects/platform_test_agent/audit_reports/{run_id}/verification_summary.json"
+                     ],
+    "status":  "bootstrap_ready"
+}
+

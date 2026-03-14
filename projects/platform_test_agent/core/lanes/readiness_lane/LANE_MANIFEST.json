@@ -1,0 +1,20 @@
+{
+    "lane_name":  "Readiness Lane",
+    "lane_slug":  "readiness_lane",
+    "purpose":  "Run readiness checks and capture readiness summary",
+    "required_shared_systems":  [
+                                    "verification_toolkit",
+                                    "reporting_toolkit"
+                                ],
+    "required_inputs":  [
+                            "readiness_entrypoints",
+                            "project_manifest",
+                            "state_paths"
+                        ],
+    "lane_outputs":  [
+                         "runtime/projects/{target_project_slug}/readiness/*",
+                         "runtime/projects/platform_test_agent/audit_reports/{run_id}/readiness_lane.json"
+                     ],
+    "status":  "bootstrap_ready"
+}
+

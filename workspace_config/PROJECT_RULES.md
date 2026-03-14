@@ -17,6 +17,8 @@ This document defines strict rules for creating and maintaining projects inside 
 - `active`
 - `supporting`
 - `experimental`
+- `audit_required`
+- `manual_testing_blocked`
 - `archived`
 - `legacy`
 
@@ -117,7 +119,12 @@ Workspace validation must fail if:
 ## Status transition policy
 - Only one `active` project is allowed.
 - Promoting another project to `active` requires explicit status transition in workspace manifest.
+- `audit_required` and `manual_testing_blocked` are guarded statuses for audit-first admission flow.
 - `legacy` and `archived` are excluded from default active analysis flow.
+
+## Manual testing admission policy
+- Guarded projects (`audit_required`, `manual_testing_blocked`) require tester-agent evidence before manual testing.
+- Admission status is controlled by `workspace_config/PROJECT_AUDIT_POLICY.md`.
 
 ## Documentation policy
 - Root README is workspace map.

@@ -11,11 +11,12 @@ Codex must complete this order before any task analysis or code change:
 6. `workspace_config/MACHINE_REPO_READING_RULES.md`
 7. `workspace_config/PROMPT_OUTPUT_POLICY.md`
 8. `workspace_config/PROJECT_AUDIT_POLICY.md`
-9. `docs/INSTRUCTION_INDEX.md`
-10. relevant `PROJECT_MANIFEST.json`
-11. relevant project `README.md`
-12. relevant `CODEX.md` if present
-13. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+9. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+10. `docs/INSTRUCTION_INDEX.md`
+11. relevant `PROJECT_MANIFEST.json`
+12. relevant project `README.md`
+13. relevant `CODEX.md` if present
+14. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 If read order is not complete: task status is `REJECTED`.
 
@@ -41,6 +42,7 @@ results in:
 
 ## Active project policy
 - Analyze active project first.
+- Canonical active project is `platform_test_agent`.
 - Legacy/archived projects are touched only on explicit user request.
 - Do not infer project scope from folder names; use manifests.
 - No side work.
@@ -56,6 +58,9 @@ results in:
 - Platform default is audit-first using `platform_test_agent`.
 - Guarded projects remain `audit_required` or `manual_testing_blocked` until tester-agent admission.
 - Manual testing admission requires tester-agent final status `PASS` or `PASS_WITH_WARNINGS` and repo-visible audit evidence.
+
+## Tester agent execution policy
+- `workspace_config/TEST_AGENT_EXECUTION_POLICY.md` defines mandatory lane order and output contract.
 
 ## Bootstrap command
 ```powershell

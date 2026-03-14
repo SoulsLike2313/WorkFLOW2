@@ -1,0 +1,19 @@
+{
+    "lane_name":  "Verification Lane",
+    "lane_slug":  "verification_lane",
+    "purpose":  "Run project verification entrypoints and collect verification evidence",
+    "required_shared_systems":  [
+                                    "verification_toolkit"
+                                ],
+    "required_inputs":  [
+                            "verification_entrypoints",
+                            "project_root",
+                            "runtime_namespace"
+                        ],
+    "lane_outputs":  [
+                         "runtime/projects/{target_project_slug}/verification/*",
+                         "runtime/projects/platform_test_agent/audit_reports/{run_id}/verification_lane.json"
+                     ],
+    "status":  "bootstrap_ready"
+}
+

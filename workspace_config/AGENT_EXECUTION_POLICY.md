@@ -112,3 +112,21 @@ When task intent is prompt writing, output format is mandatory:
 Source:
 
 - `workspace_config/PROMPT_OUTPUT_POLICY.md`
+
+## Rule 10: Tester-Agent Admission Enforcement
+
+For guarded projects (`audit_required` / `manual_testing_blocked`):
+
+1. tester-agent audit evidence is mandatory before manual testing admission;
+2. admission allowed only on final tester-agent status `PASS` or `PASS_WITH_WARNINGS`;
+3. without repo-visible summaries, admission remains blocked.
+
+Source:
+
+- `workspace_config/PROJECT_AUDIT_POLICY.md`
+
+## Rule 11: Tester-Agent Lane Contract
+
+When operating as `platform_test_agent`, execution must follow lane order and output contract from:
+
+- `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`

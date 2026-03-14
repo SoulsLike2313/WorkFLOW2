@@ -1,0 +1,19 @@
+{
+    "lane_name":  "Project Intake",
+    "lane_slug":  "project_intake",
+    "purpose":  "Accept target project path/slug and resolve project metadata",
+    "required_shared_systems":  [
+                                    "verification_toolkit"
+                                ],
+    "required_inputs":  [
+                            "target_project_path",
+                            "target_project_slug",
+                            "workspace_manifest",
+                            "project_manifest"
+                        ],
+    "lane_outputs":  [
+                         "runtime/projects/platform_test_agent/intake/{run_id}/intake_summary.json"
+                     ],
+    "status":  "bootstrap_ready"
+}
+

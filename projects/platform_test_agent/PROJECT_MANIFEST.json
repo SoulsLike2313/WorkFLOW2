@@ -1,8 +1,10 @@
 {
   "schema_version": "2.1.0",
+  "project_name": "Platform Test Agent",
   "name": "Platform Test Agent",
   "slug": "platform_test_agent",
   "description": "Primary audit-first tester agent project for machine validation and manual testing admission.",
+  "purpose": "Admission-gate tester agent that orchestrates project intake, quality lanes, evidence collection, and final manual-testing decision.",
   "status": "active",
   "category": "platform_core",
   "type": "automation_agent",
@@ -42,6 +44,13 @@
     "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode audit -TargetProjectPath <repo_relative_project_path> -TargetProjectSlug <project_slug>",
     "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>"
   ],
+  "entrypoints": {
+    "intake": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode intake -TargetProjectPath <repo_relative_project_path>",
+    "audit_dry": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode audit -TargetProjectPath <repo_relative_project_path> -TargetProjectSlug <project_slug>",
+    "audit_with_verification_execution": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode audit -TargetProjectPath <repo_relative_project_path> -TargetProjectSlug <project_slug> -ExecuteVerification",
+    "verify_target": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug> -ExecuteVerification",
+    "core_runner": "python projects/platform_test_agent/scripts/test_agent_core.py --mode <intake|audit|verify> --target-project-path <repo_relative_project_path> --target-project-slug <project_slug>"
+  },
   "verification_entrypoints": [
     "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>"
   ],
@@ -81,6 +90,52 @@
     "Primary platform role is project audit and machine report generation.",
     "Manual testing admission is controlled by tester-agent final audit status and repo-visible evidence."
   ],
+  "main_lanes": [
+    "project_intake",
+    "verification_lane",
+    "readiness_lane",
+    "ui_audit_lane",
+    "reporting_lane",
+    "localization_audit_lane",
+    "audit_observability_lane",
+    "evidence_collection",
+    "final_admission_gate"
+  ],
+  "required_shared_systems": [
+    "verification_toolkit",
+    "ui_qa_toolkit",
+    "reporting_toolkit",
+    "localization_toolkit",
+    "audit_observability_toolkit"
+  ],
+  "optional_shared_systems": [
+    "update_patch_toolkit",
+    "security_baseline"
+  ],
+  "supported_project_types": [
+    "desktop_app",
+    "backend_service",
+    "tool",
+    "prototype",
+    "library"
+  ],
+  "evidence_outputs": [
+    "runtime/projects/platform_test_agent/audit_reports/<run_id>/final_machine_report.json",
+    "runtime/projects/platform_test_agent/audit_reports/<run_id>/final_machine_report.md",
+    "runtime/projects/platform_test_agent/audit_reports/<run_id>/evidence_manifest.json",
+    "runtime/projects/platform_test_agent/audit_reports/<run_id>/admission_decision.json"
+  ],
+  "admission_outputs": [
+    "manual_testing_allowed",
+    "manual_testing_blocked",
+    "failed_audit"
+  ],
+  "execution_docs": {
+    "execution_flow_doc": "projects/platform_test_agent/docs/tester_agent_execution_flow.md",
+    "admission_policy_doc": "projects/platform_test_agent/docs/admission_policy.md",
+    "shared_systems_map_doc": "projects/platform_test_agent/docs/shared_systems_integration_map.md",
+    "lane_registry": "projects/platform_test_agent/core/lane_registry.json"
+  },
   "audit_profile": {
     "target_intake_required": true,
     "required_audit_axes": [
