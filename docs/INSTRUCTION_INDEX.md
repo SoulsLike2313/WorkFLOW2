@@ -53,7 +53,7 @@ If this order is not completed, task status is `REJECTED`.
 | `workspace_config/PROJECT_AUDIT_POLICY.md` | Audit-first platform model and manual testing admission gate | P0 | machine, codex, developer, product reviewer |
 | `workspace_config/TEST_AGENT_EXECUTION_POLICY.md` | Tester-agent lane execution policy and output contract | P0 | machine, codex, developer |
 | `workspace_config/GITHUB_SYNC_POLICY.md` | GitHub visibility and sync completion policy | P0 | machine, codex, product reviewer |
-| `workspace_config/COMPLETION_GATE_RULES.md` | Hard completion gate for commit/push/repo-visible outputs | P0 | machine, codex, product reviewer |
+| `workspace_config/COMPLETION_GATE_RULES.md` | Hard completion gate with mandatory post-task `git add -> git commit -> git push` and repo-visible outputs | P0 | machine, codex, product reviewer |
 | `docs/CURRENT_PLATFORM_STATE.md` | Canonical machine snapshot of active priority and project states | P0 | machine, codex, developer, product reviewer |
 | `docs/NEXT_CANONICAL_STEP.md` | Canonical immediate execution direction ("what do we do next") | P0 | machine, codex, product reviewer |
 | `docs/MACHINE_CHANGELOG.md` | Machine continuity log of accepted platform truth changes | P1 | machine, codex, developer, product reviewer |
