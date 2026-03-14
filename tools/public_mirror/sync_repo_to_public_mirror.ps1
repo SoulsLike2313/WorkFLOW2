@@ -111,6 +111,15 @@ $MirrorPath = [System.IO.Path]::GetFullPath($MirrorPath)
 $ExcludesFilePath = [System.IO.Path]::GetFullPath($ExcludesFilePath)
 $PublicRuntimeStatePath = [System.IO.Path]::GetFullPath($PublicRuntimeStatePath)
 
+$sourceNorm = [System.IO.Path]::GetFullPath($SourceRepoPath).TrimEnd("\")
+$mirrorNorm = [System.IO.Path]::GetFullPath($MirrorPath).TrimEnd("\")
+if ($mirrorNorm.StartsWith($sourceNorm, [System.StringComparison]::OrdinalIgnoreCase)) {
+    throw "Mirror path must be outside source repository. source=$sourceNorm mirror=$mirrorNorm"
+}
+if ($mirrorNorm -match "\\tools(\\|$)") {
+    throw "Mirror path cannot be inside tools path. mirror=$mirrorNorm"
+}
+
 Ensure-Directory (Split-Path $MirrorPath -Parent)
 Ensure-Directory $MirrorPath
 Ensure-Directory (Join-Path $SourceRepoPath "setup_reports")
