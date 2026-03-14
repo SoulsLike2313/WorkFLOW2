@@ -260,7 +260,7 @@ $stateMd = @(
     "",
     "## git status summary",
     "",
-    "```text"
+    '```text'
 )
 if ($gitStatus.Count -eq 0) {
     $stateMd += "(clean)"
@@ -268,13 +268,13 @@ if ($gitStatus.Count -eq 0) {
 else {
     $stateMd += $gitStatus
 }
-$stateMd += "```"
+$stateMd += '```'
 $stateMd += ""
 $stateMd += "## exclude rules used"
 $stateMd += ""
-$stateMd += "```text"
+$stateMd += '```text'
 $stateMd += $rules
-$stateMd += "```"
+$stateMd += '```'
 Write-MarkdownFile -PathValue $stateMdPath -Lines $stateMd
 
 $status = [ordered]@{

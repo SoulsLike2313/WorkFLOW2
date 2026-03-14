@@ -200,10 +200,10 @@ $md = @(
 foreach ($k in $results.checks.Keys) {
     $item = $results.checks[$k]
     $md += ""
-    $md += "- $k: $($item.pass)"
-    $md += "```json"
+    $md += ("- {0}: {1}" -f $k, $item.pass)
+    $md += '```json'
     $md += ($item.details | ConvertTo-Json -Depth 6)
-    $md += "```"
+    $md += '```'
 }
 Set-Content -Path $mdPath -Value $md -Encoding UTF8
 
