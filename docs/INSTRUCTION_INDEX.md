@@ -17,20 +17,21 @@ Before any task execution, Codex must read in this exact order:
 4. `workspace_config/TASK_RULES.md`
 5. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
 6. `workspace_config/TASK_SOURCE_POLICY.md`
-7. `workspace_config/AGENT_EXECUTION_POLICY.md`
-8. `workspace_config/MACHINE_REPO_READING_RULES.md`
-9. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-10. `workspace_config/PROJECT_AUDIT_POLICY.md`
-11. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-12. `workspace_config/GITHUB_SYNC_POLICY.md`
-13. `workspace_config/COMPLETION_GATE_RULES.md`
-14. `docs/INSTRUCTION_INDEX.md`
-15. `docs/CURRENT_PLATFORM_STATE.md`
-16. `docs/NEXT_CANONICAL_STEP.md`
-17. relevant `PROJECT_MANIFEST.json`
-18. relevant project `README.md`
-19. relevant `CODEX.md` if present
-20. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+7. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
+8. `workspace_config/AGENT_EXECUTION_POLICY.md`
+9. `workspace_config/MACHINE_REPO_READING_RULES.md`
+10. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+11. `workspace_config/PROJECT_AUDIT_POLICY.md`
+12. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+13. `workspace_config/GITHUB_SYNC_POLICY.md`
+14. `workspace_config/COMPLETION_GATE_RULES.md`
+15. `docs/INSTRUCTION_INDEX.md`
+16. `docs/CURRENT_PLATFORM_STATE.md`
+17. `docs/NEXT_CANONICAL_STEP.md`
+18. relevant `PROJECT_MANIFEST.json`
+19. relevant project `README.md`
+20. relevant `CODEX.md` if present
+21. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 If this order is not completed, task status is `REJECTED`.
 
@@ -44,6 +45,7 @@ If this order is not completed, task status is `REJECTED`.
 | `workspace_config/TASK_RULES.md` | Strict task acceptance gate | P0 | machine, codex, product reviewer |
 | `workspace_config/EXECUTION_ADMISSION_POLICY.md` | Hard execution admission gate and refusal contract | P0 | machine, codex, product reviewer |
 | `workspace_config/TASK_SOURCE_POLICY.md` | Authoritative task-source filter and executable request classes | P0 | machine, codex, product reviewer |
+| `workspace_config/COMMUNICATION_STYLE_POLICY.md` | Mandatory respectful/honest/human communication contract and response discipline | P0 | machine, codex |
 | `workspace_config/task_manifest.schema.json` | Machine-readable task manifest contract | P0 | machine, codex, developer |
 | `workspace_config/TASK_INTAKE_REFERENCE.md` | Intake validity criteria and refusal templates | P0 | machine, codex, developer, product reviewer |
 | `workspace_config/shared_systems_registry.json` | Shared module registry and project installation map | P0 | machine, codex, developer |

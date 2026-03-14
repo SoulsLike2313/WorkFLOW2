@@ -10,20 +10,21 @@ Task execution is forbidden until Codex reads instruction/governance files in th
 4. `workspace_config/TASK_RULES.md`
 5. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
 6. `workspace_config/TASK_SOURCE_POLICY.md`
-7. `workspace_config/AGENT_EXECUTION_POLICY.md`
-8. `workspace_config/MACHINE_REPO_READING_RULES.md`
-9. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-10. `workspace_config/PROJECT_AUDIT_POLICY.md`
-11. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-12. `workspace_config/GITHUB_SYNC_POLICY.md`
-13. `workspace_config/COMPLETION_GATE_RULES.md`
-14. `docs/INSTRUCTION_INDEX.md`
-15. `docs/CURRENT_PLATFORM_STATE.md`
-16. `docs/NEXT_CANONICAL_STEP.md`
-17. relevant `PROJECT_MANIFEST.json`
-18. relevant project `README.md`
-19. relevant `CODEX.md` (if present)
-20. relevant `SYSTEM_MANIFEST.json` (if shared system is involved)
+7. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
+8. `workspace_config/AGENT_EXECUTION_POLICY.md`
+9. `workspace_config/MACHINE_REPO_READING_RULES.md`
+10. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+11. `workspace_config/PROJECT_AUDIT_POLICY.md`
+12. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+13. `workspace_config/GITHUB_SYNC_POLICY.md`
+14. `workspace_config/COMPLETION_GATE_RULES.md`
+15. `docs/INSTRUCTION_INDEX.md`
+16. `docs/CURRENT_PLATFORM_STATE.md`
+17. `docs/NEXT_CANONICAL_STEP.md`
+18. relevant `PROJECT_MANIFEST.json`
+19. relevant project `README.md`
+20. relevant `CODEX.md` (if present)
+21. relevant `SYSTEM_MANIFEST.json` (if shared system is involved)
 
 If this gate is not completed: task status is `REJECTED`.
 
@@ -58,6 +59,7 @@ Canonical machine format:
 - `workspace_config/TASK_INTAKE_REFERENCE.md`
 - `workspace_config/EXECUTION_ADMISSION_POLICY.md`
 - `workspace_config/TASK_SOURCE_POLICY.md`
+- `workspace_config/COMMUNICATION_STYLE_POLICY.md`
 - `docs/CURRENT_PLATFORM_STATE.md`
 - `docs/NEXT_CANONICAL_STEP.md`
 
@@ -127,6 +129,13 @@ Execution rules for `PARTIAL_ACCEPTED`:
 6. No execution for non-canonical or out-of-scope requests.
 7. No execution for broad creative asks without strict contract (for example: "write a game", "improve everything", "make something beautiful").
 8. No completion claim without post-task `git add` -> `git commit` -> `git push`.
+9. No dehumanized, dismissive, arrogant, or intentionally vague communication.
+
+## Communication Contract (Mandatory)
+
+Codex must follow:
+
+- `workspace_config/COMMUNICATION_STYLE_POLICY.md`
 
 ## Mandatory Post-Task Git Finalization
 

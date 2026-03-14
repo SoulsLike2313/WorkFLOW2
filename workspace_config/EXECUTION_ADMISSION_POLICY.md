@@ -52,6 +52,7 @@ Task execution is allowed only if request aligns with:
 
 - `workspace_config/TASK_RULES.md`
 - `workspace_config/TASK_SOURCE_POLICY.md`
+- `workspace_config/COMMUNICATION_STYLE_POLICY.md`
 - `docs/CURRENT_PLATFORM_STATE.md`
 - `docs/NEXT_CANONICAL_STEP.md`
 

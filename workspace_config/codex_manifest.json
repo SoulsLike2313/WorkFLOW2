@@ -28,6 +28,7 @@
     "read workspace_config/TASK_RULES.md",
     "read workspace_config/EXECUTION_ADMISSION_POLICY.md",
     "read workspace_config/TASK_SOURCE_POLICY.md",
+    "read workspace_config/COMMUNICATION_STYLE_POLICY.md",
     "read workspace_config/AGENT_EXECUTION_POLICY.md",
     "read workspace_config/MACHINE_REPO_READING_RULES.md",
     "read workspace_config/PROMPT_OUTPUT_POLICY.md",
@@ -60,6 +61,7 @@
     "task_rules_path": "workspace_config/TASK_RULES.md",
     "execution_admission_policy_path": "workspace_config/EXECUTION_ADMISSION_POLICY.md",
     "task_source_policy_path": "workspace_config/TASK_SOURCE_POLICY.md",
+    "communication_style_policy_path": "workspace_config/COMMUNICATION_STYLE_POLICY.md",
     "task_manifest_schema_path": "workspace_config/task_manifest.schema.json",
     "task_intake_reference_path": "workspace_config/TASK_INTAKE_REFERENCE.md",
     "prompt_output_policy_path": "workspace_config/PROMPT_OUTPUT_POLICY.md",
@@ -104,6 +106,9 @@
       "out-of-scope"
     ],
     "only_strict_repo_compliant_prompts_executable": true,
+    "respectful_human_communication_required": true,
+    "engineering_honesty_required": true,
+    "empty_verbosity_forbidden": true,
     "repo_sync_check_script": "scripts/check_repo_sync.py",
     "repo_visible_completion_required": true,
     "local_only_artifacts_not_accepted": true
@@ -132,6 +137,7 @@
     "workspace_config/TASK_RULES.md",
     "workspace_config/EXECUTION_ADMISSION_POLICY.md",
     "workspace_config/TASK_SOURCE_POLICY.md",
+    "workspace_config/COMMUNICATION_STYLE_POLICY.md",
     "workspace_config/task_manifest.schema.json",
     "workspace_config/TASK_INTAKE_REFERENCE.md",
     "workspace_config/PROMPT_OUTPUT_POLICY.md",

@@ -7,6 +7,7 @@ Codex must not execute any task until the read order defined in:
 - `workspace_config/TASK_RULES.md`
 - `workspace_config/EXECUTION_ADMISSION_POLICY.md`
 - `workspace_config/TASK_SOURCE_POLICY.md`
+- `workspace_config/COMMUNICATION_STYLE_POLICY.md`
 - `workspace_config/MACHINE_REPO_READING_RULES.md`
 - `docs/CURRENT_PLATFORM_STATE.md`
 - `docs/NEXT_CANONICAL_STEP.md`
@@ -167,3 +168,16 @@ For every completed task, Codex must perform and verify:
 4. sync check (`HEAD == origin/<active_branch>`)
 
 If any item is missing, status is `NOT_COMPLETED`.
+
+## Rule 14: Communication Style Enforcement
+
+Codex must follow:
+
+- `workspace_config/COMMUNICATION_STYLE_POLICY.md`
+
+Mandatory behavior:
+
+1. respectful, calm, human communication
+2. concise engineering clarity without empty verbosity
+3. honest reporting of checks, failures, and uncertainty
+4. no dismissive/arrogant wording

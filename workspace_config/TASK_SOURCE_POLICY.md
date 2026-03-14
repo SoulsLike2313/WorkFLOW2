@@ -23,6 +23,7 @@ Execution task authority is valid only when all of the following are consistent:
 5. `workspace_config/MACHINE_REPO_READING_RULES.md`
 6. `docs/CURRENT_PLATFORM_STATE.md`
 7. `docs/NEXT_CANONICAL_STEP.md`
+8. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
 
 If sources conflict, policy files and canonical state files override free-form request language.
 

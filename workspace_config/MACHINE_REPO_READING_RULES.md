@@ -10,20 +10,21 @@ Codex must complete this exact order before any task analysis or code change:
 4. `workspace_config/TASK_RULES.md`
 5. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
 6. `workspace_config/TASK_SOURCE_POLICY.md`
-7. `workspace_config/AGENT_EXECUTION_POLICY.md`
-8. `workspace_config/MACHINE_REPO_READING_RULES.md`
-9. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-10. `workspace_config/PROJECT_AUDIT_POLICY.md`
-11. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-12. `workspace_config/GITHUB_SYNC_POLICY.md`
-13. `workspace_config/COMPLETION_GATE_RULES.md`
-14. `docs/INSTRUCTION_INDEX.md`
-15. `docs/CURRENT_PLATFORM_STATE.md`
-16. `docs/NEXT_CANONICAL_STEP.md`
-17. relevant `PROJECT_MANIFEST.json`
-18. relevant project `README.md`
-19. relevant `CODEX.md` if present
-20. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+7. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
+8. `workspace_config/AGENT_EXECUTION_POLICY.md`
+9. `workspace_config/MACHINE_REPO_READING_RULES.md`
+10. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+11. `workspace_config/PROJECT_AUDIT_POLICY.md`
+12. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+13. `workspace_config/GITHUB_SYNC_POLICY.md`
+14. `workspace_config/COMPLETION_GATE_RULES.md`
+15. `docs/INSTRUCTION_INDEX.md`
+16. `docs/CURRENT_PLATFORM_STATE.md`
+17. `docs/NEXT_CANONICAL_STEP.md`
+18. relevant `PROJECT_MANIFEST.json`
+19. relevant project `README.md`
+20. relevant `CODEX.md` if present
+21. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 If any mandatory step is skipped, task status is `REJECTED`.
 
@@ -42,6 +43,7 @@ State/priority continuity rules:
 6. `docs/CURRENT_PLATFORM_STATE.md` = canonical current state snapshot
 7. `docs/NEXT_CANONICAL_STEP.md` = canonical immediate execution direction
 8. `docs/MACHINE_CHANGELOG.md` = canonical machine continuity log
+9. `workspace_config/COMMUNICATION_STYLE_POLICY.md` = mandatory communication behavior contract
 
 ## Rule 3: Active Project Detection
 
@@ -170,3 +172,11 @@ Completion is valid only when machine can confirm:
 4. worktree is clean after push
 
 If any item fails, completion status is `NOT_COMPLETED`.
+
+## Rule 16: Communication Style Contract Detection
+
+Machine must enforce:
+
+- `workspace_config/COMMUNICATION_STYLE_POLICY.md`
+
+If response behavior conflicts with this policy, compliance status is `FAIL`.
