@@ -132,6 +132,7 @@ $robocopyArgs = @(
     $SourceRepoPath,
     $MirrorPath,
     "/MIR",
+    "/MT:32",
     "/R:1",
     "/W:1",
     "/XJ",
