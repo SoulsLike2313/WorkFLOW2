@@ -6,13 +6,17 @@
   "bootstrap_doc_path": "workspace_config/codex_bootstrap.md",
   "analysis_priorities": {
     "active_project_first": true,
-    "active_project_slug": "tiktok_agent_platform",
+    "active_project_slug": "platform_test_agent",
     "legacy_or_archived_only_on_request": true,
     "validate_workspace_first": true,
     "use_project_manifests_not_guessing": true,
     "mandatory_review_axes": [
       "verification",
       "readiness",
+      "ui_qa",
+      "reporting",
+      "localization",
+      "audit_observability",
       "update_patch"
     ]
   },
@@ -23,6 +27,8 @@
     "read workspace_config/TASK_RULES.md",
     "read workspace_config/AGENT_EXECUTION_POLICY.md",
     "read workspace_config/MACHINE_REPO_READING_RULES.md",
+    "read workspace_config/PROMPT_OUTPUT_POLICY.md",
+    "read workspace_config/PROJECT_AUDIT_POLICY.md",
     "read workspace_config/GITHUB_SYNC_POLICY.md",
     "read workspace_config/COMPLETION_GATE_RULES.md",
     "read docs/INSTRUCTION_INDEX.md",
@@ -48,6 +54,8 @@
     "task_rules_path": "workspace_config/TASK_RULES.md",
     "task_manifest_schema_path": "workspace_config/task_manifest.schema.json",
     "task_intake_reference_path": "workspace_config/TASK_INTAKE_REFERENCE.md",
+    "prompt_output_policy_path": "workspace_config/PROMPT_OUTPUT_POLICY.md",
+    "project_audit_policy_path": "workspace_config/PROJECT_AUDIT_POLICY.md",
     "shared_systems_registry_path": "workspace_config/shared_systems_registry.json",
     "install_workflow_script": "scripts/install_system.py",
     "remove_workflow_script": "scripts/remove_system.py",
@@ -88,6 +96,8 @@
     "workspace_config/TASK_RULES.md",
     "workspace_config/task_manifest.schema.json",
     "workspace_config/TASK_INTAKE_REFERENCE.md",
+    "workspace_config/PROMPT_OUTPUT_POLICY.md",
+    "workspace_config/PROJECT_AUDIT_POLICY.md",
     "workspace_config/AGENT_EXECUTION_POLICY.md",
     "workspace_config/MACHINE_REPO_READING_RULES.md",
     "workspace_config/shared_systems_registry.json",
@@ -105,8 +115,8 @@
     "scripts/check_repo_sync.py"
   ],
   "required_active_project_files": [
-    "projects/wild_hunt_command_citadel/tiktok_agent_platform/PROJECT_MANIFEST.json",
-    "projects/wild_hunt_command_citadel/tiktok_agent_platform/README.md",
-    "projects/wild_hunt_command_citadel/tiktok_agent_platform/CODEX.md"
+    "projects/platform_test_agent/PROJECT_MANIFEST.json",
+    "projects/platform_test_agent/README.md",
+    "projects/platform_test_agent/CODEX.md"
   ]
 }

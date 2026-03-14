@@ -2,11 +2,13 @@
   "schema_version": "2.1.0",
   "workspace_slug": "workflow",
   "workspace_name": "WorkFLOW Multi-Project Workspace",
-  "active_project": "tiktok_agent_platform",
+  "active_project": "platform_test_agent",
   "status_values": [
     "active",
     "supporting",
     "experimental",
+    "audit_required",
+    "manual_testing_blocked",
     "archived",
     "legacy"
   ],
@@ -30,6 +32,8 @@
     "task_manifest_schema_path": "workspace_config/task_manifest.schema.json",
     "agent_execution_policy_path": "workspace_config/AGENT_EXECUTION_POLICY.md",
     "machine_repo_reading_rules_path": "workspace_config/MACHINE_REPO_READING_RULES.md",
+    "prompt_output_policy_path": "workspace_config/PROMPT_OUTPUT_POLICY.md",
+    "project_audit_policy_path": "workspace_config/PROJECT_AUDIT_POLICY.md",
     "github_sync_policy_path": "workspace_config/GITHUB_SYNC_POLICY.md",
     "completion_gate_rules_path": "workspace_config/COMPLETION_GATE_RULES.md"
   },
@@ -60,20 +64,22 @@
     "new_project_generator": "python scripts/new_project.py",
     "install_system": "python scripts/install_system.py --project-slug <slug> --system-slug <system_slug>",
     "remove_system": "python scripts/remove_system.py --project-slug <slug> --system-slug <system_slug>",
+    "tester_agent_project_intake": "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode intake -TargetProjectPath <repo_relative_project_path>",
+    "tester_agent_audit_run": "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode audit -TargetProjectPath <repo_relative_project_path> -TargetProjectSlug <project_slug>",
     "project_startup_prepare": "python scripts/project_startup.py prepare --project-slug <slug>",
     "project_startup_run_user": "python scripts/project_startup.py run --project-slug <slug> --entrypoint user --startup-kind user",
     "project_startup_run_developer": "python scripts/project_startup.py run --project-slug <slug> --entrypoint developer --startup-kind developer",
     "repo_sync_check": "python scripts/check_repo_sync.py --remote origin --branch main"
   },
   "verification_entrypoints": {
-    "active_project_verify": "python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint verify --startup-kind verify --port-mode fixed",
+    "active_project_verify": "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode verify -TargetProjectSlug tiktok_agent_platform",
     "workspace_validate": "python scripts/validate_workspace.py",
     "repo_sync_check": "powershell -ExecutionPolicy Bypass -File .\\scripts\\check_repo_sync.ps1",
     "repo_sync_check_python": "python scripts/check_repo_sync.py --remote origin --branch main"
   },
   "update_entrypoints": {
-    "active_user_update": "python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint update --startup-kind update --port-mode fixed",
-    "active_developer_update_api": "python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint update --startup-kind update --port-mode fixed"
+    "active_user_update": "not_applicable_for_platform_test_agent",
+    "active_developer_update_api": "not_applicable_for_platform_test_agent"
   },
   "bootstrap_rules": {
     "validate_workspace_before_changes": true,
@@ -81,23 +87,37 @@
     "load_project_manifest_before_analysis": true,
     "do_not_guess_project_scope": true,
     "legacy_archived_only_on_explicit_request": true,
-    "manual_testing_gate": "PASS"
+    "manual_testing_gate": "PASS_or_PASS_WITH_WARNINGS_from_platform_test_agent_with_repo_visible_audit_evidence",
+    "manual_testing_gate_owner": "platform_test_agent",
+    "manual_testing_gate_enforced": true
   },
   "project_status_index": {
     "active": [
-      "tiktok_agent_platform"
+      "platform_test_agent"
     ],
     "supporting": [
       "voice_launcher"
     ],
     "experimental": [
-      "adaptive_trading",
+      "adaptive_trading"
+    ],
+    "audit_required": [
       "game_ru_ai"
+    ],
+    "manual_testing_blocked": [
+      "tiktok_agent_platform"
     ],
     "archived": [],
     "legacy": []
   },
   "project_system_index": {
+    "platform_test_agent": {
+      "verification_toolkit": "required_for_audit_flow",
+      "reporting_toolkit": "required_for_audit_flow",
+      "ui_qa_toolkit": "required_for_audit_flow",
+      "audit_observability_toolkit": "required_for_audit_flow",
+      "localization_toolkit": "required_for_audit_flow"
+    },
     "tiktok_agent_platform": {
       "ui_qa_toolkit": "installed",
       "verification_toolkit": "installed",
@@ -115,12 +135,44 @@
   },
   "project_registry": [
     {
-      "slug": "tiktok_agent_platform",
-      "name": "TikTok Agent Platform",
+      "slug": "platform_test_agent",
+      "name": "Platform Test Agent",
       "status": "active",
       "category": "platform_core",
-      "type": "desktop_app",
+      "type": "automation_agent",
       "priority": 1,
+      "runtime_namespace": "platform_test_agent",
+      "port_range": {
+        "start": 8600,
+        "end": 8699
+      },
+      "port_mode_default": "fixed",
+      "service_ports": {
+        "api_port": 8600,
+        "ui_bridge_port": 8610,
+        "update_port": 8620,
+        "health_port": 8630
+      },
+      "root_path": "projects/platform_test_agent",
+      "manifest_path": "projects/platform_test_agent/PROJECT_MANIFEST.json",
+      "readme_path": "projects/platform_test_agent/README.md",
+      "main_entrypoints": [
+        "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode intake -TargetProjectPath <repo_relative_project_path>",
+        "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode audit -TargetProjectPath <repo_relative_project_path> -TargetProjectSlug <project_slug>",
+        "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>"
+      ],
+      "verification_entrypoints": [
+        "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>"
+      ],
+      "update_entrypoints": []
+    },
+    {
+      "slug": "tiktok_agent_platform",
+      "name": "TikTok Agent Platform",
+      "status": "manual_testing_blocked",
+      "category": "platform_core",
+      "type": "desktop_app",
+      "priority": 4,
       "runtime_namespace": "tiktok_agent_platform",
       "port_range": {
         "start": 8500,
@@ -215,7 +267,7 @@
     {
       "slug": "game_ru_ai",
       "name": "GameRuAI",
-      "status": "experimental",
+      "status": "audit_required",
       "category": "desktop_tool",
       "type": "desktop_app",
       "priority": 5,

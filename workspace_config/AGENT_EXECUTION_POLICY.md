@@ -96,3 +96,19 @@ If external unrelated changes are detected:
 1. Mark as `external_unrelated_changes`.
 2. Keep excluded from task scope and task claims.
 3. Do not revert unless explicitly requested.
+
+## Rule 9: Prompt Output Format Enforcement
+
+When task intent is prompt writing, output format is mandatory:
+
+1. Exactly one copyable prompt block.
+2. No fragmented prompt sections.
+3. No alternative prompt versions unless explicitly requested.
+4. No analysis inside prompt block.
+5. Only short context is allowed outside prompt block.
+6. If user requests short prompt, output only one short prompt block.
+7. If user states persistent preference ("always only this format"), treat it as mandatory for future prompt-writing responses in this repository context.
+
+Source:
+
+- `workspace_config/PROMPT_OUTPUT_POLICY.md`

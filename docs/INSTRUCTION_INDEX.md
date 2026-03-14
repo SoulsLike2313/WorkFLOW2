@@ -17,13 +17,14 @@ Before any task execution, Codex must read in this exact order:
 4. `workspace_config/TASK_RULES.md`
 5. `workspace_config/AGENT_EXECUTION_POLICY.md`
 6. `workspace_config/MACHINE_REPO_READING_RULES.md`
-7. `workspace_config/GITHUB_SYNC_POLICY.md`
-8. `workspace_config/COMPLETION_GATE_RULES.md`
-9. `docs/INSTRUCTION_INDEX.md`
-10. relevant `PROJECT_MANIFEST.json`
-11. relevant project `README.md`
-12. relevant `CODEX.md` if present
-13. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+7. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+8. `workspace_config/GITHUB_SYNC_POLICY.md`
+9. `workspace_config/COMPLETION_GATE_RULES.md`
+10. `docs/INSTRUCTION_INDEX.md`
+11. relevant `PROJECT_MANIFEST.json`
+12. relevant project `README.md`
+13. relevant `CODEX.md` if present
+14. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 If this order is not completed, task status is `REJECTED`.
 
@@ -40,6 +41,7 @@ If this order is not completed, task status is `REJECTED`.
 | `workspace_config/shared_systems_registry.json` | Shared module registry and project installation map | P0 | machine, codex, developer |
 | `workspace_config/AGENT_EXECUTION_POLICY.md` | Strict execution boundaries and anti-side-work rules | P0 | machine, codex, product reviewer |
 | `workspace_config/MACHINE_REPO_READING_RULES.md` | Deterministic repository reading policy | P0 | machine, codex |
+| `workspace_config/PROMPT_OUTPUT_POLICY.md` | Mandatory prompt-writing output format (single copyable prompt block) | P0 | machine, codex, developer |
 | `workspace_config/GITHUB_SYNC_POLICY.md` | GitHub visibility and sync completion policy | P0 | machine, codex, product reviewer |
 | `workspace_config/COMPLETION_GATE_RULES.md` | Hard completion gate for commit/push/repo-visible outputs | P0 | machine, codex, product reviewer |
 | `workspace_config/PROJECT_RULES.md` | Workspace project lifecycle and isolation standards | P1 | machine, codex, developer |

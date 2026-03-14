@@ -9,11 +9,13 @@ Codex must complete this order before any task analysis or code change:
 4. `workspace_config/TASK_RULES.md`
 5. `workspace_config/AGENT_EXECUTION_POLICY.md`
 6. `workspace_config/MACHINE_REPO_READING_RULES.md`
-7. `docs/INSTRUCTION_INDEX.md`
-8. relevant `PROJECT_MANIFEST.json`
-9. relevant project `README.md`
-10. relevant `CODEX.md` if present
-11. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+7. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+8. `workspace_config/PROJECT_AUDIT_POLICY.md`
+9. `docs/INSTRUCTION_INDEX.md`
+10. relevant `PROJECT_MANIFEST.json`
+11. relevant project `README.md`
+12. relevant `CODEX.md` if present
+13. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 If read order is not complete: task status is `REJECTED`.
 
@@ -44,6 +46,16 @@ results in:
 - No side work.
 - No unrequested artifacts.
 - No silent scope expansion.
+
+## Prompt output policy
+- Prompt-writing requests must follow `workspace_config/PROMPT_OUTPUT_POLICY.md`.
+- Output format for prompt-writing is one copyable prompt block only.
+- No mixed prompt + analysis format inside prompt block.
+
+## Project audit policy
+- Platform default is audit-first using `platform_test_agent`.
+- Guarded projects remain `audit_required` or `manual_testing_blocked` until tester-agent admission.
+- Manual testing admission requires tester-agent final status `PASS` or `PASS_WITH_WARNINGS` and repo-visible audit evidence.
 
 ## Bootstrap command
 ```powershell

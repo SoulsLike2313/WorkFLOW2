@@ -4,27 +4,32 @@
 
 This repository is a structured multi-project workspace.
 
-Current engineering priority is one active product module:
+Current engineering priority is one active platform module:
 
-- `projects/wild_hunt_command_citadel/tiktok_agent_platform`
+- `projects/platform_test_agent`
 
 ## Active Module
 
 Primary active module:
 
-- `projects/wild_hunt_command_citadel/tiktok_agent_platform`
+- `projects/platform_test_agent`
 
 Primary references:
 
-- `projects/wild_hunt_command_citadel/tiktok_agent_platform/README.md`
-- `projects/wild_hunt_command_citadel/tiktok_agent_platform/PROJECT_MANIFEST.json`
+- `projects/platform_test_agent/README.md`
+- `projects/platform_test_agent/PROJECT_MANIFEST.json`
 
-## Product Architecture (Active Module)
+## Platform Direction (Active Module)
 
-The active module is one product with explicit layers:
+The active module is a tester agent workflow (audit-first gate), not an app product layer.
 
-- `core/` - platform/runtime core and verification/update/UI-QA foundations.
-- `agent/` - TikTok agent application layer.
+Primary workflow:
+
+1. project intake (`path` + `slug` + manifest resolution)
+2. verification/readiness/UI-QA/reporting/localization/audit checks
+3. evidence collection (screenshots/logs/traces/summaries)
+4. final machine audit report
+5. manual testing admission verdict (`PASS` or `PASS_WITH_WARNINGS` required)
 
 ## Root-Level Structure
 
@@ -61,11 +66,13 @@ Mandatory pre-task read gate:
 4. `workspace_config/TASK_RULES.md`
 5. `workspace_config/AGENT_EXECUTION_POLICY.md`
 6. `workspace_config/MACHINE_REPO_READING_RULES.md`
-7. `docs/INSTRUCTION_INDEX.md`
-8. relevant `PROJECT_MANIFEST.json`
-9. relevant project `README.md`
-10. relevant `CODEX.md` if present
-11. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+7. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+8. `workspace_config/PROJECT_AUDIT_POLICY.md`
+9. `docs/INSTRUCTION_INDEX.md`
+10. relevant `PROJECT_MANIFEST.json`
+11. relevant project `README.md`
+12. relevant `CODEX.md` if present
+13. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 Shared system workflows:
 
@@ -80,18 +87,21 @@ Status source of truth:
 
 Current priority model:
 
-- `active`: `tiktok_agent_platform`
+- `active`: `platform_test_agent`
 - `supporting`: `voice_launcher`
-- `experimental`: `adaptive_trading`, `game_ru_ai`
+- `experimental`: `adaptive_trading`
+- `manual_testing_blocked`: `tiktok_agent_platform`
+- `audit_required`: `game_ru_ai`
 
 ## Canonical Project Registry
 
 Workspace-level projects (and only these) are canonical:
 
-- `tiktok_agent_platform` -> `projects/wild_hunt_command_citadel/tiktok_agent_platform` (`active`)
+- `platform_test_agent` -> `projects/platform_test_agent` (`active`)
+- `tiktok_agent_platform` -> `projects/wild_hunt_command_citadel/tiktok_agent_platform` (`manual_testing_blocked`)
 - `voice_launcher` -> `projects/voice_launcher` (`supporting`)
 - `adaptive_trading` -> `projects/adaptive_trading` (`experimental`)
-- `game_ru_ai` -> `projects/GameRuAI` (`experimental`)
+- `game_ru_ai` -> `projects/GameRuAI` (`audit_required`)
 
 Tree paths that exist but are non-registry:
 
@@ -115,33 +125,28 @@ Run from repository root (`.`):
 Canonical user-mode root entrypoint:
 
 ```powershell
-python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint user --startup-kind user --port-mode fixed
+powershell -ExecutionPolicy Bypass -File .\projects\platform_test_agent\run_project.ps1 -Mode intake -TargetProjectPath projects\wild_hunt_command_citadel\tiktok_agent_platform
 ```
 
-User mode:
+Intake mode:
 
 ```powershell
-python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint user --startup-kind user --port-mode fixed
+powershell -ExecutionPolicy Bypass -File .\projects\platform_test_agent\run_project.ps1 -Mode intake -TargetProjectPath projects\GameRuAI
 ```
 
-Developer mode:
+Audit mode:
 
 ```powershell
-python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint developer --startup-kind developer --port-mode fixed
+powershell -ExecutionPolicy Bypass -File .\projects\platform_test_agent\run_project.ps1 -Mode audit -TargetProjectPath projects\wild_hunt_command_citadel\tiktok_agent_platform -TargetProjectSlug tiktok_agent_platform
 ```
 
 Verification:
 
 ```powershell
-python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint verify --startup-kind verify --port-mode fixed
-```
-
-Update flow:
-
-```powershell
-python scripts/project_startup.py run --project-slug tiktok_agent_platform --entrypoint update --startup-kind update --port-mode fixed
+powershell -ExecutionPolicy Bypass -File .\projects\platform_test_agent\run_project.ps1 -Mode verify -TargetProjectSlug game_ru_ai
 ```
 
 Manual test policy:
 
-- manual testing is allowed only after verification gate `PASS`.
+- manual testing is blocked for guarded projects until tester-agent final audit status is `PASS` or `PASS_WITH_WARNINGS`.
+- repo-visible audit summaries are mandatory for admission.

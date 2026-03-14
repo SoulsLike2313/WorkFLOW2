@@ -1,0 +1,100 @@
+{
+  "schema_version": "2.1.0",
+  "name": "Platform Test Agent",
+  "slug": "platform_test_agent",
+  "description": "Primary audit-first tester agent project for machine validation and manual testing admission.",
+  "status": "active",
+  "category": "platform_core",
+  "type": "automation_agent",
+  "priority": 1,
+  "root_path": "projects/platform_test_agent",
+  "readme_path": "projects/platform_test_agent/README.md",
+  "runtime_namespace": "platform_test_agent",
+  "port_range": {
+    "start": 8600,
+    "end": 8699
+  },
+  "port_mode_default": "fixed",
+  "service_ports": {
+    "api_port": 8600,
+    "ui_bridge_port": 8610,
+    "update_port": 8620,
+    "health_port": 8630
+  },
+  "runtime_paths": {
+    "runtime_dir": "runtime/projects/platform_test_agent",
+    "log_dir": "runtime/projects/platform_test_agent/logs",
+    "data_dir": "runtime/projects/platform_test_agent/data",
+    "cache_dir": "runtime/projects/platform_test_agent/cache",
+    "temp_dir": "runtime/projects/platform_test_agent/temp",
+    "diagnostics_dir": "runtime/projects/platform_test_agent/diagnostics",
+    "update_artifacts_dir": "runtime/projects/platform_test_agent/update_artifacts",
+    "verification_dir": "runtime/projects/platform_test_agent/verification"
+  },
+  "state_paths": {
+    "db_path": "runtime/projects/platform_test_agent/db/platform_test_agent.db",
+    "state_path": "runtime/projects/platform_test_agent/state/runtime_state.json"
+  },
+  "health_path": "/health",
+  "env_overrides": {},
+  "main_entrypoints": [
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode intake -TargetProjectPath <repo_relative_project_path>",
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode audit -TargetProjectPath <repo_relative_project_path> -TargetProjectSlug <project_slug>",
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>"
+  ],
+  "verification_entrypoints": [
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>"
+  ],
+  "user_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode intake -TargetProjectPath <repo_relative_project_path>",
+  "developer_mode_entrypoint": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode audit -TargetProjectPath <repo_relative_project_path> -TargetProjectSlug <project_slug>",
+  "update_entrypoint": "not_applicable",
+  "config_files": [
+    "CODEX.md"
+  ],
+  "runtime_dirs": [
+    "runtime/projects/platform_test_agent",
+    "runtime/projects/platform_test_agent/logs",
+    "runtime/projects/platform_test_agent/data",
+    "runtime/projects/platform_test_agent/cache",
+    "runtime/projects/platform_test_agent/temp",
+    "runtime/projects/platform_test_agent/diagnostics",
+    "runtime/projects/platform_test_agent/update_artifacts",
+    "runtime/projects/platform_test_agent/verification"
+  ],
+  "log_dirs": [
+    "runtime/projects/platform_test_agent/logs",
+    "runtime/projects/platform_test_agent/diagnostics"
+  ],
+  "data_dirs": [
+    "runtime/projects/platform_test_agent/data"
+  ],
+  "dependencies_file": "not_applicable",
+  "owner": "workflow-core-team",
+  "maturity_level": "foundation",
+  "tags": [
+    "tester-agent",
+    "audit-first",
+    "machine-validation",
+    "admission-gate"
+  ],
+  "notes": [
+    "Primary platform role is project audit and machine report generation.",
+    "Manual testing admission is controlled by tester-agent final audit status and repo-visible evidence."
+  ],
+  "audit_profile": {
+    "target_intake_required": true,
+    "required_audit_axes": [
+      "verification",
+      "readiness",
+      "ui_qa_if_applicable",
+      "reporting",
+      "localization",
+      "audit_observability"
+    ],
+    "manual_testing_admission_statuses": [
+      "PASS",
+      "PASS_WITH_WARNINGS"
+    ],
+    "repo_visible_evidence_required": true
+  }
+}
