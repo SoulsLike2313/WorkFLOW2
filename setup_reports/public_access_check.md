@@ -1,6 +1,6 @@
 ﻿# Public Access Check
 
-- checked_at_utc: 2026-03-15T15:39:55.2100414Z
+- checked_at_utc: 2026-03-15T15:48:22.0130472Z
 - public_url: https://46d966cd1dadae.lhr.life
 - public_access_provider: ssh_localhost_run
 - public_access_mechanism: ssh reverse tunnel via localhost.run (bound to non-VPN interface)

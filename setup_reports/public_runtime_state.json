@@ -12,7 +12,7 @@
     "public_url_detected_at_utc":  "2026-03-15T15:39:28.3901075Z",
     "tunnel_started_at_utc":  "2026-03-15T15:21:16.7195840Z",
     "public_access_one_external_blocker":  "stable_non_session_public_endpoint_requires_external_secret_or_managed_tunnel_credentials",
-    "updated_at_utc":  "2026-03-15T15:42:31.0516759Z",
+    "updated_at_utc":  "2026-03-15T15:50:00.3754227Z",
     "public_url":  "https://46d966cd1dadae.lhr.life",
     "tunnel_pid":  1168,
     "local_url":  "http://127.0.0.1:18080/",

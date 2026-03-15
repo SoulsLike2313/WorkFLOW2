@@ -1,6 +1,6 @@
 ﻿# Public Mirror Progress Status
 
-- updated_at_utc: 2026-03-15T15:47:01.7203628Z
+- updated_at_utc: 2026-03-15T15:47:41.6241501Z
 - mode: FAST_RESUME
 - source_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
@@ -25,7 +25,7 @@
 - stage=STAGE_A_setup_reports status=PASS timeout=False exit_code=
   log: E:\CVVCODEX\setup_reports\public_mirror_logs\stageA_setup_reports.log
 
-- stage=STAGE_A_shared_systems status=TIME_BUDGET_REACHED timeout=True exit_code=
+- stage=STAGE_A_shared_systems status=PASS timeout=False exit_code=
   log: E:\CVVCODEX\setup_reports\public_mirror_logs\stageA_shared_systems.log
 
 - stage=STAGE_B_INCREMENTAL status=PASS timeout=False exit_code=
@@ -35,10 +35,10 @@
 
 - source_files: 35333
 - source_directories: 3046
-- source_size_bytes: 3828947676
+- source_size_bytes: 3828947537
 - files: 35311
 - directories: 3046
-- size_bytes: 3827493100
+- size_bytes: 3827493210
 - approx_sync_ratio_percent: 99.94
 
 ## Ready Components
