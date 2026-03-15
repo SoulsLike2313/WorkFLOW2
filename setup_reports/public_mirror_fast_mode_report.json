@@ -82,7 +82,7 @@
     }
   ],
   "create_delete_validation": {
-    "run_id": "public-mirror-validate-20260315T113514Z",
+    "run_id": "public-mirror-validate-20260315T115529Z",
     "create_ok": true,
     "delete_ok": true
   },
@@ -91,7 +91,7 @@
   },
   "local_web_validation": true,
   "public_url_validation": true,
-  "public_url": "https://6ae9b5512f6b67.lhr.life",
+  "public_url": "https://278ceff1502c07.lhr.life",
   "heavy_paths": {
     "deferred": [
       "runtime",

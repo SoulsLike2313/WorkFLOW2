@@ -29,13 +29,13 @@
 
 ## Validation
 
-- validation_run_id: public-mirror-validate-20260315T113514Z
+- validation_run_id: public-mirror-validate-20260315T115529Z
 - create propagation: True
 - delete propagation: True
 - sensitive exposure check: True
 - local web check: True
 - public URL check: True
-- public_url: https://6ae9b5512f6b67.lhr.life
+- public_url: https://278ceff1502c07.lhr.life
 
 ## Practicality
 

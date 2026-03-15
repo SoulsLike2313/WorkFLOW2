@@ -67,12 +67,21 @@ function Resolve-PublicUrl([string]$OutPath, [string]$ErrPath, [int]$TimeoutSec 
         foreach ($path in @($OutPath, $ErrPath)) {
             $text = Read-SharedText $path
             if ([string]::IsNullOrWhiteSpace($text)) { continue }
+            $lineMatch = [regex]::Match($text, "tunneled with tls termination,\s*(https?://[^\s,]+)")
+            if ($lineMatch.Success) {
+                return $lineMatch.Groups[1].Value.TrimEnd("/")
+            }
             $matches = [regex]::Matches($text, "https?://[^\s,]+")
             if ($matches.Count -eq 0) { continue }
             $candidates = New-Object System.Collections.Generic.List[string]
             foreach ($m in $matches) {
                 $url = $m.Value.TrimEnd("/")
-                if ($url -match "localhost\.run/docs" -or $url -match "localhost:3000") {
+                if (
+                    $url -match "localhost\.run" -or
+                    $url -match "localhost:3000" -or
+                    $url -match "twitter\.com" -or
+                    $url -match "localhost_run"
+                ) {
                     continue
                 }
                 $candidates.Add($url) | Out-Null
