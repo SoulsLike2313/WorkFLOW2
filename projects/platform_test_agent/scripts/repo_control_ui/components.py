@@ -80,12 +80,23 @@ class HeroCard(QFrame):
         layout.setContentsMargins(SPACE_4, SPACE_4, SPACE_4, SPACE_4)
         layout.setSpacing(SPACE_1)
 
+        top_row = QHBoxLayout()
+        top_row.setSpacing(SPACE_2)
+        top_row.addStretch(1)
+
+        self.verdict_chip = QLabel("REPO")
+        self.verdict_chip.setObjectName("StatusBadge")
+        self.verdict_chip.setAlignment(Qt.AlignCenter)
+        self.verdict_chip.setMinimumWidth(88)
+        top_row.addWidget(self.verdict_chip)
+
         self.verdict_label = QLabel("NOT TRUSTED")
         self.verdict_label.setObjectName("HeroVerdict")
         self.subtitle_label = QLabel("Run refresh to evaluate repository trust state.")
         self.subtitle_label.setObjectName("HeroSubtitle")
         self.subtitle_label.setWordWrap(True)
 
+        layout.addLayout(top_row)
         layout.addWidget(self.verdict_label)
         layout.addWidget(self.subtitle_label)
 
@@ -93,8 +104,11 @@ class HeroCard(QFrame):
         verdict_upper = verdict.upper()
         self.verdict_label.setText(verdict_upper)
         self.subtitle_label.setText(subtitle)
-        color, _ = _status_colors("PASS" if verdict_upper == "TRUSTED" else "FAIL")
+        status = "PASS" if verdict_upper == "TRUSTED" else "FAIL"
+        color, bg = _status_colors(status)
         self.verdict_label.setStyleSheet(f"color: {color};")
+        self.verdict_chip.setText(verdict_upper)
+        self.verdict_chip.setStyleSheet(f"color: {color}; background: {bg}; border: 1px solid {color};")
 
 
 class StatusCard(QFrame):
@@ -233,7 +247,7 @@ class TechnicalDetailsPanel(QFrame):
     def _on_toggled(self, checked: bool) -> None:
         self._collapsed = not checked
         self.text.setVisible(checked)
-        self.toggle_button.setText("Technical details (expanded)" if checked else "Technical details")
+        self.toggle_button.setText("Technical details (expanded)" if checked else "Technical details (collapsed)")
 
     def set_details(self, details_text: str) -> None:
         self.text.setPlainText(details_text)

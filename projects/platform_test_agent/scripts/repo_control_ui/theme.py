@@ -64,8 +64,10 @@ QFrame#Panel {{
     border-radius: 14px;
 }}
 QFrame#HeroCard {{
-    background: {PALETTE.bg_surface_alt};
-    border: 1px solid {PALETTE.border};
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+        stop:0 {PALETTE.bg_surface_alt},
+        stop:1 #181b2a);
+    border: 1px solid #3b2f5f;
     border-radius: 18px;
 }}
 QLabel#MetaLabel {{
@@ -78,13 +80,13 @@ QLabel#MetaValue {{
     font-weight: 600;
 }}
 QLabel#HeroVerdict {{
-    font-size: 44px;
+    font-size: 46px;
     font-weight: 700;
     letter-spacing: 1px;
 }}
 QLabel#HeroSubtitle {{
     color: {PALETTE.text_secondary};
-    font-size: 14px;
+    font-size: 13px;
 }}
 QLabel#SectionTitle {{
     font-size: 16px;
@@ -107,7 +109,7 @@ QLabel#StatusSummary {{
     color: {PALETTE.text_secondary};
 }}
 QLabel#StatusBadge {{
-    padding: 3px 10px;
+    padding: 4px 10px;
     border-radius: 10px;
     font-size: 11px;
     font-weight: 700;
@@ -157,6 +159,7 @@ QPushButton#PrimaryButton {{
     background: {PALETTE.accent};
     border-color: {PALETTE.accent};
     color: #ffffff;
+    min-width: 120px;
 }}
 QPushButton#PrimaryButton:hover {{
     background: {PALETTE.accent_hover};

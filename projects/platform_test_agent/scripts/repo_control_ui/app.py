@@ -46,6 +46,7 @@ class RepoControlMainWindow(QMainWindow):
         self.setObjectName("RepoControlWindow")
         self.setWindowTitle("Repository Trust Control")
         self.setMinimumSize(WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT)
+        self.resize(1240, 860)
 
         root = QWidget()
         self.setCentralWidget(root)
@@ -78,6 +79,9 @@ class RepoControlMainWindow(QMainWindow):
         self.actions = ActionPanel()
         self.tech = TechnicalDetailsPanel()
 
+        action_hint = QLabel("Primary actions")
+        action_hint.setObjectName("SectionTitle")
+
         technical_header = QHBoxLayout()
         technical_title = QLabel("Quick diagnostics")
         technical_title.setObjectName("SectionTitle")
@@ -91,6 +95,7 @@ class RepoControlMainWindow(QMainWindow):
         root_layout.addWidget(self.hero)
         root_layout.addWidget(status_wrapper)
         root_layout.addWidget(self.why_not_trusted)
+        root_layout.addWidget(action_hint)
         root_layout.addWidget(self.actions)
         root_layout.addLayout(technical_header)
         root_layout.addWidget(self.tech)

@@ -174,6 +174,7 @@ class RepoControlDiagnostics:
         issues.extend(sync_issues)
         issues.extend(presence_issues)
         issues.extend(manifest_issues)
+        issues = self._prioritize_issues(issues)
 
         statuses = {
             "repo_integrity": self._status_model(
@@ -196,11 +197,12 @@ class RepoControlDiagnostics:
 
         trusted = all(model["status"] == "PASS" for model in statuses.values())
         verdict = "TRUSTED" if trusted else "NOT TRUSTED"
-        subtitle = (
-            "Repository state is verified and ready for machine reading."
-            if trusted
-            else f"{len(issues)} blocking issue(s) detected. Resolve priority items below."
-        )
+        subtitle = "Repository state is verified and ready for machine reading."
+        if not trusted:
+            if issues:
+                subtitle = f"{issues[0]} ({len(issues)} blocker(s))"
+            else:
+                subtitle = "Repository is not trusted. Review blocking reasons below."
 
         details_lines = [
             f"repo: {self.repo_root}",
@@ -322,3 +324,29 @@ class RepoControlDiagnostics:
                     break
                 digest.update(chunk)
         return digest.hexdigest()
+
+    @staticmethod
+    def _priority_for_issue(message: str) -> int:
+        text = message.lower()
+        if "operation in progress" in text:
+            return 0
+        if "not a git worktree" in text or "cannot resolve head" in text:
+            return 1
+        if "no tracking branch" in text:
+            return 2
+        if "behind" in text:
+            return 3
+        if "fetch remote state" in text:
+            return 4
+        if "uncommitted changes" in text:
+            return 5
+        if "safe reading file missing" in text:
+            return 6
+        if "manifest missing" in text or "manifest is not valid json" in text:
+            return 7
+        if "hash mismatch" in text:
+            return 8
+        return 9
+
+    def _prioritize_issues(self, issues: list[str]) -> list[str]:
+        return sorted(issues, key=lambda message: (self._priority_for_issue(message), message))

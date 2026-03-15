@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "manifest_type": "safe_reading_manifest",
-  "generated_at": "2026-03-16T01:00:35.994582",
+  "generated_at": "2026-03-16T01:04:46.140506",
   "files": [
     {
       "path": "README.md",
@@ -20,8 +20,8 @@
     },
     {
       "path": "workspace_config/workspace_manifest.json",
-      "sha256": "cf4be202c0c485e30c21b79e19ec433a6c52ba3698a54eaa05c31eca61b7e601",
-      "size_bytes": 16735
+      "sha256": "41e965c6a77673dc2b9a6d80b3d5a3113e5a26a0c042cc935aecd64da23b3b22",
+      "size_bytes": 16834
     },
     {
       "path": "workspace_config/codex_manifest.json",
