@@ -17,8 +17,21 @@ function Resolve-SourceRoot {
     return (Resolve-Path ((git rev-parse --show-toplevel).Trim())).Path
 }
 
+function Resolve-RepoName([string]$RepoRoot) {
+    $remote = (git -C $RepoRoot remote get-url origin 2>$null)
+    if (-not [string]::IsNullOrWhiteSpace($remote)) {
+        $leaf = Split-Path $remote -Leaf
+        if ($leaf.EndsWith(".git")) {
+            return [System.IO.Path]::GetFileNameWithoutExtension($leaf)
+        }
+        return $leaf
+    }
+    return [System.IO.Path]::GetFileName($RepoRoot)
+}
+
 $sourceRoot = Resolve-SourceRoot
 $checkpointPath = Join-Path $sourceRoot "setup_reports/public_mirror_resume_checkpoint.json"
+$runtimePath = Join-Path $sourceRoot "setup_reports/public_runtime_state.json"
 
 if ([string]::IsNullOrWhiteSpace($MirrorPath) -and (Test-Path $checkpointPath)) {
     try {
@@ -30,8 +43,18 @@ if ([string]::IsNullOrWhiteSpace($MirrorPath) -and (Test-Path $checkpointPath)) 
     catch {}
 }
 
+if ([string]::IsNullOrWhiteSpace($MirrorPath) -and (Test-Path $runtimePath)) {
+    try {
+        $runtime = Get-Content -Raw $runtimePath | ConvertFrom-Json
+        if (-not [string]::IsNullOrWhiteSpace($runtime.mirror_path)) {
+            $MirrorPath = [string]$runtime.mirror_path
+        }
+    }
+    catch {}
+}
+
 if ([string]::IsNullOrWhiteSpace($MirrorPath)) {
-    $repoName = [System.IO.Path]::GetFileName($sourceRoot)
+    $repoName = Resolve-RepoName $sourceRoot
     $MirrorPath = Join-Path (Join-Path (Split-Path $sourceRoot -Parent) "_public_repo_mirror") $repoName
 }
 

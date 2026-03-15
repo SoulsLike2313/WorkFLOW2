@@ -1,28 +1,21 @@
 ﻿# Public Access Check
 
-- checked_at_utc: 2026-03-15T16:33:47.1683322Z
-- public_url: https://9b8191c9412744.lhr.life
-- public_access_provider: ssh_localhost_run
-- public_access_mechanism: ssh reverse tunnel via localhost.run (bound to non-VPN interface)
-- public_access_vpn_dependent: False
+- checked_at_utc: 2026-03-15T17:09:59.3079773Z
 - local_target_url: http://127.0.0.1:18080/
-- tunnel_pid: 1168
-- tunnel_process_alive: True
-- old_public_url: https://787e4105496bcf.lhr.life
-- old_broken_public_url: https://0e6748b97ae3fe.lhr.life
-- old_broken_public_url_cause: stale_session_hostname_not_mapped
-- latest_tunnel_url_from_logs: https://9b8191c9412744.lhr.life
-- runtime_url_outdated: True
-- session_based_url: True
-- stability_classification: SESSION_FRAGILE
+- public_url: 
+- public_access_provider: direct_local_pc_caddy
+- public_access_mechanism: direct local-PC hosting via Caddy (non-tunnel canonical)
+- public_access_vpn_dependent: False
+- session_based_url: False
+- stability_classification: BROKEN
 - stable_enough_for_chatgpt: False
-- repeated_checks_passed: 25/25
-- failure_cause: 
-- status: PASS
+- repeated_checks_passed: 0/0
+- failure_cause: router_port_forwarding_or_dns_mapping_not_configured
+- status: FAIL
 
 ## Checks
 
-- root_access
+- local_root_access
 ```json
 {
     "ok":  true,
@@ -31,61 +24,11 @@
 }
 ```
 
-- state_file_access
+- local_public_state_access
 ```json
 {
     "ok":  true,
     "status":  200,
     "error":  null
-}
-```
-
-- sync_status_file_access
-```json
-{
-    "ok":  true,
-    "status":  200,
-    "error":  null
-}
-```
-
-- entrypoints_file_access
-```json
-{
-    "ok":  true,
-    "status":  200,
-    "error":  null
-}
-```
-
-- git_path_blocked
-```json
-{
-    "pass":  true,
-    "probe":  {
-                  "ok":  false,
-                  "status":  404,
-                  "error":  "Удаленный сервер возвратил ошибку: (404) Не найден."
-              }
-}
-```
-
-- env_path_blocked
-```json
-{
-    "pass":  true,
-    "probe":  {
-                  "ok":  false,
-                  "status":  404,
-                  "error":  "Удаленный сервер возвратил ошибку: (404) Не найден."
-              }
-}
-```
-
-- vpn_independent
-```json
-{
-    "pass":  true,
-    "value":  true
 }
 ```

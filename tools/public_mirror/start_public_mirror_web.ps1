@@ -144,7 +144,8 @@ $caddyfile = @"
     persist_config off
 }
 
-$BindAddress`:$Port {
+:$Port {
+    bind $BindAddress
     root * $mirrorForCaddy
     @sensitive path /.git* /.env /.env.* /id_rsa* /id_ed25519* /*.pem /*.key /*.pfx /*.p12 /secrets.* /token* /credentials*
     respond @sensitive 404

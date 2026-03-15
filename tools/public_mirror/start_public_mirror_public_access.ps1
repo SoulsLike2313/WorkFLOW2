@@ -114,10 +114,10 @@ $localProbe = Probe-Url -Url $localUrl
 $publicUrl = $null
 if (-not [string]::IsNullOrWhiteSpace($CanonicalHostname)) {
     if (($PublicScheme -eq "http" -and $PublicPort -eq 80) -or ($PublicScheme -eq "https" -and $PublicPort -eq 443)) {
-        $publicUrl = "$PublicScheme://$CanonicalHostname"
+        $publicUrl = "${PublicScheme}://$CanonicalHostname"
     }
     else {
-        $publicUrl = "$PublicScheme://$CanonicalHostname`:$PublicPort"
+        $publicUrl = "${PublicScheme}://$CanonicalHostname`:$PublicPort"
     }
 }
 

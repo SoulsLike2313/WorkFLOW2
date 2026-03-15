@@ -1,0 +1,15 @@
+﻿{
+    admin off
+    auto_https off
+    persist_config off
+}
+
+:18080 {
+    bind 0.0.0.0
+    root * E:/_public_repo_mirror/WorkFLOW
+    @sensitive path /.git* /.env /.env.* /id_rsa* /id_ed25519* /*.pem /*.key /*.pfx /*.p12 /secrets.* /token* /credentials*
+    respond @sensitive 404
+    file_server browse {
+        hide .git .env .env.* *.pem *.key *.pfx *.p12 id_rsa id_ed25519 secrets.* token* credentials*
+    }
+}
