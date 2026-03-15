@@ -1,6 +1,6 @@
-# Public Mirror Excludes
+﻿# Public Mirror Excludes
 
-- generated_at_utc: 2026-03-14T10:51:56.6836463Z
+- generated_at_utc: 2026-03-15T11:39:25.4546757Z
 - source: setup_reports/public_mirror_excludes.txt
 
 ## Exclude Rules

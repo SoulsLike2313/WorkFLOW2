@@ -1,10 +1,16 @@
 ﻿{
-    "tunnel_pid":  5420,
-    "public_url_status":  "READY",
-    "tunnel_started_at_utc":  "2026-03-15T11:30:07.6265121Z",
-    "public_url":  "https://d51a87921bb347.lhr.life",
-    "public_url_blocker":  null,
+    "source_repo_path":  "E:\\CVVCODEX",
+    "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
+    "tunnel_started_at_utc":  "2026-03-15T11:34:00.2732044Z",
     "tunnel_command":  "ssh -R 80:127.0.0.1:18080 nokey@localhost.run",
-    "public_url_detected_at_utc":  "2026-03-15T11:30:07.6265121Z",
-    "updated_at_utc":  "2026-03-15T11:30:07.6305130Z"
+    "local_server_started_at_utc":  "2026-03-15T11:33:41.2154250Z",
+    "updated_at_utc":  "2026-03-15T11:34:00.2851974Z",
+    "public_url_blocker":  null,
+    "local_url":  "http://127.0.0.1:18080/",
+    "public_url_status":  "READY",
+    "public_url_detected_at_utc":  "2026-03-15T11:34:00.2762026Z",
+    "local_server_pid":  16868,
+    "tunnel_pid":  6948,
+    "local_server_command":  "python -m http.server 18080 --bind 127.0.0.1 --directory E:\\_public_repo_mirror\\WorkFLOW",
+    "public_url":  "https://6ae9b5512f6b67.lhr.life"
 }

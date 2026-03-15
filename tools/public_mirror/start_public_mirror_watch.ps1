@@ -76,7 +76,12 @@ function Save-RuntimeState([hashtable]$StatePatch) {
     $state = @{}
     if (Test-Path $runtimeStatePath) {
         try {
-            $state = Get-Content -Raw $runtimeStatePath | ConvertFrom-Json -AsHashtable
+            $obj = Get-Content -Raw $runtimeStatePath | ConvertFrom-Json
+            if ($obj -ne $null) {
+                foreach ($prop in $obj.PSObject.Properties) {
+                    $state[$prop.Name] = $prop.Value
+                }
+            }
         }
         catch {
             $state = @{}

@@ -31,7 +31,10 @@ foreach ($pidField in @("watch_pid", "local_server_pid", "tunnel_pid")) {
     }
 }
 
-$stateHash = $state | ConvertTo-Json -Depth 8 | ConvertFrom-Json -AsHashtable
+$stateHash = @{}
+foreach ($prop in $state.PSObject.Properties) {
+    $stateHash[$prop.Name] = $prop.Value
+}
 $stateHash["watch_mode"] = "stopped"
 $stateHash["stopped_at_utc"] = (Get-Date).ToUniversalTime().ToString("o")
 $stateHash | ConvertTo-Json -Depth 8 | Set-Content -Path $runtimeStatePath -Encoding UTF8

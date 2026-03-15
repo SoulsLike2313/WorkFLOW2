@@ -1,19 +1,19 @@
 ﻿{
-    "checked_at_utc":  "2026-03-15T11:36:31.1759879Z",
+    "checked_at_utc":  "2026-03-15T11:36:31.5608735Z",
     "source_repo_path":  "E:\\CVVCODEX",
-    "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
-    "local_url":  "http://127.0.0.1:18080/",
+    "public_url":  "https://6ae9b5512f6b67.lhr.life",
+    "status":  "PASS",
     "checks":  {
                    "root_access":  {
                                        "ok":  true,
                                        "status":  200,
                                        "error":  null
                                    },
-                   "public_repo_state_access":  {
-                                                    "ok":  true,
-                                                    "status":  200,
-                                                    "error":  null
-                                                },
+                   "state_file_access":  {
+                                             "ok":  true,
+                                             "status":  200,
+                                             "error":  null
+                                         },
                    "git_path_blocked":  {
                                             "pass":  true,
                                             "probe":  {
@@ -30,6 +30,5 @@
                                                           "error":  "Удаленный сервер возвратил ошибку: (404) Не найден."
                                                       }
                                         }
-               },
-    "status":  "PASS"
+               }
 }

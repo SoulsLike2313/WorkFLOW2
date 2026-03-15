@@ -1,25 +1,43 @@
 ﻿{
-    "generated_at_utc":  "2026-03-15T10:56:53.9152242Z",
-    "source_path":  "E:\\CVVCODEX",
+    "generated_at_utc":  "2026-03-15T11:39:25.4678878Z",
+    "source_path":  "E:/CVVCODEX",
     "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
-    "previous_bottlenecks":  [
-                                 "monolithic full-pass sync took too long and timed out without early usable output",
-                                 "full recursive inventory / full manifest generation in the critical path increased wall-time",
-                                 "heavy local trees (.venv, legacy shortform_core, runtime/setup_assets tails) dominated scan/copy cost",
-                                 "single long pass had weak intermediate progress signaling"
-                             ],
-    "confirmed_heavy_paths":  [
-                                  "E:\\CVVCODEX\\runtime",
-                                  "E:\\CVVCODEX\\setup_assets",
-                                  "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core",
-                                  "**\\\\.venv\\\\**"
+    "bottlenecks":  [
+                        "High file count with many small files across projects/docs/runtime artifacts",
+                        "Heavy tail directories runtime and setup_assets increase full-pass duration",
+                        "Single-pass full-tree sync causes delayed usable result"
+                    ],
+    "fast_strategy":  "FAST_RESUME_STAGED",
+    "stages":  [
+                   "STAGE_A_USABLE",
+                   "STAGE_B_INCREMENTAL",
+                   "STAGE_C_HEAVY_TAIL_OPTIONAL"
+               ],
+    "stage_a_focus":  [
+                          "README*",
+                          "docs",
+                          "workspace_config",
+                          "scripts",
+                          "projects",
+                          "setup_reports",
+                          "shared_systems"
+                      ],
+    "heavy_tail_paths":  [
+                             "runtime",
+                             "setup_assets"
+                         ],
+    "acceleration_measures":  [
+                                  "robocopy /MT:32 with low retry/wait (/R:1 /W:1)",
+                                  "stage time budgets with checkpoint snapshots",
+                                  "PUBLIC_* state files emitted in STAGE_A",
+                                  "incremental sync from existing mirror baseline"
                               ],
-    "fast_mode_changes":  [
-                              "staged strategy: Stage A usable -\u003e Stage B incremental -\u003e Stage C heavy tail",
-                              "time budgets enforced per stage to avoid silent long runs",
-                              "engineering-ready state is emitted early with PUBLIC_* files",
-                              "heavy-tail paths deferred by default and synced only on explicit request",
-                              "progress snapshots written to setup_reports/public_mirror_progress_status.*"
-                          ],
+    "engineering_ready_gate":  {
+                                   "readme_docs_workspace_scripts_projects_available":  true,
+                                   "public_state_files_available":  true,
+                                   "excludes_applied":  true,
+                                   "heavy_tail_not_blocking":  true
+                               },
+    "current_progress_snapshot_path":  "setup_reports/public_mirror_progress_status.json",
     "status":  "PASS"
 }

@@ -1,0 +1,113 @@
+﻿{
+    "checked_at_utc":  "2026-03-15T11:37:28.4789327Z",
+    "source_repo_path":  "E:/CVVCODEX",
+    "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
+    "branch":  "main",
+    "head_commit":  "e57ff23e342c2e1b6c29c2cd667ec6670c21d478",
+    "git_status":  {
+                       "clean":  false,
+                       "changed_count":  14,
+                       "porcelain":  [
+                                         " M setup_reports/public_mirror_progress_status.json",
+                                         " M setup_reports/public_mirror_progress_status.md",
+                                         " M setup_reports/public_mirror_web_check.json",
+                                         " M setup_reports/public_mirror_web_check.md",
+                                         " M setup_reports/public_runtime_state.json",
+                                         " M tools/public_mirror/check_public_mirror_public_access.ps1",
+                                         " M tools/public_mirror/check_public_mirror_web.ps1",
+                                         " M tools/public_mirror/start_public_mirror_public_access.ps1",
+                                         " M tools/public_mirror/start_public_mirror_watch.ps1",
+                                         " M tools/public_mirror/stop_public_mirror_watch.ps1",
+                                         "?? setup_reports/public_access_check.json",
+                                         "?? setup_reports/public_access_check.md",
+                                         "?? setup_reports/public_repo_access_validation.json",
+                                         "?? setup_reports/public_repo_access_validation.md"
+                                     ]
+                   },
+    "source_stats":  {
+                         "files":  35323,
+                         "directories":  3046,
+                         "size_bytes":  3828826949
+                     },
+    "mirror_stats":  {
+                         "files":  35300,
+                         "directories":  3046,
+                         "size_bytes":  3827362001
+                     },
+    "active_sync_entrypoint":  "tools/public_mirror/fast_resume_public_mirror.ps1",
+    "fast_resume_entrypoint":  "tools/public_mirror/fast_resume_public_mirror.ps1",
+    "manual_sync_entrypoint":  "tools/public_mirror/sync_repo_to_public_mirror.ps1",
+    "runtime_state_path":  "setup_reports/public_runtime_state.json",
+    "runtime_state":  {
+                          "source_repo_path":  "E:\\CVVCODEX",
+                          "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
+                          "tunnel_started_at_utc":  "2026-03-15T11:34:00.2732044Z",
+                          "tunnel_command":  "ssh -R 80:127.0.0.1:18080 nokey@localhost.run",
+                          "local_server_started_at_utc":  "2026-03-15T11:33:41.2154250Z",
+                          "updated_at_utc":  "2026-03-15T11:34:00.2851974Z",
+                          "public_url_blocker":  null,
+                          "local_url":  "http://127.0.0.1:18080/",
+                          "public_url_status":  "READY",
+                          "public_url_detected_at_utc":  "2026-03-15T11:34:00.2762026Z",
+                          "local_server_pid":  16868,
+                          "tunnel_pid":  6948,
+                          "local_server_command":  "python -m http.server 18080 --bind 127.0.0.1 --directory E:\\_public_repo_mirror\\WorkFLOW",
+                          "public_url":  "https://6ae9b5512f6b67.lhr.life"
+                      },
+    "relevant_processes":  [
+                               {
+                                   "ProcessId":  17568,
+                                   "Name":  "python.exe",
+                                   "ParentProcessId":  15456,
+                                   "CommandLine":  "\"C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" -m http.server 18080 --bind 127.0.0.1 --directory E:\\_public_repo_mirror\\WorkFLOW "
+                               },
+                               {
+                                   "ProcessId":  17160,
+                                   "Name":  "python.exe",
+                                   "ParentProcessId":  6176,
+                                   "CommandLine":  "\"C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" -m http.server 18080 --bind 127.0.0.1 --directory E:\\_public_repo_mirror\\WorkFLOW "
+                               },
+                               {
+                                   "ProcessId":  11240,
+                                   "Name":  "python.exe",
+                                   "ParentProcessId":  18660,
+                                   "CommandLine":  "\"C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" -m http.server 18080 --bind 127.0.0.1 --directory E:\\_public_repo_mirror\\WorkFLOW "
+                               },
+                               {
+                                   "ProcessId":  11516,
+                                   "Name":  "python.exe",
+                                   "ParentProcessId":  8396,
+                                   "CommandLine":  "\"C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" -m http.server 18080 --bind 127.0.0.1 --directory E:\\_public_repo_mirror\\WorkFLOW "
+                               },
+                               {
+                                   "ProcessId":  5176,
+                                   "Name":  "python.exe",
+                                   "ParentProcessId":  19384,
+                                   "CommandLine":  "\"C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" -m http.server 18080 --bind 127.0.0.1 --directory E:\\_public_repo_mirror\\WorkFLOW "
+                               },
+                               {
+                                   "ProcessId":  11340,
+                                   "Name":  "python.exe",
+                                   "ParentProcessId":  13116,
+                                   "CommandLine":  "\"C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" -m http.server 18080 --bind 127.0.0.1 --directory E:\\_public_repo_mirror\\WorkFLOW "
+                               },
+                               {
+                                   "ProcessId":  16868,
+                                   "Name":  "python.exe",
+                                   "ParentProcessId":  10340,
+                                   "CommandLine":  "\"C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" -m http.server 18080 --bind 127.0.0.1 --directory E:\\_public_repo_mirror\\WorkFLOW "
+                               },
+                               {
+                                   "ProcessId":  6948,
+                                   "Name":  "ssh.exe",
+                                   "ParentProcessId":  13140,
+                                   "CommandLine":  "\"C:\\Windows\\System32\\OpenSSH\\ssh.exe\" -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=accept-new -R 80:127.0.0.1:18080 nokey@localhost.run "
+                               },
+                               {
+                                   "ProcessId":  7416,
+                                   "Name":  "powershell.exe",
+                                   "ParentProcessId":  6336,
+                                   "CommandLine":  "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -Command \"[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;\n$ErrorActionPreference=\u0027Stop\u0027;$src=(git rev-parse --show-toplevel).Trim();$mirror=\u0027E:\\_public_repo_mirror\\WorkFLOW\u0027;$branch=(git -C $src branch --show-current).Trim();$head=(git -C $src rev-parse HEAD).Trim();$status=@(git -C $src status --short);$sourceFiles=(Get-ChildItem $src -Recurse -File -Force -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch \u0027\\\\.git(\\\\|$)\u0027 });$sourceDirs=(Get-ChildItem $src -Recurse -Directory -Force -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch \u0027\\\\.git(\\\\|$)\u0027 });$mirrorFiles=(Get-ChildItem $mirror -Recurse -File -Force -ErrorAction SilentlyContinue);$mirrorDirs=(Get-ChildItem $mirror -Recurse -Directory -Force -ErrorAction SilentlyContinue);$runtimePath=Join-Path $src \u0027setup_reports/public_runtime_state.json\u0027;$runtime=$null;if(Test-Path $runtimePath){$runtime=Get-Content -Raw $runtimePath | ConvertFrom-Json};$procList=Get-CimInstance Win32_Process | Where-Object { $_.Name -match \u0027powershell|python|ssh|robocopy|cloudflared\u0027 -and $_.CommandLine -match \u0027public_mirror|_public_repo_mirror|localhost.run|http.server|sync_repo_to_public_mirror|fast_resume_public_mirror|start_public_mirror_watch|start_public_mirror_web|start_public_mirror_public_access\u0027 } | Select-Object ProcessId,Name,ParentProcessId,CommandLine; $obj=[ordered]@{ checked_at_utc=(Get-Date).ToUniversalTime().ToString(\u0027o\u0027); source_repo_path=$src; mirror_path=$mirror; branch=$branch; head_commit=$head; git_status=[ordered]@{ clean=($status.Count -eq 0); changed_count=$status.Count; porcelain=@($status)}; source_stats=[ordered]@{ files=$sourceFiles.Count; directories=$sourceDirs.Count; size_bytes=[int64](($sourceFiles|Measure-Object Length -Sum).Sum)}; mirror_stats=[ordered]@{ files=$mirrorFiles.Count; directories=$mirrorDirs.Count; size_bytes=[int64](($mirrorFiles|Measure-Object Length -Sum).Sum)}; active_sync_entrypoint=\u0027tools/public_mirror/fast_resume_public_mirror.ps1\u0027; fast_resume_entrypoint=\u0027tools/public_mirror/fast_resume_public_mirror.ps1\u0027; manual_sync_entrypoint=\u0027tools/public_mirror/sync_repo_to_public_mirror.ps1\u0027; runtime_state_path=\u0027setup_reports/public_runtime_state.json\u0027; runtime_state=$runtime; relevant_processes=$procList }; $jsonPath=Join-Path $src \u0027setup_reports/server_sync_current_state.json\u0027; $mdPath=Join-Path $src \u0027setup_reports/server_sync_current_state.md\u0027; $obj | ConvertTo-Json -Depth 10 | Set-Content -Path $jsonPath -Encoding UTF8; $md=@(\u0027# Server Sync Current State\u0027,\u0027\u0027,(\u0027- checked_at_utc: {0}\u0027 -f $obj.checked_at_utc),(\u0027- source_repo_path: {0}\u0027 -f $obj.source_repo_path),(\u0027- mirror_path: {0}\u0027 -f $obj.mirror_path),(\u0027- branch: {0}\u0027 -f $obj.branch),(\u0027- head_commit: {0}\u0027 -f $obj.head_commit),(\u0027- git_status_clean: {0}\u0027 -f $obj.git_status.clean),(\u0027- git_status_changed_count: {0}\u0027 -f $obj.git_status.changed_count),(\u0027- source_files: {0}\u0027 -f $obj.source_stats.files),(\u0027- source_directories: {0}\u0027 -f $obj.source_stats.directories),(\u0027- source_size_bytes: {0}\u0027 -f $obj.source_stats.size_bytes),(\u0027- mirror_files: {0}\u0027 -f $obj.mirror_stats.files),(\u0027- mirror_directories: {0}\u0027 -f $obj.mirror_stats.directories),(\u0027- mirror_size_bytes: {0}\u0027 -f $obj.mirror_stats.size_bytes),(\u0027- active_sync_entrypoint: {0}\u0027 -f $obj.active_sync_entrypoint),(\u0027- fast_resume_entrypoint: {0}\u0027 -f $obj.fast_resume_entrypoint),(\u0027- manual_sync_entrypoint: {0}\u0027 -f $obj.manual_sync_entrypoint),\u0027\u0027,\u0027## Relevant Processes\u0027,\u0027\u0027,\u0027```json\u0027,($obj.relevant_processes | ConvertTo-Json -Depth 8),\u0027```\u0027); Set-Content -Path $mdPath -Value $md -Encoding UTF8; \u0027STATE_REPORT_WRITTEN\u0027\""
+                               }
+                           ]
+}
