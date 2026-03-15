@@ -1,0 +1,155 @@
+﻿{
+    "generated_at_utc":  "2026-03-15T10:56:53.9352135Z",
+    "source_path":  "E:\\CVVCODEX",
+    "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
+    "strategy":  "FAST_RESUME_STAGED",
+    "stages":  [
+                   "STAGE_A_USABLE",
+                   "STAGE_B_INCREMENTAL",
+                   "STAGE_C_HEAVY_TAIL_OPTIONAL"
+               ],
+    "engineering_ready_definition":  [
+                                         "mirror has README/docs/workspace_config/scripts/projects",
+                                         "PUBLIC_REPO_STATE/PUBLIC_SYNC_STATUS/PUBLIC_ENTRYPOINTS exist",
+                                         "exclude rules are applied and sensitive paths not exposed"
+                                     ],
+    "stage_results":  [
+                          {
+                              "label":  "STAGE_A_docs",
+                              "source":  "E:\\CVVCODEX\\docs",
+                              "destination":  "E:\\_public_repo_mirror\\WorkFLOW\\docs",
+                              "time_budget_seconds":  30,
+                              "timed_out":  false,
+                              "robocopy_exit_code":  null,
+                              "status":  "PASS",
+                              "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_docs.log",
+                              "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_docs.log.err",
+                              "finished_at_utc":  "2026-03-15T10:55:44.1214999Z"
+                          },
+                          {
+                              "label":  "STAGE_A_workspace_config",
+                              "source":  "E:\\CVVCODEX\\workspace_config",
+                              "destination":  "E:\\_public_repo_mirror\\WorkFLOW\\workspace_config",
+                              "time_budget_seconds":  30,
+                              "timed_out":  false,
+                              "robocopy_exit_code":  null,
+                              "status":  "PASS",
+                              "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_workspace_config.log",
+                              "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_workspace_config.log.err",
+                              "finished_at_utc":  "2026-03-15T10:55:44.1768103Z"
+                          },
+                          {
+                              "label":  "STAGE_A_scripts",
+                              "source":  "E:\\CVVCODEX\\scripts",
+                              "destination":  "E:\\_public_repo_mirror\\WorkFLOW\\scripts",
+                              "time_budget_seconds":  30,
+                              "timed_out":  false,
+                              "robocopy_exit_code":  null,
+                              "status":  "PASS",
+                              "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_scripts.log",
+                              "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_scripts.log.err",
+                              "finished_at_utc":  "2026-03-15T10:55:44.2261061Z"
+                          },
+                          {
+                              "label":  "STAGE_A_projects",
+                              "source":  "E:\\CVVCODEX\\projects",
+                              "destination":  "E:\\_public_repo_mirror\\WorkFLOW\\projects",
+                              "time_budget_seconds":  30,
+                              "timed_out":  false,
+                              "robocopy_exit_code":  null,
+                              "status":  "PASS",
+                              "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_projects.log",
+                              "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_projects.log.err",
+                              "finished_at_utc":  "2026-03-15T10:55:45.2422595Z"
+                          },
+                          {
+                              "label":  "STAGE_A_setup_reports",
+                              "source":  "E:\\CVVCODEX\\setup_reports",
+                              "destination":  "E:\\_public_repo_mirror\\WorkFLOW\\setup_reports",
+                              "time_budget_seconds":  30,
+                              "timed_out":  false,
+                              "robocopy_exit_code":  null,
+                              "status":  "PASS",
+                              "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_setup_reports.log",
+                              "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_setup_reports.log.err",
+                              "finished_at_utc":  "2026-03-15T10:55:45.2963142Z"
+                          },
+                          {
+                              "label":  "STAGE_A_shared_systems",
+                              "source":  "E:\\CVVCODEX\\shared_systems",
+                              "destination":  "E:\\_public_repo_mirror\\WorkFLOW\\shared_systems",
+                              "time_budget_seconds":  30,
+                              "timed_out":  false,
+                              "robocopy_exit_code":  null,
+                              "status":  "PASS",
+                              "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_shared_systems.log",
+                              "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_shared_systems.log.err",
+                              "finished_at_utc":  "2026-03-15T10:55:45.3609271Z"
+                          },
+                          {
+                              "label":  "STAGE_B_INCREMENTAL",
+                              "source":  "E:\\CVVCODEX",
+                              "destination":  "E:\\_public_repo_mirror\\WorkFLOW",
+                              "time_budget_seconds":  60,
+                              "timed_out":  false,
+                              "robocopy_exit_code":  null,
+                              "status":  "PASS",
+                              "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageB_incremental.log",
+                              "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageB_incremental.log.err",
+                              "finished_at_utc":  "2026-03-15T10:55:50.3948586Z"
+                          }
+                      ],
+    "mirror_stats":  {
+                         "size_bytes":  3827301202,
+                         "directories":  3046,
+                         "files":  35280
+                     },
+    "create_delete_validation":  {
+                                     "create_ok":  true,
+                                     "delete_ok":  true
+                                 },
+    "sensitive_validation":  {
+                                 "pem_count":  0,
+                                 "git_dir_exists":  false,
+                                 "pfx_count":  0,
+                                 "env_exists":  false,
+                                 "key_count":  0,
+                                 "p12_count":  0
+                             },
+    "heavy_paths":  {
+                        "deferred":  [
+                                         "runtime",
+                                         "setup_assets"
+                                     ],
+                        "mandatory_now":  [
+                                              "README*",
+                                              "docs",
+                                              "workspace_config",
+                                              "scripts",
+                                              "projects",
+                                              "setup_reports",
+                                              "shared_systems"
+                                          ],
+                        "excluded":  [
+                                         ".git/",
+                                         ".env",
+                                         ".env.*",
+                                         "*.pem",
+                                         "*.key",
+                                         "*.pfx",
+                                         "*.p12",
+                                         "id_rsa",
+                                         "id_ed25519",
+                                         "secrets.*",
+                                         "token*",
+                                         "credentials*",
+                                         ".venv/",
+                                         "venv/",
+                                         "__pycache__/",
+                                         "projects/wild_hunt_command_citadel/shortform_core/"
+                                     ]
+                    },
+    "sync_practical":  "YES",
+    "full_long_pass_required_each_run":  "NO",
+    "status":  "PASS"
+}

@@ -1,0 +1,25 @@
+﻿{
+    "generated_at_utc":  "2026-03-15T10:56:53.9152242Z",
+    "source_path":  "E:\\CVVCODEX",
+    "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
+    "previous_bottlenecks":  [
+                                 "monolithic full-pass sync took too long and timed out without early usable output",
+                                 "full recursive inventory / full manifest generation in the critical path increased wall-time",
+                                 "heavy local trees (.venv, legacy shortform_core, runtime/setup_assets tails) dominated scan/copy cost",
+                                 "single long pass had weak intermediate progress signaling"
+                             ],
+    "confirmed_heavy_paths":  [
+                                  "E:\\CVVCODEX\\runtime",
+                                  "E:\\CVVCODEX\\setup_assets",
+                                  "E:\\CVVCODEX\\projects\\wild_hunt_command_citadel\\shortform_core",
+                                  "**\\\\.venv\\\\**"
+                              ],
+    "fast_mode_changes":  [
+                              "staged strategy: Stage A usable -\u003e Stage B incremental -\u003e Stage C heavy tail",
+                              "time budgets enforced per stage to avoid silent long runs",
+                              "engineering-ready state is emitted early with PUBLIC_* files",
+                              "heavy-tail paths deferred by default and synced only on explicit request",
+                              "progress snapshots written to setup_reports/public_mirror_progress_status.*"
+                          ],
+    "status":  "PASS"
+}
