@@ -1,14 +1,15 @@
 ﻿{
-    "checked_at_utc":  "2026-03-15T11:59:02.4299395Z",
+    "checked_at_utc":  "2026-03-15T12:09:37.8405901Z",
     "source_repo_path":  "E:/CVVCODEX",
     "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
     "branch":  "main",
-    "head_commit":  "eaef89d44cc3f4783d23288b28442743e6c55e05",
+    "head_commit":  "0e1c2a0f4c469b90620c51305c67196fdd9c186c",
     "git_status":  {
                        "clean":  false,
-                       "changed_count":  17,
+                       "changed_count":  15,
                        "porcelain":  [
                                          " M setup_reports/final_operator_report.json",
+                                         " M setup_reports/final_operator_report.md",
                                          " M setup_reports/public_access_check.json",
                                          " M setup_reports/public_access_check.md",
                                          " M setup_reports/public_mirror_fast_mode_report.json",
@@ -21,21 +22,18 @@
                                          " M setup_reports/public_repo_access_validation.md",
                                          " M setup_reports/public_runtime_state.json",
                                          " M setup_reports/server_sync_current_state.json",
-                                         " M setup_reports/server_sync_current_state.md",
-                                         " M tools/public_mirror/README.md",
-                                         " M tools/public_mirror/start_public_mirror_public_access.ps1",
-                                         "?? setup_reports/final_operator_report.md"
+                                         " M setup_reports/server_sync_current_state.md"
                                      ]
                    },
     "source_stats":  {
                          "files":  35327,
                          "directories":  3046,
-                         "size_bytes":  3828835174
+                         "size_bytes":  3828839980
                      },
     "mirror_stats":  {
                          "files":  35306,
                          "directories":  3046,
-                         "size_bytes":  3827381934
+                         "size_bytes":  3827383670
                      },
     "active_sync_entrypoint":  "tools/public_mirror/fast_resume_public_mirror.ps1",
     "fast_resume_entrypoint":  "tools/public_mirror/fast_resume_public_mirror.ps1",
@@ -44,27 +42,28 @@
     "runtime_state":  {
                           "source_repo_path":  "E:\\CVVCODEX",
                           "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
-                          "tunnel_started_at_utc":  "2026-03-15T11:54:50.5215900Z",
+                          "tunnel_started_at_utc":  "2026-03-15T12:03:18.5870961Z",
                           "tunnel_command":  "ssh -R 80:127.0.0.1:18080 nokey@localhost.run",
-                          "local_server_started_at_utc":  "2026-03-15T11:33:41.2154250Z",
-                          "updated_at_utc":  "2026-03-15T11:54:50.5355823Z",
+                          "local_server_started_at_utc":  "2026-03-15T12:03:14.8441468Z",
+                          "updated_at_utc":  "2026-03-15T12:03:18.5983003Z",
                           "public_url_blocker":  null,
                           "local_url":  "http://127.0.0.1:18080/",
                           "public_url_status":  "READY",
-                          "public_url_detected_at_utc":  "2026-03-15T11:54:50.5255907Z",
-                          "local_server_pid":  16868,
-                          "tunnel_pid":  1844,
+                          "public_url_detected_at_utc":  "2026-03-15T12:03:18.5900944Z",
+                          "local_server_pid":  11452,
+                          "tunnel_pid":  7212,
                           "local_server_command":  "python -m http.server 18080 --bind 127.0.0.1 --directory E:\\_public_repo_mirror\\WorkFLOW",
-                          "public_url":  "https://278ceff1502c07.lhr.life"
+                          "local_server_stopped_at_utc":  "2026-03-15T12:03:12.7714982Z",
+                          "public_url":  "https://074c01864bb287.lhr.life"
                       },
     "relevant_processes":  [
                                {
-                                   "ProcessId":  16868,
+                                   "ProcessId":  11452,
                                    "Name":  "python.exe",
                                    "CommandLine":  "\"C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" -m http.server 18080 --bind 127.0.0.1 --directory E:\\_public_repo_mirror\\WorkFLOW "
                                },
                                {
-                                   "ProcessId":  1844,
+                                   "ProcessId":  7212,
                                    "Name":  "ssh.exe",
                                    "CommandLine":  "\"C:\\Windows\\System32\\OpenSSH\\ssh.exe\" -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=accept-new -R 80:127.0.0.1:18080 nokey@localhost.run "
                                }

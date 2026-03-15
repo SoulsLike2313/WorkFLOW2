@@ -1,6 +1,6 @@
-# Public Mirror Fast Mode Report
+﻿# Public Mirror Fast Mode Report
 
-- generated_at_utc: 2026-03-15T11:40:00Z
+- generated_at_utc: 2026-03-15T12:09:02.7791203Z
 - status: PASS
 - strategy: FAST_RESUME_STAGED
 - source_path: E:\CVVCODEX
@@ -8,9 +8,9 @@
 - current_stage: COMPLETE_FAST_MODE
 - engineering_ready: True
 - approx_sync_ratio_percent: 99.94
-- mirror_files: 35300
+- mirror_files: 35306
 - mirror_directories: 3046
-- mirror_size_bytes: 3827362001
+- mirror_size_bytes: 3827383670
 
 ## Stages
 
@@ -29,13 +29,13 @@
 
 ## Validation
 
-- validation_run_id: public-mirror-validate-20260315T115529Z
+- validation_run_id: public-mirror-validate-20260315T120356Z
 - create propagation: True
 - delete propagation: True
 - sensitive exposure check: True
 - local web check: True
 - public URL check: True
-- public_url: https://278ceff1502c07.lhr.life
+- public_url: https://074c01864bb287.lhr.life
 
 ## Practicality
 

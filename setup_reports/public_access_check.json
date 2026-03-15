@@ -1,33 +1,33 @@
 ﻿{
-    "checked_at_utc":  "2026-03-15T12:00:59.6196857Z",
+    "checked_at_utc":  "2026-03-15T12:06:38.3829388Z",
     "source_repo_path":  "E:\\CVVCODEX",
-    "public_url":  "https://278ceff1502c07.lhr.life",
-    "status":  "FAIL",
+    "public_url":  "https://074c01864bb287.lhr.life",
+    "status":  "PASS",
     "checks":  {
                    "root_access":  {
-                                       "ok":  false,
-                                       "status":  503,
-                                       "error":  "Удаленный сервер возвратил ошибку: (503) Сервер не доступен."
+                                       "ok":  true,
+                                       "status":  200,
+                                       "error":  null
                                    },
                    "state_file_access":  {
-                                             "ok":  false,
-                                             "status":  503,
-                                             "error":  "Удаленный сервер возвратил ошибку: (503) Сервер не доступен."
+                                             "ok":  true,
+                                             "status":  200,
+                                             "error":  null
                                          },
                    "git_path_blocked":  {
                                             "pass":  true,
                                             "probe":  {
                                                           "ok":  false,
-                                                          "status":  503,
-                                                          "error":  "Удаленный сервер возвратил ошибку: (503) Сервер не доступен."
+                                                          "status":  404,
+                                                          "error":  "Удаленный сервер возвратил ошибку: (404) Не найден."
                                                       }
                                         },
                    "env_path_blocked":  {
                                             "pass":  true,
                                             "probe":  {
                                                           "ok":  false,
-                                                          "status":  503,
-                                                          "error":  "Удаленный сервер возвратил ошибку: (503) Сервер не доступен."
+                                                          "status":  404,
+                                                          "error":  "Удаленный сервер возвратил ошибку: (404) Не найден."
                                                       }
                                         }
                }

@@ -1,14 +1,14 @@
-# Final Operator Report
+﻿# Final Operator Report
 
-- generated_at_utc: 2026-03-15T11:41:00Z
+- generated_at_utc: 2026-03-15T12:08:40.1388943Z
 - architecture: local source repo -> external mirror -> local web server -> public tunnel URL
 - github_is_not_source_of_truth: True
 - source_repo_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - source_branch: main
-- source_head_commit: e57ff23e342c2e1b6c29c2cd667ec6670c21d478
+- source_head_commit: 0e1c2a0f4c469b90620c51305c67196fdd9c186c
 - local_url: http://127.0.0.1:18080/
-- public_url: https://278ceff1502c07.lhr.life
+- public_url: https://074c01864bb287.lhr.life
 - engineering_ready: True
 - current_stage: COMPLETE_FAST_MODE
 - excludes_file: setup_reports/public_mirror_excludes.txt
