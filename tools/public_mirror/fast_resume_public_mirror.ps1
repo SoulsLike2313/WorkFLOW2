@@ -175,6 +175,25 @@ function Get-MirrorStats([string]$MirrorRoot) {
     }
 }
 
+function Get-SourceStats([string]$SourceRoot) {
+    if (-not (Test-Path $SourceRoot)) {
+        return @{
+            files = 0
+            directories = 0
+            size_bytes = 0
+        }
+    }
+    $files = Get-ChildItem -Path $SourceRoot -Recurse -File -Force -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -notmatch "\\\.git(\\|$)" }
+    $dirs = Get-ChildItem -Path $SourceRoot -Recurse -Directory -Force -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -notmatch "\\\.git(\\|$)" }
+    return @{
+        files = ($files | Measure-Object).Count
+        directories = ($dirs | Measure-Object).Count
+        size_bytes = [int64](($files | Measure-Object Length -Sum).Sum)
+    }
+}
+
 function Write-ProgressStatus {
     param(
         [hashtable]$ProgressObject,
@@ -203,9 +222,31 @@ function Write-ProgressStatus {
     $md += ""
     $md += "## Mirror Stats"
     $md += ""
+    $md += "- source_files: $($ProgressObject.source_stats.files)"
+    $md += "- source_directories: $($ProgressObject.source_stats.directories)"
+    $md += "- source_size_bytes: $($ProgressObject.source_stats.size_bytes)"
     $md += "- files: $($ProgressObject.mirror_stats.files)"
     $md += "- directories: $($ProgressObject.mirror_stats.directories)"
     $md += "- size_bytes: $($ProgressObject.mirror_stats.size_bytes)"
+    $md += "- approx_sync_ratio_percent: $($ProgressObject.approx_sync_ratio_percent)"
+    $md += ""
+    $md += "## Ready Components"
+    $md += ""
+    foreach ($k in $ProgressObject.ready_components.Keys) {
+        $md += ("- {0}: {1}" -f $k, $ProgressObject.ready_components[$k])
+    }
+    $md += ""
+    $md += "## Remaining"
+    $md += ""
+    foreach ($x in $ProgressObject.remaining_items) {
+        $md += "- $x"
+    }
+    $md += ""
+    $md += "## Bottlenecks"
+    $md += ""
+    foreach ($b in $ProgressObject.bottlenecks) {
+        $md += "- $b"
+    }
     Set-Content -Path $MdPath -Value $md -Encoding UTF8
 }
 
@@ -345,6 +386,7 @@ Ensure-Directory (Join-Path $sourceRoot "setup_reports")
 
 $excludes = Load-Excludes $excludesPath
 $classified = Classify-ExcludeRules -Rules $excludes -SourceRoot $sourceRoot
+$sourceStats = Get-SourceStats $sourceRoot
 
 $heavyDeferredDirs = @(
     (Join-Path $sourceRoot "runtime"),
@@ -366,6 +408,29 @@ $progress = [ordered]@{
     status = "IN_PROGRESS"
     stage_results = (New-Object System.Collections.Generic.List[object])
     heavy_deferred_paths = @($heavyDeferredDirs | ForEach-Object { $_.Replace("\", "/") })
+    source_stats = $sourceStats
+    mirror_stats = @{
+        files = 0
+        directories = 0
+        size_bytes = 0
+    }
+    approx_sync_ratio_percent = 0
+    ready_components = @{
+        readme = $false
+        docs = $false
+        workspace_config = $false
+        scripts = $false
+        projects = $false
+        public_state_files = $false
+    }
+    remaining_items = @(
+        "run STAGE_A_USABLE",
+        "run STAGE_B_INCREMENTAL",
+        "optional STAGE_C_HEAVY_TAIL"
+    )
+    bottlenecks = @(
+        "large local tree and heavy tail directories"
+    )
     updated_at_utc = (Get-Date).ToUniversalTime().ToString("o")
 }
 
@@ -427,6 +492,19 @@ Write-PublicStateFiles -SourceRoot $sourceRoot -MirrorRoot $mirrorRoot -Excludes
     -Stage "STAGE_A_USABLE" -EngineeringReady $engineeringReady -Status $stageAStatus -MirrorStats $mirrorStatsAfterA
 
 $progress.engineering_ready = $engineeringReady
+$progress.ready_components.readme = (Test-Path (Join-Path $mirrorRoot "README.md"))
+$progress.ready_components.docs = (Test-Path (Join-Path $mirrorRoot "docs"))
+$progress.ready_components.workspace_config = (Test-Path (Join-Path $mirrorRoot "workspace_config"))
+$progress.ready_components.scripts = (Test-Path (Join-Path $mirrorRoot "scripts"))
+$progress.ready_components.projects = (Test-Path (Join-Path $mirrorRoot "projects"))
+$progress.ready_components.public_state_files = (Test-Path (Join-Path $mirrorRoot "PUBLIC_REPO_STATE.json")) -and `
+    (Test-Path (Join-Path $mirrorRoot "PUBLIC_SYNC_STATUS.json")) -and `
+    (Test-Path (Join-Path $mirrorRoot "PUBLIC_ENTRYPOINTS.md"))
+$progress.mirror_stats = $mirrorStatsAfterA
+if ($sourceStats.files -gt 0) {
+    $progress.approx_sync_ratio_percent = [math]::Round(([math]::Min($mirrorStatsAfterA.files, $sourceStats.files) / [double]$sourceStats.files) * 100, 2)
+}
+$progress.remaining_items = @("run STAGE_B_INCREMENTAL", "optional STAGE_C_HEAVY_TAIL")
 foreach ($r in $stageAResults) {
     $progress.stage_results.Add($r) | Out-Null
 }
@@ -447,6 +525,11 @@ Write-PublicStateFiles -SourceRoot $sourceRoot -MirrorRoot $mirrorRoot -Excludes
     -Stage "STAGE_B_INCREMENTAL" -EngineeringReady $engineeringReady -Status $stageB.status -MirrorStats $mirrorStatsAfterB
 
 $progress.current_stage = if ($RunHeavyTail) { "STAGE_C_HEAVY_TAIL" } else { "COMPLETE_FAST_MODE" }
+$progress.mirror_stats = $mirrorStatsAfterB
+if ($sourceStats.files -gt 0) {
+    $progress.approx_sync_ratio_percent = [math]::Round(([math]::Min($mirrorStatsAfterB.files, $sourceStats.files) / [double]$sourceStats.files) * 100, 2)
+}
+$progress.remaining_items = if ($RunHeavyTail) { @("run STAGE_C_HEAVY_TAIL") } else { @("none required for engineering-ready state") }
 $progress.updated_at_utc = (Get-Date).ToUniversalTime().ToString("o")
 Write-ProgressStatus -ProgressObject $progress -JsonPath $progressJson -MdPath $progressMd
 
@@ -463,6 +546,7 @@ if ($RunHeavyTail) {
         $progress.stage_results.Add($stageC) | Out-Null
     }
     $progress.current_stage = "COMPLETE_WITH_HEAVY_TAIL"
+    $progress.remaining_items = @("none")
     $progress.updated_at_utc = (Get-Date).ToUniversalTime().ToString("o")
     Write-ProgressStatus -ProgressObject $progress -JsonPath $progressJson -MdPath $progressMd
 }
@@ -471,6 +555,10 @@ $finalStats = Get-MirrorStats $mirrorRoot
 $anyFail = ($progress.stage_results | Where-Object { $_.status -eq "FAIL" }).Count -gt 0
 $progress.status = if ($anyFail) { "PASS_WITH_WARNINGS" } else { "PASS" }
 $progress.mirror_stats = $finalStats
+if ($sourceStats.files -gt 0) {
+    $progress.approx_sync_ratio_percent = [math]::Round(([math]::Min($finalStats.files, $sourceStats.files) / [double]$sourceStats.files) * 100, 2)
+}
+$progress.bottlenecks = if ($RunHeavyTail) { @("none") } else { @("heavy tail deferred by design: runtime/setup_assets") }
 $progress.updated_at_utc = (Get-Date).ToUniversalTime().ToString("o")
 Write-ProgressStatus -ProgressObject $progress -JsonPath $progressJson -MdPath $progressMd
 

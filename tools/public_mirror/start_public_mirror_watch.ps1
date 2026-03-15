@@ -3,6 +3,8 @@ param(
     [string]$MirrorPath,
     [string]$ExcludesFilePath,
     [int]$DebounceSeconds = 3,
+    [int]$StageATimeBudgetSeconds = 120,
+    [int]$StageBTimeBudgetSeconds = 120,
     [switch]$StartWeb,
     [switch]$StartTunnel,
     [int]$Port = 18080
@@ -61,14 +63,13 @@ $tunnelOutPath = Join-Path $runtimeDir "public_tunnel_stdout.log"
 $tunnelErrPath = Join-Path $runtimeDir "public_tunnel_stderr.log"
 
 function Invoke-Sync([switch]$SkipManifest) {
-    $syncScript = Join-Path $SourceRepoPath "tools/public_mirror/sync_repo_to_public_mirror.ps1"
+    $syncScript = Join-Path $SourceRepoPath "tools/public_mirror/fast_resume_public_mirror.ps1"
     & powershell -NoProfile -ExecutionPolicy Bypass -File $syncScript `
         -SourceRepoPath $SourceRepoPath `
         -MirrorPath $MirrorPath `
         -ExcludesFilePath $ExcludesFilePath `
-        -PublicRuntimeStatePath $runtimeStatePath `
-        -SkipFileManifest:$SkipManifest `
-        -Quiet
+        -StageATimeBudgetSeconds $StageATimeBudgetSeconds `
+        -StageBTimeBudgetSeconds $StageBTimeBudgetSeconds
 }
 
 function Save-RuntimeState([hashtable]$StatePatch) {

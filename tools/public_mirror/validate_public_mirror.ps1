@@ -7,13 +7,15 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-function Get-RepoRoot {
-    $root = (git rev-parse --show-toplevel).Trim()
-    return (Resolve-Path $root).Path
+function Resolve-SourceRoot {
+    if (-not [string]::IsNullOrWhiteSpace($SourceRepoPath)) {
+        return (Resolve-Path $SourceRepoPath).Path
+    }
+    return (Resolve-Path ((git rev-parse --show-toplevel).Trim())).Path
 }
 
-function Get-RepoName {
-    $remote = (git remote get-url origin 2>$null)
+function Resolve-RepoName([string]$RepoRoot) {
+    $remote = (git -C $RepoRoot remote get-url origin 2>$null)
     if (-not [string]::IsNullOrWhiteSpace($remote)) {
         $leaf = Split-Path $remote -Leaf
         if ($leaf.EndsWith(".git")) {
@@ -21,30 +23,45 @@ function Get-RepoName {
         }
         return $leaf
     }
-    return [System.IO.Path]::GetFileName((Get-RepoRoot))
+    return [System.IO.Path]::GetFileName($RepoRoot)
 }
 
-if ([string]::IsNullOrWhiteSpace($SourceRepoPath)) {
-    $SourceRepoPath = Get-RepoRoot
+function Set-Check([hashtable]$Results, [string]$Name, [bool]$Pass, $Details) {
+    $Results.checks[$Name] = [ordered]@{
+        pass = $Pass
+        details = $Details
+    }
+    if (-not $Pass -and $Results.status -eq "PASS") {
+        $Results.status = "FAIL"
+    }
 }
-else {
-    $SourceRepoPath = (Resolve-Path $SourceRepoPath).Path
+
+function Run-ScriptCapture([string]$ScriptPath, [string[]]$Args) {
+    $allArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $ScriptPath) + $Args
+    $text = & powershell @allArgs 2>&1
+    $exitCode = $LASTEXITCODE
+    return [ordered]@{
+        exit_code = $exitCode
+        output = @($text | ForEach-Object { "$_" })
+    }
 }
+
+$sourceRoot = Resolve-SourceRoot
+$repoName = Resolve-RepoName $sourceRoot
 if ([string]::IsNullOrWhiteSpace($MirrorPath)) {
-    $mirrorParent = Join-Path (Split-Path $SourceRepoPath -Parent) "_public_repo_mirror"
-    $MirrorPath = Join-Path $mirrorParent (Get-RepoName)
+    $MirrorPath = Join-Path (Join-Path (Split-Path $sourceRoot -Parent) "_public_repo_mirror") $repoName
 }
-$MirrorPath = [System.IO.Path]::GetFullPath($MirrorPath)
-
 if ([string]::IsNullOrWhiteSpace($ExcludesFilePath)) {
-    $ExcludesFilePath = Join-Path $SourceRepoPath "setup_reports/public_mirror_excludes.txt"
+    $ExcludesFilePath = Join-Path $sourceRoot "setup_reports/public_mirror_excludes.txt"
 }
-$ExcludesFilePath = [System.IO.Path]::GetFullPath($ExcludesFilePath)
 
-$runtimeStatePath = Join-Path $SourceRepoPath "setup_reports/public_runtime_state.json"
-if ([string]::IsNullOrWhiteSpace($PublicUrl) -and (Test-Path $runtimeStatePath)) {
+$sourceRoot = [System.IO.Path]::GetFullPath($sourceRoot)
+$mirrorRoot = [System.IO.Path]::GetFullPath($MirrorPath)
+$excludesPath = [System.IO.Path]::GetFullPath($ExcludesFilePath)
+$runtimePath = Join-Path $sourceRoot "setup_reports/public_runtime_state.json"
+if ([string]::IsNullOrWhiteSpace($PublicUrl) -and (Test-Path $runtimePath)) {
     try {
-        $runtime = Get-Content -Raw $runtimeStatePath | ConvertFrom-Json
+        $runtime = Get-Content -Raw $runtimePath | ConvertFrom-Json
         if (-not [string]::IsNullOrWhiteSpace($runtime.public_url)) {
             $PublicUrl = $runtime.public_url
         }
@@ -52,34 +69,26 @@ if ([string]::IsNullOrWhiteSpace($PublicUrl) -and (Test-Path $runtimeStatePath))
     catch {}
 }
 
-$syncScript = Join-Path $SourceRepoPath "tools/public_mirror/sync_repo_to_public_mirror.ps1"
-& powershell -NoProfile -ExecutionPolicy Bypass -File $syncScript `
-    -SourceRepoPath $SourceRepoPath `
-    -MirrorPath $MirrorPath `
-    -ExcludesFilePath $ExcludesFilePath `
-    -PublicRuntimeStatePath $runtimeStatePath `
-    -Quiet
-
 $runId = "public-mirror-validate-" + (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
 $results = [ordered]@{
     run_id = $runId
     generated_at_utc = (Get-Date).ToUniversalTime().ToString("o")
-    source_repo_path = $SourceRepoPath
-    mirror_path = $MirrorPath
+    source_repo_path = $sourceRoot
+    mirror_path = $mirrorRoot
     public_url = $PublicUrl
     checks = [ordered]@{}
     status = "PASS"
 }
 
-function Set-Check($name, $pass, $details) {
-    $results.checks[$name] = [ordered]@{
-        pass = [bool]$pass
-        details = $details
-    }
-    if (-not $pass -and $results.status -eq "PASS") {
-        $results.status = "FAIL"
-    }
-}
+$fastScript = Join-Path $sourceRoot "tools/public_mirror/fast_resume_public_mirror.ps1"
+$syncRun = Run-ScriptCapture -ScriptPath $fastScript -Args @(
+    "-SourceRepoPath", $sourceRoot,
+    "-MirrorPath", $mirrorRoot,
+    "-ExcludesFilePath", $excludesPath,
+    "-StageATimeBudgetSeconds", "120",
+    "-StageBTimeBudgetSeconds", "180"
+)
+Set-Check -Results $results -Name "fast_resume_sync" -Pass ($syncRun.exit_code -eq 0) -Details $syncRun
 
 $requiredMirrorFiles = @(
     "PUBLIC_REPO_STATE.json",
@@ -90,108 +99,92 @@ $requiredMirrorFiles = @(
 )
 $missing = @()
 foreach ($rf in $requiredMirrorFiles) {
-    if (-not (Test-Path (Join-Path $MirrorPath $rf))) {
+    if (-not (Test-Path (Join-Path $mirrorRoot $rf))) {
         $missing += $rf
     }
 }
-Set-Check "required_public_state_files" ($missing.Count -eq 0) (@{ missing = $missing })
+Set-Check -Results $results -Name "required_public_state_files" -Pass ($missing.Count -eq 0) -Details (@{ missing = $missing })
 
 $probeRel = "setup_reports/.public_mirror_probe_$([guid]::NewGuid().ToString('N')).txt"
-$probeSrc = Join-Path $SourceRepoPath $probeRel
-$probeMirror = Join-Path $MirrorPath $probeRel
+$probeSrc = Join-Path $sourceRoot $probeRel
+$probeMirror = Join-Path $mirrorRoot $probeRel
 New-Item -ItemType Directory -Path (Split-Path $probeSrc -Parent) -Force | Out-Null
 $probeContent = "probe-run=$runId"
 Set-Content -Path $probeSrc -Value $probeContent -Encoding UTF8
 
-& powershell -NoProfile -ExecutionPolicy Bypass -File $syncScript `
-    -SourceRepoPath $SourceRepoPath `
-    -MirrorPath $MirrorPath `
-    -ExcludesFilePath $ExcludesFilePath `
-    -PublicRuntimeStatePath $runtimeStatePath `
-    -SkipFileManifest `
-    -Quiet
-
-$createPass = (Test-Path $probeMirror)
+$syncCreate = Run-ScriptCapture -ScriptPath $fastScript -Args @(
+    "-SourceRepoPath", $sourceRoot,
+    "-MirrorPath", $mirrorRoot,
+    "-ExcludesFilePath", $excludesPath,
+    "-StageATimeBudgetSeconds", "90",
+    "-StageBTimeBudgetSeconds", "90"
+)
+$createPass = ($syncCreate.exit_code -eq 0) -and (Test-Path $probeMirror)
 if ($createPass) {
     $mirrorContent = (Get-Content -Raw $probeMirror).Trim()
     $createPass = ($mirrorContent -eq $probeContent)
 }
-Set-Check "sync_create_propagation" $createPass (@{ source_probe = $probeSrc; mirror_probe = $probeMirror })
+Set-Check -Results $results -Name "sync_create_propagation" -Pass $createPass -Details (@{
+        source_probe = $probeSrc
+        mirror_probe = $probeMirror
+        sync = $syncCreate
+    })
 
 Remove-Item -Path $probeSrc -Force -ErrorAction SilentlyContinue
-& powershell -NoProfile -ExecutionPolicy Bypass -File $syncScript `
-    -SourceRepoPath $SourceRepoPath `
-    -MirrorPath $MirrorPath `
-    -ExcludesFilePath $ExcludesFilePath `
-    -PublicRuntimeStatePath $runtimeStatePath `
-    -SkipFileManifest `
-    -Quiet
-
-$deletePass = -not (Test-Path $probeMirror)
-Set-Check "sync_delete_propagation" $deletePass (@{ mirror_probe_removed = $deletePass })
-
-$sensitiveLocal = @(
-    (Join-Path $MirrorPath ".git"),
-    (Join-Path $MirrorPath ".env")
+$syncDelete = Run-ScriptCapture -ScriptPath $fastScript -Args @(
+    "-SourceRepoPath", $sourceRoot,
+    "-MirrorPath", $mirrorRoot,
+    "-ExcludesFilePath", $excludesPath,
+    "-StageATimeBudgetSeconds", "90",
+    "-StageBTimeBudgetSeconds", "90"
 )
-$sensitiveLeak = @()
-foreach ($p in $sensitiveLocal) {
-    if (Test-Path $p) {
-        $sensitiveLeak += $p
+$deletePass = ($syncDelete.exit_code -eq 0) -and (-not (Test-Path $probeMirror))
+Set-Check -Results $results -Name "sync_delete_propagation" -Pass $deletePass -Details (@{
+        mirror_probe_removed = $deletePass
+        sync = $syncDelete
+    })
+
+$sensitivePatterns = @(".git", ".env", "*.pem", "*.key", "*.p12", "*.pfx")
+$leaks = @()
+foreach ($pat in $sensitivePatterns) {
+    $found = Get-ChildItem -Path $mirrorRoot -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -like $pat }
+    if ($found) {
+        $leaks += @($found | Select-Object -ExpandProperty FullName)
     }
 }
-Set-Check "sensitive_local_path_block" ($sensitiveLeak.Count -eq 0) (@{ leaked_paths = $sensitiveLeak })
+$leaks = @($leaks | Sort-Object -Unique)
+Set-Check -Results $results -Name "sensitive_paths_not_present" -Pass ($leaks.Count -eq 0) -Details (@{ leaked_paths = $leaks })
+
+$webCheckScript = Join-Path $sourceRoot "tools/public_mirror/check_public_mirror_web.ps1"
+$webCheck = Run-ScriptCapture -ScriptPath $webCheckScript -Args @(
+    "-SourceRepoPath", $sourceRoot,
+    "-MirrorPath", $mirrorRoot
+)
+Set-Check -Results $results -Name "local_web_access_and_safety" -Pass ($webCheck.exit_code -eq 0) -Details $webCheck
 
 if (-not [string]::IsNullOrWhiteSpace($PublicUrl)) {
-    $publicChecks = [ordered]@{
-        root_list_ok = $false
-        state_file_ok = $false
-        sensitive_git_blocked = $false
-        sensitive_env_blocked = $false
-    }
-    try {
-        $root = Invoke-WebRequest -Uri $PublicUrl -UseBasicParsing -TimeoutSec 20
-        $publicChecks.root_list_ok = ($root.StatusCode -ge 200 -and $root.StatusCode -lt 400)
-    }
-    catch {}
-    try {
-        $stateResp = Invoke-WebRequest -Uri ($PublicUrl.TrimEnd("/") + "/PUBLIC_REPO_STATE.json") -UseBasicParsing -TimeoutSec 20
-        $publicChecks.state_file_ok = ($stateResp.StatusCode -ge 200 -and $stateResp.StatusCode -lt 400)
-    }
-    catch {}
-    try {
-        $gitResp = Invoke-WebRequest -Uri ($PublicUrl.TrimEnd("/") + "/.git/") -UseBasicParsing -TimeoutSec 20
-        $publicChecks.sensitive_git_blocked = ($gitResp.StatusCode -ge 400)
-    }
-    catch {
-        $publicChecks.sensitive_git_blocked = $true
-    }
-    try {
-        $envResp = Invoke-WebRequest -Uri ($PublicUrl.TrimEnd("/") + "/.env") -UseBasicParsing -TimeoutSec 20
-        $publicChecks.sensitive_env_blocked = ($envResp.StatusCode -ge 400)
-    }
-    catch {
-        $publicChecks.sensitive_env_blocked = $true
-    }
-
-    $publicPass = $publicChecks.root_list_ok -and $publicChecks.state_file_ok -and $publicChecks.sensitive_git_blocked -and $publicChecks.sensitive_env_blocked
-    Set-Check "public_url_access_and_safety" $publicPass $publicChecks
+    $publicCheckScript = Join-Path $sourceRoot "tools/public_mirror/check_public_mirror_public_access.ps1"
+    $publicCheck = Run-ScriptCapture -ScriptPath $publicCheckScript -Args @(
+        "-SourceRepoPath", $sourceRoot,
+        "-PublicUrl", $PublicUrl
+    )
+    Set-Check -Results $results -Name "public_url_access_and_safety" -Pass ($publicCheck.exit_code -eq 0) -Details $publicCheck
 }
 else {
-    Set-Check "public_url_access_and_safety" $false (@{ reason = "public_url_not_available" })
+    Set-Check -Results $results -Name "public_url_access_and_safety" -Pass $false -Details (@{ reason = "public_url_not_available" })
 }
 
-$jsonPath = Join-Path $SourceRepoPath "setup_reports/public_repo_access_validation.json"
-$mdPath = Join-Path $SourceRepoPath "setup_reports/public_repo_access_validation.md"
-$results | ConvertTo-Json -Depth 8 | Set-Content -Path $jsonPath -Encoding UTF8
+$jsonPath = Join-Path $sourceRoot "setup_reports/public_repo_access_validation.json"
+$mdPath = Join-Path $sourceRoot "setup_reports/public_repo_access_validation.md"
+$results | ConvertTo-Json -Depth 10 | Set-Content -Path $jsonPath -Encoding UTF8
 
 $md = @(
     "# Public Repo Access Validation",
     "",
     "- run_id: $runId",
     "- generated_at_utc: $($results.generated_at_utc)",
-    "- source_repo_path: $SourceRepoPath",
-    "- mirror_path: $MirrorPath",
+    "- source_repo_path: $sourceRoot",
+    "- mirror_path: $mirrorRoot",
     "- public_url: $PublicUrl",
     "- status: $($results.status)",
     "",
@@ -202,7 +195,7 @@ foreach ($k in $results.checks.Keys) {
     $md += ""
     $md += ("- {0}: {1}" -f $k, $item.pass)
     $md += '```json'
-    $md += ($item.details | ConvertTo-Json -Depth 6)
+    $md += ($item.details | ConvertTo-Json -Depth 8)
     $md += '```'
 }
 Set-Content -Path $mdPath -Value $md -Encoding UTF8
