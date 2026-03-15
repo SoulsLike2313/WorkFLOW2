@@ -1,6 +1,6 @@
 ﻿# Public Access Check
 
-- checked_at_utc: 2026-03-15T14:58:40.7991185Z
+- checked_at_utc: 2026-03-15T15:10:37.3420341Z
 - public_url: https://0e6748b97ae3fe.lhr.life
 - public_access_provider: ssh_localhost_run
 - public_access_mechanism: ssh reverse tunnel via localhost.run (bound to non-VPN interface)
@@ -12,7 +12,7 @@
 - old_broken_public_url: https://penalties-passive-trading-probability.trycloudflare.com
 - old_broken_public_url_cause: cloudflared_quick_tunnel_failed_live_health_check_tls_handshake_eof
 - latest_tunnel_url_from_logs: https://0e6748b97ae3fe.lhr.life
-- runtime_url_outdated: True
+- runtime_url_outdated: False
 - failure_cause: 
 - status: PASS
 
@@ -28,6 +28,24 @@
 ```
 
 - state_file_access
+```json
+{
+    "ok":  true,
+    "status":  200,
+    "error":  null
+}
+```
+
+- sync_status_file_access
+```json
+{
+    "ok":  true,
+    "status":  200,
+    "error":  null
+}
+```
+
+- entrypoints_file_access
 ```json
 {
     "ok":  true,

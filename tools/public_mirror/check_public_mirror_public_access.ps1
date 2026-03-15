@@ -169,6 +169,8 @@ if ([string]::IsNullOrWhiteSpace($PublicUrl)) {
 else {
     $rootCheck = Probe-Url $PublicUrl
     $stateCheck = Probe-Url ($PublicUrl.TrimEnd("/") + "/PUBLIC_REPO_STATE.json")
+    $syncCheck = Probe-Url ($PublicUrl.TrimEnd("/") + "/PUBLIC_SYNC_STATUS.json")
+    $entrypointsCheck = Probe-Url ($PublicUrl.TrimEnd("/") + "/PUBLIC_ENTRYPOINTS.md")
     $gitCheck = Probe-Url ($PublicUrl.TrimEnd("/") + "/.git/")
     $envCheck = Probe-Url ($PublicUrl.TrimEnd("/") + "/.env")
 
@@ -178,11 +180,13 @@ else {
 
     $result.checks["root_access"] = $rootCheck
     $result.checks["state_file_access"] = $stateCheck
+    $result.checks["sync_status_file_access"] = $syncCheck
+    $result.checks["entrypoints_file_access"] = $entrypointsCheck
     $result.checks["git_path_blocked"] = [ordered]@{ pass = $gitBlocked; probe = $gitCheck }
     $result.checks["env_path_blocked"] = [ordered]@{ pass = $envBlocked; probe = $envCheck }
     $result.checks["vpn_independent"] = [ordered]@{ pass = $vpnIndependentCheck; value = (-not $vpnDependent) }
 
-    $result.status = if ($rootCheck.ok -and $stateCheck.ok -and $gitBlocked -and $envBlocked -and $vpnIndependentCheck) { "PASS" } else { "FAIL" }
+    $result.status = if ($rootCheck.ok -and $stateCheck.ok -and $syncCheck.ok -and $entrypointsCheck.ok -and $gitBlocked -and $envBlocked -and $vpnIndependentCheck) { "PASS" } else { "FAIL" }
     if ($result.status -ne "PASS") {
         if (-not $tunnelAlive) {
             $result.failure_cause = "tunnel_process_not_alive_stale_session_url"
@@ -190,7 +194,7 @@ else {
         elseif ($vpnDependent) {
             $result.failure_cause = "public_access_marked_vpn_dependent"
         }
-        elseif (($rootCheck.status -eq 503) -or ($stateCheck.status -eq 503)) {
+        elseif (($rootCheck.status -eq 503) -or ($stateCheck.status -eq 503) -or ($syncCheck.status -eq 503) -or ($entrypointsCheck.status -eq 503)) {
             $result.failure_cause = "tunnel_endpoint_not_mapped_or_session_expired"
         }
         else {
