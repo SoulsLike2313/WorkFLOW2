@@ -1,8 +1,10 @@
 param(
     [string]$SourceRepoPath,
     [int]$Port = 18080,
-    [int]$DetectTimeoutSeconds = 45,
-    [int]$HealthCheckTimeoutSeconds = 30,
+    [int]$DetectTimeoutSeconds = 60,
+    [int]$HealthCheckTimeoutSeconds = 45,
+    [ValidateSet("cloudflared_quick_tunnel", "ssh_localhost_run")]
+    [string]$Provider = "cloudflared_quick_tunnel",
     [switch]$ForceRestart
 )
 
@@ -38,83 +40,27 @@ function Write-RuntimeState([string]$PathValue, [hashtable]$Patch) {
         $state[$k] = $Patch[$k]
     }
     $state["updated_at_utc"] = (Get-Date).ToUniversalTime().ToString("o")
-    $state | ConvertTo-Json -Depth 10 | Set-Content -Path $PathValue -Encoding UTF8
+    $state | ConvertTo-Json -Depth 12 | Set-Content -Path $PathValue -Encoding UTF8
 }
 
-function Resolve-PublicUrl([string]$OutPath, [string]$ErrPath, [int]$TimeoutSec = 45) {
-    function Read-SharedText([string]$PathValue) {
-        if (-not (Test-Path $PathValue)) {
-            return ""
-        }
-        $fs = $null
-        $sr = $null
-        try {
-            $fs = [System.IO.File]::Open($PathValue, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
-            $sr = New-Object System.IO.StreamReader($fs)
-            return $sr.ReadToEnd()
-        }
-        catch {
-            return ""
-        }
-        finally {
-            if ($sr) { $sr.Dispose() }
-            if ($fs) { $fs.Dispose() }
-        }
+function Read-SharedText([string]$PathValue) {
+    if (-not (Test-Path $PathValue)) {
+        return ""
     }
-
-    $deadline = (Get-Date).AddSeconds($TimeoutSec)
-    while ((Get-Date) -lt $deadline) {
-        Start-Sleep -Milliseconds 1000
-        foreach ($path in @($OutPath, $ErrPath)) {
-            $text = Read-SharedText $path
-            if ([string]::IsNullOrWhiteSpace($text)) { continue }
-            $lineMatches = [regex]::Matches($text, "tunneled with tls termination,\s*(https?://[^\s,]+)")
-            if ($lineMatches.Count -gt 0) {
-                $last = $lineMatches[$lineMatches.Count - 1].Groups[1].Value.TrimEnd("/")
-                if (-not [string]::IsNullOrWhiteSpace($last)) {
-                    return $last
-                }
-            }
-            $matches = [regex]::Matches($text, "https?://[^\s,]+")
-            if ($matches.Count -eq 0) { continue }
-            $candidates = New-Object System.Collections.Generic.List[string]
-            foreach ($m in $matches) {
-                $url = $m.Value.TrimEnd("/")
-                if (
-                    $url -match "localhost\.run" -or
-                    $url -match "localhost:3000" -or
-                    $url -match "twitter\.com" -or
-                    $url -match "localhost_run"
-                ) {
-                    continue
-                }
-                $candidates.Add($url) | Out-Null
-            }
-            if ($candidates.Count -gt 0) {
-                return $candidates[$candidates.Count - 1]
-            }
-        }
+    $fs = $null
+    $sr = $null
+    try {
+        $fs = [System.IO.File]::Open($PathValue, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+        $sr = New-Object System.IO.StreamReader($fs)
+        return $sr.ReadToEnd()
     }
-    return $null
-}
-
-function Wait-PublicUrlHealthy([string]$Url, [int]$TimeoutSec = 30) {
-    if ([string]::IsNullOrWhiteSpace($Url)) {
-        return $false
+    catch {
+        return ""
     }
-    $deadline = (Get-Date).AddSeconds($TimeoutSec)
-    while ((Get-Date) -lt $deadline) {
-        try {
-            $root = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 10
-            $state = Invoke-WebRequest -Uri ($Url.TrimEnd("/") + "/PUBLIC_REPO_STATE.json") -UseBasicParsing -TimeoutSec 10
-            if ($root.StatusCode -ge 200 -and $root.StatusCode -lt 400 -and $state.StatusCode -ge 200 -and $state.StatusCode -lt 400) {
-                return $true
-            }
-        }
-        catch {}
-        Start-Sleep -Milliseconds 1500
+    finally {
+        if ($sr) { $sr.Dispose() }
+        if ($fs) { $fs.Dispose() }
     }
-    return $false
 }
 
 function Probe-UrlStatus([string]$Url) {
@@ -133,6 +79,102 @@ function Probe-UrlStatus([string]$Url) {
     }
 }
 
+function Resolve-PublicUrlFromLogs {
+    param(
+        [string]$OutPath,
+        [string]$ErrPath,
+        [string]$ProviderName,
+        [int]$TimeoutSec
+    )
+    $deadline = (Get-Date).AddSeconds($TimeoutSec)
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 1000
+        foreach ($path in @($OutPath, $ErrPath)) {
+            $text = Read-SharedText $path
+            if ([string]::IsNullOrWhiteSpace($text)) { continue }
+
+            if ($ProviderName -eq "cloudflared_quick_tunnel") {
+                $matches = [regex]::Matches($text, "https://[a-z0-9\-]+\.trycloudflare\.com")
+                if ($matches.Count -gt 0) {
+                    return $matches[$matches.Count - 1].Value.TrimEnd("/")
+                }
+            }
+            else {
+                $lineMatches = [regex]::Matches($text, "tunneled with tls termination,\s*(https?://[^\s,]+)")
+                if ($lineMatches.Count -gt 0) {
+                    return $lineMatches[$lineMatches.Count - 1].Groups[1].Value.TrimEnd("/")
+                }
+                $genericMatches = [regex]::Matches($text, "https?://[^\s,]+")
+                if ($genericMatches.Count -gt 0) {
+                    $filtered = New-Object System.Collections.Generic.List[string]
+                    foreach ($m in $genericMatches) {
+                        $url = $m.Value.TrimEnd("/")
+                        if (
+                            $url -match "localhost\.run" -or
+                            $url -match "localhost:3000" -or
+                            $url -match "twitter\.com" -or
+                            $url -match "localhost_run"
+                        ) {
+                            continue
+                        }
+                        $filtered.Add($url) | Out-Null
+                    }
+                    if ($filtered.Count -gt 0) {
+                        return $filtered[$filtered.Count - 1]
+                    }
+                }
+            }
+        }
+    }
+    return $null
+}
+
+function Wait-PublicUrlHealthy([string]$Url, [int]$TimeoutSec = 45) {
+    if ([string]::IsNullOrWhiteSpace($Url)) {
+        return $false
+    }
+    $deadline = (Get-Date).AddSeconds($TimeoutSec)
+    while ((Get-Date) -lt $deadline) {
+        try {
+            $root = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 10
+            $state = Invoke-WebRequest -Uri ($Url.TrimEnd("/") + "/PUBLIC_REPO_STATE.json") -UseBasicParsing -TimeoutSec 10
+            if ($root.StatusCode -ge 200 -and $root.StatusCode -lt 400 -and $state.StatusCode -ge 200 -and $state.StatusCode -lt 400) {
+                return $true
+            }
+        }
+        catch {}
+        Start-Sleep -Milliseconds 1500
+    }
+    return $false
+}
+
+function Stop-ProcessSafe([int]$PidValue) {
+    if ($PidValue -le 0) { return }
+    try {
+        Stop-Process -Id $PidValue -Force -ErrorAction Stop
+    }
+    catch {}
+}
+
+function Get-ProviderCommand([string]$ProviderName) {
+    if ($ProviderName -eq "cloudflared_quick_tunnel") {
+        $cmd = Get-Command cloudflared -ErrorAction SilentlyContinue
+        if ($cmd) { return $cmd.Source }
+        foreach ($candidate in @(
+                "C:\Program Files\cloudflared\cloudflared.exe",
+                "C:\Program Files (x86)\cloudflared\cloudflared.exe"
+            )) {
+            if (Test-Path $candidate) {
+                return $candidate
+            }
+        }
+        return $null
+    }
+    $ssh = Get-Command ssh -ErrorAction SilentlyContinue
+    if ($ssh) { return $ssh.Source }
+    return $null
+}
+
 $sourceRoot = Resolve-SourceRoot
 $runtimeDir = Join-Path $sourceRoot "setup_reports"
 if (-not (Test-Path $runtimeDir)) {
@@ -141,111 +183,128 @@ if (-not (Test-Path $runtimeDir)) {
 $runtimePath = Join-Path $runtimeDir "public_runtime_state.json"
 $outPath = Join-Path $runtimeDir "public_tunnel_stdout.log"
 $errPath = Join-Path $runtimeDir "public_tunnel_stderr.log"
-$previousPublicUrl = $null
-$oldBrokenUrl = $null
-$oldBrokenCause = $null
 
 # Ensure local web is running first.
 $startWebScript = Join-Path $sourceRoot "tools/public_mirror/start_public_mirror_web.ps1"
 & $startWebScript -SourceRepoPath $sourceRoot -Port $Port | Out-Null
 
 $state = Read-RuntimeState $runtimePath
-$previousPublicUrl = [string]$state["public_url"]
-if ($state.ContainsKey("old_broken_public_url") -and -not [string]::IsNullOrWhiteSpace([string]$state["old_broken_public_url"])) {
-    $oldBrokenUrl = [string]$state["old_broken_public_url"]
+$previousPublicUrl = if ($state.ContainsKey("public_url")) { [string]$state["public_url"] } else { $null }
+$previousPid = if ($state.ContainsKey("tunnel_pid")) { [int]$state["tunnel_pid"] } else { 0 }
+$oldBrokenUrl = if ($state.ContainsKey("old_broken_public_url")) { [string]$state["old_broken_public_url"] } else { $null }
+$oldBrokenCause = if ($state.ContainsKey("old_broken_public_url_cause")) { [string]$state["old_broken_public_url_cause"] } else { $null }
+
+$previousProcessAlive = $false
+if ($previousPid -gt 0) {
+    $previousProcessAlive = [bool](Get-Process -Id $previousPid -ErrorAction SilentlyContinue)
 }
-if ($state.ContainsKey("old_broken_public_url_cause") -and -not [string]::IsNullOrWhiteSpace([string]$state["old_broken_public_url_cause"])) {
-    $oldBrokenCause = [string]$state["old_broken_public_url_cause"]
-}
-$existingPid = $state["tunnel_pid"]
+$previousStatus = Probe-UrlStatus -Url $previousPublicUrl
 if (-not [string]::IsNullOrWhiteSpace($previousPublicUrl)) {
-    $existingProcess = if ($existingPid) { Get-Process -Id $existingPid -ErrorAction SilentlyContinue } else { $null }
-    $previousStatus = Probe-UrlStatus -Url $previousPublicUrl
-    if (-not $existingProcess) {
+    if (-not $previousProcessAlive) {
         $oldBrokenUrl = $previousPublicUrl
-        $oldBrokenCause = "stale_tunnel_session_process_not_alive"
+        $oldBrokenCause = "stale_session_process_not_alive"
     }
     elseif ($null -ne $previousStatus -and $previousStatus -ge 500) {
         $oldBrokenUrl = $previousPublicUrl
-        $oldBrokenCause = "stale_tunnel_hostname_not_mapped"
-    }
-}
-if ($existingPid) {
-    $existing = Get-Process -Id $existingPid -ErrorAction SilentlyContinue
-    if ($existing) {
-        if ($ForceRestart) {
-            Stop-Process -Id $existingPid -Force -ErrorAction SilentlyContinue
-        }
-        elseif ($state.ContainsKey("public_url") -and -not [string]::IsNullOrWhiteSpace([string]$state["public_url"])) {
-            Write-Host "[public-mirror-public] already running pid=$existingPid url=$($state["public_url"])"
-            exit 0
-        }
-        else {
-            Stop-Process -Id $existingPid -Force -ErrorAction SilentlyContinue
-        }
+        $oldBrokenCause = "stale_session_hostname_not_mapped"
     }
 }
 
-# Prevent stale URL extraction from previous tunnel session logs.
+if ($previousPid -gt 0 -and ($ForceRestart -or $Provider -ne $state["public_access_provider"])) {
+    Stop-ProcessSafe -PidValue $previousPid
+}
+
+# Clean logs to avoid stale URL extraction.
 Set-Content -Path $outPath -Value "" -Encoding UTF8
 Set-Content -Path $errPath -Value "" -Encoding UTF8
 
-$sshArgs = @(
-    "-o", "ExitOnForwardFailure=yes",
-    "-o", "ServerAliveInterval=30",
-    "-o", "ServerAliveCountMax=3",
-    "-o", "StrictHostKeyChecking=accept-new",
-    "-R", "80:127.0.0.1:$Port",
-    "nokey@localhost.run"
-)
-
-$proc = Start-Process -FilePath "ssh" -ArgumentList $sshArgs -PassThru -WindowStyle Hidden `
-    -RedirectStandardOutput $outPath -RedirectStandardError $errPath
-
-$publicUrl = Resolve-PublicUrl -OutPath $outPath -ErrPath $errPath -TimeoutSec $DetectTimeoutSeconds
-if (-not $publicUrl) {
-    if (-not $proc.HasExited) {
-        try { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue } catch {}
-    }
+$providerCommand = Get-ProviderCommand -ProviderName $Provider
+if ([string]::IsNullOrWhiteSpace($providerCommand)) {
     Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
+            public_access_provider = $Provider
+            public_access_mechanism = if ($Provider -eq "cloudflared_quick_tunnel") { "cloudflared quick tunnel (trycloudflare.com)" } else { "ssh reverse tunnel via localhost.run" }
+            public_access_vpn_dependent = ($Provider -ne "cloudflared_quick_tunnel")
             tunnel_pid = $null
-            tunnel_started_at_utc = (Get-Date).ToUniversalTime().ToString("o")
-            tunnel_command = "ssh -R 80:127.0.0.1:$Port nokey@localhost.run"
             public_url = $null
             public_url_status = "NOT_READY"
             previous_public_url = $previousPublicUrl
             old_broken_public_url = $oldBrokenUrl
             old_broken_public_url_cause = $oldBrokenCause
-            public_url_blocker = "No tunnel URL detected from current ssh session output within timeout. External network or tunnel service availability required."
+            public_url_blocker = "provider_binary_not_found"
         })
-    Write-Host "[public-mirror-public] public URL not ready; blocker recorded in setup_reports/public_runtime_state.json"
+    Write-Host "[public-mirror-public] provider executable not found for $Provider"
+    exit 4
+}
+
+if ($Provider -eq "cloudflared_quick_tunnel") {
+    $args = @("tunnel", "--url", "http://127.0.0.1:$Port", "--no-autoupdate")
+}
+else {
+    $args = @(
+        "-o", "ExitOnForwardFailure=yes",
+        "-o", "ServerAliveInterval=30",
+        "-o", "ServerAliveCountMax=3",
+        "-o", "StrictHostKeyChecking=accept-new",
+        "-R", "80:127.0.0.1:$Port",
+        "nokey@localhost.run"
+    )
+}
+
+$proc = Start-Process -FilePath $providerCommand -ArgumentList $args -PassThru -WindowStyle Hidden `
+    -RedirectStandardOutput $outPath -RedirectStandardError $errPath
+
+$publicUrl = Resolve-PublicUrlFromLogs -OutPath $outPath -ErrPath $errPath -ProviderName $Provider -TimeoutSec $DetectTimeoutSeconds
+if ([string]::IsNullOrWhiteSpace($publicUrl)) {
+    if (-not $proc.HasExited) {
+        Stop-ProcessSafe -PidValue $proc.Id
+    }
+    Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
+            public_access_provider = $Provider
+            public_access_mechanism = if ($Provider -eq "cloudflared_quick_tunnel") { "cloudflared quick tunnel (trycloudflare.com)" } else { "ssh reverse tunnel via localhost.run" }
+            public_access_vpn_dependent = ($Provider -ne "cloudflared_quick_tunnel")
+            tunnel_pid = $null
+            tunnel_command = "$providerCommand $($args -join ' ')"
+            public_url = $null
+            public_url_status = "NOT_READY"
+            previous_public_url = $previousPublicUrl
+            old_broken_public_url = $oldBrokenUrl
+            old_broken_public_url_cause = $oldBrokenCause
+            public_url_blocker = "public_url_not_detected_from_current_session_logs"
+        })
+    Write-Host "[public-mirror-public] URL detection failed for provider=$Provider"
     exit 2
 }
 
 $healthy = Wait-PublicUrlHealthy -Url $publicUrl -TimeoutSec $HealthCheckTimeoutSeconds
 if (-not $healthy) {
     if (-not $proc.HasExited) {
-        try { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue } catch {}
+        Stop-ProcessSafe -PidValue $proc.Id
     }
     Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
+            public_access_provider = $Provider
+            public_access_mechanism = if ($Provider -eq "cloudflared_quick_tunnel") { "cloudflared quick tunnel (trycloudflare.com)" } else { "ssh reverse tunnel via localhost.run" }
+            public_access_vpn_dependent = ($Provider -ne "cloudflared_quick_tunnel")
             tunnel_pid = $null
-            tunnel_started_at_utc = (Get-Date).ToUniversalTime().ToString("o")
-            tunnel_command = "ssh -R 80:127.0.0.1:$Port nokey@localhost.run"
+            tunnel_command = "$providerCommand $($args -join ' ')"
             public_url = $publicUrl
             public_url_status = "NOT_READY"
             previous_public_url = $previousPublicUrl
             old_broken_public_url = $oldBrokenUrl
             old_broken_public_url_cause = $oldBrokenCause
-            public_url_blocker = "Tunnel URL detected but failed live health check for root/PUBLIC_REPO_STATE.json."
+            public_url_blocker = "public_url_failed_live_health_check"
         })
-    Write-Host "[public-mirror-public] URL detected but health check failed: $publicUrl"
+    Write-Host "[public-mirror-public] URL health check failed: $publicUrl"
     exit 3
 }
 
 Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
+        public_access_provider = $Provider
+        public_access_mechanism = if ($Provider -eq "cloudflared_quick_tunnel") { "cloudflared quick tunnel (trycloudflare.com)" } else { "ssh reverse tunnel via localhost.run" }
+        public_access_vpn_dependent = ($Provider -ne "cloudflared_quick_tunnel")
         tunnel_pid = $proc.Id
+        tunnel_command = "$providerCommand $($args -join ' ')"
         tunnel_started_at_utc = (Get-Date).ToUniversalTime().ToString("o")
-        tunnel_command = "ssh -R 80:127.0.0.1:$Port nokey@localhost.run"
+        local_url = "http://127.0.0.1:$Port/"
         public_url = $publicUrl
         public_url_status = "READY"
         public_url_detected_at_utc = (Get-Date).ToUniversalTime().ToString("o")
@@ -255,4 +314,4 @@ Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
         public_url_blocker = $null
     })
 
-Write-Host "[public-mirror-public] ready url=$publicUrl pid=$($proc.Id)"
+Write-Host "[public-mirror-public] ready provider=$Provider url=$publicUrl pid=$($proc.Id)"

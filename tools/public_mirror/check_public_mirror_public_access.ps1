@@ -29,18 +29,13 @@ function Read-RuntimeState([string]$PathValue) {
     return @{}
 }
 
-function Probe-Url([string]$Url) {
-    try {
-        $resp = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 20
-        return [ordered]@{ ok = $true; status = $resp.StatusCode; error = $null }
+function Write-RuntimePatch([string]$PathValue, [hashtable]$Patch) {
+    $state = Read-RuntimeState $PathValue
+    foreach ($k in $Patch.Keys) {
+        $state[$k] = $Patch[$k]
     }
-    catch {
-        $statusCode = $null
-        if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
-            $statusCode = [int]$_.Exception.Response.StatusCode
-        }
-        return [ordered]@{ ok = $false; status = $statusCode; error = $_.Exception.Message }
-    }
+    $state["updated_at_utc"] = (Get-Date).ToUniversalTime().ToString("o")
+    $state | ConvertTo-Json -Depth 12 | Set-Content -Path $PathValue -Encoding UTF8
 }
 
 function Read-SharedText([string]$PathValue) {
@@ -63,32 +58,43 @@ function Read-SharedText([string]$PathValue) {
     }
 }
 
-function Get-LatestTunnelUrl([string]$OutPath, [string]$ErrPath) {
+function Probe-Url([string]$Url) {
+    try {
+        $resp = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 20
+        return [ordered]@{ ok = $true; status = [int]$resp.StatusCode; error = $null }
+    }
+    catch {
+        $statusCode = $null
+        if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+            $statusCode = [int]$_.Exception.Response.StatusCode
+        }
+        return [ordered]@{ ok = $false; status = $statusCode; error = $_.Exception.Message }
+    }
+}
+
+function Get-LatestTunnelUrl([string]$OutPath, [string]$ErrPath, [string]$ProviderName) {
     $candidates = New-Object System.Collections.Generic.List[string]
     foreach ($path in @($OutPath, $ErrPath)) {
         $text = Read-SharedText $path
         if ([string]::IsNullOrWhiteSpace($text)) { continue }
-        $lineMatches = [regex]::Matches($text, "tunneled with tls termination,\s*(https?://[^\s,]+)")
-        foreach ($m in $lineMatches) {
-            $u = $m.Groups[1].Value.TrimEnd("/")
-            if (-not [string]::IsNullOrWhiteSpace($u)) {
-                $candidates.Add($u) | Out-Null
+
+        if ($ProviderName -eq "cloudflared_quick_tunnel") {
+            $matches = [regex]::Matches($text, "https://[a-z0-9\-]+\.trycloudflare\.com")
+            foreach ($m in $matches) {
+                $candidates.Add($m.Value.TrimEnd("/")) | Out-Null
+            }
+        }
+        else {
+            $lineMatches = [regex]::Matches($text, "tunneled with tls termination,\s*(https?://[^\s,]+)")
+            foreach ($m in $lineMatches) {
+                $candidates.Add($m.Groups[1].Value.TrimEnd("/")) | Out-Null
             }
         }
     }
-    if ($candidates.Count -gt 0) {
-        return $candidates[$candidates.Count - 1]
+    if ($candidates.Count -eq 0) {
+        return $null
     }
-    return $null
-}
-
-function Write-RuntimePatch([string]$PathValue, [hashtable]$Patch) {
-    $state = Read-RuntimeState $PathValue
-    foreach ($k in $Patch.Keys) {
-        $state[$k] = $Patch[$k]
-    }
-    $state["updated_at_utc"] = (Get-Date).ToUniversalTime().ToString("o")
-    $state | ConvertTo-Json -Depth 10 | Set-Content -Path $PathValue -Encoding UTF8
+    return $candidates[$candidates.Count - 1]
 }
 
 $sourceRoot = Resolve-SourceRoot
@@ -96,20 +102,24 @@ $runtimePath = Join-Path $sourceRoot "setup_reports/public_runtime_state.json"
 $tunnelOutPath = Join-Path $sourceRoot "setup_reports/public_tunnel_stdout.log"
 $tunnelErrPath = Join-Path $sourceRoot "setup_reports/public_tunnel_stderr.log"
 $runtime = Read-RuntimeState $runtimePath
+$provider = if ($runtime.ContainsKey("public_access_provider")) { [string]$runtime["public_access_provider"] } else { "ssh_localhost_run" }
+$vpnDependent = if ($runtime.ContainsKey("public_access_vpn_dependent")) { [bool]$runtime["public_access_vpn_dependent"] } else { ($provider -ne "cloudflared_quick_tunnel") }
+
 if ([string]::IsNullOrWhiteSpace($PublicUrl) -and $runtime.ContainsKey("public_url")) {
     $PublicUrl = [string]$runtime["public_url"]
 }
 
-$latestTunnelUrl = Get-LatestTunnelUrl -OutPath $tunnelOutPath -ErrPath $tunnelErrPath
+$latestTunnelUrl = Get-LatestTunnelUrl -OutPath $tunnelOutPath -ErrPath $tunnelErrPath -ProviderName $provider
 $runtimeUrlOutdated = $false
 if (-not [string]::IsNullOrWhiteSpace($latestTunnelUrl) -and $latestTunnelUrl -ne $PublicUrl) {
-    $latestProbe = Probe-Url $latestTunnelUrl
-    $latestStateProbe = Probe-Url ($latestTunnelUrl.TrimEnd("/") + "/PUBLIC_REPO_STATE.json")
-    if ($latestProbe.ok -and $latestStateProbe.ok) {
+    $probeLatestRoot = Probe-Url $latestTunnelUrl
+    $probeLatestState = Probe-Url ($latestTunnelUrl.TrimEnd("/") + "/PUBLIC_REPO_STATE.json")
+    if ($probeLatestRoot.ok -and $probeLatestState.ok) {
         $runtimeUrlOutdated = $true
+        $oldUrl = $PublicUrl
         $PublicUrl = $latestTunnelUrl
         Write-RuntimePatch -PathValue $runtimePath -Patch ([ordered]@{
-                previous_public_url = if ($runtime.ContainsKey("public_url")) { [string]$runtime["public_url"] } else { $null }
+                previous_public_url = $oldUrl
                 public_url = $latestTunnelUrl
                 public_url_status = "READY"
                 public_url_detected_at_utc = (Get-Date).ToUniversalTime().ToString("o")
@@ -118,14 +128,22 @@ if (-not [string]::IsNullOrWhiteSpace($latestTunnelUrl) -and $latestTunnelUrl -n
     }
 }
 
+$tunnelPid = if ($runtime.ContainsKey("tunnel_pid")) { [int]$runtime["tunnel_pid"] } else { 0 }
+$tunnelAlive = $false
+if ($tunnelPid -gt 0) {
+    $tunnelAlive = [bool](Get-Process -Id $tunnelPid -ErrorAction SilentlyContinue)
+}
+
 $result = [ordered]@{
     checked_at_utc = (Get-Date).ToUniversalTime().ToString("o")
     source_repo_path = $sourceRoot
     public_url = $PublicUrl
-    public_access_mechanism = "ssh reverse tunnel via localhost.run"
+    public_access_provider = $provider
+    public_access_mechanism = if ($runtime.ContainsKey("public_access_mechanism")) { [string]$runtime["public_access_mechanism"] } else { $provider }
+    public_access_vpn_dependent = $vpnDependent
     local_target_url = if ($runtime.ContainsKey("local_url")) { [string]$runtime["local_url"] } else { "http://127.0.0.1:18080/" }
-    tunnel_pid = if ($runtime.ContainsKey("tunnel_pid")) { $runtime["tunnel_pid"] } else { $null }
-    tunnel_process_alive = $false
+    tunnel_pid = $tunnelPid
+    tunnel_process_alive = $tunnelAlive
     old_public_url = if ($runtime.ContainsKey("previous_public_url")) { [string]$runtime["previous_public_url"] } else { $null }
     old_broken_public_url = if ($runtime.ContainsKey("old_broken_public_url")) { [string]$runtime["old_broken_public_url"] } else { $null }
     old_broken_public_url_cause = if ($runtime.ContainsKey("old_broken_public_url_cause")) { [string]$runtime["old_broken_public_url_cause"] } else { $null }
@@ -134,11 +152,6 @@ $result = [ordered]@{
     failure_cause = $null
     status = "FAIL"
     checks = [ordered]@{}
-}
-
-if ($result.tunnel_pid) {
-    $tp = Get-Process -Id $result.tunnel_pid -ErrorAction SilentlyContinue
-    $result.tunnel_process_alive = [bool]$tp
 }
 
 if ([string]::IsNullOrWhiteSpace($PublicUrl)) {
@@ -156,15 +169,21 @@ else {
 
     $gitBlocked = ($gitCheck.ok -eq $false) -or ($gitCheck.status -ge 400)
     $envBlocked = ($envCheck.ok -eq $false) -or ($envCheck.status -ge 400)
+    $vpnIndependentCheck = -not $vpnDependent
 
     $result.checks["root_access"] = $rootCheck
     $result.checks["state_file_access"] = $stateCheck
     $result.checks["git_path_blocked"] = [ordered]@{ pass = $gitBlocked; probe = $gitCheck }
     $result.checks["env_path_blocked"] = [ordered]@{ pass = $envBlocked; probe = $envCheck }
-    $result.status = if ($rootCheck.ok -and $stateCheck.ok -and $gitBlocked -and $envBlocked) { "PASS" } else { "FAIL" }
+    $result.checks["vpn_independent"] = [ordered]@{ pass = $vpnIndependentCheck; value = (-not $vpnDependent) }
+
+    $result.status = if ($rootCheck.ok -and $stateCheck.ok -and $gitBlocked -and $envBlocked -and $vpnIndependentCheck) { "PASS" } else { "FAIL" }
     if ($result.status -ne "PASS") {
-        if (-not $result.tunnel_process_alive) {
+        if (-not $tunnelAlive) {
             $result.failure_cause = "tunnel_process_not_alive_stale_session_url"
+        }
+        elseif ($vpnDependent) {
+            $result.failure_cause = "public_access_marked_vpn_dependent"
         }
         elseif (($rootCheck.status -eq 503) -or ($stateCheck.status -eq 503)) {
             $result.failure_cause = "tunnel_endpoint_not_mapped_or_session_expired"
@@ -177,20 +196,24 @@ else {
 
 $jsonPath = Join-Path $sourceRoot "setup_reports/public_access_check.json"
 $mdPath = Join-Path $sourceRoot "setup_reports/public_access_check.md"
-$result | ConvertTo-Json -Depth 10 | Set-Content -Path $jsonPath -Encoding UTF8
+$result | ConvertTo-Json -Depth 12 | Set-Content -Path $jsonPath -Encoding UTF8
 
 $md = @(
     "# Public Access Check",
     "",
     "- checked_at_utc: $($result.checked_at_utc)",
     "- public_url: $($result.public_url)",
+    "- public_access_provider: $($result.public_access_provider)",
     "- public_access_mechanism: $($result.public_access_mechanism)",
+    "- public_access_vpn_dependent: $($result.public_access_vpn_dependent)",
     "- local_target_url: $($result.local_target_url)",
     "- tunnel_pid: $($result.tunnel_pid)",
     "- tunnel_process_alive: $($result.tunnel_process_alive)",
     "- old_public_url: $($result.old_public_url)",
     "- old_broken_public_url: $($result.old_broken_public_url)",
     "- old_broken_public_url_cause: $($result.old_broken_public_url_cause)",
+    "- latest_tunnel_url_from_logs: $($result.latest_tunnel_url_from_logs)",
+    "- runtime_url_outdated: $($result.runtime_url_outdated)",
     "- failure_cause: $($result.failure_cause)",
     "- status: $($result.status)",
     "",
