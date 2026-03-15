@@ -43,11 +43,79 @@ function Probe-Url([string]$Url) {
     }
 }
 
+function Read-SharedText([string]$PathValue) {
+    if (-not (Test-Path $PathValue)) {
+        return ""
+    }
+    $fs = $null
+    $sr = $null
+    try {
+        $fs = [System.IO.File]::Open($PathValue, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+        $sr = New-Object System.IO.StreamReader($fs)
+        return $sr.ReadToEnd()
+    }
+    catch {
+        return ""
+    }
+    finally {
+        if ($sr) { $sr.Dispose() }
+        if ($fs) { $fs.Dispose() }
+    }
+}
+
+function Get-LatestTunnelUrl([string]$OutPath, [string]$ErrPath) {
+    $candidates = New-Object System.Collections.Generic.List[string]
+    foreach ($path in @($OutPath, $ErrPath)) {
+        $text = Read-SharedText $path
+        if ([string]::IsNullOrWhiteSpace($text)) { continue }
+        $lineMatches = [regex]::Matches($text, "tunneled with tls termination,\s*(https?://[^\s,]+)")
+        foreach ($m in $lineMatches) {
+            $u = $m.Groups[1].Value.TrimEnd("/")
+            if (-not [string]::IsNullOrWhiteSpace($u)) {
+                $candidates.Add($u) | Out-Null
+            }
+        }
+    }
+    if ($candidates.Count -gt 0) {
+        return $candidates[$candidates.Count - 1]
+    }
+    return $null
+}
+
+function Write-RuntimePatch([string]$PathValue, [hashtable]$Patch) {
+    $state = Read-RuntimeState $PathValue
+    foreach ($k in $Patch.Keys) {
+        $state[$k] = $Patch[$k]
+    }
+    $state["updated_at_utc"] = (Get-Date).ToUniversalTime().ToString("o")
+    $state | ConvertTo-Json -Depth 10 | Set-Content -Path $PathValue -Encoding UTF8
+}
+
 $sourceRoot = Resolve-SourceRoot
 $runtimePath = Join-Path $sourceRoot "setup_reports/public_runtime_state.json"
+$tunnelOutPath = Join-Path $sourceRoot "setup_reports/public_tunnel_stdout.log"
+$tunnelErrPath = Join-Path $sourceRoot "setup_reports/public_tunnel_stderr.log"
 $runtime = Read-RuntimeState $runtimePath
 if ([string]::IsNullOrWhiteSpace($PublicUrl) -and $runtime.ContainsKey("public_url")) {
     $PublicUrl = [string]$runtime["public_url"]
+}
+
+$latestTunnelUrl = Get-LatestTunnelUrl -OutPath $tunnelOutPath -ErrPath $tunnelErrPath
+$runtimeUrlOutdated = $false
+if (-not [string]::IsNullOrWhiteSpace($latestTunnelUrl) -and $latestTunnelUrl -ne $PublicUrl) {
+    $latestProbe = Probe-Url $latestTunnelUrl
+    $latestStateProbe = Probe-Url ($latestTunnelUrl.TrimEnd("/") + "/PUBLIC_REPO_STATE.json")
+    if ($latestProbe.ok -and $latestStateProbe.ok) {
+        $runtimeUrlOutdated = $true
+        $PublicUrl = $latestTunnelUrl
+        Write-RuntimePatch -PathValue $runtimePath -Patch ([ordered]@{
+                previous_public_url = if ($runtime.ContainsKey("public_url")) { [string]$runtime["public_url"] } else { $null }
+                public_url = $latestTunnelUrl
+                public_url_status = "READY"
+                public_url_detected_at_utc = (Get-Date).ToUniversalTime().ToString("o")
+            })
+        $runtime = Read-RuntimeState $runtimePath
+    }
 }
 
 $result = [ordered]@{
@@ -61,6 +129,8 @@ $result = [ordered]@{
     old_public_url = if ($runtime.ContainsKey("previous_public_url")) { [string]$runtime["previous_public_url"] } else { $null }
     old_broken_public_url = if ($runtime.ContainsKey("old_broken_public_url")) { [string]$runtime["old_broken_public_url"] } else { $null }
     old_broken_public_url_cause = if ($runtime.ContainsKey("old_broken_public_url_cause")) { [string]$runtime["old_broken_public_url_cause"] } else { $null }
+    latest_tunnel_url_from_logs = $latestTunnelUrl
+    runtime_url_outdated = $runtimeUrlOutdated
     failure_cause = $null
     status = "FAIL"
     checks = [ordered]@{}
