@@ -14,7 +14,14 @@ function Resolve-SourceRoot {
 function Read-RuntimeState([string]$PathValue) {
     if (Test-Path $PathValue) {
         try {
-            return (Get-Content -Raw $PathValue | ConvertFrom-Json -AsHashtable)
+            $obj = Get-Content -Raw $PathValue | ConvertFrom-Json
+            $hash = @{}
+            if ($obj -ne $null) {
+                foreach ($prop in $obj.PSObject.Properties) {
+                    $hash[$prop.Name] = $prop.Value
+                }
+            }
+            return $hash
         }
         catch {}
     }

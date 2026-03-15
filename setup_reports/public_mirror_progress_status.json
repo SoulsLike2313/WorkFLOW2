@@ -3,13 +3,24 @@
                                  "E:/CVVCODEX/runtime",
                                  "E:/CVVCODEX/setup_assets"
                              ],
-    "current_stage":  "COMPLETE_FAST_MODE",
-    "engineering_ready":  true,
+    "updated_at_utc":  "2026-03-15T11:16:34.0450437Z",
     "source_path":  "E:\\CVVCODEX",
+    "remaining_items":  "none required for engineering-ready state",
+    "engineering_ready":  true,
     "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
-    "status":  "PASS",
-    "mode":  "FAST_RESUME",
-    "updated_at_utc":  "2026-03-15T10:55:58.1187019Z",
+    "ready_components":  {
+                             "projects":  true,
+                             "docs":  true,
+                             "readme":  true,
+                             "scripts":  true,
+                             "workspace_config":  true,
+                             "public_state_files":  true
+                         },
+    "mirror_stats":  {
+                         "size_bytes":  3827342505,
+                         "directories":  3046,
+                         "files":  35291
+                     },
     "stage_results":  [
                           {
                               "label":  "STAGE_A_docs",
@@ -21,7 +32,7 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_docs.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_docs.log.err",
-                              "finished_at_utc":  "2026-03-15T10:55:44.1214999Z"
+                              "finished_at_utc":  "2026-03-15T11:16:19.8144429Z"
                           },
                           {
                               "label":  "STAGE_A_workspace_config",
@@ -33,7 +44,7 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_workspace_config.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_workspace_config.log.err",
-                              "finished_at_utc":  "2026-03-15T10:55:44.1768103Z"
+                              "finished_at_utc":  "2026-03-15T11:16:19.8695542Z"
                           },
                           {
                               "label":  "STAGE_A_scripts",
@@ -45,7 +56,7 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_scripts.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_scripts.log.err",
-                              "finished_at_utc":  "2026-03-15T10:55:44.2261061Z"
+                              "finished_at_utc":  "2026-03-15T11:16:19.9189288Z"
                           },
                           {
                               "label":  "STAGE_A_projects",
@@ -57,7 +68,7 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_projects.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_projects.log.err",
-                              "finished_at_utc":  "2026-03-15T10:55:45.2422595Z"
+                              "finished_at_utc":  "2026-03-15T11:16:20.9894512Z"
                           },
                           {
                               "label":  "STAGE_A_setup_reports",
@@ -69,7 +80,7 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_setup_reports.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_setup_reports.log.err",
-                              "finished_at_utc":  "2026-03-15T10:55:45.2963142Z"
+                              "finished_at_utc":  "2026-03-15T11:16:21.0924455Z"
                           },
                           {
                               "label":  "STAGE_A_shared_systems",
@@ -81,24 +92,29 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_shared_systems.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_shared_systems.log.err",
-                              "finished_at_utc":  "2026-03-15T10:55:45.3609271Z"
+                              "finished_at_utc":  "2026-03-15T11:16:21.1540991Z"
                           },
                           {
                               "label":  "STAGE_B_INCREMENTAL",
                               "source":  "E:\\CVVCODEX",
                               "destination":  "E:\\_public_repo_mirror\\WorkFLOW",
-                              "time_budget_seconds":  60,
+                              "time_budget_seconds":  180,
                               "timed_out":  false,
                               "robocopy_exit_code":  null,
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageB_incremental.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageB_incremental.log.err",
-                              "finished_at_utc":  "2026-03-15T10:55:50.3948586Z"
+                              "finished_at_utc":  "2026-03-15T11:16:26.3076340Z"
                           }
                       ],
-    "mirror_stats":  {
-                         "size_bytes":  3827301202,
+    "mode":  "FAST_RESUME",
+    "source_stats":  {
+                         "size_bytes":  3828794735,
                          "directories":  3046,
-                         "files":  35280
-                     }
+                         "files":  35312
+                     },
+    "bottlenecks":  "heavy tail deferred by design: runtime/setup_assets",
+    "status":  "PASS",
+    "approx_sync_ratio_percent":  99.94,
+    "current_stage":  "COMPLETE_FAST_MODE"
 }

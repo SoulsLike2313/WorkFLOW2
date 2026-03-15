@@ -1,0 +1,35 @@
+﻿{
+    "checked_at_utc":  "2026-03-15T11:17:14.8464956Z",
+    "source_repo_path":  "E:\\CVVCODEX",
+    "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
+    "local_url":  "http://127.0.0.1:18080/",
+    "checks":  {
+                   "root_access":  {
+                                       "ok":  true,
+                                       "status":  200,
+                                       "error":  null
+                                   },
+                   "public_repo_state_access":  {
+                                                    "ok":  true,
+                                                    "status":  200,
+                                                    "error":  null
+                                                },
+                   "git_path_blocked":  {
+                                            "pass":  true,
+                                            "probe":  {
+                                                          "ok":  false,
+                                                          "status":  404,
+                                                          "error":  "Удаленный сервер возвратил ошибку: (404) Не найден."
+                                                      }
+                                        },
+                   "env_path_blocked":  {
+                                            "pass":  true,
+                                            "probe":  {
+                                                          "ok":  false,
+                                                          "status":  404,
+                                                          "error":  "Удаленный сервер возвратил ошибку: (404) Не найден."
+                                                      }
+                                        }
+               },
+    "status":  "PASS"
+}

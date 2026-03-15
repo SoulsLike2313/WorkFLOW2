@@ -1,6 +1,7 @@
 param(
     [string]$SourceRepoPath,
     [int]$Port = 18080,
+    [int]$DetectTimeoutSeconds = 45,
     [switch]$ForceRestart
 )
 
@@ -30,15 +31,44 @@ function Write-RuntimeState([string]$PathValue, [hashtable]$Patch) {
 }
 
 function Resolve-PublicUrl([string]$OutPath, [string]$ErrPath, [int]$TimeoutSec = 45) {
+    function Read-SharedText([string]$PathValue) {
+        if (-not (Test-Path $PathValue)) {
+            return ""
+        }
+        $fs = $null
+        $sr = $null
+        try {
+            $fs = [System.IO.File]::Open($PathValue, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+            $sr = New-Object System.IO.StreamReader($fs)
+            return $sr.ReadToEnd()
+        }
+        catch {
+            return ""
+        }
+        finally {
+            if ($sr) { $sr.Dispose() }
+            if ($fs) { $fs.Dispose() }
+        }
+    }
+
     $deadline = (Get-Date).AddSeconds($TimeoutSec)
     while ((Get-Date) -lt $deadline) {
         Start-Sleep -Milliseconds 1000
         foreach ($path in @($OutPath, $ErrPath)) {
-            if (-not (Test-Path $path)) { continue }
-            $text = Get-Content -Raw $path -ErrorAction SilentlyContinue
-            $match = [regex]::Match($text, "https?://[a-zA-Z0-9\.\-/_]+")
-            if ($match.Success) {
-                return $match.Value.TrimEnd("/")
+            $text = Read-SharedText $path
+            if ([string]::IsNullOrWhiteSpace($text)) { continue }
+            $matches = [regex]::Matches($text, "https?://[^\s,]+")
+            if ($matches.Count -eq 0) { continue }
+            $candidates = New-Object System.Collections.Generic.List[string]
+            foreach ($m in $matches) {
+                $url = $m.Value.TrimEnd("/")
+                if ($url -match "localhost\.run/docs" -or $url -match "localhost:3000") {
+                    continue
+                }
+                $candidates.Add($url) | Out-Null
+            }
+            if ($candidates.Count -gt 0) {
+                return $candidates[$candidates.Count - 1]
             }
         }
     }
@@ -56,7 +86,7 @@ $errPath = Join-Path $runtimeDir "public_tunnel_stderr.log"
 
 # Ensure local web is running first.
 $startWebScript = Join-Path $sourceRoot "tools/public_mirror/start_public_mirror_web.ps1"
-& powershell -NoProfile -ExecutionPolicy Bypass -File $startWebScript -SourceRepoPath $sourceRoot -Port $Port | Out-Null
+& $startWebScript -SourceRepoPath $sourceRoot -Port $Port | Out-Null
 
 $state = Read-RuntimeState $runtimePath
 $existingPid = $state["tunnel_pid"]
@@ -88,15 +118,18 @@ $sshArgs = @(
 $proc = Start-Process -FilePath "ssh" -ArgumentList $sshArgs -PassThru -WindowStyle Hidden `
     -RedirectStandardOutput $outPath -RedirectStandardError $errPath
 
-$publicUrl = Resolve-PublicUrl -OutPath $outPath -ErrPath $errPath -TimeoutSec 45
+$publicUrl = Resolve-PublicUrl -OutPath $outPath -ErrPath $errPath -TimeoutSec $DetectTimeoutSeconds
 if (-not $publicUrl) {
+    if (-not $proc.HasExited) {
+        try { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue } catch {}
+    }
     Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
-            tunnel_pid = $proc.Id
+            tunnel_pid = $null
             tunnel_started_at_utc = (Get-Date).ToUniversalTime().ToString("o")
             tunnel_command = "ssh -R 80:127.0.0.1:$Port nokey@localhost.run"
             public_url = $null
             public_url_status = "NOT_READY"
-            public_url_blocker = "No tunnel URL detected from ssh output. External network/ssh tunnel availability required."
+            public_url_blocker = "No tunnel URL detected from ssh output within timeout. External network or tunnel service availability required."
         })
     Write-Host "[public-mirror-public] public URL not ready; blocker recorded in setup_reports/public_runtime_state.json"
     exit 2
