@@ -1,5 +1,5 @@
 ﻿{
-    "generated_at_utc":  "2026-03-15T18:13:22.7436851Z",
+    "generated_at_utc":  "2026-03-15T18:21:04.2234248Z",
     "active_interface":  "Ethernet",
     "lan_ip":  "192.168.0.27",
     "gateway":  "192.168.0.1",
@@ -10,8 +10,9 @@
     "router_http_reachable":  true,
     "router_http_status":  200,
     "upnp":  {
-                 "available":  false,
-                 "reason":  "static_mapping_collection_unavailable"
+                 "available":  true,
+                 "mapping_present":  false,
+                 "mapping_count":  0
              },
     "listening_ports":  [
                             {

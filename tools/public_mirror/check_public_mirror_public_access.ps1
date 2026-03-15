@@ -167,6 +167,9 @@ $result = [ordered]@{
     session_based_url = $false
     status = "FAIL"
     failure_cause = $null
+    manual_step_required = $null
+    exact_router_rule = $null
+    post_step_verification_command = "powershell -NoProfile -ExecutionPolicy Bypass -File tools/public_mirror/check_public_mirror_public_access.ps1 -SourceRepoPath E:\CVVCODEX -RunStabilitySeries -RootCheckCount 5 -FileCheckRounds 3 -IntervalSeconds 4"
     checks = [ordered]@{
         local_root_access = $localRootCheck
         local_public_state_access = $localStateCheck
@@ -182,6 +185,8 @@ if (-not $localRootCheck.ok -or -not $localStateCheck.ok) {
 }
 elseif ([string]::IsNullOrWhiteSpace($PublicUrl)) {
     $result.failure_cause = "router_port_forwarding_or_dns_mapping_not_configured"
+    $result.manual_step_required = "Create router NAT/port-forward rule"
+    $result.exact_router_rule = "TCP 18080 -> 192.168.0.27:18080"
 }
 else {
     $rootCheck = Probe-Url $PublicUrl
@@ -205,6 +210,8 @@ else {
     }
     else {
         $result.failure_cause = "router_port_forwarding_or_dns_mapping_not_configured"
+        $result.manual_step_required = "Create router NAT/port-forward rule"
+        $result.exact_router_rule = "TCP 18080 -> 192.168.0.27:18080"
     }
 }
 
@@ -300,6 +307,9 @@ $md = @(
     "- stability_classification: $($result.stability_classification)",
     "- stable_enough_for_chatgpt: $($result.stable_enough_for_chatgpt)",
     "- repeated_checks_passed: $(if($result.repeated_checks_summary){$result.repeated_checks_summary.passed}else{'n/a'})/$(if($result.repeated_checks_summary){$result.repeated_checks_summary.total}else{'n/a'})",
+    "- manual_step_required: $($result.manual_step_required)",
+    "- exact_router_rule: $($result.exact_router_rule)",
+    "- post_step_verification_command: $($result.post_step_verification_command)",
     "- failure_cause: $($result.failure_cause)",
     "- status: $($result.status)",
     "",
@@ -330,6 +340,7 @@ Write-RuntimePatch -PathValue $runtimePath -Patch ([ordered]@{
         public_access_repeated_checks_passed = $prevPassed
         public_access_repeated_checks_total = $prevTotal
         router_port_forwarding_configured = ($result.status -eq "PASS")
+        router_manual_step = "Create router NAT/port-forward rule: TCP 18080 -> 192.168.0.27:18080"
         public_url_status = if ($result.status -eq "PASS") { "READY" } else { "NOT_READY" }
         public_url_blocker = if ($result.status -eq "PASS") { $null } else { $result.failure_cause }
         public_access_one_external_blocker = if ($result.status -eq "PASS") { $null } else { $result.failure_cause }

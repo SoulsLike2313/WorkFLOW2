@@ -159,6 +159,7 @@ Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
         canonical_public_port = $PublicPort
         ddns_domain_status = if ([string]::IsNullOrWhiteSpace($CanonicalHostname)) { "not_configured" } elseif ($CanonicalHostname -eq [string]$network.external_ip) { "external_ip_literal_fallback" } else { "configured" }
         router_port_forwarding_configured = ($status -eq "READY")
+        router_manual_step = "Create router NAT/port-forward rule: TCP 18080 -> 192.168.0.27:18080"
         direct_hosting_network = $network
         tunnel_pid = $null
         tunnel_command = $null

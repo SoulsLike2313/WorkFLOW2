@@ -1,6 +1,6 @@
 ﻿# Public Runtime State
 
-- updated_at_utc: 2026-03-15T18:10:31.2994384Z
+- updated_at_utc: 2026-03-15T18:24:59.8353288Z
 - source_repo_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - local_url: http://127.0.0.1:18080/
@@ -19,6 +19,7 @@
 - public_access_stable_enough_for_chatgpt: False
 - ddns_domain_status: external_ip_literal_fallback
 - router_port_forwarding_configured: False
+- router_manual_step: Create router NAT/port-forward rule: TCP 18080 -> 192.168.0.27:18080
 - public_access_one_external_blocker: router_port_forwarding_or_dns_mapping_not_configured
 - direct_hosting_local_ip: 192.168.0.27
 - direct_hosting_external_ip: 185.171.202.83

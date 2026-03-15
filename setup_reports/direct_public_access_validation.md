@@ -1,6 +1,6 @@
 ﻿# Direct Public Access Validation
 
-- generated_at_utc: 2026-03-15T18:13:23.8592239Z
+- generated_at_utc: 2026-03-15T18:26:46.4849507Z
 - canonical_public_url: http://185.171.202.83:18080
 - local_url: http://127.0.0.1:18080/
 - root_repeated_checks: 5

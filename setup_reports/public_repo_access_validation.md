@@ -1,7 +1,7 @@
 ﻿# Public Repo Access Validation
 
-- run_id: public-mirror-validate-20260315T180848Z
-- generated_at_utc: 2026-03-15T18:08:48.7525849Z
+- run_id: public-mirror-validate-20260315T183647Z
+- generated_at_utc: 2026-03-15T18:36:47.7980782Z
 - source_repo_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - public_url: http://185.171.202.83:18080
@@ -35,7 +35,7 @@
 - sync_create_propagation: True
 ```json
 {
-    "mirror_probe":  "E:\\_public_repo_mirror\\WorkFLOW\\setup_reports\\.public_mirror_probe_4094757bc9cf40c1a4c09a687d50466a.txt",
+    "mirror_probe":  "E:\\_public_repo_mirror\\WorkFLOW\\setup_reports\\.public_mirror_probe_62fa41eb09694544ad4d775acff9f870.txt",
     "sync":  {
                  "exit_code":  0,
                  "output":  [
@@ -46,7 +46,7 @@
                                 "[public-mirror-fast] progress_json: E:\\CVVCODEX\\setup_reports\\public_mirror_progress_status.json"
                             ]
              },
-    "source_probe":  "E:\\CVVCODEX\\setup_reports\\.public_mirror_probe_4094757bc9cf40c1a4c09a687d50466a.txt"
+    "source_probe":  "E:\\CVVCODEX\\setup_reports\\.public_mirror_probe_62fa41eb09694544ad4d775acff9f870.txt"
 }
 ```
 

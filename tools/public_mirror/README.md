@@ -92,6 +92,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\check_
 
 Single manual step if external URL is not ready:
 - create router port-forward rule `TCP 18080 -> 192.168.0.27:18080`
+- this same exact step is mirrored in runtime field `router_manual_step`
+
+Immediate post-step check command:
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\check_public_mirror_public_access.ps1 `
+  -SourceRepoPath E:\CVVCODEX `
+  -RunStabilitySeries `
+  -RootCheckCount 5 `
+  -FileCheckRounds 3 `
+  -IntervalSeconds 4
+```
 
 Current DDNS/domain state:
 - no DDNS credential/config in repo/env
