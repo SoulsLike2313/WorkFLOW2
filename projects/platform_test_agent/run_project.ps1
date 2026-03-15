@@ -1,5 +1,3 @@
-$ErrorActionPreference = "Stop"
-
 param(
     [ValidateSet("intake", "audit", "verify")]
     [string]$Mode = "intake",
@@ -7,6 +5,8 @@ param(
     [string]$TargetProjectSlug = "",
     [switch]$ExecuteVerification
 )
+
+$ErrorActionPreference = "Stop"
 
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $projectRoot
