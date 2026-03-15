@@ -1,28 +1,18 @@
 ﻿{
-    "generated_at_utc":  "2026-03-15T20:47:37.0507272Z",
-    "scope":  "WAN_PATH_ONLY_AFTER_LAN_CONFIRMED",
+    "generated_at_utc":  "2026-03-15T21:09:47.3663138Z",
+    "scope":  "WAN_PATH_ONLY",
     "lan_reachability":  "CONFIRMED",
-    "lan_evidence":  "LAN laptop successfully fetched http://192.168.0.27:18080/PUBLIC_REPO_STATE.json (user-confirmed)",
-    "host_state":  {
-                       "caddy_alive":  true,
-                       "local_bind_ok":  true,
-                       "inbound_lan_path_ok":  true,
-                       "firewall_breakpoint":  false
-                   },
-    "wan_checks":  {
-                       "target_public_url":  "http://185.171.202.83:18080/",
-                       "probe_root_ok":  false,
-                       "probe_state_ok":  false,
-                       "probe_error":  "Connection closed unexpectedly",
-                       "off_lan_user_result":  "FAIL"
-                   },
-    "signs":  {
-                  "port_forward_effective_on_wan_side":  "NO",
-                  "isp_inbound_filtering_suspected":  "YES",
-                  "cgnat_or_double_nat_suspected":  "NO",
-                  "wrong_wan_interface_binding_possible":  "YES"
-              },
-    "exact_break_point":  "WAN-side path (router WAN forwarding effectiveness / ISP ingress policy). Host/LAN stack is not the break point.",
-    "one_exact_next_step":  "In router admin, verify that TCP 18080 forward is bound to active WAN interface (ppp0) and points to 192.168.0.27:18080, then retest from off-LAN mobile network.",
-    "constraints":  "Caddy/mirror/sync/VPN/LAN path unchanged in this run."
+    "wan_reachability":  "FAIL",
+    "local_stack_blocker":  false,
+    "target_public_url":  "http://185.171.202.83:18080/",
+    "wan_hypotheses":  {
+                           "router_port_forward_not_effective_on_wan_side":  "YES",
+                           "wrong_wan_interface_binding_ppp0":  "YES",
+                           "isp_inbound_filtering_or_policy":  "YES",
+                           "hidden_provider_policy_possible":  "YES",
+                           "cgnat_or_double_nat_primary":  "NO"
+                       },
+    "exact_break_point":  "WAN ingress path not reaching effective router forwarding to 192.168.0.27:18080 on active WAN route; host/LAN stack is healthy.",
+    "one_exact_next_step":  "Bind TCP 18080 forward explicitly to active WAN interface (ppp0) -\u003e 192.168.0.27:18080, then retest from off-LAN mobile network.",
+    "constraints":  "No Caddy/mirror/sync/LAN/firewall/tunnel changes in this update."
 }

@@ -1,24 +1,21 @@
-﻿# WAN Path Validation (After LAN Confirmed)
+﻿# WAN Path Validation (Canonical WAN-Side Focus)
 
-- generated_at_utc: 2026-03-15T20:47:37.0507272Z
+- generated_at_utc: 2026-03-15T21:09:47.3663138Z
 - LAN reachability: CONFIRMED
 - WAN reachability: FAIL
 
-## Confirmed facts
-- Caddy alive: YES
-- LAN bind/listen path: OK
-- inbound LAN path to 192.168.0.27:18080: OK
-- Windows firewall as break point: NO
-- off-LAN access to http://185.171.202.83:18080/: FAIL
+## Canonical state
+- localhost/LAN/Caddy/internal stack: NOT THE BLOCKER
+- public target: http://185.171.202.83:18080/
 
-## WAN-side signs
-- port-forward effective on WAN side: NO
-- wrong WAN interface binding possible (ppp0 mismatch): YES
-- ISP inbound block suspected: YES
-- CGNAT/double NAT suspected: NO
+## WAN-side classification
+- router NAT/port forwarding effective on WAN side: NO (suspected ineffective)
+- wrong WAN interface binding (ppp0 path mismatch): YES (suspected)
+- ISP inbound filtering/policy block: YES (suspected)
+- CGNAT/double NAT: NO (not primary signal)
 
-## Exact break point
-- WAN-side path (router WAN forwarding effectiveness / ISP ingress policy). Host/LAN stack is not the break point.
+## Exact WAN-side break point
+- WAN ingress path does not reliably hit effective forwarding to 192.168.0.27:18080 on active WAN route; host/LAN stack is confirmed healthy.
 
 ## One exact next step
-- In router admin, verify that TCP 18080 forward is bound to active WAN interface (ppp0) and points to 192.168.0.27:18080, then retest from off-LAN mobile network.
+- On router WAN/NAT page, explicitly bind TCP 18080 forwarding to active WAN interface (ppp0) -> 192.168.0.27:18080, then immediately retest from off-LAN mobile network.

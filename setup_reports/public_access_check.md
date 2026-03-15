@@ -1,24 +1,15 @@
-﻿# WAN Path Validation (After LAN Confirmed)
+﻿# Public Access Check (WAN-Side Only)
 
-- generated_at_utc: 2026-03-15T20:47:37.0507272Z
+- generated_at_utc: 2026-03-15T21:09:47.3663138Z
 - LAN reachability: CONFIRMED
 - WAN reachability: FAIL
 
-## Confirmed facts
-- Caddy alive: YES
-- LAN bind/listen path: OK
-- inbound LAN path to 192.168.0.27:18080: OK
-- Windows firewall as break point: NO
-- off-LAN access to http://185.171.202.83:18080/: FAIL
-
-## WAN-side signs
-- port-forward effective on WAN side: NO
-- wrong WAN interface binding possible (ppp0 mismatch): YES
-- ISP inbound block suspected: YES
-- CGNAT/double NAT suspected: NO
+## Result
+- External URL check failed for: http://185.171.202.83:18080/PUBLIC_REPO_STATE.json
+- Local/LAN path remains healthy and is not the blocker.
 
 ## Exact break point
-- WAN-side path (router WAN forwarding effectiveness / ISP ingress policy). Host/LAN stack is not the break point.
+- WAN ingress/forwarding effectiveness on active WAN path (router/ISP side).
 
 ## One exact next step
-- In router admin, verify that TCP 18080 forward is bound to active WAN interface (ppp0) and points to 192.168.0.27:18080, then retest from off-LAN mobile network.
+- Bind TCP 18080 forward to active WAN interface (ppp0) -> 192.168.0.27:18080 and retest from off-LAN.
