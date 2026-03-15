@@ -109,6 +109,19 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\check_
   -SourceRepoPath E:\CVVCODEX
 ```
 
+- public URL stability audit (distributed repeated checks):
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\check_public_mirror_public_access.ps1 `
+  -SourceRepoPath E:\CVVCODEX `
+  -RunStabilitySeries `
+  -RootCheckCount 5 `
+  -FileCheckRounds 3 `
+  -IntervalSeconds 8
+```
+Writes:
+- `setup_reports/public_url_stability_check.json`
+- `setup_reports/public_url_stability_check.md`
+
 - end-to-end validation:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\validate_public_mirror.ps1 `

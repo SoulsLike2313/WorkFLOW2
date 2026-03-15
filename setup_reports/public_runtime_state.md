@@ -1,20 +1,25 @@
 ﻿# Public Runtime State
 
-- updated_at_utc: 2026-03-15T14:58:40.7611401Z
+- updated_at_utc: 2026-03-15T15:31:14.3580015Z
 - source_repo_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - local_url: http://127.0.0.1:18080/
-- public_url: https://0e6748b97ae3fe.lhr.life
+- public_url: https://10df7336ba08d7.lhr.life
 - public_url_status: READY
 - public_access_provider: ssh_localhost_run
 - public_access_mechanism: ssh reverse tunnel via localhost.run (bound to non-VPN interface)
 - public_access_vpn_dependent: False
-- tunnel_command: C:\Windows\System32\OpenSSH\ssh.exe -4 -b 192.168.0.27 -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=accept-new -R 80:127.0.0.1:18080 nokey@localhost.run
-- tunnel_pid: 7864
+- public_access_session_based: True
+- public_access_stability_classification: SESSION_FRAGILE
+- public_access_repeated_checks_passed: 14/14
+- public_access_stable_enough_for_chatgpt: False
+- public_access_one_external_blocker: stable_non_session_public_endpoint_requires_external_secret_or_managed_tunnel_credentials
+- tunnel_command: C:\Windows\System32\OpenSSH\ssh.exe -4 -b 192.168.0.27 -o ExitOnForwardFailure=yes -o TCPKeepAlive=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=2 -o ConnectTimeout=15 -o ConnectionAttempts=3 -o IPQoS=none -o LogLevel=ERROR -o StrictHostKeyChecking=accept-new -R 80:127.0.0.1:18080 nokey@localhost.run
+- tunnel_pid: 1168
 - bound_interface_alias: Ethernet
 - bound_interface_ip: 192.168.0.27
 - local_server_pid: 14280
-- previous_public_url: https://00c19594f2cc94.lhr.life
-- old_broken_public_url: https://penalties-passive-trading-probability.trycloudflare.com
-- old_broken_public_url_cause: cloudflared_quick_tunnel_failed_live_health_check_tls_handshake_eof
+- previous_public_url: https://0e6748b97ae3fe.lhr.life
+- old_broken_public_url: https://0e6748b97ae3fe.lhr.life
+- old_broken_public_url_cause: stale_session_hostname_not_mapped
 - public_url_blocker: 

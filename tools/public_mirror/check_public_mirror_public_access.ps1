@@ -1,6 +1,10 @@
 param(
     [string]$SourceRepoPath,
-    [string]$PublicUrl
+    [string]$PublicUrl,
+    [switch]$RunStabilitySeries,
+    [int]$RootCheckCount = 5,
+    [int]$FileCheckRounds = 3,
+    [int]$IntervalSeconds = 8
 )
 
 $ErrorActionPreference = "Stop"
@@ -72,6 +76,38 @@ function Probe-Url([string]$Url) {
     }
 }
 
+function Probe-UrlDetailed([string]$Url) {
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+    try {
+        $resp = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 20 -DisableKeepAlive -Headers @{
+            "Cache-Control" = "no-cache"
+            Pragma        = "no-cache"
+        }
+        $sw.Stop()
+        return [ordered]@{
+            checked_at_utc = (Get-Date).ToUniversalTime().ToString("o")
+            ok = $true
+            status = [int]$resp.StatusCode
+            latency_ms = [math]::Round($sw.Elapsed.TotalMilliseconds, 2)
+            error = $null
+        }
+    }
+    catch {
+        $sw.Stop()
+        $statusCode = $null
+        if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+            $statusCode = [int]$_.Exception.Response.StatusCode
+        }
+        return [ordered]@{
+            checked_at_utc = (Get-Date).ToUniversalTime().ToString("o")
+            ok = $false
+            status = $statusCode
+            latency_ms = [math]::Round($sw.Elapsed.TotalMilliseconds, 2)
+            error = $_.Exception.Message
+        }
+    }
+}
+
 function Get-LatestTunnelUrl([string]$OutPath, [string]$ErrPath, [string]$ProviderName) {
     $candidates = New-Object System.Collections.Generic.List[string]
     foreach ($path in @($OutPath, $ErrPath)) {
@@ -95,6 +131,155 @@ function Get-LatestTunnelUrl([string]$OutPath, [string]$ErrPath, [string]$Provid
         return $null
     }
     return $candidates[$candidates.Count - 1]
+}
+
+function Run-StabilitySeries {
+    param(
+        [string]$InitialPublicUrl,
+        [string]$ProviderName,
+        [int]$TunnelPid,
+        [string]$OutPath,
+        [string]$ErrPath,
+        [int]$RootChecks,
+        [int]$FileRounds,
+        [int]$SleepSeconds
+    )
+
+    $series = [ordered]@{
+        enabled = $true
+        started_at_utc = (Get-Date).ToUniversalTime().ToString("o")
+        root_checks_requested = $RootChecks
+        file_rounds_requested = $FileRounds
+        interval_seconds = $SleepSeconds
+        session_based_url = ($ProviderName -eq "ssh_localhost_run" -or $ProviderName -eq "cloudflared_quick_tunnel")
+        root_checks = @()
+        file_checks = [ordered]@{
+            "/PUBLIC_REPO_STATE.json" = @()
+            "/PUBLIC_SYNC_STATUS.json" = @()
+            "/PUBLIC_ENTRYPOINTS.md" = @()
+        }
+        tunnel_process_alive_sequence = @()
+        url_changes_detected = @()
+        latest_url = $InitialPublicUrl
+        successful_checks = 0
+        failed_checks = 0
+        total_checks = 0
+        success_rate_percent = 0
+        had_tunnel_drop = $false
+        classification = "BROKEN"
+        stable_enough_for_chatgpt = $false
+    }
+
+    $currentUrl = $InitialPublicUrl
+    for ($i = 1; $i -le $RootChecks; $i++) {
+        $latest = Get-LatestTunnelUrl -OutPath $OutPath -ErrPath $ErrPath -ProviderName $ProviderName
+        if (-not [string]::IsNullOrWhiteSpace($latest) -and $latest -ne $currentUrl) {
+            $series.url_changes_detected += [ordered]@{
+                checked_at_utc = (Get-Date).ToUniversalTime().ToString("o")
+                old_url = $currentUrl
+                new_url = $latest
+            }
+            $currentUrl = $latest
+        }
+
+        $alive = $false
+        if ($TunnelPid -gt 0) {
+            $alive = [bool](Get-Process -Id $TunnelPid -ErrorAction SilentlyContinue)
+        }
+        if (-not $alive) { $series.had_tunnel_drop = $true }
+        $series.tunnel_process_alive_sequence += [ordered]@{
+            checked_at_utc = (Get-Date).ToUniversalTime().ToString("o")
+            phase = "root"
+            attempt = $i
+            tunnel_process_alive = $alive
+        }
+
+        $probe = Probe-UrlDetailed -Url $currentUrl
+        $probe["attempt"] = $i
+        $probe["url"] = $currentUrl
+        $probe["tunnel_process_alive"] = $alive
+        $series.root_checks += $probe
+        $series.total_checks++
+        if ($probe.ok) { $series.successful_checks++ } else { $series.failed_checks++ }
+
+        if ($i -lt $RootChecks -and $SleepSeconds -gt 0) {
+            Start-Sleep -Seconds $SleepSeconds
+        }
+    }
+
+    $filePaths = @("/PUBLIC_REPO_STATE.json", "/PUBLIC_SYNC_STATUS.json", "/PUBLIC_ENTRYPOINTS.md")
+    for ($round = 1; $round -le $FileRounds; $round++) {
+        foreach ($path in $filePaths) {
+            $latest = Get-LatestTunnelUrl -OutPath $OutPath -ErrPath $ErrPath -ProviderName $ProviderName
+            if (-not [string]::IsNullOrWhiteSpace($latest) -and $latest -ne $currentUrl) {
+                $series.url_changes_detected += [ordered]@{
+                    checked_at_utc = (Get-Date).ToUniversalTime().ToString("o")
+                    old_url = $currentUrl
+                    new_url = $latest
+                }
+                $currentUrl = $latest
+            }
+
+            $alive = $false
+            if ($TunnelPid -gt 0) {
+                $alive = [bool](Get-Process -Id $TunnelPid -ErrorAction SilentlyContinue)
+            }
+            if (-not $alive) { $series.had_tunnel_drop = $true }
+            $series.tunnel_process_alive_sequence += [ordered]@{
+                checked_at_utc = (Get-Date).ToUniversalTime().ToString("o")
+                phase = "file"
+                round = $round
+                path = $path
+                tunnel_process_alive = $alive
+            }
+
+            $target = $currentUrl.TrimEnd("/") + $path
+            $probe = Probe-UrlDetailed -Url $target
+            $probe["round"] = $round
+            $probe["path"] = $path
+            $probe["url"] = $target
+            $probe["tunnel_process_alive"] = $alive
+            $series.file_checks[$path] += $probe
+            $series.total_checks++
+            if ($probe.ok) { $series.successful_checks++ } else { $series.failed_checks++ }
+        }
+
+        if ($round -lt $FileRounds -and $SleepSeconds -gt 0) {
+            Start-Sleep -Seconds $SleepSeconds
+        }
+    }
+
+    $series.latest_url = $currentUrl
+    if ($series.total_checks -gt 0) {
+        $series.success_rate_percent = [math]::Round((100.0 * $series.successful_checks / $series.total_checks), 2)
+    }
+
+    if ($series.successful_checks -eq $series.total_checks -and -not $series.had_tunnel_drop -and $series.url_changes_detected.Count -eq 0) {
+        if ($series.session_based_url) {
+            $series.classification = "SESSION_FRAGILE"
+        }
+        else {
+            $series.classification = "STABLE"
+        }
+    }
+    elseif ($series.success_rate_percent -ge 90 -and -not $series.had_tunnel_drop) {
+        if ($series.session_based_url) {
+            $series.classification = "SESSION_FRAGILE"
+        }
+        else {
+            $series.classification = "MOSTLY_STABLE"
+        }
+    }
+    elseif ($series.success_rate_percent -ge 60) {
+        $series.classification = "SESSION_FRAGILE"
+    }
+    else {
+        $series.classification = "BROKEN"
+    }
+
+    $series.stable_enough_for_chatgpt = ($series.classification -eq "STABLE" -or $series.classification -eq "MOSTLY_STABLE")
+    $series["ended_at_utc"] = (Get-Date).ToUniversalTime().ToString("o")
+    return $series
 }
 
 $sourceRoot = Resolve-SourceRoot
@@ -154,6 +339,11 @@ $result = [ordered]@{
     old_broken_public_url_cause = if ($runtime.ContainsKey("old_broken_public_url_cause")) { [string]$runtime["old_broken_public_url_cause"] } else { $null }
     latest_tunnel_url_from_logs = $latestTunnelUrl
     runtime_url_outdated = $runtimeUrlOutdated
+    session_based_url = ($provider -eq "ssh_localhost_run" -or $provider -eq "cloudflared_quick_tunnel")
+    stability_classification = $null
+    stable_enough_for_chatgpt = $null
+    repeated_checks_summary = $null
+    stability_series = $null
     failure_cause = $null
     status = "FAIL"
     checks = [ordered]@{}
@@ -203,9 +393,76 @@ else {
     }
 }
 
+if ($RunStabilitySeries -and -not [string]::IsNullOrWhiteSpace($PublicUrl)) {
+    $stability = Run-StabilitySeries -InitialPublicUrl $PublicUrl -ProviderName $provider -TunnelPid $tunnelPid `
+        -OutPath $tunnelOutPath -ErrPath $tunnelErrPath -RootChecks $RootCheckCount -FileRounds $FileCheckRounds -SleepSeconds $IntervalSeconds
+
+    # if URL changed during the series and still healthy, keep runtime/state on latest URL.
+    if (-not [string]::IsNullOrWhiteSpace($stability.latest_url) -and $stability.latest_url -ne $result.public_url) {
+        $result.old_public_url = $result.public_url
+        $result.public_url = $stability.latest_url
+    }
+
+    $result.stability_series = $stability
+    $result.stability_classification = $stability.classification
+    $result.stable_enough_for_chatgpt = $stability.stable_enough_for_chatgpt
+    $result.repeated_checks_summary = [ordered]@{
+        passed = $stability.successful_checks
+        total = $stability.total_checks
+        failed = $stability.failed_checks
+    }
+
+    if ($stability.classification -eq "BROKEN") {
+        $result.status = "FAIL"
+        if ([string]::IsNullOrWhiteSpace($result.failure_cause)) {
+            $result.failure_cause = "repeated_access_stability_broken"
+        }
+    }
+}
+
 $jsonPath = Join-Path $sourceRoot "setup_reports/public_access_check.json"
 $mdPath = Join-Path $sourceRoot "setup_reports/public_access_check.md"
 $result | ConvertTo-Json -Depth 12 | Set-Content -Path $jsonPath -Encoding UTF8
+
+if ($RunStabilitySeries -and $result.stability_series -ne $null) {
+    $stabilityJsonPath = Join-Path $sourceRoot "setup_reports/public_url_stability_check.json"
+    $stabilityMdPath = Join-Path $sourceRoot "setup_reports/public_url_stability_check.md"
+    $result.stability_series | ConvertTo-Json -Depth 14 | Set-Content -Path $stabilityJsonPath -Encoding UTF8
+
+    $stabilityMd = @(
+        "# Public URL Stability Check",
+        "",
+        "- checked_at_utc: $($result.checked_at_utc)",
+        "- source_repo_path: $($sourceRoot)",
+        "- public_access_provider: $($result.public_access_provider)",
+        "- public_access_mechanism: $($result.public_access_mechanism)",
+        "- session_based_url: $($result.session_based_url)",
+        "- final_public_url: $($result.public_url)",
+        "- classification: $($result.stability_classification)",
+        "- stable_enough_for_chatgpt: $($result.stable_enough_for_chatgpt)",
+        "- repeated_checks_passed: $($result.repeated_checks_summary.passed)/$($result.repeated_checks_summary.total)",
+        "- failed_checks: $($result.repeated_checks_summary.failed)",
+        "- url_changes_detected: $($result.stability_series.url_changes_detected.Count)",
+        "- had_tunnel_drop: $($result.stability_series.had_tunnel_drop)"
+    )
+    $stabilityMd += ""
+    $stabilityMd += "## Full Series JSON"
+    $stabilityMd += '```json'
+    $stabilityMd += ($result.stability_series | ConvertTo-Json -Depth 14)
+    $stabilityMd += '```'
+    Set-Content -Path $stabilityMdPath -Value $stabilityMd -Encoding UTF8
+
+    Write-RuntimePatch -PathValue $runtimePath -Patch ([ordered]@{
+            public_url = $result.public_url
+            public_url_status = if ($result.status -eq "PASS") { "READY" } else { "NOT_READY" }
+            public_access_stability_classification = $result.stability_classification
+            public_access_stable_enough_for_chatgpt = $result.stable_enough_for_chatgpt
+            public_access_repeated_checks_passed = $result.repeated_checks_summary.passed
+            public_access_repeated_checks_total = $result.repeated_checks_summary.total
+            public_access_had_tunnel_drop = $result.stability_series.had_tunnel_drop
+            public_access_url_changes_detected = $result.stability_series.url_changes_detected.Count
+        })
+}
 
 $md = @(
     "# Public Access Check",
@@ -223,6 +480,10 @@ $md = @(
     "- old_broken_public_url_cause: $($result.old_broken_public_url_cause)",
     "- latest_tunnel_url_from_logs: $($result.latest_tunnel_url_from_logs)",
     "- runtime_url_outdated: $($result.runtime_url_outdated)",
+    "- session_based_url: $($result.session_based_url)",
+    "- stability_classification: $($result.stability_classification)",
+    "- stable_enough_for_chatgpt: $($result.stable_enough_for_chatgpt)",
+    "- repeated_checks_passed: $(if($result.repeated_checks_summary){$result.repeated_checks_summary.passed}else{'n/a'})/$(if($result.repeated_checks_summary){$result.repeated_checks_summary.total}else{'n/a'})",
     "- failure_cause: $($result.failure_cause)",
     "- status: $($result.status)",
     "",
