@@ -1,26 +1,24 @@
 ﻿# Public Runtime State
 
-- updated_at_utc: 2026-03-15T17:39:23.5693414Z
+- updated_at_utc: 2026-03-15T18:10:31.2994384Z
 - source_repo_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - local_url: http://127.0.0.1:18080/
 - caddy_config_path: E:\CVVCODEX\tools\public_mirror\Caddyfile
 - canonical_local_hosting: caddy_direct_local_pc
-- public_url: 
+- local_bind_address: 0.0.0.0
+- local_bind_port: 18080
+- public_url: http://185.171.202.83:18080
 - public_url_status: NOT_READY
 - public_access_provider: direct_local_pc_caddy
 - public_access_mechanism: direct local-PC hosting via Caddy (non-tunnel canonical)
 - public_access_vpn_dependent: False
 - public_access_session_based: False
 - public_access_stability_classification: BROKEN
-- public_access_repeated_checks_passed: 0/0
+- public_access_repeated_checks_passed: 0/14
 - public_access_stable_enough_for_chatgpt: False
+- ddns_domain_status: external_ip_literal_fallback
+- router_port_forwarding_configured: False
 - public_access_one_external_blocker: router_port_forwarding_or_dns_mapping_not_configured
 - direct_hosting_local_ip: 192.168.0.27
 - direct_hosting_external_ip: 185.171.202.83
-- direct_hosting_gateway: 192.168.0.1
-- local_server_type: caddy
-- local_server_pid: 11012
-- tunnel_pid: 
-- old_broken_public_url: https://0e6748b97ae3fe.lhr.life
-- old_broken_public_url_cause: stale_session_hostname_not_mapped

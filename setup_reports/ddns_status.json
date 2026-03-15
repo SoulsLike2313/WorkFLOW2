@@ -1,0 +1,9 @@
+﻿{
+    "generated_at_utc":  "2026-03-15T18:13:23.8372340Z",
+    "provider":  "none",
+    "hostname":  "",
+    "status":  "external_ip_literal_fallback",
+    "update_mechanism":  "none",
+    "config_path":  "",
+    "notes":  "No DDNS credentials/config found in env or repo files. External IP literal fallback is active."
+}

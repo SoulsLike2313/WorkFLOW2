@@ -1,0 +1,30 @@
+﻿{
+    "generated_at_utc":  "2026-03-15T18:13:22.7436851Z",
+    "active_interface":  "Ethernet",
+    "lan_ip":  "192.168.0.27",
+    "gateway":  "192.168.0.1",
+    "gateway_reachable":  true,
+    "external_ip":  "185.171.202.83",
+    "nat_situation":  "private_lan_with_nat",
+    "cgnat_or_double_nat":  "not_confirmed_from_local_only",
+    "router_http_reachable":  true,
+    "router_http_status":  200,
+    "upnp":  {
+                 "available":  false,
+                 "reason":  "static_mapping_collection_unavailable"
+             },
+    "listening_ports":  [
+                            {
+                                "local_address":  "::",
+                                "local_port":  18080,
+                                "pid":  11012,
+                                "process":  "caddy"
+                            }
+                        ],
+    "firewall_rule_for_18080":  true,
+    "canyouseeme_result":  {
+                               "checked":  true,
+                               "status_code":  200,
+                               "result_line":  "\u003cp style=\"padding-left:15px\"\u003e\u003cfont color=\"red\"\u003e\u003cb\u003eError:\u003c/b\u003e\u003c/font\u003e\u0026nbsp;I could \u003cb\u003enot\u003c/b\u003e see your service on \u003cb\u003e185.171.202.83\u003c/b\u003e on port (\u003cb\u003e18080\u003c/b\u003e)\u003cbr\u003eReason:\u003csmall\u003e\u0026nbsp;Connection timed out\u003c/small\u003e\u003c/p\u003e"
+                           }
+}

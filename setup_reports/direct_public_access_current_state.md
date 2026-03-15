@@ -1,0 +1,13 @@
+﻿# Direct Public Access Current State
+
+- generated_at_utc: 2026-03-15T18:13:22.7157031Z
+- source_path: E:\CVVCODEX
+- mirror_path: E:\_public_repo_mirror\WorkFLOW
+- caddy_config_path: E:\CVVCODEX\tools\public_mirror\Caddyfile
+- branch: main
+- head_commit: 08b3db6691c54cb712bc318804fce10bd9fd3116
+- local_url: http://127.0.0.1:18080/
+- local_web_status: PASS
+- root_is_mirror: True
+- fast_resume_still_works: True
+- sync_still_works: True

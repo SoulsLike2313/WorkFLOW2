@@ -8,6 +8,8 @@
 - canonical public strategy: direct inbound access to local PC (router/NAT/DDNS/domain path)
 - tunnels (`localhost.run`, quick tunnels, ngrok session endpoints) are **legacy fallback only**, not canonical
 - `github_is_not_source_of_truth = true`
+- canonical local bind: `0.0.0.0:18080`
+- canonical local read URL: `http://127.0.0.1:18080/`
 
 ## Fast Sync (Unchanged)
 
@@ -56,7 +58,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\check_
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\start_public_mirror_public_access.ps1 `
   -SourceRepoPath E:\CVVCODEX `
-  -CanonicalHostname "<your-ddns-or-domain>" `
+  -CanonicalHostname "<your-ddns-or-domain-or-public-ip>" `
   -PublicScheme http `
   -PublicPort 18080
 ```
@@ -79,7 +81,21 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\check_
   - `.git*`, `.env*`
   - `*.pem`, `*.key`, `*.pfx`, `*.p12`
   - `id_rsa*`, `id_ed25519*`
-  - `secrets.*`, `token*`, `credentials*`
+- `secrets.*`, `token*`, `credentials*`
+
+## Router/NAT Canonical Mapping
+
+- external port: `18080/TCP`
+- internal host: `192.168.0.27`
+- internal port: `18080`
+- service target: Caddy mirror server
+
+Single manual step if external URL is not ready:
+- create router port-forward rule `TCP 18080 -> 192.168.0.27:18080`
+
+Current DDNS/domain state:
+- no DDNS credential/config in repo/env
+- fallback public target is external IP literal (`http://<external_ip>:18080`)
 
 ## ENGINEERING READY
 

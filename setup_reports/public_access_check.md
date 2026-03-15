@@ -1,15 +1,15 @@
 ﻿# Public Access Check
 
-- checked_at_utc: 2026-03-15T17:59:48.4121953Z
+- checked_at_utc: 2026-03-15T18:10:05.6389141Z
 - local_target_url: http://127.0.0.1:18080/
 - public_url: http://185.171.202.83:18080
 - public_access_provider: direct_local_pc_caddy
 - public_access_mechanism: direct local-PC hosting via Caddy (non-tunnel canonical)
 - public_access_vpn_dependent: False
 - session_based_url: False
-- stability_classification: BROKEN
-- stable_enough_for_chatgpt: False
-- repeated_checks_passed: 0/14
+- stability_classification: 
+- stable_enough_for_chatgpt: 
+- repeated_checks_passed: n/a/n/a
 - failure_cause: router_port_forwarding_or_dns_mapping_not_configured
 - status: FAIL
 

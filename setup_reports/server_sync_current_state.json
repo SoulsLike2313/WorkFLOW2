@@ -1,15 +1,13 @@
 ﻿{
-    "checked_at_utc":  "2026-03-15T17:40:33.2885666Z",
+    "checked_at_utc":  "2026-03-15T18:13:22.6737250Z",
     "source_repo_path":  "E:\\CVVCODEX",
     "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
     "branch":  "main",
-    "head_commit":  "7edc7bec0893c6df0fb1864c6ce5f257b940a28e",
+    "head_commit":  "08b3db6691c54cb712bc318804fce10bd9fd3116",
     "git_status":  {
                        "clean":  false,
-                       "changed_count":  18,
+                       "changed_count":  23,
                        "porcelain":  [
-                                         " M setup_reports/final_operator_report.json",
-                                         " M setup_reports/final_operator_report.md",
                                          " M setup_reports/public_access_check.json",
                                          " M setup_reports/public_access_check.md",
                                          " M setup_reports/public_mirror_progress_status.json",
@@ -19,34 +17,38 @@
                                          " M setup_reports/public_repo_access_validation.json",
                                          " M setup_reports/public_repo_access_validation.md",
                                          " M setup_reports/public_runtime_state.json",
-                                         " M setup_reports/public_runtime_state.md",
                                          " M setup_reports/public_url_stability_check.json",
                                          " M setup_reports/public_url_stability_check.md",
-                                         " M setup_reports/server_sync_current_state.json",
-                                         " M setup_reports/server_sync_current_state.md",
-                                         " M tools/public_mirror/start_public_mirror_watch.ps1",
-                                         " M tools/public_mirror/validate_public_mirror.ps1"
+                                         " M tools/public_mirror/README.md",
+                                         " M tools/public_mirror/check_public_mirror_public_access.ps1",
+                                         "?? setup_reports/ddns_status.json",
+                                         "?? setup_reports/ddns_status.md",
+                                         "?? setup_reports/direct_public_access_current_state.json",
+                                         "?? setup_reports/direct_public_access_current_state.md",
+                                         "?? setup_reports/direct_public_access_validation.json",
+                                         "?? setup_reports/direct_public_access_validation.md",
+                                         "?? setup_reports/direct_public_network_diagnosis.json",
+                                         "?? setup_reports/direct_public_network_diagnosis.md",
+                                         "?? setup_reports/router_port_forwarding_status.json",
+                                         "?? setup_reports/router_port_forwarding_status.md"
                                      ]
                    },
     "source_stats":  {
-                         "files":  35335,
-                         "directories":  3046,
-                         "size_bytes":  3828953972
+                         "files":  35345,
+                         "size_bytes":  3828989825
                      },
     "mirror_stats":  {
-                         "files":  35315,
-                         "directories":  3046,
-                         "size_bytes":  3827500619
+                         "files":  35325,
+                         "size_bytes":  3827553663
                      },
     "current_sync_mode":  "FAST_RESUME_STAGED",
     "active_sync_entrypoint":  "tools/public_mirror/fast_resume_public_mirror.ps1",
     "fast_resume_entrypoint":  "tools/public_mirror/fast_resume_public_mirror.ps1",
-    "resume_entrypoint":  "tools/public_mirror/resume_public_mirror.ps1",
-    "manual_sync_entrypoint":  "tools/public_mirror/sync_repo_to_public_mirror.ps1",
-    "watch_entrypoint":  "tools/public_mirror/start_public_mirror_watch.ps1",
+    "sync_entrypoint":  "tools/public_mirror/sync_repo_to_public_mirror.ps1",
     "runtime_state_path":  "setup_reports/public_runtime_state.json",
     "runtime_state":  {
-                          "github_is_not_source_of_truth":  true,
+                          "ddns_domain_status":  "external_ip_literal_fallback",
+                          "canonical_local_hosting":  "caddy_direct_local_pc",
                           "tunnel_command":  null,
                           "source_repo_path":  "E:\\CVVCODEX",
                           "direct_hosting_network":  {
@@ -60,42 +62,46 @@
                           "local_bind_port":  18080,
                           "public_access_mechanism":  "direct local-PC hosting via Caddy (non-tunnel canonical)",
                           "public_url_status":  "NOT_READY",
-                          "public_access_repeated_checks_total":  0,
+                          "public_access_repeated_checks_total":  14,
                           "public_access_repeated_checks_passed":  0,
                           "public_url_blocker":  "router_port_forwarding_or_dns_mapping_not_configured",
                           "previous_public_url":  "https://787e4105496bcf.lhr.life",
                           "local_server_command":  "C:\\Users\\PC\\AppData\\Local\\Microsoft\\WinGet\\Links\\caddy.exe run --config E:\\CVVCODEX\\tools\\public_mirror\\Caddyfile --adapter caddyfile",
-                          "public_url_detected_at_utc":  "2026-03-15T17:08:46.4044650Z",
+                          "public_url_detected_at_utc":  "2026-03-15T17:59:31.0895992Z",
                           "caddy_config_path":  "E:\\CVVCODEX\\tools\\public_mirror\\Caddyfile",
                           "tunnel_started_at_utc":  "2026-03-15T15:21:16.7195840Z",
-                          "canonical_public_hostname":  "",
+                          "canonical_public_hostname":  "185.171.202.83",
                           "public_access_one_external_blocker":  "router_port_forwarding_or_dns_mapping_not_configured",
                           "canonical_public_port":  18080,
-                          "updated_at_utc":  "2026-03-15T17:39:23.5693414Z",
-                          "public_url":  null,
+                          "updated_at_utc":  "2026-03-15T18:10:31.2994384Z",
+                          "public_url":  "http://185.171.202.83:18080",
                           "tunnel_pid":  null,
                           "local_url":  "http://127.0.0.1:18080/",
-                          "public_access_had_tunnel_drop":  false,
+                          "public_access_stable_enough_for_chatgpt":  false,
                           "bound_interface_alias":  "Ethernet",
                           "old_broken_public_url_cause":  "stale_session_hostname_not_mapped",
+                          "router_port_forwarding_configured":  false,
                           "public_access_provider":  "direct_local_pc_caddy",
                           "public_access_url_changes_detected":  0,
-                          "public_access_stable_enough_for_chatgpt":  false,
+                          "canonical_public_scheme":  "http",
                           "bound_interface_ip":  "192.168.0.27",
                           "local_server_started_at_utc":  "2026-03-15T17:06:43.4528824Z",
                           "local_server_type":  "caddy",
                           "public_access_stability_classification":  "BROKEN",
                           "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
                           "local_server_stopped_at_utc":  "2026-03-15T12:03:12.7714982Z",
-                          "canonical_local_hosting":  "caddy_direct_local_pc",
+                          "github_is_not_source_of_truth":  true,
                           "local_server_pid":  11012,
-                          "canonical_public_scheme":  "http",
+                          "public_access_had_tunnel_drop":  false,
                           "public_access_session_based":  false,
                           "old_broken_public_url":  "https://0e6748b97ae3fe.lhr.life"
                       },
-    "relevant_processes":  {
-                               "ProcessId":  11012,
-                               "Name":  "caddy.exe",
-                               "CommandLine":  "\"C:\\Users\\PC\\AppData\\Local\\Microsoft\\WinGet\\Links\\caddy.exe\" run --config E:\\CVVCODEX\\tools\\public_mirror\\Caddyfile --adapter caddyfile "
-                           }
+    "relevant_listeners":  [
+                               {
+                                   "local_address":  "::",
+                                   "local_port":  18080,
+                                   "pid":  11012,
+                                   "process":  "caddy"
+                               }
+                           ]
 }

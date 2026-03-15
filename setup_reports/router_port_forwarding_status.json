@@ -1,0 +1,17 @@
+﻿{
+    "generated_at_utc":  "2026-03-15T18:13:23.8502289Z",
+    "configured":  false,
+    "automatic_configuration_attempted":  "upnp",
+    "automatic_configuration_result":  {
+                                           "available":  false,
+                                           "reason":  "static_mapping_collection_unavailable"
+                                       },
+    "firewall_rule_for_18080":  true,
+    "canonical_mapping":  {
+                              "protocol":  "TCP",
+                              "external_port":  18080,
+                              "internal_ip":  "192.168.0.27",
+                              "internal_port":  18080
+                          },
+    "one_manual_step_required":  "Create router NAT/port-forward rule: TCP 18080 -\u003e 192.168.0.27:18080"
+}

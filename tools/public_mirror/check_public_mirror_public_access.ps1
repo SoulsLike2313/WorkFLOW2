@@ -315,15 +315,20 @@ foreach ($key in $result.checks.Keys) {
 }
 Set-Content -Path $mdPath -Value $md -Encoding UTF8
 
+$prevPassed = if ($result.repeated_checks_summary) { $result.repeated_checks_summary.passed } elseif ($runtime.ContainsKey("public_access_repeated_checks_passed")) { $runtime["public_access_repeated_checks_passed"] } else { $null }
+$prevTotal = if ($result.repeated_checks_summary) { $result.repeated_checks_summary.total } elseif ($runtime.ContainsKey("public_access_repeated_checks_total")) { $runtime["public_access_repeated_checks_total"] } else { $null }
+$prevClassification = if ($result.stability_classification) { $result.stability_classification } elseif ($runtime.ContainsKey("public_access_stability_classification")) { $runtime["public_access_stability_classification"] } else { $null }
+$prevStable = if ($null -ne $result.stable_enough_for_chatgpt) { $result.stable_enough_for_chatgpt } elseif ($runtime.ContainsKey("public_access_stable_enough_for_chatgpt")) { $runtime["public_access_stable_enough_for_chatgpt"] } else { $null }
+
 Write-RuntimePatch -PathValue $runtimePath -Patch ([ordered]@{
         public_access_provider = "direct_local_pc_caddy"
         public_access_mechanism = "direct local-PC hosting via Caddy (non-tunnel canonical)"
         public_access_vpn_dependent = $false
         public_access_session_based = $false
-        public_access_stability_classification = $result.stability_classification
-        public_access_stable_enough_for_chatgpt = $result.stable_enough_for_chatgpt
-        public_access_repeated_checks_passed = if ($result.repeated_checks_summary) { $result.repeated_checks_summary.passed } else { $null }
-        public_access_repeated_checks_total = if ($result.repeated_checks_summary) { $result.repeated_checks_summary.total } else { $null }
+        public_access_stability_classification = $prevClassification
+        public_access_stable_enough_for_chatgpt = $prevStable
+        public_access_repeated_checks_passed = $prevPassed
+        public_access_repeated_checks_total = $prevTotal
         router_port_forwarding_configured = ($result.status -eq "PASS")
         public_url_status = if ($result.status -eq "PASS") { "READY" } else { "NOT_READY" }
         public_url_blocker = if ($result.status -eq "PASS") { $null } else { $result.failure_cause }

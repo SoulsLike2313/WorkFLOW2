@@ -1,29 +1,27 @@
 ﻿# Final Operator Report
 
-- generated_at_utc: 2026-03-15T17:40:33.3755170Z
+- generated_at_utc: 2026-03-15T18:13:23.9161889Z
 - source_repo_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - source_branch: main
-- source_head_commit: 7edc7bec0893c6df0fb1864c6ce5f257b940a28e
+- source_head_commit: 08b3db6691c54cb712bc318804fce10bd9fd3116
 - local_url: http://127.0.0.1:18080/
 - caddy_config_path: E:\CVVCODEX\tools\public_mirror\Caddyfile
-- old_canonical_mechanism: ssh reverse tunnel via localhost.run (session-based)
 - current_public_access_mechanism: direct local-PC hosting via Caddy (non-tunnel canonical)
 - current_public_access_provider: direct_local_pc_caddy
 - vpn_independent: True
 - session_based_url: False
 - direct_hosting_local_ip: 192.168.0.27
 - direct_hosting_external_ip: 185.171.202.83
-- canonical_public_hostname: 
-- ddns_domain_status: not_configured
+- canonical_public_hostname: 185.171.202.83
+- ddns_domain_status: external_ip_literal_fallback
 - direct_public_url_status: NOT_READY
-- public_url: 
+- public_url: http://185.171.202.83:18080
 - stability_classification: BROKEN
-- repeated_checks_passed: 0/0
-- public_files_repeated_checks_passed: 0/3
+- repeated_checks_passed: 0/14
 - security_check_status: PASS
 - local_web_status: PASS
-- validation_run_id: public-mirror-validate-20260315T173540Z
+- validation_run_id: public-mirror-validate-20260315T180848Z
 - validation_status: FAIL
 - stable_enough_for_chatgpt: False
 - one_external_blocker: router_port_forwarding_or_dns_mapping_not_configured
