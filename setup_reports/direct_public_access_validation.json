@@ -1,25 +1,29 @@
 ﻿{
-    "generated_at_utc":  "2026-03-15T20:28:13.2371576Z",
-    "mode":  "PACKET_PATH_VERDICT_ONLY_NO_REBUILD",
+    "generated_at_utc":  "2026-03-15T20:45:35.1995200Z",
+    "mode":  "PACKET_CAPTURE_HOST_SIDE_ONLY",
     "packet_capture":  {
                            "run":  true,
                            "tool":  "pktmon",
-                           "filter":  "TCP SYN dst/src port 18080",
                            "etl_path":  "E:\\CVVCODEX\\setup_reports\\pktmon_test.etl",
                            "txt_path":  "E:\\CVVCODEX\\setup_reports\\pktmon_test.txt",
-                           "etl_size_bytes":  22668,
-                           "txt_size_bytes":  143004,
-                           "txt_line_count":  429
+                           "filter":  "TCP SYN, IP 192.168.0.27, port 18080"
                        },
-    "observations":  {
-                         "syn_from_lan_client_reached_host":  "NO",
-                         "host_syn_ack_or_response_observed":  "NO",
-                         "rst_or_drop_observed":  "NO_EXPLICIT_PACKET_EVENT",
-                         "trigger_from_lan_client_confirmed":  "UNKNOWN",
-                         "note":  "No TCP SYN packet event for port 18080 observed in capture output."
-                     },
-    "verdict":  "PATH_BROKEN_BEFORE_HOST_OR_TRIGGER_NOT_SENT",
-    "exact_break_point":  "No inbound SYN to 192.168.0.27:18080 observed on host capture window; break is before host stack (router bridge/AP isolation/segmentation) unless LAN client request was not sent during capture window.",
-    "one_exact_next_step":  "Run one synchronized test: start capture, then immediately execute on LAN laptop: curl http://192.168.0.27:18080/PUBLIC_REPO_STATE.json and confirm exact timestamp.",
-    "constraints":  "Caddy/mirror/sync/NAT unchanged in this run."
+    "packet_evidence":  {
+                            "syn_observed":  true,
+                            "syn_src_ip":  "192.168.0.1",
+                            "syn_src_port":  60182,
+                            "syn_dst_ip":  "192.168.0.27",
+                            "syn_dst_port":  18080,
+                            "syn_flags":  "S",
+                            "host_response_observed":  true,
+                            "host_response_basis":  "PktMon component counters at boundary 11 show Rx packets=1 and Tx packets=1 during matched flow."
+                        },
+    "interpretation":  {
+                           "syn_from_lan_client_reached_host":  "YES",
+                           "host_response_observed":  "YES",
+                           "exact_verdict":  "HOST_STACK_RESPONDS; BREAK_IS_UPSTREAM_OF_HOST_FOR_CLIENT_PATH",
+                           "exact_break_point":  "Wi-Fi client path segmentation / AP isolation / router bridge policy between LAN laptop and Ethernet host. Host ingress/egress on 18080 is working.",
+                           "one_exact_next_step":  "Disable AP/client isolation on the active Wi-Fi SSID and retest from laptop: curl http://192.168.0.27:18080/PUBLIC_REPO_STATE.json"
+                       },
+    "constraints":  "Caddy/mirror/sync/NAT/VPN config unchanged in this packet-capture run."
 }

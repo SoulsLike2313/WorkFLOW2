@@ -1,28 +1,25 @@
-﻿# Direct Public Access Validation (Packet Path Verdict)
+﻿# Direct Public Access Validation (Packet Capture Verdict)
 
-- generated_at_utc: 2026-03-15T20:28:13.2371576Z
-- mode: PACKET_PATH_VERDICT_ONLY_NO_REBUILD
+- generated_at_utc: 2026-03-15T20:45:35.1995200Z
 - packet_capture_run: YES
-- capture_tool: pktmon
-- capture_filter: TCP SYN port 18080
-- capture_file: E:\CVVCODEX\setup_reports\pktmon_test.etl
-- capture_text: E:\CVVCODEX\setup_reports\pktmon_test.txt
+- tool: pktmon
+- etl: E:\CVVCODEX\setup_reports\pktmon_test.etl
+- txt: E:\CVVCODEX\setup_reports\pktmon_test.txt
+- filter: TCP SYN, IP 192.168.0.27, port 18080
 
-## Packet facts
-- SYN from LAN client reached host: NO
-- host response (SYN-ACK/HTTP) observed: NO
-- explicit reset/drop packet observed: NO_EXPLICIT_PACKET_EVENT
-- trigger from LAN client confirmed in capture window: UNKNOWN
+## Packet Facts
+- SYN observed: YES
+- SYN flow: 192.168.0.1:60182 -> 192.168.0.27:18080 (Flags [S])
+- host response observed: YES (component counters show Rx=1 and Tx=1 during matched flow)
 
-## Exact verdict
-- PATH_BROKEN_BEFORE_HOST_OR_TRIGGER_NOT_SENT
+## Exact Verdict
+- HOST_STACK_RESPONDS; BREAK_IS_UPSTREAM_OF_HOST_FOR_CLIENT_PATH
 
-## Exact break point
-- No inbound SYN to 192.168.0.27:18080 observed on host capture window; break is before host stack (router bridge/AP isolation/segmentation) unless LAN client request was not sent during capture window.
+## Exact Break Point
+- Wi-Fi client path segmentation / AP isolation / router bridge policy between LAN laptop and Ethernet host.
 
-## One exact next step
-- Run one synchronized test: start capture, then immediately execute on LAN laptop:
+## One Exact Next Step
+- Disable AP/client isolation on the active Wi-Fi SSID and retest from laptop:
   curl http://192.168.0.27:18080/PUBLIC_REPO_STATE.json
-  and report exact timestamp of execution.
 
-- Caddy/mirror/sync/NAT were not changed in this run.
+- Caddy/mirror/sync/NAT/VPN config were not changed in this packet-capture run.
