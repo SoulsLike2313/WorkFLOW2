@@ -2,7 +2,7 @@ param(
     [string]$SourceRepoPath,
     [string]$MirrorPath,
     [int]$Port = 18080,
-    [string]$BindAddress = "127.0.0.1",
+    [string]$BindAddress = "0.0.0.0",
     [switch]$ForceRestart
 )
 
@@ -56,7 +56,7 @@ function Write-RuntimeState([string]$PathValue, [hashtable]$Patch) {
         $state[$k] = $Patch[$k]
     }
     $state["updated_at_utc"] = (Get-Date).ToUniversalTime().ToString("o")
-    $state | ConvertTo-Json -Depth 10 | Set-Content -Path $PathValue -Encoding UTF8
+    $state | ConvertTo-Json -Depth 12 | Set-Content -Path $PathValue -Encoding UTF8
 }
 
 function Test-WebReady([string]$Url, [int]$TimeoutSeconds = 20) {
@@ -74,6 +74,23 @@ function Test-WebReady([string]$Url, [int]$TimeoutSeconds = 20) {
     return $false
 }
 
+function Resolve-CaddyExecutable {
+    $cmd = Get-Command caddy -ErrorAction SilentlyContinue
+    if ($cmd) {
+        return $cmd.Source
+    }
+    foreach ($candidate in @(
+            "C:\Users\PC\AppData\Local\Microsoft\WinGet\Links\caddy.exe",
+            "C:\Program Files\Caddy\caddy.exe",
+            "C:\ProgramData\chocolatey\bin\caddy.exe"
+        )) {
+        if (Test-Path $candidate) {
+            return $candidate
+        }
+    }
+    return $null
+}
+
 $sourceRoot = Resolve-SourceRoot
 $repoName = Resolve-RepoName $sourceRoot
 if ([string]::IsNullOrWhiteSpace($MirrorPath)) {
@@ -89,48 +106,81 @@ if (-not (Test-Path $mirrorRoot)) {
     throw "Mirror path not found: $mirrorRoot"
 }
 
+$caddyExe = Resolve-CaddyExecutable
+if ([string]::IsNullOrWhiteSpace($caddyExe)) {
+    throw "Caddy executable not found. Install Caddy before starting canonical local web."
+}
+
 $runtimeDir = Join-Path $sourceRoot "setup_reports"
 Ensure-Directory $runtimeDir
 $runtimePath = Join-Path $runtimeDir "public_runtime_state.json"
 $outLog = Join-Path $runtimeDir "public_server_stdout.log"
 $errLog = Join-Path $runtimeDir "public_server_stderr.log"
-$localUrl = "http://$BindAddress`:$Port/"
+$localUrl = "http://127.0.0.1:$Port/"
 
 $state = Read-RuntimeState $runtimePath
-$existingPid = $state["local_server_pid"]
-if ($existingPid) {
+$existingPid = 0
+if ($state.ContainsKey("local_server_pid") -and $state["local_server_pid"]) {
+    $existingPid = [int]$state["local_server_pid"]
+}
+if ($existingPid -gt 0) {
     $existingProcess = Get-Process -Id $existingPid -ErrorAction SilentlyContinue
     if ($existingProcess) {
-        if ($ForceRestart) {
-            Stop-Process -Id $existingPid -Force -ErrorAction SilentlyContinue
+        if (-not $ForceRestart -and (Test-WebReady -Url $localUrl -TimeoutSeconds 3) -and ($state["local_server_type"] -eq "caddy")) {
+            Write-Host "[public-mirror-web] already running caddy pid=$existingPid url=$localUrl"
+            exit 0
         }
-        else {
-            if (Test-WebReady -Url $localUrl -TimeoutSeconds 3) {
-                Write-Host "[public-mirror-web] already running pid=$existingPid url=$localUrl"
-                exit 0
-            }
-            Stop-Process -Id $existingPid -Force -ErrorAction SilentlyContinue
-        }
+        Stop-Process -Id $existingPid -Force -ErrorAction SilentlyContinue
+        Start-Sleep -Milliseconds 300
     }
 }
 
-$args = @("-m", "http.server", "$Port", "--bind", $BindAddress, "--directory", $mirrorRoot)
-$proc = Start-Process -FilePath "python" -ArgumentList $args -PassThru -WindowStyle Hidden `
+$caddyConfigPath = Join-Path $sourceRoot "tools/public_mirror/Caddyfile"
+$mirrorForCaddy = ($mirrorRoot -replace "\\", "/")
+$caddyfile = @"
+{
+    admin off
+    auto_https off
+    persist_config off
+}
+
+$BindAddress`:$Port {
+    root * $mirrorForCaddy
+    @sensitive path /.git* /.env /.env.* /id_rsa* /id_ed25519* /*.pem /*.key /*.pfx /*.p12 /secrets.* /token* /credentials*
+    respond @sensitive 404
+    file_server browse {
+        hide .git .env .env.* *.pem *.key *.pfx *.p12 id_rsa id_ed25519 secrets.* token* credentials*
+    }
+}
+"@
+Set-Content -Path $caddyConfigPath -Value $caddyfile -Encoding UTF8
+
+Set-Content -Path $outLog -Value "" -Encoding UTF8
+Set-Content -Path $errLog -Value "" -Encoding UTF8
+
+$args = @("run", "--config", $caddyConfigPath, "--adapter", "caddyfile")
+$proc = Start-Process -FilePath $caddyExe -ArgumentList $args -PassThru -WindowStyle Hidden `
     -RedirectStandardOutput $outLog -RedirectStandardError $errLog
 
-$ready = Test-WebReady -Url $localUrl -TimeoutSeconds 15
+$ready = Test-WebReady -Url $localUrl -TimeoutSeconds 20
 if (-not $ready) {
     try { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue } catch {}
-    throw "Local web server failed to start on $localUrl"
+    throw "Caddy local web failed to start on $localUrl"
 }
 
 Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
         source_repo_path = $sourceRoot
         mirror_path = $mirrorRoot
+        caddy_config_path = $caddyConfigPath
+        local_server_type = "caddy"
         local_server_pid = $proc.Id
-        local_server_command = "python -m http.server $Port --bind $BindAddress --directory $mirrorRoot"
+        local_server_command = "$caddyExe $($args -join ' ')"
         local_server_started_at_utc = (Get-Date).ToUniversalTime().ToString("o")
         local_url = $localUrl
+        local_bind_address = $BindAddress
+        local_bind_port = $Port
+        canonical_local_hosting = "caddy_direct_local_pc"
+        github_is_not_source_of_truth = $true
     })
 
-Write-Host "[public-mirror-web] started pid=$($proc.Id) url=$localUrl mirror=$mirrorRoot"
+Write-Host "[public-mirror-web] started caddy pid=$($proc.Id) url=$localUrl mirror=$mirrorRoot"

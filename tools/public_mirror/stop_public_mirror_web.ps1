@@ -46,9 +46,12 @@ if (-not (Test-Path $runtimePath)) {
 }
 
 $state = Read-RuntimeState $runtimePath
-$pidValue = $state["local_server_pid"]
+$pidValue = 0
+if ($state.ContainsKey("local_server_pid") -and $state["local_server_pid"]) {
+    $pidValue = [int]$state["local_server_pid"]
+}
 $stopped = $false
-if ($pidValue) {
+if ($pidValue -gt 0) {
     try {
         Stop-Process -Id $pidValue -Force -ErrorAction Stop
         $stopped = $true
@@ -58,6 +61,7 @@ if ($pidValue) {
 
 Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
         local_server_pid = $null
+        local_server_type = $null
         local_server_stopped_at_utc = (Get-Date).ToUniversalTime().ToString("o")
     })
 

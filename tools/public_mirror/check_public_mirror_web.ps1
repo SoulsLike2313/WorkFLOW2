@@ -56,6 +56,30 @@ function Try-Get([string]$Url) {
     }
 }
 
+function Try-GetDetailed([string]$Url) {
+    try {
+        $resp = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 10
+        return [ordered]@{
+            ok = $true
+            status = [int]$resp.StatusCode
+            error = $null
+            body = [string]$resp.Content
+        }
+    }
+    catch {
+        $statusCode = $null
+        if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+            $statusCode = [int]$_.Exception.Response.StatusCode
+        }
+        return [ordered]@{
+            ok = $false
+            status = $statusCode
+            error = $_.Exception.Message
+            body = $null
+        }
+    }
+}
+
 $sourceRoot = Resolve-SourceRoot
 $repoName = Resolve-RepoName $sourceRoot
 if ([string]::IsNullOrWhiteSpace($MirrorPath)) {
@@ -71,13 +95,19 @@ if ([string]::IsNullOrWhiteSpace($LocalUrl)) {
     $LocalUrl = "http://127.0.0.1:18080/"
 }
 
-$rootCheck = Try-Get $LocalUrl
+$rootCheck = Try-GetDetailed $LocalUrl
 $stateCheck = Try-Get ($LocalUrl.TrimEnd("/") + "/PUBLIC_REPO_STATE.json")
+$syncStatusCheck = Try-Get ($LocalUrl.TrimEnd("/") + "/PUBLIC_SYNC_STATUS.json")
+$entrypointsCheck = Try-Get ($LocalUrl.TrimEnd("/") + "/PUBLIC_ENTRYPOINTS.md")
 $gitCheck = Try-Get ($LocalUrl.TrimEnd("/") + "/.git/")
 $envCheck = Try-Get ($LocalUrl.TrimEnd("/") + "/.env")
 
 $gitBlocked = ($gitCheck.ok -eq $false) -or ($gitCheck.status -ge 400)
 $envBlocked = ($envCheck.ok -eq $false) -or ($envCheck.status -ge 400)
+$browseEnabled = $false
+if ($rootCheck.ok -and $null -ne $rootCheck.body) {
+    $browseEnabled = ($rootCheck.body -match "(?i)directory listing|index of|href=")
+}
 
 $result = [ordered]@{
     checked_at_utc = (Get-Date).ToUniversalTime().ToString("o")
@@ -87,12 +117,15 @@ $result = [ordered]@{
     checks = [ordered]@{
         root_access = $rootCheck
         public_repo_state_access = $stateCheck
+        public_sync_status_access = $syncStatusCheck
+        public_entrypoints_access = $entrypointsCheck
+        directory_browsing_enabled = [ordered]@{ pass = $browseEnabled }
         git_path_blocked = [ordered]@{ pass = $gitBlocked; probe = $gitCheck }
         env_path_blocked = [ordered]@{ pass = $envBlocked; probe = $envCheck }
     }
 }
 
-$pass = $rootCheck.ok -and $stateCheck.ok -and $gitBlocked -and $envBlocked
+$pass = $rootCheck.ok -and $stateCheck.ok -and $syncStatusCheck.ok -and $entrypointsCheck.ok -and $browseEnabled -and $gitBlocked -and $envBlocked
 $result["status"] = if ($pass) { "PASS" } else { "FAIL" }
 
 $jsonPath = Join-Path $sourceRoot "setup_reports/public_mirror_web_check.json"
@@ -110,6 +143,9 @@ $md = @(
     "",
     "- root_access: $($rootCheck.ok) status=$($rootCheck.status)",
     "- public_repo_state_access: $($stateCheck.ok) status=$($stateCheck.status)",
+    "- public_sync_status_access: $($syncStatusCheck.ok) status=$($syncStatusCheck.status)",
+    "- public_entrypoints_access: $($entrypointsCheck.ok) status=$($entrypointsCheck.status)",
+    "- directory_browsing_enabled: $browseEnabled",
     "- git_path_blocked: $gitBlocked",
     "- env_path_blocked: $envBlocked"
 )
