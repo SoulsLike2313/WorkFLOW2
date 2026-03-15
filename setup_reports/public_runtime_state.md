@@ -1,10 +1,10 @@
 ﻿# Public Runtime State
 
-- updated_at_utc: 2026-03-15T15:55:14.1941059Z
+- updated_at_utc: 2026-03-15T16:00:03.8491660Z
 - source_repo_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - local_url: http://127.0.0.1:18080/
-- public_url: https://46d966cd1dadae.lhr.life
+- public_url: https://787e4105496bcf.lhr.life
 - public_url_status: READY
 - public_access_provider: ssh_localhost_run
 - public_access_mechanism: ssh reverse tunnel via localhost.run (bound to non-VPN interface)
@@ -19,7 +19,7 @@
 - bound_interface_alias: Ethernet
 - bound_interface_ip: 192.168.0.27
 - local_server_pid: 14280
-- previous_public_url: https://10df7336ba08d7.lhr.life
+- previous_public_url: https://46d966cd1dadae.lhr.life
 - old_broken_public_url: https://0e6748b97ae3fe.lhr.life
 - old_broken_public_url_cause: stale_session_hostname_not_mapped
 - public_url_blocker: 
