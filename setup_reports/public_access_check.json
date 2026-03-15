@@ -1,67 +1,18 @@
 ﻿{
-    "checked_at_utc":  "2026-03-15T18:38:05.3251374Z",
+    "checked_at_utc":  "2026-03-15T19:39:44.7535722Z",
+    "status":  "INDETERMINATE",
     "source_repo_path":  "E:\\CVVCODEX",
     "local_target_url":  "http://127.0.0.1:18080/",
     "public_url":  "http://185.171.202.83:18080",
-    "public_access_provider":  "direct_local_pc_caddy",
-    "public_access_mechanism":  "direct local-PC hosting via Caddy (non-tunnel canonical)",
-    "public_access_vpn_dependent":  false,
-    "session_based_url":  false,
-    "status":  "FAIL",
-    "failure_cause":  "router_port_forwarding_or_dns_mapping_not_configured",
-    "manual_step_required":  "Create router NAT/port-forward rule",
-    "exact_router_rule":  "TCP 18080 -\u003e 192.168.0.27:18080",
-    "post_step_verification_command":  "powershell -NoProfile -ExecutionPolicy Bypass -File tools/public_mirror/check_public_mirror_public_access.ps1 -SourceRepoPath E:\\CVVCODEX -RunStabilitySeries -RootCheckCount 5 -FileCheckRounds 3 -IntervalSeconds 4",
-    "checks":  {
-                   "local_root_access":  {
-                                             "ok":  true,
-                                             "status":  200,
-                                             "error":  null
-                                         },
-                   "local_public_state_access":  {
-                                                     "ok":  true,
-                                                     "status":  200,
-                                                     "error":  null
-                                                 },
-                   "root_access":  {
-                                       "ok":  false,
-                                       "status":  null,
-                                       "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто."
-                                   },
-                   "state_file_access":  {
-                                             "ok":  false,
-                                             "status":  null,
-                                             "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто."
-                                         },
-                   "sync_status_file_access":  {
-                                                   "ok":  false,
-                                                   "status":  null,
-                                                   "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто."
-                                               },
-                   "entrypoints_file_access":  {
-                                                   "ok":  false,
-                                                   "status":  null,
-                                                   "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто."
-                                               },
-                   "git_path_blocked":  {
-                                            "pass":  true,
-                                            "probe":  {
-                                                          "ok":  false,
-                                                          "status":  null,
-                                                          "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто."
-                                                      }
-                                        },
-                   "env_path_blocked":  {
-                                            "pass":  true,
-                                            "probe":  {
-                                                          "ok":  false,
-                                                          "status":  null,
-                                                          "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто."
-                                                      }
-                                        }
-               },
-    "stability_classification":  null,
-    "stable_enough_for_chatgpt":  null,
-    "repeated_checks_summary":  null,
-    "stability_series":  null
+    "caddy_alive":  true,
+    "local_port_18080_listening":  true,
+    "local_public_files_ok":  true,
+    "security_local":  "PASS",
+    "windows_firewall_issue":  false,
+    "expected_router_rule":  "TCP 18080 -\u003e 192.168.0.27:18080",
+    "router_nat_rule_confirmed":  "UNKNOWN",
+    "nat_loopback_may_distort":  "YES",
+    "public_reachability":  "NOT_CONFIRMED",
+    "exact_break_point":  "NAT loopback prevents reliable in-network verification of external endpoint; router NAT rule presence is not confirmed from inside LAN.",
+    "one_exact_next_step":  "Run one off-LAN check (mobile network) for http://185.171.202.83:18080/PUBLIC_REPO_STATE.json to confirm real external reachability."
 }
