@@ -1,25 +1,24 @@
-﻿# Direct Public Access Validation (Packet Capture Verdict)
+﻿# WAN Path Validation (After LAN Confirmed)
 
-- generated_at_utc: 2026-03-15T20:45:35.1995200Z
-- packet_capture_run: YES
-- tool: pktmon
-- etl: E:\CVVCODEX\setup_reports\pktmon_test.etl
-- txt: E:\CVVCODEX\setup_reports\pktmon_test.txt
-- filter: TCP SYN, IP 192.168.0.27, port 18080
+- generated_at_utc: 2026-03-15T20:47:37.0507272Z
+- LAN reachability: CONFIRMED
+- WAN reachability: FAIL
 
-## Packet Facts
-- SYN observed: YES
-- SYN flow: 192.168.0.1:60182 -> 192.168.0.27:18080 (Flags [S])
-- host response observed: YES (component counters show Rx=1 and Tx=1 during matched flow)
+## Confirmed facts
+- Caddy alive: YES
+- LAN bind/listen path: OK
+- inbound LAN path to 192.168.0.27:18080: OK
+- Windows firewall as break point: NO
+- off-LAN access to http://185.171.202.83:18080/: FAIL
 
-## Exact Verdict
-- HOST_STACK_RESPONDS; BREAK_IS_UPSTREAM_OF_HOST_FOR_CLIENT_PATH
+## WAN-side signs
+- port-forward effective on WAN side: NO
+- wrong WAN interface binding possible (ppp0 mismatch): YES
+- ISP inbound block suspected: YES
+- CGNAT/double NAT suspected: NO
 
-## Exact Break Point
-- Wi-Fi client path segmentation / AP isolation / router bridge policy between LAN laptop and Ethernet host.
+## Exact break point
+- WAN-side path (router WAN forwarding effectiveness / ISP ingress policy). Host/LAN stack is not the break point.
 
-## One Exact Next Step
-- Disable AP/client isolation on the active Wi-Fi SSID and retest from laptop:
-  curl http://192.168.0.27:18080/PUBLIC_REPO_STATE.json
-
-- Caddy/mirror/sync/NAT/VPN config were not changed in this packet-capture run.
+## One exact next step
+- In router admin, verify that TCP 18080 forward is bound to active WAN interface (ppp0) and points to 192.168.0.27:18080, then retest from off-LAN mobile network.

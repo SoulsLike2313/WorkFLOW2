@@ -1,29 +1,28 @@
 ﻿{
-    "generated_at_utc":  "2026-03-15T20:45:35.1995200Z",
-    "mode":  "PACKET_CAPTURE_HOST_SIDE_ONLY",
-    "packet_capture":  {
-                           "run":  true,
-                           "tool":  "pktmon",
-                           "etl_path":  "E:\\CVVCODEX\\setup_reports\\pktmon_test.etl",
-                           "txt_path":  "E:\\CVVCODEX\\setup_reports\\pktmon_test.txt",
-                           "filter":  "TCP SYN, IP 192.168.0.27, port 18080"
-                       },
-    "packet_evidence":  {
-                            "syn_observed":  true,
-                            "syn_src_ip":  "192.168.0.1",
-                            "syn_src_port":  60182,
-                            "syn_dst_ip":  "192.168.0.27",
-                            "syn_dst_port":  18080,
-                            "syn_flags":  "S",
-                            "host_response_observed":  true,
-                            "host_response_basis":  "PktMon component counters at boundary 11 show Rx packets=1 and Tx packets=1 during matched flow."
-                        },
-    "interpretation":  {
-                           "syn_from_lan_client_reached_host":  "YES",
-                           "host_response_observed":  "YES",
-                           "exact_verdict":  "HOST_STACK_RESPONDS; BREAK_IS_UPSTREAM_OF_HOST_FOR_CLIENT_PATH",
-                           "exact_break_point":  "Wi-Fi client path segmentation / AP isolation / router bridge policy between LAN laptop and Ethernet host. Host ingress/egress on 18080 is working.",
-                           "one_exact_next_step":  "Disable AP/client isolation on the active Wi-Fi SSID and retest from laptop: curl http://192.168.0.27:18080/PUBLIC_REPO_STATE.json"
-                       },
-    "constraints":  "Caddy/mirror/sync/NAT/VPN config unchanged in this packet-capture run."
+    "generated_at_utc":  "2026-03-15T20:47:37.0507272Z",
+    "scope":  "WAN_PATH_ONLY_AFTER_LAN_CONFIRMED",
+    "lan_reachability":  "CONFIRMED",
+    "lan_evidence":  "LAN laptop successfully fetched http://192.168.0.27:18080/PUBLIC_REPO_STATE.json (user-confirmed)",
+    "host_state":  {
+                       "caddy_alive":  true,
+                       "local_bind_ok":  true,
+                       "inbound_lan_path_ok":  true,
+                       "firewall_breakpoint":  false
+                   },
+    "wan_checks":  {
+                       "target_public_url":  "http://185.171.202.83:18080/",
+                       "probe_root_ok":  false,
+                       "probe_state_ok":  false,
+                       "probe_error":  "Connection closed unexpectedly",
+                       "off_lan_user_result":  "FAIL"
+                   },
+    "signs":  {
+                  "port_forward_effective_on_wan_side":  "NO",
+                  "isp_inbound_filtering_suspected":  "YES",
+                  "cgnat_or_double_nat_suspected":  "NO",
+                  "wrong_wan_interface_binding_possible":  "YES"
+              },
+    "exact_break_point":  "WAN-side path (router WAN forwarding effectiveness / ISP ingress policy). Host/LAN stack is not the break point.",
+    "one_exact_next_step":  "In router admin, verify that TCP 18080 forward is bound to active WAN interface (ppp0) and points to 192.168.0.27:18080, then retest from off-LAN mobile network.",
+    "constraints":  "Caddy/mirror/sync/VPN/LAN path unchanged in this run."
 }
