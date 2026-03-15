@@ -42,14 +42,16 @@
   "main_entrypoints": [
     "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode intake -TargetProjectPath <repo_relative_project_path>",
     "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode audit -TargetProjectPath <repo_relative_project_path> -TargetProjectSlug <project_slug>",
-    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>"
+    "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>",
+    "python .\\scripts\\repo_control_center.py"
   ],
   "entrypoints": {
     "intake": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode intake -TargetProjectPath <repo_relative_project_path>",
     "audit_dry": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode audit -TargetProjectPath <repo_relative_project_path> -TargetProjectSlug <project_slug>",
     "audit_with_verification_execution": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode audit -TargetProjectPath <repo_relative_project_path> -TargetProjectSlug <project_slug> -ExecuteVerification",
     "verify_target": "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug> -ExecuteVerification",
-    "core_runner": "python projects/platform_test_agent/scripts/test_agent_core.py --mode <intake|audit|verify> --target-project-path <repo_relative_project_path> --target-project-slug <project_slug>"
+    "core_runner": "python projects/platform_test_agent/scripts/test_agent_core.py --mode <intake|audit|verify> --target-project-path <repo_relative_project_path> --target-project-slug <project_slug>",
+    "repo_trust_desktop_ui": "python projects/platform_test_agent/scripts/repo_control_center.py"
   },
   "verification_entrypoints": [
     "powershell -ExecutionPolicy Bypass -File .\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>"

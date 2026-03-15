@@ -34,3 +34,18 @@ Manual testing is blocked unless the final tester-agent audit status is:
 - `PASS_WITH_WARNINGS`
 
 and required summaries are repo-visible.
+
+## Repo Trust Desktop UI
+
+One-screen desktop control center for repository trust diagnostics:
+
+```powershell
+python .\projects\platform_test_agent\scripts\repo_control_center.py
+```
+
+The UI gives a fast verdict (`TRUSTED` / `NOT TRUSTED`) and shows:
+
+- Repo integrity
+- GitHub sync
+- Safe reading files presence
+- Safe reading hash match against `workspace_config/safe_reading_manifest.json`

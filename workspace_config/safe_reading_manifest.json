@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "manifest_type": "safe_reading_manifest",
+  "generated_at": "2026-03-16T01:00:35.994582",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "51da716a96e88db97000bb488a9816e820c6b94278fd43027e25f7d72abb02ab",
+      "size_bytes": 7239
+    },
+    {
+      "path": "REPO_MAP.md",
+      "sha256": "ea55fdd98ed78e38e78ecad0be32ca733f2f5ea2950386c7f75dba763f93a6b9",
+      "size_bytes": 1947
+    },
+    {
+      "path": "MACHINE_CONTEXT.md",
+      "sha256": "da89c512c1565a66fb773fc2996dfae5ec930bb0df298d7418d59087332d6fb6",
+      "size_bytes": 1649
+    },
+    {
+      "path": "workspace_config/workspace_manifest.json",
+      "sha256": "cf4be202c0c485e30c21b79e19ec433a6c52ba3698a54eaa05c31eca61b7e601",
+      "size_bytes": 16735
+    },
+    {
+      "path": "workspace_config/codex_manifest.json",
+      "sha256": "f331a555ae8a4dd31ccd4421354729d5b4b56d97280e9da996d11528d8c7ec8b",
+      "size_bytes": 7291
+    },
+    {
+      "path": "workspace_config/TASK_RULES.md",
+      "sha256": "8309eb28b3add05b42317be4f4ed62e606196c2a247ebdba0c554831b9026005",
+      "size_bytes": 5388
+    },
+    {
+      "path": "workspace_config/AGENT_EXECUTION_POLICY.md",
+      "sha256": "cba1198f16cf3153a9c5e55b01d1039d70217e299a8408a8d426edf3b176a71b",
+      "size_bytes": 5449
+    },
+    {
+      "path": "workspace_config/MACHINE_REPO_READING_RULES.md",
+      "sha256": "73d3708405eced1907c5194411a2d3a6a607f6fbf694dff1b9485e0e62412912",
+      "size_bytes": 6109
+    },
+    {
+      "path": "docs/INSTRUCTION_INDEX.md",
+      "sha256": "1a04b7b0f404e9699de1330381e19dd602f15416aec7a5b87f5927a851e2661c",
+      "size_bytes": 6470
+    }
+  ],
+  "required_files": [
+    "README.md",
+    "REPO_MAP.md",
+    "MACHINE_CONTEXT.md",
+    "workspace_config/workspace_manifest.json",
+    "workspace_config/codex_manifest.json",
+    "workspace_config/TASK_RULES.md",
+    "workspace_config/AGENT_EXECUTION_POLICY.md",
+    "workspace_config/MACHINE_REPO_READING_RULES.md",
+    "docs/INSTRUCTION_INDEX.md"
+  ],
+  "missing_source_files": []
+}
