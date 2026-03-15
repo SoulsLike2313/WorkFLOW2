@@ -1,24 +1,30 @@
 ﻿# Final Operator Report
 
-- generated_at_utc: 2026-03-15T16:02:05.4895612Z
+- generated_at_utc: 2026-03-15T17:40:33.3755170Z
 - source_repo_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - source_branch: main
-- source_head_commit: a1e366f3764b792d07cf3706f2c6cef2c6f85c7f
+- source_head_commit: 7edc7bec0893c6df0fb1864c6ce5f257b940a28e
 - local_url: http://127.0.0.1:18080/
-- public_url: https://787e4105496bcf.lhr.life
-- current_public_access_mechanism: ssh reverse tunnel via localhost.run (bound to non-VPN interface)
-- current_public_access_provider: ssh_localhost_run
+- caddy_config_path: E:\CVVCODEX\tools\public_mirror\Caddyfile
+- old_canonical_mechanism: ssh reverse tunnel via localhost.run (session-based)
+- current_public_access_mechanism: direct local-PC hosting via Caddy (non-tunnel canonical)
+- current_public_access_provider: direct_local_pc_caddy
 - vpn_independent: True
-- session_based_url: True
-- stability_classification: SESSION_FRAGILE
-- repeated_checks_passed: 14/14
-- public_files_repeated_checks_passed: 9/9
+- session_based_url: False
+- direct_hosting_local_ip: 192.168.0.27
+- direct_hosting_external_ip: 185.171.202.83
+- canonical_public_hostname: 
+- ddns_domain_status: not_configured
+- direct_public_url_status: NOT_READY
+- public_url: 
+- stability_classification: BROKEN
+- repeated_checks_passed: 0/0
+- public_files_repeated_checks_passed: 0/3
 - security_check_status: PASS
+- local_web_status: PASS
+- validation_run_id: public-mirror-validate-20260315T173540Z
+- validation_status: FAIL
 - stable_enough_for_chatgpt: False
-- old_public_url: https://46d966cd1dadae.lhr.life
-- old_broken_public_url: https://0e6748b97ae3fe.lhr.life
-- old_broken_public_url_cause: stale_session_hostname_not_mapped
-- validation_run_id: public-mirror-validate-20260315T154641Z
-- validation_status: PASS
-- one_external_blocker: stable_non_session_public_endpoint_requires_external_secret_or_managed_tunnel_credentials
+- one_external_blocker: router_port_forwarding_or_dns_mapping_not_configured
+- github_is_not_source_of_truth: True

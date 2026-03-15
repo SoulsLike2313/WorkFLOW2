@@ -1,6 +1,6 @@
 ﻿# Public Access Check
 
-- checked_at_utc: 2026-03-15T17:09:59.3079773Z
+- checked_at_utc: 2026-03-15T17:39:23.4993814Z
 - local_target_url: http://127.0.0.1:18080/
 - public_url: 
 - public_access_provider: direct_local_pc_caddy

@@ -174,6 +174,19 @@ else {
     Set-Check -Results $results -Name "public_url_access_and_safety" -Pass $false -Details (@{ reason = "public_url_not_available" })
 }
 
+# Hard gate: if any check is false, overall validation is FAIL.
+$hasFailedChecks = $false
+foreach ($checkName in $results.checks.Keys) {
+    $item = $results.checks[$checkName]
+    if ($item -and $item.Contains("pass") -and (-not [bool]$item["pass"])) {
+        $hasFailedChecks = $true
+        break
+    }
+}
+if ($hasFailedChecks) {
+    $results.status = "FAIL"
+}
+
 $jsonPath = Join-Path $sourceRoot "setup_reports/public_repo_access_validation.json"
 $mdPath = Join-Path $sourceRoot "setup_reports/public_repo_access_validation.md"
 $results | ConvertTo-Json -Depth 10 | Set-Content -Path $jsonPath -Encoding UTF8

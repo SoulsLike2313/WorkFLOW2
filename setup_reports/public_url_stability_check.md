@@ -1,6 +1,6 @@
 ﻿# Public URL Stability Check
 
-- checked_at_utc: 2026-03-15T17:09:59.3079773Z
+- checked_at_utc: 2026-03-15T17:39:23.4993814Z
 - public_access_provider: direct_local_pc_caddy
 - public_access_mechanism: direct local-PC hosting via Caddy (non-tunnel canonical)
 - session_based_url: False
@@ -14,7 +14,7 @@
 ```json
 {
     "enabled":  true,
-    "started_at_utc":  "2026-03-15T17:09:59.3159727Z",
+    "started_at_utc":  "2026-03-15T17:39:23.5073768Z",
     "root_checks_requested":  10,
     "file_rounds_requested":  5,
     "interval_seconds":  6,
@@ -39,7 +39,7 @@
     "classification":  "BROKEN",
     "stable_enough_for_chatgpt":  false,
     "session_based_url":  false,
-    "ended_at_utc":  "2026-03-15T17:09:59.3159727Z",
+    "ended_at_utc":  "2026-03-15T17:39:23.5073768Z",
     "reason":  "public_url_missing"
 }
 ```

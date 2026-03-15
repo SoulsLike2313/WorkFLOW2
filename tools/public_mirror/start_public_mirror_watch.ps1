@@ -95,69 +95,30 @@ function Save-RuntimeState([hashtable]$StatePatch) {
 }
 
 function Start-LocalWebServer {
-    $args = @("-m", "http.server", "$Port", "--bind", "127.0.0.1", "--directory", "$MirrorPath")
-    $proc = Start-Process -FilePath "python" -ArgumentList $args -PassThru -WindowStyle Hidden `
-        -RedirectStandardOutput $serverOutPath -RedirectStandardError $serverErrPath
-    Save-RuntimeState @{
-        local_server_pid = $proc.Id
-        local_url = "http://127.0.0.1:$Port/"
-        local_server_started_at_utc = (Get-Date).ToUniversalTime().ToString("o")
-    }
-    return $proc
+    $scriptPath = Join-Path $SourceRepoPath "tools/public_mirror/start_public_mirror_web.ps1"
+    & powershell -NoProfile -ExecutionPolicy Bypass -File $scriptPath `
+        -SourceRepoPath $SourceRepoPath `
+        -MirrorPath $MirrorPath `
+        -Port $Port `
+        -BindAddress "0.0.0.0" | Out-Null
 }
 
-function Start-PublicTunnel {
-    $sshArgs = @(
-        "-o", "ExitOnForwardFailure=yes",
-        "-o", "ServerAliveInterval=30",
-        "-o", "ServerAliveCountMax=3",
-        "-o", "StrictHostKeyChecking=accept-new",
-        "-R", "80:127.0.0.1:$Port",
-        "nokey@localhost.run"
-    )
-    $proc = Start-Process -FilePath "ssh" -ArgumentList $sshArgs -PassThru -WindowStyle Hidden `
-        -RedirectStandardOutput $tunnelOutPath -RedirectStandardError $tunnelErrPath
-    Save-RuntimeState @{
-        tunnel_pid = $proc.Id
-        tunnel_started_at_utc = (Get-Date).ToUniversalTime().ToString("o")
-        tunnel_command = "ssh -R 80:127.0.0.1:$Port nokey@localhost.run"
-    }
-
-    $publicUrl = $null
-    $deadline = (Get-Date).AddSeconds(45)
-    while ((Get-Date) -lt $deadline) {
-        Start-Sleep -Milliseconds 1000
-        if (Test-Path $tunnelOutPath) {
-            $text = Get-Content -Raw $tunnelOutPath
-            $match = [regex]::Match($text, "https?://[a-zA-Z0-9\.\-/_]+")
-            if ($match.Success) {
-                $publicUrl = $match.Value.TrimEnd("/")
-                break
-            }
-        }
-        if ($proc.HasExited) {
-            break
-        }
-    }
-    if ($publicUrl) {
-        Save-RuntimeState @{
-            public_url = $publicUrl
-            public_url_detected_at_utc = (Get-Date).ToUniversalTime().ToString("o")
-        }
-    }
-    return $proc
+function Initialize-PublicAccessState {
+    $scriptPath = Join-Path $SourceRepoPath "tools/public_mirror/start_public_mirror_public_access.ps1"
+    & powershell -NoProfile -ExecutionPolicy Bypass -File $scriptPath `
+        -SourceRepoPath $SourceRepoPath `
+        -PublicPort $Port | Out-Null
 }
 
 Add-Content -Path $watchLogPath -Value ("[{0}] watch start" -f (Get-Date).ToString("s"))
 Invoke-Sync
 
-$webProc = $null
-$tunnelProc = $null
 if ($StartWeb) {
-    $webProc = Start-LocalWebServer
+    Start-LocalWebServer
 }
 if ($StartTunnel) {
-    $tunnelProc = Start-PublicTunnel
+    Add-Content -Path $watchLogPath -Value ("[{0}] StartTunnel switch is legacy; initializing direct public access readiness instead" -f (Get-Date).ToString("s"))
+    Initialize-PublicAccessState
 }
 
 Save-RuntimeState @{

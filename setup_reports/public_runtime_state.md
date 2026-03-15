@@ -1,25 +1,26 @@
 ﻿# Public Runtime State
 
-- updated_at_utc: 2026-03-15T16:00:03.8491660Z
+- updated_at_utc: 2026-03-15T17:39:23.5693414Z
 - source_repo_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - local_url: http://127.0.0.1:18080/
-- public_url: https://787e4105496bcf.lhr.life
-- public_url_status: READY
-- public_access_provider: ssh_localhost_run
-- public_access_mechanism: ssh reverse tunnel via localhost.run (bound to non-VPN interface)
+- caddy_config_path: E:\CVVCODEX\tools\public_mirror\Caddyfile
+- canonical_local_hosting: caddy_direct_local_pc
+- public_url: 
+- public_url_status: NOT_READY
+- public_access_provider: direct_local_pc_caddy
+- public_access_mechanism: direct local-PC hosting via Caddy (non-tunnel canonical)
 - public_access_vpn_dependent: False
-- public_access_session_based: True
-- public_access_stability_classification: SESSION_FRAGILE
-- public_access_repeated_checks_passed: 14/14
+- public_access_session_based: False
+- public_access_stability_classification: BROKEN
+- public_access_repeated_checks_passed: 0/0
 - public_access_stable_enough_for_chatgpt: False
-- public_access_one_external_blocker: stable_non_session_public_endpoint_requires_external_secret_or_managed_tunnel_credentials
-- tunnel_command: C:\Windows\System32\OpenSSH\ssh.exe -4 -b 192.168.0.27 -o ExitOnForwardFailure=yes -o TCPKeepAlive=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=2 -o ConnectTimeout=15 -o ConnectionAttempts=3 -o IPQoS=none -o LogLevel=ERROR -o StrictHostKeyChecking=accept-new -R 80:127.0.0.1:18080 nokey@localhost.run
-- tunnel_pid: 1168
-- bound_interface_alias: Ethernet
-- bound_interface_ip: 192.168.0.27
-- local_server_pid: 14280
-- previous_public_url: https://46d966cd1dadae.lhr.life
+- public_access_one_external_blocker: router_port_forwarding_or_dns_mapping_not_configured
+- direct_hosting_local_ip: 192.168.0.27
+- direct_hosting_external_ip: 185.171.202.83
+- direct_hosting_gateway: 192.168.0.1
+- local_server_type: caddy
+- local_server_pid: 11012
+- tunnel_pid: 
 - old_broken_public_url: https://0e6748b97ae3fe.lhr.life
 - old_broken_public_url_cause: stale_session_hostname_not_mapped
-- public_url_blocker: 
