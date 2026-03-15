@@ -3,7 +3,7 @@
                                  "E:/CVVCODEX/runtime",
                                  "E:/CVVCODEX/setup_assets"
                              ],
-    "updated_at_utc":  "2026-03-15T14:22:08.5612213Z",
+    "updated_at_utc":  "2026-03-15T15:01:05.9790684Z",
     "source_path":  "E:\\CVVCODEX",
     "remaining_items":  "none required for engineering-ready state",
     "engineering_ready":  true,
@@ -17,9 +17,9 @@
                              "public_state_files":  true
                          },
     "mirror_stats":  {
-                         "size_bytes":  3827409894,
+                         "size_bytes":  3827416204,
                          "directories":  3046,
-                         "files":  35307
+                         "files":  35304
                      },
     "stage_results":  [
                           {
@@ -32,7 +32,7 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_docs.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_docs.log.err",
-                              "finished_at_utc":  "2026-03-15T14:21:54.3380989Z"
+                              "finished_at_utc":  "2026-03-15T15:00:55.5366281Z"
                           },
                           {
                               "label":  "STAGE_A_workspace_config",
@@ -44,7 +44,7 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_workspace_config.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_workspace_config.log.err",
-                              "finished_at_utc":  "2026-03-15T14:21:54.3965744Z"
+                              "finished_at_utc":  "2026-03-15T15:00:55.5983582Z"
                           },
                           {
                               "label":  "STAGE_A_scripts",
@@ -56,7 +56,7 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_scripts.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_scripts.log.err",
-                              "finished_at_utc":  "2026-03-15T14:21:54.4521486Z"
+                              "finished_at_utc":  "2026-03-15T15:00:55.6536393Z"
                           },
                           {
                               "label":  "STAGE_A_projects",
@@ -68,7 +68,7 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_projects.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_projects.log.err",
-                              "finished_at_utc":  "2026-03-15T14:21:55.5374321Z"
+                              "finished_at_utc":  "2026-03-15T15:00:56.6599800Z"
                           },
                           {
                               "label":  "STAGE_A_setup_reports",
@@ -80,7 +80,7 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_setup_reports.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_setup_reports.log.err",
-                              "finished_at_utc":  "2026-03-15T14:21:55.5962198Z"
+                              "finished_at_utc":  "2026-03-15T15:00:56.7193310Z"
                           },
                           {
                               "label":  "STAGE_A_shared_systems",
@@ -92,7 +92,7 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_shared_systems.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageA_shared_systems.log.err",
-                              "finished_at_utc":  "2026-03-15T14:21:55.6656718Z"
+                              "finished_at_utc":  "2026-03-15T15:00:56.7901287Z"
                           },
                           {
                               "label":  "STAGE_B_INCREMENTAL",
@@ -104,17 +104,19 @@
                               "status":  "PASS",
                               "log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageB_incremental.log",
                               "error_log_path":  "E:\\CVVCODEX\\setup_reports\\public_mirror_logs\\stageB_incremental.log.err",
-                              "finished_at_utc":  "2026-03-15T14:22:00.7910362Z"
+                              "finished_at_utc":  "2026-03-15T15:01:01.9919678Z"
                           }
                       ],
     "mode":  "FAST_RESUME",
     "source_stats":  {
-                         "size_bytes":  3828864221,
+                         "size_bytes":  3828878119,
                          "directories":  3046,
-                         "files":  35329
+                         "files":  35331
                      },
-    "bottlenecks":  "heavy tail deferred by design: runtime/setup_assets",
-    "status":  "PASS",
-    "approx_sync_ratio_percent":  99.94,
+    "bottlenecks":  [
+                        "large local tree and heavy tail directories"
+                    ],
+    "status":  "IN_PROGRESS",
+    "approx_sync_ratio_percent":  99.92,
     "current_stage":  "COMPLETE_FAST_MODE"
 }

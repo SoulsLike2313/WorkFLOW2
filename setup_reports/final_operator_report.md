@@ -1,24 +1,34 @@
 ﻿# Final Operator Report
 
-- generated_at_utc: 2026-03-15T14:23:41.9090333Z
+- generated_at_utc: 2026-03-15T14:59:46.1746743Z
 - architecture: local source repo -> external mirror -> local web server -> public tunnel URL
 - github_is_not_source_of_truth: True
 - source_repo_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - source_branch: main
-- source_head_commit: 0e1c2a0f4c469b90620c51305c67196fdd9c186c
+- source_head_commit: 9b342a7f60bff0c2dfa023b89306509c48225e35
 - local_url: http://127.0.0.1:18080/
-- public_url: https://ac85f2bd6236a2.lhr.life
-- public_access_mechanism: ssh reverse tunnel via localhost.run
+- public_url: https://0e6748b97ae3fe.lhr.life
+- public_access_provider: ssh_localhost_run
+- public_access_mechanism: ssh reverse tunnel via localhost.run (bound to non-VPN interface)
+- public_access_vpn_dependent: False
+- old_public_access_mechanism: ssh reverse tunnel via localhost.run (without interface bind) + attempted cloudflared quick tunnel
+- old_public_access_vpn_dependent: POTENTIAL_DEPENDENCY_PRESENT
+- old_broken_public_url: https://penalties-passive-trading-probability.trycloudflare.com
+- old_broken_public_url_cause: cloudflared_quick_tunnel_failed_live_health_check_tls_handshake_eof
+- previous_public_url: https://00c19594f2cc94.lhr.life
+- latest_tunnel_url_from_logs: https://0e6748b97ae3fe.lhr.life
+- runtime_url_outdated: True
 - public_url_runtime_status: READY
 - public_url_runtime_blocker: 
-- tunnel_pid: 1872
+- tunnel_pid: 7864
 - local_server_pid: 14280
-- old_broken_public_url: https://074c01864bb287.lhr.life
-- old_broken_public_url_cause: stale_tunnel_session_process_not_alive; URL returned 503/no tunnel here
-- previous_public_url: https://e2dd0013569fce.lhr.life
-- latest_tunnel_url_from_logs: https://ac85f2bd6236a2.lhr.life
-- runtime_url_outdated: False
+- bound_interface_alias: Ethernet
+- bound_interface_ip: 192.168.0.27
+- security_check_status: PASS
+- public_state_files_reachable: YES
+- validation_run_id: public-mirror-validate-20260315T145719Z
+- validation_status: PASS
 - engineering_ready: True
 - current_stage: COMPLETE_FAST_MODE
 - excludes_file: setup_reports/public_mirror_excludes.txt
@@ -31,15 +41,9 @@
 - web_start: powershell -NoProfile -ExecutionPolicy Bypass -File tools/public_mirror/start_public_mirror_web.ps1 -SourceRepoPath E:\CVVCODEX -MirrorPath E:\_public_repo_mirror\WorkFLOW
 - web_stop: powershell -NoProfile -ExecutionPolicy Bypass -File tools/public_mirror/stop_public_mirror_web.ps1 -SourceRepoPath E:\CVVCODEX
 - web_check: powershell -NoProfile -ExecutionPolicy Bypass -File tools/public_mirror/check_public_mirror_web.ps1 -SourceRepoPath E:\CVVCODEX
-- public_access_start: powershell -NoProfile -ExecutionPolicy Bypass -File tools/public_mirror/start_public_mirror_public_access.ps1 -SourceRepoPath E:\CVVCODEX -Port 18080
+- public_access_start: powershell -NoProfile -ExecutionPolicy Bypass -File tools/public_mirror/start_public_mirror_public_access.ps1 -SourceRepoPath E:\CVVCODEX -Port 18080 -Provider ssh_localhost_run
 - public_access_check: powershell -NoProfile -ExecutionPolicy Bypass -File tools/public_mirror/check_public_mirror_public_access.ps1 -SourceRepoPath E:\CVVCODEX
 - validate: powershell -NoProfile -ExecutionPolicy Bypass -File tools/public_mirror/validate_public_mirror.ps1 -SourceRepoPath E:\CVVCODEX -MirrorPath E:\_public_repo_mirror\WorkFLOW -ExcludesFilePath E:\CVVCODEX\setup_reports\public_mirror_excludes.txt
-
-## Engineering Ready Definition
-- README/docs/workspace_config/scripts/projects are available in mirror
-- PUBLIC_REPO_STATE.* + PUBLIC_SYNC_STATUS.* + PUBLIC_ENTRYPOINTS.md exist in mirror
-- sensitive paths (.git/.env/keys/tokens/secrets) are excluded
-- create/delete propagation check passes
 
 ## Heavy Tail Deferred
 - runtime

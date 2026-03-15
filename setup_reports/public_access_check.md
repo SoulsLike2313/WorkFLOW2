@@ -1,27 +1,69 @@
 ﻿# Public Access Check
 
-- checked_at_utc: 2026-03-15T14:43:44.8968145Z
-- public_url: 
-- public_access_provider: cloudflared_quick_tunnel
-- public_access_mechanism: cloudflared quick tunnel (trycloudflare.com)
+- checked_at_utc: 2026-03-15T14:58:40.7991185Z
+- public_url: https://0e6748b97ae3fe.lhr.life
+- public_access_provider: ssh_localhost_run
+- public_access_mechanism: ssh reverse tunnel via localhost.run (bound to non-VPN interface)
 - public_access_vpn_dependent: False
 - local_target_url: http://127.0.0.1:18080/
-- tunnel_pid: 0
-- tunnel_process_alive: False
-- old_public_url: https://ac85f2bd6236a2.lhr.life
-- old_broken_public_url: https://ac85f2bd6236a2.lhr.life
-- old_broken_public_url_cause: stale_session_hostname_not_mapped
-- latest_tunnel_url_from_logs: 
-- runtime_url_outdated: False
-- failure_cause: public_url_missing_in_runtime_state
-- status: FAIL
+- tunnel_pid: 7864
+- tunnel_process_alive: True
+- old_public_url: https://00c19594f2cc94.lhr.life
+- old_broken_public_url: https://penalties-passive-trading-probability.trycloudflare.com
+- old_broken_public_url_cause: cloudflared_quick_tunnel_failed_live_health_check_tls_handshake_eof
+- latest_tunnel_url_from_logs: https://0e6748b97ae3fe.lhr.life
+- runtime_url_outdated: True
+- failure_cause: 
+- status: PASS
 
 ## Checks
 
-- public_url_present
+- root_access
 ```json
 {
-    "pass":  false,
-    "reason":  "public_url_missing"
+    "ok":  true,
+    "status":  200,
+    "error":  null
+}
+```
+
+- state_file_access
+```json
+{
+    "ok":  true,
+    "status":  200,
+    "error":  null
+}
+```
+
+- git_path_blocked
+```json
+{
+    "pass":  true,
+    "probe":  {
+                  "ok":  false,
+                  "status":  404,
+                  "error":  "Удаленный сервер возвратил ошибку: (404) Не найден."
+              }
+}
+```
+
+- env_path_blocked
+```json
+{
+    "pass":  true,
+    "probe":  {
+                  "ok":  false,
+                  "status":  404,
+                  "error":  "Удаленный сервер возвратил ошибку: (404) Не найден."
+              }
+}
+```
+
+- vpn_independent
+```json
+{
+    "pass":  true,
+    "value":  true
 }
 ```

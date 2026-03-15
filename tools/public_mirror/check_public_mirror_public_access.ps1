@@ -103,7 +103,12 @@ $tunnelOutPath = Join-Path $sourceRoot "setup_reports/public_tunnel_stdout.log"
 $tunnelErrPath = Join-Path $sourceRoot "setup_reports/public_tunnel_stderr.log"
 $runtime = Read-RuntimeState $runtimePath
 $provider = if ($runtime.ContainsKey("public_access_provider")) { [string]$runtime["public_access_provider"] } else { "ssh_localhost_run" }
-$vpnDependent = if ($runtime.ContainsKey("public_access_vpn_dependent")) { [bool]$runtime["public_access_vpn_dependent"] } else { ($provider -ne "cloudflared_quick_tunnel") }
+$vpnDependent = if ($runtime.ContainsKey("public_access_vpn_dependent")) {
+    [bool]$runtime["public_access_vpn_dependent"]
+}
+else {
+    if ($provider -eq "cloudflared_quick_tunnel" -or $provider -eq "ssh_localhost_run") { $false } else { $true }
+}
 
 if ([string]::IsNullOrWhiteSpace($PublicUrl) -and $runtime.ContainsKey("public_url")) {
     $PublicUrl = [string]$runtime["public_url"]

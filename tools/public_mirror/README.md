@@ -84,14 +84,24 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\check_
   -SourceRepoPath E:\CVVCODEX
 ```
 
-- public access start (localhost.run tunnel):
+- public access start (VPN-independent default: ssh tunnel bound to non-VPN interface):
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\start_public_mirror_public_access.ps1 `
   -SourceRepoPath E:\CVVCODEX `
-  -Port 18080
+  -Port 18080 `
+  -Provider ssh_localhost_run
 ```
 
-`localhost.run` links are session-based and can expire; if a URL shows `no tunnel here` or `503`, restart public access command above.
+The default mode binds `ssh` to a detected non-VPN IPv4 interface (for example `Ethernet`) to avoid VPN-route dependency.
+`localhost.run` links remain session-based and can expire; if a URL shows `no tunnel here` or `503`, restart public access command above.
+
+- alternative public access start (cloudflared quick tunnel, fallback only):
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\start_public_mirror_public_access.ps1 `
+  -SourceRepoPath E:\CVVCODEX `
+  -Port 18080 `
+  -Provider cloudflared_quick_tunnel
+```
 
 - public access check:
 ```powershell

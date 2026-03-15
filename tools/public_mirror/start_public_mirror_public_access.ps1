@@ -4,7 +4,7 @@ param(
     [int]$DetectTimeoutSeconds = 60,
     [int]$HealthCheckTimeoutSeconds = 45,
     [ValidateSet("cloudflared_quick_tunnel", "ssh_localhost_run")]
-    [string]$Provider = "cloudflared_quick_tunnel",
+    [string]$Provider = "ssh_localhost_run",
     [switch]$ForceRestart
 )
 
@@ -175,6 +175,28 @@ function Get-ProviderCommand([string]$ProviderName) {
     return $null
 }
 
+function Get-NonVpnBindIPv4 {
+    $routes = Get-NetRoute -AddressFamily IPv4 -DestinationPrefix "0.0.0.0/0" -ErrorAction SilentlyContinue |
+        Sort-Object RouteMetric
+    foreach ($route in $routes) {
+        $alias = [string]$route.InterfaceAlias
+        if ($alias -match "(?i)tun|vpn|warp|wireguard|tailscale|happ") {
+            continue
+        }
+        $ip = Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $route.ifIndex -ErrorAction SilentlyContinue |
+            Where-Object { $_.IPAddress -notmatch "^169\.254\." -and $_.PrefixOrigin -ne "WellKnown" } |
+            Select-Object -First 1
+        if ($ip) {
+            return [ordered]@{
+                ip = [string]$ip.IPAddress
+                interface_alias = $alias
+                interface_index = [int]$route.ifIndex
+            }
+        }
+    }
+    return $null
+}
+
 $sourceRoot = Resolve-SourceRoot
 $runtimeDir = Join-Path $sourceRoot "setup_reports"
 if (-not (Test-Path $runtimeDir)) {
@@ -237,10 +259,32 @@ if ([string]::IsNullOrWhiteSpace($providerCommand)) {
 }
 
 if ($Provider -eq "cloudflared_quick_tunnel") {
-    $args = @("tunnel", "--url", "http://127.0.0.1:$Port", "--no-autoupdate")
+    $args = @("tunnel", "--url", "http://127.0.0.1:$Port", "--no-autoupdate", "--protocol", "http2")
+    $publicAccessMechanism = "cloudflared quick tunnel (trycloudflare.com)"
+    $vpnDependent = $false
+    $bindInfo = $null
 }
 else {
+    $bindInfo = Get-NonVpnBindIPv4
+    if ($null -eq $bindInfo -or [string]::IsNullOrWhiteSpace($bindInfo.ip)) {
+        Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
+                public_access_provider = $Provider
+                public_access_mechanism = "ssh reverse tunnel via localhost.run (direct route bind unavailable)"
+                public_access_vpn_dependent = $true
+                tunnel_pid = $null
+                public_url = $null
+                public_url_status = "NOT_READY"
+                previous_public_url = $previousPublicUrl
+                old_broken_public_url = $oldBrokenUrl
+                old_broken_public_url_cause = $oldBrokenCause
+                public_url_blocker = "no_non_vpn_ipv4_interface_found_for_ssh_bind"
+            })
+        Write-Host "[public-mirror-public] unable to find non-VPN IPv4 interface for SSH bind"
+        exit 5
+    }
     $args = @(
+        "-4",
+        "-b", [string]$bindInfo.ip,
         "-o", "ExitOnForwardFailure=yes",
         "-o", "ServerAliveInterval=30",
         "-o", "ServerAliveCountMax=3",
@@ -248,6 +292,8 @@ else {
         "-R", "80:127.0.0.1:$Port",
         "nokey@localhost.run"
     )
+    $publicAccessMechanism = "ssh reverse tunnel via localhost.run (bound to non-VPN interface)"
+    $vpnDependent = $false
 }
 
 $proc = Start-Process -FilePath $providerCommand -ArgumentList $args -PassThru -WindowStyle Hidden `
@@ -260,8 +306,8 @@ if ([string]::IsNullOrWhiteSpace($publicUrl)) {
     }
     Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
             public_access_provider = $Provider
-            public_access_mechanism = if ($Provider -eq "cloudflared_quick_tunnel") { "cloudflared quick tunnel (trycloudflare.com)" } else { "ssh reverse tunnel via localhost.run" }
-            public_access_vpn_dependent = ($Provider -ne "cloudflared_quick_tunnel")
+            public_access_mechanism = $publicAccessMechanism
+            public_access_vpn_dependent = $vpnDependent
             tunnel_pid = $null
             tunnel_command = "$providerCommand $($args -join ' ')"
             public_url = $null
@@ -270,6 +316,8 @@ if ([string]::IsNullOrWhiteSpace($publicUrl)) {
             old_broken_public_url = $oldBrokenUrl
             old_broken_public_url_cause = $oldBrokenCause
             public_url_blocker = "public_url_not_detected_from_current_session_logs"
+            bound_interface_alias = if ($bindInfo) { [string]$bindInfo.interface_alias } else { $null }
+            bound_interface_ip = if ($bindInfo) { [string]$bindInfo.ip } else { $null }
         })
     Write-Host "[public-mirror-public] URL detection failed for provider=$Provider"
     exit 2
@@ -282,8 +330,8 @@ if (-not $healthy) {
     }
     Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
             public_access_provider = $Provider
-            public_access_mechanism = if ($Provider -eq "cloudflared_quick_tunnel") { "cloudflared quick tunnel (trycloudflare.com)" } else { "ssh reverse tunnel via localhost.run" }
-            public_access_vpn_dependent = ($Provider -ne "cloudflared_quick_tunnel")
+            public_access_mechanism = $publicAccessMechanism
+            public_access_vpn_dependent = $vpnDependent
             tunnel_pid = $null
             tunnel_command = "$providerCommand $($args -join ' ')"
             public_url = $publicUrl
@@ -292,6 +340,8 @@ if (-not $healthy) {
             old_broken_public_url = $oldBrokenUrl
             old_broken_public_url_cause = $oldBrokenCause
             public_url_blocker = "public_url_failed_live_health_check"
+            bound_interface_alias = if ($bindInfo) { [string]$bindInfo.interface_alias } else { $null }
+            bound_interface_ip = if ($bindInfo) { [string]$bindInfo.ip } else { $null }
         })
     Write-Host "[public-mirror-public] URL health check failed: $publicUrl"
     exit 3
@@ -299,8 +349,8 @@ if (-not $healthy) {
 
 Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
         public_access_provider = $Provider
-        public_access_mechanism = if ($Provider -eq "cloudflared_quick_tunnel") { "cloudflared quick tunnel (trycloudflare.com)" } else { "ssh reverse tunnel via localhost.run" }
-        public_access_vpn_dependent = ($Provider -ne "cloudflared_quick_tunnel")
+        public_access_mechanism = $publicAccessMechanism
+        public_access_vpn_dependent = $vpnDependent
         tunnel_pid = $proc.Id
         tunnel_command = "$providerCommand $($args -join ' ')"
         tunnel_started_at_utc = (Get-Date).ToUniversalTime().ToString("o")
@@ -312,6 +362,8 @@ Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
         old_broken_public_url = $oldBrokenUrl
         old_broken_public_url_cause = $oldBrokenCause
         public_url_blocker = $null
+        bound_interface_alias = if ($bindInfo) { [string]$bindInfo.interface_alias } else { $null }
+        bound_interface_ip = if ($bindInfo) { [string]$bindInfo.ip } else { $null }
     })
 
 Write-Host "[public-mirror-public] ready provider=$Provider url=$publicUrl pid=$($proc.Id)"

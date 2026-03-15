@@ -1,12 +1,12 @@
 ﻿# Public Mirror Progress Status
 
-- updated_at_utc: 2026-03-15T14:22:08.5612213Z
+- updated_at_utc: 2026-03-15T15:01:05.9790684Z
 - mode: FAST_RESUME
 - source_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - engineering_ready: True
 - current_stage: COMPLETE_FAST_MODE
-- status: PASS
+- status: IN_PROGRESS
 
 ## Stage Results
 
@@ -33,13 +33,13 @@
 
 ## Mirror Stats
 
-- source_files: 35329
+- source_files: 35331
 - source_directories: 3046
-- source_size_bytes: 3828864221
-- files: 35307
+- source_size_bytes: 3828878119
+- files: 35304
 - directories: 3046
-- size_bytes: 3827409894
-- approx_sync_ratio_percent: 99.94
+- size_bytes: 3827416204
+- approx_sync_ratio_percent: 99.92
 
 ## Ready Components
 
@@ -56,4 +56,4 @@
 
 ## Bottlenecks
 
-- heavy tail deferred by design: runtime/setup_assets
+- large local tree and heavy tail directories
