@@ -1,258 +1,258 @@
 ﻿{
     "enabled":  true,
-    "started_at_utc":  "2026-03-15T15:28:05.7186919Z",
+    "started_at_utc":  "2026-03-15T15:40:10.0900216Z",
     "root_checks_requested":  5,
     "file_rounds_requested":  3,
     "interval_seconds":  8,
     "session_based_url":  true,
     "root_checks":  [
                         {
-                            "checked_at_utc":  "2026-03-15T15:28:07.2245485Z",
+                            "checked_at_utc":  "2026-03-15T15:40:13.0318057Z",
                             "ok":  true,
                             "status":  200,
-                            "latency_ms":  1483.4,
+                            "latency_ms":  2922.08,
                             "error":  null,
                             "attempt":  1,
-                            "url":  "https://10df7336ba08d7.lhr.life",
+                            "url":  "https://46d966cd1dadae.lhr.life",
                             "tunnel_process_alive":  true
                         },
                         {
-                            "checked_at_utc":  "2026-03-15T15:28:16.6100409Z",
+                            "checked_at_utc":  "2026-03-15T15:40:29.3053861Z",
                             "ok":  true,
                             "status":  200,
-                            "latency_ms":  1351.3,
+                            "latency_ms":  8242.72,
                             "error":  null,
                             "attempt":  2,
-                            "url":  "https://10df7336ba08d7.lhr.life",
+                            "url":  "https://46d966cd1dadae.lhr.life",
                             "tunnel_process_alive":  true
                         },
                         {
-                            "checked_at_utc":  "2026-03-15T15:28:26.2030793Z",
+                            "checked_at_utc":  "2026-03-15T15:40:45.0053725Z",
                             "ok":  true,
                             "status":  200,
-                            "latency_ms":  1557.09,
+                            "latency_ms":  7689.33,
                             "error":  null,
                             "attempt":  3,
-                            "url":  "https://10df7336ba08d7.lhr.life",
+                            "url":  "https://46d966cd1dadae.lhr.life",
                             "tunnel_process_alive":  true
                         },
                         {
-                            "checked_at_utc":  "2026-03-15T15:28:35.5906738Z",
+                            "checked_at_utc":  "2026-03-15T15:40:54.5251229Z",
                             "ok":  true,
                             "status":  200,
-                            "latency_ms":  1379.36,
+                            "latency_ms":  1498.71,
                             "error":  null,
                             "attempt":  4,
-                            "url":  "https://10df7336ba08d7.lhr.life",
+                            "url":  "https://46d966cd1dadae.lhr.life",
                             "tunnel_process_alive":  true
                         },
                         {
-                            "checked_at_utc":  "2026-03-15T15:28:44.7317211Z",
+                            "checked_at_utc":  "2026-03-15T15:41:05.1113338Z",
                             "ok":  true,
                             "status":  200,
-                            "latency_ms":  1130.48,
+                            "latency_ms":  2562.27,
                             "error":  null,
                             "attempt":  5,
-                            "url":  "https://10df7336ba08d7.lhr.life",
+                            "url":  "https://46d966cd1dadae.lhr.life",
                             "tunnel_process_alive":  true
                         }
                     ],
     "file_checks":  {
                         "/PUBLIC_REPO_STATE.json":  [
                                                         {
-                                                            "checked_at_utc":  "2026-03-15T15:28:46.1879237Z",
+                                                            "checked_at_utc":  "2026-03-15T15:41:08.3541233Z",
                                                             "ok":  true,
                                                             "status":  200,
-                                                            "latency_ms":  1445.92,
+                                                            "latency_ms":  3232.88,
                                                             "error":  null,
                                                             "round":  1,
                                                             "path":  "/PUBLIC_REPO_STATE.json",
-                                                            "url":  "https://10df7336ba08d7.lhr.life/PUBLIC_REPO_STATE.json",
+                                                            "url":  "https://46d966cd1dadae.lhr.life/PUBLIC_REPO_STATE.json",
                                                             "tunnel_process_alive":  true
                                                         },
                                                         {
-                                                            "checked_at_utc":  "2026-03-15T15:29:12.1894437Z",
+                                                            "checked_at_utc":  "2026-03-15T15:41:20.3495844Z",
                                                             "ok":  true,
                                                             "status":  200,
-                                                            "latency_ms":  13940.08,
+                                                            "latency_ms":  1305.2,
                                                             "error":  null,
                                                             "round":  2,
                                                             "path":  "/PUBLIC_REPO_STATE.json",
-                                                            "url":  "https://10df7336ba08d7.lhr.life/PUBLIC_REPO_STATE.json",
+                                                            "url":  "https://46d966cd1dadae.lhr.life/PUBLIC_REPO_STATE.json",
                                                             "tunnel_process_alive":  true
                                                         },
                                                         {
-                                                            "checked_at_utc":  "2026-03-15T15:29:24.4167432Z",
+                                                            "checked_at_utc":  "2026-03-15T15:41:31.9959647Z",
                                                             "ok":  true,
                                                             "status":  200,
-                                                            "latency_ms":  1548.95,
+                                                            "latency_ms":  1032,
                                                             "error":  null,
                                                             "round":  3,
                                                             "path":  "/PUBLIC_REPO_STATE.json",
-                                                            "url":  "https://10df7336ba08d7.lhr.life/PUBLIC_REPO_STATE.json",
+                                                            "url":  "https://46d966cd1dadae.lhr.life/PUBLIC_REPO_STATE.json",
                                                             "tunnel_process_alive":  true
                                                         }
                                                     ],
                         "/PUBLIC_SYNC_STATUS.json":  [
                                                          {
-                                                             "checked_at_utc":  "2026-03-15T15:28:48.8334355Z",
+                                                             "checked_at_utc":  "2026-03-15T15:41:09.6724140Z",
                                                              "ok":  true,
                                                              "status":  200,
-                                                             "latency_ms":  2632.83,
+                                                             "latency_ms":  1304.68,
                                                              "error":  null,
                                                              "round":  1,
                                                              "path":  "/PUBLIC_SYNC_STATUS.json",
-                                                             "url":  "https://10df7336ba08d7.lhr.life/PUBLIC_SYNC_STATUS.json",
+                                                             "url":  "https://46d966cd1dadae.lhr.life/PUBLIC_SYNC_STATUS.json",
                                                              "tunnel_process_alive":  true
                                                          },
                                                          {
-                                                             "checked_at_utc":  "2026-03-15T15:29:13.6851850Z",
+                                                             "checked_at_utc":  "2026-03-15T15:41:21.7121710Z",
                                                              "ok":  true,
                                                              "status":  200,
-                                                             "latency_ms":  1488.2,
+                                                             "latency_ms":  1354.36,
                                                              "error":  null,
                                                              "round":  2,
                                                              "path":  "/PUBLIC_SYNC_STATUS.json",
-                                                             "url":  "https://10df7336ba08d7.lhr.life/PUBLIC_SYNC_STATUS.json",
+                                                             "url":  "https://46d966cd1dadae.lhr.life/PUBLIC_SYNC_STATUS.json",
                                                              "tunnel_process_alive":  true
                                                          },
                                                          {
-                                                             "checked_at_utc":  "2026-03-15T15:29:26.3028322Z",
+                                                             "checked_at_utc":  "2026-03-15T15:41:33.2355557Z",
                                                              "ok":  true,
                                                              "status":  200,
-                                                             "latency_ms":  1879.81,
+                                                             "latency_ms":  1232.2,
                                                              "error":  null,
                                                              "round":  3,
                                                              "path":  "/PUBLIC_SYNC_STATUS.json",
-                                                             "url":  "https://10df7336ba08d7.lhr.life/PUBLIC_SYNC_STATUS.json",
+                                                             "url":  "https://46d966cd1dadae.lhr.life/PUBLIC_SYNC_STATUS.json",
                                                              "tunnel_process_alive":  true
                                                          }
                                                      ],
                         "/PUBLIC_ENTRYPOINTS.md":  [
                                                        {
-                                                           "checked_at_utc":  "2026-03-15T15:28:50.2373202Z",
+                                                           "checked_at_utc":  "2026-03-15T15:41:11.0220897Z",
                                                            "ok":  true,
                                                            "status":  200,
-                                                           "latency_ms":  1395.62,
+                                                           "latency_ms":  1341.51,
                                                            "error":  null,
                                                            "round":  1,
                                                            "path":  "/PUBLIC_ENTRYPOINTS.md",
-                                                           "url":  "https://10df7336ba08d7.lhr.life/PUBLIC_ENTRYPOINTS.md",
+                                                           "url":  "https://46d966cd1dadae.lhr.life/PUBLIC_ENTRYPOINTS.md",
                                                            "tunnel_process_alive":  true
                                                        },
                                                        {
-                                                           "checked_at_utc":  "2026-03-15T15:29:14.8505201Z",
+                                                           "checked_at_utc":  "2026-03-15T15:41:22.9534470Z",
                                                            "ok":  true,
                                                            "status":  200,
-                                                           "latency_ms":  1157.88,
+                                                           "latency_ms":  1232.97,
                                                            "error":  null,
                                                            "round":  2,
                                                            "path":  "/PUBLIC_ENTRYPOINTS.md",
-                                                           "url":  "https://10df7336ba08d7.lhr.life/PUBLIC_ENTRYPOINTS.md",
+                                                           "url":  "https://46d966cd1dadae.lhr.life/PUBLIC_ENTRYPOINTS.md",
                                                            "tunnel_process_alive":  true
                                                        },
                                                        {
-                                                           "checked_at_utc":  "2026-03-15T15:29:28.5238112Z",
+                                                           "checked_at_utc":  "2026-03-15T15:41:35.2091479Z",
                                                            "ok":  true,
                                                            "status":  200,
-                                                           "latency_ms":  2213.92,
+                                                           "latency_ms":  1965.6,
                                                            "error":  null,
                                                            "round":  3,
                                                            "path":  "/PUBLIC_ENTRYPOINTS.md",
-                                                           "url":  "https://10df7336ba08d7.lhr.life/PUBLIC_ENTRYPOINTS.md",
+                                                           "url":  "https://46d966cd1dadae.lhr.life/PUBLIC_ENTRYPOINTS.md",
                                                            "tunnel_process_alive":  true
                                                        }
                                                    ]
                     },
     "tunnel_process_alive_sequence":  [
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:28:05.7333775Z",
+                                              "checked_at_utc":  "2026-03-15T15:40:10.1020147Z",
                                               "phase":  "root",
                                               "attempt":  1,
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:28:15.2582211Z",
+                                              "checked_at_utc":  "2026-03-15T15:40:21.0614413Z",
                                               "phase":  "root",
                                               "attempt":  2,
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:28:24.6452087Z",
+                                              "checked_at_utc":  "2026-03-15T15:40:37.3153329Z",
                                               "phase":  "root",
                                               "attempt":  3,
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:28:34.2112346Z",
+                                              "checked_at_utc":  "2026-03-15T15:40:53.0257861Z",
                                               "phase":  "root",
                                               "attempt":  4,
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:28:43.6007901Z",
+                                              "checked_at_utc":  "2026-03-15T15:41:02.5482720Z",
                                               "phase":  "root",
                                               "attempt":  5,
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:28:44.7403206Z",
+                                              "checked_at_utc":  "2026-03-15T15:41:05.1199456Z",
                                               "phase":  "file",
                                               "round":  1,
                                               "path":  "/PUBLIC_REPO_STATE.json",
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:28:46.2000090Z",
+                                              "checked_at_utc":  "2026-03-15T15:41:08.3671159Z",
                                               "phase":  "file",
                                               "round":  1,
                                               "path":  "/PUBLIC_SYNC_STATUS.json",
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:28:48.8410507Z",
+                                              "checked_at_utc":  "2026-03-15T15:41:09.6800064Z",
                                               "phase":  "file",
                                               "round":  1,
                                               "path":  "/PUBLIC_ENTRYPOINTS.md",
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:28:58.2480928Z",
+                                              "checked_at_utc":  "2026-03-15T15:41:19.0438105Z",
                                               "phase":  "file",
                                               "round":  2,
                                               "path":  "/PUBLIC_REPO_STATE.json",
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:29:12.1965369Z",
+                                              "checked_at_utc":  "2026-03-15T15:41:20.3575829Z",
                                               "phase":  "file",
                                               "round":  2,
                                               "path":  "/PUBLIC_SYNC_STATUS.json",
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:29:13.6923024Z",
+                                              "checked_at_utc":  "2026-03-15T15:41:21.7197708Z",
                                               "phase":  "file",
                                               "round":  2,
                                               "path":  "/PUBLIC_ENTRYPOINTS.md",
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:29:22.8672679Z",
+                                              "checked_at_utc":  "2026-03-15T15:41:30.9636121Z",
                                               "phase":  "file",
                                               "round":  3,
                                               "path":  "/PUBLIC_REPO_STATE.json",
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:29:24.4228621Z",
+                                              "checked_at_utc":  "2026-03-15T15:41:32.0030272Z",
                                               "phase":  "file",
                                               "round":  3,
                                               "path":  "/PUBLIC_SYNC_STATUS.json",
                                               "tunnel_process_alive":  true
                                           },
                                           {
-                                              "checked_at_utc":  "2026-03-15T15:29:26.3095173Z",
+                                              "checked_at_utc":  "2026-03-15T15:41:33.2426723Z",
                                               "phase":  "file",
                                               "round":  3,
                                               "path":  "/PUBLIC_ENTRYPOINTS.md",
@@ -262,7 +262,7 @@
     "url_changes_detected":  [
 
                              ],
-    "latest_url":  "https://10df7336ba08d7.lhr.life",
+    "latest_url":  "https://46d966cd1dadae.lhr.life",
     "successful_checks":  14,
     "failed_checks":  0,
     "total_checks":  14,
@@ -270,5 +270,5 @@
     "had_tunnel_drop":  false,
     "classification":  "SESSION_FRAGILE",
     "stable_enough_for_chatgpt":  false,
-    "ended_at_utc":  "2026-03-15T15:29:28.5421832Z"
+    "ended_at_utc":  "2026-03-15T15:41:35.2272768Z"
 }

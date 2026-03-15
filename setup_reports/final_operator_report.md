@@ -1,12 +1,12 @@
 ﻿# Final Operator Report
 
-- generated_at_utc: 2026-03-15T15:30:21.4041206Z
+- generated_at_utc: 2026-03-15T15:42:30.9255295Z
 - source_repo_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - source_branch: main
-- source_head_commit: 408222791ac40ce85d35d679e10675df0953663c
+- source_head_commit: a695569ac313f2ab8f94c086a9b883944d987dfc
 - local_url: http://127.0.0.1:18080/
-- public_url: https://10df7336ba08d7.lhr.life
+- public_url: https://46d966cd1dadae.lhr.life
 - current_public_access_mechanism: ssh reverse tunnel via localhost.run (bound to non-VPN interface)
 - current_public_access_provider: ssh_localhost_run
 - vpn_independent: True
@@ -16,9 +16,9 @@
 - public_files_repeated_checks_passed: 9/9
 - security_check_status: PASS
 - stable_enough_for_chatgpt: False
-- old_public_url: https://0e6748b97ae3fe.lhr.life
+- old_public_url: https://10df7336ba08d7.lhr.life
 - old_broken_public_url: https://0e6748b97ae3fe.lhr.life
 - old_broken_public_url_cause: stale_session_hostname_not_mapped
-- validation_run_id: public-mirror-validate-20260315T152614Z
+- validation_run_id: public-mirror-validate-20260315T153806Z
 - validation_status: PASS
 - one_external_blocker: stable_non_session_public_endpoint_requires_external_secret_or_managed_tunnel_credentials

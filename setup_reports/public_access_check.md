@@ -1,17 +1,17 @@
 ﻿# Public Access Check
 
-- checked_at_utc: 2026-03-15T15:27:56.6840463Z
-- public_url: https://10df7336ba08d7.lhr.life
+- checked_at_utc: 2026-03-15T15:39:55.2100414Z
+- public_url: https://46d966cd1dadae.lhr.life
 - public_access_provider: ssh_localhost_run
 - public_access_mechanism: ssh reverse tunnel via localhost.run (bound to non-VPN interface)
 - public_access_vpn_dependent: False
 - local_target_url: http://127.0.0.1:18080/
 - tunnel_pid: 1168
 - tunnel_process_alive: True
-- old_public_url: https://0e6748b97ae3fe.lhr.life
+- old_public_url: https://10df7336ba08d7.lhr.life
 - old_broken_public_url: https://0e6748b97ae3fe.lhr.life
 - old_broken_public_url_cause: stale_session_hostname_not_mapped
-- latest_tunnel_url_from_logs: https://10df7336ba08d7.lhr.life
+- latest_tunnel_url_from_logs: https://46d966cd1dadae.lhr.life
 - runtime_url_outdated: False
 - session_based_url: True
 - stability_classification: SESSION_FRAGILE

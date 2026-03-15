@@ -1,7 +1,7 @@
 ﻿# Public Repo Access Validation
 
-- run_id: public-mirror-validate-20260315T152614Z
-- generated_at_utc: 2026-03-15T15:26:14.6807390Z
+- run_id: public-mirror-validate-20260315T153806Z
+- generated_at_utc: 2026-03-15T15:38:06.8773727Z
 - source_repo_path: E:\CVVCODEX
 - mirror_path: E:\_public_repo_mirror\WorkFLOW
 - public_url: https://10df7336ba08d7.lhr.life
@@ -35,7 +35,7 @@
 - sync_create_propagation: True
 ```json
 {
-    "mirror_probe":  "E:\\_public_repo_mirror\\WorkFLOW\\setup_reports\\.public_mirror_probe_7b4058bca8e34ea0a33b50fa15255a8c.txt",
+    "mirror_probe":  "E:\\_public_repo_mirror\\WorkFLOW\\setup_reports\\.public_mirror_probe_a4d9fefa8d4e4acfaef51f41e389d41d.txt",
     "sync":  {
                  "exit_code":  0,
                  "output":  [
@@ -46,7 +46,7 @@
                                 "[public-mirror-fast] progress_json: E:\\CVVCODEX\\setup_reports\\public_mirror_progress_status.json"
                             ]
              },
-    "source_probe":  "E:\\CVVCODEX\\setup_reports\\.public_mirror_probe_7b4058bca8e34ea0a33b50fa15255a8c.txt"
+    "source_probe":  "E:\\CVVCODEX\\setup_reports\\.public_mirror_probe_a4d9fefa8d4e4acfaef51f41e389d41d.txt"
 }
 ```
 
@@ -93,7 +93,7 @@
 {
     "exit_code":  0,
     "output":  [
-                   "[public-mirror-public] status=PASS public_url=https://10df7336ba08d7.lhr.life",
+                   "[public-mirror-public] status=PASS public_url=https://46d966cd1dadae.lhr.life",
                    "[public-mirror-public] report_json=E:\\CVVCODEX\\setup_reports\\public_access_check.json",
                    "[public-mirror-public] report_md=E:\\CVVCODEX\\setup_reports\\public_access_check.md"
                ]
