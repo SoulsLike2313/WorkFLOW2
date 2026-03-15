@@ -1,36 +1,28 @@
-﻿# Direct Public Access Validation (Factual Dry Check)
+﻿# Direct Public Access Validation (Packet Path Verdict)
 
-- generated_at_utc: 2026-03-15T19:39:44.7535722Z
-- check_mode: FACTUAL_DRY_CHECK_ONLY
-- chain: Internet -> router NAT/port forwarding -> 192.168.0.27:18080 -> Caddy -> E:\_public_repo_mirror\WorkFLOW
+- generated_at_utc: 2026-03-15T20:28:13.2371576Z
+- mode: PACKET_PATH_VERDICT_ONLY_NO_REBUILD
+- packet_capture_run: YES
+- capture_tool: pktmon
+- capture_filter: TCP SYN port 18080
+- capture_file: E:\CVVCODEX\setup_reports\pktmon_test.etl
+- capture_text: E:\CVVCODEX\setup_reports\pktmon_test.txt
 
-## Stage 1 - Local Base
-- Caddy process alive: YES (PID 11012)
-- local port 18080 listening: YES
-- http://127.0.0.1:18080/: YES (200)
-- /PUBLIC_REPO_STATE.json local: YES (200)
-- /.git/ local blocked: YES (404)
-- /.env local blocked: YES (404)
+## Packet facts
+- SYN from LAN client reached host: NO
+- host response (SYN-ACK/HTTP) observed: NO
+- explicit reset/drop packet observed: NO_EXPLICIT_PACKET_EVENT
+- trigger from LAN client confirmed in capture window: UNKNOWN
 
-## Stage 2 - Windows Firewall
-- inbound TCP 18080 block present: NO
-- inbound TCP 18080 allow present: YES (WorkFLOW Public Mirror Caddy 18080)
-- firewall fix required: NO
+## Exact verdict
+- PATH_BROKEN_BEFORE_HOST_OR_TRIGGER_NOT_SENT
 
-## Stage 3 - Router/NAT Side
-- expected router rule: TCP 18080 -> 192.168.0.27:18080
-- router NAT rule confirmed from inside: UNKNOWN
-- NAT loopback may distort same-network verification: YES
+## Exact break point
+- No inbound SYN to 192.168.0.27:18080 observed on host capture window; break is before host stack (router bridge/AP isolation/segmentation) unless LAN client request was not sent during capture window.
 
-## Stage 4 - Public Reachability
-- http://185.171.202.83:18080/: FAIL (connection closed)
-- /PUBLIC_REPO_STATE.json: FAIL (connection closed)
-- /PUBLIC_SYNC_STATUS.json: FAIL (connection closed)
-- /PUBLIC_ENTRYPOINTS.md: FAIL (connection closed)
-- verdict: INDETERMINATE
+## One exact next step
+- Run one synchronized test: start capture, then immediately execute on LAN laptop:
+  curl http://192.168.0.27:18080/PUBLIC_REPO_STATE.json
+  and report exact timestamp of execution.
 
-## Stage 5 - Exact Break Point
-- NAT loopback prevents reliable in-network verification of external endpoint; router NAT rule presence is not confirmed from inside LAN.
-
-## One Exact Next Step
-- Run one off-LAN check (mobile network) for http://185.171.202.83:18080/PUBLIC_REPO_STATE.json to confirm real external reachability.
+- Caddy/mirror/sync/NAT were not changed in this run.

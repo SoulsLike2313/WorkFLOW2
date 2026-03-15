@@ -1,18 +1,25 @@
 ﻿{
-    "checked_at_utc":  "2026-03-15T19:39:44.7535722Z",
-    "status":  "INDETERMINATE",
-    "source_repo_path":  "E:\\CVVCODEX",
-    "local_target_url":  "http://127.0.0.1:18080/",
-    "public_url":  "http://185.171.202.83:18080",
-    "caddy_alive":  true,
-    "local_port_18080_listening":  true,
-    "local_public_files_ok":  true,
-    "security_local":  "PASS",
-    "windows_firewall_issue":  false,
-    "expected_router_rule":  "TCP 18080 -\u003e 192.168.0.27:18080",
-    "router_nat_rule_confirmed":  "UNKNOWN",
-    "nat_loopback_may_distort":  "YES",
-    "public_reachability":  "NOT_CONFIRMED",
-    "exact_break_point":  "NAT loopback prevents reliable in-network verification of external endpoint; router NAT rule presence is not confirmed from inside LAN.",
-    "one_exact_next_step":  "Run one off-LAN check (mobile network) for http://185.171.202.83:18080/PUBLIC_REPO_STATE.json to confirm real external reachability."
+    "generated_at_utc":  "2026-03-15T20:28:13.2371576Z",
+    "mode":  "PACKET_PATH_VERDICT_ONLY_NO_REBUILD",
+    "packet_capture":  {
+                           "run":  true,
+                           "tool":  "pktmon",
+                           "filter":  "TCP SYN dst/src port 18080",
+                           "etl_path":  "E:\\CVVCODEX\\setup_reports\\pktmon_test.etl",
+                           "txt_path":  "E:\\CVVCODEX\\setup_reports\\pktmon_test.txt",
+                           "etl_size_bytes":  22668,
+                           "txt_size_bytes":  143004,
+                           "txt_line_count":  429
+                       },
+    "observations":  {
+                         "syn_from_lan_client_reached_host":  "NO",
+                         "host_syn_ack_or_response_observed":  "NO",
+                         "rst_or_drop_observed":  "NO_EXPLICIT_PACKET_EVENT",
+                         "trigger_from_lan_client_confirmed":  "UNKNOWN",
+                         "note":  "No TCP SYN packet event for port 18080 observed in capture output."
+                     },
+    "verdict":  "PATH_BROKEN_BEFORE_HOST_OR_TRIGGER_NOT_SENT",
+    "exact_break_point":  "No inbound SYN to 192.168.0.27:18080 observed on host capture window; break is before host stack (router bridge/AP isolation/segmentation) unless LAN client request was not sent during capture window.",
+    "one_exact_next_step":  "Run one synchronized test: start capture, then immediately execute on LAN laptop: curl http://192.168.0.27:18080/PUBLIC_REPO_STATE.json and confirm exact timestamp.",
+    "constraints":  "Caddy/mirror/sync/NAT unchanged in this run."
 }

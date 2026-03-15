@@ -1,94 +1,25 @@
 ﻿{
-    "generated_at_utc":  "2026-03-15T19:55:39.4429880Z",
-    "mode":  "INBOUND_LAN_PATH_DIAGNOSTICS_ONLY",
-    "local_base":  {
-                       "caddy_alive":  true,
-                       "caddy_pid":  11012,
-                       "caddy_listening_on":  [
-                                                  {
-                                                      "local_address":  "0.0.0.0",
-                                                      "local_port":  18080,
-                                                      "state":  "LISTEN",
-                                                      "pid":  11012
-                                                  },
-                                                  {
-                                                      "local_address":  "::",
-                                                      "local_port":  18080,
-                                                      "state":  "LISTEN",
-                                                      "pid":  11012
-                                                  }
-                                              ],
-                       "local_127_root":  {
-                                              "ok":  true,
-                                              "status":  200,
-                                              "url":  "http://127.0.0.1:18080/"
-                                          },
-                       "local_lan_root":  {
-                                              "ok":  true,
-                                              "status":  200,
-                                              "url":  "http://192.168.0.27:18080/"
-                                          },
-                       "public_repo_state_127":  {
-                                                     "ok":  true,
-                                                     "status":  200,
-                                                     "url":  "http://127.0.0.1:18080/PUBLIC_REPO_STATE.json"
-                                                 },
-                       "public_repo_state_lan":  {
-                                                     "ok":  true,
-                                                     "status":  200,
-                                                     "url":  "http://192.168.0.27:18080/PUBLIC_REPO_STATE.json"
-                                                 },
-                       "git_blocked_127":  {
-                                               "pass":  true,
-                                               "status":  404,
-                                               "url":  "http://127.0.0.1:18080/.git/"
-                                           },
-                       "env_blocked_127":  {
-                                               "pass":  true,
-                                               "status":  404,
-                                               "url":  "http://127.0.0.1:18080/.env"
-                                           }
-                   },
-    "windows_firewall":  {
-                             "network_profile":  "Public",
-                             "inbound_rule_tcp_18080_status":  "PRESENT",
-                             "inbound_rule_display_name":  "WorkFLOW Public Mirror Caddy 18080",
-                             "inbound_rule_action":  "Allow",
-                             "inbound_rule_profiles":  "Any",
-                             "inbound_rule_remote":  "Any",
-                             "firewall_issue":  false,
-                             "firewall_fix_applied":  false
-                         },
-    "router_nat":  {
-                       "expected_nat_rule":  "TCP 18080 -\u003e 192.168.0.27:18080",
-                       "nat_rule_confirmed":  "UNKNOWN",
-                       "nat_loopback_limitation":  "YES"
-                   },
-    "public_reachability":  {
-                                "target":  "http://185.171.202.83:18080/",
-                                "root":  {
-                                             "ok":  false,
-                                             "status":  null,
-                                             "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто."
-                                         },
-                                "public_repo_state":  {
-                                                          "ok":  false,
-                                                          "status":  null,
-                                                          "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто."
-                                                      },
-                                "public_sync_status":  {
-                                                           "ok":  false,
-                                                           "status":  null,
-                                                           "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто."
-                                                       },
-                                "public_entrypoints":  {
-                                                           "ok":  false,
-                                                           "status":  null,
-                                                           "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто."
-                                                       }
-                            },
-    "lan_device_reachability_after_fix":  "NO",
-    "lan_device_check_basis":  "Phone in same Wi-Fi reported not reachable; no reliable remote probe from this host to confirm peer-client path.",
-    "exact_break_point":  "client isolation / AP isolation / router LAN isolation / other network segmentation on Wi-Fi LAN path to 192.168.0.27:18080",
-    "one_exact_next_step":  "Disable AP/client isolation for the Wi-Fi SSID on router/AP, then retest from phone: http://192.168.0.27:18080/PUBLIC_REPO_STATE.json"
+    "generated_at_utc":  "2026-03-15T20:28:13.2371576Z",
+    "mode":  "PACKET_PATH_VERDICT_ONLY_NO_REBUILD",
+    "packet_capture":  {
+                           "run":  true,
+                           "tool":  "pktmon",
+                           "filter":  "TCP SYN dst/src port 18080",
+                           "etl_path":  "E:\\CVVCODEX\\setup_reports\\pktmon_test.etl",
+                           "txt_path":  "E:\\CVVCODEX\\setup_reports\\pktmon_test.txt",
+                           "etl_size_bytes":  22668,
+                           "txt_size_bytes":  143004,
+                           "txt_line_count":  429
+                       },
+    "observations":  {
+                         "syn_from_lan_client_reached_host":  "NO",
+                         "host_syn_ack_or_response_observed":  "NO",
+                         "rst_or_drop_observed":  "NO_EXPLICIT_PACKET_EVENT",
+                         "trigger_from_lan_client_confirmed":  "UNKNOWN",
+                         "note":  "No TCP SYN packet event for port 18080 observed in capture output."
+                     },
+    "verdict":  "PATH_BROKEN_BEFORE_HOST_OR_TRIGGER_NOT_SENT",
+    "exact_break_point":  "No inbound SYN to 192.168.0.27:18080 observed on host capture window; break is before host stack (router bridge/AP isolation/segmentation) unless LAN client request was not sent during capture window.",
+    "one_exact_next_step":  "Run one synchronized test: start capture, then immediately execute on LAN laptop: curl http://192.168.0.27:18080/PUBLIC_REPO_STATE.json and confirm exact timestamp.",
+    "constraints":  "Caddy/mirror/sync/NAT unchanged in this run."
 }
