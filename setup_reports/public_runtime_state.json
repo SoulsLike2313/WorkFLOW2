@@ -1,17 +1,20 @@
 ﻿{
     "source_repo_path":  "E:\\CVVCODEX",
     "mirror_path":  "E:\\_public_repo_mirror\\WorkFLOW",
-    "tunnel_started_at_utc":  "2026-03-15T14:00:17.2882499Z",
+    "tunnel_started_at_utc":  "2026-03-15T14:04:16.8289472Z",
     "tunnel_command":  "ssh -R 80:127.0.0.1:18080 nokey@localhost.run",
     "local_server_started_at_utc":  "2026-03-15T14:00:12.6667812Z",
-    "updated_at_utc":  "2026-03-15T14:00:17.3022425Z",
+    "updated_at_utc":  "2026-03-15T14:04:16.8415214Z",
     "public_url_blocker":  null,
     "local_url":  "http://127.0.0.1:18080/",
     "public_url_status":  "READY",
-    "public_url_detected_at_utc":  "2026-03-15T14:00:17.2922483Z",
+    "public_url_detected_at_utc":  "2026-03-15T14:04:16.8325123Z",
     "local_server_pid":  14280,
-    "tunnel_pid":  18476,
+    "tunnel_pid":  1872,
     "local_server_command":  "python -m http.server 18080 --bind 127.0.0.1 --directory E:\\_public_repo_mirror\\WorkFLOW",
     "local_server_stopped_at_utc":  "2026-03-15T12:03:12.7714982Z",
-    "public_url":  "https://c115809ee1d89b.lhr.life"
+    "previous_public_url":  "https://c115809ee1d89b.lhr.life",
+    "public_url":  "https://e2dd0013569fce.lhr.life",
+    "old_broken_public_url":  "https://074c01864bb287.lhr.life",
+    "old_broken_public_url_cause":  "stale_tunnel_session_process_not_alive; URL returned 503/no tunnel here"
 }

@@ -91,6 +91,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\start_
   -Port 18080
 ```
 
+`localhost.run` links are session-based and can expire; if a URL shows `no tunnel here` or `503`, restart public access command above.
+
 - public access check:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\check_public_mirror_public_access.ps1 `

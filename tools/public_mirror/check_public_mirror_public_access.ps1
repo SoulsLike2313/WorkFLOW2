@@ -54,8 +54,21 @@ $result = [ordered]@{
     checked_at_utc = (Get-Date).ToUniversalTime().ToString("o")
     source_repo_path = $sourceRoot
     public_url = $PublicUrl
+    public_access_mechanism = "ssh reverse tunnel via localhost.run"
+    local_target_url = if ($runtime.ContainsKey("local_url")) { [string]$runtime["local_url"] } else { "http://127.0.0.1:18080/" }
+    tunnel_pid = if ($runtime.ContainsKey("tunnel_pid")) { $runtime["tunnel_pid"] } else { $null }
+    tunnel_process_alive = $false
+    old_public_url = if ($runtime.ContainsKey("previous_public_url")) { [string]$runtime["previous_public_url"] } else { $null }
+    old_broken_public_url = if ($runtime.ContainsKey("old_broken_public_url")) { [string]$runtime["old_broken_public_url"] } else { $null }
+    old_broken_public_url_cause = if ($runtime.ContainsKey("old_broken_public_url_cause")) { [string]$runtime["old_broken_public_url_cause"] } else { $null }
+    failure_cause = $null
     status = "FAIL"
     checks = [ordered]@{}
+}
+
+if ($result.tunnel_pid) {
+    $tp = Get-Process -Id $result.tunnel_pid -ErrorAction SilentlyContinue
+    $result.tunnel_process_alive = [bool]$tp
 }
 
 if ([string]::IsNullOrWhiteSpace($PublicUrl)) {
@@ -63,6 +76,7 @@ if ([string]::IsNullOrWhiteSpace($PublicUrl)) {
         pass = $false
         reason = "public_url_missing"
     }
+    $result.failure_cause = "public_url_missing_in_runtime_state"
 }
 else {
     $rootCheck = Probe-Url $PublicUrl
@@ -78,6 +92,17 @@ else {
     $result.checks["git_path_blocked"] = [ordered]@{ pass = $gitBlocked; probe = $gitCheck }
     $result.checks["env_path_blocked"] = [ordered]@{ pass = $envBlocked; probe = $envCheck }
     $result.status = if ($rootCheck.ok -and $stateCheck.ok -and $gitBlocked -and $envBlocked) { "PASS" } else { "FAIL" }
+    if ($result.status -ne "PASS") {
+        if (-not $result.tunnel_process_alive) {
+            $result.failure_cause = "tunnel_process_not_alive_stale_session_url"
+        }
+        elseif (($rootCheck.status -eq 503) -or ($stateCheck.status -eq 503)) {
+            $result.failure_cause = "tunnel_endpoint_not_mapped_or_session_expired"
+        }
+        else {
+            $result.failure_cause = "public_url_probe_failed"
+        }
+    }
 }
 
 $jsonPath = Join-Path $sourceRoot "setup_reports/public_access_check.json"
@@ -89,6 +114,14 @@ $md = @(
     "",
     "- checked_at_utc: $($result.checked_at_utc)",
     "- public_url: $($result.public_url)",
+    "- public_access_mechanism: $($result.public_access_mechanism)",
+    "- local_target_url: $($result.local_target_url)",
+    "- tunnel_pid: $($result.tunnel_pid)",
+    "- tunnel_process_alive: $($result.tunnel_process_alive)",
+    "- old_public_url: $($result.old_public_url)",
+    "- old_broken_public_url: $($result.old_broken_public_url)",
+    "- old_broken_public_url_cause: $($result.old_broken_public_url_cause)",
+    "- failure_cause: $($result.failure_cause)",
     "- status: $($result.status)",
     "",
     "## Checks"

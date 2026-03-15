@@ -117,6 +117,22 @@ function Wait-PublicUrlHealthy([string]$Url, [int]$TimeoutSec = 30) {
     return $false
 }
 
+function Probe-UrlStatus([string]$Url) {
+    if ([string]::IsNullOrWhiteSpace($Url)) {
+        return $null
+    }
+    try {
+        $resp = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 10
+        return [int]$resp.StatusCode
+    }
+    catch {
+        if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+            return [int]$_.Exception.Response.StatusCode
+        }
+        return $null
+    }
+}
+
 $sourceRoot = Resolve-SourceRoot
 $runtimeDir = Join-Path $sourceRoot "setup_reports"
 if (-not (Test-Path $runtimeDir)) {
@@ -126,6 +142,8 @@ $runtimePath = Join-Path $runtimeDir "public_runtime_state.json"
 $outPath = Join-Path $runtimeDir "public_tunnel_stdout.log"
 $errPath = Join-Path $runtimeDir "public_tunnel_stderr.log"
 $previousPublicUrl = $null
+$oldBrokenUrl = $null
+$oldBrokenCause = $null
 
 # Ensure local web is running first.
 $startWebScript = Join-Path $sourceRoot "tools/public_mirror/start_public_mirror_web.ps1"
@@ -133,7 +151,25 @@ $startWebScript = Join-Path $sourceRoot "tools/public_mirror/start_public_mirror
 
 $state = Read-RuntimeState $runtimePath
 $previousPublicUrl = [string]$state["public_url"]
+if ($state.ContainsKey("old_broken_public_url") -and -not [string]::IsNullOrWhiteSpace([string]$state["old_broken_public_url"])) {
+    $oldBrokenUrl = [string]$state["old_broken_public_url"]
+}
+if ($state.ContainsKey("old_broken_public_url_cause") -and -not [string]::IsNullOrWhiteSpace([string]$state["old_broken_public_url_cause"])) {
+    $oldBrokenCause = [string]$state["old_broken_public_url_cause"]
+}
 $existingPid = $state["tunnel_pid"]
+if (-not [string]::IsNullOrWhiteSpace($previousPublicUrl)) {
+    $existingProcess = if ($existingPid) { Get-Process -Id $existingPid -ErrorAction SilentlyContinue } else { $null }
+    $previousStatus = Probe-UrlStatus -Url $previousPublicUrl
+    if (-not $existingProcess) {
+        $oldBrokenUrl = $previousPublicUrl
+        $oldBrokenCause = "stale_tunnel_session_process_not_alive"
+    }
+    elseif ($null -ne $previousStatus -and $previousStatus -ge 500) {
+        $oldBrokenUrl = $previousPublicUrl
+        $oldBrokenCause = "stale_tunnel_hostname_not_mapped"
+    }
+}
 if ($existingPid) {
     $existing = Get-Process -Id $existingPid -ErrorAction SilentlyContinue
     if ($existing) {
@@ -178,6 +214,8 @@ if (-not $publicUrl) {
             public_url = $null
             public_url_status = "NOT_READY"
             previous_public_url = $previousPublicUrl
+            old_broken_public_url = $oldBrokenUrl
+            old_broken_public_url_cause = $oldBrokenCause
             public_url_blocker = "No tunnel URL detected from current ssh session output within timeout. External network or tunnel service availability required."
         })
     Write-Host "[public-mirror-public] public URL not ready; blocker recorded in setup_reports/public_runtime_state.json"
@@ -196,6 +234,8 @@ if (-not $healthy) {
             public_url = $publicUrl
             public_url_status = "NOT_READY"
             previous_public_url = $previousPublicUrl
+            old_broken_public_url = $oldBrokenUrl
+            old_broken_public_url_cause = $oldBrokenCause
             public_url_blocker = "Tunnel URL detected but failed live health check for root/PUBLIC_REPO_STATE.json."
         })
     Write-Host "[public-mirror-public] URL detected but health check failed: $publicUrl"
@@ -210,6 +250,8 @@ Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
         public_url_status = "READY"
         public_url_detected_at_utc = (Get-Date).ToUniversalTime().ToString("o")
         previous_public_url = $previousPublicUrl
+        old_broken_public_url = $oldBrokenUrl
+        old_broken_public_url_cause = $oldBrokenCause
         public_url_blocker = $null
     })
 
