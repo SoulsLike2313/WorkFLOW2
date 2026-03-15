@@ -1,45 +1,175 @@
 ﻿# Public URL Stability Check
 
-- checked_at_utc: 2026-03-15T17:39:23.4993814Z
+- checked_at_utc: 2026-03-15T17:59:48.4121953Z
 - public_access_provider: direct_local_pc_caddy
 - public_access_mechanism: direct local-PC hosting via Caddy (non-tunnel canonical)
 - session_based_url: False
-- final_public_url: 
+- final_public_url: http://185.171.202.83:18080
 - classification: BROKEN
 - stable_enough_for_chatgpt: False
-- repeated_checks_passed: 0/0
-- failed_checks: 0
+- repeated_checks_passed: 0/14
+- failed_checks: 14
 
 ## Full Series JSON
 ```json
 {
     "enabled":  true,
-    "started_at_utc":  "2026-03-15T17:39:23.5073768Z",
-    "root_checks_requested":  10,
-    "file_rounds_requested":  5,
-    "interval_seconds":  6,
+    "started_at_utc":  "2026-03-15T18:00:04.2513670Z",
+    "root_checks_requested":  5,
+    "file_rounds_requested":  3,
+    "interval_seconds":  4,
     "root_checks":  [
-
+                        {
+                            "ok":  false,
+                            "status":  null,
+                            "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                            "checked_at_utc":  "2026-03-15T18:00:07.0294796Z",
+                            "latency_ms":  2770.25,
+                            "url":  "http://185.171.202.83:18080",
+                            "attempt":  1
+                        },
+                        {
+                            "ok":  false,
+                            "status":  null,
+                            "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                            "checked_at_utc":  "2026-03-15T18:00:13.9630474Z",
+                            "latency_ms":  2897.61,
+                            "url":  "http://185.171.202.83:18080",
+                            "attempt":  2
+                        },
+                        {
+                            "ok":  false,
+                            "status":  null,
+                            "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                            "checked_at_utc":  "2026-03-15T18:00:21.2798852Z",
+                            "latency_ms":  3307.48,
+                            "url":  "http://185.171.202.83:18080",
+                            "attempt":  3
+                        },
+                        {
+                            "ok":  false,
+                            "status":  null,
+                            "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                            "checked_at_utc":  "2026-03-15T18:00:39.8239374Z",
+                            "latency_ms":  14537.68,
+                            "url":  "http://185.171.202.83:18080",
+                            "attempt":  4
+                        },
+                        {
+                            "ok":  false,
+                            "status":  null,
+                            "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                            "checked_at_utc":  "2026-03-15T18:00:46.4520810Z",
+                            "latency_ms":  2615.77,
+                            "url":  "http://185.171.202.83:18080",
+                            "attempt":  5
+                        }
                     ],
     "file_checks":  {
                         "/PUBLIC_REPO_STATE.json":  [
-
+                                                        {
+                                                            "ok":  false,
+                                                            "status":  null,
+                                                            "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                                                            "checked_at_utc":  "2026-03-15T18:00:49.1046942Z",
+                                                            "latency_ms":  2647.26,
+                                                            "url":  "http://185.171.202.83:18080/PUBLIC_REPO_STATE.json",
+                                                            "round":  1,
+                                                            "path":  "/PUBLIC_REPO_STATE.json"
+                                                        },
+                                                        {
+                                                            "ok":  false,
+                                                            "status":  null,
+                                                            "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                                                            "checked_at_utc":  "2026-03-15T18:01:00.9502533Z",
+                                                            "latency_ms":  2639.69,
+                                                            "url":  "http://185.171.202.83:18080/PUBLIC_REPO_STATE.json",
+                                                            "round":  2,
+                                                            "path":  "/PUBLIC_REPO_STATE.json"
+                                                        },
+                                                        {
+                                                            "ok":  false,
+                                                            "status":  null,
+                                                            "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                                                            "checked_at_utc":  "2026-03-15T18:01:12.8534760Z",
+                                                            "latency_ms":  2602.15,
+                                                            "url":  "http://185.171.202.83:18080/PUBLIC_REPO_STATE.json",
+                                                            "round":  3,
+                                                            "path":  "/PUBLIC_REPO_STATE.json"
+                                                        }
                                                     ],
                         "/PUBLIC_SYNC_STATUS.json":  [
-
+                                                         {
+                                                             "ok":  false,
+                                                             "status":  null,
+                                                             "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                                                             "checked_at_utc":  "2026-03-15T18:00:51.7649362Z",
+                                                             "latency_ms":  2654.72,
+                                                             "url":  "http://185.171.202.83:18080/PUBLIC_SYNC_STATUS.json",
+                                                             "round":  1,
+                                                             "path":  "/PUBLIC_SYNC_STATUS.json"
+                                                         },
+                                                         {
+                                                             "ok":  false,
+                                                             "status":  null,
+                                                             "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                                                             "checked_at_utc":  "2026-03-15T18:01:03.5431705Z",
+                                                             "latency_ms":  2592.81,
+                                                             "url":  "http://185.171.202.83:18080/PUBLIC_SYNC_STATUS.json",
+                                                             "round":  2,
+                                                             "path":  "/PUBLIC_SYNC_STATUS.json"
+                                                         },
+                                                         {
+                                                             "ok":  false,
+                                                             "status":  null,
+                                                             "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                                                             "checked_at_utc":  "2026-03-15T18:01:15.7431993Z",
+                                                             "latency_ms":  2889.16,
+                                                             "url":  "http://185.171.202.83:18080/PUBLIC_SYNC_STATUS.json",
+                                                             "round":  3,
+                                                             "path":  "/PUBLIC_SYNC_STATUS.json"
+                                                         }
                                                      ],
                         "/PUBLIC_ENTRYPOINTS.md":  [
-
+                                                       {
+                                                           "ok":  false,
+                                                           "status":  null,
+                                                           "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                                                           "checked_at_utc":  "2026-03-15T18:00:54.2990896Z",
+                                                           "latency_ms":  2533.85,
+                                                           "url":  "http://185.171.202.83:18080/PUBLIC_ENTRYPOINTS.md",
+                                                           "round":  1,
+                                                           "path":  "/PUBLIC_ENTRYPOINTS.md"
+                                                       },
+                                                       {
+                                                           "ok":  false,
+                                                           "status":  null,
+                                                           "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                                                           "checked_at_utc":  "2026-03-15T18:01:06.2435636Z",
+                                                           "latency_ms":  2699.82,
+                                                           "url":  "http://185.171.202.83:18080/PUBLIC_ENTRYPOINTS.md",
+                                                           "round":  2,
+                                                           "path":  "/PUBLIC_ENTRYPOINTS.md"
+                                                       },
+                                                       {
+                                                           "ok":  false,
+                                                           "status":  null,
+                                                           "error":  "Базовое соединение закрыто: Соединение было неожиданно закрыто.",
+                                                           "checked_at_utc":  "2026-03-15T18:01:19.0048594Z",
+                                                           "latency_ms":  3261.18,
+                                                           "url":  "http://185.171.202.83:18080/PUBLIC_ENTRYPOINTS.md",
+                                                           "round":  3,
+                                                           "path":  "/PUBLIC_ENTRYPOINTS.md"
+                                                       }
                                                    ]
                     },
     "successful_checks":  0,
-    "failed_checks":  0,
-    "total_checks":  0,
+    "failed_checks":  14,
+    "total_checks":  14,
     "success_rate_percent":  0,
     "classification":  "BROKEN",
     "stable_enough_for_chatgpt":  false,
     "session_based_url":  false,
-    "ended_at_utc":  "2026-03-15T17:39:23.5073768Z",
-    "reason":  "public_url_missing"
+    "ended_at_utc":  "2026-03-15T18:01:19.0211342Z"
 }
 ```

@@ -3,6 +3,7 @@ param(
     [string]$CanonicalHostname,
     [string]$PublicScheme = "http",
     [int]$PublicPort = 18080,
+    [switch]$AllowExternalIpFallback = $true,
     [switch]$StopLegacyTunnel = $true
 )
 
@@ -112,6 +113,10 @@ $network = Get-NetworkSnapshot
 $localProbe = Probe-Url -Url $localUrl
 
 $publicUrl = $null
+if ([string]::IsNullOrWhiteSpace($CanonicalHostname) -and $AllowExternalIpFallback -and -not [string]::IsNullOrWhiteSpace([string]$network.external_ip)) {
+    $CanonicalHostname = [string]$network.external_ip
+}
+
 if (-not [string]::IsNullOrWhiteSpace($CanonicalHostname)) {
     if (($PublicScheme -eq "http" -and $PublicPort -eq 80) -or ($PublicScheme -eq "https" -and $PublicPort -eq 443)) {
         $publicUrl = "${PublicScheme}://$CanonicalHostname"
@@ -152,6 +157,8 @@ Write-RuntimeState -PathValue $runtimePath -Patch ([ordered]@{
         canonical_public_hostname = $CanonicalHostname
         canonical_public_scheme = $PublicScheme
         canonical_public_port = $PublicPort
+        ddns_domain_status = if ([string]::IsNullOrWhiteSpace($CanonicalHostname)) { "not_configured" } elseif ($CanonicalHostname -eq [string]$network.external_ip) { "external_ip_literal_fallback" } else { "configured" }
+        router_port_forwarding_configured = ($status -eq "READY")
         direct_hosting_network = $network
         tunnel_pid = $null
         tunnel_command = $null

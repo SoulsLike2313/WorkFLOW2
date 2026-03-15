@@ -204,7 +204,7 @@ else {
         $result.status = "PASS"
     }
     else {
-        $result.failure_cause = "direct_public_url_probe_failed_or_not_exposed"
+        $result.failure_cause = "router_port_forwarding_or_dns_mapping_not_configured"
     }
 }
 
@@ -324,6 +324,7 @@ Write-RuntimePatch -PathValue $runtimePath -Patch ([ordered]@{
         public_access_stable_enough_for_chatgpt = $result.stable_enough_for_chatgpt
         public_access_repeated_checks_passed = if ($result.repeated_checks_summary) { $result.repeated_checks_summary.passed } else { $null }
         public_access_repeated_checks_total = if ($result.repeated_checks_summary) { $result.repeated_checks_summary.total } else { $null }
+        router_port_forwarding_configured = ($result.status -eq "PASS")
         public_url_status = if ($result.status -eq "PASS") { "READY" } else { "NOT_READY" }
         public_url_blocker = if ($result.status -eq "PASS") { $null } else { $result.failure_cause }
         public_access_one_external_blocker = if ($result.status -eq "PASS") { $null } else { $result.failure_cause }
