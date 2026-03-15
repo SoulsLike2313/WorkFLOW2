@@ -1,9 +1,0 @@
-{
-  "run_id": "20260313_010038",
-  "status": "PASS",
-  "path": "runtime/ui_snapshots/20260313_010038",
-  "manifest_path": "runtime/ui_snapshots/20260313_010038/ui_screenshots_manifest.json",
-  "summary_path": "runtime/ui_snapshots/20260313_010038/ui_snapshot_summary.json",
-  "walkthrough_trace_path": "runtime/ui_snapshots/20260313_010038/ui_walkthrough_trace.json",
-  "timestamp": "2026-03-12T22:02:46.932219+00:00"
-}

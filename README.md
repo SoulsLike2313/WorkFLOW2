@@ -42,6 +42,18 @@ Top-level purpose:
 - `workspace_config/`: machine-readable workspace governance and templates.
 - `runtime/`: generated runtime and diagnostics artifacts.
 
+Fast orientation files:
+
+- `REPO_MAP.md`: concise directory map and reading order.
+- `MACHINE_CONTEXT.md`: machine-first context recovery guide.
+
+## Privacy and Publication Rules
+
+- Repository is private by policy.
+- GitHub is the canonical external state; local-only changes are not accepted as complete.
+- Public mirror/tunnel/publication workflows are non-canonical and excluded from this repository.
+- Router/WAN/LAN diagnostics and publication artifacts must not be committed.
+
 ## Task Governance Layer
 
 Strict machine task governance is defined in:

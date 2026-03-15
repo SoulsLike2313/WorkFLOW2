@@ -180,3 +180,12 @@ Machine must enforce:
 - `workspace_config/COMMUNICATION_STYLE_POLICY.md`
 
 If response behavior conflicts with this policy, compliance status is `FAIL`.
+
+## Rule 17: Fast Context Files
+
+For rapid context recovery, machine should read:
+
+1. `REPO_MAP.md`
+2. `MACHINE_CONTEXT.md`
+
+These files do not override `workspace_config/workspace_manifest.json` or project manifests.

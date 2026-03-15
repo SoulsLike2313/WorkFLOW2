@@ -1,5 +1,18 @@
 # GitHub Sync Policy
 
+## Privacy Boundary
+
+Repository workflow is private-only.
+
+Forbidden in tracked state:
+
+1. public mirror workflows
+2. tunnel/public endpoint scripts and credentials
+3. router/WAN/LAN exposure diagnostics
+4. local publication runtime logs
+
+GitHub visibility must remain private. No public publication flow is canonical.
+
 ## Mandatory Rule
 
 No task is complete unless the result is visible in GitHub on `origin/main`.

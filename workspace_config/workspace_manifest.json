@@ -40,9 +40,13 @@
     "test_agent_execution_policy_path": "workspace_config/TEST_AGENT_EXECUTION_POLICY.md",
     "github_sync_policy_path": "workspace_config/GITHUB_SYNC_POLICY.md",
     "completion_gate_rules_path": "workspace_config/COMPLETION_GATE_RULES.md",
+    "repo_map_path": "REPO_MAP.md",
+    "machine_context_path": "MACHINE_CONTEXT.md",
     "current_platform_state_path": "docs/CURRENT_PLATFORM_STATE.md",
     "next_canonical_step_path": "docs/NEXT_CANONICAL_STEP.md",
     "machine_changelog_path": "docs/MACHINE_CHANGELOG.md",
+    "private_repo_required": true,
+    "public_mirror_publication_artifacts_allowed": false,
     "mandatory_post_task_git_finalization": true,
     "post_task_git_finalization_order": [
       "git add",

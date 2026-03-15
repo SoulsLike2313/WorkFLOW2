@@ -40,6 +40,8 @@ If this order is not completed, task status is `REJECTED`.
 | File | Role | Priority | Target Audience |
 | --- | --- | --- | --- |
 | `README.md` | Workspace map and top-level orientation | P0 | machine, codex, developer, product reviewer |
+| `REPO_MAP.md` | Compact repository map, canonical directory intent, and quick read order | P0 | machine, codex, developer |
+| `MACHINE_CONTEXT.md` | Deterministic machine context snapshot and non-canonical input boundaries | P0 | machine, codex |
 | `workspace_config/workspace_manifest.json` | Project registry, active project, status model | P0 | machine, codex, developer |
 | `workspace_config/codex_manifest.json` | Machine onboarding order and scope controls | P0 | machine, codex |
 | `workspace_config/TASK_RULES.md` | Strict task acceptance gate | P0 | machine, codex, product reviewer |
