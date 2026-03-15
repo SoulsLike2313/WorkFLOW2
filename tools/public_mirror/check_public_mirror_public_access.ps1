@@ -278,6 +278,12 @@ function Run-StabilitySeries {
     }
 
     $series.stable_enough_for_chatgpt = ($series.classification -eq "STABLE" -or $series.classification -eq "MOSTLY_STABLE")
+    $series["stability_notes"] = if ($series.session_based_url) {
+        "Session-based public URL: classification is capped at SESSION_FRAGILE even with 100% pass rate."
+    }
+    else {
+        "Non-session public URL."
+    }
     $series["ended_at_utc"] = (Get-Date).ToUniversalTime().ToString("o")
     return $series
 }

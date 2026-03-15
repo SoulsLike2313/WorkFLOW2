@@ -122,6 +122,8 @@ Writes:
 - `setup_reports/public_url_stability_check.json`
 - `setup_reports/public_url_stability_check.md`
 
+For session-based tunnels (`localhost.run`, quick tunnel providers), stability classification is intentionally capped at `SESSION_FRAGILE` even when repeated checks are 100% successful.
+
 - end-to-end validation:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\public_mirror\validate_public_mirror.ps1 `
