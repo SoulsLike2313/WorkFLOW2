@@ -45,12 +45,14 @@ def _resolve_target_project(*, target_path: str, target_slug: str) -> TargetProj
     workspace = _load_json(WORKSPACE_MANIFEST)
     registry = list(workspace.get("project_registry", []))
     matches: list[dict[str, Any]] = []
+    normalized_target_path = str(target_path).strip().replace("\\", "/")
 
     for item in registry:
         item_slug = str(item.get("slug", "")).strip()
         item_root = str(item.get("root_path", "")).strip()
+        normalized_item_root = item_root.replace("\\", "/")
         slug_match = bool(target_slug) and item_slug == target_slug
-        path_match = bool(target_path) and item_root == target_path
+        path_match = bool(normalized_target_path) and normalized_item_root == normalized_target_path
         if slug_match or path_match:
             matches.append(item)
 

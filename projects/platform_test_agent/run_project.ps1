@@ -28,7 +28,14 @@ while ($true) {
 Set-Location $repoRoot
 
 if ($Mode -eq "intake") {
-    python .\projects\platform_test_agent\scripts\test_agent_core.py --mode intake --target-project-path $TargetProjectPath --target-project-slug $TargetProjectSlug
+    $args = @(".\projects\platform_test_agent\scripts\test_agent_core.py", "--mode", "intake")
+    if (-not [string]::IsNullOrWhiteSpace($TargetProjectPath)) {
+        $args += @("--target-project-path", $TargetProjectPath)
+    }
+    if (-not [string]::IsNullOrWhiteSpace($TargetProjectSlug)) {
+        $args += @("--target-project-slug", $TargetProjectSlug)
+    }
+    python @args
     exit $LASTEXITCODE
 }
 
