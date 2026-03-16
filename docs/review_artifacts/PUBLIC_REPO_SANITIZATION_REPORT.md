@@ -1,14 +1,14 @@
 # Public Repo Sanitization Report
 
-- generated_at_utc: `2026-03-16T02:18:44.000000+00:00`
+- generated_at_utc: `2026-03-16T16:01:55.000000+00:00`
 - scope: `publication_safe_finish`
 - local_source_root: `E:\CVVCODEX`
 - repo_name: `WorkFLOW`
 - branch: `main`
-- basis_head_sha: `e9d0f7325b9e5de8da6e2fa42e424dc06e6aa535`
+- basis_head_sha: `ab0a660317a0a104aa1b7203f0c908bc068965ee`
 - tracking_branch: `origin/main`
-- ahead/behind: `0/0`
-- tracked_file_count: `1022`
+- ahead/behind: `1/0`
+- tracked_file_count: `1024`
 
 ## Removed From Tracking
 - `setup_assets/windows10pro/SetupHost_strings.txt`
@@ -36,6 +36,8 @@
 - `workspace_config/AGENT_EXECUTION_POLICY.md`
 - `workspace_config/MACHINE_REPO_READING_RULES.md`
 - `workspace_config/SAFE_MIRROR_MANIFEST.json`
+- `docs/CHATGPT_BUNDLE_EXPORT.md`
+- `scripts/export_chatgpt_bundle.py`
 
 ## Safe Mirror Artifacts
 - manifest: `workspace_config/SAFE_MIRROR_MANIFEST.json`
