@@ -45,6 +45,19 @@
 - `docs/governance/POLICY_EVOLUTION_LOG.md`
 - `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
 
+### Governance v1.1 Hardening Layer
+
+- `docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md`
+- `docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md`
+- `docs/governance/VERIFICATION_DEPTH_POLICY.md`
+- `docs/governance/EVIDENCE_RETENTION_POLICY.md`
+- `docs/governance/PROMOTION_THRESHOLD_POLICY.md`
+- `docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md`
+- `docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md`
+- `docs/governance/OPERATIONAL_METRICS_POLICY.md`
+- `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
+- `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
+
 ## Repo Control Center V1 (CLI-First)
 
 Canonical control entrypoint:

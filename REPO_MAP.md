@@ -31,7 +31,17 @@
 20. `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
 21. `docs/governance/POLICY_EVOLUTION_LOG.md`
 22. `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
-23. `scripts/repo_control_center.py`
+23. `docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md`
+24. `docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md`
+25. `docs/governance/VERIFICATION_DEPTH_POLICY.md`
+26. `docs/governance/EVIDENCE_RETENTION_POLICY.md`
+27. `docs/governance/PROMOTION_THRESHOLD_POLICY.md`
+28. `docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md`
+29. `docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md`
+30. `docs/governance/OPERATIONAL_METRICS_POLICY.md`
+31. `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
+32. `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
+33. `scripts/repo_control_center.py`
 
 ## Canonical Top-Level Directories
 
@@ -65,6 +75,19 @@ Current canonical active project:
 - Machine-readable outputs:
   - `runtime/repo_control_center/repo_control_status.json`
   - `runtime/repo_control_center/evolution_status.json`
+
+## Governance v1.1 Hardening Policies
+
+- `docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md`
+- `docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md`
+- `docs/governance/VERIFICATION_DEPTH_POLICY.md`
+- `docs/governance/EVIDENCE_RETENTION_POLICY.md`
+- `docs/governance/PROMOTION_THRESHOLD_POLICY.md`
+- `docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md`
+- `docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md`
+- `docs/governance/OPERATIONAL_METRICS_POLICY.md`
+- `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
+- `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
 
 ## Completion Guard
 

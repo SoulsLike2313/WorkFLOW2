@@ -60,7 +60,17 @@
     "read docs/governance/POLICY_EVOLUTION_LOG.md",
     "read docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
     "read scripts/repo_control_center.py",
-    "run python scripts/repo_control_center.py status"
+    "run python scripts/repo_control_center.py status",
+    "read docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md",
+    "read docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md",
+    "read docs/governance/VERIFICATION_DEPTH_POLICY.md",
+    "read docs/governance/EVIDENCE_RETENTION_POLICY.md",
+    "read docs/governance/PROMOTION_THRESHOLD_POLICY.md",
+    "read docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md",
+    "read docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md",
+    "read docs/governance/OPERATIONAL_METRICS_POLICY.md",
+    "read docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
+    "read docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md"
   ],
   "task_governance": {
     "instruction_read_before_task_required": true,
@@ -157,7 +167,17 @@
       "docs/governance/MODEL_MATURITY_MODEL.md",
       "docs/governance/EVOLUTION_SIGNAL_REGISTRY.md",
       "docs/governance/POLICY_EVOLUTION_LOG.md",
-      "docs/governance/NEXT_EVOLUTION_CANDIDATE.md"
+      "docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
+      "docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md",
+      "docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md",
+      "docs/governance/VERIFICATION_DEPTH_POLICY.md",
+      "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+      "docs/governance/PROMOTION_THRESHOLD_POLICY.md",
+      "docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md",
+      "docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md",
+      "docs/governance/OPERATIONAL_METRICS_POLICY.md",
+      "docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
+      "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -182,7 +202,19 @@
     "policy_evolution_log_path": "docs/governance/POLICY_EVOLUTION_LOG.md",
     "next_evolution_candidate_path": "docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
     "repo_control_center_verdict_engine_required": true,
-    "evolution_readiness_engine_required": true
+    "evolution_readiness_engine_required": true,
+    "governance_v11_hardening_paths": [
+      "docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md",
+      "docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md",
+      "docs/governance/VERIFICATION_DEPTH_POLICY.md",
+      "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+      "docs/governance/PROMOTION_THRESHOLD_POLICY.md",
+      "docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md",
+      "docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md",
+      "docs/governance/OPERATIONAL_METRICS_POLICY.md",
+      "docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
+      "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md"
+    ]
   },
   "scope_controls": {
     "allow_cross_project_changes_without_request": false,
@@ -256,7 +288,17 @@
     "docs/governance/EVOLUTION_SIGNAL_REGISTRY.md",
     "docs/governance/POLICY_EVOLUTION_LOG.md",
     "docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
-    "scripts/repo_control_center.py"
+    "scripts/repo_control_center.py",
+    "docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md",
+    "docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md",
+    "docs/governance/VERIFICATION_DEPTH_POLICY.md",
+    "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+    "docs/governance/PROMOTION_THRESHOLD_POLICY.md",
+    "docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md",
+    "docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md",
+    "docs/governance/OPERATIONAL_METRICS_POLICY.md",
+    "docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
+    "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md"
   ],
   "required_active_project_files": [
     "projects/platform_test_agent/PROJECT_MANIFEST.json",
@@ -289,7 +331,17 @@
       "docs/governance/MODEL_MATURITY_MODEL.md",
       "docs/governance/EVOLUTION_SIGNAL_REGISTRY.md",
       "docs/governance/POLICY_EVOLUTION_LOG.md",
-      "docs/governance/NEXT_EVOLUTION_CANDIDATE.md"
+      "docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
+      "docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md",
+      "docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md",
+      "docs/governance/VERIFICATION_DEPTH_POLICY.md",
+      "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+      "docs/governance/PROMOTION_THRESHOLD_POLICY.md",
+      "docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md",
+      "docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md",
+      "docs/governance/OPERATIONAL_METRICS_POLICY.md",
+      "docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
+      "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md"
     ],
     "repo_control_center": "scripts/repo_control_center.py"
   },
@@ -317,6 +369,16 @@
     "docs/governance/EVOLUTION_SIGNAL_REGISTRY.md",
     "docs/governance/POLICY_EVOLUTION_LOG.md",
     "docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
+    "docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md",
+    "docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md",
+    "docs/governance/VERIFICATION_DEPTH_POLICY.md",
+    "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+    "docs/governance/PROMOTION_THRESHOLD_POLICY.md",
+    "docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md",
+    "docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md",
+    "docs/governance/OPERATIONAL_METRICS_POLICY.md",
+    "docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
+    "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
     "scripts/repo_control_center.py",
     "workspace_config/GITHUB_SYNC_POLICY.md",
     "workspace_config/AGENT_EXECUTION_POLICY.md",

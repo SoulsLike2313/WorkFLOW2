@@ -35,22 +35,32 @@ Architecture anchor:
 21. `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
 22. `docs/governance/POLICY_EVOLUTION_LOG.md`
 23. `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
-24. `scripts/repo_control_center.py`
-25. `workspace_config/TASK_RULES.md`
-26. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
-27. `workspace_config/TASK_SOURCE_POLICY.md`
-28. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
-29. `workspace_config/AGENT_EXECUTION_POLICY.md`
-30. `workspace_config/MACHINE_REPO_READING_RULES.md`
-31. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-32. `workspace_config/PROJECT_AUDIT_POLICY.md`
-33. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-34. `workspace_config/GITHUB_SYNC_POLICY.md`
-35. `workspace_config/COMPLETION_GATE_RULES.md`
-36. relevant `PROJECT_MANIFEST.json`
-37. relevant project `README.md`
-38. relevant `CODEX.md` if present
-39. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+24. `docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md`
+25. `docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md`
+26. `docs/governance/VERIFICATION_DEPTH_POLICY.md`
+27. `docs/governance/EVIDENCE_RETENTION_POLICY.md`
+28. `docs/governance/PROMOTION_THRESHOLD_POLICY.md`
+29. `docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md`
+30. `docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md`
+31. `docs/governance/OPERATIONAL_METRICS_POLICY.md`
+32. `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
+33. `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
+34. `scripts/repo_control_center.py`
+35. `workspace_config/TASK_RULES.md`
+36. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
+37. `workspace_config/TASK_SOURCE_POLICY.md`
+38. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
+39. `workspace_config/AGENT_EXECUTION_POLICY.md`
+40. `workspace_config/MACHINE_REPO_READING_RULES.md`
+41. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+42. `workspace_config/PROJECT_AUDIT_POLICY.md`
+43. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+44. `workspace_config/GITHUB_SYNC_POLICY.md`
+45. `workspace_config/COMPLETION_GATE_RULES.md`
+46. relevant `PROJECT_MANIFEST.json`
+47. relevant project `README.md`
+48. relevant `CODEX.md` if present
+49. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 If this order is not completed, task status is `REJECTED`.
 
@@ -71,6 +81,16 @@ If this order is not completed, task status is `REJECTED`.
 - `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
 - `docs/governance/POLICY_EVOLUTION_LOG.md`
 - `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
+- `docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md`
+- `docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md`
+- `docs/governance/VERIFICATION_DEPTH_POLICY.md`
+- `docs/governance/EVIDENCE_RETENTION_POLICY.md`
+- `docs/governance/PROMOTION_THRESHOLD_POLICY.md`
+- `docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md`
+- `docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md`
+- `docs/governance/OPERATIONAL_METRICS_POLICY.md`
+- `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
+- `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
 
 ## Canonical Index
 
@@ -92,6 +112,16 @@ If this order is not completed, task status is `REJECTED`.
 | `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md` | Signal taxonomy and scoring/weight model | P1 |
 | `docs/governance/POLICY_EVOLUTION_LOG.md` | Governance evolution continuity log | P1 |
 | `docs/governance/NEXT_EVOLUTION_CANDIDATE.md` | Current->candidate maturity recommendation state | P1 |
+| `docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md` | Change authority boundaries by governance layer | P1 |
+| `docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md` | Incident classification, freeze, rollback and recovery sequence | P1 |
+| `docs/governance/VERIFICATION_DEPTH_POLICY.md` | Minimum verification depth matrix by change type | P1 |
+| `docs/governance/EVIDENCE_RETENTION_POLICY.md` | Evidence classes, retention, archive and traceability rules | P1 |
+| `docs/governance/PROMOTION_THRESHOLD_POLICY.md` | Formal promotion thresholds and observation-window rules | P1 |
+| `docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md` | Public mirror exposure incident response and restore gate | P1 |
+| `docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md` | Deprecation/retirement lifecycle and active-read-order cleanup | P1 |
+| `docs/governance/OPERATIONAL_METRICS_POLICY.md` | Core governance metrics and interpretation guardrails | P1 |
+| `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md` | Mandatory notification/escalation and silence-forbidden rules | P1 |
+| `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md` | Schema versioning, compatibility, migration and drift rules | P1 |
 | `workspace_config/SAFE_MIRROR_MANIFEST.json` | Safe mirror machine snapshot | P1 |
 | `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md` | Safe mirror evidence report | P2 |
 | `docs/review_artifacts/PUBLIC_REPO_SANITIZATION_REPORT.md` | Legacy/non-canonical historical artifact | P3 |
