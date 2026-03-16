@@ -1,17 +1,26 @@
 # SAFE MIRROR Build Report
 
-- generated_at: `2026-03-16T20:55:25.372695+00:00`
+- generated_at: `2026-03-16T21:27:12.381258+00:00`
 - local_source_root: `E:\CVVCODEX`
 - repo_name: `WorkFLOW2`
+- evidence_contract_version: `2.0.0`
+- evidence_mode: `tracked_evidence_refresh_commit`
+- basis_head_sha: `6c953f9974d3d7e38140865ea107ca80645e0a06`
+- evidence_generated_at: `2026-03-16T21:27:12.381258+00:00`
+- evidence_commit_note: `evidence refresh commit for basis 6c953f9974d3d7e38140865ea107ca80645e0a06`
 - active_project: `platform_test_agent`
 - branch: `main`
-- head_sha: `c7802d1d71ba288e0184ada7c7854f301f55778a`
+- head_sha (basis): `6c953f9974d3d7e38140865ea107ca80645e0a06`
 - tracking_branch: `safe_mirror/main`
 - ahead/behind: `0/0`
 - worktree_clean: `True`
 - tracked_files_count: `1053`
 - sync_verdict: `PASS`
 - publication_safe_verdict: `PASS`
+
+## Evidence Contract
+- tracked evidence artifacts describe `basis_head_sha` commit.
+- for `tracked_evidence_refresh_commit` mode, current `HEAD` can be an evidence refresh commit on top of basis.
 
 ## Included Roots
 - `docs`
