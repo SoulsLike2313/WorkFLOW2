@@ -8,7 +8,8 @@ Provide a deterministic context snapshot for Codex/ChatGPT/new machine readers.
 
 - Repository visibility model: public audit/core workspace.
 - Local preparation root: `E:\CVVCODEX`.
-- Canonical external state: GitHub (`origin/main`).
+- Local development source of truth: `E:\CVVCODEX`.
+- Canonical public safe snapshot: GitHub `WorkFLOW2` (`safe_mirror/main`).
 - Canonical ChatGPT-reading mechanism: targeted safe bundle export (`scripts/export_chatgpt_bundle.py`).
 - Active project: `platform_test_agent`.
 - Guarded projects:

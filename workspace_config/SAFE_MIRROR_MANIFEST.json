@@ -1,30 +1,33 @@
 {
   "schema_version": "1.0.0",
-  "repo_name": "WorkFLOW",
-  "generated_at": "2026-03-16T16:00:49.045493+00:00",
+  "repo_name": "WorkFLOW2",
+  "local_repo_name": "CVVCODEX",
+  "public_safe_mirror_remote": "safe_mirror",
+  "public_safe_mirror_url": "https://github.com/SoulsLike2313/WorkFLOW2.git",
+  "generated_at": "2026-03-16T16:38:53.643244+00:00",
   "export_tool_version": "safe-mirror-builder/1.0.0",
   "local_source_root": "E:\\CVVCODEX",
   "privacy_mode": "publication_safe_local_prepare",
   "current_branch": "main",
-  "tracking_branch": "origin/main",
-  "head_sha": "ab0a660317a0a104aa1b7203f0c908bc068965ee",
-  "ahead": 1,
+  "tracking_branch": "safe_mirror/main",
+  "head_sha": "f54f50268b4953b74b535400cb32af5d64120376",
+  "ahead": 0,
   "behind": 0,
-  "worktree_clean": true,
+  "worktree_clean": false,
   "git": {
     "current_branch": "main",
-    "head_sha": "ab0a660317a0a104aa1b7203f0c908bc068965ee",
-    "tracking_branch": "origin/main",
-    "ahead": 1,
+    "head_sha": "f54f50268b4953b74b535400cb32af5d64120376",
+    "tracking_branch": "safe_mirror/main",
+    "ahead": 0,
     "behind": 0,
-    "worktree_clean": true,
-    "status_short": "## main...origin/main [ahead 1]",
-    "sync_state": "ahead_only_ready_to_push"
+    "worktree_clean": false,
+    "status_short": "## main...safe_mirror/main\n M MACHINE_CONTEXT.md\n M README.md\n M REPO_MAP.md\n M docs/repo_publication_policy.md\n M scripts/build_safe_mirror_manifest.py\n M workspace_config/AGENT_EXECUTION_POLICY.md\n M workspace_config/COMPLETION_GATE_RULES.md\n M workspace_config/GITHUB_SYNC_POLICY.md\n M workspace_config/MACHINE_REPO_READING_RULES.md\n M workspace_config/codex_manifest.json\n M workspace_config/workspace_manifest.json",
+    "sync_state": "in_sync"
   },
   "active_project": "platform_test_agent",
   "safe_reading_entrypoints": {
     "workspace_validate": "python scripts/validate_workspace.py",
-    "repo_sync_check": "python scripts/check_repo_sync.py --remote origin --branch main",
+    "repo_sync_check": "python scripts/check_repo_sync.py --remote safe_mirror --branch main",
     "tester_agent_project_intake": "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode intake -TargetProjectPath <repo_relative_project_path>"
   },
   "included_directories": [
@@ -943,6 +946,7 @@
     "scripts/install_system.py",
     "scripts/new_project.py",
     "scripts/project_startup.py",
+    "scripts/push_safe_mirror.ps1",
     "scripts/register_auto_sync_task.ps1",
     "scripts/remove_system.py",
     "scripts/run_project.ps1",
@@ -1066,7 +1070,7 @@
     "workspace_config/templates/project_template/presets/tool/structure.json",
     "workspace_config/workspace_manifest.json"
   ],
-  "tracked_files_count": 1024,
+  "tracked_files_count": 1025,
   "excluded_categories": [
     ".env files",
     "credentials and private keys",
@@ -1103,18 +1107,18 @@
   "allowlist_violations": [],
   "secret_hits": [],
   "key_file_hashes": {
-    "README.md": "49f24a5bc261510260c25ef4821ad61ea920aac332a53b299582c90b4af4862b",
-    "REPO_MAP.md": "c5c760cb05fee1bf1438b79f3ec246aa11f2fbb2479fd12847cc5103a6180b64",
-    "MACHINE_CONTEXT.md": "3be9cbd747d93939575a90e61ef732757b9d984057bfeb02fc202124ef6d0496",
-    "workspace_config/workspace_manifest.json": "333de54794f8de18494addae19af53e779cc7bb5e31da7fffb186827c5117521",
-    "workspace_config/codex_manifest.json": "0881aaaa597f2db3e3a1a938852b34a37a6be1c5b410af5d6d51d3e6188d86c3"
+    "README.md": "c483e1d1b9942623d46e4ae27993714c02a22645b94664ad48d3d45a5fadeceb",
+    "REPO_MAP.md": "84d2c0c5f8cf6490e4cd18b82e962b098cf94898bf299cd53a361046136063d5",
+    "MACHINE_CONTEXT.md": "eec94124a1a2fca8f3ffa671e6987ab216249367858193145319858bf39ee04f",
+    "workspace_config/workspace_manifest.json": "acdef9a5882652d05fc9ce38a07edd5b80ed75db91fa1486f4ecd6a27949169a",
+    "workspace_config/codex_manifest.json": "f8f5be607d58351e571fcce7e25dd1299033d1e8b5c5452ae47a8ea773f3c76e"
   },
   "sync_verdict": "PASS",
   "publication_safe_verdict": "PASS",
   "failure_reasons": [],
   "notes_for_chatgpt": [
     "Local working source root is E:\\CVVCODEX.",
-    "GitHub WorkFLOW is synchronized only after local publication-safe validation.",
+    "GitHub WorkFLOW2 (safe_mirror) is synchronized only after local publication-safe validation.",
     "Use required safe-reading files and workspace manifests as source of truth."
   ]
 }

@@ -1,7 +1,7 @@
 {
   "schema_version": "2.1.0",
   "workspace_slug": "workflow",
-  "workspace_name": "WorkFLOW Multi-Project Workspace",
+  "workspace_name": "CVVCODEX Multi-Project Workspace",
   "active_project": "platform_test_agent",
   "status_values": [
     "active",
@@ -65,7 +65,11 @@
     "only_strict_repo_compliant_prompts_executable": true,
     "respectful_human_communication_required": true,
     "engineering_honesty_required": true,
-    "empty_verbosity_forbidden": true
+    "empty_verbosity_forbidden": true,
+    "public_safe_mirror_remote": "safe_mirror",
+    "public_safe_mirror_repo": "WorkFLOW2",
+    "public_safe_mirror_url": "https://github.com/SoulsLike2313/WorkFLOW2.git",
+    "legacy_origin_non_canonical": true
   },
   "shared_systems": {
     "root_path": "shared_systems",
@@ -99,16 +103,17 @@
     "project_startup_prepare": "python scripts/project_startup.py prepare --project-slug <slug>",
     "project_startup_run_user": "python scripts/project_startup.py run --project-slug <slug> --entrypoint user --startup-kind user",
     "project_startup_run_developer": "python scripts/project_startup.py run --project-slug <slug> --entrypoint developer --startup-kind developer",
-    "repo_sync_check": "python scripts/check_repo_sync.py --remote origin --branch main",
+    "repo_sync_check": "python scripts/check_repo_sync.py --remote safe_mirror --branch main",
     "build_safe_mirror_manifest": "python scripts/build_safe_mirror_manifest.py --repo-root E:\\CVVCODEX",
     "export_chatgpt_bundle": "python scripts/export_chatgpt_bundle.py <context|files|paths|project|request> [mode_args]",
-    "repo_trust_desktop_ui": "python projects/platform_test_agent/scripts/repo_control_center.py"
+    "repo_trust_desktop_ui": "python projects/platform_test_agent/scripts/repo_control_center.py",
+    "push_safe_mirror": "powershell -ExecutionPolicy Bypass -File .\\scripts\\push_safe_mirror.ps1"
   },
   "verification_entrypoints": {
     "active_project_verify": "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>",
     "workspace_validate": "python scripts/validate_workspace.py",
     "repo_sync_check": "powershell -ExecutionPolicy Bypass -File .\\scripts\\check_repo_sync.ps1",
-    "repo_sync_check_python": "python scripts/check_repo_sync.py --remote origin --branch main"
+    "repo_sync_check_python": "python scripts/check_repo_sync.py --remote safe_mirror --branch main"
   },
   "update_entrypoints": {
     "active_user_update": "not_applicable_for_platform_test_agent",
@@ -388,5 +393,12 @@
         "Layer manifest must not be interpreted as standalone workspace project."
       ]
     }
-  ]
+  ],
+  "repository_targets": {
+    "local_source_of_truth_root": "E:\\CVVCODEX",
+    "public_safe_mirror_remote": "safe_mirror",
+    "public_safe_mirror_repo": "WorkFLOW2",
+    "public_safe_mirror_url": "https://github.com/SoulsLike2313/WorkFLOW2.git",
+    "legacy_remote_non_canonical": "origin"
+  }
 }

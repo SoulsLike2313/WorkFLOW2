@@ -1,4 +1,4 @@
-# WorkFLOW Multi-Project Repository
+# CVVCODEX Multi-Project Repository
 
 ## Overview
 
@@ -42,11 +42,11 @@ Top-level purpose:
 - `workspace_config/`: machine-readable workspace governance and templates.
 - `runtime/`: generated runtime and diagnostics artifacts.
 
-## Local Preparation -> GitHub Target Model
+## Local Preparation -> Public Safe Mirror Model
 
 - Canonical local working root: `E:\CVVCODEX`
-- Local root is used for all sanitation, validation, and publication-safe preparation.
-- GitHub `WorkFLOW` (`origin/main`) is the synchronized remote target for approved safe state only.
+- Local root is source of truth for development and heavy validation.
+- GitHub `WorkFLOW2` (`safe_mirror/main`) is the public safe mirror target only.
 - ChatGPT reading is **CLI-first targeted bundle export**, not full-repository exposure.
 - Publication-safe state manifest is generated at:
   - `workspace_config/SAFE_MIRROR_MANIFEST.json`
@@ -93,10 +93,12 @@ Fast orientation files:
 ## Privacy and Publication Rules
 
 - Repository is maintained as a public audit/core workspace.
-- GitHub is the canonical external state; local-only changes are not accepted as complete.
+- Public canonical snapshot remote is `safe_mirror/main` (`WorkFLOW2`).
+- Local-only changes are not accepted as complete until pushed to `safe_mirror/main`.
 - Publication boundaries are defined in `docs/repo_publication_policy.md`.
 - Public mirror/tunnel/publication workflows are non-canonical and excluded from this repository.
 - Router/WAN/LAN diagnostics and publication artifacts must not be committed.
+- Legacy remote `origin` (`WorkFLOW`) is non-canonical for this architecture.
 
 ## Task Governance Layer
 

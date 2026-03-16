@@ -2,7 +2,7 @@
 
 ## Workspace Purpose
 
-`WorkFLOW` is a public audit/core multi-project workspace with an audit-first platform model.
+`CVVCODEX` is the local source-of-truth workspace with `WorkFLOW2` as public safe mirror.
 
 ## Read First
 
@@ -17,9 +17,10 @@
 ## Local Root and Sync Target
 
 - Local working root for preparation: `E:\CVVCODEX`
-- Remote publication-safe target: `origin/main` (`WorkFLOW`)
+- Remote publication-safe target: `safe_mirror/main` (`WorkFLOW2`)
 - Rule: local sanitation/validation first, then sync approved state only.
 - ChatGPT reading model: targeted CLI bundle export (`scripts/export_chatgpt_bundle.py`), not full-repository exposure.
+- Legacy remote `origin` (`WorkFLOW`) is non-canonical in current architecture.
 
 ## Canonical Top-Level Directories
 

@@ -21,7 +21,13 @@ Full repository exposure is not required for ChatGPT task execution.
 
 ## Mandatory Rule
 
-No task is complete unless the result is visible in GitHub on `origin/main`.
+No task is complete unless the result is visible in GitHub on `safe_mirror/main` (`WorkFLOW2`).
+
+Canonical remotes:
+
+1. local source of truth: `E:\CVVCODEX`
+2. public safe mirror remote: `safe_mirror` -> `https://github.com/SoulsLike2313/WorkFLOW2.git`
+3. legacy remote `origin` (`WorkFLOW`) is non-canonical for completion gate
 
 Local preparation rule:
 
@@ -35,7 +41,7 @@ After every completed task, this exact sequence is mandatory:
 
 1. `git add <allowed_task_paths>`
 2. `git commit -m "<task-scoped message>"`
-3. `git push origin <active_branch>`
+3. `git push safe_mirror <active_branch>`
 
 If sequence is not completed, task status is `NOT_COMPLETED`.
 
@@ -50,7 +56,7 @@ If sequence is not completed, task status is `NOT_COMPLETED`.
 
 Before any final completion claim, the agent must verify:
 
-1. `HEAD` against `origin/main`.
+1. `HEAD` against `safe_mirror/main`.
 2. push status for the active branch.
 3. expected repo-visible paths.
 4. completion summary path in repo-visible area.
@@ -58,16 +64,16 @@ Before any final completion claim, the agent must verify:
 Mandatory proof:
 
 5. commit for current task exists in branch history.
-6. pushed commit is visible on `origin/<active_branch>`.
+6. pushed commit is visible on `safe_mirror/<active_branch>`.
 
 ## Required Verification Commands
 
 1. `git rev-parse HEAD`
-2. `git rev-parse origin/main`
+2. `git rev-parse safe_mirror/main`
 3. `git status -sb`
-4. `git ls-tree --name-only -r origin/main`
+4. `git ls-tree --name-only -r safe_mirror/main`
 5. `git log --oneline -n 1`
-6. `git rev-list --left-right --count origin/<active_branch>...HEAD`
+6. `git rev-list --left-right --count safe_mirror/<active_branch>...HEAD`
 
 ## Enforcement
 

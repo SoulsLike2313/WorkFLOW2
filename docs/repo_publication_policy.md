@@ -4,7 +4,7 @@
 
 This repository is maintained as a **public audit/core workspace**.
 
-Canonical external state is `origin/main`.
+Canonical public safe mirror state is `safe_mirror/main` (`WorkFLOW2`).
 
 Canonical local preparation root is `E:\CVVCODEX`.
 
@@ -12,8 +12,12 @@ Publication-safe synchronization model:
 
 1. sanitize and validate locally in `E:\CVVCODEX`
 2. build safe mirror manifest/report
-3. sync approved state to GitHub `WorkFLOW`
+3. sync approved safe state to GitHub `WorkFLOW2` via `safe_mirror`
 4. use targeted bundle export for ChatGPT reading requests
+
+Legacy remote note:
+
+- `origin` (`WorkFLOW`) is non-canonical in this architecture.
 
 ## ChatGPT Reading Boundary
 
@@ -65,6 +69,6 @@ The following are intentionally local-only and must not be committed:
 Before declaring any task complete:
 
 1. `git status` must be clean.
-2. `HEAD` must equal `origin/main`.
+2. `HEAD` must equal `safe_mirror/main`.
 3. required outputs must be repo-visible on GitHub.
 4. `workspace_config/SAFE_MIRROR_MANIFEST.json` must be refreshed for current state.

@@ -222,7 +222,10 @@ def build_manifest(repo_root: Path) -> dict[str, Any]:
     now = datetime.now(timezone.utc).isoformat()
     manifest: dict[str, Any] = {
         "schema_version": "1.0.0",
-        "repo_name": "WorkFLOW",
+        "repo_name": "WorkFLOW2",
+        "local_repo_name": "CVVCODEX",
+        "public_safe_mirror_remote": "safe_mirror",
+        "public_safe_mirror_url": "https://github.com/SoulsLike2313/WorkFLOW2.git",
         "generated_at": now,
         "export_tool_version": "safe-mirror-builder/1.0.0",
         "local_source_root": str(repo_root),
@@ -266,7 +269,7 @@ def build_manifest(repo_root: Path) -> dict[str, Any]:
         "failure_reasons": failure_reasons,
         "notes_for_chatgpt": [
             "Local working source root is E:\\CVVCODEX.",
-            "GitHub WorkFLOW is synchronized only after local publication-safe validation.",
+            "GitHub WorkFLOW2 (safe_mirror) is synchronized only after local publication-safe validation.",
             "Use required safe-reading files and workspace manifests as source of truth.",
         ],
     }

@@ -117,9 +117,13 @@
     "respectful_human_communication_required": true,
     "engineering_honesty_required": true,
     "empty_verbosity_forbidden": true,
-    "repo_sync_check_script": "scripts/check_repo_sync.py",
+    "repo_sync_check_script": "scripts/check_repo_sync.py --remote safe_mirror --branch main",
     "repo_visible_completion_required": true,
-    "local_only_artifacts_not_accepted": true
+    "local_only_artifacts_not_accepted": true,
+    "public_safe_mirror_remote": "safe_mirror",
+    "public_safe_mirror_repo": "WorkFLOW2",
+    "public_safe_mirror_url": "https://github.com/SoulsLike2313/WorkFLOW2.git",
+    "legacy_origin_non_canonical": true
   },
   "scope_controls": {
     "allow_cross_project_changes_without_request": false,
@@ -174,10 +178,10 @@
     "scripts/run_project.ps1",
     "workspace_config/GITHUB_SYNC_POLICY.md",
     "workspace_config/COMPLETION_GATE_RULES.md",
-    "scripts/check_repo_sync.py"
-    ,
+    "scripts/check_repo_sync.py",
     "scripts/build_safe_mirror_manifest.py",
-    "scripts/export_chatgpt_bundle.py"
+    "scripts/export_chatgpt_bundle.py",
+    "scripts/push_safe_mirror.ps1"
   ],
   "required_active_project_files": [
     "projects/platform_test_agent/PROJECT_MANIFEST.json",

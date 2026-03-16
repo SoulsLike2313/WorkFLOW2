@@ -169,7 +169,7 @@ Completion is valid only when machine can confirm:
 
 1. task outputs are staged and committed
 2. commit is pushed to remote branch
-3. remote branch head matches local head
+3. remote branch head matches local head (canonical remote: `safe_mirror/main`)
 4. worktree is clean after push
 
 If any item fails, completion status is `NOT_COMPLETED`.

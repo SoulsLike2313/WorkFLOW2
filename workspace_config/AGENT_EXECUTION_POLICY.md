@@ -164,8 +164,8 @@ For every completed task, Codex must perform and verify:
 
 1. `git add <allowed_task_paths>`
 2. `git commit -m "<task-scoped message>"`
-3. `git push origin <active_branch>`
-4. sync check (`HEAD == origin/<active_branch>`)
+3. `git push safe_mirror <active_branch>`
+4. sync check (`HEAD == safe_mirror/<active_branch>`)
 
 If any item is missing, status is `NOT_COMPLETED`.
 

@@ -30,13 +30,13 @@ Final completion must include:
 
 1. commit hash
 2. branch
-3. `HEAD` and `origin/main` comparison result
+3. `HEAD` and `safe_mirror/main` comparison result
 4. verified repo-visible paths
 5. executed validation steps and run ids
 6. proof of post-task git finalization:
    - `git add` performed on task scope
    - `git commit` created
-   - `git push` completed to remote
+   - `git push` completed to `safe_mirror`
 
 ## Mandatory Finalization Order
 
@@ -45,6 +45,6 @@ Order is strict and cannot be skipped:
 1. `git add`
 2. `git commit`
 3. `git push`
-4. sync verification (`HEAD == origin/<branch>`, clean worktree)
+4. sync verification (`HEAD == safe_mirror/<branch>`, clean worktree)
 
 Any order violation => `NOT_COMPLETED`.
