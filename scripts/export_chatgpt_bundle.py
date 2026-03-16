@@ -50,7 +50,7 @@ DISALLOWED_PATH_PATTERNS = [
     re.compile(r"(^|/)tools/public_mirror(/|$)", re.IGNORECASE),
     re.compile(r"(^|/)runtime(/|$)", re.IGNORECASE),
     re.compile(r"(^|/)(logs?|tmp|temp|cache)(/|$)", re.IGNORECASE),
-    re.compile(r"(^|/).*(router|tunnel|wan|lan|network_trace|pcap|etl).*", re.IGNORECASE),
+    re.compile(r"(^|/)(router|tunnel|wan|lan|wan_lan|network_trace|network_traces|network_diagnostics?)(/|$)", re.IGNORECASE),
     re.compile(r"\.(etl|pcap|dmp|bak|orig)$", re.IGNORECASE),
 ]
 
