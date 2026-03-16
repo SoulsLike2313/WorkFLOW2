@@ -1,90 +1,86 @@
 # Instruction Index
 
-## Priority Model
+## Purpose
 
-- `P0`: hard machine source of truth (must read first).
-- `P1`: execution policy and operational contracts.
-- `P2`: domain/layer-specific contracts.
-- `P3`: historical/supporting notes (non-authoritative for routing).
+Canonical instruction map for machine/agent execution.
+
+Architecture anchor:
+
+- local working source: `E:\CVVCODEX`
+- public safe mirror only: `WorkFLOW2` (`safe_mirror/main`)
+- targeted bundle export: official external reading channel
 
 ## Mandatory Pre-Task Read Order
-
-Before any task execution, Codex must read in this exact order:
 
 1. `README.md`
 2. `workspace_config/workspace_manifest.json`
 3. `workspace_config/codex_manifest.json`
-4. `workspace_config/TASK_RULES.md`
-5. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
-6. `workspace_config/TASK_SOURCE_POLICY.md`
-7. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
-8. `workspace_config/AGENT_EXECUTION_POLICY.md`
-9. `workspace_config/MACHINE_REPO_READING_RULES.md`
-10. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-11. `workspace_config/PROJECT_AUDIT_POLICY.md`
-12. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-13. `workspace_config/GITHUB_SYNC_POLICY.md`
-14. `workspace_config/COMPLETION_GATE_RULES.md`
-15. `docs/INSTRUCTION_INDEX.md`
-16. `docs/CURRENT_PLATFORM_STATE.md`
-17. `docs/NEXT_CANONICAL_STEP.md`
-18. relevant `PROJECT_MANIFEST.json`
-19. relevant project `README.md`
-20. relevant `CODEX.md` if present
-21. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+4. `REPO_MAP.md`
+5. `MACHINE_CONTEXT.md`
+6. `docs/INSTRUCTION_INDEX.md`
+7. `docs/CURRENT_PLATFORM_STATE.md`
+8. `docs/NEXT_CANONICAL_STEP.md`
+9. `docs/governance/FIRST_PRINCIPLES.md`
+10. `docs/governance/GOVERNANCE_HIERARCHY.md`
+11. `docs/governance/SELF_VERIFICATION_POLICY.md`
+12. `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
+13. `docs/governance/ADMISSION_GATE_POLICY.md`
+14. `docs/governance/ANTI_DRIFT_POLICY.md`
+15. `docs/governance/DEVIATION_INTELLIGENCE_POLICY.md`
+16. `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
+17. `docs/governance/CREATIVE_REASONING_POLICY.md`
+18. `docs/governance/AGENT_CHARACTER_PROFILE.md`
+19. `workspace_config/TASK_RULES.md`
+20. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
+21. `workspace_config/TASK_SOURCE_POLICY.md`
+22. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
+23. `workspace_config/AGENT_EXECUTION_POLICY.md`
+24. `workspace_config/MACHINE_REPO_READING_RULES.md`
+25. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+26. `workspace_config/PROJECT_AUDIT_POLICY.md`
+27. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+28. `workspace_config/GITHUB_SYNC_POLICY.md`
+29. `workspace_config/COMPLETION_GATE_RULES.md`
+30. relevant `PROJECT_MANIFEST.json`
+31. relevant project `README.md`
+32. relevant `CODEX.md` if present
+33. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 If this order is not completed, task status is `REJECTED`.
 
-## Index
+## Governance Brain Stack (Mandatory)
 
-| File | Role | Priority | Target Audience |
-| --- | --- | --- | --- |
-| `README.md` | Workspace map and top-level orientation | P0 | machine, codex, developer, product reviewer |
-| `REPO_MAP.md` | Compact repository map, canonical directory intent, and quick read order | P0 | machine, codex, developer |
-| `MACHINE_CONTEXT.md` | Deterministic machine context snapshot and non-canonical input boundaries | P0 | machine, codex |
-| `workspace_config/workspace_manifest.json` | Project registry, active project, status model | P0 | machine, codex, developer |
-| `workspace_config/codex_manifest.json` | Machine onboarding order and scope controls | P0 | machine, codex |
-| `workspace_config/TASK_RULES.md` | Strict task acceptance gate | P0 | machine, codex, product reviewer |
-| `workspace_config/EXECUTION_ADMISSION_POLICY.md` | Hard execution admission gate and refusal contract | P0 | machine, codex, product reviewer |
-| `workspace_config/TASK_SOURCE_POLICY.md` | Authoritative task-source filter and executable request classes | P0 | machine, codex, product reviewer |
-| `workspace_config/COMMUNICATION_STYLE_POLICY.md` | Mandatory respectful/honest/human communication contract and response discipline | P0 | machine, codex |
-| `workspace_config/task_manifest.schema.json` | Machine-readable task manifest contract | P0 | machine, codex, developer |
-| `workspace_config/TASK_INTAKE_REFERENCE.md` | Intake validity criteria and refusal templates | P0 | machine, codex, developer, product reviewer |
-| `workspace_config/shared_systems_registry.json` | Shared module registry and project installation map | P0 | machine, codex, developer |
-| `workspace_config/AGENT_EXECUTION_POLICY.md` | Strict execution boundaries and anti-side-work rules | P0 | machine, codex, product reviewer |
-| `workspace_config/MACHINE_REPO_READING_RULES.md` | Deterministic repository reading policy | P0 | machine, codex |
-| `workspace_config/PROMPT_OUTPUT_POLICY.md` | Mandatory prompt-writing output format (single copyable prompt block) | P0 | machine, codex, developer |
-| `workspace_config/PROJECT_AUDIT_POLICY.md` | Audit-first platform model and manual testing admission gate | P0 | machine, codex, developer, product reviewer |
-| `workspace_config/TEST_AGENT_EXECUTION_POLICY.md` | Tester-agent lane execution policy and output contract | P0 | machine, codex, developer |
-| `workspace_config/GITHUB_SYNC_POLICY.md` | GitHub visibility and sync completion policy | P0 | machine, codex, product reviewer |
-| `workspace_config/COMPLETION_GATE_RULES.md` | Hard completion gate with mandatory post-task `git add -> git commit -> git push` and repo-visible outputs | P0 | machine, codex, product reviewer |
-| `docs/repo_publication_policy.md` | Public publication boundary (what is kept public vs local-only) | P0 | machine, codex, developer, product reviewer |
-| `workspace_config/SAFE_MIRROR_MANIFEST.json` | Publication-safe local-to-GitHub state snapshot for machine reading | P0 | machine, codex, product reviewer |
-| `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md` | Human-readable safe mirror build and exclusion report | P1 | codex, developer, product reviewer |
-| `docs/CHATGPT_BUNDLE_EXPORT.md` | CLI-first protocol for targeted ChatGPT bundle export from local safe state | P1 | machine, codex, developer |
-| `docs/CURRENT_PLATFORM_STATE.md` | Canonical machine snapshot of active priority and project states | P0 | machine, codex, developer, product reviewer |
-| `docs/NEXT_CANONICAL_STEP.md` | Canonical immediate execution direction ("what do we do next") | P0 | machine, codex, product reviewer |
-| `docs/MACHINE_CHANGELOG.md` | Machine continuity log of accepted platform truth changes | P1 | machine, codex, developer, product reviewer |
-| `workspace_config/PROJECT_RULES.md` | Workspace project lifecycle and isolation standards | P1 | machine, codex, developer |
-| `workspace_config/codex_bootstrap.md` | Bootstrap sequence for execution startup | P1 | codex, developer |
-| `workspace_config/UI_BUILD_RULES.md` | Workspace-level UI constraints (requires normalization) | P1 | codex, developer |
-| `docs/UI_BUILD_RULES.md` | Active UI artifact and validation contract | P1 | codex, developer, product reviewer |
-| `projects/*/PROJECT_MANIFEST.json` | Per-project machine source of truth | P2 | machine, codex, developer |
-| `projects/wild_hunt_command_citadel/tiktok_agent_platform/CODEX.md` | Active project execution contract | P2 | codex, developer |
-| `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/CODEX.md` | Core-layer execution and verification contract | P2 | codex, developer |
-| `workspace_config/templates/project_template/*.json` | New-project scaffold contracts | P2 | machine, developer |
-| `scripts/install_system.py` | Machine install workflow for shared systems | P2 | machine, codex, developer |
-| `scripts/remove_system.py` | Machine remove workflow for shared systems | P2 | machine, codex, developer |
-| `scripts/check_repo_sync.py` | Machine repo sync gate (branch/head/push/path visibility) | P2 | machine, codex, developer |
-| `scripts/build_safe_mirror_manifest.py` | Local publication-safe mirror manifest builder and safety validator | P2 | machine, codex, developer |
-| `scripts/export_chatgpt_bundle.py` | Targeted request-file/files/paths/project/context safe bundle exporter for ChatGPT | P2 | machine, codex, developer |
-| `shared_systems/*/SYSTEM_MANIFEST.json` | Shared system source of truth per module | P2 | machine, codex, developer |
-| `docs/CHECKPOINT.md` | Historical checkpoint log | P3 | developer |
-| `docs/DEV_CONTINUITY.md` | Historical continuity note | P3 | developer |
-| `docs/review_artifacts/*.md` | Evidence and review outputs; not policy authority | P3 | product reviewer, developer |
+- `docs/governance/FIRST_PRINCIPLES.md`
+- `docs/governance/GOVERNANCE_HIERARCHY.md`
+- `docs/governance/SELF_VERIFICATION_POLICY.md`
+- `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
+- `docs/governance/ADMISSION_GATE_POLICY.md`
+- `docs/governance/ANTI_DRIFT_POLICY.md`
+- `docs/governance/DEVIATION_INTELLIGENCE_POLICY.md`
+- `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
+- `docs/governance/CREATIVE_REASONING_POLICY.md`
+- `docs/governance/AGENT_CHARACTER_PROFILE.md`
 
-## Authority Rules
+## Canonical Index
 
-1. If `P0` and `P1/P2/P3` conflict, `P0` wins.
-2. `P3` files are non-authoritative for task routing and scope control.
-3. Project-level changes must resolve project truth from `projects/*/PROJECT_MANIFEST.json`, not from historical notes.
+| File | Role | Priority |
+| --- | --- | --- |
+| `README.md` | Root architecture and operating model | P0 |
+| `REPO_MAP.md` | Fast repository navigation and bootstrap map | P0 |
+| `MACHINE_CONTEXT.md` | Deterministic machine context | P0 |
+| `workspace_config/workspace_manifest.json` | Workspace registry and statuses | P0 |
+| `workspace_config/codex_manifest.json` | Machine onboarding and read order contracts | P0 |
+| `workspace_config/GITHUB_SYNC_POLICY.md` | Sync and repo-visible completion rules | P0 |
+| `workspace_config/AGENT_EXECUTION_POLICY.md` | Execution boundaries and refusal rules | P0 |
+| `workspace_config/MACHINE_REPO_READING_RULES.md` | Deterministic reading contract | P0 |
+| `docs/CHATGPT_BUNDLE_EXPORT.md` | Targeted external reading protocol | P1 |
+| `docs/repo_publication_policy.md` | Publication-safe boundary policy | P1 |
+| `workspace_config/SAFE_MIRROR_MANIFEST.json` | Safe mirror machine snapshot | P1 |
+| `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md` | Safe mirror evidence report | P2 |
+| `docs/review_artifacts/PUBLIC_REPO_SANITIZATION_REPORT.md` | Legacy/non-canonical historical artifact | P3 |
+
+## Conflict Rule
+
+1. First Principles and Governance Hierarchy override lower layers.
+2. `workspace_config/workspace_manifest.json` and `workspace_config/codex_manifest.json` override narrative docs.
+3. Review artifacts are evidence logs, not canonical policy authority.

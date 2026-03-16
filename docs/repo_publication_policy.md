@@ -1,74 +1,54 @@
 # Repository Publication Policy
 
-## Scope
+## Canonical Publication Model
 
-This repository is maintained as a **public audit/core workspace**.
+- Working source of truth for development: `E:\CVVCODEX`
+- Public safe mirror only: `WorkFLOW2` via `safe_mirror/main`
+- `WorkFLOW2` is not a full working repository
+- Official ChatGPT reading path: targeted bundle export (`scripts/export_chatgpt_bundle.py`)
 
-Canonical public safe mirror state is `safe_mirror/main` (`WorkFLOW2`).
+## Governance Requirement
 
-Canonical local preparation root is `E:\CVVCODEX`.
+Publication and sharing decisions must follow governance brain stack:
 
-Publication-safe synchronization model:
+- `docs/governance/FIRST_PRINCIPLES.md`
+- `docs/governance/GOVERNANCE_HIERARCHY.md`
+- `docs/governance/ADMISSION_GATE_POLICY.md`
+- `docs/governance/SELF_VERIFICATION_POLICY.md`
+- `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
+- `docs/governance/ANTI_DRIFT_POLICY.md`
 
-1. sanitize and validate locally in `E:\CVVCODEX`
-2. build safe mirror manifest/report
-3. sync approved safe state to GitHub `WorkFLOW2` via `safe_mirror`
-4. use targeted bundle export for ChatGPT reading requests
+## What Is Allowed In WorkFLOW2
 
-Legacy remote note:
+- root architecture docs (`README.md`, `REPO_MAP.md`, `MACHINE_CONTEXT.md`)
+- governance/policy/manifests in `workspace_config/`
+- `docs/` needed for machine-readable audit context
+- project/source files approved by safe state policy
 
-- `origin` (`WorkFLOW`) is non-canonical in this architecture.
+## What Is Forbidden In WorkFLOW2
 
-## ChatGPT Reading Boundary
+- secrets (`.env*`, keys, tokens, credentials, cookies, sessions)
+- network/tunnel/router/publication artifacts
+- runtime dumps, logs, tmp/cache artifacts
+- local machine-only traces and diagnostics
+- legacy publication tooling (`tools/public_mirror/*`)
 
-ChatGPT reading must be request-scoped via:
+## Publication-Safe Workflow
 
-- `python scripts/export_chatgpt_bundle.py <mode> ...`
+1. perform work and validation in `E:\CVVCODEX`
+2. reconcile docs/manifests/policy with repo reality
+3. run sync and self-verification gates
+4. push approved safe state to `safe_mirror/main`
+5. export request-scoped bundle for ChatGPT when needed
 
-Full repository exposure is non-canonical for task-scoped ChatGPT analysis.
+## Completion Gate
 
-## Published in Public Repository
+Completion is forbidden without all three:
 
-The public repository intentionally keeps:
+- repo-visible truth
+- sync integrity (`HEAD == safe_mirror/main`, divergence `0/0`)
+- self-verification pass
 
-1. `README.md`, `REPO_MAP.md`, `MACHINE_CONTEXT.md`
-2. `workspace_config/**` governance, manifests, and policy contracts
-3. `scripts/**` workspace orchestration and validation entrypoints
-4. `projects/**` source, manifests, docs, and active/supporting modules
-5. `shared_systems/**` reusable system modules and system manifests
-6. `docs/**` architecture, governance, and review artifacts (sanitized)
+## Legacy Note
 
-## Excluded from Public Repository
-
-The following are intentionally local-only and must not be committed:
-
-1. secrets (`.env*`, keys, tokens, credentials, cookies, sessions)
-2. runtime/debug output (`runtime/**`, `setup_reports/**`, logs, traces, dumps)
-3. transient local caches (`tmp`, `temp`, `cache`, `__pycache__`, `.pytest_cache`, `.mypy_cache`)
-4. local environment trees (`.venv`, `venv`, `node_modules`)
-5. publication/tunnel leftovers (`tools/public_mirror/**`, tunnel credentials, router diagnostics)
-6. heavy local data not required for audit readability (`models`, `datasets`, media caches, setup assets)
-
-## Sanitization Rules
-
-1. No real secrets in tracked files.
-2. No hardcoded machine-specific absolute paths; use placeholders (for example: `<REPO_ROOT>`, `<USER_HOME>`).
-3. No private WAN/LAN diagnostics in tracked state.
-4. If an artifact is required for audit context but contains sensitive values, commit only a sanitized form.
-
-## External Auditor Reading Order
-
-1. `README.md`
-2. `workspace_config/workspace_manifest.json`
-3. `workspace_config/codex_manifest.json`
-4. `docs/INSTRUCTION_INDEX.md`
-5. target `PROJECT_MANIFEST.json` and target project `README.md`
-
-## Publication Gate
-
-Before declaring any task complete:
-
-1. `git status` must be clean.
-2. `HEAD` must equal `safe_mirror/main`.
-3. required outputs must be repo-visible on GitHub.
-4. `workspace_config/SAFE_MIRROR_MANIFEST.json` must be refreshed for current state.
+- Remote `origin` (`WorkFLOW`) is legacy/non-canonical for this architecture.

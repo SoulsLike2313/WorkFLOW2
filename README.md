@@ -1,238 +1,100 @@
-# CVVCODEX Multi-Project Repository
+# CVVCODEX Workspace
 
-## Overview
+## Canonical Architecture
 
-This repository is a structured multi-project workspace.
+- Working source of truth: `E:\CVVCODEX`.
+- Public safe mirror only: `WorkFLOW2` (`safe_mirror/main`, `https://github.com/SoulsLike2313/WorkFLOW2.git`).
+- `WorkFLOW2` is not the full working repository and must receive only approved safe state.
+- Official external reading channel for ChatGPT: targeted bundle export (`scripts/export_chatgpt_bundle.py`).
+- Governance brain stack is mandatory interpretation layer for all machine/agent execution.
 
-Current engineering priority is one active platform module:
+## Active Project
 
-- `projects/platform_test_agent`
+- Active project slug: `platform_test_agent`
+- Active path: `projects/platform_test_agent`
+- Canonical project registry source: `workspace_config/workspace_manifest.json`
 
-## Active Module
+## Canonical Workflow
 
-Primary active module:
+1. Local work and validation in `E:\CVVCODEX`.
+2. Reconcile docs/manifests/policy against repo reality.
+3. Run sync and self-verification gates.
+4. Push approved safe state to `safe_mirror/main` (`WorkFLOW2`).
+5. For ChatGPT reading, export targeted bundle instead of exposing full repo.
 
-- `projects/platform_test_agent`
+## Governance Brain Stack (Mandatory)
 
-Primary references:
+### Level 0
 
-- `projects/platform_test_agent/README.md`
-- `projects/platform_test_agent/PROJECT_MANIFEST.json`
+- `docs/governance/FIRST_PRINCIPLES.md`
 
-## Platform Direction (Active Module)
+### Level 1-4 Integration Anchor
 
-The active module is a tester agent workflow (audit-first gate), not an app product layer.
+- `docs/governance/GOVERNANCE_HIERARCHY.md`
+- `docs/governance/SELF_VERIFICATION_POLICY.md`
+- `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
+- `docs/governance/ADMISSION_GATE_POLICY.md`
+- `docs/governance/ANTI_DRIFT_POLICY.md`
+- `docs/governance/DEVIATION_INTELLIGENCE_POLICY.md`
+- `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
+- `docs/governance/CREATIVE_REASONING_POLICY.md`
+- `docs/governance/AGENT_CHARACTER_PROFILE.md`
 
-Primary workflow:
+## Completion Gate (Hard)
 
-1. project intake (`path` + `slug` + manifest resolution)
-2. verification/readiness/UI-QA/reporting/localization/audit checks
-3. evidence collection (screenshots/logs/traces/summaries)
-4. final machine audit report
-5. manual testing admission verdict (`PASS` or `PASS_WITH_WARNINGS` required)
+Completion is forbidden if any of the following is missing:
 
-## Root-Level Structure
+- repo-visible truth in tracked files,
+- sync parity with `safe_mirror/main`,
+- mandatory self-verification pass.
 
-Top-level purpose:
+Required checks:
 
-- `docs/`: repository-level documentation and review artifacts.
-- `projects/`: project source roots.
-- `shared_systems/`: portable reusable system modules.
-- `scripts/`: workspace bootstrap, validation, startup, and utility scripts.
-- `workspace_config/`: machine-readable workspace governance and templates.
-- `runtime/`: generated runtime and diagnostics artifacts.
+- `git status --short --branch`
+- `git rev-parse HEAD`
+- `git rev-parse safe_mirror/main`
+- `git rev-list --left-right --count HEAD...safe_mirror/main`
+- `python scripts/check_repo_sync.py --remote safe_mirror --branch main`
 
-## Local Preparation -> Public Safe Mirror Model
+## Targeted ChatGPT Bundle Export
 
-- Canonical local working root: `E:\CVVCODEX`
-- Local root is source of truth for development and heavy validation.
-- GitHub `WorkFLOW2` (`safe_mirror/main`) is the public safe mirror target only.
-- ChatGPT reading is **CLI-first targeted bundle export**, not full-repository exposure.
-- Publication-safe state manifest is generated at:
-  - `workspace_config/SAFE_MIRROR_MANIFEST.json`
-  - `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
-
-Build publication-safe mirror metadata from local root:
-
-```powershell
-python scripts/build_safe_mirror_manifest.py --repo-root E:\CVVCODEX
-```
-
-## Targeted ChatGPT Bundle Export (CLI-First)
-
-Canonical exporter:
+Canonical command:
 
 ```powershell
 python scripts/export_chatgpt_bundle.py <mode> [options]
 ```
 
-Supported modes:
+Modes:
 
-- `context`: machine-readable baseline context.
-- `files --include ...`: explicit file list.
-- `paths --include ...`: mixed file/directory list.
-- `project --slug <slug>`: policy-approved bundle for one project.
-- `request --request-file <file>`: main practical flow for ChatGPT file requests.
+- `context`
+- `files --include ...`
+- `paths --include ...`
+- `project --slug <slug>`
+- `request --request-file <file>`
 
-Core workflow:
-
-1. ChatGPT requests exact files/paths.
-2. User passes that list via CLI args or request file.
-3. Codex builds sanitized bundle zip with manifest + report.
-4. User uploads bundle to ChatGPT.
-
-Reference:
+Protocol reference:
 
 - `docs/CHATGPT_BUNDLE_EXPORT.md`
 
-Fast orientation files:
+## Root Map
 
-- `REPO_MAP.md`: concise directory map and reading order.
-- `MACHINE_CONTEXT.md`: machine-first context recovery guide.
+- `projects/` - project roots.
+- `shared_systems/` - reusable systems.
+- `workspace_config/` - governance/manifests/policies.
+- `scripts/` - execution and validation scripts.
+- `docs/` - governance and review artifacts.
+- `runtime/` - generated runtime outputs (non-authoritative).
 
-## Privacy and Publication Rules
+## Source-of-Truth Order
 
-- Repository is maintained as a public audit/core workspace.
-- Public canonical snapshot remote is `safe_mirror/main` (`WorkFLOW2`).
-- Local-only changes are not accepted as complete until pushed to `safe_mirror/main`.
-- Publication boundaries are defined in `docs/repo_publication_policy.md`.
-- Public mirror/tunnel/publication workflows are non-canonical and excluded from this repository.
-- Router/WAN/LAN diagnostics and publication artifacts must not be committed.
-- Legacy remote `origin` (`WorkFLOW`) is non-canonical for this architecture.
+1. `docs/governance/FIRST_PRINCIPLES.md`
+2. `docs/governance/GOVERNANCE_HIERARCHY.md`
+3. `workspace_config/workspace_manifest.json`
+4. `workspace_config/codex_manifest.json`
+5. project `PROJECT_MANIFEST.json`
+6. this `README.md`
+7. review artifacts as evidence only
 
-## Task Governance Layer
+## Legacy Note
 
-Strict machine task governance is defined in:
-
-- `workspace_config/TASK_RULES.md`
-- `workspace_config/EXECUTION_ADMISSION_POLICY.md`
-- `workspace_config/TASK_SOURCE_POLICY.md`
-- `workspace_config/COMMUNICATION_STYLE_POLICY.md`
-- `workspace_config/task_manifest.schema.json`
-- `workspace_config/TASK_INTAKE_REFERENCE.md`
-- `workspace_config/AGENT_EXECUTION_POLICY.md`
-- `workspace_config/MACHINE_REPO_READING_RULES.md`
-- `workspace_config/PROMPT_OUTPUT_POLICY.md`
-- `workspace_config/PROJECT_AUDIT_POLICY.md`
-- `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-- `workspace_config/shared_systems_registry.json`
-- `docs/CURRENT_PLATFORM_STATE.md`
-- `docs/NEXT_CANONICAL_STEP.md`
-- `docs/MACHINE_CHANGELOG.md`
-
-Acceptance gate:
-
-- no strict parameters -> no task acceptance.
-- only strict repo-compliant prompts are executable.
-- missing strict task contract -> `STATUS: REJECTED`, `REASON: insufficient-contract`.
-- non-canonical request -> `STATUS: REJECTED`, `REASON: non-canonical`.
-- out-of-scope request -> `STATUS: REJECTED`, `REASON: out-of-scope`.
-- no post-task `git add` -> `git commit` -> `git push` => task is `NOT_COMPLETED`.
-- communication must follow `workspace_config/COMMUNICATION_STYLE_POLICY.md`.
-
-Mandatory pre-task read gate:
-
-1. `README.md`
-2. `workspace_config/workspace_manifest.json`
-3. `workspace_config/codex_manifest.json`
-4. `workspace_config/TASK_RULES.md`
-5. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
-6. `workspace_config/TASK_SOURCE_POLICY.md`
-7. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
-8. `workspace_config/AGENT_EXECUTION_POLICY.md`
-9. `workspace_config/MACHINE_REPO_READING_RULES.md`
-10. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-11. `workspace_config/PROJECT_AUDIT_POLICY.md`
-12. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-13. `workspace_config/GITHUB_SYNC_POLICY.md`
-14. `workspace_config/COMPLETION_GATE_RULES.md`
-15. `docs/INSTRUCTION_INDEX.md`
-16. `docs/CURRENT_PLATFORM_STATE.md`
-17. `docs/NEXT_CANONICAL_STEP.md`
-18. relevant `PROJECT_MANIFEST.json`
-19. relevant project `README.md`
-20. relevant `CODEX.md` if present
-21. relevant `SYSTEM_MANIFEST.json` if shared system is involved
-
-Shared system workflows:
-
-- install: `python scripts/install_system.py --project-slug <slug> --system-slug <system_slug>`
-- remove: `python scripts/remove_system.py --project-slug <slug> --system-slug <system_slug>`
-
-## Project Priority and Status
-
-Status source of truth:
-
-- `workspace_config/workspace_manifest.json`
-
-Current priority model:
-
-- `active`: `platform_test_agent`
-- `supporting`: `voice_launcher`
-- `experimental`: `adaptive_trading`
-- `manual_testing_blocked`: `tiktok_agent_platform`
-- `audit_required`: `game_ru_ai`
-
-Canonical state/next-step references:
-
-- current state snapshot: `docs/CURRENT_PLATFORM_STATE.md`
-- canonical next step: `docs/NEXT_CANONICAL_STEP.md`
-- continuity log: `docs/MACHINE_CHANGELOG.md`
-
-## Canonical Project Registry
-
-Workspace-level projects (and only these) are canonical:
-
-- `platform_test_agent` -> `projects/platform_test_agent` (`active`)
-- `tiktok_agent_platform` -> `projects/wild_hunt_command_citadel/tiktok_agent_platform` (`manual_testing_blocked`)
-- `voice_launcher` -> `projects/voice_launcher` (`supporting`)
-- `adaptive_trading` -> `projects/adaptive_trading` (`experimental`)
-- `game_ru_ai` -> `projects/GameRuAI` (`audit_required`)
-
-Tree paths that exist but are non-registry:
-
-- `projects/wild_hunt_command_citadel` is a project-group container path and is not a standalone workspace project.
-- `projects/wild_hunt_command_citadel/shortform_core` is a local legacy residue path (if present on workstation), ignored by git and not GitHub-visible; it is not part of workspace project inventory.
-- `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/PROJECT_MANIFEST.json` and `projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/PROJECT_MANIFEST.json` are product layer manifests, not workspace project registry entries.
-
-## Source of Truth Order
-
-If any document conflicts, interpret repository truth in this order:
-
-1. `workspace_config/workspace_manifest.json` (active project, statuses, registry, non-registry paths, layer manifest registry)
-2. canonical `PROJECT_MANIFEST.json` for each registry project
-3. this `README.md` as root navigation map
-4. review artifacts in `docs/review_artifacts/` as evidence logs, not registry authority
-
-## Root Entrypoints for the Active Module
-
-Run from repository root (`.`):
-
-Canonical user-mode root entrypoint:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\projects\platform_test_agent\run_project.ps1 -Mode intake -TargetProjectPath projects\wild_hunt_command_citadel\tiktok_agent_platform
-```
-
-Intake mode:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\projects\platform_test_agent\run_project.ps1 -Mode intake -TargetProjectPath projects\GameRuAI
-```
-
-Audit mode:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\projects\platform_test_agent\run_project.ps1 -Mode audit -TargetProjectPath projects\wild_hunt_command_citadel\tiktok_agent_platform -TargetProjectSlug tiktok_agent_platform
-```
-
-Verification:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\projects\platform_test_agent\run_project.ps1 -Mode verify -TargetProjectSlug game_ru_ai
-```
-
-Manual test policy:
-
-- manual testing is blocked for guarded projects until tester-agent final audit status is `PASS` or `PASS_WITH_WARNINGS`.
-- repo-visible audit summaries are mandatory for admission.
+- `origin` (`WorkFLOW`) is legacy/non-canonical for completion and safe mirror sync.

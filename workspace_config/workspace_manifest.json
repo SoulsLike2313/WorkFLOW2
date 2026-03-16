@@ -69,7 +69,28 @@
     "public_safe_mirror_remote": "safe_mirror",
     "public_safe_mirror_repo": "WorkFLOW2",
     "public_safe_mirror_url": "https://github.com/SoulsLike2313/WorkFLOW2.git",
-    "legacy_origin_non_canonical": true
+    "legacy_origin_non_canonical": true,
+    "governance_brain_stack_required": true,
+    "governance_brain_stack_paths": [
+      "docs/governance/FIRST_PRINCIPLES.md",
+      "docs/governance/GOVERNANCE_HIERARCHY.md",
+      "docs/governance/SELF_VERIFICATION_POLICY.md",
+      "docs/governance/CONTRADICTION_CONTROL_POLICY.md",
+      "docs/governance/ADMISSION_GATE_POLICY.md",
+      "docs/governance/ANTI_DRIFT_POLICY.md",
+      "docs/governance/DEVIATION_INTELLIGENCE_POLICY.md",
+      "docs/governance/GOVERNANCE_EVOLUTION_POLICY.md",
+      "docs/governance/CREATIVE_REASONING_POLICY.md",
+      "docs/governance/AGENT_CHARACTER_PROFILE.md"
+    ],
+    "working_source_of_truth_root": "E:\\CVVCODEX",
+    "public_safe_mirror_only_not_full_repo": true,
+    "targeted_bundle_export_official_channel": true,
+    "targeted_bundle_export_script": "scripts/export_chatgpt_bundle.py",
+    "completion_requires_repo_visible_truth_sync_self_verification": true,
+    "self_verification_policy_path": "docs/governance/SELF_VERIFICATION_POLICY.md",
+    "contradiction_control_policy_path": "docs/governance/CONTRADICTION_CONTROL_POLICY.md",
+    "admission_gate_policy_path": "docs/governance/ADMISSION_GATE_POLICY.md"
   },
   "shared_systems": {
     "root_path": "shared_systems",
@@ -400,5 +421,30 @@
     "public_safe_mirror_repo": "WorkFLOW2",
     "public_safe_mirror_url": "https://github.com/SoulsLike2313/WorkFLOW2.git",
     "legacy_remote_non_canonical": "origin"
+  },
+  "canonical_architecture": {
+    "working_source_of_truth_root": "E:\\CVVCODEX",
+    "public_safe_mirror_remote": "safe_mirror",
+    "public_safe_mirror_repo": "WorkFLOW2",
+    "public_safe_mirror_only": true,
+    "public_safe_mirror_not_full_working_repo": true,
+    "chatgpt_external_reading_channel": "targeted_bundle_export",
+    "targeted_bundle_export_script": "scripts/export_chatgpt_bundle.py"
+  },
+  "governance_brain_stack": {
+    "required": true,
+    "interpretation_layer_for_all_agents": true,
+    "documents": [
+      "docs/governance/FIRST_PRINCIPLES.md",
+      "docs/governance/GOVERNANCE_HIERARCHY.md",
+      "docs/governance/SELF_VERIFICATION_POLICY.md",
+      "docs/governance/CONTRADICTION_CONTROL_POLICY.md",
+      "docs/governance/ADMISSION_GATE_POLICY.md",
+      "docs/governance/ANTI_DRIFT_POLICY.md",
+      "docs/governance/DEVIATION_INTELLIGENCE_POLICY.md",
+      "docs/governance/GOVERNANCE_EVOLUTION_POLICY.md",
+      "docs/governance/CREATIVE_REASONING_POLICY.md",
+      "docs/governance/AGENT_CHARACTER_PROFILE.md"
+    ]
   }
 }

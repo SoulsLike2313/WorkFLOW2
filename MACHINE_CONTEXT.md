@@ -1,80 +1,59 @@
 # MACHINE_CONTEXT
 
-## Goal
+## Canonical State
 
-Provide a deterministic context snapshot for Codex/ChatGPT/new machine readers.
+- Working source of truth: `E:\CVVCODEX`
+- Public safe mirror only: `WorkFLOW2` via `safe_mirror/main`
+- Public mirror is not full working repository
+- Canonical external reading path: targeted bundles from `scripts/export_chatgpt_bundle.py`
+- Governance brain stack is mandatory for interpretation and execution
+- Active project: `platform_test_agent`
 
-## Current Canonical State
-
-- Repository visibility model: public audit/core workspace.
-- Local preparation root: `E:\CVVCODEX`.
-- Local development source of truth: `E:\CVVCODEX`.
-- Canonical public safe snapshot: GitHub `WorkFLOW2` (`safe_mirror/main`).
-- Canonical ChatGPT-reading mechanism: targeted safe bundle export (`scripts/export_chatgpt_bundle.py`).
-- Active project: `platform_test_agent`.
-- Guarded projects:
-  - `tiktok_agent_platform` (`manual_testing_blocked`)
-  - `game_ru_ai` (`audit_required`)
-
-## Mandatory Read Gate
-
-Follow `workspace_config/MACHINE_REPO_READING_RULES.md` exactly.
-
-Minimal boot order:
+## Mandatory Bootstrap Read Order
 
 1. `README.md`
 2. `workspace_config/workspace_manifest.json`
 3. `workspace_config/codex_manifest.json`
-4. `workspace_config/TASK_RULES.md`
-5. `workspace_config/AGENT_EXECUTION_POLICY.md`
-6. `workspace_config/MACHINE_REPO_READING_RULES.md`
-7. `docs/INSTRUCTION_INDEX.md`
-8. target `PROJECT_MANIFEST.json`
+4. `REPO_MAP.md`
+5. `MACHINE_CONTEXT.md`
+6. `docs/INSTRUCTION_INDEX.md`
+7. `docs/CURRENT_PLATFORM_STATE.md`
+8. `docs/NEXT_CANONICAL_STEP.md`
+9. `docs/governance/FIRST_PRINCIPLES.md`
+10. `docs/governance/GOVERNANCE_HIERARCHY.md`
+11. `docs/governance/SELF_VERIFICATION_POLICY.md`
+12. `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
+13. `docs/governance/ADMISSION_GATE_POLICY.md`
+14. `docs/governance/ANTI_DRIFT_POLICY.md`
+15. `docs/governance/DEVIATION_INTELLIGENCE_POLICY.md`
+16. `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
+17. `docs/governance/CREATIVE_REASONING_POLICY.md`
+18. `docs/governance/AGENT_CHARACTER_PROFILE.md`
+19. `workspace_config/GITHUB_SYNC_POLICY.md`
+20. `workspace_config/AGENT_EXECUTION_POLICY.md`
+21. `workspace_config/MACHINE_REPO_READING_RULES.md`
+22. target `PROJECT_MANIFEST.json`
 
-## Execution Rules
+## Execution Guardrails
 
-- No strict task contract -> `STATUS: REJECTED`.
-- No side work, no silent scope expansion.
-- Completion requires `git add -> git commit -> git push`.
-- Unsynced local/remote state -> `NOT_COMPLETED`.
+- No completion without repo-visible truth.
+- No completion without sync parity (`HEAD == safe_mirror/main`, divergence `0/0`).
+- No completion without mandatory self-verification.
+- No side work and no silent scope expansion.
 
-## Fast Project Resolution
+## Canonical ChatGPT Request Workflow
 
-Canonical registry source:
-
-- `workspace_config/workspace_manifest.json` -> `project_registry`.
-
-Do not infer projects from folder names alone.
-
-## Shared Systems Resolution
-
-- Registry: `workspace_config/shared_systems_registry.json`
-- Module authority: `shared_systems/<slug>/SYSTEM_MANIFEST.json`
-- Install/remove workflows:
-  - `scripts/install_system.py`
-  - `scripts/remove_system.py`
+1. ChatGPT requests exact files/paths.
+2. User passes request to exporter (`request`, `files`, or `paths` mode).
+3. Exporter performs safety scan.
+4. Exporter writes zip + `CHATGPT_BUNDLE_MANIFEST.json` + `EXPORT_REPORT.md`.
+5. User uploads only produced safe bundle.
 
 ## Non-Canonical Inputs
 
-Do not treat the following as source of truth:
+Do not use as source of truth:
 
-- transient runtime outputs
-- review artifacts as registry authority
-- local-only diagnostics
-- any non-committed local files
-
-## Publication-Safe Mirror State
-
-- Local sanitation/validation is completed before sync to GitHub.
-- Safe mirror manifest source:
-  - `workspace_config/SAFE_MIRROR_MANIFEST.json`
-  - `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
-
-## ChatGPT Request Workflow (CLI-First)
-
-1. ChatGPT requests exact files/paths.
-2. User passes request list to exporter (`files`, `paths`, or `request` mode).
-3. Exporter runs safety scan and writes:
-   - `CHATGPT_BUNDLE_MANIFEST.json`
-   - `EXPORT_REPORT.md`
-   - `chatgpt_bundle_<mode>_<timestamp>.zip`
+- stale review artifacts,
+- runtime-only outputs,
+- local untracked files,
+- legacy remote assumptions.

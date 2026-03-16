@@ -1,66 +1,66 @@
 # REPO_MAP
 
-## Workspace Purpose
+## Canonical Identity
 
-`CVVCODEX` is the local source-of-truth workspace with `WorkFLOW2` as public safe mirror.
+- Local working source: `E:\CVVCODEX`
+- Public safe mirror only: `safe_mirror/main` -> `WorkFLOW2`
+- `WorkFLOW2` is not full development workspace.
+- External reading channel: targeted ChatGPT bundle export.
 
-## Read First
+## Read Order (Bootstrap)
 
 1. `README.md`
 2. `workspace_config/workspace_manifest.json`
 3. `workspace_config/codex_manifest.json`
-4. `docs/CURRENT_PLATFORM_STATE.md`
-5. `docs/NEXT_CANONICAL_STEP.md`
-6. `workspace_config/SAFE_MIRROR_MANIFEST.json`
-7. `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
-
-## Local Root and Sync Target
-
-- Local working root for preparation: `E:\CVVCODEX`
-- Remote publication-safe target: `safe_mirror/main` (`WorkFLOW2`)
-- Rule: local sanitation/validation first, then sync approved state only.
-- ChatGPT reading model: targeted CLI bundle export (`scripts/export_chatgpt_bundle.py`), not full-repository exposure.
-- Legacy remote `origin` (`WorkFLOW`) is non-canonical in current architecture.
+4. `MACHINE_CONTEXT.md`
+5. `docs/INSTRUCTION_INDEX.md`
+6. `docs/CURRENT_PLATFORM_STATE.md`
+7. `docs/NEXT_CANONICAL_STEP.md`
+8. `docs/governance/FIRST_PRINCIPLES.md`
+9. `docs/governance/GOVERNANCE_HIERARCHY.md`
+10. `docs/governance/SELF_VERIFICATION_POLICY.md`
+11. `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
+12. `docs/governance/ADMISSION_GATE_POLICY.md`
+13. `docs/governance/ANTI_DRIFT_POLICY.md`
+14. `docs/governance/DEVIATION_INTELLIGENCE_POLICY.md`
+15. `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
+16. `docs/governance/CREATIVE_REASONING_POLICY.md`
+17. `docs/governance/AGENT_CHARACTER_PROFILE.md`
 
 ## Canonical Top-Level Directories
 
-- `projects/`: product and platform project roots.
-- `shared_systems/`: reusable system modules (`SYSTEM_MANIFEST.json` per module).
-- `workspace_config/`: governance, manifests, execution contracts.
-- `scripts/`: workspace utilities (`validate_workspace`, `install_system`, `remove_system`, sync checks).
-- `docs/`: policy docs and review artifacts.
-- `runtime/`: generated runtime diagnostics (non-source).
+- `projects/` - project roots and manifests.
+- `shared_systems/` - shared module library.
+- `workspace_config/` - machine policies/manifests.
+- `scripts/` - validation, sync, export, startup tooling.
+- `docs/` - governance and review artifacts.
+- `runtime/` - generated runtime outputs.
 
-## Project Registry (Canonical)
+## Project Registry Source
 
-- `platform_test_agent` -> `projects/platform_test_agent` (`active`)
-- `tiktok_agent_platform` -> `projects/wild_hunt_command_citadel/tiktok_agent_platform` (`manual_testing_blocked`)
-- `voice_launcher` -> `projects/voice_launcher` (`supporting`)
-- `adaptive_trading` -> `projects/adaptive_trading` (`experimental`)
-- `game_ru_ai` -> `projects/GameRuAI` (`audit_required`)
+Authoritative registry:
 
-Authority: `workspace_config/workspace_manifest.json`.
+- `workspace_config/workspace_manifest.json` -> `project_registry`
 
-## Non-Registry Paths
+Current canonical active project:
 
-- `projects/wild_hunt_command_citadel` (container path, not standalone project).
-- Layer manifests under TikTok project:
-  - `projects/wild_hunt_command_citadel/tiktok_agent_platform/core/PROJECT_MANIFEST.json`
-  - `projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/PROJECT_MANIFEST.json`
+- `platform_test_agent` -> `projects/platform_test_agent`
 
-## Source of Truth Order
+## External Reading Path
 
-1. `workspace_config/workspace_manifest.json`
-2. `PROJECT_MANIFEST.json` of the target project
-3. `README.md`
-4. `docs/review_artifacts/*` (evidence only, not authority)
+- Public baseline: `WorkFLOW2` safe mirror.
+- Request-scoped context/code: `python scripts/export_chatgpt_bundle.py ...`
+- Full-repo publication for ChatGPT reading is non-canonical.
 
-## Intentional Exclusions
+## Completion Guard
 
-- Public mirror/tunnel/server-publication tooling is excluded from canonical repo workflow.
-- Local network diagnostics and temporary setup reports are excluded from tracked state.
+A task cannot be completed unless:
 
-## Targeted Bundle Entrypoint
+- outputs are repo-visible,
+- sync with `safe_mirror/main` is confirmed,
+- self-verification is completed.
 
-- Exporter: `python scripts/export_chatgpt_bundle.py`
-- Protocol doc: `docs/CHATGPT_BUNDLE_EXPORT.md`
+## Legacy / Non-Canonical
+
+- `origin` (`WorkFLOW`) is legacy remote for this architecture.
+- `docs/review_artifacts/PUBLIC_REPO_SANITIZATION_REPORT.md` is legacy/non-canonical evidence and not in active read order.

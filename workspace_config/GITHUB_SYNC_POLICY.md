@@ -1,85 +1,55 @@
 # GitHub Sync Policy
 
-## Privacy Boundary
+## Canonical Sync Identity
 
-Repository workflow is public-audit-safe.
+- Local working source of truth: `E:\CVVCODEX`
+- Canonical public safe mirror remote: `safe_mirror`
+- Canonical target branch: `safe_mirror/main`
+- Canonical mirror repo: `WorkFLOW2`
+- `WorkFLOW2` is public safe mirror only and not the full working repo
 
-Forbidden in tracked state:
+## Hard Completion Rule
 
-1. public mirror workflows
-2. tunnel/public endpoint scripts and credentials
-3. router/WAN/LAN exposure diagnostics
-4. local publication runtime logs
+No task completion is valid unless all are true:
 
-GitHub visibility is public for audit readability. Public mirror/tunnel publication flows remain non-canonical.
+1. result is repo-visible in tracked files
+2. changes are committed and pushed to `safe_mirror/main`
+3. sync parity is confirmed (`HEAD == safe_mirror/main`, divergence `0/0`)
+4. mandatory self-verification completed
 
-ChatGPT reading is request-scoped via targeted local bundle export:
+If any item fails: `NOT_COMPLETED`.
 
-- `python scripts/export_chatgpt_bundle.py <mode> ...`
-
-Full repository exposure is not required for ChatGPT task execution.
-
-## Mandatory Rule
-
-No task is complete unless the result is visible in GitHub on `safe_mirror/main` (`WorkFLOW2`).
-
-Canonical remotes:
-
-1. local source of truth: `E:\CVVCODEX`
-2. public safe mirror remote: `safe_mirror` -> `https://github.com/SoulsLike2313/WorkFLOW2.git`
-3. legacy remote `origin` (`WorkFLOW`) is non-canonical for completion gate
-
-Local preparation rule:
-
-1. all sanitation and publication-safe validation are executed in local root (`E:\CVVCODEX`)
-2. only approved safe state is synchronized to GitHub
-3. safe mirror state proof is required (`workspace_config/SAFE_MIRROR_MANIFEST.json`)
-
-## Mandatory Post-Task Git Finalization
-
-After every completed task, this exact sequence is mandatory:
+## Mandatory Post-Task Sequence
 
 1. `git add <allowed_task_paths>`
 2. `git commit -m "<task-scoped message>"`
 3. `git push safe_mirror <active_branch>`
+4. run sync gate checks
 
-If sequence is not completed, task status is `NOT_COMPLETED`.
+## Mandatory Sync Checks
 
-## Hard Requirements
+- `git status --short --branch`
+- `git rev-parse HEAD`
+- `git rev-parse safe_mirror/main`
+- `git rev-list --left-right --count HEAD...safe_mirror/main`
+- `python scripts/check_repo_sync.py --remote safe_mirror --branch main`
 
-1. A locally created file that is not committed and pushed is treated as non-existent.
-2. A final report without repo-visible files is rejected.
-3. Runtime-only artifacts are not accepted for review unless duplicated in a repo-visible review area.
-4. If a required file path does not open in GitHub, completion status is `REJECTED`.
+## Repo-Visible Truth Rule
 
-## Mandatory Pre-Report Sync Gate
+- local-only artifacts are non-existent for completion
+- uncommitted files are non-existent for completion
+- unpushed commits are non-existent for completion
+- stale reports cannot replace current sync evidence
 
-Before any final completion claim, the agent must verify:
+## Governance Linkage
 
-1. `HEAD` against `safe_mirror/main`.
-2. push status for the active branch.
-3. expected repo-visible paths.
-4. completion summary path in repo-visible area.
+This policy is interpreted together with:
 
-Mandatory proof:
+- `docs/governance/FIRST_PRINCIPLES.md`
+- `docs/governance/GOVERNANCE_HIERARCHY.md`
+- `docs/governance/SELF_VERIFICATION_POLICY.md`
+- `docs/governance/ADMISSION_GATE_POLICY.md`
 
-5. commit for current task exists in branch history.
-6. pushed commit is visible on `safe_mirror/<active_branch>`.
+## Legacy Note
 
-## Required Verification Commands
-
-1. `git rev-parse HEAD`
-2. `git rev-parse safe_mirror/main`
-3. `git status -sb`
-4. `git ls-tree --name-only -r safe_mirror/main`
-5. `git log --oneline -n 1`
-6. `git rev-list --left-right --count safe_mirror/<active_branch>...HEAD`
-
-## Enforcement
-
-- no GitHub-visible output => no completion
-- no push confirmation => no completion
-- no repo-visible path verification => no completion
-- no post-task `git add` => no completion
-- no post-task `git commit` => no completion
-- no post-task `git push` => no completion
+- `origin` (`WorkFLOW`) is legacy/non-canonical for completion gate decisions.

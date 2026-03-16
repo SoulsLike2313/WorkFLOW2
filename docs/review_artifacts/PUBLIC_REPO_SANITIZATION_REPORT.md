@@ -1,51 +1,29 @@
-# Public Repo Sanitization Report
+# PUBLIC_REPO_SANITIZATION_REPORT (LEGACY)
 
-- generated_at_utc: `2026-03-16T16:01:55.000000+00:00`
-- scope: `publication_safe_finish`
-- local_source_root: `E:\CVVCODEX`
-- repo_name: `WorkFLOW`
-- branch: `main`
-- basis_head_sha: `ab0a660317a0a104aa1b7203f0c908bc068965ee`
-- tracking_branch: `origin/main`
-- ahead/behind: `1/0`
-- tracked_file_count: `1024`
+Status: `LEGACY_NON_CANONICAL`
 
-## Removed From Tracking
-- `setup_assets/windows10pro/SetupHost_strings.txt`
-- `setup_assets/windows10pro/Strings.zip`
-- `setup_assets/windows10pro/sdsbase.js`
-- `setup_assets/windows10pro/strings_tool/Eula.txt`
-- `setup_assets/windows10pro/windows10iso_page.html`
+This artifact is retained for historical traceability only.
 
-## Excluded Categories
-- .env and secret files
-- credentials/private keys/tokens
-- runtime/setup_reports/logs/tmp/cache artifacts
-- publication tunnel/mirror leftovers
-- network diagnostics and WAN/LAN exposure artifacts
-- heavy local setup assets not required for audit readability
+It is **not** part of active bootstrap reading order and must not be used as canonical source of truth.
 
-## Mandatory Governance / Readability Files
-- `README.md`
-- `REPO_MAP.md`
-- `MACHINE_CONTEXT.md`
-- `docs/INSTRUCTION_INDEX.md`
-- `workspace_config/workspace_manifest.json`
-- `workspace_config/codex_manifest.json`
+Canonical replacement artifacts:
+
+- `workspace_config/SAFE_MIRROR_MANIFEST.json`
+- `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
+
+Canonical policy anchors:
+
+- `docs/governance/FIRST_PRINCIPLES.md`
+- `docs/governance/GOVERNANCE_HIERARCHY.md`
 - `workspace_config/GITHUB_SYNC_POLICY.md`
 - `workspace_config/AGENT_EXECUTION_POLICY.md`
 - `workspace_config/MACHINE_REPO_READING_RULES.md`
-- `workspace_config/SAFE_MIRROR_MANIFEST.json`
-- `docs/CHATGPT_BUNDLE_EXPORT.md`
-- `scripts/export_chatgpt_bundle.py`
 
-## Safe Mirror Artifacts
-- manifest: `workspace_config/SAFE_MIRROR_MANIFEST.json`
-- report: `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
+Legacy basis preserved from prior run:
 
-## Secret Scan
-- status: `PASS`
-- finding_count: `0`
+- generated_at_utc: `2026-03-16T16:01:55.000000+00:00`
+- basis_head_sha: `ab0a660317a0a104aa1b7203f0c908bc068965ee`
 
-## Verdict
-- publication_safe_verdict: `PASS`
+Interpretation rule:
+
+- if this file conflicts with current manifests/policies/repo reality, this file is invalid by design.

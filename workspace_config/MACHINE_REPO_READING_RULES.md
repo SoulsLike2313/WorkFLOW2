@@ -1,201 +1,88 @@
 # Machine Repo Reading Rules (Execution Gate)
 
-## Rule 1: Task Start Is Forbidden Without Read Gate
+## Rule 1: Task Start Forbidden Without Read Gate
 
-Codex must complete this exact order before any task analysis or code change:
+Machine must complete this canonical order before execution:
 
 1. `README.md`
 2. `workspace_config/workspace_manifest.json`
 3. `workspace_config/codex_manifest.json`
-4. `workspace_config/TASK_RULES.md`
-5. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
-6. `workspace_config/TASK_SOURCE_POLICY.md`
-7. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
-8. `workspace_config/AGENT_EXECUTION_POLICY.md`
-9. `workspace_config/MACHINE_REPO_READING_RULES.md`
-10. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-11. `workspace_config/PROJECT_AUDIT_POLICY.md`
-12. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-13. `workspace_config/GITHUB_SYNC_POLICY.md`
-14. `workspace_config/COMPLETION_GATE_RULES.md`
-15. `docs/INSTRUCTION_INDEX.md`
-16. `docs/CURRENT_PLATFORM_STATE.md`
-17. `docs/NEXT_CANONICAL_STEP.md`
-18. relevant `PROJECT_MANIFEST.json`
-19. relevant project `README.md`
-20. relevant `CODEX.md` if present
-21. relevant `SYSTEM_MANIFEST.json` if shared system is involved
-
-If any mandatory step is skipped, task status is `REJECTED`.
-
-## Rule 2: Source of Truth Resolution
-
-1. root `README.md` = workspace map
-2. `workspace_config/workspace_manifest.json` = workspace registry
-3. `workspace_config/codex_manifest.json` = machine onboarding policy
-4. `PROJECT_MANIFEST.json` = project source of truth
-5. `SYSTEM_MANIFEST.json` = shared system source of truth
-
-Conflict rule: higher item in this list wins.
-
-State/priority continuity rules:
-
-6. `docs/CURRENT_PLATFORM_STATE.md` = canonical current state snapshot
-7. `docs/NEXT_CANONICAL_STEP.md` = canonical immediate execution direction
-8. `docs/MACHINE_CHANGELOG.md` = canonical machine continuity log
-9. `workspace_config/COMMUNICATION_STYLE_POLICY.md` = mandatory communication behavior contract
-10. `workspace_config/SAFE_MIRROR_MANIFEST.json` = publication-safe local-to-remote state snapshot
-
-## Rule 3: Active Project Detection
-
-1. Read `workspace_config/workspace_manifest.json`.
-2. Resolve `active_project`.
-3. Resolve matching `project_registry[].manifest_path`.
-4. Canonical tester-agent active project is `platform_test_agent`.
-
-No directory-name guessing is allowed.
-
-## Rule 4: Shared Systems Detection
-
-1. Check `shared_systems/`.
-2. For each child folder, require `SYSTEM_MANIFEST.json`.
-3. If folder or manifest is missing, report `not_configured` or `incomplete_registry`.
-
-## Rule 5: Project Status Detection
-
-Primary source:
-
-- `project_registry[].status`
-
-Secondary mirror:
-
-- `project_status_index`
-
-If mismatch exists, treat registry as authoritative and report mismatch.
-
-## Rule 6: Installed Systems Detection
-
-Per project:
-
-1. Read project `PROJECT_MANIFEST.json`.
-2. Use `installed_systems` if present.
-3. If missing, report `unknown_not_declared`.
-
-Do not infer installed systems from folder names only.
-
-## Rule 7: Manifest Detection
-
-1. Workspace manifest: `workspace_config/workspace_manifest.json`
-2. Codex manifest: `workspace_config/codex_manifest.json`
-3. Project manifests: `projects/**/PROJECT_MANIFEST.json`
-4. System manifests: `shared_systems/**/SYSTEM_MANIFEST.json`
-5. Shared systems registry: `workspace_config/shared_systems_registry.json`
-
-## Rule 8: Verification Entrypoint Detection
-
-1. Project-level source: `PROJECT_MANIFEST.json -> verification_entrypoints`
-2. Workspace-level source: `workspace_manifest.json -> verification_entrypoints`
-3. For project execution, project-level entrypoint is mandatory.
-
-## Rule 9: Install/Remove Workflow Detection
-
-Install workflow source:
-
-- `scripts/install_system.py` or `scripts/install_system.ps1`
-
-Remove workflow source:
-
-- `scripts/remove_system.py` or `scripts/remove_system.ps1`
-
-If scripts are absent, workflow status is `not_implemented`.
-
-## Rule 10: Non-Guessing Failure Contract
-
-If required contract data is missing, Codex must emit:
-
-- `STATUS: REJECTED`
-- `REASON: insufficient_contract_data`
-
-and must not execute speculative edits.
-
-## Rule 11: Task Contract Enforcement Outcomes
-
-1. Without strict task contract: task is `REJECTED`.
-2. Without scope boundaries: code changes are forbidden.
-3. Without acceptance criteria: completion claim is forbidden.
-4. Without validation steps: confirmation claim is forbidden.
-5. Without canonical workflow match to `docs/NEXT_CANONICAL_STEP.md`: task is `REJECTED`.
-6. Broad creative asks without strict contract are `REJECTED`.
-
-## Rule 12: Prompt Output Policy Detection
-
-For prompt-writing tasks, machine must read and enforce:
-
-- `workspace_config/PROMPT_OUTPUT_POLICY.md`
-
-Prompt-writing output is valid only if:
-
-1. exactly one copyable prompt block is returned;
-2. prompt block is self-contained (goal, scope, do-not-do, expected output format);
-3. no analysis is inside prompt block;
-4. no alternate prompt variants are returned unless explicitly requested;
-5. short prompt requests return only short prompt block.
-
-## Rule 13: Tester-Agent Admission Gate
-
-For guarded projects:
-
-1. detect project status (`audit_required` or `manual_testing_blocked`);
-2. enforce tester-agent audit admission from `workspace_config/PROJECT_AUDIT_POLICY.md`;
-3. if repo-visible audit evidence is missing, keep project in `manual_testing_blocked`.
-
-## Rule 14: Rejection Reason Contract
-
-Allowed rejection reasons:
-
-1. `insufficient-contract`
-2. `non-canonical`
-3. `out-of-scope`
-
-Mandatory response fragment:
-
-- `STATUS: REJECTED`
-- `REASON: <allowed_reason>`
-- `NO EXECUTION`
-
-## Rule 15: Post-Task Git Finalization Detection
-
-Completion is valid only when machine can confirm:
-
-1. task outputs are staged and committed
-2. commit is pushed to remote branch
-3. remote branch head matches local head (canonical remote: `safe_mirror/main`)
-4. worktree is clean after push
-
-If any item fails, completion status is `NOT_COMPLETED`.
-
-## Rule 16: Communication Style Contract Detection
-
-Machine must enforce:
-
-- `workspace_config/COMMUNICATION_STYLE_POLICY.md`
-
-If response behavior conflicts with this policy, compliance status is `FAIL`.
-
-## Rule 17: Fast Context Files
-
-For rapid context recovery, machine should read:
-
-1. `REPO_MAP.md`
-2. `MACHINE_CONTEXT.md`
-
-These files do not override `workspace_config/workspace_manifest.json` or project manifests.
-
-## Rule 18: ChatGPT Targeted Bundle Reading Contract
-
-For ChatGPT request-scoped code/context sharing, canonical path is:
+4. `REPO_MAP.md`
+5. `MACHINE_CONTEXT.md`
+6. `docs/INSTRUCTION_INDEX.md`
+7. `docs/CURRENT_PLATFORM_STATE.md`
+8. `docs/NEXT_CANONICAL_STEP.md`
+9. `docs/governance/FIRST_PRINCIPLES.md`
+10. `docs/governance/GOVERNANCE_HIERARCHY.md`
+11. `docs/governance/SELF_VERIFICATION_POLICY.md`
+12. `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
+13. `docs/governance/ADMISSION_GATE_POLICY.md`
+14. `docs/governance/ANTI_DRIFT_POLICY.md`
+15. `docs/governance/DEVIATION_INTELLIGENCE_POLICY.md`
+16. `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
+17. `docs/governance/CREATIVE_REASONING_POLICY.md`
+18. `docs/governance/AGENT_CHARACTER_PROFILE.md`
+19. `workspace_config/TASK_RULES.md`
+20. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
+21. `workspace_config/TASK_SOURCE_POLICY.md`
+22. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
+23. `workspace_config/AGENT_EXECUTION_POLICY.md`
+24. `workspace_config/MACHINE_REPO_READING_RULES.md`
+25. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+26. `workspace_config/PROJECT_AUDIT_POLICY.md`
+27. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+28. `workspace_config/GITHUB_SYNC_POLICY.md`
+29. `workspace_config/COMPLETION_GATE_RULES.md`
+30. relevant `PROJECT_MANIFEST.json`
+31. relevant project `README.md`
+32. relevant `CODEX.md` if present
+33. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+
+If any mandatory step is skipped: `STATUS: REJECTED`.
+
+## Rule 2: Canonical Identity
+
+- Working source of truth: `E:\CVVCODEX`
+- Public safe mirror only: `WorkFLOW2` on `safe_mirror/main`
+- Targeted bundle export is canonical external reading channel
+
+## Rule 3: Source-of-Truth Resolution
+
+1. `docs/governance/FIRST_PRINCIPLES.md`
+2. `docs/governance/GOVERNANCE_HIERARCHY.md`
+3. `workspace_config/workspace_manifest.json`
+4. `workspace_config/codex_manifest.json`
+5. target `PROJECT_MANIFEST.json`
+6. `README.md`
+7. review artifacts as non-authoritative evidence
+
+## Rule 4: Active Project Detection
+
+Resolve active project only via:
+
+- `workspace_config/workspace_manifest.json` -> `active_project` + `project_registry`
+
+No folder-name guessing.
+
+## Rule 5: Completion Preconditions
+
+Completion is forbidden without:
+
+1. repo-visible truth
+2. sync parity (`HEAD == safe_mirror/main`, divergence `0/0`)
+3. self-verification pass
+4. contradiction control pass
+
+## Rule 6: ChatGPT Reading Contract
+
+For external machine reading use only:
 
 - `scripts/export_chatgpt_bundle.py`
-- protocol: `docs/CHATGPT_BUNDLE_EXPORT.md`
+- `docs/CHATGPT_BUNDLE_EXPORT.md`
 
-Machine should prefer request-scoped bundle generation (`request`, `files`, `paths`, `project`, `context`) over broad repository exposure.
+Do not treat full repository publication as required path for task-scoped ChatGPT analysis.
+
+## Rule 7: Legacy Handling
+
+- `origin` (`WorkFLOW`) is legacy/non-canonical for completion decisions.
+- `docs/review_artifacts/PUBLIC_REPO_SANITIZATION_REPORT.md` is legacy evidence and excluded from active bootstrap read order.

@@ -1,17 +1,25 @@
 # ChatGPT Targeted Bundle Export
 
-## Purpose
+## Canonical Role
 
-`scripts/export_chatgpt_bundle.py` builds a sanitized, machine-readable zip bundle for ChatGPT from local root `E:\CVVCODEX`.
+`scripts/export_chatgpt_bundle.py` is the official external reading channel.
 
-This avoids exposing full repository state and keeps sharing request-scoped.
+Architecture anchor:
 
-## Why This Model
+- local working source: `E:\CVVCODEX`
+- public safe mirror only: `WorkFLOW2` (`safe_mirror/main`)
+- ChatGPT reads request-scoped safe bundles, not full repository state
 
-1. local root is canonical for heavy prep and validation
-2. GitHub `WorkFLOW2` (`safe_mirror/main`) keeps approved publication-safe state
-3. ChatGPT gets only targeted context/code requested for the current task
-4. exporter enforces safety scan before packaging
+## Governance Coupling
+
+Exporter execution must respect governance brain stack:
+
+- `docs/governance/FIRST_PRINCIPLES.md`
+- `docs/governance/GOVERNANCE_HIERARCHY.md`
+- `docs/governance/SELF_VERIFICATION_POLICY.md`
+- `docs/governance/ADMISSION_GATE_POLICY.md`
+- `workspace_config/GITHUB_SYNC_POLICY.md`
+- `workspace_config/AGENT_EXECUTION_POLICY.md`
 
 ## Modes
 
@@ -23,84 +31,52 @@ python scripts/export_chatgpt_bundle.py project --slug platform_test_agent
 python scripts/export_chatgpt_bundle.py request --request-file chatgpt_request.txt
 ```
 
-## Request Mode Workflow
+## Canonical Workflow (ChatGPT requested files)
 
-1. ChatGPT sends exact file/path list.
-2. User writes list to request file (`chatgpt_request.txt`).
-3. Run:
+1. ChatGPT sends exact files/paths.
+2. User provides request file or `--include` arguments.
+3. Exporter validates request against safety policy.
+4. Exporter generates zip + manifest + report.
+5. User uploads bundle only.
 
-```powershell
-python scripts/export_chatgpt_bundle.py request --request-file chatgpt_request.txt
-```
+## Safety Scan Requirements
 
-4. Exporter writes zip + manifest + report.
-5. User uploads zip to ChatGPT.
+Before packing, exporter must:
 
-Request file format:
-
-- one repo-relative path per line
-- empty lines allowed
-- `#` comments allowed
-- `- path` and `* path` bullet style is supported
-
-## Safety Scan Rules
-
-Before packaging exporter checks:
-
-1. repo root and git state (`branch`, `tracking`, `HEAD`, `ahead/behind`, `worktree_clean`)
-2. path policy (blocked categories)
-3. secret-like content patterns in included files
-4. mandatory context inclusion
+1. resolve git state (`branch`, `head`, `tracking`, `ahead/behind`, `worktree_clean`)
+2. enforce blocked path categories
+3. scan included content for sensitive patterns
+4. emit explicit safe-share verdict
 
 Blocked categories include:
 
-- `.env*`
-- key/cert files (`*.pem`, `*.key`, `*.p12`, `*.pfx`)
-- credentials/secrets/token-like paths
-- `setup_reports/*`
-- `tools/public_mirror/*`
-- `runtime/*`
-- logs/cache/tmp artifacts
-- tunnel/router/WAN/LAN/network-trace artifacts
+- `.env*`, keys/certs, credentials, secrets
+- `setup_reports/*`, `tools/public_mirror/*`
+- runtime/log/cache/tmp artifacts
+- WAN/LAN/tunnel/router diagnostics and configs
 
-## Bundle Structure
+## Bundle Output
 
-Bundle filename:
+Archive name:
 
 - `chatgpt_bundle_<mode>_<timestamp>.zip`
 
-Bundle contents:
+Contains:
 
-- `exported/**`
 - `CHATGPT_BUNDLE_MANIFEST.json`
 - `EXPORT_REPORT.md`
+- exported file tree
 
-`CHATGPT_BUNDLE_MANIFEST.json` includes:
+`CHATGPT_BUNDLE_MANIFEST.json` includes sync verdict, requested/included/skipped/blocked lists, hashes, and safe-share verdict.
 
-- git/sync summary
-- requested paths
-- included/skipped/blocked lists
-- file hashes
-- active project
-- safe-share verdict
+`EXPORT_REPORT.md` includes requested scope, inclusion decisions, block reasons, and final line:
 
-`EXPORT_REPORT.md` includes:
+- `SAFE TO SHARE WITH CHATGPT: YES/NO`
 
-- request summary
-- included/skipped/blocked details
-- reasons
-- sync summary
-- final verdict:
-  - `SAFE TO SHARE WITH CHATGPT: YES/NO`
+## Completion Rule
 
-## Verdict Interpretation
+Bundle task cannot be marked complete without:
 
-- `SAFE TO SHARE` -> allowed for ChatGPT upload
-- `RESTRICTED/BLOCKED` -> some requested items blocked by policy
-- `NOT SAFE TO SHARE` -> sync/repo state failed safety requirements
-
-## Operational Notes
-
-- CLI-first is canonical.
-- No heavy UI layer is required for this workflow.
-- Export artifacts are local-only runtime outputs.
+- repo-visible truth for required artifacts,
+- sync integrity,
+- self-verification pass.
