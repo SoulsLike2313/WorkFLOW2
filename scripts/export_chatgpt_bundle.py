@@ -14,7 +14,8 @@ from pathlib import Path
 from typing import Any
 
 
-REPO_NAME = "WorkFLOW"
+LOCAL_REPO_NAME = "CVVCODEX"
+PUBLIC_SAFE_MIRROR_REPO = "WorkFLOW2"
 DEFAULT_OUTPUT_DIR = "runtime/chatgpt_bundle_exports"
 WORKSPACE_MANIFEST_PATH = Path("workspace_config/workspace_manifest.json")
 SAFE_MIRROR_MANIFEST_PATH = Path("workspace_config/SAFE_MIRROR_MANIFEST.json")
@@ -460,7 +461,10 @@ def main() -> int:
 
     manifest_payload: dict[str, Any] = {
         "schema_version": "1.0.0",
-        "repo_name": REPO_NAME,
+        "repo_name": PUBLIC_SAFE_MIRROR_REPO,
+        "local_repo_name": LOCAL_REPO_NAME,
+        "public_safe_mirror_repo": PUBLIC_SAFE_MIRROR_REPO,
+        "public_safe_mirror_remote": "safe_mirror",
         "local_root": str(repo_root),
         "current_branch": git_state.branch,
         "tracking_branch": git_state.tracking_branch,

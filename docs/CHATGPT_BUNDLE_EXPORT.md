@@ -9,7 +9,7 @@ This avoids exposing full repository state and keeps sharing request-scoped.
 ## Why This Model
 
 1. local root is canonical for heavy prep and validation
-2. GitHub `WorkFLOW` keeps approved publication-safe state
+2. GitHub `WorkFLOW2` (`safe_mirror/main`) keeps approved publication-safe state
 3. ChatGPT gets only targeted context/code requested for the current task
 4. exporter enforces safety scan before packaging
 
