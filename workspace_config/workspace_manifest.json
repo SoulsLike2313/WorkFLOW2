@@ -96,7 +96,10 @@
       "docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md",
       "docs/governance/OPERATIONAL_METRICS_POLICY.md",
       "docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
-      "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md"
+      "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
+      "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
+      "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
+      "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -120,6 +123,9 @@
     "evolution_signal_registry_path": "docs/governance/EVOLUTION_SIGNAL_REGISTRY.md",
     "policy_evolution_log_path": "docs/governance/POLICY_EVOLUTION_LOG.md",
     "next_evolution_candidate_path": "docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
+    "machine_bootstrap_contract_path": "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
+    "canonical_source_precedence_path": "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
+    "zero_config_operation_policy_path": "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
     "repo_control_center_verdict_engine_required": true,
     "evolution_readiness_engine_required": true,
     "governance_v11_hardening_paths": [
@@ -132,7 +138,10 @@
       "docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md",
       "docs/governance/OPERATIONAL_METRICS_POLICY.md",
       "docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
-      "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md"
+      "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
+      "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
+      "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
+      "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md"
     ]
   },
   "shared_systems": {

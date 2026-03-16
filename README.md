@@ -57,6 +57,9 @@
 - `docs/governance/OPERATIONAL_METRICS_POLICY.md`
 - `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
 - `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
+- `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
+- `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
+- `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
 
 ## Repo Control Center V1 (CLI-First)
 

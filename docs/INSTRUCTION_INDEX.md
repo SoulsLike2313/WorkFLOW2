@@ -68,6 +68,9 @@ If this order is not completed, task status is `REJECTED`.
 
 - `docs/governance/FIRST_PRINCIPLES.md`
 - `docs/governance/GOVERNANCE_HIERARCHY.md`
+- `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
+- `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
+- `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
 - `docs/governance/SELF_VERIFICATION_POLICY.md`
 - `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
 - `docs/governance/ADMISSION_GATE_POLICY.md`
@@ -116,6 +119,9 @@ If this order is not completed, task status is `REJECTED`.
 | `docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md` | Incident classification, freeze, rollback and recovery sequence | P1 |
 | `docs/governance/VERIFICATION_DEPTH_POLICY.md` | Minimum verification depth matrix by change type | P1 |
 | `docs/governance/EVIDENCE_RETENTION_POLICY.md` | Evidence classes, retention, archive and traceability rules | P1 |
+| `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md` | Canonical bootstrap authority and read-order conflict contract | P1 |
+| `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md` | Source authority precedence and contradiction resolution contract | P1 |
+| `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md` | New-machine zero-config readiness contract and hidden dependency gate | P1 |
 | `docs/governance/PROMOTION_THRESHOLD_POLICY.md` | Formal promotion thresholds and observation-window rules | P1 |
 | `docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md` | Public mirror exposure incident response and restore gate | P1 |
 | `docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md` | Deprecation/retirement lifecycle and active-read-order cleanup | P1 |

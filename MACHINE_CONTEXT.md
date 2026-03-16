@@ -77,6 +77,12 @@
 
 Hardening layer defines authority, incident handling, verification depth, evidence retention, promotion thresholds, exposure response, lifecycle retirement, metrics, escalation, and schema versioning.
 
+Bootstrap and source-authority contracts:
+
+- `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
+- `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
+- `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
+
 ## Non-Canonical Inputs
 
 Do not use as source of truth:

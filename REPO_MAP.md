@@ -92,6 +92,12 @@ Current canonical active project:
 - `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
 - `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
 
+## Bootstrap And Precedence Contracts
+
+- `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
+- `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
+- `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
+
 ## Completion Guard
 
 A task cannot be completed unless:

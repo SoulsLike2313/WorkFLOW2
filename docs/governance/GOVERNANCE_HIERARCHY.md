@@ -82,6 +82,9 @@ Expected documents:
 - `workspace_config/COMPLETION_GATE_RULES.md`
 - `docs/repo_publication_policy.md`
 - `docs/CHATGPT_BUNDLE_EXPORT.md`
+- `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
+- `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
+- `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
 - `scripts/repo_control_center.py`
 
 Conflict resolution rule:
