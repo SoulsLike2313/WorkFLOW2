@@ -27,22 +27,20 @@ Machine must complete this canonical order before execution:
 21. `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
 22. `docs/governance/POLICY_EVOLUTION_LOG.md`
 23. `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
-24. `scripts/repo_control_center.py`
-25. `workspace_config/TASK_RULES.md`
-26. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
-27. `workspace_config/TASK_SOURCE_POLICY.md`
-28. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
-29. `workspace_config/AGENT_EXECUTION_POLICY.md`
-30. `workspace_config/MACHINE_REPO_READING_RULES.md`
-31. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-32. `workspace_config/PROJECT_AUDIT_POLICY.md`
-33. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-34. `workspace_config/GITHUB_SYNC_POLICY.md`
-35. `workspace_config/COMPLETION_GATE_RULES.md`
-36. relevant `PROJECT_MANIFEST.json`
-37. relevant project `README.md`
-38. relevant `CODEX.md` if present
-39. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+24. `docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md`
+25. `docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md`
+26. `docs/governance/VERIFICATION_DEPTH_POLICY.md`
+27. `docs/governance/EVIDENCE_RETENTION_POLICY.md`
+28. `docs/governance/PROMOTION_THRESHOLD_POLICY.md`
+29. `docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md`
+30. `docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md`
+31. `docs/governance/OPERATIONAL_METRICS_POLICY.md`
+32. `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
+33. `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
+34. `scripts/repo_control_center.py`
+35. `workspace_config/GITHUB_SYNC_POLICY.md`
+36. `workspace_config/AGENT_EXECUTION_POLICY.md`
+37. `workspace_config/MACHINE_REPO_READING_RULES.md`
 
 If any mandatory step is skipped: `STATUS: REJECTED`.
 

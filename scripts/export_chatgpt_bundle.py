@@ -19,7 +19,7 @@ PUBLIC_SAFE_MIRROR_REPO = "WorkFLOW2"
 DEFAULT_OUTPUT_DIR = "runtime/chatgpt_bundle_exports"
 WORKSPACE_MANIFEST_PATH = Path("workspace_config/workspace_manifest.json")
 SAFE_MIRROR_MANIFEST_PATH = Path("workspace_config/SAFE_MIRROR_MANIFEST.json")
-SANITIZATION_REPORT_PATH = Path("docs/review_artifacts/PUBLIC_REPO_SANITIZATION_REPORT.md")
+SAFE_MIRROR_REPORT_PATH = Path("docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md")
 
 MANDATORY_CONTEXT_FILES = [
     "README.md",
@@ -32,7 +32,7 @@ MANDATORY_CONTEXT_FILES = [
     "workspace_config/workspace_manifest.json",
     "workspace_config/codex_manifest.json",
     "workspace_config/SAFE_MIRROR_MANIFEST.json",
-    "docs/review_artifacts/PUBLIC_REPO_SANITIZATION_REPORT.md",
+    "docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md",
 ]
 
 CONTEXT_MODE_FILES = [
@@ -486,7 +486,7 @@ def main() -> int:
         "safe_share_verdict": safe_share_verdict,
         "safe_state_basis": {
             "safe_mirror_manifest_path": str(SAFE_MIRROR_MANIFEST_PATH),
-            "sanitization_report_path": str(SANITIZATION_REPORT_PATH),
+            "safe_mirror_report_path": str(SAFE_MIRROR_REPORT_PATH),
         },
     }
 
