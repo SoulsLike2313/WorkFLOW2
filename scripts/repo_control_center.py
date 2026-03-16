@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -338,10 +339,18 @@ def mirror_checks(git_state: GitState) -> dict[str, Any]:
         evidence["manifest_head"] = manifest_head
         evidence["current_head"] = git_state.head
         evidence["manifest_head_matches_current"] = manifest_head == git_state.head
+        if manifest_head != git_state.head:
+            warnings.append(
+                f"SAFE_MIRROR_MANIFEST head mismatch: manifest={manifest_head} current={git_state.head}"
+            )
 
     if exists("docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md"):
         report_text = read_text("docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md")
         evidence["report_mentions_current_head"] = git_state.head in report_text
+        if git_state.head not in report_text:
+            warnings.append("SAFE_MIRROR_BUILD_REPORT is stale: current HEAD not referenced")
+
+    evidence["stale_evidence"] = bool(warnings)
 
     if blockers:
         verdict = "BLOCKED"
@@ -493,8 +502,59 @@ def parse_current_level() -> str:
     return "V1_STABLE"
 
 
+def parse_candidate_context() -> dict[str, str]:
+    path = REPO_ROOT / "docs/governance/NEXT_EVOLUTION_CANDIDATE.md"
+    context = {
+        "current_level": "V1_STABLE",
+        "candidate_level": "V1_PLUS",
+        "recommendation": "HOLD",
+    }
+    if not path.exists():
+        return context
+
+    for line in path.read_text(encoding="utf-8-sig").splitlines():
+        lower = line.lower()
+        if lower.startswith("- current_level:"):
+            context["current_level"] = line.split(":", 1)[1].strip().strip("`")
+        elif lower.startswith("- candidate_level:"):
+            context["candidate_level"] = line.split(":", 1)[1].strip().strip("`")
+        elif lower.startswith("- readiness:"):
+            context["recommendation"] = line.split(":", 1)[1].strip().strip("`").upper()
+    return context
+
+
+def parse_promotion_threshold_policy() -> dict[str, Any]:
+    rel = "docs/governance/PROMOTION_THRESHOLD_POLICY.md"
+    parsed: dict[str, Any] = {
+        "path": rel,
+        "exists": exists(rel),
+        "observation_window_required": 5,
+        "candidate_cycles_required": 3,
+        "ready_cycles_required": 5,
+        "promote_cycles_required": 5,
+    }
+    if not parsed["exists"]:
+        return parsed
+
+    text = read_text(rel)
+
+    def extract(pattern: str, default: int) -> int:
+        match = re.search(pattern, text, flags=re.IGNORECASE)
+        return int(match.group(1)) if match else default
+
+    parsed["observation_window_required"] = extract(r"default minimum window:\s*-\s*(\d+)\s+consecutive clean cycles", 5)
+    parsed["candidate_cycles_required"] = extract(r"candidate.*?at least\s+(\d+)\s+consecutive clean cycles", 3)
+    parsed["ready_cycles_required"] = extract(r"ready.*?at least\s+(\d+)\s+consecutive clean cycles", 5)
+    parsed["promote_cycles_required"] = extract(r"promote.*?at least\s+(\d+)\s+clean cycles", parsed["ready_cycles_required"])
+    return parsed
+
+
 def evolution_checks(sync: dict[str, Any], governance: dict[str, Any], contradictions: dict[str, Any], trust: dict[str, Any], admission: dict[str, Any], mirror: dict[str, Any], bundle: dict[str, Any]) -> dict[str, Any]:
-    current_level = parse_current_level()
+    candidate_context = parse_candidate_context()
+    current_level = candidate_context["current_level"]
+    threshold_policy = parse_promotion_threshold_policy()
+    policy_log_text = read_text("docs/governance/POLICY_EVOLUTION_LOG.md") if exists("docs/governance/POLICY_EVOLUTION_LOG.md") else ""
+    next_candidate_text = read_text("docs/governance/NEXT_EVOLUTION_CANDIDATE.md") if exists("docs/governance/NEXT_EVOLUTION_CANDIDATE.md") else ""
 
     positive_signals = [
         ("sync_in_sync", sync["verdict"] == "IN_SYNC", 15),
@@ -505,7 +565,7 @@ def evolution_checks(sync: dict[str, Any], governance: dict[str, Any], contradic
         ("critical_contradictions_zero", contradictions["critical_count"] == 0, 10),
         ("admission_gate_green", admission["verdict"] == "ADMISSIBLE", 10),
         ("bundle_ready", bundle["verdict"] == "READY", 10),
-        ("safe_mirror_not_blocked", mirror["verdict"] != "BLOCKED", 5),
+        ("safe_mirror_fresh", mirror["verdict"] == "PASS", 5),
         ("trust_not_failed", trust["verdict"] != "NOT_TRUSTED", 5),
     ]
 
@@ -520,18 +580,88 @@ def evolution_checks(sync: dict[str, Any], governance: dict[str, Any], contradic
     if trust["verdict"] == "NOT_TRUSTED":
         blocking_signals.append("hidden_blocker_or_failed_trust")
 
+    current_cycle_clean = (
+        sync["verdict"] == "IN_SYNC"
+        and sync["evidence"]["worktree_clean"]
+        and sync["evidence"]["ahead"] == 0
+        and sync["evidence"]["behind"] == 0
+        and contradictions["critical_count"] == 0
+        and trust["verdict"] != "NOT_TRUSTED"
+    )
+    observed_clean_cycles = 1 if current_cycle_clean else 0
+
+    approved_hardening_events = policy_log_text.count("decision: `APPROVED`")
+    governance_hardening_evidence = approved_hardening_events > 0
+    repeated_failure_reduction_evidence = bool(
+        re.search(r"(drift|failure)\s+reduction", policy_log_text, flags=re.IGNORECASE)
+    )
+
+    false_pass_history_entries = len(re.findall(r"false\s+pass", policy_log_text, flags=re.IGNORECASE))
+    false_pass_unresolved = bool(re.search(r"false\s+pass.*unresolved", policy_log_text, flags=re.IGNORECASE))
+    unresolved_contradiction_history_hits = len(
+        re.findall(r"unresolved critical contradiction", policy_log_text, flags=re.IGNORECASE)
+    )
+
+    observation_window_required = int(threshold_policy["observation_window_required"])
+    candidate_cycles_required = int(threshold_policy["candidate_cycles_required"])
+    ready_cycles_required = int(threshold_policy["ready_cycles_required"])
+    promote_cycles_required = int(threshold_policy["promote_cycles_required"])
+
+    observation_window_complete = observed_clean_cycles >= observation_window_required
+    candidate_cycles_complete = observed_clean_cycles >= candidate_cycles_required
+    ready_cycles_complete = observed_clean_cycles >= ready_cycles_required
+    promote_cycles_complete = observed_clean_cycles >= promote_cycles_required
+    blocking_signals_zero = len(blocking_signals) == 0
+    mirror_evidence_fresh = mirror["verdict"] == "PASS"
+    false_pass_history_zero = false_pass_history_entries == 0 and not false_pass_unresolved
+    contradiction_history_clean = unresolved_contradiction_history_hits == 0 and contradictions["critical_count"] == 0
+    evidence_completeness = (
+        threshold_policy["exists"]
+        and exists("docs/governance/POLICY_EVOLUTION_LOG.md")
+        and exists("docs/governance/NEXT_EVOLUTION_CANDIDATE.md")
+    )
+
+    promotion_requirements_missing: list[str] = []
+    if not threshold_policy["exists"]:
+        promotion_requirements_missing.append("missing PROMOTION_THRESHOLD_POLICY baseline")
+    if not observation_window_complete:
+        promotion_requirements_missing.append(
+            f"required observation window incomplete: {observed_clean_cycles}/{observation_window_required} clean cycles"
+        )
+    if not blocking_signals_zero:
+        promotion_requirements_missing.append("blocking signals present")
+    if not false_pass_history_zero:
+        promotion_requirements_missing.append("false PASS history not clean")
+    if not contradiction_history_clean:
+        promotion_requirements_missing.append("contradiction history not clean")
+    if not governance_hardening_evidence:
+        promotion_requirements_missing.append("governance hardening evidence missing")
+    if not repeated_failure_reduction_evidence:
+        promotion_requirements_missing.append("repeated failure reduction evidence missing")
+    if not mirror_evidence_fresh:
+        promotion_requirements_missing.append("safe mirror evidence stale")
+    if not evidence_completeness:
+        promotion_requirements_missing.append("promotion evidence package incomplete")
+
+    formal_promotion_thresholds_confirmed = len(promotion_requirements_missing) == 0
+
+    explicit_promote_approval = (
+        bool(re.search(r"-\s*recommendation:\s*`?\s*PROMOTE\s*`?", next_candidate_text, flags=re.IGNORECASE))
+        or candidate_context["recommendation"] == "PROMOTE"
+    )
+
     if blocking_signals:
         candidate_level = current_level
         readiness = "BLOCKED"
         evolution_verdict = "BLOCKED"
-    elif score >= 90:
+    elif score >= 90 and formal_promotion_thresholds_confirmed:
         candidate_level = "V2_READY"
         readiness = "HIGH"
-        evolution_verdict = "PROMOTE"
+        evolution_verdict = "PROMOTE" if explicit_promote_approval and promote_cycles_complete else "V2_READY"
     elif score >= 75:
         candidate_level = "V2_CANDIDATE"
         readiness = "MEDIUM_HIGH"
-        evolution_verdict = "V2_CANDIDATE"
+        evolution_verdict = "V2_CANDIDATE" if candidate_cycles_complete else "PREPARE"
     elif score >= 55:
         candidate_level = "V1_EVOLVING"
         readiness = "MEDIUM"
@@ -541,6 +671,12 @@ def evolution_checks(sync: dict[str, Any], governance: dict[str, Any], contradic
         readiness = "LOW"
         evolution_verdict = "HOLD"
 
+    # Hard guard: never allow V2_READY/PROMOTE without formal promotion threshold confirmation.
+    if evolution_verdict in {"V2_READY", "PROMOTE"} and not formal_promotion_thresholds_confirmed:
+        evolution_verdict = "V2_CANDIDATE" if score >= 75 else "PREPARE"
+        candidate_level = "V2_CANDIDATE" if score >= 75 else "V1_EVOLVING"
+        readiness = "MEDIUM_HIGH" if score >= 75 else "MEDIUM"
+
     policy_changes_proposed: list[str] = []
     if governance["verdict"] != "COMPLIANT":
         policy_changes_proposed.append("Close governance compliance gaps listed in governance blockers.")
@@ -548,20 +684,40 @@ def evolution_checks(sync: dict[str, Any], governance: dict[str, Any], contradic
         policy_changes_proposed.append("Refresh SAFE_MIRROR_MANIFEST and SAFE_MIRROR_BUILD_REPORT to current HEAD.")
     if contradictions["major_count"] > 0:
         policy_changes_proposed.append("Resolve major contradiction items before promotion.")
+    if not repeated_failure_reduction_evidence:
+        policy_changes_proposed.append("Record measurable repeated-failure reduction evidence in POLICY_EVOLUTION_LOG.")
+    if not observation_window_complete:
+        policy_changes_proposed.append(
+            f"Accumulate {observation_window_required} consecutive clean full-check cycles with evidence linkage."
+        )
 
     recommendation = evolution_verdict if evolution_verdict in {"HOLD", "PREPARE", "PROMOTE"} else "PREPARE"
 
     return {
         "verdict": evolution_verdict,
-        "basis": "evidence-weighted maturity signal model",
+        "basis": "evidence-weighted maturity model gated by PROMOTION_THRESHOLD_POLICY",
         "evidence": {
             "score": score,
             "positive_signals": positive_signals,
             "current_level": current_level,
             "candidate_level": candidate_level,
             "readiness": readiness,
+            "threshold_policy": threshold_policy,
+            "observed_clean_cycles": observed_clean_cycles,
+            "observation_window_complete": observation_window_complete,
+            "candidate_cycles_complete": candidate_cycles_complete,
+            "ready_cycles_complete": ready_cycles_complete,
+            "promote_cycles_complete": promote_cycles_complete,
+            "false_pass_history_entries": false_pass_history_entries,
+            "false_pass_unresolved": false_pass_unresolved,
+            "unresolved_contradiction_history_hits": unresolved_contradiction_history_hits,
+            "governance_hardening_evidence": governance_hardening_evidence,
+            "repeated_failure_reduction_evidence": repeated_failure_reduction_evidence,
+            "formal_promotion_thresholds_confirmed": formal_promotion_thresholds_confirmed,
+            "promotion_requirements_missing": promotion_requirements_missing,
+            "explicit_promote_approval": explicit_promote_approval,
         },
-        "blockers": blocking_signals,
+        "blockers": [*blocking_signals, *promotion_requirements_missing],
         "next_step": "Clear blocking signals." if blocking_signals else "Execute proposed validations for next maturity step.",
         "evolution_block": {
             "current_level": current_level,
