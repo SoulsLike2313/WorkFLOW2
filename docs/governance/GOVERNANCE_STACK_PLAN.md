@@ -1,106 +1,56 @@
-﻿# GOVERNANCE STACK PLAN
+# GOVERNANCE STACK PLAN
 
-Plan for building a governance brain stack without rewriting the whole layer in one step.
+Current plan state for governance brain stack and control/evolution layers.
 
-## 1) Proposed hierarchy
+## Implemented layers
 
-### Layer G0 — Governance Constitution (single authority)
+### Layer 0: First Principles
 
-Purpose: define canonical governance hierarchy, conflict resolution, and compliance boundaries.
+- `docs/governance/FIRST_PRINCIPLES.md`
 
-### Layer G1 — Execution Admission Law
-
-Purpose: strict task contract gate, acceptance/refusal rules, scope and anti-side-work controls.
-
-### Layer G2 — Runtime Operation Laws
-
-Purpose: machine reading order, sync/completion gates, publication boundaries, export safety boundaries.
-
-### Layer G3 — State Contracts
-
-Purpose: machine-readable manifests and required state artifacts with freshness/validity rules.
-
-### Layer G4 — Evidence and Audit Trail
-
-Purpose: review artifacts and generated reports as evidence-only outputs (non-authoritative for routing).
-
-## 2) Proposed document set
-
-## G0 (new/updated)
-
-- `docs/governance/GOVERNANCE_CONSTITUTION.md` (new)
-- `docs/governance/GOVERNANCE_STACK_MAP.md` (new)
-
-## G1 (reuse, normalize links)
+### Layer 1: Core Operating Policies
 
 - `workspace_config/TASK_RULES.md`
 - `workspace_config/EXECUTION_ADMISSION_POLICY.md`
 - `workspace_config/TASK_SOURCE_POLICY.md`
 - `workspace_config/AGENT_EXECUTION_POLICY.md`
 
-## G2 (reuse, normalize links)
+### Layer 2: Control & Audit
 
 - `workspace_config/MACHINE_REPO_READING_RULES.md`
 - `workspace_config/GITHUB_SYNC_POLICY.md`
 - `workspace_config/COMPLETION_GATE_RULES.md`
 - `docs/repo_publication_policy.md`
 - `docs/CHATGPT_BUNDLE_EXPORT.md`
+- `scripts/repo_control_center.py`
 
-## G3 (reuse + fill gaps)
+### Layer 3: Adaptive & Evolution
 
-- `workspace_config/workspace_manifest.json`
-- `workspace_config/codex_manifest.json`
-- `workspace_config/SAFE_MIRROR_MANIFEST.json`
-- `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
+- `docs/governance/DEVIATION_INTELLIGENCE_POLICY.md`
+- `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
+- `docs/governance/CREATIVE_REASONING_POLICY.md`
+- `docs/governance/EVOLUTION_READINESS_POLICY.md`
+- `docs/governance/MODEL_MATURITY_MODEL.md`
+- `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
+- `docs/governance/POLICY_EVOLUTION_LOG.md`
+- `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
 
-## G4 (evidence only)
+### Layer 4: Project-Specific
 
-- `docs/review_artifacts/*`
+- `projects/*/PROJECT_MANIFEST.json`
+- project-local `README.md`/`CODEX.md` where present
 
-## 3) Order of implementation
+## Current execution order
 
-1. **Stabilize current truth inputs**
-   - refresh stale sanitization report
-   - resolve absolute-path policy contradiction
+1. local work in `E:\CVVCODEX`
+2. run Repo Control Center checks
+3. run sync and self-verification gates
+4. push approved safe state to `safe_mirror/main`
+5. generate targeted ChatGPT bundle when needed
 
-2. **Create G0 authority layer**
-   - add governance constitution and stack map
-   - define conflict resolution order and legacy-reference policy
+## Next implementation order
 
-3. **Link G1/G2 to G0**
-   - make existing policy docs reference G0 as parent authority
-   - remove duplicate normative text where possible, keep concise operational rules
-
-4. **Harden G3 state controls**
-   - define freshness rule for generated artifacts
-   - define generation->commit sequencing rule for safe-state manifests/reports
-   - fill `codex_manifest.bootstrap_read_order`
-
-5. **Constrain G4 evidence role**
-   - mark review artifacts as non-authoritative in one consistent language pattern
-
-6. **Add governance self-audit loop**
-   - define required periodic checks (contradictions, stale reports, legacy noise, false completion risk)
-
-## 4) Short rationale by layer
-
-- **G0**: removes ambiguity; gives machine one source for governance authority.
-- **G1**: protects against scope drift and non-contract execution.
-- **G2**: enforces deterministic machine operations and completion discipline.
-- **G3**: makes machine-readable state trustworthy and fresh.
-- **G4**: preserves evidence value without letting artifacts override authority.
-
-## 5) Non-goals for this phase
-
-- no architecture rebuild
-- no UI work
-- no broad policy rewrite in one step
-- no additional governance docs beyond those needed for G0 kickoff
-
-## 6) Immediate next move after this plan
-
-Implement G0 minimal set first:
-
-1. `GOVERNANCE_CONSTITUTION.md`
-2. `GOVERNANCE_STACK_MAP.md`
-3. cross-links from `README.md`, `INSTRUCTION_INDEX.md`, and `workspace_config` policy files
+1. keep evolution signal evidence updated per run
+2. keep policy evolution log synchronized with accepted/rejected changes
+3. keep safe mirror artifact freshness in each completion cycle
+4. maintain contradiction-free read order across docs/manifests

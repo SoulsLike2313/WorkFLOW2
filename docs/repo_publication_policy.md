@@ -37,9 +37,20 @@ Publication and sharing decisions must follow governance brain stack:
 
 1. perform work and validation in `E:\CVVCODEX`
 2. reconcile docs/manifests/policy with repo reality
-3. run sync and self-verification gates
-4. push approved safe state to `safe_mirror/main`
-5. export request-scoped bundle for ChatGPT when needed
+3. run Repo Control Center checks (`status`, `trust`, `sync`, `evolution`, `full-check`)
+4. run sync and self-verification gates
+5. push approved safe state to `safe_mirror/main`
+6. export request-scoped bundle for ChatGPT when needed
+
+## Evolution Readiness Governance
+
+Publication governance must include:
+
+- `docs/governance/EVOLUTION_READINESS_POLICY.md`
+- `docs/governance/MODEL_MATURITY_MODEL.md`
+- `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
+- `docs/governance/POLICY_EVOLUTION_LOG.md`
+- `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
 
 ## Completion Gate
 

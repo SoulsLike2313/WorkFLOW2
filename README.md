@@ -39,6 +39,45 @@
 - `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
 - `docs/governance/CREATIVE_REASONING_POLICY.md`
 - `docs/governance/AGENT_CHARACTER_PROFILE.md`
+- `docs/governance/EVOLUTION_READINESS_POLICY.md`
+- `docs/governance/MODEL_MATURITY_MODEL.md`
+- `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
+- `docs/governance/POLICY_EVOLUTION_LOG.md`
+- `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
+
+## Repo Control Center V1 (CLI-First)
+
+Canonical control entrypoint:
+
+```powershell
+python scripts/repo_control_center.py <mode>
+```
+
+Supported modes:
+
+- `status`
+- `audit`
+- `trust`
+- `sync`
+- `mirror`
+- `bundle`
+- `evolution`
+- `full-check`
+
+Core verdicts:
+
+- TRUST VERDICT: `TRUSTED | WARNING | NOT_TRUSTED`
+- SYNC VERDICT: `IN_SYNC | DRIFTED | BLOCKED`
+- GOVERNANCE VERDICT: `COMPLIANT | PARTIAL | NON_COMPLIANT`
+- ADMISSION VERDICT: `ADMISSIBLE | CONDITIONAL | REJECTED`
+- EVOLUTION VERDICT: `HOLD | PREPARE | V2_CANDIDATE | V2_READY | PROMOTE | BLOCKED`
+
+Runtime artifacts:
+
+- `runtime/repo_control_center/repo_control_status.json`
+- `runtime/repo_control_center/repo_control_report.md`
+- `runtime/repo_control_center/evolution_status.json`
+- `runtime/repo_control_center/evolution_report.md`
 
 ## Completion Gate (Hard)
 

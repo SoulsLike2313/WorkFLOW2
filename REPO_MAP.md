@@ -26,6 +26,12 @@
 15. `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
 16. `docs/governance/CREATIVE_REASONING_POLICY.md`
 17. `docs/governance/AGENT_CHARACTER_PROFILE.md`
+18. `docs/governance/EVOLUTION_READINESS_POLICY.md`
+19. `docs/governance/MODEL_MATURITY_MODEL.md`
+20. `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
+21. `docs/governance/POLICY_EVOLUTION_LOG.md`
+22. `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
+23. `scripts/repo_control_center.py`
 
 ## Canonical Top-Level Directories
 
@@ -51,6 +57,14 @@ Current canonical active project:
 - Public baseline: `WorkFLOW2` safe mirror.
 - Request-scoped context/code: `python scripts/export_chatgpt_bundle.py ...`
 - Full-repo publication for ChatGPT reading is non-canonical.
+
+## Repo Control Center
+
+- Canonical CLI: `python scripts/repo_control_center.py <mode>`
+- Primary modes: `status`, `trust`, `sync`, `bundle`, `evolution`, `full-check`
+- Machine-readable outputs:
+  - `runtime/repo_control_center/repo_control_status.json`
+  - `runtime/repo_control_center/evolution_status.json`
 
 ## Completion Guard
 

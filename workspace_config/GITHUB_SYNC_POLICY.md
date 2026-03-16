@@ -33,6 +33,8 @@ If any item fails: `NOT_COMPLETED`.
 - `git rev-parse safe_mirror/main`
 - `git rev-list --left-right --count HEAD...safe_mirror/main`
 - `python scripts/check_repo_sync.py --remote safe_mirror --branch main`
+- `python scripts/repo_control_center.py sync`
+- `python scripts/repo_control_center.py trust`
 
 ## Repo-Visible Truth Rule
 
@@ -49,6 +51,7 @@ This policy is interpreted together with:
 - `docs/governance/GOVERNANCE_HIERARCHY.md`
 - `docs/governance/SELF_VERIFICATION_POLICY.md`
 - `docs/governance/ADMISSION_GATE_POLICY.md`
+- `docs/governance/EVOLUTION_READINESS_POLICY.md`
 
 ## Legacy Note
 

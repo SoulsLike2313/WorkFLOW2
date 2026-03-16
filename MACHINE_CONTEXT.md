@@ -29,10 +29,16 @@
 16. `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
 17. `docs/governance/CREATIVE_REASONING_POLICY.md`
 18. `docs/governance/AGENT_CHARACTER_PROFILE.md`
-19. `workspace_config/GITHUB_SYNC_POLICY.md`
-20. `workspace_config/AGENT_EXECUTION_POLICY.md`
-21. `workspace_config/MACHINE_REPO_READING_RULES.md`
-22. target `PROJECT_MANIFEST.json`
+19. `docs/governance/EVOLUTION_READINESS_POLICY.md`
+20. `docs/governance/MODEL_MATURITY_MODEL.md`
+21. `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
+22. `docs/governance/POLICY_EVOLUTION_LOG.md`
+23. `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
+24. `scripts/repo_control_center.py`
+25. `workspace_config/GITHUB_SYNC_POLICY.md`
+26. `workspace_config/AGENT_EXECUTION_POLICY.md`
+27. `workspace_config/MACHINE_REPO_READING_RULES.md`
+28. target `PROJECT_MANIFEST.json`
 
 ## Execution Guardrails
 
@@ -48,6 +54,14 @@
 3. Exporter performs safety scan.
 4. Exporter writes zip + `CHATGPT_BUNDLE_MANIFEST.json` + `EXPORT_REPORT.md`.
 5. User uploads only produced safe bundle.
+
+## Repo Control Center Workflow
+
+1. Run `python scripts/repo_control_center.py status`.
+2. Run `python scripts/repo_control_center.py trust`.
+3. Run `python scripts/repo_control_center.py evolution`.
+4. Run `python scripts/repo_control_center.py full-check`.
+5. Use generated runtime reports as evidence package for completion/promotion decisions.
 
 ## Non-Canonical Inputs
 

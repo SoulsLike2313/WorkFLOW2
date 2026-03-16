@@ -82,6 +82,7 @@ Expected documents:
 - `workspace_config/COMPLETION_GATE_RULES.md`
 - `docs/repo_publication_policy.md`
 - `docs/CHATGPT_BUNDLE_EXPORT.md`
+- `scripts/repo_control_center.py`
 
 Conflict resolution rule:
 
@@ -105,7 +106,14 @@ Expected documents:
 
 - `docs/governance/GOVERNANCE_GAP_AUDIT.md`
 - `docs/governance/GOVERNANCE_STACK_PLAN.md`
-- future self-audit and governance evolution policies derived from stack plan
+- `docs/governance/DEVIATION_INTELLIGENCE_POLICY.md`
+- `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
+- `docs/governance/CREATIVE_REASONING_POLICY.md`
+- `docs/governance/EVOLUTION_READINESS_POLICY.md`
+- `docs/governance/MODEL_MATURITY_MODEL.md`
+- `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
+- `docs/governance/POLICY_EVOLUTION_LOG.md`
+- `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
 
 Conflict resolution rule:
 

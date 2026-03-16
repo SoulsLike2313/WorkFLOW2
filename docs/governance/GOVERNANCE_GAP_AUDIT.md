@@ -1,114 +1,57 @@
-﻿# GOVERNANCE GAP AUDIT
+# GOVERNANCE GAP AUDIT
 
 Generated from current repository truth at `E:\CVVCODEX`.
 
-## 1) What already exists
+## Current status
 
-Current governance/context baseline is present and readable:
+- governance brain stack: present
+- control layer: present
+- evolution layer: present
+- repo control center CLI: present (`scripts/repo_control_center.py`)
+- manifest bootstrap read order: populated
 
-- root context: `README.md`, `REPO_MAP.md`, `MACHINE_CONTEXT.md`
-- instruction index: `docs/INSTRUCTION_INDEX.md`
-- publication and export contracts: `docs/repo_publication_policy.md`, `docs/CHATGPT_BUNDLE_EXPORT.md`
-- sync and execution policies: `workspace_config/GITHUB_SYNC_POLICY.md`, `workspace_config/AGENT_EXECUTION_POLICY.md`, `workspace_config/MACHINE_REPO_READING_RULES.md`
-- machine manifests: `workspace_config/workspace_manifest.json`, `workspace_config/codex_manifest.json`, `workspace_config/SAFE_MIRROR_MANIFEST.json`
-- safe-state report artifacts: `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`, `docs/review_artifacts/PUBLIC_REPO_SANITIZATION_REPORT.md`
+## Closed gaps
 
-Canonical model is repeatedly stated and aligned in most core files:
+1. stale sanitization artifact ambiguity closed by explicit `LEGACY_NON_CANONICAL` marking.
+2. empty bootstrap read order closed in `workspace_config/codex_manifest.json`.
+3. missing executable control layer closed via Repo Control Center modes and runtime reports.
+4. missing evolution readiness layer closed via five governance evolution documents.
 
-- local source of truth: `E:\CVVCODEX`
-- public safe mirror target: `WorkFLOW2` via `safe_mirror/main`
-- ChatGPT external reading channel: targeted bundle export
+## Remaining gaps
 
-## 2) Contradictions found
+### G1 (MAJOR)
 
-### C1. Stale sanitization report conflicts with current canon
+Safe mirror state artifacts may become stale after new commits if not regenerated in same cycle.
 
-`docs/review_artifacts/PUBLIC_REPO_SANITIZATION_REPORT.md` still states:
+Evidence:
 
-- `repo_name: WorkFLOW`
-- `tracking_branch: origin/main`
-- outdated basis SHA
+- `workspace_config/SAFE_MIRROR_MANIFEST.json`
+- `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
 
-This conflicts with current canonical model (`WorkFLOW2`, `safe_mirror/main`).
+Required control:
 
-### C2. Path policy contradiction
+- refresh artifacts before final completion when head changes.
 
-`docs/repo_publication_policy.md` says hardcoded machine-specific absolute paths should be avoided (`<REPO_ROOT>` style), but top-level canonical docs intentionally hardcode `E:\CVVCODEX`.
+### G2 (MINOR)
 
-Result: policy text and operational canon conflict.
+Legacy reference to `origin` (`WorkFLOW`) remains in multiple files as non-canonical note.
 
-### C3. Safe-state identity drift risk
+Required control:
 
-`workspace_config/SAFE_MIRROR_MANIFEST.json` and `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md` are generated from current HEAD, but committing regenerated files changes HEAD immediately after generation.
+- keep legacy note grouped and explicitly non-authoritative.
 
-Result: a recurring one-commit drift can appear between runtime identity claim and final committed HEAD if not handled as a two-step process.
+## Machine-understanding status
 
-## 3) Duplicates and legacy noise
+A new machine can resolve without oral context:
 
-### D1. Repeated read-order contracts across multiple docs
+1. source of truth (`E:\CVVCODEX`)
+2. public safe mirror role (`WorkFLOW2` / `safe_mirror/main`)
+3. targeted external reading path (`scripts/export_chatgpt_bundle.py`)
+4. control/verdict path (`scripts/repo_control_center.py`)
+5. evolution readiness path (`docs/governance/*evolution*`)
 
-Read gate/order is duplicated in:
+## Next hardening direction
 
-- `README.md`
-- `docs/INSTRUCTION_INDEX.md`
-- `workspace_config/MACHINE_REPO_READING_RULES.md`
-
-No explicit single-source field is declared for read-order authority.
-
-### D2. Legacy origin references remain as noise
-
-`origin (WorkFLOW)` is marked non-canonical (correct), but still repeatedly present in governance docs. This is useful historically, but creates parsing noise for a new machine if not grouped under one explicit legacy section.
-
-## 4) Weak governance points
-
-### W1. Missing bootstrap read order in codex manifest
-
-`workspace_config/codex_manifest.json` has `bootstrap_read_order` as empty list.
-
-This weakens machine onboarding determinism despite strict read-gate requirements elsewhere.
-
-### W2. No explicit governance hierarchy document
-
-There is no dedicated doc defining authoritative hierarchy of governance layers (constitution -> execution law -> operational contracts -> evidence).
-
-### W3. No explicit anti-false-completion control matrix
-
-Completion controls exist, but they are distributed. There is no single matrix mapping each required completion check to exact proof artifact and failure status.
-
-### W4. No explicit governance self-audit policy
-
-No dedicated policy defines periodic governance integrity checks (consistency scan, stale artifact scan, contradiction scan, drift scan).
-
-## 5) Policy gaps
-
-Missing top-level controlling laws (documented as a single governance stack) for:
-
-- hierarchy resolution when multiple policy docs overlap
-- stale report invalidation rules
-- generation/commit sequencing for machine state artifacts
-- required self-audit cadence and required outputs
-- strict handling of legacy references (where allowed vs forbidden)
-
-## 6) Machine-understanding gaps
-
-### M1. New machine can misread stale artifacts as authoritative
-
-`PUBLIC_REPO_SANITIZATION_REPORT.md` currently looks authoritative but is stale and contradicts current mirror model.
-
-### M2. Governance entrypoint ambiguity
-
-There is no one “governance entrypoint” file that says: read this first for governance stack authority, then this order.
-
-### M3. Contract source fragmentation
-
-Task acceptance, execution, reading, sync, and publication constraints are each present, but distributed. Machine confidence depends on resolving multiple docs correctly.
-
-## 7) Missing controls before governance brain stack
-
-Required before stack hardening:
-
-1. Refresh stale sanitization report to current `WorkFLOW2/safe_mirror` canon.
-2. Resolve absolute-path policy conflict (either allow canonical absolute root or replace with placeholder model).
-3. Define one governance hierarchy source file and point all docs to it.
-4. Add codex bootstrap read order to manifest.
-5. Add stale-artifact invalidation rule and state-artifact generation/commit sequence rule.
+1. keep gap audit updated per release cycle
+2. keep policy evolution log synchronized with actual changes
+3. keep safe mirror artifacts fresh to current HEAD before final completion claims

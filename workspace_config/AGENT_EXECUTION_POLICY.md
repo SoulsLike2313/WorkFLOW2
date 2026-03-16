@@ -45,6 +45,11 @@ All execution and interpretation must comply with:
 - `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
 - `docs/governance/CREATIVE_REASONING_POLICY.md`
 - `docs/governance/AGENT_CHARACTER_PROFILE.md`
+- `docs/governance/EVOLUTION_READINESS_POLICY.md`
+- `docs/governance/MODEL_MATURITY_MODEL.md`
+- `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
+- `docs/governance/POLICY_EVOLUTION_LOG.md`
+- `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
 
 ## Rule 4: Bounded Execution
 
@@ -95,3 +100,14 @@ Required sequence:
 
 - Do not use full repository exposure as default reading channel.
 - Use `scripts/export_chatgpt_bundle.py` request-scoped bundles.
+
+## Rule 9: Repo Control Center Enforcement
+
+Before completion claim, run:
+
+1. `python scripts/repo_control_center.py status`
+2. `python scripts/repo_control_center.py trust`
+3. `python scripts/repo_control_center.py evolution`
+4. `python scripts/repo_control_center.py full-check`
+
+If trust/sync/admission are blocked, completion is forbidden.

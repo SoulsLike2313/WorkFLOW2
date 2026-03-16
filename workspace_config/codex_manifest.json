@@ -53,7 +53,14 @@
     "read docs/governance/DEVIATION_INTELLIGENCE_POLICY.md",
     "read docs/governance/GOVERNANCE_EVOLUTION_POLICY.md",
     "read docs/governance/CREATIVE_REASONING_POLICY.md",
-    "read docs/governance/AGENT_CHARACTER_PROFILE.md"
+    "read docs/governance/AGENT_CHARACTER_PROFILE.md",
+    "read docs/governance/EVOLUTION_READINESS_POLICY.md",
+    "read docs/governance/MODEL_MATURITY_MODEL.md",
+    "read docs/governance/EVOLUTION_SIGNAL_REGISTRY.md",
+    "read docs/governance/POLICY_EVOLUTION_LOG.md",
+    "read docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
+    "read scripts/repo_control_center.py",
+    "run python scripts/repo_control_center.py status"
   ],
   "task_governance": {
     "instruction_read_before_task_required": true,
@@ -145,7 +152,12 @@
       "docs/governance/DEVIATION_INTELLIGENCE_POLICY.md",
       "docs/governance/GOVERNANCE_EVOLUTION_POLICY.md",
       "docs/governance/CREATIVE_REASONING_POLICY.md",
-      "docs/governance/AGENT_CHARACTER_PROFILE.md"
+      "docs/governance/AGENT_CHARACTER_PROFILE.md",
+      "docs/governance/EVOLUTION_READINESS_POLICY.md",
+      "docs/governance/MODEL_MATURITY_MODEL.md",
+      "docs/governance/EVOLUTION_SIGNAL_REGISTRY.md",
+      "docs/governance/POLICY_EVOLUTION_LOG.md",
+      "docs/governance/NEXT_EVOLUTION_CANDIDATE.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -154,7 +166,23 @@
     "completion_requires_repo_visible_truth_sync_self_verification": true,
     "self_verification_policy_path": "docs/governance/SELF_VERIFICATION_POLICY.md",
     "contradiction_control_policy_path": "docs/governance/CONTRADICTION_CONTROL_POLICY.md",
-    "admission_gate_policy_path": "docs/governance/ADMISSION_GATE_POLICY.md"
+    "admission_gate_policy_path": "docs/governance/ADMISSION_GATE_POLICY.md",
+    "repo_control_center_script": "scripts/repo_control_center.py",
+    "repo_control_center_runtime_dir": "runtime/repo_control_center",
+    "repo_control_center_required_commands": [
+      "status",
+      "trust",
+      "sync",
+      "evolution",
+      "full-check"
+    ],
+    "evolution_readiness_policy_path": "docs/governance/EVOLUTION_READINESS_POLICY.md",
+    "model_maturity_model_path": "docs/governance/MODEL_MATURITY_MODEL.md",
+    "evolution_signal_registry_path": "docs/governance/EVOLUTION_SIGNAL_REGISTRY.md",
+    "policy_evolution_log_path": "docs/governance/POLICY_EVOLUTION_LOG.md",
+    "next_evolution_candidate_path": "docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
+    "repo_control_center_verdict_engine_required": true,
+    "evolution_readiness_engine_required": true
   },
   "scope_controls": {
     "allow_cross_project_changes_without_request": false,
@@ -222,7 +250,13 @@
     "docs/governance/DEVIATION_INTELLIGENCE_POLICY.md",
     "docs/governance/GOVERNANCE_EVOLUTION_POLICY.md",
     "docs/governance/CREATIVE_REASONING_POLICY.md",
-    "docs/governance/AGENT_CHARACTER_PROFILE.md"
+    "docs/governance/AGENT_CHARACTER_PROFILE.md",
+    "docs/governance/EVOLUTION_READINESS_POLICY.md",
+    "docs/governance/MODEL_MATURITY_MODEL.md",
+    "docs/governance/EVOLUTION_SIGNAL_REGISTRY.md",
+    "docs/governance/POLICY_EVOLUTION_LOG.md",
+    "docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
+    "scripts/repo_control_center.py"
   ],
   "required_active_project_files": [
     "projects/platform_test_agent/PROJECT_MANIFEST.json",
@@ -250,8 +284,14 @@
       "docs/governance/DEVIATION_INTELLIGENCE_POLICY.md",
       "docs/governance/GOVERNANCE_EVOLUTION_POLICY.md",
       "docs/governance/CREATIVE_REASONING_POLICY.md",
-      "docs/governance/AGENT_CHARACTER_PROFILE.md"
-    ]
+      "docs/governance/AGENT_CHARACTER_PROFILE.md",
+      "docs/governance/EVOLUTION_READINESS_POLICY.md",
+      "docs/governance/MODEL_MATURITY_MODEL.md",
+      "docs/governance/EVOLUTION_SIGNAL_REGISTRY.md",
+      "docs/governance/POLICY_EVOLUTION_LOG.md",
+      "docs/governance/NEXT_EVOLUTION_CANDIDATE.md"
+    ],
+    "repo_control_center": "scripts/repo_control_center.py"
   },
   "bootstrap_read_order": [
     "README.md",
@@ -272,6 +312,12 @@
     "docs/governance/GOVERNANCE_EVOLUTION_POLICY.md",
     "docs/governance/CREATIVE_REASONING_POLICY.md",
     "docs/governance/AGENT_CHARACTER_PROFILE.md",
+    "docs/governance/EVOLUTION_READINESS_POLICY.md",
+    "docs/governance/MODEL_MATURITY_MODEL.md",
+    "docs/governance/EVOLUTION_SIGNAL_REGISTRY.md",
+    "docs/governance/POLICY_EVOLUTION_LOG.md",
+    "docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
+    "scripts/repo_control_center.py",
     "workspace_config/GITHUB_SYNC_POLICY.md",
     "workspace_config/AGENT_EXECUTION_POLICY.md",
     "workspace_config/MACHINE_REPO_READING_RULES.md"

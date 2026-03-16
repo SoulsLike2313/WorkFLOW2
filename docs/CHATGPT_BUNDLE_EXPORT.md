@@ -80,3 +80,18 @@ Bundle task cannot be marked complete without:
 - repo-visible truth for required artifacts,
 - sync integrity,
 - self-verification pass.
+
+## Repo Control Center Integration
+
+Use Repo Control Center before external sharing:
+
+```powershell
+python scripts/repo_control_center.py bundle
+python scripts/repo_control_center.py full-check
+```
+
+Required condition for bundle release:
+
+- bundle check must be `READY`
+- trust/sync/governance/admission checks must not be blocked
+- evolution report must not contain blocking signals for current release gate
