@@ -190,3 +190,12 @@ For rapid context recovery, machine should read:
 2. `MACHINE_CONTEXT.md`
 
 These files do not override `workspace_config/workspace_manifest.json` or project manifests.
+
+## Rule 18: ChatGPT Targeted Bundle Reading Contract
+
+For ChatGPT request-scoped code/context sharing, canonical path is:
+
+- `scripts/export_chatgpt_bundle.py`
+- protocol: `docs/CHATGPT_BUNDLE_EXPORT.md`
+
+Machine should prefer request-scoped bundle generation (`request`, `files`, `paths`, `project`, `context`) over broad repository exposure.

@@ -47,6 +47,7 @@ Top-level purpose:
 - Canonical local working root: `E:\CVVCODEX`
 - Local root is used for all sanitation, validation, and publication-safe preparation.
 - GitHub `WorkFLOW` (`origin/main`) is the synchronized remote target for approved safe state only.
+- ChatGPT reading is **CLI-first targeted bundle export**, not full-repository exposure.
 - Publication-safe state manifest is generated at:
   - `workspace_config/SAFE_MIRROR_MANIFEST.json`
   - `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
@@ -56,6 +57,33 @@ Build publication-safe mirror metadata from local root:
 ```powershell
 python scripts/build_safe_mirror_manifest.py --repo-root E:\CVVCODEX
 ```
+
+## Targeted ChatGPT Bundle Export (CLI-First)
+
+Canonical exporter:
+
+```powershell
+python scripts/export_chatgpt_bundle.py <mode> [options]
+```
+
+Supported modes:
+
+- `context`: machine-readable baseline context.
+- `files --include ...`: explicit file list.
+- `paths --include ...`: mixed file/directory list.
+- `project --slug <slug>`: policy-approved bundle for one project.
+- `request --request-file <file>`: main practical flow for ChatGPT file requests.
+
+Core workflow:
+
+1. ChatGPT requests exact files/paths.
+2. User passes that list via CLI args or request file.
+3. Codex builds sanitized bundle zip with manifest + report.
+4. User uploads bundle to ChatGPT.
+
+Reference:
+
+- `docs/CHATGPT_BUNDLE_EXPORT.md`
 
 Fast orientation files:
 

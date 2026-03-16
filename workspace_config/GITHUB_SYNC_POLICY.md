@@ -13,6 +13,12 @@ Forbidden in tracked state:
 
 GitHub visibility is public for audit readability. Public mirror/tunnel publication flows remain non-canonical.
 
+ChatGPT reading is request-scoped via targeted local bundle export:
+
+- `python scripts/export_chatgpt_bundle.py <mode> ...`
+
+Full repository exposure is not required for ChatGPT task execution.
+
 ## Mandatory Rule
 
 No task is complete unless the result is visible in GitHub on `origin/main`.

@@ -19,6 +19,7 @@
 - Local working root for preparation: `E:\CVVCODEX`
 - Remote publication-safe target: `origin/main` (`WorkFLOW`)
 - Rule: local sanitation/validation first, then sync approved state only.
+- ChatGPT reading model: targeted CLI bundle export (`scripts/export_chatgpt_bundle.py`), not full-repository exposure.
 
 ## Canonical Top-Level Directories
 
@@ -57,3 +58,8 @@ Authority: `workspace_config/workspace_manifest.json`.
 
 - Public mirror/tunnel/server-publication tooling is excluded from canonical repo workflow.
 - Local network diagnostics and temporary setup reports are excluded from tracked state.
+
+## Targeted Bundle Entrypoint
+
+- Exporter: `python scripts/export_chatgpt_bundle.py`
+- Protocol doc: `docs/CHATGPT_BUNDLE_EXPORT.md`

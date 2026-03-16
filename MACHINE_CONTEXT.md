@@ -9,6 +9,7 @@ Provide a deterministic context snapshot for Codex/ChatGPT/new machine readers.
 - Repository visibility model: public audit/core workspace.
 - Local preparation root: `E:\CVVCODEX`.
 - Canonical external state: GitHub (`origin/main`).
+- Canonical ChatGPT-reading mechanism: targeted safe bundle export (`scripts/export_chatgpt_bundle.py`).
 - Active project: `platform_test_agent`.
 - Guarded projects:
   - `tiktok_agent_platform` (`manual_testing_blocked`)
@@ -67,3 +68,12 @@ Do not treat the following as source of truth:
 - Safe mirror manifest source:
   - `workspace_config/SAFE_MIRROR_MANIFEST.json`
   - `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
+
+## ChatGPT Request Workflow (CLI-First)
+
+1. ChatGPT requests exact files/paths.
+2. User passes request list to exporter (`files`, `paths`, or `request` mode).
+3. Exporter runs safety scan and writes:
+   - `CHATGPT_BUNDLE_MANIFEST.json`
+   - `EXPORT_REPORT.md`
+   - `chatgpt_bundle_<mode>_<timestamp>.zip`

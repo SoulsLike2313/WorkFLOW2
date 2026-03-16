@@ -97,6 +97,7 @@
     "next_canonical_step_path": "docs/NEXT_CANONICAL_STEP.md",
     "machine_changelog_path": "docs/MACHINE_CHANGELOG.md",
     "repo_publication_policy_path": "docs/repo_publication_policy.md",
+    "chatgpt_bundle_export_doc_path": "docs/CHATGPT_BUNDLE_EXPORT.md",
     "safe_mirror_manifest_path": "workspace_config/SAFE_MIRROR_MANIFEST.json",
     "safe_mirror_report_path": "docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md",
     "private_repo_required": false,
@@ -159,6 +160,7 @@
     "docs/NEXT_CANONICAL_STEP.md",
     "docs/MACHINE_CHANGELOG.md",
     "docs/repo_publication_policy.md",
+    "docs/CHATGPT_BUNDLE_EXPORT.md",
     "workspace_config/SAFE_MIRROR_MANIFEST.json",
     "docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md",
     "docs/INSTRUCTION_INDEX.md",
@@ -174,7 +176,8 @@
     "workspace_config/COMPLETION_GATE_RULES.md",
     "scripts/check_repo_sync.py"
     ,
-    "scripts/build_safe_mirror_manifest.py"
+    "scripts/build_safe_mirror_manifest.py",
+    "scripts/export_chatgpt_bundle.py"
   ],
   "required_active_project_files": [
     "projects/platform_test_agent/PROJECT_MANIFEST.json",

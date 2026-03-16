@@ -46,6 +46,7 @@
     "next_canonical_step_path": "docs/NEXT_CANONICAL_STEP.md",
     "machine_changelog_path": "docs/MACHINE_CHANGELOG.md",
     "repo_publication_policy_path": "docs/repo_publication_policy.md",
+    "chatgpt_bundle_export_doc_path": "docs/CHATGPT_BUNDLE_EXPORT.md",
     "safe_mirror_manifest_path": "workspace_config/SAFE_MIRROR_MANIFEST.json",
     "safe_mirror_report_path": "docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md",
     "private_repo_required": false,
@@ -100,6 +101,7 @@
     "project_startup_run_developer": "python scripts/project_startup.py run --project-slug <slug> --entrypoint developer --startup-kind developer",
     "repo_sync_check": "python scripts/check_repo_sync.py --remote origin --branch main",
     "build_safe_mirror_manifest": "python scripts/build_safe_mirror_manifest.py --repo-root E:\\CVVCODEX",
+    "export_chatgpt_bundle": "python scripts/export_chatgpt_bundle.py <context|files|paths|project|request> [mode_args]",
     "repo_trust_desktop_ui": "python projects/platform_test_agent/scripts/repo_control_center.py"
   },
   "verification_entrypoints": {

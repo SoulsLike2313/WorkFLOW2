@@ -13,6 +13,15 @@ Publication-safe synchronization model:
 1. sanitize and validate locally in `E:\CVVCODEX`
 2. build safe mirror manifest/report
 3. sync approved state to GitHub `WorkFLOW`
+4. use targeted bundle export for ChatGPT reading requests
+
+## ChatGPT Reading Boundary
+
+ChatGPT reading must be request-scoped via:
+
+- `python scripts/export_chatgpt_bundle.py <mode> ...`
+
+Full repository exposure is non-canonical for task-scoped ChatGPT analysis.
 
 ## Published in Public Repository
 

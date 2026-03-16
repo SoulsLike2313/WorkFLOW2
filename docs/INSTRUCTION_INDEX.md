@@ -61,6 +61,7 @@ If this order is not completed, task status is `REJECTED`.
 | `docs/repo_publication_policy.md` | Public publication boundary (what is kept public vs local-only) | P0 | machine, codex, developer, product reviewer |
 | `workspace_config/SAFE_MIRROR_MANIFEST.json` | Publication-safe local-to-GitHub state snapshot for machine reading | P0 | machine, codex, product reviewer |
 | `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md` | Human-readable safe mirror build and exclusion report | P1 | codex, developer, product reviewer |
+| `docs/CHATGPT_BUNDLE_EXPORT.md` | CLI-first protocol for targeted ChatGPT bundle export from local safe state | P1 | machine, codex, developer |
 | `docs/CURRENT_PLATFORM_STATE.md` | Canonical machine snapshot of active priority and project states | P0 | machine, codex, developer, product reviewer |
 | `docs/NEXT_CANONICAL_STEP.md` | Canonical immediate execution direction ("what do we do next") | P0 | machine, codex, product reviewer |
 | `docs/MACHINE_CHANGELOG.md` | Machine continuity log of accepted platform truth changes | P1 | machine, codex, developer, product reviewer |
@@ -76,6 +77,7 @@ If this order is not completed, task status is `REJECTED`.
 | `scripts/remove_system.py` | Machine remove workflow for shared systems | P2 | machine, codex, developer |
 | `scripts/check_repo_sync.py` | Machine repo sync gate (branch/head/push/path visibility) | P2 | machine, codex, developer |
 | `scripts/build_safe_mirror_manifest.py` | Local publication-safe mirror manifest builder and safety validator | P2 | machine, codex, developer |
+| `scripts/export_chatgpt_bundle.py` | Targeted request-file/files/paths/project/context safe bundle exporter for ChatGPT | P2 | machine, codex, developer |
 | `shared_systems/*/SYSTEM_MANIFEST.json` | Shared system source of truth per module | P2 | machine, codex, developer |
 | `docs/CHECKPOINT.md` | Historical checkpoint log | P3 | developer |
 | `docs/DEV_CONTINUITY.md` | Historical continuity note | P3 | developer |

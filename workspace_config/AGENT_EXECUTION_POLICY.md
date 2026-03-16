@@ -188,3 +188,4 @@ Mandatory behavior:
 2. Public mirror/tunnel/public endpoint flows are forbidden in canonical execution.
 3. Router/WAN/LAN publication diagnostics are non-canonical artifacts and must not be added to tracked state.
 4. If sensitive publication artifacts are detected, cleanup and ignore hardening are required before completion.
+5. ChatGPT-reading workflow is CLI-first targeted bundle export (`scripts/export_chatgpt_bundle.py`), not full-repository exposure by default.
