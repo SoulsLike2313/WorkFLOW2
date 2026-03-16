@@ -2,7 +2,7 @@
 
 ## Workspace Purpose
 
-`WorkFLOW` is a private multi-project workspace with an audit-first platform model.
+`WorkFLOW` is a public audit/core multi-project workspace with an audit-first platform model.
 
 ## Read First
 

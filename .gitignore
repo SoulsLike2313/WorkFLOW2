@@ -15,6 +15,12 @@ env/
 build/
 dist/
 installer/output/
+out/
+outputs/
+export/
+exports/
+release/
+artifacts/
 *.pkg
 *.exe
 *.tmp
@@ -31,6 +37,10 @@ runtime/
 dev_logs/
 startup_trace.log
 setup_reports/
+logs/
+tmp/
+temp/
+cache/
 
 # Security-sensitive files
 .env
@@ -46,9 +56,24 @@ tokens.*
 secrets.*
 credentials*
 .netrc
+*.sqlite
+*.sqlite3
+*.db
 
 # Deprecated publication/tunnel layer
 tools/public_mirror/
+setup_assets/
+
+# Dependency and local environment trees
+node_modules/
+
+# Heavy local data not required for public audit layer
+models/
+datasets/
+data/raw/
+media_cache/
+downloads/
+checkpoints/
 
 # Local project data
 %APPDATA%/

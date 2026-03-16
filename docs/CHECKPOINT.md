@@ -147,9 +147,9 @@
 - Main window size increased for better readability.
 - Table column `Режим запуска` widened to avoid clipping (`Лаунчер + Play` now fully visible).
 - Desktop shortcut created:
-  - `C:\Users\PC\Desktop\Voice Launcher.lnk`
-  - target: `E:\CVVCODEX\dist\VoiceLauncher.exe`
-  - icon from local PC image converted to: `C:\Users\PC\AppData\Roaming\VoiceLauncher\desktop_custom_icon.ico`
+  - `<USER_HOME>\Desktop\Voice Launcher.lnk`
+  - target: `<REPO_ROOT>\dist\VoiceLauncher.exe`
+  - icon from local PC image converted to: `<USER_HOME>\AppData\Roaming\VoiceLauncher\desktop_custom_icon.ico`
 - Rebuilt exe and launched updated app.
 ### 2026-03-10 19:10 | Launcher Anti-Spam + Cold Start Fix
 - Reduced first-run recognition lag:

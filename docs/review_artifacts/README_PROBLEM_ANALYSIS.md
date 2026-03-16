@@ -7,7 +7,7 @@ To avoid noisy full-file dumps, the root `README.md` was reviewed in two steps:
 
 ## Targeted markers reviewed
 Markers checked first:
-- `E:\CVVCODEX`
+- `<REPO_ROOT>`
 - `.exe`
 - `active_projects`
 - `tiktok_automation_app`
@@ -41,7 +41,7 @@ Markers checked first:
    - increases chance of root/module documentation divergence over time.
 
 ## Critical stale markers status in previous README
-- `E:\CVVCODEX`: not found
+- `<REPO_ROOT>`: not found
 - `.exe` references: not found
 - `active_projects`: not found
 - `tiktok_automation_app`: not found

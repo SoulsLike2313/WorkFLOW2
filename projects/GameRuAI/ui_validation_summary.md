@@ -54,15 +54,15 @@
 
 ## Artifacts
 
-- root_summary_json: `E:\CVVCODEX\projects\GameRuAI\ui_validation_summary.json`
-- root_summary_md: `E:\CVVCODEX\projects\GameRuAI\ui_validation_summary.md`
-- root_screenshots_manifest: `E:\CVVCODEX\projects\GameRuAI\ui_screenshots_manifest.json`
-- validate_run_dir: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\validate_20260313_045243`
-- latest_run_txt: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\latest_run.txt`
-- doctor_summary_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\20260313_045243\ui_doctor_summary.json`
-- doctor_manifest_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_validation\20260313_045243\ui_screenshots_manifest.json`
-- snapshot_summary_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_snapshots\20260313_045340\ui_snapshot_summary.json`
-- snapshot_manifest_json: `E:\CVVCODEX\projects\GameRuAI\runtime\ui_snapshots\20260313_045340\ui_screenshots_manifest.json`
+- root_summary_json: `<REPO_ROOT>\projects\GameRuAI\ui_validation_summary.json`
+- root_summary_md: `<REPO_ROOT>\projects\GameRuAI\ui_validation_summary.md`
+- root_screenshots_manifest: `<REPO_ROOT>\projects\GameRuAI\ui_screenshots_manifest.json`
+- validate_run_dir: `<REPO_ROOT>\projects\GameRuAI\runtime\ui_validation\validate_20260313_045243`
+- latest_run_txt: `<REPO_ROOT>\projects\GameRuAI\runtime\ui_validation\latest_run.txt`
+- doctor_summary_json: `<REPO_ROOT>\projects\GameRuAI\runtime\ui_validation\20260313_045243\ui_doctor_summary.json`
+- doctor_manifest_json: `<REPO_ROOT>\projects\GameRuAI\runtime\ui_validation\20260313_045243\ui_screenshots_manifest.json`
+- snapshot_summary_json: `<REPO_ROOT>\projects\GameRuAI\runtime\ui_snapshots\20260313_045340\ui_snapshot_summary.json`
+- snapshot_manifest_json: `<REPO_ROOT>\projects\GameRuAI\runtime\ui_snapshots\20260313_045340\ui_screenshots_manifest.json`
 
 ## Warnings
 

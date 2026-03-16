@@ -1,0 +1,28 @@
+{
+  "generated_at_utc": "2026-03-16T01:58:54.443798+00:00",
+  "scope": "public_audit_safe_rebuild",
+  "tracked_file_count": 1016,
+  "removed_from_tracking": [
+    "setup_assets/windows10pro/SetupHost_strings.txt",
+    "setup_assets/windows10pro/Strings.zip",
+    "setup_assets/windows10pro/sdsbase.js",
+    "setup_assets/windows10pro/strings_tool/Eula.txt",
+    "setup_assets/windows10pro/windows10iso_page.html"
+  ],
+  "secret_scan": {
+    "status": "PASS",
+    "finding_count": 0,
+    "findings": []
+  },
+  "absolute_windows_path_scan": {
+    "status": "PASS_WITH_ALLOWED_EXAMPLES",
+    "hit_count": 2,
+    "hits": [
+      "projects/adaptive_trading/adaptive_trading_gui_ultra.py",
+      "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/worker.py"
+    ],
+    "notes": "Remaining hits are local runtime examples/placeholders, not credentials."
+  },
+  "publication_policy_path": "docs/repo_publication_policy.md",
+  "public_visibility_target": "public"
+}

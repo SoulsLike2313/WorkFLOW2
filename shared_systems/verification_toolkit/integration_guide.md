@@ -13,7 +13,7 @@ This module is portable and intended to be installed through:
 
 Removal must be executed through:
 - scripts/remove_system.py
-"@ | Set-Content -Path (Join-Path E:\CVVCODEX\shared_systems\verification_toolkit 'README.md') -Encoding UTF8
+"@ | Set-Content -Path (Join-Path <REPO_ROOT>\shared_systems\verification_toolkit 'README.md') -Encoding UTF8
 
   @"
 # Integration Guide: Verification Toolkit

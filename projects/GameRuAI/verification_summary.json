@@ -2,7 +2,7 @@
   "project": "GameRuAI",
   "project_slug": "game_ru_ai",
   "verification_run_id": "game_ru_ai-startup-20260313T020923Z",
-  "verification_dir": "E:\\CVVCODEX\\runtime\\projects\\game_ru_ai\\verification\\verify-20260313T020923Z",
+  "verification_dir": "<REPO_ROOT>\\runtime\\projects\\game_ru_ai\\verification\\verify-20260313T020923Z",
   "status": "PASS",
   "exit_code": 0,
   "verification_command": "python -m pytest -q",

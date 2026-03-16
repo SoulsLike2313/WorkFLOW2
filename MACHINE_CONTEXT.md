@@ -6,7 +6,7 @@ Provide a deterministic context snapshot for Codex/ChatGPT/new machine readers.
 
 ## Current Canonical State
 
-- Repository visibility model: private workspace.
+- Repository visibility model: public audit/core workspace.
 - Canonical external state: GitHub (`origin/main`).
 - Active project: `platform_test_agent`.
 - Guarded projects:

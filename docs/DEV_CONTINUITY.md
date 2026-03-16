@@ -18,8 +18,8 @@ Quick resume checklist:
 
 Build command:
 
-`C:\\Users\\PC\\.venv312\\Scripts\\python.exe -m PyInstaller --noconfirm VoiceLauncher.spec`
+`<USER_HOME>\\.venv312\\Scripts\\python.exe -m PyInstaller --noconfirm VoiceLauncher.spec`
 
 Run command (dev):
 
-`C:\\Users\\PC\\.venv312\\Scripts\\python.exe E:\\CVVCODEX\\voice_launcher.py`
+`<USER_HOME>\\.venv312\\Scripts\\python.exe <REPO_ROOT>\\voice_launcher.py`

@@ -2,7 +2,7 @@
 
 ## Privacy Boundary
 
-Repository workflow is private-only.
+Repository workflow is public-audit-safe.
 
 Forbidden in tracked state:
 
@@ -11,7 +11,7 @@ Forbidden in tracked state:
 3. router/WAN/LAN exposure diagnostics
 4. local publication runtime logs
 
-GitHub visibility must remain private. No public publication flow is canonical.
+GitHub visibility is public for audit readability. Public mirror/tunnel publication flows remain non-canonical.
 
 ## Mandatory Rule
 

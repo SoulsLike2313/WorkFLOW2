@@ -5,7 +5,7 @@ Target file: README.md
 Status: PASS
 
 ## Forbidden markers check
-- PASS: no forbidden markers found (`E:\CVVCODEX`, `active_projects`, `tiktok_automation_app`, `.exe`)
+- PASS: no forbidden markers found (`<REPO_ROOT>`, `active_projects`, `tiktok_automation_app`, `.exe`)
 
 ## Legacy launch pattern check
 - PASS: no stale legacy launch patterns found

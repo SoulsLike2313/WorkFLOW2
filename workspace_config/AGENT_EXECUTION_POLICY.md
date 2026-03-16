@@ -182,9 +182,9 @@ Mandatory behavior:
 3. honest reporting of checks, failures, and uncertainty
 4. no dismissive/arrogant wording
 
-## Rule 15: Private Repository Boundary
+## Rule 15: Public Audit Repository Boundary
 
-1. Repository visibility must remain private.
+1. Repository visibility is public for audit readability.
 2. Public mirror/tunnel/public endpoint flows are forbidden in canonical execution.
 3. Router/WAN/LAN publication diagnostics are non-canonical artifacts and must not be added to tracked state.
-4. If such artifacts are detected, cleanup and ignore hardening are required before completion.
+4. If sensitive publication artifacts are detected, cleanup and ignore hardening are required before completion.

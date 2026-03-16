@@ -96,7 +96,8 @@
     "current_platform_state_path": "docs/CURRENT_PLATFORM_STATE.md",
     "next_canonical_step_path": "docs/NEXT_CANONICAL_STEP.md",
     "machine_changelog_path": "docs/MACHINE_CHANGELOG.md",
-    "private_repo_required": true,
+    "repo_publication_policy_path": "docs/repo_publication_policy.md",
+    "private_repo_required": false,
     "public_mirror_publication_artifacts_allowed": false,
     "mandatory_post_task_git_finalization": true,
     "post_task_git_finalization_order": [
@@ -155,6 +156,7 @@
     "docs/CURRENT_PLATFORM_STATE.md",
     "docs/NEXT_CANONICAL_STEP.md",
     "docs/MACHINE_CHANGELOG.md",
+    "docs/repo_publication_policy.md",
     "docs/INSTRUCTION_INDEX.md",
     "workspace_config/PROJECT_RULES.md",
     "scripts/bootstrap_workspace.ps1",

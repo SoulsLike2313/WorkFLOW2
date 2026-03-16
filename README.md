@@ -49,8 +49,9 @@ Fast orientation files:
 
 ## Privacy and Publication Rules
 
-- Repository is private by policy.
+- Repository is maintained as a public audit/core workspace.
 - GitHub is the canonical external state; local-only changes are not accepted as complete.
+- Publication boundaries are defined in `docs/repo_publication_policy.md`.
 - Public mirror/tunnel/publication workflows are non-canonical and excluded from this repository.
 - Router/WAN/LAN diagnostics and publication artifacts must not be committed.
 
