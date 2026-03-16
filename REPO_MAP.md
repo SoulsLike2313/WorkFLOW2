@@ -11,6 +11,14 @@
 3. `workspace_config/codex_manifest.json`
 4. `docs/CURRENT_PLATFORM_STATE.md`
 5. `docs/NEXT_CANONICAL_STEP.md`
+6. `workspace_config/SAFE_MIRROR_MANIFEST.json`
+7. `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
+
+## Local Root and Sync Target
+
+- Local working root for preparation: `E:\CVVCODEX`
+- Remote publication-safe target: `origin/main` (`WorkFLOW`)
+- Rule: local sanitation/validation first, then sync approved state only.
 
 ## Canonical Top-Level Directories
 

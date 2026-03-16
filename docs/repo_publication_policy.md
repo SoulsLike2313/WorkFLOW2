@@ -6,6 +6,14 @@ This repository is maintained as a **public audit/core workspace**.
 
 Canonical external state is `origin/main`.
 
+Canonical local preparation root is `E:\CVVCODEX`.
+
+Publication-safe synchronization model:
+
+1. sanitize and validate locally in `E:\CVVCODEX`
+2. build safe mirror manifest/report
+3. sync approved state to GitHub `WorkFLOW`
+
 ## Published in Public Repository
 
 The public repository intentionally keeps:
@@ -50,3 +58,4 @@ Before declaring any task complete:
 1. `git status` must be clean.
 2. `HEAD` must equal `origin/main`.
 3. required outputs must be repo-visible on GitHub.
+4. `workspace_config/SAFE_MIRROR_MANIFEST.json` must be refreshed for current state.

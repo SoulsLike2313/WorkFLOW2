@@ -59,6 +59,8 @@ If this order is not completed, task status is `REJECTED`.
 | `workspace_config/GITHUB_SYNC_POLICY.md` | GitHub visibility and sync completion policy | P0 | machine, codex, product reviewer |
 | `workspace_config/COMPLETION_GATE_RULES.md` | Hard completion gate with mandatory post-task `git add -> git commit -> git push` and repo-visible outputs | P0 | machine, codex, product reviewer |
 | `docs/repo_publication_policy.md` | Public publication boundary (what is kept public vs local-only) | P0 | machine, codex, developer, product reviewer |
+| `workspace_config/SAFE_MIRROR_MANIFEST.json` | Publication-safe local-to-GitHub state snapshot for machine reading | P0 | machine, codex, product reviewer |
+| `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md` | Human-readable safe mirror build and exclusion report | P1 | codex, developer, product reviewer |
 | `docs/CURRENT_PLATFORM_STATE.md` | Canonical machine snapshot of active priority and project states | P0 | machine, codex, developer, product reviewer |
 | `docs/NEXT_CANONICAL_STEP.md` | Canonical immediate execution direction ("what do we do next") | P0 | machine, codex, product reviewer |
 | `docs/MACHINE_CHANGELOG.md` | Machine continuity log of accepted platform truth changes | P1 | machine, codex, developer, product reviewer |
@@ -73,6 +75,7 @@ If this order is not completed, task status is `REJECTED`.
 | `scripts/install_system.py` | Machine install workflow for shared systems | P2 | machine, codex, developer |
 | `scripts/remove_system.py` | Machine remove workflow for shared systems | P2 | machine, codex, developer |
 | `scripts/check_repo_sync.py` | Machine repo sync gate (branch/head/push/path visibility) | P2 | machine, codex, developer |
+| `scripts/build_safe_mirror_manifest.py` | Local publication-safe mirror manifest builder and safety validator | P2 | machine, codex, developer |
 | `shared_systems/*/SYSTEM_MANIFEST.json` | Shared system source of truth per module | P2 | machine, codex, developer |
 | `docs/CHECKPOINT.md` | Historical checkpoint log | P3 | developer |
 | `docs/DEV_CONTINUITY.md` | Historical continuity note | P3 | developer |

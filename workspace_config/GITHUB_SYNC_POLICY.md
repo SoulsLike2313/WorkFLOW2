@@ -17,6 +17,12 @@ GitHub visibility is public for audit readability. Public mirror/tunnel publicat
 
 No task is complete unless the result is visible in GitHub on `origin/main`.
 
+Local preparation rule:
+
+1. all sanitation and publication-safe validation are executed in local root (`E:\CVVCODEX`)
+2. only approved safe state is synchronized to GitHub
+3. safe mirror state proof is required (`workspace_config/SAFE_MIRROR_MANIFEST.json`)
+
 ## Mandatory Post-Task Git Finalization
 
 After every completed task, this exact sequence is mandatory:

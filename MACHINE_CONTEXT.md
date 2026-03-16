@@ -7,6 +7,7 @@ Provide a deterministic context snapshot for Codex/ChatGPT/new machine readers.
 ## Current Canonical State
 
 - Repository visibility model: public audit/core workspace.
+- Local preparation root: `E:\CVVCODEX`.
 - Canonical external state: GitHub (`origin/main`).
 - Active project: `platform_test_agent`.
 - Guarded projects:
@@ -59,3 +60,10 @@ Do not treat the following as source of truth:
 - review artifacts as registry authority
 - local-only diagnostics
 - any non-committed local files
+
+## Publication-Safe Mirror State
+
+- Local sanitation/validation is completed before sync to GitHub.
+- Safe mirror manifest source:
+  - `workspace_config/SAFE_MIRROR_MANIFEST.json`
+  - `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`

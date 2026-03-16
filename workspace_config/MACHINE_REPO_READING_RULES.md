@@ -44,6 +44,7 @@ State/priority continuity rules:
 7. `docs/NEXT_CANONICAL_STEP.md` = canonical immediate execution direction
 8. `docs/MACHINE_CHANGELOG.md` = canonical machine continuity log
 9. `workspace_config/COMMUNICATION_STYLE_POLICY.md` = mandatory communication behavior contract
+10. `workspace_config/SAFE_MIRROR_MANIFEST.json` = publication-safe local-to-remote state snapshot
 
 ## Rule 3: Active Project Detection
 

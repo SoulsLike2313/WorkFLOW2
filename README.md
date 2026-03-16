@@ -42,6 +42,21 @@ Top-level purpose:
 - `workspace_config/`: machine-readable workspace governance and templates.
 - `runtime/`: generated runtime and diagnostics artifacts.
 
+## Local Preparation -> GitHub Target Model
+
+- Canonical local working root: `E:\CVVCODEX`
+- Local root is used for all sanitation, validation, and publication-safe preparation.
+- GitHub `WorkFLOW` (`origin/main`) is the synchronized remote target for approved safe state only.
+- Publication-safe state manifest is generated at:
+  - `workspace_config/SAFE_MIRROR_MANIFEST.json`
+  - `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
+
+Build publication-safe mirror metadata from local root:
+
+```powershell
+python scripts/build_safe_mirror_manifest.py --repo-root E:\CVVCODEX
+```
+
 Fast orientation files:
 
 - `REPO_MAP.md`: concise directory map and reading order.
