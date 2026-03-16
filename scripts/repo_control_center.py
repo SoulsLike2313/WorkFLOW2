@@ -328,29 +328,113 @@ def mirror_checks(git_state: GitState) -> dict[str, Any]:
     missing = missing_paths(SAFE_STATE_FILES)
     blockers: list[str] = []
     warnings: list[str] = []
-    evidence: dict[str, Any] = {"required_files": SAFE_STATE_FILES, "missing": missing}
+    evidence: dict[str, Any] = {
+        "required_files": SAFE_STATE_FILES,
+        "missing": missing,
+        "evidence_contract_model": "basis_commit",
+    }
 
     if missing:
         blockers.extend([f"missing safe-state artifact: {p}" for p in missing])
 
     if exists("workspace_config/SAFE_MIRROR_MANIFEST.json"):
         safe_manifest = load_json("workspace_config/SAFE_MIRROR_MANIFEST.json")
-        manifest_head = safe_manifest.get("head_sha")
-        evidence["manifest_head"] = manifest_head
+        basis_head = safe_manifest.get("basis_head_sha") or safe_manifest.get("head_sha")
+        evidence_mode = safe_manifest.get("evidence_mode", "legacy")
+        contract_version = safe_manifest.get("evidence_contract_version")
+        evidence_generated_at = safe_manifest.get("evidence_generated_at")
+        evidence["basis_head_sha"] = basis_head
+        evidence["evidence_mode"] = evidence_mode
+        evidence["evidence_contract_version"] = contract_version
+        evidence["evidence_generated_at"] = evidence_generated_at
         evidence["current_head"] = git_state.head
-        evidence["manifest_head_matches_current"] = manifest_head == git_state.head
-        if manifest_head != git_state.head:
+
+        if not basis_head:
+            blockers.append("SAFE_MIRROR_MANIFEST missing basis_head_sha")
+        if not contract_version:
+            blockers.append("SAFE_MIRROR_MANIFEST missing evidence_contract_version")
+        if not evidence_generated_at:
+            blockers.append("SAFE_MIRROR_MANIFEST missing evidence_generated_at")
+
+        basis_commit_valid = False
+        if basis_head:
+            commit_check = subprocess.run(
+                ["git", "cat-file", "-e", f"{basis_head}^{{commit}}"],
+                cwd=REPO_ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            basis_commit_valid = commit_check.returncode == 0
+            evidence["basis_commit_valid"] = basis_commit_valid
+            if not basis_commit_valid:
+                blockers.append(f"basis_head_sha is not a valid commit: {basis_head}")
+
+        evidence_valid = False
+        if basis_head and basis_commit_valid:
+            if evidence_mode == "runtime_current_head":
+                evidence_valid = git_state.head == basis_head
+                evidence["runtime_mode_head_match"] = evidence_valid
+                if not evidence_valid:
+                    warnings.append(
+                        f"runtime_current_head mismatch: basis_head_sha={basis_head} current={git_state.head}"
+                    )
+            elif evidence_mode == "tracked_evidence_refresh_commit":
+                if git_state.head == basis_head:
+                    warnings.append("tracked evidence mode expects evidence refresh commit on top of basis_head_sha")
+                    evidence["basis_to_current_changed_files"] = []
+                    evidence["non_evidence_changes"] = []
+                else:
+                    ancestor_check = subprocess.run(
+                        ["git", "merge-base", "--is-ancestor", basis_head, git_state.head],
+                        cwd=REPO_ROOT,
+                        text=True,
+                        capture_output=True,
+                        check=False,
+                    )
+                    basis_is_ancestor = ancestor_check.returncode == 0
+                    evidence["basis_is_ancestor_of_current"] = basis_is_ancestor
+                    if not basis_is_ancestor:
+                        warnings.append("basis_head_sha is not ancestor of current HEAD")
+                    diff_out = run_cmd(["git", "diff", "--name-only", f"{basis_head}..{git_state.head}"], allow_fail=True)
+                    changed_files = [x.strip() for x in diff_out.splitlines() if x.strip()]
+                    non_evidence_changes = [x for x in changed_files if x not in SAFE_STATE_FILES]
+                    evidence["basis_to_current_changed_files"] = changed_files
+                    evidence["non_evidence_changes"] = non_evidence_changes
+                    if not changed_files:
+                        warnings.append("no changes found between basis_head_sha and current HEAD")
+                    if non_evidence_changes:
+                        warnings.append(
+                            "tracked evidence refresh commit model violated: non-evidence files changed from basis to current"
+                        )
+                    evidence_valid = basis_is_ancestor and bool(changed_files) and not non_evidence_changes
+            else:
+                warnings.append(f"unsupported evidence_mode in SAFE_MIRROR_MANIFEST: {evidence_mode}")
+                evidence["unsupported_evidence_mode"] = evidence_mode
+
+        evidence["evidence_valid"] = evidence_valid
+        evidence["stale_evidence"] = not evidence_valid
+        if not evidence_valid and not blockers:
             warnings.append(
-                f"SAFE_MIRROR_MANIFEST head mismatch: manifest={manifest_head} current={git_state.head}"
+                "SAFE_MIRROR_MANIFEST evidence contract not satisfied for current HEAD"
             )
 
     if exists("docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md"):
         report_text = read_text("docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md")
-        evidence["report_mentions_current_head"] = git_state.head in report_text
-        if git_state.head not in report_text:
-            warnings.append("SAFE_MIRROR_BUILD_REPORT is stale: current HEAD not referenced")
-
-    evidence["stale_evidence"] = bool(warnings)
+        basis_head_for_report = evidence.get("basis_head_sha")
+        evidence["report_mentions_basis_head"] = bool(basis_head_for_report and basis_head_for_report in report_text)
+        evidence["report_mentions_contract_version"] = bool(
+            evidence.get("evidence_contract_version") and str(evidence["evidence_contract_version"]) in report_text
+        )
+        evidence["report_mentions_evidence_mode"] = bool(
+            evidence.get("evidence_mode") and str(evidence["evidence_mode"]) in report_text
+        )
+        if basis_head_for_report and basis_head_for_report not in report_text:
+            warnings.append("SAFE_MIRROR_BUILD_REPORT missing basis_head_sha reference")
+        if evidence.get("evidence_contract_version") and str(evidence["evidence_contract_version"]) not in report_text:
+            warnings.append("SAFE_MIRROR_BUILD_REPORT missing evidence_contract_version reference")
+        if evidence.get("evidence_mode") and str(evidence["evidence_mode"]) not in report_text:
+            warnings.append("SAFE_MIRROR_BUILD_REPORT missing evidence_mode reference")
 
     if blockers:
         verdict = "BLOCKED"

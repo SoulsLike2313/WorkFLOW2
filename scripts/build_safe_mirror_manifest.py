@@ -14,6 +14,11 @@ from typing import Any
 
 SAFE_MIRROR_MANIFEST_PATH = Path("workspace_config/SAFE_MIRROR_MANIFEST.json")
 SAFE_MIRROR_REPORT_PATH = Path("docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md")
+EVIDENCE_CONTRACT_VERSION = "2.0.0"
+EVIDENCE_FILES = [
+    "workspace_config/SAFE_MIRROR_MANIFEST.json",
+    "docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md",
+]
 
 REQUIRED_FILES = [
     "README.md",
@@ -81,6 +86,17 @@ class GitState:
     status_short: str
 
 
+def git_commit_exists(repo_root: Path, sha: str) -> bool:
+    completed = subprocess.run(
+        ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
+        cwd=repo_root,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    return completed.returncode == 0
+
+
 def run_git(repo_root: Path, args: list[str], *, allow_fail: bool = False) -> str:
     completed = subprocess.run(
         ["git", *args],
@@ -142,7 +158,13 @@ def collect_git_state(repo_root: Path) -> GitState:
     )
 
 
-def build_manifest(repo_root: Path) -> dict[str, Any]:
+def build_manifest(
+    repo_root: Path,
+    *,
+    basis_head_sha: str | None = None,
+    evidence_mode: str = "tracked_evidence_refresh_commit",
+    evidence_commit_note: str = "",
+) -> dict[str, Any]:
     tracked_files = run_git(repo_root, ["ls-files"]).splitlines()
     tracked_files = [item.strip() for item in tracked_files if item.strip()]
 
@@ -173,6 +195,7 @@ def build_manifest(repo_root: Path) -> dict[str, Any]:
 
     missing_required = [path for path in REQUIRED_FILES if not (repo_root / path).exists()]
     git_state = collect_git_state(repo_root)
+    basis_sha = basis_head_sha or git_state.head_sha
 
     workspace_manifest = json.loads((repo_root / "workspace_config/workspace_manifest.json").read_text(encoding="utf-8"))
     active_project = workspace_manifest.get("active_project", "unknown")
@@ -205,6 +228,12 @@ def build_manifest(repo_root: Path) -> dict[str, Any]:
     if not_allowlisted:
         publication_safe_verdict = "FAIL"
         failure_reasons.append("tracked files outside allowlist roots")
+    if not git_commit_exists(repo_root, basis_sha):
+        publication_safe_verdict = "FAIL"
+        failure_reasons.append("basis_head_sha does not resolve to valid commit")
+    if evidence_mode not in {"runtime_current_head", "tracked_evidence_refresh_commit"}:
+        publication_safe_verdict = "FAIL"
+        failure_reasons.append("unsupported evidence_mode")
 
     if git_state.tracking_branch == "no-tracking":
         sync_verdict = "FAIL"
@@ -222,6 +251,12 @@ def build_manifest(repo_root: Path) -> dict[str, Any]:
     now = datetime.now(timezone.utc).isoformat()
     manifest: dict[str, Any] = {
         "schema_version": "1.0.0",
+        "evidence_contract_version": EVIDENCE_CONTRACT_VERSION,
+        "evidence_generated_at": now,
+        "evidence_mode": evidence_mode,
+        "basis_head_sha": basis_sha,
+        "evidence_commit_note": evidence_commit_note,
+        "evidence_files": EVIDENCE_FILES,
         "repo_name": "WorkFLOW2",
         "local_repo_name": "CVVCODEX",
         "public_safe_mirror_remote": "safe_mirror",
@@ -232,13 +267,17 @@ def build_manifest(repo_root: Path) -> dict[str, Any]:
         "privacy_mode": "publication_safe_local_prepare",
         "current_branch": git_state.branch,
         "tracking_branch": git_state.tracking_branch,
-        "head_sha": git_state.head_sha,
+        "head_sha": basis_sha,
+        "head_sha_legacy_field": basis_sha,
+        "head_sha_runtime_at_generation": git_state.head_sha,
         "ahead": git_state.ahead,
         "behind": git_state.behind,
         "worktree_clean": git_state.worktree_clean,
         "git": {
             "current_branch": git_state.branch,
-            "head_sha": git_state.head_sha,
+            "head_sha": basis_sha,
+            "basis_head_sha": basis_sha,
+            "runtime_head_sha_at_generation": git_state.head_sha,
             "tracking_branch": git_state.tracking_branch,
             "ahead": git_state.ahead,
             "behind": git_state.behind,
@@ -287,15 +326,24 @@ def write_report(repo_root: Path, manifest: dict[str, Any]) -> Path:
         f"- generated_at: `{manifest['generated_at']}`",
         f"- local_source_root: `{manifest['local_source_root']}`",
         f"- repo_name: `{manifest['repo_name']}`",
+        f"- evidence_contract_version: `{manifest['evidence_contract_version']}`",
+        f"- evidence_mode: `{manifest['evidence_mode']}`",
+        f"- basis_head_sha: `{manifest['basis_head_sha']}`",
+        f"- evidence_generated_at: `{manifest['evidence_generated_at']}`",
+        f"- evidence_commit_note: `{manifest.get('evidence_commit_note', '') or 'none'}`",
         f"- active_project: `{manifest['active_project']}`",
         f"- branch: `{git_state['current_branch']}`",
-        f"- head_sha: `{git_state['head_sha']}`",
+        f"- head_sha (basis): `{git_state['head_sha']}`",
         f"- tracking_branch: `{git_state['tracking_branch']}`",
         f"- ahead/behind: `{git_state['ahead']}/{git_state['behind']}`",
         f"- worktree_clean: `{git_state['worktree_clean']}`",
         f"- tracked_files_count: `{manifest['tracked_files_count']}`",
         f"- sync_verdict: `{manifest['sync_verdict']}`",
         f"- publication_safe_verdict: `{manifest['publication_safe_verdict']}`",
+        "",
+        "## Evidence Contract",
+        "- tracked evidence artifacts describe `basis_head_sha` commit.",
+        "- for `tracked_evidence_refresh_commit` mode, current `HEAD` can be an evidence refresh commit on top of basis.",
         "",
         "## Included Roots",
     ]
@@ -338,10 +386,31 @@ def write_report(repo_root: Path, manifest: dict[str, Any]) -> Path:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build publication-safe mirror manifest/report from local root.")
     parser.add_argument("--repo-root", default=".", help="Repository root path (default: current directory).")
+    parser.add_argument(
+        "--basis-head-sha",
+        default="",
+        help="Basis commit SHA described by tracked evidence artifacts (default: current HEAD).",
+    )
+    parser.add_argument(
+        "--evidence-mode",
+        default="tracked_evidence_refresh_commit",
+        choices=["runtime_current_head", "tracked_evidence_refresh_commit"],
+        help="Evidence validation mode written to SAFE_MIRROR_MANIFEST.",
+    )
+    parser.add_argument(
+        "--evidence-commit-note",
+        default="",
+        help="Optional note for evidence refresh commit context.",
+    )
     args = parser.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
-    manifest = build_manifest(repo_root)
+    manifest = build_manifest(
+        repo_root,
+        basis_head_sha=args.basis_head_sha or None,
+        evidence_mode=args.evidence_mode,
+        evidence_commit_note=args.evidence_commit_note,
+    )
 
     manifest_path = repo_root / SAFE_MIRROR_MANIFEST_PATH
     manifest_path.parent.mkdir(parents=True, exist_ok=True)

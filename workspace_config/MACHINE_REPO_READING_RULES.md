@@ -109,3 +109,8 @@ Mandatory runtime evidence files:
 - `runtime/repo_control_center/repo_control_report.md`
 - `runtime/repo_control_center/evolution_status.json`
 - `runtime/repo_control_center/evolution_report.md`
+
+Tracked safe-state evidence contract:
+
+- `workspace_config/SAFE_MIRROR_MANIFEST.json` and `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md` describe `basis_head_sha` (basis commit evidence), not self-referential final commit hash.
+- In `tracked_evidence_refresh_commit` mode, current `HEAD` is valid if it is an evidence refresh commit over `basis_head_sha` and `basis..HEAD` changes only safe evidence files.
