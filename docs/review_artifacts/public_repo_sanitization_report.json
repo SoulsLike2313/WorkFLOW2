@@ -1,7 +1,14 @@
 {
-  "generated_at_utc": "2026-03-16T01:58:54.443798+00:00",
-  "scope": "public_audit_safe_rebuild",
-  "tracked_file_count": 1016,
+  "generated_at_utc": "2026-03-16T02:12:21.015250+00:00",
+  "scope": "publication_safe_finish",
+  "local_source_root": "E:\\CVVCODEX",
+  "repo_name": "WorkFLOW",
+  "branch": "main",
+  "basis_head_sha": "af965f634e35f14691ecf13b95d0fa77444d80e1",
+  "tracking_branch": "origin/main",
+  "ahead": 1,
+  "behind": 0,
+  "tracked_file_count": 1020,
   "removed_from_tracking": [
     "setup_assets/windows10pro/SetupHost_strings.txt",
     "setup_assets/windows10pro/Strings.zip",
@@ -9,20 +16,32 @@
     "setup_assets/windows10pro/strings_tool/Eula.txt",
     "setup_assets/windows10pro/windows10iso_page.html"
   ],
+  "excluded_categories": [
+    ".env and secret files",
+    "credentials/private keys/tokens",
+    "runtime/setup_reports/logs/tmp/cache artifacts",
+    "publication tunnel/mirror leftovers",
+    "network diagnostics and WAN/LAN exposure artifacts",
+    "heavy local setup assets not required for audit readability"
+  ],
+  "mandatory_governance_files": [
+    "README.md",
+    "REPO_MAP.md",
+    "MACHINE_CONTEXT.md",
+    "docs/INSTRUCTION_INDEX.md",
+    "workspace_config/workspace_manifest.json",
+    "workspace_config/codex_manifest.json",
+    "workspace_config/GITHUB_SYNC_POLICY.md",
+    "workspace_config/AGENT_EXECUTION_POLICY.md",
+    "workspace_config/MACHINE_REPO_READING_RULES.md",
+    "workspace_config/SAFE_MIRROR_MANIFEST.json"
+  ],
+  "safe_mirror_manifest_path": "workspace_config/SAFE_MIRROR_MANIFEST.json",
+  "safe_mirror_report_path": "docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md",
   "secret_scan": {
     "status": "PASS",
     "finding_count": 0,
     "findings": []
   },
-  "absolute_windows_path_scan": {
-    "status": "PASS_WITH_ALLOWED_EXAMPLES",
-    "hit_count": 2,
-    "hits": [
-      "projects/adaptive_trading/adaptive_trading_gui_ultra.py",
-      "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/worker.py"
-    ],
-    "notes": "Remaining hits are local runtime examples/placeholders, not credentials."
-  },
-  "publication_policy_path": "docs/repo_publication_policy.md",
-  "public_visibility_target": "public"
+  "publication_safe_verdict": "PASS"
 }

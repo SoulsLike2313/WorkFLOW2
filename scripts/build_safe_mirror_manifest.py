@@ -206,13 +206,18 @@ def build_manifest(repo_root: Path) -> dict[str, Any]:
         publication_safe_verdict = "FAIL"
         failure_reasons.append("tracked files outside allowlist roots")
 
-    sync_verdict = (
-        "PASS"
-        if git_state.tracking_branch != "no-tracking"
-        and git_state.ahead == 0
-        and git_state.behind == 0
-        else "FAIL"
-    )
+    if git_state.tracking_branch == "no-tracking":
+        sync_verdict = "FAIL"
+        sync_state = "no_tracking_branch"
+    elif git_state.behind > 0:
+        sync_verdict = "FAIL"
+        sync_state = "behind_remote"
+    elif git_state.ahead > 0:
+        sync_verdict = "PASS"
+        sync_state = "ahead_only_ready_to_push"
+    else:
+        sync_verdict = "PASS"
+        sync_state = "in_sync"
 
     now = datetime.now(timezone.utc).isoformat()
     manifest: dict[str, Any] = {
@@ -230,6 +235,7 @@ def build_manifest(repo_root: Path) -> dict[str, Any]:
             "behind": git_state.behind,
             "worktree_clean": git_state.worktree_clean,
             "status_short": git_state.status_short,
+            "sync_state": sync_state,
         },
         "active_project": active_project,
         "safe_reading_entrypoints": {

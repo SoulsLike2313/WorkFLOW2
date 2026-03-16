@@ -1,8 +1,14 @@
 # Public Repo Sanitization Report
 
-- generated_at_utc: `2026-03-16T01:58:54.443798+00:00`
-- scope: `public_audit_safe_rebuild`
-- tracked_file_count: `1016`
+- generated_at_utc: `2026-03-16T02:12:21.015250+00:00`
+- scope: `publication_safe_finish`
+- local_source_root: `E:\CVVCODEX`
+- repo_name: `WorkFLOW`
+- branch: `main`
+- basis_head_sha: `af965f634e35f14691ecf13b95d0fa77444d80e1`
+- tracking_branch: `origin/main`
+- ahead/behind: `1/0`
+- tracked_file_count: `1020`
 
 ## Removed From Tracking
 - `setup_assets/windows10pro/SetupHost_strings.txt`
@@ -11,15 +17,33 @@
 - `setup_assets/windows10pro/strings_tool/Eula.txt`
 - `setup_assets/windows10pro/windows10iso_page.html`
 
+## Excluded Categories
+- .env and secret files
+- credentials/private keys/tokens
+- runtime/setup_reports/logs/tmp/cache artifacts
+- publication tunnel/mirror leftovers
+- network diagnostics and WAN/LAN exposure artifacts
+- heavy local setup assets not required for audit readability
+
+## Mandatory Governance / Readability Files
+- `README.md`
+- `REPO_MAP.md`
+- `MACHINE_CONTEXT.md`
+- `docs/INSTRUCTION_INDEX.md`
+- `workspace_config/workspace_manifest.json`
+- `workspace_config/codex_manifest.json`
+- `workspace_config/GITHUB_SYNC_POLICY.md`
+- `workspace_config/AGENT_EXECUTION_POLICY.md`
+- `workspace_config/MACHINE_REPO_READING_RULES.md`
+- `workspace_config/SAFE_MIRROR_MANIFEST.json`
+
+## Safe Mirror Artifacts
+- manifest: `workspace_config/SAFE_MIRROR_MANIFEST.json`
+- report: `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
+
 ## Secret Scan
 - status: `PASS`
 - finding_count: `0`
 
-## Absolute Path Scan
-- status: `PASS_WITH_ALLOWED_EXAMPLES`
-- hit_count: `2`
-- note: remaining hits are non-secret examples/placeholders and not auth data.
-
-## Publication Boundary
-- policy: `docs/repo_publication_policy.md`
-- target visibility: `public`
+## Verdict
+- publication_safe_verdict: `PASS`

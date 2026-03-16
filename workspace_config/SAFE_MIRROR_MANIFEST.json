@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0.0",
+  "repo_name": "WorkFLOW",
+  "generated_at": "2026-03-16T02:11:46.969058+00:00",
+  "export_tool_version": "safe-mirror-builder/1.0.0",
+  "local_source_root": "E:\\CVVCODEX",
+  "privacy_mode": "publication_safe_local_prepare",
+  "git": {
+    "current_branch": "main",
+    "head_sha": "af965f634e35f14691ecf13b95d0fa77444d80e1",
+    "tracking_branch": "origin/main",
+    "ahead": 1,
+    "behind": 0,
+    "worktree_clean": false,
+    "status_short": "## main...origin/main [ahead 1]\n M scripts/build_safe_mirror_manifest.py\n?? docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md\n?? workspace_config/SAFE_MIRROR_MANIFEST.json",
+    "sync_state": "ahead_only_ready_to_push"
+  },
+  "active_project": "platform_test_agent",
+  "safe_reading_entrypoints": {
+    "workspace_validate": "python scripts/validate_workspace.py",
+    "repo_sync_check": "python scripts/check_repo_sync.py --remote origin --branch main",
+    "tester_agent_project_intake": "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode intake -TargetProjectPath <repo_relative_project_path>"
+  },
+  "included_directories": [
+    "docs",
+    "projects",
+    "scripts",
+    "shared_systems",
+    "workspace_config"
+  ],
+  "included_files": [
+    ".gitignore",
+    "MACHINE_CONTEXT.md",
+    "README.md",
+    "REPO_MAP.md"
+  ],
+  "tracked_files_count": 1020,
+  "excluded_categories": [
+    ".env files",
+    "credentials and private keys",
+    "runtime dumps and logs",
+    "temporary/cache artifacts",
+    "network diagnostics and publication leftovers",
+    "legacy publication/tunnel artifacts",
+    "local machine-only backups"
+  ],
+  "required_files": [
+    "README.md",
+    "REPO_MAP.md",
+    "MACHINE_CONTEXT.md",
+    "docs/INSTRUCTION_INDEX.md",
+    "workspace_config/GITHUB_SYNC_POLICY.md",
+    "workspace_config/AGENT_EXECUTION_POLICY.md",
+    "workspace_config/MACHINE_REPO_READING_RULES.md",
+    "workspace_config/workspace_manifest.json",
+    "workspace_config/codex_manifest.json"
+  ],
+  "missing_required_files": [],
+  "disallowed_tracked_paths": [],
+  "allowlist_violations": [],
+  "secret_hits": [],
+  "key_file_hashes": {
+    "README.md": "aa9f7dc5aef2d5824faa5eeed21d7ff42c62b1c2218dc9b62bd2bde30061b06b",
+    "REPO_MAP.md": "cc887f37cd6b14be8a01cfac23840a19b3266c5a3304ba5acfbb882f92ff955f",
+    "MACHINE_CONTEXT.md": "d44c45c2f364012cdec73cff1255bb207c2b0b85220e190087aad1ef2e734590",
+    "workspace_config/workspace_manifest.json": "65d5c4e2856d4d426264baf22aea9bfe0dda7babe7eb4080c22451d3344f221c",
+    "workspace_config/codex_manifest.json": "20218fa3faf817a2683181925692e5f8b834d9c301c37b06226bbce3ea3a9ac5"
+  },
+  "sync_verdict": "PASS",
+  "publication_safe_verdict": "PASS",
+  "failure_reasons": [],
+  "notes_for_chatgpt": [
+    "Local working source root is E:\\CVVCODEX.",
+    "GitHub WorkFLOW is synchronized only after local publication-safe validation.",
+    "Use required safe-reading files and workspace manifests as source of truth."
+  ]
+}
