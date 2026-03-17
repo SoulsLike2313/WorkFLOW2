@@ -1,6 +1,6 @@
 {
-  "schema_version": "operator_mission_registry.final.v1.0.0",
-  "wave": "3FINAL",
+  "schema_version": "operator_mission_registry.wave3a.v1.0.0",
+  "wave": "3A",
   "mission_contract_doc": "docs/governance/OPERATOR_MISSION_CONTRACT.md",
   "task_program_dependency": {
     "script": "scripts/operator_task_program_surface.py",
@@ -8,296 +8,333 @@
   },
   "mutability_levels_allowed": [
     "READ_ONLY",
+    "REFRESH_ONLY",
     "PACKAGE_ONLY",
-    "OPERATIONAL_ROUTING",
-    "GUARDED_STATE_CHANGE",
-    "CREATOR_ONLY_MUTATION"
+    "CERTIFICATION_ONLY"
   ],
   "routing_precedence": {
     "class_order": [
-      "blocked_mission_test_mission",
-      "creator_only_mission",
-      "controlled_state_change_mission",
-      "guarded_creator_mission",
-      "readiness_transition_mission",
-      "evidence_aggregation_mission",
-      "packaging_review_transition_mission",
-      "multi_program_operational_mission",
-      "report_mission",
-      "evidence_pack_mission",
-      "validation_mission",
-      "status_refresh_mission"
+      "certification_mission",
+      "readiness_mission",
+      "review_prep_mission",
+      "status_consolidation_mission"
     ]
   },
   "mission_classes": [
     {
       "wave": "3A",
-      "mission_class": "status_refresh_mission",
-      "mutability_level": "READ_ONLY",
-      "authority_requirement": "none",
-      "allowed_modes": ["creator", "helper", "integration"],
-      "policy_basis": ["docs/governance/OPERATOR_MISSION_CONTRACT.md", "docs/governance/ADMISSION_GATE_POLICY.md"],
-      "missions": [
-        {
-          "mission_id": "mission.wave3a.status_refresh_certification.v1",
-          "mission_scope": "safe_status_refresh_and_certification",
-          "route_tokens": ["status refresh mission", "status certification mission"],
-          "program_plan": [
-            {"program_id": "program.wave2a.status_refresh_surface.v1", "expected_verdicts": ["SUCCESS"]},
-            {"program_id": "program.wave2a.full_status_reconstruction.v1", "expected_verdicts": ["SUCCESS"]}
-          ],
-          "acceptance_criteria": ["all planned programs return SUCCESS"],
-          "completion_rule": "certify_on_success"
-        }
-      ]
-    },
-    {
-      "wave": "3A",
-      "mission_class": "validation_mission",
-      "mutability_level": "READ_ONLY",
+      "mission_class": "certification_mission",
+      "description": "Baseline certification mission for accepted governance/query/command/task-program layer.",
+      "allowed_modes": [
+        "creator"
+      ],
       "authority_requirement": "creator_required",
-      "allowed_modes": ["creator"],
       "requires_in_sync": true,
       "requires_clean_worktree": true,
-      "policy_basis": ["docs/governance/CREATOR_AUTHORITY_POLICY.md", "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"],
+      "policy_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "scope_definition": "certification_chain_execution",
+      "non_goals": [
+        "state mutation",
+        "product orchestration",
+        "lifecycle install/remove flows"
+      ],
+      "program_dependencies": [
+        "program.wave2a.creator_grade_validation.v1",
+        "program.wave2a.governance_chain_validation.v1",
+        "program.wave2a.status_evidence_report.v1"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/repo_control_status.json",
+        "runtime/repo_control_center/repo_control_report.md",
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json"
+      ],
+      "acceptance_criteria": [
+        "creator authority present",
+        "all program dependencies return SUCCESS",
+        "repo_control_center full-check PASS"
+      ],
+      "mutability_level": "CERTIFICATION_ONLY",
+      "resume_supported": true,
+      "blocking_conditions": [
+        "creator_authority_required",
+        "sync_in_sync",
+        "worktree_clean",
+        "step_execution_failed"
+      ],
       "missions": [
         {
-          "mission_id": "mission.wave3a.creator_readiness_validation.v1",
-          "mission_scope": "creator_readiness_validation",
-          "route_tokens": ["creator readiness mission", "creator validation mission"],
-          "program_plan": [
-            {"program_id": "program.wave2a.creator_grade_validation.v1", "expected_verdicts": ["SUCCESS"]},
-            {"program_id": "program.wave2a.governance_chain_validation.v1", "expected_verdicts": ["SUCCESS"]}
+          "mission_id": "mission.wave3a.certification.baseline.v1",
+          "resolved_goal": "Close baseline certification mission for current control layer state.",
+          "mission_scope": "baseline_certification_scope",
+          "route_tokens": [
+            "certification mission",
+            "baseline certification mission",
+            "close baseline certification mission",
+            "run certification mission for current layer",
+            "drive layer to certified state"
           ],
-          "acceptance_criteria": ["creator authority gate PASS", "validation chain SUCCESS"],
+          "program_plan": [
+            {
+              "program_id": "program.wave2a.creator_grade_validation.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2a.governance_chain_validation.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2a.status_evidence_report.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            }
+          ],
           "completion_rule": "certify_on_success"
         }
       ]
     },
     {
       "wave": "3A",
-      "mission_class": "evidence_pack_mission",
+      "mission_class": "readiness_mission",
+      "description": "Readiness mission to prove transition readiness for the next stage without mutation-heavy actions.",
+      "allowed_modes": [
+        "creator"
+      ],
+      "authority_requirement": "creator_required",
+      "requires_in_sync": true,
+      "requires_clean_worktree": true,
+      "policy_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/PROMOTION_THRESHOLD_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "scope_definition": "readiness_evidence_aggregation",
+      "non_goals": [
+        "policy mutation",
+        "guarded creator mutation programs",
+        "integration lifecycle operations"
+      ],
+      "program_dependencies": [
+        "program.wave2a.full_status_reconstruction.v1",
+        "program.wave2a.governance_evidence_pack.v1",
+        "program.wave2a.operator_engineering_report.v1"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/plain_status.md",
+        "runtime/repo_control_center/one_screen_status.json",
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json"
+      ],
+      "acceptance_criteria": [
+        "status reconstruction SUCCESS",
+        "governance evidence package produced",
+        "operator engineering report produced"
+      ],
+      "mutability_level": "CERTIFICATION_ONLY",
+      "resume_supported": true,
+      "blocking_conditions": [
+        "creator_authority_required",
+        "sync_in_sync",
+        "worktree_clean",
+        "step_execution_failed"
+      ],
+      "missions": [
+        {
+          "mission_id": "mission.wave3a.readiness.next_stage.v1",
+          "resolved_goal": "Assemble readiness package and verify next-stage transition readiness.",
+          "mission_scope": "next_stage_readiness_scope",
+          "route_tokens": [
+            "readiness mission",
+            "execute readiness mission",
+            "build readiness package for next stage",
+            "check if layer is ready for transition"
+          ],
+          "program_plan": [
+            {
+              "program_id": "program.wave2a.full_status_reconstruction.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2a.governance_evidence_pack.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2a.operator_engineering_report.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            }
+          ],
+          "completion_rule": "certify_on_success"
+        }
+      ]
+    },
+    {
+      "wave": "3A",
+      "mission_class": "review_prep_mission",
+      "description": "Review preparation mission for safe evidence/report package construction.",
+      "allowed_modes": [
+        "creator",
+        "helper",
+        "integration"
+      ],
+      "authority_requirement": "none",
+      "policy_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "scope_definition": "review_package_preparation",
+      "non_goals": [
+        "creator-only guarded mutation",
+        "inbox integration mutation flows",
+        "lifecycle install/remove operations"
+      ],
+      "program_dependencies": [
+        "program.wave2a.governance_evidence_pack.v1",
+        "program.wave2a.status_evidence_report.v1",
+        "program.wave2a.operator_engineering_report.v1"
+      ],
+      "evidence_outputs": [
+        "runtime/chatgpt_bundle_exports",
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json"
+      ],
+      "acceptance_criteria": [
+        "review-safe evidence artifacts generated",
+        "mission report generated"
+      ],
       "mutability_level": "PACKAGE_ONLY",
-      "authority_requirement": "creator_required",
-      "allowed_modes": ["creator"],
-      "requires_in_sync": true,
-      "requires_clean_worktree": true,
-      "policy_basis": ["docs/governance/EVIDENCE_RETENTION_POLICY.md", "docs/governance/VERIFICATION_DEPTH_POLICY.md"],
+      "resume_supported": true,
+      "blocking_conditions": [
+        "policy_basis_missing",
+        "step_execution_failed"
+      ],
       "missions": [
         {
-          "mission_id": "mission.wave3a.evidence_review_pack.v1",
-          "mission_scope": "evidence_packaging_and_review_prep",
-          "route_tokens": ["evidence mission", "evidence pack mission"],
-          "program_plan": [
-            {"program_id": "program.wave2a.governance_evidence_pack.v1", "expected_verdicts": ["SUCCESS"]},
-            {"program_id": "program.wave2a.creator_proof_pack.v1", "expected_verdicts": ["SUCCESS"]}
+          "mission_id": "mission.wave3a.review_prep.package.v1",
+          "resolved_goal": "Prepare mission-level package for external review without leaving safe scope.",
+          "mission_scope": "review_prep_scope",
+          "route_tokens": [
+            "review prep mission",
+            "prepare mission package for external review",
+            "build review-ready package",
+            "execute review preparation mission"
           ],
-          "acceptance_criteria": ["all package programs SUCCESS"],
+          "program_plan": [
+            {
+              "program_id": "program.wave2a.governance_evidence_pack.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2a.status_evidence_report.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2a.operator_engineering_report.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            }
+          ],
           "completion_rule": "certify_on_success"
         }
       ]
     },
     {
       "wave": "3A",
-      "mission_class": "report_mission",
-      "mutability_level": "READ_ONLY",
+      "mission_class": "status_consolidation_mission",
+      "description": "Status consolidation mission for mission-level status/evidence truth surface.",
+      "allowed_modes": [
+        "creator",
+        "helper",
+        "integration"
+      ],
       "authority_requirement": "none",
-      "allowed_modes": ["creator", "helper", "integration"],
-      "policy_basis": ["docs/governance/OPERATIONAL_METRICS_POLICY.md"],
+      "policy_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/SELF_VERIFICATION_POLICY.md"
+      ],
+      "scope_definition": "status_consolidation_and_reporting",
+      "non_goals": [
+        "policy mutation",
+        "state-changing program execution",
+        "guarded lifecycle operations"
+      ],
+      "program_dependencies": [
+        "program.wave2a.status_refresh_surface.v1",
+        "program.wave2a.full_status_reconstruction.v1",
+        "program.wave2a.status_evidence_report.v1"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/plain_status.md",
+        "runtime/repo_control_center/one_screen_status.json",
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json"
+      ],
+      "acceptance_criteria": [
+        "status artifacts refreshed",
+        "status evidence report generated"
+      ],
+      "mutability_level": "REFRESH_ONLY",
+      "resume_supported": true,
+      "blocking_conditions": [
+        "policy_basis_missing",
+        "step_execution_failed"
+      ],
       "missions": [
         {
-          "mission_id": "mission.wave3a.operator_report_compilation.v1",
-          "mission_scope": "mission_reporting_and_summary",
-          "route_tokens": ["operator report mission", "engineering report mission"],
-          "program_plan": [
-            {"program_id": "program.wave2a.operator_engineering_report.v1", "expected_verdicts": ["SUCCESS"]},
-            {"program_id": "program.wave2a.status_evidence_report.v1", "expected_verdicts": ["SUCCESS"]}
+          "mission_id": "mission.wave3a.status_consolidation.complete.v1",
+          "resolved_goal": "Consolidate status/evidence into one mission-level truth package.",
+          "mission_scope": "status_consolidation_scope",
+          "route_tokens": [
+            "status consolidation mission",
+            "consolidate status contour into one mission package",
+            "build mission-level status evidence surface",
+            "execute complete status consolidation mission"
           ],
-          "acceptance_criteria": ["all report programs SUCCESS"],
+          "program_plan": [
+            {
+              "program_id": "program.wave2a.status_refresh_surface.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2a.full_status_reconstruction.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2a.status_evidence_report.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            }
+          ],
           "completion_rule": "certify_on_success"
-        }
-      ]
-    },
-    {
-      "wave": "3B",
-      "mission_class": "multi_program_operational_mission",
-      "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_requirement": "none",
-      "allowed_modes": ["creator", "helper", "integration"],
-      "required_inputs": ["task_id", "node_id"],
-      "policy_basis": ["docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md", "docs/governance/INTEGRATION_INBOX_POLICY.md"],
-      "missions": [
-        {
-          "mission_id": "mission.wave3b.operational_delivery_cycle.v1",
-          "mission_scope": "multi_program_operational_delivery",
-          "route_tokens": ["operational delivery mission", "delivery cycle mission"],
-          "program_plan": [
-            {"program_id": "program.wave2b.handoff_preparation_end_to_end.v1", "expected_verdicts": ["SUCCESS"]},
-            {"program_id": "program.wave2b.inbox_review_cycle.v1", "expected_verdicts": ["SUCCESS"]}
-          ],
-          "acceptance_criteria": ["handoff and inbox review programs completed"],
-          "completion_rule": "certify_on_success"
-        }
-      ]
-    },
-    {
-      "wave": "3B",
-      "mission_class": "packaging_review_transition_mission",
-      "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_requirement": "none",
-      "allowed_modes": ["creator", "helper", "integration"],
-      "required_inputs": ["task_id", "node_id"],
-      "policy_basis": ["docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md", "docs/governance/INTEGRATION_INBOX_POLICY.md"],
-      "missions": [
-        {
-          "mission_id": "mission.wave3b.packaging_review_transition.v1",
-          "mission_scope": "packaging_and_review_transition",
-          "route_tokens": ["packaging transition mission", "review transition mission"],
-          "program_plan": [
-            {"program_id": "program.wave2b.delivery_ready_handoff_package.v1", "expected_verdicts": ["SUCCESS"]},
-            {"program_id": "program.wave2b.evidence_delivery_chain.v1", "expected_verdicts": ["SUCCESS"]}
-          ],
-          "acceptance_criteria": ["delivery and evidence routing complete"],
-          "completion_rule": "certify_on_success"
-        }
-      ]
-    },
-    {
-      "wave": "3B",
-      "mission_class": "evidence_aggregation_mission",
-      "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_requirement": "none",
-      "allowed_modes": ["creator", "helper", "integration"],
-      "policy_basis": ["docs/governance/EVIDENCE_RETENTION_POLICY.md", "docs/governance/OPERATIONAL_METRICS_POLICY.md"],
-      "missions": [
-        {
-          "mission_id": "mission.wave3b.evidence_aggregation_cycle.v1",
-          "mission_scope": "cross_program_evidence_aggregation",
-          "route_tokens": ["evidence aggregation mission", "evidence cycle mission"],
-          "program_plan": [
-            {"program_id": "program.wave2a.governance_evidence_pack.v1", "expected_verdicts": ["SUCCESS"]},
-            {"program_id": "program.wave2b.evidence_delivery_chain.v1", "expected_verdicts": ["SUCCESS"]},
-            {"program_id": "program.wave2a.status_evidence_report.v1", "expected_verdicts": ["SUCCESS"]}
-          ],
-          "acceptance_criteria": ["evidence aggregation report generated"],
-          "completion_rule": "certify_on_success"
-        }
-      ]
-    },
-    {
-      "wave": "3B",
-      "mission_class": "readiness_transition_mission",
-      "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_requirement": "creator_required",
-      "allowed_modes": ["creator"],
-      "requires_in_sync": true,
-      "requires_clean_worktree": true,
-      "policy_basis": ["docs/governance/PROMOTION_THRESHOLD_POLICY.md", "docs/governance/ADMISSION_GATE_POLICY.md"],
-      "missions": [
-        {
-          "mission_id": "mission.wave3b.readiness_transition_cycle.v1",
-          "mission_scope": "readiness_transition_and_certification",
-          "route_tokens": ["readiness transition mission", "transition certification mission"],
-          "program_plan": [
-            {"program_id": "program.wave2b.certification_pass.v1", "expected_verdicts": ["SUCCESS"]},
-            {"program_id": "program.wave2b.review_certification_sequence.v1", "expected_verdicts": ["SUCCESS"]}
-          ],
-          "acceptance_criteria": ["certification programs completed"],
-          "completion_rule": "certify_on_success"
-        }
-      ]
-    },
-    {
-      "wave": "3C",
-      "mission_class": "guarded_creator_mission",
-      "mutability_level": "GUARDED_STATE_CHANGE",
-      "authority_requirement": "creator_required",
-      "allowed_modes": ["creator"],
-      "requires_in_sync": true,
-      "requires_clean_worktree": true,
-      "rollback_supported": true,
-      "policy_basis": ["docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md", "docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md"],
-      "missions": [
-        {
-          "mission_id": "mission.wave3c.guarded_creator_maintenance.v1",
-          "mission_scope": "guarded_creator_maintenance",
-          "route_tokens": ["guarded creator mission", "guarded maintenance mission"],
-          "program_plan": [
-            {"program_id": "program.wave2c.guarded_governance_maintenance.v1", "expected_verdicts": ["SUCCESS"]},
-            {"program_id": "program.wave2c.control_artifacts_rebuild.v1", "expected_verdicts": ["SUCCESS"]}
-          ],
-          "acceptance_criteria": ["guarded programs succeeded", "audit trail captured"],
-          "completion_rule": "certify_on_success"
-        }
-      ]
-    },
-    {
-      "wave": "3C",
-      "mission_class": "creator_only_mission",
-      "mutability_level": "CREATOR_ONLY_MUTATION",
-      "authority_requirement": "creator_required",
-      "allowed_modes": ["creator"],
-      "requires_in_sync": true,
-      "requires_clean_worktree": true,
-      "rollback_supported": true,
-      "policy_basis": ["docs/governance/CREATOR_AUTHORITY_POLICY.md", "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md"],
-      "missions": [
-        {
-          "mission_id": "mission.wave3c.creator_only_acceptance_sequence.v1",
-          "mission_scope": "creator_only_acceptance_sequence",
-          "route_tokens": ["creator only mission", "authority required mission"],
-          "program_plan": [
-            {"program_id": "program.wave2c.creator_authorized_sequence.v1", "expected_verdicts": ["SUCCESS"]},
-            {"program_id": "program.wave2c.authority_required_program.v1", "expected_verdicts": ["SUCCESS"]}
-          ],
-          "acceptance_criteria": ["authority-required programs succeeded"],
-          "completion_rule": "certify_on_success"
-        }
-      ]
-    },
-    {
-      "wave": "3C",
-      "mission_class": "controlled_state_change_mission",
-      "mutability_level": "GUARDED_STATE_CHANGE",
-      "authority_requirement": "creator_required",
-      "allowed_modes": ["creator"],
-      "requires_in_sync": true,
-      "requires_clean_worktree": true,
-      "rollback_supported": true,
-      "policy_basis": ["docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md", "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md"],
-      "missions": [
-        {
-          "mission_id": "mission.wave3c.controlled_state_change_cycle.v1",
-          "mission_scope": "controlled_lifecycle_state_change",
-          "route_tokens": ["controlled lifecycle mission", "state change mission"],
-          "program_plan": [
-            {"program_id": "program.wave2c.controlled_install_lifecycle.v1", "expected_verdicts": ["SUCCESS"]},
-            {"program_id": "program.wave2c.controlled_remove_lifecycle.v1", "expected_verdicts": ["SUCCESS"]}
-          ],
-          "acceptance_criteria": ["controlled lifecycle programs succeeded"],
-          "completion_rule": "certify_on_success"
-        }
-      ]
-    },
-    {
-      "wave": "3C",
-      "mission_class": "blocked_mission_test_mission",
-      "mutability_level": "READ_ONLY",
-      "authority_requirement": "none",
-      "allowed_modes": ["creator", "helper", "integration"],
-      "failure_policy_default": "stop_on_blocked",
-      "policy_basis": ["docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md", "docs/governance/ADMISSION_GATE_POLICY.md"],
-      "missions": [
-        {
-          "mission_id": "mission.wave3c.blocked_mission_certification.v1",
-          "mission_scope": "blocked_path_certification",
-          "route_tokens": ["blocked mission certification", "blocked path mission"],
-          "program_plan": [
-            {"program_id": "program.wave2c.blocked_missing_preconditions.v1", "expected_verdicts": ["BLOCKED"]},
-            {"program_id": "program.wave2c.blocked_policy_mutation.v1", "expected_verdicts": ["BLOCKED"]}
-          ],
-          "acceptance_criteria": ["all blocked test programs return BLOCKED"],
-          "completion_rule": "certify_on_expected_blocks"
         }
       ]
     }
