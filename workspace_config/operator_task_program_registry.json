@@ -1,0 +1,587 @@
+{
+  "schema_version": "operator_task_program_registry.wave2a.v1.0.0",
+  "wave": "2A",
+  "execution_contract_doc": "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md",
+  "command_layer_dependency": {
+    "script": "scripts/operator_command_surface.py",
+    "registry": "workspace_config/operator_command_registry.json"
+  },
+  "mutability_levels_allowed": [
+    "READ_ONLY",
+    "REFRESH_ONLY",
+    "PACKAGE_ONLY"
+  ],
+  "program_classes": [
+    {
+      "program_class": "status_refresh_program",
+      "description": "Refresh and reconstruct runtime truth/status surface.",
+      "allowed_modes": [
+        "creator",
+        "helper",
+        "integration"
+      ],
+      "authority_requirement": "none",
+      "policy_basis": [
+        "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md",
+        "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "step_templates": [
+        "status_refresh",
+        "report_generation"
+      ],
+      "command_dependencies": [
+        "status_refresh",
+        "report_generation",
+        "validation_run"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/plain_status.md",
+        "runtime/repo_control_center/one_screen_status.json",
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "mutability_level": "REFRESH_ONLY",
+      "resume_supported": true,
+      "blocking_conditions": [
+        "authority_mode_not_allowed",
+        "policy_basis_missing",
+        "invalid_resume_pointer",
+        "step_execution_failed"
+      ],
+      "programs": [
+        {
+          "program_id": "program.wave2a.status_refresh_surface.v1",
+          "resolved_goal": "Refresh runtime status surface and emit program report.",
+          "execution_scope": "safe_runtime_status_refresh",
+          "allowed_modes": [
+            "creator",
+            "helper",
+            "integration"
+          ],
+          "authority_requirement": "none",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "REFRESH_ONLY",
+          "failure_policy": "stop_on_failure",
+          "resume_supported": true,
+          "route_tokens": [
+            "status refresh program",
+            "refresh status surface",
+            "refresh runtime truth",
+            "rebuild runtime truth surface"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "status refresh",
+              "action": "status_refresh",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/repo_control_center/plain_status.md",
+            "runtime/repo_control_center/one_screen_status.json",
+            "runtime/repo_control_center/operator_program_status.json",
+            "runtime/repo_control_center/operator_program_report.md"
+          ],
+          "blocking_conditions": [
+            "step_execution_failed"
+          ]
+        },
+        {
+          "program_id": "program.wave2a.full_status_reconstruction.v1",
+          "resolved_goal": "Reconstruct full status chain with validation + refreshed status snapshot.",
+          "execution_scope": "full_status_reconstruction",
+          "allowed_modes": [
+            "creator",
+            "helper",
+            "integration"
+          ],
+          "authority_requirement": "none",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "REFRESH_ONLY",
+          "failure_policy": "stop_on_failure",
+          "resume_supported": true,
+          "route_tokens": [
+            "full status reconstruction",
+            "rebuild full status contour",
+            "status chain refresh"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "status refresh",
+              "action": "status_refresh",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "validation run",
+              "action": "validation_run",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "status refresh",
+              "action": "status_refresh",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/repo_control_center/plain_status.md",
+            "runtime/repo_control_center/one_screen_status.json",
+            "runtime/repo_control_center/operator_program_status.json",
+            "runtime/repo_control_center/operator_program_report.md"
+          ],
+          "blocking_conditions": [
+            "step_execution_failed"
+          ]
+        }
+      ]
+    },
+    {
+      "program_class": "validation_program",
+      "description": "Run creator-grade or governance validation flows in safe mode.",
+      "allowed_modes": [
+        "creator",
+        "helper",
+        "integration"
+      ],
+      "authority_requirement": "program_specific",
+      "policy_basis": [
+        "docs/governance/SELF_VERIFICATION_POLICY.md",
+        "docs/governance/VERIFICATION_DEPTH_POLICY.md",
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md"
+      ],
+      "step_templates": [
+        "validation_run",
+        "creator_acceptance_precheck"
+      ],
+      "command_dependencies": [
+        "validation_run",
+        "creator_acceptance_precheck",
+        "policy_reference_execute"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/repo_control_status.json",
+        "runtime/repo_control_center/repo_control_report.md",
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "mutability_level": "READ_ONLY",
+      "resume_supported": true,
+      "blocking_conditions": [
+        "creator_authority_required",
+        "authority_mode_not_allowed",
+        "policy_basis_missing",
+        "step_execution_failed"
+      ],
+      "programs": [
+        {
+          "program_id": "program.wave2a.creator_grade_validation.v1",
+          "resolved_goal": "Execute creator-grade validation pass and persist evidence.",
+          "execution_scope": "creator_grade_validation",
+          "allowed_modes": [
+            "creator"
+          ],
+          "authority_requirement": "creator_required",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "READ_ONLY",
+          "failure_policy": "stop_on_failure",
+          "resume_supported": true,
+          "route_tokens": [
+            "creator-grade validation program",
+            "creator validation pass",
+            "full creator validation"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "creator acceptance precheck",
+              "action": "creator_acceptance_precheck",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "validation run",
+              "action": "validation_run",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/repo_control_center/repo_control_status.json",
+            "runtime/repo_control_center/repo_control_report.md",
+            "runtime/repo_control_center/operator_program_status.json",
+            "runtime/repo_control_center/operator_program_report.md"
+          ],
+          "blocking_conditions": [
+            "creator_authority_required",
+            "step_execution_failed"
+          ]
+        },
+        {
+          "program_id": "program.wave2a.governance_chain_validation.v1",
+          "resolved_goal": "Validate governance chain and generate policy-basis evidence.",
+          "execution_scope": "governance_chain_validation",
+          "allowed_modes": [
+            "creator",
+            "helper",
+            "integration"
+          ],
+          "authority_requirement": "none",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "READ_ONLY",
+          "failure_policy": "stop_on_failure",
+          "resume_supported": true,
+          "route_tokens": [
+            "governance chain validation",
+            "validate governance chain end-to-end",
+            "governance validation pass",
+            "full validation pass"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "validation run",
+              "action": "validation_run",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "policy reference",
+              "action": "policy_reference_execute",
+              "pass_args": [],
+              "static_args": {
+                "policy_topic": "governance_chain_validation"
+              }
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/operator_command_layer/policy_reference_output.md",
+            "runtime/repo_control_center/operator_program_status.json",
+            "runtime/repo_control_center/operator_program_report.md"
+          ],
+          "blocking_conditions": [
+            "step_execution_failed"
+          ]
+        }
+      ]
+    },
+    {
+      "program_class": "evidence_pack_program",
+      "description": "Build safe evidence bundles and creator-proof package sets.",
+      "allowed_modes": [
+        "creator",
+        "helper",
+        "integration"
+      ],
+      "authority_requirement": "program_specific",
+      "policy_basis": [
+        "docs/CHATGPT_BUNDLE_EXPORT.md",
+        "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "step_templates": [
+        "evidence_bundle_context",
+        "report_generation"
+      ],
+      "command_dependencies": [
+        "evidence_bundle_context",
+        "status_refresh",
+        "creator_acceptance_precheck",
+        "report_generation"
+      ],
+      "evidence_outputs": [
+        "runtime/chatgpt_bundle_exports",
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "mutability_level": "PACKAGE_ONLY",
+      "resume_supported": true,
+      "blocking_conditions": [
+        "creator_authority_required",
+        "policy_basis_missing",
+        "step_execution_failed"
+      ],
+      "programs": [
+        {
+          "program_id": "program.wave2a.governance_evidence_pack.v1",
+          "resolved_goal": "Generate governance evidence bundle plus program report.",
+          "execution_scope": "governance_evidence_packaging",
+          "allowed_modes": [
+            "creator",
+            "helper",
+            "integration"
+          ],
+          "authority_requirement": "none",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "PACKAGE_ONLY",
+          "failure_policy": "stop_on_failure",
+          "resume_supported": true,
+          "route_tokens": [
+            "governance evidence package",
+            "assemble governance evidence pack",
+            "review-safe runtime evidence set"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "status refresh",
+              "action": "status_refresh",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "evidence bundle",
+              "action": "evidence_bundle_context",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/chatgpt_bundle_exports",
+            "runtime/repo_control_center/operator_program_status.json",
+            "runtime/repo_control_center/operator_program_report.md"
+          ],
+          "blocking_conditions": [
+            "step_execution_failed"
+          ]
+        },
+        {
+          "program_id": "program.wave2a.creator_proof_pack.v1",
+          "resolved_goal": "Build creator-grade proof package with authority-aware validation chain.",
+          "execution_scope": "creator_proof_packaging",
+          "allowed_modes": [
+            "creator"
+          ],
+          "authority_requirement": "creator_required",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "PACKAGE_ONLY",
+          "failure_policy": "stop_on_failure",
+          "resume_supported": true,
+          "route_tokens": [
+            "creator-grade proof package",
+            "creator proof package",
+            "creator evidence package"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "creator acceptance precheck",
+              "action": "creator_acceptance_precheck",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "evidence bundle",
+              "action": "evidence_bundle_context",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/chatgpt_bundle_exports",
+            "runtime/repo_control_center/operator_program_status.json",
+            "runtime/repo_control_center/operator_program_report.md"
+          ],
+          "blocking_conditions": [
+            "creator_authority_required",
+            "step_execution_failed"
+          ]
+        }
+      ]
+    },
+    {
+      "program_class": "report_program",
+      "description": "Produce engineering status/evidence reports from current runtime truth.",
+      "allowed_modes": [
+        "creator",
+        "helper",
+        "integration"
+      ],
+      "authority_requirement": "none",
+      "policy_basis": [
+        "docs/governance/POLICY_DIGEST.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md",
+        "docs/governance/EVIDENCE_RETENTION_POLICY.md"
+      ],
+      "step_templates": [
+        "status_refresh",
+        "report_generation",
+        "policy_reference_execute"
+      ],
+      "command_dependencies": [
+        "status_refresh",
+        "report_generation",
+        "policy_reference_execute",
+        "validation_run"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_status.json"
+      ],
+      "mutability_level": "READ_ONLY",
+      "resume_supported": true,
+      "blocking_conditions": [
+        "policy_basis_missing",
+        "step_execution_failed"
+      ],
+      "programs": [
+        {
+          "program_id": "program.wave2a.operator_engineering_report.v1",
+          "resolved_goal": "Generate operator engineering summary report from refreshed status truth.",
+          "execution_scope": "operator_engineering_reporting",
+          "allowed_modes": [
+            "creator",
+            "helper",
+            "integration"
+          ],
+          "authority_requirement": "none",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "READ_ONLY",
+          "failure_policy": "stop_on_failure",
+          "resume_supported": true,
+          "route_tokens": [
+            "generate full operator report",
+            "engineering governance summary",
+            "operator report program"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "status refresh",
+              "action": "status_refresh",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/repo_control_center/operator_program_report.md",
+            "runtime/repo_control_center/operator_program_status.json"
+          ],
+          "blocking_conditions": [
+            "step_execution_failed"
+          ]
+        },
+        {
+          "program_id": "program.wave2a.status_evidence_report.v1",
+          "resolved_goal": "Generate combined status+evidence report with policy basis reference.",
+          "execution_scope": "status_evidence_reporting",
+          "allowed_modes": [
+            "creator",
+            "helper",
+            "integration"
+          ],
+          "authority_requirement": "none",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "READ_ONLY",
+          "failure_policy": "stop_on_failure",
+          "resume_supported": true,
+          "route_tokens": [
+            "status evidence report",
+            "status plus evidence report",
+            "full status report program"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "validation run",
+              "action": "validation_run",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "policy reference",
+              "action": "policy_reference_execute",
+              "pass_args": [],
+              "static_args": {
+                "policy_topic": "operator_task_program_wave_2a"
+              }
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/repo_control_center/operator_program_report.md",
+            "runtime/repo_control_center/operator_program_status.json",
+            "runtime/operator_command_layer/policy_reference_output.md"
+          ],
+          "blocking_conditions": [
+            "step_execution_failed"
+          ]
+        }
+      ]
+    }
+  ]
+}
