@@ -44,11 +44,15 @@
 31. `docs/governance/OPERATIONAL_METRICS_POLICY.md`
 32. `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
 33. `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
-34. `scripts/repo_control_center.py`
-35. `workspace_config/GITHUB_SYNC_POLICY.md`
-36. `workspace_config/AGENT_EXECUTION_POLICY.md`
-37. `workspace_config/MACHINE_REPO_READING_RULES.md`
-38. target `PROJECT_MANIFEST.json`
+34. `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
+35. `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
+36. `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
+37. `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
+38. `scripts/repo_control_center.py`
+39. `workspace_config/GITHUB_SYNC_POLICY.md`
+40. `workspace_config/AGENT_EXECUTION_POLICY.md`
+41. `workspace_config/MACHINE_REPO_READING_RULES.md`
+42. target `PROJECT_MANIFEST.json`
 
 ## Execution Guardrails
 
@@ -64,6 +68,12 @@
 3. Exporter performs safety scan.
 4. Exporter writes zip + `CHATGPT_BUNDLE_MANIFEST.json` + `EXPORT_REPORT.md`.
 5. User uploads only produced safe bundle.
+
+Audit-safe runtime evidence export:
+
+- use `python scripts/export_chatgpt_bundle.py audit-runtime --include-rcc-runtime`
+- only allowlisted `runtime/repo_control_center/*` reports may pass
+- standard `files/paths/request/project/context` modes keep runtime blocked
 
 ## Repo Control Center Workflow
 
@@ -82,6 +92,7 @@ Bootstrap and source-authority contracts:
 - `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
 - `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
 - `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
+- `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
 
 ## Non-Canonical Inputs
 

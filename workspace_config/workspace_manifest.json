@@ -99,7 +99,8 @@
       "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
       "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
       "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
-      "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md"
+      "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
+      "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -141,8 +142,12 @@
       "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
       "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
       "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
-      "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md"
-    ]
+      "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
+      "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
+    ],
+    "governance_acceptance_gate_path": "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
+    "chatgpt_audit_runtime_allowlist_path": "workspace_config/chatgpt_audit_runtime_allowlist.json",
+    "audit_runtime_export_mode_required": true
   },
   "shared_systems": {
     "root_path": "shared_systems",
@@ -514,8 +519,19 @@
       "docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md",
       "docs/governance/OPERATIONAL_METRICS_POLICY.md",
       "docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
-      "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md"
+      "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
+      "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
+      "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
+      "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
+      "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
     ],
     "repo_control_center": "scripts/repo_control_center.py"
-  }
+  },
+  "required_repo_files": [
+    "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
+    "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
+    "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
+    "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
+    "workspace_config/chatgpt_audit_runtime_allowlist.json"
+  ]
 }

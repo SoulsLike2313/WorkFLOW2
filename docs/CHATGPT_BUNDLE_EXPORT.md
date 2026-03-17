@@ -29,6 +29,7 @@ python scripts/export_chatgpt_bundle.py files --include README.md REPO_MAP.md MA
 python scripts/export_chatgpt_bundle.py paths --include projects/platform_test_agent workspace_config docs/INSTRUCTION_INDEX.md
 python scripts/export_chatgpt_bundle.py project --slug platform_test_agent
 python scripts/export_chatgpt_bundle.py request --request-file chatgpt_request.txt
+python scripts/export_chatgpt_bundle.py audit-runtime --include-rcc-runtime
 ```
 
 ## Canonical Workflow (ChatGPT requested files)
@@ -54,6 +55,14 @@ Blocked categories include:
 - `setup_reports/*`, `tools/public_mirror/*`
 - runtime/log/cache/tmp artifacts
 - WAN/LAN/tunnel/router diagnostics and configs
+
+Audit-safe exception:
+
+- runtime remains blocked in standard modes.
+- only `audit-runtime` mode may include runtime files from explicit allowlist:
+  - `workspace_config/chatgpt_audit_runtime_allowlist.json`
+  - currently restricted to `runtime/repo_control_center/*` reports.
+- allowlisted runtime files still pass content safety scan; unsafe content is blocked.
 
 ## Bundle Output
 

@@ -60,6 +60,7 @@
 - `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
 - `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
 - `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
+- `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
 
 ## Repo Control Center V1 (CLI-First)
 
@@ -87,6 +88,7 @@ Core verdicts:
 - GOVERNANCE VERDICT: `COMPLIANT | PARTIAL | NON_COMPLIANT`
 - ADMISSION VERDICT: `ADMISSIBLE | CONDITIONAL | REJECTED`
 - EVOLUTION VERDICT: `HOLD | PREPARE | V2_CANDIDATE | V2_READY | PROMOTE | BLOCKED`
+- GOVERNANCE ACCEPTANCE: `PASS | FAIL`
 
 Runtime artifacts:
 
@@ -126,6 +128,7 @@ Modes:
 - `paths --include ...`
 - `project --slug <slug>`
 - `request --request-file <file>`
+- `audit-runtime --include-rcc-runtime` (only allowlisted RCC runtime reports)
 
 Protocol reference:
 

@@ -37,10 +37,14 @@ Machine must complete this canonical order before execution:
 31. `docs/governance/OPERATIONAL_METRICS_POLICY.md`
 32. `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
 33. `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
-34. `scripts/repo_control_center.py`
-35. `workspace_config/GITHUB_SYNC_POLICY.md`
-36. `workspace_config/AGENT_EXECUTION_POLICY.md`
-37. `workspace_config/MACHINE_REPO_READING_RULES.md`
+34. `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
+35. `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
+36. `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
+37. `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
+38. `scripts/repo_control_center.py`
+39. `workspace_config/GITHUB_SYNC_POLICY.md`
+40. `workspace_config/AGENT_EXECUTION_POLICY.md`
+41. `workspace_config/MACHINE_REPO_READING_RULES.md`
 
 If any mandatory step is skipped: `STATUS: REJECTED`.
 
@@ -83,6 +87,7 @@ For external machine reading use only:
 
 - `scripts/export_chatgpt_bundle.py`
 - `docs/CHATGPT_BUNDLE_EXPORT.md`
+- `workspace_config/chatgpt_audit_runtime_allowlist.json` (only for `audit-runtime` mode)
 
 Do not treat full repository publication as required path for task-scoped ChatGPT analysis.
 

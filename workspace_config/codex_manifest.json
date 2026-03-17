@@ -70,7 +70,11 @@
     "read docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md",
     "read docs/governance/OPERATIONAL_METRICS_POLICY.md",
     "read docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
-    "read docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md"
+    "read docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
+    "read docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
+    "read docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
+    "read docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
+    "read docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
   ],
   "task_governance": {
     "instruction_read_before_task_required": true,
@@ -180,7 +184,8 @@
       "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
       "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
       "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
-      "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md"
+      "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
+      "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -219,8 +224,15 @@
       "docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md",
       "docs/governance/OPERATIONAL_METRICS_POLICY.md",
       "docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
-      "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md"
-    ]
+      "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
+      "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
+      "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
+      "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
+      "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
+    ],
+    "governance_acceptance_gate_path": "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
+    "chatgpt_audit_runtime_allowlist_path": "workspace_config/chatgpt_audit_runtime_allowlist.json",
+    "audit_runtime_export_mode_required": true
   },
   "scope_controls": {
     "allow_cross_project_changes_without_request": false,
@@ -307,7 +319,9 @@
     "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
     "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
     "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
-    "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md"
+    "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
+    "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
+    "workspace_config/chatgpt_audit_runtime_allowlist.json"
   ],
   "required_active_project_files": [
     "projects/platform_test_agent/PROJECT_MANIFEST.json",
@@ -353,7 +367,8 @@
       "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
       "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
       "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
-      "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md"
+      "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
+      "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
     ],
     "repo_control_center": "scripts/repo_control_center.py"
   },
@@ -391,6 +406,10 @@
     "docs/governance/OPERATIONAL_METRICS_POLICY.md",
     "docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
     "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
+    "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
+    "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
+    "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
+    "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
     "scripts/repo_control_center.py",
     "workspace_config/GITHUB_SYNC_POLICY.md",
     "workspace_config/AGENT_EXECUTION_POLICY.md",

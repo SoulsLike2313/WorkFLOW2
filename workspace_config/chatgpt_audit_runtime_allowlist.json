@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "policy": "chatgpt_audit_runtime_allowlist",
+  "description": "Runtime files that are allowed only in audit-runtime export mode after safety scan.",
+  "allowed_runtime_paths": [
+    "runtime/repo_control_center/repo_control_status.json",
+    "runtime/repo_control_center/repo_control_report.md",
+    "runtime/repo_control_center/evolution_status.json",
+    "runtime/repo_control_center/evolution_report.md"
+  ]
+}

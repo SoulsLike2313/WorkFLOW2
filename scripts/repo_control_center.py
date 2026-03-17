@@ -55,6 +55,24 @@ EVOLUTION_LAYER_DOCS = [
     "docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
 ]
 
+GOVERNANCE_V11_HARDENING_DOCS = [
+    "docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md",
+    "docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md",
+    "docs/governance/VERIFICATION_DEPTH_POLICY.md",
+    "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+    "docs/governance/PROMOTION_THRESHOLD_POLICY.md",
+    "docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md",
+    "docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md",
+    "docs/governance/OPERATIONAL_METRICS_POLICY.md",
+    "docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md",
+    "docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md",
+]
+
+GOVERNANCE_ACCEPTANCE_DOC = "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
+MACHINE_BOOTSTRAP_CONTRACT = "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md"
+CANONICAL_SOURCE_PRECEDENCE_DOC = "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md"
+ZERO_CONFIG_POLICY_DOC = "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md"
+
 SAFE_STATE_FILES = [
     "workspace_config/SAFE_MIRROR_MANIFEST.json",
     "docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md",
@@ -71,6 +89,10 @@ BOOTSTRAP_REQUIRED = [
     "docs/NEXT_CANONICAL_STEP.md",
     *GOVERNANCE_BRAIN_STACK,
     *EVOLUTION_LAYER_DOCS,
+    "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
+    "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
+    "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
+    "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
     "scripts/repo_control_center.py",
     "workspace_config/GITHUB_SYNC_POLICY.md",
     "workspace_config/AGENT_EXECUTION_POLICY.md",
@@ -142,6 +164,107 @@ def build_git_state(fetch: bool) -> GitState:
 
 def missing_paths(paths: list[str]) -> list[str]:
     return [p for p in paths if not exists(p)]
+
+
+def parse_numbered_markdown_paths(rel: str) -> list[str]:
+    if not exists(rel):
+        return []
+    items: list[str] = []
+    for line in read_text(rel).splitlines():
+        match = re.match(r"\s*\d+\.\s+`([^`]+)`", line)
+        if match:
+            items.append(match.group(1).strip())
+    return items
+
+
+def bootstrap_enforcement_checks() -> dict[str, Any]:
+    blockers: list[str] = []
+    warnings: list[str] = []
+    evidence: dict[str, Any] = {}
+
+    cm = load_json("workspace_config/codex_manifest.json")
+    bootstrap = cm.get("bootstrap_read_order", [])
+    evidence["bootstrap_exists"] = isinstance(bootstrap, list)
+    if not isinstance(bootstrap, list) or not bootstrap:
+        blockers.append("bootstrap_read_order missing or empty in codex_manifest")
+        bootstrap = []
+
+    normalized_bootstrap = [str(x).strip() for x in bootstrap if str(x).strip()]
+    evidence["bootstrap_count"] = len(normalized_bootstrap)
+    evidence["bootstrap_unique_count"] = len(set(normalized_bootstrap))
+
+    if len(set(normalized_bootstrap)) != len(normalized_bootstrap):
+        blockers.append("bootstrap_read_order contains duplicate paths")
+
+    missing_from_repo = [p for p in normalized_bootstrap if not exists(p)]
+    evidence["bootstrap_missing_paths"] = missing_from_repo
+    if missing_from_repo:
+        blockers.extend([f"bootstrap path missing in repo: {p}" for p in missing_from_repo])
+
+    missing_required = [p for p in BOOTSTRAP_REQUIRED if p not in normalized_bootstrap]
+    evidence["bootstrap_missing_required"] = missing_required
+    if missing_required:
+        blockers.extend([f"bootstrap missing required path: {p}" for p in missing_required])
+
+    legacy_tokens = [
+        p
+        for p in normalized_bootstrap
+        if "PUBLIC_REPO_SANITIZATION_REPORT.md" in p or "tools/public_mirror" in p
+    ]
+    evidence["legacy_tokens_in_bootstrap"] = legacy_tokens
+    if legacy_tokens:
+        blockers.extend([f"legacy/non-canonical bootstrap entry: {p}" for p in legacy_tokens])
+
+    canonical_prefix = [
+        "README.md",
+        "workspace_config/workspace_manifest.json",
+        "workspace_config/codex_manifest.json",
+        "REPO_MAP.md",
+        "MACHINE_CONTEXT.md",
+        "docs/INSTRUCTION_INDEX.md",
+    ]
+    evidence["canonical_prefix_expected"] = canonical_prefix
+    evidence["canonical_prefix_actual"] = normalized_bootstrap[: len(canonical_prefix)]
+    if normalized_bootstrap[: len(canonical_prefix)] != canonical_prefix:
+        blockers.append("bootstrap canonical prefix mismatch")
+
+    repo_control_entries = [p for p in normalized_bootstrap if p.endswith("repo_control_center.py")]
+    evidence["repo_control_entries"] = repo_control_entries
+    if len(repo_control_entries) != 1 or repo_control_entries[0] != "scripts/repo_control_center.py":
+        blockers.append("conflicting bootstrap entrypoints for repo control center")
+
+    if "docs/governance/FIRST_PRINCIPLES.md" in normalized_bootstrap and "docs/governance/GOVERNANCE_HIERARCHY.md" in normalized_bootstrap:
+        if normalized_bootstrap.index("docs/governance/FIRST_PRINCIPLES.md") > normalized_bootstrap.index("docs/governance/GOVERNANCE_HIERARCHY.md"):
+            blockers.append("bootstrap precedence violated: FIRST_PRINCIPLES appears after GOVERNANCE_HIERARCHY")
+
+    bootstrap_rules_list = parse_numbered_markdown_paths("workspace_config/MACHINE_REPO_READING_RULES.md")
+    machine_context_list = parse_numbered_markdown_paths("MACHINE_CONTEXT.md")
+    evidence["rules_list_count"] = len(bootstrap_rules_list)
+    evidence["machine_context_list_count"] = len(machine_context_list)
+    if bootstrap_rules_list and set(bootstrap_rules_list) != set(normalized_bootstrap):
+        warnings.append("MACHINE_REPO_READING_RULES list differs from codex_manifest bootstrap set")
+    if machine_context_list and set(machine_context_list) != set(normalized_bootstrap):
+        warnings.append("MACHINE_CONTEXT bootstrap list differs from codex_manifest bootstrap set")
+
+    for rel in [MACHINE_BOOTSTRAP_CONTRACT, CANONICAL_SOURCE_PRECEDENCE_DOC, ZERO_CONFIG_POLICY_DOC]:
+        if not exists(rel):
+            blockers.append(f"missing bootstrap/precedence contract: {rel}")
+
+    if blockers:
+        verdict = "BLOCKED"
+    elif warnings:
+        verdict = "WARNING"
+    else:
+        verdict = "PASS"
+
+    return {
+        "verdict": verdict,
+        "basis": "single canonical bootstrap contract enforcement",
+        "evidence": evidence,
+        "blockers": blockers,
+        "warnings": warnings,
+        "next_step": "Resolve bootstrap contract blockers/warnings." if (blockers or warnings) else "Bootstrap contract enforced.",
+    }
 
 
 def contradiction_checks(git_state: GitState) -> dict[str, Any]:
@@ -234,7 +357,9 @@ def contradiction_checks(git_state: GitState) -> dict[str, Any]:
 def governance_checks() -> dict[str, Any]:
     missing_stack = missing_paths(GOVERNANCE_BRAIN_STACK)
     missing_evolution = missing_paths(EVOLUTION_LAYER_DOCS)
+    missing_hardening = missing_paths(GOVERNANCE_V11_HARDENING_DOCS)
     missing_core = missing_paths(CORE_DOCS)
+    missing_acceptance = missing_paths([GOVERNANCE_ACCEPTANCE_DOC])
 
     weak_docs: list[str] = []
     for rel in GOVERNANCE_BRAIN_STACK + EVOLUTION_LAYER_DOCS:
@@ -255,15 +380,13 @@ def governance_checks() -> dict[str, Any]:
         if rel not in cm_stack:
             governance_refs_missing.append(f"codex_manifest missing {rel}")
 
-    bootstrap = cm.get("bootstrap_read_order", [])
-    missing_bootstrap = [rel for rel in BOOTSTRAP_REQUIRED if rel not in bootstrap]
-
     blockers = [
         *[f"missing governance doc: {p}" for p in missing_stack],
         *[f"missing evolution doc: {p}" for p in missing_evolution],
+        *[f"missing hardening doc: {p}" for p in missing_hardening],
+        *[f"missing governance acceptance gate: {p}" for p in missing_acceptance],
         *[f"missing core doc: {p}" for p in missing_core],
         *governance_refs_missing,
-        *[f"bootstrap missing: {p}" for p in missing_bootstrap],
     ]
 
     warnings = [f"low operational density: {p}" for p in weak_docs]
@@ -282,8 +405,9 @@ def governance_checks() -> dict[str, Any]:
         "evidence": {
             "missing_stack": missing_stack,
             "missing_evolution": missing_evolution,
+            "missing_hardening": missing_hardening,
+            "missing_acceptance": missing_acceptance,
             "missing_core": missing_core,
-            "missing_bootstrap": missing_bootstrap,
             "weak_docs": weak_docs,
         },
     }
@@ -475,7 +599,7 @@ def bundle_checks() -> dict[str, Any]:
         )
         evidence["help_exit_code"] = proc.returncode
         help_output = (proc.stdout or "") + (proc.stderr or "")
-        for token in ["context", "files", "paths", "project", "request"]:
+        for token in ["context", "files", "paths", "project", "request", "audit-runtime"]:
             if token not in help_output:
                 blockers.append(f"exporter missing mode in CLI help: {token}")
         if proc.returncode != 0:
@@ -495,7 +619,14 @@ def bundle_checks() -> dict[str, Any]:
     }
 
 
-def trust_checks(sync: dict[str, Any], governance: dict[str, Any], contradictions: dict[str, Any], mirror: dict[str, Any], bundle: dict[str, Any]) -> dict[str, Any]:
+def trust_checks(
+    sync: dict[str, Any],
+    governance: dict[str, Any],
+    contradictions: dict[str, Any],
+    mirror: dict[str, Any],
+    bundle: dict[str, Any],
+    bootstrap: dict[str, Any],
+) -> dict[str, Any]:
     blockers: list[str] = []
     warnings: list[str] = []
 
@@ -516,6 +647,11 @@ def trust_checks(sync: dict[str, Any], governance: dict[str, Any], contradiction
     elif mirror["verdict"] == "WARNING":
         warnings.append("safe mirror artifact freshness warning")
 
+    if bootstrap["verdict"] == "BLOCKED":
+        blockers.append("bootstrap contract blocked")
+    elif bootstrap["verdict"] == "WARNING":
+        warnings.append("bootstrap contract warning")
+
     if bundle["verdict"] != "READY":
         blockers.append("bundle readiness blocked")
 
@@ -535,6 +671,7 @@ def trust_checks(sync: dict[str, Any], governance: dict[str, Any], contradiction
             "critical_contradictions": contradictions["critical_count"],
             "major_contradictions": contradictions["major_count"],
             "mirror_verdict": mirror["verdict"],
+            "bootstrap_verdict": bootstrap["verdict"],
             "bundle_verdict": bundle["verdict"],
         },
         "blockers": blockers,
@@ -543,7 +680,13 @@ def trust_checks(sync: dict[str, Any], governance: dict[str, Any], contradiction
     }
 
 
-def admission_checks(trust: dict[str, Any], sync: dict[str, Any], governance: dict[str, Any], contradictions: dict[str, Any]) -> dict[str, Any]:
+def admission_checks(
+    trust: dict[str, Any],
+    sync: dict[str, Any],
+    governance: dict[str, Any],
+    contradictions: dict[str, Any],
+    governance_acceptance: dict[str, Any],
+) -> dict[str, Any]:
     blockers: list[str] = []
     if trust["verdict"] == "NOT_TRUSTED":
         blockers.append("trust verdict is NOT_TRUSTED")
@@ -553,6 +696,8 @@ def admission_checks(trust: dict[str, Any], sync: dict[str, Any], governance: di
         blockers.append("governance NON_COMPLIANT")
     if contradictions["critical_count"] > 0:
         blockers.append("critical contradictions unresolved")
+    if governance_acceptance["verdict"] != "PASS":
+        blockers.append("governance acceptance gate not PASS")
 
     if blockers:
         verdict = "REJECTED"
@@ -570,9 +715,74 @@ def admission_checks(trust: dict[str, Any], sync: dict[str, Any], governance: di
             "governance_verdict": governance["verdict"],
             "critical_contradictions": contradictions["critical_count"],
             "major_contradictions": contradictions["major_count"],
+            "governance_acceptance_verdict": governance_acceptance["verdict"],
         },
         "blockers": blockers,
         "next_step": "Clear blockers to reach ADMISSIBLE." if blockers else "Admission gate is clear.",
+    }
+
+
+def governance_acceptance_checks(
+    *,
+    sync: dict[str, Any],
+    trust: dict[str, Any],
+    governance: dict[str, Any],
+    contradictions: dict[str, Any],
+    mirror: dict[str, Any],
+    bundle: dict[str, Any],
+    bootstrap: dict[str, Any],
+    git_state: GitState,
+) -> dict[str, Any]:
+    blockers: list[str] = []
+    evidence: dict[str, Any] = {
+        "acceptance_doc_exists": exists(GOVERNANCE_ACCEPTANCE_DOC),
+        "next_step_doc_exists": exists("docs/NEXT_CANONICAL_STEP.md"),
+        "sync_verdict": sync["verdict"],
+        "trust_verdict": trust["verdict"],
+        "governance_verdict": governance["verdict"],
+        "bootstrap_verdict": bootstrap["verdict"],
+        "mirror_verdict": mirror["verdict"],
+        "bundle_verdict": bundle["verdict"],
+        "critical_contradictions": contradictions["critical_count"],
+        "worktree_clean": git_state.worktree_clean,
+        "divergence": f"{git_state.ahead}/{git_state.behind}",
+    }
+
+    if not exists(GOVERNANCE_ACCEPTANCE_DOC):
+        blockers.append("missing governance acceptance gate document")
+
+    next_step_text = read_text("docs/NEXT_CANONICAL_STEP.md") if exists("docs/NEXT_CANONICAL_STEP.md") else ""
+    has_governance_closure = "governance acceptance closure" in next_step_text.lower()
+    evidence["next_step_has_governance_acceptance_closure"] = has_governance_closure
+    if not has_governance_closure:
+        blockers.append("NEXT_CANONICAL_STEP does not route to governance acceptance closure")
+
+    if sync["verdict"] != "IN_SYNC":
+        blockers.append("sync gate not IN_SYNC")
+    if trust["verdict"] != "TRUSTED":
+        blockers.append("trust gate not TRUSTED")
+    if governance["verdict"] != "COMPLIANT":
+        blockers.append("governance gate not COMPLIANT")
+    if bootstrap["verdict"] != "PASS":
+        blockers.append("bootstrap enforcement not PASS")
+    if mirror["verdict"] != "PASS":
+        blockers.append("safe mirror evidence gate not PASS")
+    if bundle["verdict"] != "READY":
+        blockers.append("bundle gate not READY")
+    if contradictions["critical_count"] > 0:
+        blockers.append("critical contradictions unresolved")
+    if not git_state.worktree_clean:
+        blockers.append("worktree is dirty")
+    if git_state.ahead != 0 or git_state.behind != 0:
+        blockers.append(f"divergence is not zero: {git_state.ahead}/{git_state.behind}")
+
+    verdict = "PASS" if not blockers else "FAIL"
+    return {
+        "verdict": verdict,
+        "basis": "formal governance acceptance gate for transition readiness",
+        "evidence": evidence,
+        "blockers": blockers,
+        "next_step": "Governance foundation accepted for next-stage consideration." if verdict == "PASS" else "Close governance acceptance blockers.",
     }
 
 
@@ -818,16 +1028,27 @@ def evolution_checks(sync: dict[str, Any], governance: dict[str, Any], contradic
 def build_results(fetch: bool) -> dict[str, Any]:
     git_state = build_git_state(fetch=fetch)
     contradictions = contradiction_checks(git_state)
+    bootstrap = bootstrap_enforcement_checks()
     governance = governance_checks()
     sync = sync_checks(git_state)
     mirror = mirror_checks(git_state)
     bundle = bundle_checks()
-    trust = trust_checks(sync, governance, contradictions, mirror, bundle)
-    admission = admission_checks(trust, sync, governance, contradictions)
+    trust = trust_checks(sync, governance, contradictions, mirror, bundle, bootstrap)
+    governance_acceptance = governance_acceptance_checks(
+        sync=sync,
+        trust=trust,
+        governance=governance,
+        contradictions=contradictions,
+        mirror=mirror,
+        bundle=bundle,
+        bootstrap=bootstrap,
+        git_state=git_state,
+    )
+    admission = admission_checks(trust, sync, governance, contradictions, governance_acceptance)
     evolution = evolution_checks(sync, governance, contradictions, trust, admission, mirror, bundle)
 
     repo_health = "PASS"
-    if trust["verdict"] == "NOT_TRUSTED" or admission["verdict"] == "REJECTED":
+    if trust["verdict"] == "NOT_TRUSTED" or admission["verdict"] == "REJECTED" or governance_acceptance["verdict"] != "PASS":
         repo_health = "FAIL"
     elif trust["verdict"] == "WARNING" or admission["verdict"] == "CONDITIONAL":
         repo_health = "WARNING"
@@ -860,8 +1081,10 @@ def build_results(fetch: bool) -> dict[str, Any]:
         "checks": {
             "contradictions": contradictions,
             "drift": drift_status,
+            "bootstrap": bootstrap,
             "mirror": mirror,
             "bundle": bundle,
+            "governance_acceptance": governance_acceptance,
         },
         "verdicts": {
             "trust": trust,
@@ -873,6 +1096,7 @@ def build_results(fetch: bool) -> dict[str, Any]:
                 "blockers": governance["blockers"],
                 "next_step": "Resolve governance blockers." if governance["blockers"] else "Maintain governance parity.",
             },
+            "governance_acceptance": governance_acceptance,
             "admission": admission,
             "evolution": evolution,
         },
@@ -915,8 +1139,14 @@ def markdown_report(result: dict[str, Any]) -> str:
         "## Bundle Readiness",
         f"- verdict: `{result['checks']['bundle']['verdict']}`",
         "",
+        "## Bootstrap Enforcement",
+        f"- verdict: `{result['checks']['bootstrap']['verdict']}`",
+        "",
         "## Safe Mirror Health",
         f"- verdict: `{result['checks']['mirror']['verdict']}`",
+        "",
+        "## Governance Acceptance Gate",
+        f"- verdict: `{result['checks']['governance_acceptance']['verdict']}`",
         "",
         "## EVOLUTION",
         f"- current_level: `{v['evolution']['evolution_block']['current_level']}`",
@@ -1003,12 +1233,14 @@ def summarize_for_mode(result: dict[str, Any], mode: str) -> dict[str, Any]:
             "trust": v["trust"]["verdict"],
             "sync": v["sync"]["verdict"],
             "governance": v["governance"]["verdict"],
+            "governance_acceptance": v["governance_acceptance"]["verdict"],
             "admission": v["admission"]["verdict"],
             "evolution": v["evolution"]["verdict"],
         }
     elif mode == "trust":
         base["trust"] = v["trust"]
         base["governance"] = v["governance"]
+        base["governance_acceptance"] = v["governance_acceptance"]
         base["admission"] = v["admission"]
     elif mode == "sync":
         base["sync"] = v["sync"]
@@ -1028,7 +1260,7 @@ def exit_code_for_mode(result: dict[str, Any], mode: str) -> int:
     if mode == "sync":
         return 0 if v["sync"]["verdict"] == "IN_SYNC" else 1
     if mode == "trust":
-        return 0 if v["trust"]["verdict"] == "TRUSTED" else 1
+        return 0 if v["trust"]["verdict"] == "TRUSTED" and v["governance_acceptance"]["verdict"] == "PASS" else 1
     if mode == "evolution":
         return 0 if v["evolution"]["verdict"] not in {"BLOCKED"} else 1
     if mode in {"audit", "full-check"}:

@@ -41,10 +41,14 @@
 30. `docs/governance/OPERATIONAL_METRICS_POLICY.md`
 31. `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
 32. `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
-33. `scripts/repo_control_center.py`
-34. `workspace_config/GITHUB_SYNC_POLICY.md`
-35. `workspace_config/AGENT_EXECUTION_POLICY.md`
-36. `workspace_config/MACHINE_REPO_READING_RULES.md`
+33. `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
+34. `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
+35. `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
+36. `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
+37. `scripts/repo_control_center.py`
+38. `workspace_config/GITHUB_SYNC_POLICY.md`
+39. `workspace_config/AGENT_EXECUTION_POLICY.md`
+40. `workspace_config/MACHINE_REPO_READING_RULES.md`
 
 ## Canonical Top-Level Directories
 
@@ -97,6 +101,7 @@ Current canonical active project:
 - `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
 - `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
 - `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
+- `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
 
 ## Completion Guard
 

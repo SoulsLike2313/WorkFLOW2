@@ -20,6 +20,7 @@ DEFAULT_OUTPUT_DIR = "runtime/chatgpt_bundle_exports"
 WORKSPACE_MANIFEST_PATH = Path("workspace_config/workspace_manifest.json")
 SAFE_MIRROR_MANIFEST_PATH = Path("workspace_config/SAFE_MIRROR_MANIFEST.json")
 SAFE_MIRROR_REPORT_PATH = Path("docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md")
+AUDIT_RUNTIME_ALLOWLIST_PATH = Path("workspace_config/chatgpt_audit_runtime_allowlist.json")
 
 MANDATORY_CONTEXT_FILES = [
     "README.md",
@@ -49,10 +50,18 @@ DISALLOWED_PATH_PATTERNS = [
     re.compile(r"(^|/)(id_rsa|id_ed25519)$", re.IGNORECASE),
     re.compile(r"(^|/)setup_reports(/|$)", re.IGNORECASE),
     re.compile(r"(^|/)tools/public_mirror(/|$)", re.IGNORECASE),
-    re.compile(r"(^|/)runtime(/|$)", re.IGNORECASE),
     re.compile(r"(^|/)(logs?|tmp|temp|cache)(/|$)", re.IGNORECASE),
     re.compile(r"(^|/)(router|tunnel|wan|lan|wan_lan|network_trace|network_traces|network_diagnostics?)(/|$)", re.IGNORECASE),
     re.compile(r"\.(etl|pcap|dmp|bak|orig)$", re.IGNORECASE),
+]
+
+RUNTIME_PATH_PATTERN = re.compile(r"(^|/)runtime(/|$)", re.IGNORECASE)
+
+DEFAULT_AUDIT_RUNTIME_ALLOWLIST = [
+    "runtime/repo_control_center/repo_control_status.json",
+    "runtime/repo_control_center/repo_control_report.md",
+    "runtime/repo_control_center/evolution_status.json",
+    "runtime/repo_control_center/evolution_report.md",
 ]
 
 SECRET_CONTENT_PATTERNS = [
@@ -61,6 +70,13 @@ SECRET_CONTENT_PATTERNS = [
     re.compile(r"sk-[A-Za-z0-9]{20,}"),
     re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     re.compile(r"https?://[^\s:@/]+:[^\s@/]+@"),
+]
+
+AUDIT_RUNTIME_CONTENT_BLOCK_PATTERNS = [
+    re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
+    re.compile(r"(?i)\b(password|token|secret|credentials?)\b\s*[:=]\s*['\"]?[A-Za-z0-9_\-]{8,}"),
+    re.compile(r"[A-Za-z]:\\Users\\"),
+    re.compile(r"/Users/"),
 ]
 
 TEXT_EXTENSIONS = {
@@ -129,12 +145,27 @@ def normalize_rel(path: str) -> str:
     return value.strip("/")
 
 
-def is_path_disallowed(rel_path: str) -> bool:
+def load_audit_runtime_allowlist(repo_root: Path) -> set[str]:
+    path = repo_root / AUDIT_RUNTIME_ALLOWLIST_PATH
+    if not path.exists():
+        return {normalize_rel(item) for item in DEFAULT_AUDIT_RUNTIME_ALLOWLIST}
+    payload = load_json(path)
+    values = payload.get("allowed_runtime_paths", [])
+    if not isinstance(values, list):
+        return {normalize_rel(item) for item in DEFAULT_AUDIT_RUNTIME_ALLOWLIST}
+    return {normalize_rel(str(item)) for item in values if str(item).strip()}
+
+
+def path_disallow_reason(rel_path: str, *, runtime_allowlist: set[str]) -> str | None:
     target = normalize_rel(rel_path)
+    if RUNTIME_PATH_PATTERN.search(target):
+        if target in runtime_allowlist:
+            return None
+        return "runtime_path_not_in_audit_allowlist"
     for pattern in DISALLOWED_PATH_PATTERNS:
         if pattern.search(target):
-            return True
-    return False
+            return "requested_path_disallowed_by_policy"
+    return None
 
 
 def file_hash(path: Path) -> str:
@@ -228,23 +259,33 @@ def resolve_project_paths(repo_root: Path, slug: str) -> list[str]:
     raise RuntimeError(f"Unknown project slug: {slug}")
 
 
-def mode_requests(repo_root: Path, args: argparse.Namespace) -> tuple[list[str], str]:
+def mode_requests(repo_root: Path, args: argparse.Namespace) -> tuple[list[str], str, set[str]]:
     mode = args.mode
     if mode == "context":
-        return list(CONTEXT_MODE_FILES), "built-in:context"
+        return list(CONTEXT_MODE_FILES), "built-in:context", set()
     if mode == "files":
-        return list(args.include), "cli:files"
+        return list(args.include), "cli:files", set()
     if mode == "paths":
-        return list(args.include), "cli:paths"
+        return list(args.include), "cli:paths", set()
     if mode == "project":
-        return resolve_project_paths(repo_root, args.slug), f"project:{args.slug}"
+        return resolve_project_paths(repo_root, args.slug), f"project:{args.slug}", set()
     if mode == "request":
         request_file = Path(args.request_file).expanduser()
         if not request_file.is_absolute():
             request_file = (repo_root / request_file).resolve()
         if not request_file.exists():
             raise RuntimeError(f"Request file not found: {request_file}")
-        return parse_request_file(request_file), f"request-file:{request_file}"
+        return parse_request_file(request_file), f"request-file:{request_file}", set()
+    if mode == "audit-runtime":
+        runtime_allowlist = load_audit_runtime_allowlist(repo_root)
+        requested: list[str] = []
+        if args.include_rcc_runtime:
+            requested.extend(sorted(runtime_allowlist))
+        if args.include:
+            requested.extend(list(args.include))
+        if not requested:
+            raise RuntimeError("audit-runtime mode requires --include-rcc-runtime or --include paths.")
+        return requested, "audit-runtime", runtime_allowlist
     raise RuntimeError(f"Unsupported mode: {mode}")
 
 
@@ -252,6 +293,7 @@ def expand_and_filter(
     repo_root: Path,
     tracked: set[str],
     requested: list[str],
+    runtime_allowlist: set[str],
 ) -> tuple[list[str], list[dict[str, str]], list[dict[str, str]]]:
     included: set[str] = set()
     skipped: list[dict[str, str]] = []
@@ -263,8 +305,9 @@ def expand_and_filter(
         rel = normalize_rel(raw)
         if not rel:
             continue
-        if is_path_disallowed(rel):
-            blocked.append({"path": rel, "reason": "requested_path_disallowed_by_policy"})
+        disallow_reason = path_disallow_reason(rel, runtime_allowlist=runtime_allowlist)
+        if disallow_reason:
+            blocked.append({"path": rel, "reason": disallow_reason})
             continue
 
         if rel in tracked:
@@ -279,14 +322,27 @@ def expand_and_filter(
 
         full = (repo_root / rel).resolve()
         if full.exists():
+            if rel in runtime_allowlist and full.is_file():
+                included.add(rel)
+                continue
+            if full.is_dir():
+                allowlisted_dir_matches = sorted(
+                    item
+                    for item in runtime_allowlist
+                    if item.startswith(prefix) and (repo_root / item).is_file()
+                )
+                if allowlisted_dir_matches:
+                    included.update(allowlisted_dir_matches)
+                    continue
             skipped.append({"path": rel, "reason": "exists_but_not_tracked"})
         else:
             skipped.append({"path": rel, "reason": "not_found"})
 
     filtered: list[str] = []
     for rel in sorted(included):
-        if is_path_disallowed(rel):
-            blocked.append({"path": rel, "reason": "tracked_path_disallowed_by_policy"})
+        disallow_reason = path_disallow_reason(rel, runtime_allowlist=runtime_allowlist)
+        if disallow_reason:
+            blocked.append({"path": rel, "reason": disallow_reason})
             continue
         filtered.append(rel)
 
@@ -308,6 +364,12 @@ def expand_and_filter(
                 blocked.append({"path": rel, "reason": f"content_pattern_block:{pattern.pattern}"})
                 secret_hit = True
                 break
+        if not secret_hit and rel in runtime_allowlist:
+            for pattern in AUDIT_RUNTIME_CONTENT_BLOCK_PATTERNS:
+                if pattern.search(text):
+                    blocked.append({"path": rel, "reason": f"audit_runtime_content_block:{pattern.pattern}"})
+                    secret_hit = True
+                    break
         if not secret_hit:
             final_included.append(rel)
 
@@ -425,6 +487,22 @@ def build_parser() -> argparse.ArgumentParser:
     request_mode = sub.add_parser("request", help="Export from request file containing paths listed by ChatGPT/user.")
     request_mode.add_argument("--request-file", required=True, help="Path to request file.")
 
+    audit_runtime = sub.add_parser(
+        "audit-runtime",
+        help="Export audit-safe runtime reports only via explicit allowlist (no global runtime policy weakening).",
+    )
+    audit_runtime.add_argument(
+        "--include-rcc-runtime",
+        action="store_true",
+        help="Include policy-approved runtime/repo_control_center reports from allowlist.",
+    )
+    audit_runtime.add_argument(
+        "--include",
+        nargs="*",
+        default=[],
+        help="Optional extra repo-relative paths; runtime paths still require allowlist.",
+    )
+
     return parser
 
 
@@ -439,8 +517,13 @@ def main() -> int:
     git_state = build_git_state(repo_root)
     tracked = tracked_files(repo_root)
 
-    requested, request_source = mode_requests(repo_root, args)
-    included, skipped, blocked = expand_and_filter(repo_root, tracked, requested)
+    requested, request_source, runtime_allowlist = mode_requests(repo_root, args)
+    included, skipped, blocked = expand_and_filter(
+        repo_root,
+        tracked,
+        requested,
+        runtime_allowlist=runtime_allowlist,
+    )
 
     included_hashes = {path: file_hash(repo_root / path) for path in included}
 
@@ -488,6 +571,9 @@ def main() -> int:
             "safe_mirror_manifest_path": str(SAFE_MIRROR_MANIFEST_PATH),
             "safe_mirror_report_path": str(SAFE_MIRROR_REPORT_PATH),
         },
+        "audit_runtime_allowlist_path": str(AUDIT_RUNTIME_ALLOWLIST_PATH),
+        "audit_runtime_allowlist_enabled": bool(runtime_allowlist),
+        "audit_runtime_allowlist": sorted(runtime_allowlist),
     }
 
     report_md = build_report(
