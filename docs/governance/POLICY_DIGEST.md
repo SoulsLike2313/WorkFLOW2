@@ -39,6 +39,19 @@ Digest map of policy documents that directly influence Repo Control Center gate 
 | `workspace_config/AGENT_EXECUTION_POLICY.md` | Execution boundary contract | Execution governance | Yes |
 | `workspace_config/MACHINE_REPO_READING_RULES.md` | Canonical read-order contract | Bootstrap enforcement | Yes |
 
+## Operator Query / Command Policies
+
+| Document | Primary Function | Gate/Layer Controlled | Bootstrap Required |
+| --- | --- | --- | --- |
+| `docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md` | Query-layer baseline declaration | Query framing over governance truth | Yes |
+| `docs/governance/OPERATOR_QUERY_CATALOG.md` | Query class taxonomy | Query class scope control | Yes |
+| `docs/governance/OPERATOR_RESPONSE_CONTRACT.md` | Stable query response shape | Query output contract | Yes |
+| `docs/governance/OPERATOR_INTENT_ROUTING.md` | Deterministic query routing precedence | Query routing control | Yes |
+| `docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md` | Command execution baseline declaration | Command layer framing | Yes |
+| `docs/governance/OPERATOR_COMMAND_CATALOG.md` | Command class taxonomy | Command scope control | Yes |
+| `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md` | Mandatory execution contract fields | Command contract gate | Yes |
+| `docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md` | Deterministic command routing precedence | Command routing control | Yes |
+
 ## Role Separation
 - `MACHINE_OPERATOR_GUIDE.md`: operational runbook.
 - `MACHINE_CAPABILITIES_SUMMARY.md`: capability/authority matrix.

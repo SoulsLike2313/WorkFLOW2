@@ -107,7 +107,15 @@
       "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
       "docs/governance/INTEGRATION_INBOX_POLICY.md",
       "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
-      "docs/governance/FEDERATION_ARCHITECTURE.md"
+      "docs/governance/FEDERATION_ARCHITECTURE.md",
+      "docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md",
+      "docs/governance/OPERATOR_QUERY_CATALOG.md",
+      "docs/governance/OPERATOR_RESPONSE_CONTRACT.md",
+      "docs/governance/OPERATOR_INTENT_ROUTING.md",
+      "docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md",
+      "docs/governance/OPERATOR_COMMAND_CATALOG.md",
+      "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md",
+      "docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -196,7 +204,14 @@
       "workspace_config/handoff_package_schema.json",
       "workspace_config/integration_inbox_contract.json",
       "workspace_config/creator_mode_detection_contract.json"
-    ]
+    ],
+    "operator_command_registry_path": "workspace_config/operator_command_registry.json",
+    "operator_command_surface_script": "scripts/operator_command_surface.py",
+    "operator_command_execution_baseline_path": "docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md",
+    "operator_command_catalog_path": "docs/governance/OPERATOR_COMMAND_CATALOG.md",
+    "operator_command_execution_contract_path": "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md",
+    "operator_command_intent_routing_path": "docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md",
+    "operator_command_layer_required": true
   },
   "shared_systems": {
     "root_path": "shared_systems",
@@ -241,7 +256,12 @@
     "detect_machine_mode": "python scripts/detect_machine_mode.py --intent auto",
     "resolve_task_id": "python scripts/resolve_task_id.py --task-id <task_id>",
     "prepare_handoff_package": "python scripts/prepare_handoff_package.py --task-id <task_id> --node-id <node_id>",
-    "review_integration_inbox": "python scripts/review_integration_inbox.py"
+    "review_integration_inbox": "python scripts/review_integration_inbox.py",
+    "operator_command_surface_execute": "python scripts/operator_command_surface.py execute --command <operator_command_text>",
+    "operator_command_surface_classify": "python scripts/operator_command_surface.py classify --command <operator_command_text>",
+    "operator_command_surface_consistency_check": "python scripts/operator_command_surface.py consistency-check",
+    "operator_command_surface_status": "python scripts/operator_command_surface.py status",
+    "operator_command_surface_registry": "python scripts/operator_command_surface.py registry"
   },
   "verification_entrypoints": {
     "active_project_verify": "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>",
@@ -546,7 +566,8 @@
     "federation_enabled": true,
     "canonical_acceptance_mode": "creator_only",
     "creator_authority_detection": "external_env_marker",
-    "integration_inbox_root": "integration/inbox"
+    "integration_inbox_root": "integration/inbox",
+    "operator_command_execution_layer": "policy_bound_cli_v1"
   },
   "governance_brain_stack": {
     "required": true,
@@ -587,7 +608,15 @@
       "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
       "docs/governance/INTEGRATION_INBOX_POLICY.md",
       "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
-      "docs/governance/FEDERATION_ARCHITECTURE.md"
+      "docs/governance/FEDERATION_ARCHITECTURE.md",
+      "docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md",
+      "docs/governance/OPERATOR_QUERY_CATALOG.md",
+      "docs/governance/OPERATOR_RESPONSE_CONTRACT.md",
+      "docs/governance/OPERATOR_INTENT_ROUTING.md",
+      "docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md",
+      "docs/governance/OPERATOR_COMMAND_CATALOG.md",
+      "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md",
+      "docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md"
     ],
     "repo_control_center": "scripts/repo_control_center.py"
   },
@@ -615,6 +644,21 @@
     "scripts/review_integration_inbox.py",
     "integration/README.md",
     "tasks/README.md",
-    "tasks/registry/example_block_task.json"
+    "tasks/registry/example_block_task.json",
+    "docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md",
+    "docs/governance/OPERATOR_QUERY_CATALOG.md",
+    "docs/governance/OPERATOR_RESPONSE_CONTRACT.md",
+    "docs/governance/OPERATOR_INTENT_ROUTING.md",
+    "docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md",
+    "docs/governance/OPERATOR_COMMAND_CATALOG.md",
+    "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md",
+    "docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md",
+    "workspace_config/operator_command_registry.json",
+    "scripts/operator_command_surface.py",
+    "docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json",
+    "docs/review_artifacts/OPERATOR_COMMAND_CONSISTENCY_REPORT.md",
+    "docs/review_artifacts/OPERATOR_COMMAND_READINESS_BASELINE.md",
+    "docs/review_artifacts/OPERATOR_COMMAND_LAYER_CERTIFICATION.md",
+    "docs/review_artifacts/OPERATOR_COMMAND_LAYER_SUMMARY.md"
   ]
 }

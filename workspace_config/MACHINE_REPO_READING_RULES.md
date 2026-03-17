@@ -63,6 +63,17 @@ Machine must complete this canonical order before execution:
 57. `workspace_config/GITHUB_SYNC_POLICY.md`
 58. `workspace_config/AGENT_EXECUTION_POLICY.md`
 59. `workspace_config/MACHINE_REPO_READING_RULES.md`
+60. `docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md`
+61. `docs/governance/OPERATOR_QUERY_CATALOG.md`
+62. `docs/governance/OPERATOR_RESPONSE_CONTRACT.md`
+63. `docs/governance/OPERATOR_INTENT_ROUTING.md`
+64. `docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md`
+65. `docs/governance/OPERATOR_COMMAND_CATALOG.md`
+66. `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md`
+67. `docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md`
+68. `workspace_config/operator_command_registry.json`
+69. `scripts/operator_command_surface.py`
+70. `docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json`
 
 If any mandatory step is skipped: `STATUS: REJECTED`.
 
@@ -148,3 +159,16 @@ Tracked safe-state evidence contract:
 - full copy without valid authority marker is `helper` mode.
 - helper mode cannot declare canonical completion or governance acceptance.
 - integration inbox is mandatory entrypoint for external helper deliveries.
+
+## Rule 10: Operator Command Surface Enforcement
+
+- command execution layer entrypoint:
+  - `scripts/operator_command_surface.py`
+- unified command registry:
+  - `workspace_config/operator_command_registry.json`
+- mandatory command evidence outputs:
+  - `runtime/operator_command_layer/last_execution.json`
+  - `runtime/operator_command_layer/command_surface_status.json`
+- mutable command actions must be:
+  - explicit `--allow-mutation`
+  - or dry-run mode with formal execution contract output

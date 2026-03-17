@@ -35,6 +35,7 @@ If any item fails: `NOT_COMPLETED`.
 - `python scripts/check_repo_sync.py --remote safe_mirror --branch main`
 - `python scripts/repo_control_center.py sync`
 - `python scripts/repo_control_center.py trust`
+- `python scripts/operator_command_surface.py status` (if command layer was used)
 
 ## Repo-Visible Truth Rule
 
@@ -42,6 +43,14 @@ If any item fails: `NOT_COMPLETED`.
 - uncommitted files are non-existent for completion
 - unpushed commits are non-existent for completion
 - stale reports cannot replace current sync evidence
+
+## Operator Command Execution Link
+
+If execution was performed via `scripts/operator_command_surface.py`:
+
+1. command runtime evidence must exist (`runtime/operator_command_layer/*`)
+2. mutable command runs require post-run sync verification
+3. completion is forbidden when command evidence says `BLOCKED`/`FAILED` and blockers are unresolved
 
 ## Governance Linkage
 

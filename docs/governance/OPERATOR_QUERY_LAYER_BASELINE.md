@@ -45,6 +45,7 @@ Creator proof outputs:
 - Return response in stable contract shape.
 - Attach evidence source references.
 - Preserve engineering semantics and gate distinctions.
+- Provide non-mutating context for the Operator Command Execution Layer.
 
 ## Non-Goals
 - No governance rule redefinition.

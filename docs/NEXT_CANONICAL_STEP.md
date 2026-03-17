@@ -1,70 +1,65 @@
-# Next Canonical Step
+﻿# Next Canonical Step
 
-- step_id: `next-step-federation-integration-layer-v1`
+- step_id: `next-step-operator-command-execution-layer-v1`
 - effective_date_utc: `2026-03-17`
-- previous_accepted_stage: `governance-acceptance-foundation-closed`
+- previous_accepted_stage: `operator-query-layer-command-surface-accepted`
 
 ## What Do We Do Next
 
 Canonical next execution step is:
 
-`federation / integration layer v1 hardening`
+`operator command execution layer v1`
 
 This means:
 
-1. creator/helper/integration machine modes with external creator authority detection contract
-2. task-id block execution workflow for helper nodes
-3. integration inbox review flow for external handoff packages
-4. canonical acceptance remains creator-only
+1. classify operator commands deterministically
+2. enforce authority/policy/precondition checks before execution
+3. execute only policy-allowed actions by wave (`1A`, `1B`, `1C`)
+4. return unified execution contract with artifacts/state-change tracking
+5. freeze readiness only after consistency + creator-grade validation
 
 ## Canonical Goal
 
-Make parallel multi-node development operational without losing canonical authority:
+Make operator commands executable without relaxing governance boundaries:
 
-1. full repo copy without authority marker resolves to helper mode
-2. helper nodes execute only `task_id` blocks
-3. external blocks are delivered through integration inbox only
-4. canonical creator machine remains final acceptance authority
+1. no free-form uncontrolled execution
+2. creator-only operations remain creator-only
+3. mutable commands stay guarded and dry-run by default
+4. every command run leaves repo-visible runtime evidence
 
 ## Canonical Scope
 
 - target layer:
-  - `docs/governance/**` (federation/integration policies)
-  - `workspace_config/**` (mode/task/handoff/inbox contracts)
-  - `integration/**`
-  - `tasks/**`
-  - `scripts/detect_machine_mode.py`
-  - `scripts/resolve_task_id.py`
-  - `scripts/prepare_handoff_package.py`
-  - `scripts/review_integration_inbox.py`
-  - `scripts/repo_control_center.py` (mode/integration checks only)
+  - `docs/governance/OPERATOR_COMMAND_*`
+  - `workspace_config/operator_command_registry.json`
+  - `scripts/operator_command_surface.py`
+  - `runtime/operator_command_layer/*`
+  - `docs/review_artifacts/OPERATOR_COMMAND_*`
   - root context docs/manifests integration
 - forbidden scope:
   - product feature development
-  - optimization branch work
-  - UI work
-  - safe_mirror architecture rewrite
+  - governance baseline rewrite
+  - authority model weakening
+  - UI expansion
 
 ## Canonical Acceptance Criteria
 
-1. creator authority contract exists (env + marker schema) without tracked local authority path leakage
-2. helper fallback works when authority is absent
-3. task-id resolution works for registry tasks
-4. handoff package generation works
-5. integration inbox review flow returns `ACCEPT_CANDIDATE | REJECT | QUARANTINE`
-6. repo control center reports machine mode and integration readiness
-7. sync parity with `safe_mirror/main` remains `0/0` and worktree clean
+1. Wave `1A/1B/1C` command classes implemented
+2. unified registry and execution contract are active
+3. command routing consistency check passes on golden pack
+4. creator-grade chain remains green after integration
+5. sync parity with `safe_mirror/main` remains `0/0` and worktree clean
 
 ## Canonical Prohibitions For This Step
 
-1. no completion claim from helper mode
-2. no governance override from helper mode
-3. no direct canonical merge from external handoff package
-4. no creator authority path disclosure in tracked repository
+1. no command may bypass policy checks
+2. no command may bypass authority checks
+3. no mutable execution without guard (`dry_run` or explicit `--allow-mutation`)
+4. no completion claim when command layer evidence is missing
 
 ## Rejection Condition
 
-Any request that bypasses creator-only canonical acceptance or integration inbox route must be rejected:
+Any request that requires policy/authority override must be rejected:
 
 ```text
 STATUS: REJECTED

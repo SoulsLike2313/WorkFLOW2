@@ -9,6 +9,7 @@
 | Evidence validation | Validate safe-state evidence contract (`basis_head_sha`, evidence mode, evidence freshness) | Non-compliant evidence degrades mirror/trust chain |
 | Runtime reporting | Emit machine-readable and operator-readable status artifacts | Output reflects current run only |
 | Integration readiness | Validate integration inbox structure and task/handoff tooling presence | Missing structure/contracts block integration verdict |
+| Command execution | Execute policy-bound operator commands via deterministic routing | Mutable commands are guarded and authority-bound |
 
 ## Authority-Bound Actions
 Creator-only:
@@ -30,6 +31,11 @@ Creator-only:
 - `runtime/repo_control_center/evolution_report.md`
 - `runtime/repo_control_center/one_screen_status.json`
 - `runtime/repo_control_center/plain_status.md`
+- `runtime/operator_command_layer/last_execution.json`
+- `runtime/operator_command_layer/command_execution_log.jsonl`
+- `runtime/operator_command_layer/command_surface_status.json`
+- `runtime/operator_command_layer/command_surface_report.md`
+- `runtime/operator_command_layer/operator_command_consistency_check.json`
 
 ## Verdict Naming Discipline
 - Verdict fields: `*_verdict`

@@ -17,12 +17,14 @@ Publication and sharing decisions must follow governance brain stack:
 - `docs/governance/SELF_VERIFICATION_POLICY.md`
 - `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
 - `docs/governance/ANTI_DRIFT_POLICY.md`
+- `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md`
 
 ## What Is Allowed In WorkFLOW2
 
 - root architecture docs (`README.md`, `REPO_MAP.md`, `MACHINE_CONTEXT.md`)
 - governance/policy/manifests in `workspace_config/`
 - `docs/` needed for machine-readable audit context
+- operator command execution layer artifacts (`docs/governance/OPERATOR_COMMAND_*`, `workspace_config/operator_command_registry.json`)
 - project/source files approved by safe state policy
 
 ## What Is Forbidden In WorkFLOW2

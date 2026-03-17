@@ -83,6 +83,17 @@ Architecture anchor:
 69. relevant project `README.md`
 70. relevant `CODEX.md` if present
 71. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+72. `docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md`
+73. `docs/governance/OPERATOR_QUERY_CATALOG.md`
+74. `docs/governance/OPERATOR_RESPONSE_CONTRACT.md`
+75. `docs/governance/OPERATOR_INTENT_ROUTING.md`
+76. `docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md`
+77. `docs/governance/OPERATOR_COMMAND_CATALOG.md`
+78. `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md`
+79. `docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md`
+80. `workspace_config/operator_command_registry.json`
+81. `scripts/operator_command_surface.py`
+82. `docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json`
 
 If this order is not completed, task status is `REJECTED`.
 
@@ -137,6 +148,12 @@ If this order is not completed, task status is `REJECTED`.
 | `docs/governance/POLICY_DIGEST.md` | Compressed map of policy stack and controlled gates | P0 |
 | `workspace_config/workspace_manifest.json` | Workspace registry and statuses | P0 |
 | `workspace_config/codex_manifest.json` | Machine onboarding and read order contracts | P0 |
+| `docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md` | Execution-layer baseline over accepted governance/query stack | P0 |
+| `docs/governance/OPERATOR_COMMAND_CATALOG.md` | Canonical command class catalog (Wave 1A/1B/1C) | P0 |
+| `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md` | Mandatory execution contract shape and refusal semantics | P0 |
+| `docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md` | Deterministic command routing precedence | P0 |
+| `workspace_config/operator_command_registry.json` | Unified machine-readable command registry | P0 |
+| `scripts/operator_command_surface.py` | CLI execution surface (`execute/classify/status/registry/consistency-check`) | P0 |
 | `workspace_config/GITHUB_SYNC_POLICY.md` | Sync and repo-visible completion rules | P0 |
 | `workspace_config/AGENT_EXECUTION_POLICY.md` | Execution boundaries and refusal rules | P0 |
 | `workspace_config/MACHINE_REPO_READING_RULES.md` | Deterministic reading contract | P0 |

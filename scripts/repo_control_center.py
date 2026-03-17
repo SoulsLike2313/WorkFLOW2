@@ -35,6 +35,26 @@ CORE_DOCS = [
     "workspace_config/codex_manifest.json",
 ]
 
+OPERATOR_QUERY_LAYER_DOCS = [
+    "docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md",
+    "docs/governance/OPERATOR_QUERY_CATALOG.md",
+    "docs/governance/OPERATOR_RESPONSE_CONTRACT.md",
+    "docs/governance/OPERATOR_INTENT_ROUTING.md",
+]
+
+OPERATOR_COMMAND_LAYER_DOCS = [
+    "docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md",
+    "docs/governance/OPERATOR_COMMAND_CATALOG.md",
+    "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md",
+    "docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md",
+]
+
+OPERATOR_COMMAND_LAYER_FILES = [
+    "workspace_config/operator_command_registry.json",
+    "scripts/operator_command_surface.py",
+    "docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json",
+]
+
 GOVERNANCE_BRAIN_STACK = [
     "docs/governance/FIRST_PRINCIPLES.md",
     "docs/governance/GOVERNANCE_HIERARCHY.md",
@@ -134,6 +154,9 @@ BOOTSTRAP_REQUIRED = [
     "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
     "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
     *FEDERATION_LAYER_DOCS,
+    *OPERATOR_QUERY_LAYER_DOCS,
+    *OPERATOR_COMMAND_LAYER_DOCS,
+    *OPERATOR_COMMAND_LAYER_FILES,
     "scripts/repo_control_center.py",
     "workspace_config/GITHUB_SYNC_POLICY.md",
     "workspace_config/AGENT_EXECUTION_POLICY.md",
@@ -534,11 +557,20 @@ def governance_checks() -> dict[str, Any]:
     missing_hardening = missing_paths(GOVERNANCE_V11_HARDENING_DOCS)
     missing_federation = missing_paths(FEDERATION_LAYER_DOCS)
     missing_federation_contracts = missing_paths(FEDERATION_CONTRACT_FILES)
+    missing_operator_query = missing_paths(OPERATOR_QUERY_LAYER_DOCS)
+    missing_operator_command = missing_paths(OPERATOR_COMMAND_LAYER_DOCS)
+    missing_operator_command_files = missing_paths(OPERATOR_COMMAND_LAYER_FILES)
     missing_core = missing_paths(CORE_DOCS)
     missing_acceptance = missing_paths([GOVERNANCE_ACCEPTANCE_DOC])
 
     weak_docs: list[str] = []
-    for rel in GOVERNANCE_BRAIN_STACK + EVOLUTION_LAYER_DOCS + FEDERATION_LAYER_DOCS:
+    for rel in (
+        GOVERNANCE_BRAIN_STACK
+        + EVOLUTION_LAYER_DOCS
+        + FEDERATION_LAYER_DOCS
+        + OPERATOR_QUERY_LAYER_DOCS
+        + OPERATOR_COMMAND_LAYER_DOCS
+    ):
         if exists(rel):
             lines = [ln for ln in read_text(rel).splitlines() if ln.strip()]
             if len(lines) < 20:
@@ -560,6 +592,16 @@ def governance_checks() -> dict[str, Any]:
             governance_refs_missing.append(f"workspace_manifest missing federation doc {rel}")
         if rel not in cm_stack:
             governance_refs_missing.append(f"codex_manifest missing federation doc {rel}")
+    for rel in OPERATOR_QUERY_LAYER_DOCS:
+        if rel not in wm_stack:
+            governance_refs_missing.append(f"workspace_manifest missing operator query doc {rel}")
+        if rel not in cm_stack:
+            governance_refs_missing.append(f"codex_manifest missing operator query doc {rel}")
+    for rel in OPERATOR_COMMAND_LAYER_DOCS:
+        if rel not in wm_stack:
+            governance_refs_missing.append(f"workspace_manifest missing operator command doc {rel}")
+        if rel not in cm_stack:
+            governance_refs_missing.append(f"codex_manifest missing operator command doc {rel}")
 
     blockers = [
         *[f"missing governance doc: {p}" for p in missing_stack],
@@ -567,6 +609,9 @@ def governance_checks() -> dict[str, Any]:
         *[f"missing hardening doc: {p}" for p in missing_hardening],
         *[f"missing federation doc: {p}" for p in missing_federation],
         *[f"missing federation contract: {p}" for p in missing_federation_contracts],
+        *[f"missing operator query doc: {p}" for p in missing_operator_query],
+        *[f"missing operator command doc: {p}" for p in missing_operator_command],
+        *[f"missing operator command file: {p}" for p in missing_operator_command_files],
         *[f"missing governance acceptance gate: {p}" for p in missing_acceptance],
         *[f"missing core doc: {p}" for p in missing_core],
         *governance_refs_missing,
@@ -591,6 +636,9 @@ def governance_checks() -> dict[str, Any]:
             "missing_hardening": missing_hardening,
             "missing_federation": missing_federation,
             "missing_federation_contracts": missing_federation_contracts,
+            "missing_operator_query": missing_operator_query,
+            "missing_operator_command": missing_operator_command,
+            "missing_operator_command_files": missing_operator_command_files,
             "missing_acceptance": missing_acceptance,
             "missing_core": missing_core,
             "weak_docs": weak_docs,
@@ -961,9 +1009,14 @@ def governance_acceptance_checks(
     next_step_lower = next_step_text.lower()
     has_governance_closure = "governance acceptance closure" in next_step_lower
     has_federation_transition = "federation / integration layer v1" in next_step_lower or "next-step-federation-integration-layer-v1" in next_step_lower
-    has_valid_route = has_governance_closure or has_federation_transition
+    has_operator_command_transition = (
+        "operator command execution layer v1" in next_step_lower
+        or "next-step-operator-command-execution-layer-v1" in next_step_lower
+    )
+    has_valid_route = has_governance_closure or has_federation_transition or has_operator_command_transition
     evidence["next_step_has_governance_acceptance_closure"] = has_governance_closure
     evidence["next_step_has_federation_transition"] = has_federation_transition
+    evidence["next_step_has_operator_command_transition"] = has_operator_command_transition
     evidence["next_step_has_valid_post_acceptance_route"] = has_valid_route
     if not has_valid_route:
         blockers.append("NEXT_CANONICAL_STEP missing governance-accepted canonical route")

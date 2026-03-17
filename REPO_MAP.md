@@ -69,6 +69,17 @@
 57. `workspace_config/GITHUB_SYNC_POLICY.md`
 58. `workspace_config/AGENT_EXECUTION_POLICY.md`
 59. `workspace_config/MACHINE_REPO_READING_RULES.md`
+60. `docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md`
+61. `docs/governance/OPERATOR_QUERY_CATALOG.md`
+62. `docs/governance/OPERATOR_RESPONSE_CONTRACT.md`
+63. `docs/governance/OPERATOR_INTENT_ROUTING.md`
+64. `docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md`
+65. `docs/governance/OPERATOR_COMMAND_CATALOG.md`
+66. `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md`
+67. `docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md`
+68. `workspace_config/operator_command_registry.json`
+69. `scripts/operator_command_surface.py`
+70. `docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json`
 
 ## Canonical Top-Level Directories
 
@@ -105,6 +116,19 @@ Current canonical active project:
   - `runtime/repo_control_center/repo_control_status.json`
   - `runtime/repo_control_center/evolution_status.json`
   - `runtime/repo_control_center/machine_mode_status.json`
+
+## Operator Command Layer
+
+- Command surface: `scripts/operator_command_surface.py`
+- Registry: `workspace_config/operator_command_registry.json`
+- Golden pack: `docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json`
+- Consistency report: `docs/review_artifacts/OPERATOR_COMMAND_CONSISTENCY_REPORT.md`
+- Runtime outputs:
+  - `runtime/operator_command_layer/last_execution.json`
+  - `runtime/operator_command_layer/command_execution_log.jsonl`
+  - `runtime/operator_command_layer/command_surface_status.json`
+  - `runtime/operator_command_layer/command_surface_report.md`
+  - `runtime/operator_command_layer/operator_command_consistency_check.json`
 
 ## Governance v1.1 Hardening Policies
 

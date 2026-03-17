@@ -58,7 +58,8 @@ Not accepted for execution:
 - governance foundation: `accepted`
 - repo control center: `accepted`
 - targeted bundle export: `accepted`
-- next active layer: `federation / integration layer v1`
+- operator query layer: `accepted`
+- next active layer: `operator command execution layer v1`
 
 ## Shared Systems Baseline
 

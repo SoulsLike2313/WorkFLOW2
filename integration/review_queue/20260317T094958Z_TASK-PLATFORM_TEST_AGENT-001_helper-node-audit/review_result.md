@@ -1,0 +1,8 @@
+# Integration Review Result
+
+- package: `20260317T094958Z_TASK-PLATFORM_TEST_AGENT-001_helper-node-audit`
+- decision: `ACCEPT_CANDIDATE`
+- reviewed_at: `2026-03-17T12:50:58.513941+00:00`
+
+## Reasons
+- schema and scope checks passed

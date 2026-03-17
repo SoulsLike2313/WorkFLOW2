@@ -1,0 +1,33 @@
+﻿{
+  "schema_version": "operator_command_golden_pack.v1.0.0",
+  "baseline_source": "docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md",
+  "routing_source": "docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md",
+  "contract_source": "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md",
+  "items": [
+    {"id": "C001", "raw_command": "status refresh", "command_class": "status_refresh_command", "resolved_action": "status_refresh"},
+    {"id": "C002", "raw_command": "refresh runtime status", "command_class": "status_refresh_command", "resolved_action": "status_refresh"},
+    {"id": "C003", "raw_command": "run validation", "command_class": "validation_command", "resolved_action": "validation_run"},
+    {"id": "C004", "raw_command": "workspace validation sweep", "command_class": "validation_command", "resolved_action": "validation_run"},
+    {"id": "C005", "raw_command": "build evidence bundle", "command_class": "evidence_bundle_command", "resolved_action": "evidence_bundle_context"},
+    {"id": "C006", "raw_command": "export context bundle", "command_class": "evidence_bundle_command", "resolved_action": "evidence_bundle_context"},
+    {"id": "C007", "raw_command": "generate execution report", "command_class": "report_generation_command", "resolved_action": "report_generation"},
+    {"id": "C008", "raw_command": "status report generation", "command_class": "report_generation_command", "resolved_action": "report_generation"},
+    {"id": "C009", "raw_command": "prepare handoff", "command_class": "handoff_command", "resolved_action": "handoff_prepare"},
+    {"id": "C010", "raw_command": "integration handoff package", "command_class": "handoff_command", "resolved_action": "handoff_prepare"},
+    {"id": "C011", "raw_command": "inbox review", "command_class": "inbox_review_command", "resolved_action": "inbox_review"},
+    {"id": "C012", "raw_command": "review integration inbox", "command_class": "inbox_review_command", "resolved_action": "inbox_review"},
+    {"id": "C013", "raw_command": "evidence routing", "command_class": "evidence_routing_command", "resolved_action": "evidence_routing"},
+    {"id": "C014", "raw_command": "route runtime evidence", "command_class": "evidence_routing_command", "resolved_action": "evidence_routing"},
+    {"id": "C015", "raw_command": "policy reference execution", "command_class": "policy_reference_command", "resolved_action": "policy_reference_execute"},
+    {"id": "C016", "raw_command": "policy lookup", "command_class": "policy_reference_command", "resolved_action": "policy_reference_execute"},
+    {"id": "C017", "raw_command": "guarded state change", "command_class": "guarded_state_change_command", "resolved_action": "refresh_safe_mirror_evidence"},
+    {"id": "C018", "raw_command": "refresh safe mirror evidence", "command_class": "guarded_state_change_command", "resolved_action": "refresh_safe_mirror_evidence"},
+    {"id": "C019", "raw_command": "creator precheck", "command_class": "creator_only_execution_command", "resolved_action": "creator_acceptance_precheck"},
+    {"id": "C020", "raw_command": "creator acceptance precheck", "command_class": "creator_only_execution_command", "resolved_action": "creator_acceptance_precheck"},
+    {"id": "C021", "raw_command": "governance maintenance check", "command_class": "governance_maintenance_command", "resolved_action": "governance_maintenance_check"},
+    {"id": "C022", "raw_command": "policy maintenance", "command_class": "governance_maintenance_command", "resolved_action": "governance_maintenance_check"},
+    {"id": "C023", "raw_command": "install system", "command_class": "install_remove_controlled_command", "resolved_action": "install_system"},
+    {"id": "C024", "raw_command": "remove system", "command_class": "install_remove_controlled_command", "resolved_action": "remove_system"},
+    {"id": "C025", "raw_command": "unknown random text", "command_class": "status_refresh_command", "resolved_action": "status_refresh"}
+  ]
+}

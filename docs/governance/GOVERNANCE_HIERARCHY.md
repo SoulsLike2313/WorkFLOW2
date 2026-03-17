@@ -85,7 +85,17 @@ Expected documents:
 - `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
 - `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
 - `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
+- `docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md`
+- `docs/governance/OPERATOR_QUERY_CATALOG.md`
+- `docs/governance/OPERATOR_RESPONSE_CONTRACT.md`
+- `docs/governance/OPERATOR_INTENT_ROUTING.md`
+- `docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md`
+- `docs/governance/OPERATOR_COMMAND_CATALOG.md`
+- `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md`
+- `docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md`
+- `workspace_config/operator_command_registry.json`
 - `scripts/repo_control_center.py`
+- `scripts/operator_command_surface.py`
 
 Conflict resolution rule:
 

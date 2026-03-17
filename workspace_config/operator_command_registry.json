@@ -1,0 +1,283 @@
+﻿{
+  "schema_version": "operator_command_registry.v1.0.0",
+  "execution_contract_version": "operator_command_execution_contract.v1.0.0",
+  "baseline": "docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md",
+  "command_classes": [
+    {
+      "wave": "1A",
+      "command_class": "status_refresh_command",
+      "execution_scope": "repo_control_runtime_refresh",
+      "mutability_level": "read_only",
+      "allowed_modes": ["creator", "helper", "integration"],
+      "creator_authority_required": false,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "dry_run_supported": true,
+      "review_requirement": "none",
+      "policy_basis": [
+        "docs/governance/FIRST_PRINCIPLES.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md",
+        "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md"
+      ],
+      "actions": [
+        {
+          "resolved_action": "status_refresh",
+          "description": "Refresh runtime status artifacts via repo_control_center status"
+        }
+      ]
+    },
+    {
+      "wave": "1A",
+      "command_class": "validation_command",
+      "execution_scope": "workspace_validation_and_sync_validation",
+      "mutability_level": "read_only",
+      "allowed_modes": ["creator", "helper", "integration"],
+      "creator_authority_required": false,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "dry_run_supported": true,
+      "review_requirement": "none",
+      "policy_basis": [
+        "docs/governance/SELF_VERIFICATION_POLICY.md",
+        "docs/governance/VERIFICATION_DEPTH_POLICY.md",
+        "workspace_config/GITHUB_SYNC_POLICY.md"
+      ],
+      "actions": [
+        {
+          "resolved_action": "validation_run",
+          "description": "Run validate_workspace + check_repo_sync + repo_control trust"
+        }
+      ]
+    },
+    {
+      "wave": "1A",
+      "command_class": "evidence_bundle_command",
+      "execution_scope": "chatgpt_bundle_context_export",
+      "mutability_level": "read_only",
+      "allowed_modes": ["creator", "helper", "integration"],
+      "creator_authority_required": false,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "dry_run_supported": true,
+      "review_requirement": "none",
+      "policy_basis": [
+        "docs/governance/ADMISSION_GATE_POLICY.md",
+        "docs/CHATGPT_BUNDLE_EXPORT.md",
+        "workspace_config/MACHINE_REPO_READING_RULES.md"
+      ],
+      "actions": [
+        {
+          "resolved_action": "evidence_bundle_context",
+          "description": "Export context mode safe bundle for evidence snapshot"
+        }
+      ]
+    },
+    {
+      "wave": "1A",
+      "command_class": "report_generation_command",
+      "execution_scope": "execution_report_materialization",
+      "mutability_level": "read_only",
+      "allowed_modes": ["creator", "helper", "integration"],
+      "creator_authority_required": false,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "dry_run_supported": true,
+      "review_requirement": "none",
+      "policy_basis": [
+        "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+        "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md"
+      ],
+      "actions": [
+        {
+          "resolved_action": "report_generation",
+          "description": "Generate compact execution status report from runtime truth"
+        }
+      ]
+    },
+    {
+      "wave": "1B",
+      "command_class": "handoff_command",
+      "execution_scope": "external_block_handoff_package_preparation",
+      "mutability_level": "guarded_state_change",
+      "allowed_modes": ["creator", "helper", "integration"],
+      "creator_authority_required": false,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "dry_run_supported": true,
+      "review_requirement": "integration_review_required",
+      "policy_basis": [
+        "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
+        "docs/governance/TASK_ID_EXECUTION_CONTRACT.md",
+        "docs/governance/INTEGRATION_INBOX_POLICY.md"
+      ],
+      "actions": [
+        {
+          "resolved_action": "handoff_prepare",
+          "description": "Build handoff package metadata and deliver to inbox/preview target"
+        }
+      ]
+    },
+    {
+      "wave": "1B",
+      "command_class": "inbox_review_command",
+      "execution_scope": "integration_inbox_audit_decision",
+      "mutability_level": "guarded_state_change",
+      "allowed_modes": ["creator", "integration"],
+      "creator_authority_required": false,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "dry_run_supported": true,
+      "review_requirement": "canonical_review_flow",
+      "policy_basis": [
+        "docs/governance/INTEGRATION_INBOX_POLICY.md",
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md"
+      ],
+      "actions": [
+        {
+          "resolved_action": "inbox_review",
+          "description": "Scan and classify inbox packages, optional route in live mutation mode"
+        }
+      ]
+    },
+    {
+      "wave": "1B",
+      "command_class": "evidence_routing_command",
+      "execution_scope": "runtime_evidence_route_package",
+      "mutability_level": "guarded_state_change",
+      "allowed_modes": ["creator", "integration"],
+      "creator_authority_required": false,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "dry_run_supported": true,
+      "review_requirement": "integration_review_required",
+      "policy_basis": [
+        "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+        "docs/governance/INTEGRATION_INBOX_POLICY.md"
+      ],
+      "actions": [
+        {
+          "resolved_action": "evidence_routing",
+          "description": "Route allowlisted runtime evidence into inbox/preview package"
+        }
+      ]
+    },
+    {
+      "wave": "1B",
+      "command_class": "policy_reference_command",
+      "execution_scope": "policy_basis_resolution",
+      "mutability_level": "read_only",
+      "allowed_modes": ["creator", "helper", "integration"],
+      "creator_authority_required": false,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "dry_run_supported": true,
+      "review_requirement": "none",
+      "policy_basis": [
+        "docs/governance/POLICY_DIGEST.md",
+        "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md"
+      ],
+      "actions": [
+        {
+          "resolved_action": "policy_reference_execute",
+          "description": "Produce policy reference artifact for requested topic"
+        }
+      ]
+    },
+    {
+      "wave": "1C",
+      "command_class": "guarded_state_change_command",
+      "execution_scope": "safe_state_evidence_refresh",
+      "mutability_level": "guarded_state_change",
+      "allowed_modes": ["creator"],
+      "creator_authority_required": true,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "dry_run_supported": true,
+      "review_requirement": "creator_review",
+      "policy_basis": [
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md",
+        "workspace_config/GITHUB_SYNC_POLICY.md"
+      ],
+      "actions": [
+        {
+          "resolved_action": "refresh_safe_mirror_evidence",
+          "description": "Refresh safe mirror manifest/recheck under guarded mutation"
+        }
+      ]
+    },
+    {
+      "wave": "1C",
+      "command_class": "creator_only_execution_command",
+      "execution_scope": "creator_acceptance_precheck",
+      "mutability_level": "read_only",
+      "allowed_modes": ["creator"],
+      "creator_authority_required": true,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "dry_run_supported": true,
+      "review_requirement": "creator_review",
+      "policy_basis": [
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md",
+        "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
+      ],
+      "actions": [
+        {
+          "resolved_action": "creator_acceptance_precheck",
+          "description": "Execute creator strict mode + full governance check chain"
+        }
+      ]
+    },
+    {
+      "wave": "1C",
+      "command_class": "governance_maintenance_command",
+      "execution_scope": "governance_artifact_integrity_scan",
+      "mutability_level": "read_only",
+      "allowed_modes": ["creator", "integration"],
+      "creator_authority_required": false,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "dry_run_supported": true,
+      "review_requirement": "none",
+      "policy_basis": [
+        "docs/governance/CONTRADICTION_CONTROL_POLICY.md",
+        "docs/governance/ANTI_DRIFT_POLICY.md",
+        "docs/governance/EVIDENCE_RETENTION_POLICY.md"
+      ],
+      "actions": [
+        {
+          "resolved_action": "governance_maintenance_check",
+          "description": "Check required governance artifacts and generate maintenance evidence"
+        }
+      ]
+    },
+    {
+      "wave": "1C",
+      "command_class": "install_remove_controlled_command",
+      "execution_scope": "shared_system_install_remove_controlled",
+      "mutability_level": "guarded_state_change",
+      "allowed_modes": ["creator"],
+      "creator_authority_required": true,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "dry_run_supported": true,
+      "review_requirement": "creator_review",
+      "policy_basis": [
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+        "workspace_config/AGENT_EXECUTION_POLICY.md",
+        "workspace_config/workspace_manifest.json"
+      ],
+      "actions": [
+        {
+          "resolved_action": "install_system",
+          "description": "Controlled shared-system install execution"
+        },
+        {
+          "resolved_action": "remove_system",
+          "description": "Controlled shared-system remove execution"
+        }
+      ]
+    }
+  ]
+}

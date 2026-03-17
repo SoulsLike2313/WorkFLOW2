@@ -133,6 +133,44 @@ Runtime artifacts:
 - `runtime/repo_control_center/machine_mode_status.json`
 - `runtime/repo_control_center/machine_mode_report.md`
 
+## Operator Command Execution Layer V1 (CLI-First)
+
+Canonical execution entrypoint:
+
+```powershell
+python scripts/operator_command_surface.py <mode>
+```
+
+Modes:
+
+- `execute`
+- `classify`
+- `status`
+- `registry`
+- `consistency-check`
+
+Execution contract is fixed by:
+
+- `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md`
+- `workspace_config/operator_command_registry.json`
+
+Execution runtime artifacts:
+
+- `runtime/operator_command_layer/last_execution.json`
+- `runtime/operator_command_layer/command_execution_log.jsonl`
+- `runtime/operator_command_layer/command_surface_status.json`
+- `runtime/operator_command_layer/command_surface_report.md`
+- `runtime/operator_command_layer/operator_command_consistency_check.json`
+
+Example commands:
+
+```powershell
+python scripts/operator_command_surface.py execute --command "status refresh"
+python scripts/operator_command_surface.py execute --command "run validation"
+python scripts/operator_command_surface.py execute --command "prepare handoff" --task-id WF-TASK-EXAMPLE-001 --node-id helper-node-01 --dry-run
+python scripts/operator_command_surface.py consistency-check
+```
+
 ## Completion Gate (Hard)
 
 Completion is forbidden if any of the following is missing:

@@ -80,6 +80,17 @@ Read these first when you need plain-language status without deep policy parsing
 57. `workspace_config/GITHUB_SYNC_POLICY.md`
 58. `workspace_config/AGENT_EXECUTION_POLICY.md`
 59. `workspace_config/MACHINE_REPO_READING_RULES.md`
+60. `docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md`
+61. `docs/governance/OPERATOR_QUERY_CATALOG.md`
+62. `docs/governance/OPERATOR_RESPONSE_CONTRACT.md`
+63. `docs/governance/OPERATOR_INTENT_ROUTING.md`
+64. `docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md`
+65. `docs/governance/OPERATOR_COMMAND_CATALOG.md`
+66. `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md`
+67. `docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md`
+68. `workspace_config/operator_command_registry.json`
+69. `scripts/operator_command_surface.py`
+70. `docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json`
 
 ## Execution Guardrails
 
@@ -110,6 +121,14 @@ Audit-safe runtime evidence export:
 3. Run `python scripts/repo_control_center.py evolution`.
 4. Run `python scripts/repo_control_center.py full-check`.
 5. Use generated runtime reports as evidence package for completion/promotion decisions.
+
+## Operator Command Execution Workflow
+
+1. Classify command: `python scripts/operator_command_surface.py classify --command "<text>"`.
+2. Execute command: `python scripts/operator_command_surface.py execute --command "<text>" [flags]`.
+3. Validate deterministic routing: `python scripts/operator_command_surface.py consistency-check`.
+4. Review command runtime evidence in `runtime/operator_command_layer/`.
+5. Re-run `python scripts/repo_control_center.py full-check` after mutable command execution.
 
 ## Federation / Integration Workflow
 

@@ -126,3 +126,16 @@ If trust/sync/admission are blocked, completion is forbidden.
 - External helper deliveries must go through:
   - `integration/inbox/`
   - `scripts/review_integration_inbox.py` review flow
+
+## Rule 11: Operator Command Execution Layer
+
+- Command execution must use:
+  - `scripts/operator_command_surface.py`
+- Command class/action authority comes only from:
+  - `workspace_config/operator_command_registry.json`
+- Every executed command must emit contract evidence in:
+  - `runtime/operator_command_layer/last_execution.json`
+  - `runtime/operator_command_layer/command_surface_status.json`
+- Mutable actions are forbidden unless guarded:
+  - default dry-run
+  - explicit `--allow-mutation` for approved guarded actions only

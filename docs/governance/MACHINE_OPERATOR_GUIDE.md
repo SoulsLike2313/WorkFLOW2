@@ -36,6 +36,20 @@ Canonical decision chain:
    - `runtime/repo_control_center/one_screen_status.json`
    - `runtime/repo_control_center/plain_status.md`
 
+## Operator Command Surface
+Execution entrypoint:
+- `python scripts/operator_command_surface.py execute --command "<operator command>"`
+
+Routing/contract references:
+- `docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md`
+- `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md`
+- `workspace_config/operator_command_registry.json`
+
+Required execution evidence:
+- `runtime/operator_command_layer/last_execution.json`
+- `runtime/operator_command_layer/command_surface_status.json`
+- `runtime/operator_command_layer/command_surface_report.md`
+
 ## Block Routing
 Route by:
 - `blocking_reason_category`
