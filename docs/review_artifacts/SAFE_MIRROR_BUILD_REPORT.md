@@ -1,16 +1,16 @@
 # SAFE MIRROR Build Report
 
-- generated_at: `2026-03-17T23:42:14.777941+00:00`
+- generated_at: `2026-03-17T23:44:56.202554+00:00`
 - local_source_root: `E:\CVVCODEX`
 - repo_name: `WorkFLOW2`
 - evidence_contract_version: `2.0.0`
 - evidence_mode: `tracked_evidence_refresh_commit`
-- basis_head_sha: `f83e2fff328b3d612e826b7f2ac548017bdd6525`
-- evidence_generated_at: `2026-03-17T23:42:14.777941+00:00`
-- evidence_commit_note: `Constitution compression evidence refresh`
+- basis_head_sha: `e168f7f9c02d0e44f12006225013de64d4e3536a`
+- evidence_generated_at: `2026-03-17T23:44:56.202554+00:00`
+- evidence_commit_note: `Constitution phase vocabulary freeze evidence refresh`
 - active_project: `platform_test_agent`
 - branch: `main`
-- head_sha (basis): `f83e2fff328b3d612e826b7f2ac548017bdd6525`
+- head_sha (basis): `e168f7f9c02d0e44f12006225013de64d4e3536a`
 - tracking_branch: `safe_mirror/main`
 - ahead/behind: `0/0`
 - worktree_clean: `True`
