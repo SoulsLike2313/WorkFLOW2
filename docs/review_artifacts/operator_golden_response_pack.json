@@ -1,0 +1,447 @@
+{
+  "schema_version": "operator_golden_response_pack.v1.0.0",
+  "baseline_source": "docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md",
+  "contract_source": "docs/governance/OPERATOR_RESPONSE_CONTRACT.md",
+  "items": [
+    {
+      "id": "Q001",
+      "raw_query": "в каком ты режиме",
+      "request_class": "mode_query",
+      "resolved_scope": "machine_mode_identity",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "request_class",
+          "resolved_scope",
+          "current_state.machine_mode",
+          "authority.authority_present",
+          "next_step",
+          "evidence_source"
+        ],
+        "expected_state": {
+          "machine_mode": "creator"
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ],
+      "notes": "mode identity query"
+    },
+    {
+      "id": "Q002",
+      "raw_query": "machine mode status",
+      "request_class": "mode_query",
+      "resolved_scope": "machine_mode_identity",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "current_state.machine_mode",
+          "verdict"
+        ],
+        "expected_state": {
+          "machine_mode": "creator"
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q003",
+      "raw_query": "есть ли creator authority",
+      "request_class": "authority_query",
+      "resolved_scope": "creator_authority_contract",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "authority.authority_present",
+          "authority.authority_status",
+          "authority.creator_level_acceptance_allowed"
+        ],
+        "expected_state": {
+          "authority_present": true
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json",
+        "runtime/repo_control_center/creator_authority_env_output.txt"
+      ]
+    },
+    {
+      "id": "Q004",
+      "raw_query": "какой authority path используется",
+      "request_class": "authority_query",
+      "resolved_scope": "creator_authority_contract",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "authority.authority_path"
+        ]
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q005",
+      "raw_query": "можешь делать creator-level acceptance",
+      "request_class": "authority_query",
+      "resolved_scope": "creator_authority_contract",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "authority.creator_level_acceptance_allowed",
+          "current_state.governance_acceptance_verdict",
+          "current_state.admission_verdict"
+        ],
+        "expected_state": {
+          "creator_level_acceptance_allowed": true
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q006",
+      "raw_query": "здоров ли workspace",
+      "request_class": "workspace_health_query",
+      "resolved_scope": "workspace_control_health",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "current_state.workspace_health",
+          "current_state.sync_verdict",
+          "blocking_factors.category"
+        ],
+        "expected_state": {
+          "workspace_health": "PASS"
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q007",
+      "raw_query": "is workspace healthy",
+      "request_class": "workspace_health_query",
+      "resolved_scope": "workspace_control_health",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "current_state.workspace_health"
+        ],
+        "expected_state": {
+          "workspace_health": "PASS"
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q008",
+      "raw_query": "sync status",
+      "request_class": "workspace_health_query",
+      "resolved_scope": "workspace_control_health",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "current_state.sync_verdict"
+        ],
+        "expected_state": {
+          "sync_verdict": "IN_SYNC"
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q009",
+      "raw_query": "governance compliant или нет",
+      "request_class": "governance_query",
+      "resolved_scope": "governance_chain_state",
+      "expected_response": {
+        "verdict": "COMPLIANT",
+        "required_fields": [
+          "current_state.governance_verdict",
+          "current_state.governance_acceptance_verdict"
+        ],
+        "expected_state": {
+          "governance_verdict": "COMPLIANT"
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json",
+        "runtime/repo_control_center/repo_control_status.json"
+      ]
+    },
+    {
+      "id": "Q010",
+      "raw_query": "governance acceptance status",
+      "request_class": "governance_query",
+      "resolved_scope": "governance_chain_state",
+      "expected_response": {
+        "verdict": "COMPLIANT",
+        "required_fields": [
+          "current_state.governance_acceptance_verdict"
+        ],
+        "expected_state": {
+          "governance_acceptance_verdict": "PASS"
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q011",
+      "raw_query": "admission gate открыт",
+      "request_class": "admission_query",
+      "resolved_scope": "admission_gate_state",
+      "expected_response": {
+        "verdict": "ADMISSIBLE",
+        "required_fields": [
+          "current_state.admission_verdict",
+          "authority.creator_level_acceptance_allowed"
+        ],
+        "expected_state": {
+          "admission_verdict": "ADMISSIBLE"
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q012",
+      "raw_query": "admission status",
+      "request_class": "admission_query",
+      "resolved_scope": "admission_gate_state",
+      "expected_response": {
+        "verdict": "ADMISSIBLE",
+        "required_fields": [
+          "current_state.admission_verdict"
+        ],
+        "expected_state": {
+          "admission_verdict": "ADMISSIBLE"
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q013",
+      "raw_query": "что сейчас блокирует систему",
+      "request_class": "blocker_query",
+      "resolved_scope": "active_blockers",
+      "expected_response": {
+        "verdict": "NONE",
+        "required_fields": [
+          "blocking_factors.category",
+          "blocking_factors.detail"
+        ],
+        "expected_state": {
+          "blocking_reason_category": "NONE"
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q014",
+      "raw_query": "почему verdict такой",
+      "request_class": "blocker_query",
+      "resolved_scope": "active_blockers",
+      "expected_response": {
+        "verdict": "NONE",
+        "required_fields": [
+          "blocking_factors.category",
+          "blocking_factors.detail",
+          "next_step"
+        ]
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json",
+        "runtime/repo_control_center/plain_status.md"
+      ]
+    },
+    {
+      "id": "Q015",
+      "raw_query": "next canonical step",
+      "request_class": "next_step_query",
+      "resolved_scope": "canonical_next_step",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "next_step"
+        ],
+        "expected_state": {
+          "next_step": "next-step-federation-integration-layer-v1"
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json",
+        "docs/NEXT_CANONICAL_STEP.md"
+      ]
+    },
+    {
+      "id": "Q016",
+      "raw_query": "что делать дальше",
+      "request_class": "next_step_query",
+      "resolved_scope": "canonical_next_step",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "next_step",
+          "notes"
+        ]
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q017",
+      "raw_query": "что ты умеешь",
+      "request_class": "capability_query",
+      "resolved_scope": "capability_and_authority_surface",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "capability_scope",
+          "authority.creator_level_acceptance_allowed"
+        ]
+      },
+      "evidence_source": [
+        "docs/governance/MACHINE_CAPABILITIES_SUMMARY.md",
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q018",
+      "raw_query": "what are forbidden actions",
+      "request_class": "capability_query",
+      "resolved_scope": "capability_and_authority_surface",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "capability_scope"
+        ]
+      },
+      "evidence_source": [
+        "docs/governance/MACHINE_CAPABILITIES_SUMMARY.md"
+      ]
+    },
+    {
+      "id": "Q019",
+      "raw_query": "на какой policy опирается governance acceptance",
+      "request_class": "policy_reference_query",
+      "resolved_scope": "policy_basis_reference",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "policy_basis",
+          "evidence_source"
+        ]
+      },
+      "evidence_source": [
+        "docs/governance/POLICY_DIGEST.md",
+        "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
+      ]
+    },
+    {
+      "id": "Q020",
+      "raw_query": "какой документ отвечает за ограничение helper mode",
+      "request_class": "policy_reference_query",
+      "resolved_scope": "policy_basis_reference",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "policy_basis"
+        ]
+      },
+      "evidence_source": [
+        "docs/governance/HELPER_NODE_POLICY.md",
+        "docs/governance/POLICY_DIGEST.md"
+      ]
+    },
+    {
+      "id": "Q021",
+      "raw_query": "can you declare canonical completion now",
+      "request_class": "authority_query",
+      "resolved_scope": "creator_authority_contract",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "authority.creator_level_acceptance_allowed",
+          "current_state.admission_verdict",
+          "current_state.governance_acceptance_verdict"
+        ],
+        "expected_state": {
+          "creator_level_acceptance_allowed": true
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q022",
+      "raw_query": "is there any escalation requirement now",
+      "request_class": "blocker_query",
+      "resolved_scope": "active_blockers",
+      "expected_response": {
+        "verdict": "NONE",
+        "required_fields": [
+          "blocking_factors.category",
+          "blocking_factors.detail"
+        ]
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q023",
+      "raw_query": "trust status",
+      "request_class": "workspace_health_query",
+      "resolved_scope": "workspace_control_health",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "current_state.trust_verdict",
+          "current_state.sync_verdict"
+        ],
+        "expected_state": {
+          "trust_verdict": "TRUSTED"
+        }
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json"
+      ]
+    },
+    {
+      "id": "Q024",
+      "raw_query": "evolution status",
+      "request_class": "workspace_health_query",
+      "resolved_scope": "workspace_control_health",
+      "expected_response": {
+        "verdict": "PASS",
+        "required_fields": [
+          "current_state.governance_verdict",
+          "next_step"
+        ]
+      },
+      "evidence_source": [
+        "runtime/repo_control_center/one_screen_status.json",
+        "runtime/repo_control_center/evolution_status.json"
+      ],
+      "notes": "evolution progression is reported but does not override admission gate."
+    }
+  ]
+}
