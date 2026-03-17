@@ -23,6 +23,16 @@ Wave 2C safety and boundary review for guarded creator programs and controlled s
 - proof: `runtime/repo_control_center/wave2c_operator_task_program_consistency_output.json`
 - result: `PASS (16/16)`
 
+### Allowed guarded maintenance case
+- command (creator mode + mutation allowed):
+  - `python scripts/operator_task_program_surface.py execute --program-id program.wave2c.guarded_governance_maintenance.v1 --intent creator --allow-mutation`
+- proof: `runtime/repo_control_center/wave2c_guarded_program_execute_output.json`
+- result: `SUCCESS`
+- enforced controls:
+  - creator authority gate passed
+  - policy basis gate passed
+  - mutation path executed with audit trail fields (`mutability_level`, `rollback_supported`, `approval_basis`, `audit_trail_reference`)
+
 ### Blocked authority case
 - command (simulated helper mode):
   - `python scripts/operator_task_program_surface.py execute --program-id program.wave2c.creator_authorized_sequence.v1 --intent helper --allow-mutation`
@@ -30,7 +40,6 @@ Wave 2C safety and boundary review for guarded creator programs and controlled s
 - result: `BLOCKED`
 - enforced blockers:
   - `machine_mode 'helper' not allowed ...`
-  - `creator authority required but not present`
 
 ### Blocked missing-preconditions case
 - command:
