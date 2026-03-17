@@ -1,0 +1,2732 @@
+{
+  "schema_version": "operator_task_program_golden_pack.final.v1.0.0",
+  "description": "Unified final acceptance benchmark for Task/Program Layer across Wave 2A, Wave 2B, and Wave 2C.",
+  "coverage": {
+    "total_items": 52,
+    "source_waves": {
+      "2A": 20,
+      "2B": 16,
+      "2C": 16
+    },
+    "program_classes": [
+      "blocked_mutation_test_program",
+      "certification_program",
+      "controlled_lifecycle_program",
+      "creator_only_program",
+      "evidence_delivery_program",
+      "evidence_pack_program",
+      "guarded_maintenance_program",
+      "handoff_preparation_program",
+      "inbox_review_program",
+      "report_program",
+      "status_refresh_program",
+      "validation_program"
+    ]
+  },
+  "items": [
+    {
+      "id": "FINAL-2A-001",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-001",
+      "raw_request": "status refresh program",
+      "program_class": "status_refresh_program",
+      "mutability_level": "REFRESH_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "status_refresh_program",
+        "program_id": "program.wave2a.status_refresh_surface.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "REFRESH_ONLY",
+        "execution_scope": "safe_runtime_status_refresh",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "status_refresh",
+          "report_generation",
+          "validation_run"
+        ]
+      },
+      "expected_program_id": "program.wave2a.status_refresh_surface.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "refresh_only",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Base safe status refresh flow."
+    },
+    {
+      "id": "FINAL-2A-002",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-002",
+      "raw_request": "refresh runtime truth",
+      "program_class": "status_refresh_program",
+      "mutability_level": "REFRESH_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "status_refresh_program",
+        "program_id": "program.wave2a.status_refresh_surface.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "REFRESH_ONLY",
+        "execution_scope": "safe_runtime_status_refresh",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "status_refresh",
+          "report_generation",
+          "validation_run"
+        ]
+      },
+      "expected_program_id": "program.wave2a.status_refresh_surface.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "refresh_only",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Token variant for refresh."
+    },
+    {
+      "id": "FINAL-2A-003",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-003",
+      "raw_request": "full status reconstruction",
+      "program_class": "status_refresh_program",
+      "mutability_level": "REFRESH_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "status_refresh_program",
+        "program_id": "program.wave2a.full_status_reconstruction.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "REFRESH_ONLY",
+        "execution_scope": "full_status_reconstruction",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "status_refresh",
+          "report_generation",
+          "validation_run"
+        ]
+      },
+      "expected_program_id": "program.wave2a.full_status_reconstruction.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "validation_run",
+        "status_refresh"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "refresh_only",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Status chain reconstruction path."
+    },
+    {
+      "id": "FINAL-2A-004",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-004",
+      "raw_request": "rebuild full status contour",
+      "program_class": "status_refresh_program",
+      "mutability_level": "REFRESH_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "status_refresh_program",
+        "program_id": "program.wave2a.full_status_reconstruction.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "REFRESH_ONLY",
+        "execution_scope": "full_status_reconstruction",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "status_refresh",
+          "report_generation",
+          "validation_run"
+        ]
+      },
+      "expected_program_id": "program.wave2a.full_status_reconstruction.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "validation_run",
+        "status_refresh"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "refresh_only",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Token variant for reconstruction."
+    },
+    {
+      "id": "FINAL-2A-005",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-005",
+      "raw_request": "creator-grade validation program",
+      "program_class": "validation_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "validation_program",
+        "program_id": "program.wave2a.creator_grade_validation.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "creator_grade_validation",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "validation_run",
+          "creator_acceptance_precheck",
+          "policy_reference_execute"
+        ]
+      },
+      "expected_program_id": "program.wave2a.creator_grade_validation.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "validation_run"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/repo_control_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/repo_control_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md"
+      ],
+      "notes": "Requires creator authority."
+    },
+    {
+      "id": "FINAL-2A-006",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-006",
+      "raw_request": "creator validation pass",
+      "program_class": "validation_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "validation_program",
+        "program_id": "program.wave2a.creator_grade_validation.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "creator_grade_validation",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "validation_run",
+          "creator_acceptance_precheck",
+          "policy_reference_execute"
+        ]
+      },
+      "expected_program_id": "program.wave2a.creator_grade_validation.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "validation_run"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/repo_control_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/repo_control_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md"
+      ],
+      "notes": "Creator-only validation path."
+    },
+    {
+      "id": "FINAL-2A-007",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-007",
+      "raw_request": "governance chain validation",
+      "program_class": "validation_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "validation_program",
+        "program_id": "program.wave2a.governance_chain_validation.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "governance_chain_validation",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "validation_run",
+          "creator_acceptance_precheck",
+          "policy_reference_execute"
+        ]
+      },
+      "expected_program_id": "program.wave2a.governance_chain_validation.v1",
+      "expected_step_plan": [
+        "validation_run",
+        "policy_reference_execute"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/operator_command_layer/policy_reference_output.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/operator_command_layer/policy_reference_output.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Governance validation without creator-only mutation."
+    },
+    {
+      "id": "FINAL-2A-008",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-008",
+      "raw_request": "validate governance chain end-to-end",
+      "program_class": "validation_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "validation_program",
+        "program_id": "program.wave2a.governance_chain_validation.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "governance_chain_validation",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "validation_run",
+          "creator_acceptance_precheck",
+          "policy_reference_execute"
+        ]
+      },
+      "expected_program_id": "program.wave2a.governance_chain_validation.v1",
+      "expected_step_plan": [
+        "validation_run",
+        "policy_reference_execute"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/operator_command_layer/policy_reference_output.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/operator_command_layer/policy_reference_output.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Token variant for governance validation."
+    },
+    {
+      "id": "FINAL-2A-009",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-009",
+      "raw_request": "governance evidence package",
+      "program_class": "evidence_pack_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "evidence_pack_program",
+        "program_id": "program.wave2a.governance_evidence_pack.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "governance_evidence_packaging",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "evidence_bundle_context",
+          "status_refresh",
+          "creator_acceptance_precheck",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2a.governance_evidence_pack.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "evidence_bundle_context",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/chatgpt_bundle_exports",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/chatgpt_bundle_exports",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/CHATGPT_BUNDLE_EXPORT.md"
+      ],
+      "notes": "Safe evidence packaging path."
+    },
+    {
+      "id": "FINAL-2A-010",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-010",
+      "raw_request": "assemble governance evidence pack",
+      "program_class": "evidence_pack_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "evidence_pack_program",
+        "program_id": "program.wave2a.governance_evidence_pack.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "governance_evidence_packaging",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "evidence_bundle_context",
+          "status_refresh",
+          "creator_acceptance_precheck",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2a.governance_evidence_pack.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "evidence_bundle_context",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/chatgpt_bundle_exports",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/chatgpt_bundle_exports",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/CHATGPT_BUNDLE_EXPORT.md"
+      ],
+      "notes": "Packaging token variant."
+    },
+    {
+      "id": "FINAL-2A-011",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-011",
+      "raw_request": "creator-grade proof package",
+      "program_class": "evidence_pack_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "evidence_pack_program",
+        "program_id": "program.wave2a.creator_proof_pack.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "creator_proof_packaging",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "evidence_bundle_context",
+          "status_refresh",
+          "creator_acceptance_precheck",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2a.creator_proof_pack.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "evidence_bundle_context",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/chatgpt_bundle_exports",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/chatgpt_bundle_exports",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md"
+      ],
+      "notes": "Creator authority constrained evidence pack."
+    },
+    {
+      "id": "FINAL-2A-012",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-012",
+      "raw_request": "creator proof package",
+      "program_class": "evidence_pack_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "evidence_pack_program",
+        "program_id": "program.wave2a.creator_proof_pack.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "creator_proof_packaging",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "evidence_bundle_context",
+          "status_refresh",
+          "creator_acceptance_precheck",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2a.creator_proof_pack.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "evidence_bundle_context",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/chatgpt_bundle_exports",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/chatgpt_bundle_exports",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md"
+      ],
+      "notes": "Creator proof token variant."
+    },
+    {
+      "id": "FINAL-2A-013",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-013",
+      "raw_request": "generate full operator report",
+      "program_class": "report_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "report_program",
+        "program_id": "program.wave2a.operator_engineering_report.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "operator_engineering_reporting",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "status_refresh",
+          "report_generation",
+          "policy_reference_execute",
+          "validation_run"
+        ]
+      },
+      "expected_program_id": "program.wave2a.operator_engineering_report.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_status.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_status.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Primary operator report flow."
+    },
+    {
+      "id": "FINAL-2A-014",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-014",
+      "raw_request": "engineering governance summary",
+      "program_class": "report_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "report_program",
+        "program_id": "program.wave2a.operator_engineering_report.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "operator_engineering_reporting",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "status_refresh",
+          "report_generation",
+          "policy_reference_execute",
+          "validation_run"
+        ]
+      },
+      "expected_program_id": "program.wave2a.operator_engineering_report.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_status.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_status.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Token variant."
+    },
+    {
+      "id": "FINAL-2A-015",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-015",
+      "raw_request": "status evidence report",
+      "program_class": "report_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "report_program",
+        "program_id": "program.wave2a.status_evidence_report.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "status_evidence_reporting",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "status_refresh",
+          "report_generation",
+          "policy_reference_execute",
+          "validation_run"
+        ]
+      },
+      "expected_program_id": "program.wave2a.status_evidence_report.v1",
+      "expected_step_plan": [
+        "validation_run",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/operator_command_layer/policy_reference_output.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/operator_command_layer/policy_reference_output.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Status + policy reference reporting."
+    },
+    {
+      "id": "FINAL-2A-016",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-016",
+      "raw_request": "status plus evidence report",
+      "program_class": "report_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "report_program",
+        "program_id": "program.wave2a.status_evidence_report.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "status_evidence_reporting",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "status_refresh",
+          "report_generation",
+          "policy_reference_execute",
+          "validation_run"
+        ]
+      },
+      "expected_program_id": "program.wave2a.status_evidence_report.v1",
+      "expected_step_plan": [
+        "validation_run",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/operator_command_layer/policy_reference_output.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/operator_command_layer/policy_reference_output.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Token variant."
+    },
+    {
+      "id": "FINAL-2A-017",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-017",
+      "raw_request": "full validation pass",
+      "program_class": "validation_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "validation_program",
+        "program_id": "program.wave2a.governance_chain_validation.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "governance_chain_validation",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "validation_run",
+          "creator_acceptance_precheck",
+          "policy_reference_execute"
+        ]
+      },
+      "expected_program_id": "program.wave2a.governance_chain_validation.v1",
+      "expected_step_plan": [
+        "validation_run",
+        "policy_reference_execute"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Validation alias."
+    },
+    {
+      "id": "FINAL-2A-018",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-018",
+      "raw_request": "collect creator evidence package",
+      "program_class": "evidence_pack_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "evidence_pack_program",
+        "program_id": "program.wave2a.creator_proof_pack.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "creator_proof_packaging",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "evidence_bundle_context",
+          "status_refresh",
+          "creator_acceptance_precheck",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2a.creator_proof_pack.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "evidence_bundle_context",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/chatgpt_bundle_exports",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/chatgpt_bundle_exports",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md"
+      ],
+      "notes": "Additional creator evidence phrase."
+    },
+    {
+      "id": "FINAL-2A-019",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-019",
+      "raw_request": "operator report program",
+      "program_class": "report_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "report_program",
+        "program_id": "program.wave2a.operator_engineering_report.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "operator_engineering_reporting",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "status_refresh",
+          "report_generation",
+          "policy_reference_execute",
+          "validation_run"
+        ]
+      },
+      "expected_program_id": "program.wave2a.operator_engineering_report.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_status.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_status.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Direct program alias."
+    },
+    {
+      "id": "FINAL-2A-020",
+      "source_wave": "2A",
+      "source_id": "W2A-GP-020",
+      "raw_request": "safe operator task program status",
+      "program_class": "status_refresh_program",
+      "mutability_level": "REFRESH_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "status_refresh_program",
+        "program_id": "program.wave2a.status_refresh_surface.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "REFRESH_ONLY",
+        "execution_scope": "safe_runtime_status_refresh",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [],
+        "command_dependencies": [
+          "status_refresh",
+          "report_generation",
+          "validation_run"
+        ]
+      },
+      "expected_program_id": "program.wave2a.status_refresh_surface.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS",
+      "expected_state_change": "refresh_only",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": "Status-oriented alias for scanability."
+    },
+    {
+      "id": "FINAL-2B-001",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-001",
+      "raw_request": "prepare handoff program",
+      "program_class": "handoff_preparation_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "handoff_preparation_program",
+        "program_id": "program.wave2b.handoff_preparation_end_to_end.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "handoff_preparation_end_to_end",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "validation_run",
+          "evidence_bundle_context",
+          "handoff_prepare",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2b.handoff_preparation_end_to_end.v1",
+      "expected_step_plan": [
+        "validation_run",
+        "evidence_bundle_context",
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_INPUTS",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/handoff_prepare_output.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/handoff_prepare_output.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [
+        "validation_run",
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_failure",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-002",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-002",
+      "raw_request": "подготовь handoff program",
+      "program_class": "handoff_preparation_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "handoff_preparation_program",
+        "program_id": "program.wave2b.handoff_preparation_end_to_end.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "handoff_preparation_end_to_end",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "validation_run",
+          "evidence_bundle_context",
+          "handoff_prepare",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2b.handoff_preparation_end_to_end.v1",
+      "expected_step_plan": [
+        "validation_run",
+        "evidence_bundle_context",
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_INPUTS",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/handoff_prepare_output.json"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/handoff_prepare_output.json"
+      ],
+      "expected_checkpoints": [
+        "validation_run",
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_failure",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-003",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-003",
+      "raw_request": "delivery-ready governance package",
+      "program_class": "handoff_preparation_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "handoff_preparation_program",
+        "program_id": "program.wave2b.delivery_ready_handoff_package.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "delivery_ready_handoff_package",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "validation_run",
+          "evidence_bundle_context",
+          "handoff_prepare",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2b.delivery_ready_handoff_package.v1",
+      "expected_step_plan": [
+        "validation_run",
+        "policy_reference_execute",
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_INPUTS",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/handoff_prepare_output.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/handoff_prepare_output.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [
+        "policy_reference_execute",
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_failure",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-004",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-004",
+      "raw_request": "prepare delivery handoff package",
+      "program_class": "handoff_preparation_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "handoff_preparation_program",
+        "program_id": "program.wave2b.delivery_ready_handoff_package.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "delivery_ready_handoff_package",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "validation_run",
+          "evidence_bundle_context",
+          "handoff_prepare",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2b.delivery_ready_handoff_package.v1",
+      "expected_step_plan": [
+        "validation_run",
+        "policy_reference_execute",
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_INPUTS",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/handoff_prepare_output.json"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/handoff_prepare_output.json"
+      ],
+      "expected_checkpoints": [
+        "policy_reference_execute",
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_failure",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-005",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-005",
+      "raw_request": "inbox review cycle",
+      "program_class": "inbox_review_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "inbox_review_program",
+        "program_id": "program.wave2b.inbox_review_cycle.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "inbox_review_cycle",
+        "failure_policy": "stop_on_blocked",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_blocked",
+          "any_step_failed"
+        ],
+        "command_dependencies": [
+          "inbox_review",
+          "report_generation",
+          "policy_reference_execute"
+        ]
+      },
+      "expected_program_id": "program.wave2b.inbox_review_cycle.v1",
+      "expected_step_plan": [
+        "inbox_review",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_MODE",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/inbox_review_output.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/inbox_review_output.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [
+        "inbox_review",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_blocked",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/governance/INTEGRATION_INBOX_POLICY.md"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-006",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-006",
+      "raw_request": "выполни полный inbox review cycle",
+      "program_class": "inbox_review_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "inbox_review_program",
+        "program_id": "program.wave2b.inbox_review_cycle.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "inbox_review_cycle",
+        "failure_policy": "stop_on_blocked",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_blocked",
+          "any_step_failed"
+        ],
+        "command_dependencies": [
+          "inbox_review",
+          "report_generation",
+          "policy_reference_execute"
+        ]
+      },
+      "expected_program_id": "program.wave2b.inbox_review_cycle.v1",
+      "expected_step_plan": [
+        "inbox_review",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_MODE",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/inbox_review_output.json"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/inbox_review_output.json"
+      ],
+      "expected_checkpoints": [
+        "inbox_review",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_blocked",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-007",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-007",
+      "raw_request": "прогони review queue program",
+      "program_class": "inbox_review_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "inbox_review_program",
+        "program_id": "program.wave2b.inbox_review_cycle.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "inbox_review_cycle",
+        "failure_policy": "stop_on_blocked",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_blocked",
+          "any_step_failed"
+        ],
+        "command_dependencies": [
+          "inbox_review",
+          "report_generation",
+          "policy_reference_execute"
+        ]
+      },
+      "expected_program_id": "program.wave2b.inbox_review_cycle.v1",
+      "expected_step_plan": [
+        "inbox_review",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_MODE",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [
+        "inbox_review",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_blocked",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-008",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-008",
+      "raw_request": "проверь incoming package и классифицируй его",
+      "program_class": "inbox_review_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "inbox_review_program",
+        "program_id": "program.wave2b.inbox_review_cycle.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "inbox_review_cycle",
+        "failure_policy": "stop_on_blocked",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_blocked",
+          "any_step_failed"
+        ],
+        "command_dependencies": [
+          "inbox_review",
+          "report_generation",
+          "policy_reference_execute"
+        ]
+      },
+      "expected_program_id": "program.wave2b.inbox_review_cycle.v1",
+      "expected_step_plan": [
+        "inbox_review",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_MODE",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/inbox_review_output.json"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/inbox_review_output.json"
+      ],
+      "expected_checkpoints": [
+        "inbox_review",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_blocked",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-009",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-009",
+      "raw_request": "evidence delivery program",
+      "program_class": "evidence_delivery_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "evidence_delivery_program",
+        "program_id": "program.wave2b.evidence_delivery_chain.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "evidence_delivery_chain",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "status_refresh",
+          "validation_run",
+          "evidence_routing",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2b.evidence_delivery_chain.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "validation_run",
+        "evidence_routing",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_MODE",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/evidence_routing_output.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/evidence_routing_output.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [
+        "validation_run",
+        "evidence_routing",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_failure",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/governance/EVIDENCE_RETENTION_POLICY.md"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-010",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-010",
+      "raw_request": "собери и разложи evidence для review",
+      "program_class": "evidence_delivery_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "evidence_delivery_program",
+        "program_id": "program.wave2b.evidence_delivery_chain.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "evidence_delivery_chain",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "status_refresh",
+          "validation_run",
+          "evidence_routing",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2b.evidence_delivery_chain.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "validation_run",
+        "evidence_routing",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_MODE",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/evidence_routing_output.json"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/evidence_routing_output.json"
+      ],
+      "expected_checkpoints": [
+        "validation_run",
+        "evidence_routing",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_failure",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-011",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-011",
+      "raw_request": "подготовь delivery-ready evidence chain",
+      "program_class": "evidence_delivery_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "evidence_delivery_program",
+        "program_id": "program.wave2b.evidence_delivery_chain.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "evidence_delivery_chain",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "status_refresh",
+          "validation_run",
+          "evidence_routing",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2b.evidence_delivery_chain.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "validation_run",
+        "evidence_routing",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_MODE",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/evidence_routing_output.json"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/evidence_routing_output.json"
+      ],
+      "expected_checkpoints": [
+        "validation_run",
+        "evidence_routing",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_failure",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-012",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-012",
+      "raw_request": "собери policy-backed evidence routing program",
+      "program_class": "evidence_delivery_program",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "evidence_delivery_program",
+        "program_id": "program.wave2b.evidence_delivery_chain.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "PACKAGE_ONLY",
+        "execution_scope": "evidence_delivery_chain",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "status_refresh",
+          "validation_run",
+          "evidence_routing",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2b.evidence_delivery_chain.v1",
+      "expected_step_plan": [
+        "status_refresh",
+        "validation_run",
+        "evidence_routing",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_MODE",
+      "expected_state_change": "package_only",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/evidence_routing_output.json"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/evidence_routing_output.json"
+      ],
+      "expected_checkpoints": [
+        "validation_run",
+        "evidence_routing",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_failure",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-013",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-013",
+      "raw_request": "certification pass",
+      "program_class": "certification_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "certification_program",
+        "program_id": "program.wave2b.certification_pass.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "creator_certification_pass",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "validation_run",
+          "inbox_review",
+          "policy_reference_execute",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2b.certification_pass.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "validation_run",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY_OR_SYNC",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/repo_control_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/repo_control_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [
+        "creator_acceptance_precheck",
+        "validation_run",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_failure",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/governance/PROMOTION_THRESHOLD_POLICY.md"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-014",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-014",
+      "raw_request": "выполни certification pass",
+      "program_class": "certification_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "certification_program",
+        "program_id": "program.wave2b.certification_pass.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "creator_certification_pass",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "validation_run",
+          "inbox_review",
+          "policy_reference_execute",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2b.certification_pass.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "validation_run",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY_OR_SYNC",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/repo_control_center/repo_control_status.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/repo_control_status.json"
+      ],
+      "expected_checkpoints": [
+        "creator_acceptance_precheck",
+        "validation_run",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_stop_on_failure",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-015",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-015",
+      "raw_request": "review certification sequence",
+      "program_class": "certification_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "certification_program",
+        "program_id": "program.wave2b.review_certification_sequence.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "review_certification_sequence",
+        "failure_policy": "continue_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "validation_run",
+          "inbox_review",
+          "policy_reference_execute",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2b.review_certification_sequence.v1",
+      "expected_step_plan": [
+        "validation_run",
+        "inbox_review",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_MODE",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/inbox_review_output.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/inbox_review_output.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [
+        "validation_run",
+        "inbox_review",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_continue_on_failure",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2B-016",
+      "source_wave": "2B",
+      "source_id": "W2B-GP-016",
+      "raw_request": "certification review cycle",
+      "program_class": "certification_program",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "certification_program",
+        "program_id": "program.wave2b.review_certification_sequence.v1",
+        "authority_requirement": "none",
+        "creator_authority_required": false,
+        "mutability_level": "READ_ONLY",
+        "execution_scope": "review_certification_sequence",
+        "failure_policy": "continue_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "validation_run",
+          "inbox_review",
+          "policy_reference_execute",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2b.review_certification_sequence.v1",
+      "expected_step_plan": [
+        "validation_run",
+        "inbox_review",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_MODE",
+      "expected_state_change": "none",
+      "produced_artifacts": [
+        "runtime/operator_command_layer/inbox_review_output.json"
+      ],
+      "expected_artifacts": [
+        "runtime/operator_command_layer/inbox_review_output.json"
+      ],
+      "expected_checkpoints": [
+        "validation_run",
+        "inbox_review",
+        "report_generation"
+      ],
+      "expected_resume_behavior": "resume_supported_continue_on_failure",
+      "expected_step_behavior": "",
+      "blocking_expectation": "",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-001",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-001",
+      "raw_request": "controlled governance maintenance program",
+      "program_class": "guarded_maintenance_program",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "guarded_maintenance_program",
+        "program_id": "program.wave2c.guarded_governance_maintenance.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "GUARDED_STATE_CHANGE",
+        "execution_scope": "guarded_governance_maintenance",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "governance_maintenance_check",
+          "refresh_safe_mirror_evidence",
+          "report_generation",
+          "policy_reference_execute"
+        ]
+      },
+      "expected_program_id": "program.wave2c.guarded_governance_maintenance.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "governance_maintenance_check",
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GUARDS",
+      "expected_state_change": "guarded_only",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "none_when_creator",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-002",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-002",
+      "raw_request": "выполни controlled governance maintenance program",
+      "program_class": "guarded_maintenance_program",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "guarded_maintenance_program",
+        "program_id": "program.wave2c.guarded_governance_maintenance.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "GUARDED_STATE_CHANGE",
+        "execution_scope": "guarded_governance_maintenance",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "governance_maintenance_check",
+          "refresh_safe_mirror_evidence",
+          "report_generation",
+          "policy_reference_execute"
+        ]
+      },
+      "expected_program_id": "program.wave2c.guarded_governance_maintenance.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "governance_maintenance_check",
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GUARDS",
+      "expected_state_change": "guarded_only",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "none_when_creator",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-003",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-003",
+      "raw_request": "rebuild approved control artifacts",
+      "program_class": "guarded_maintenance_program",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "guarded_maintenance_program",
+        "program_id": "program.wave2c.control_artifacts_rebuild.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "GUARDED_STATE_CHANGE",
+        "execution_scope": "control_artifacts_rebuild",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "governance_maintenance_check",
+          "refresh_safe_mirror_evidence",
+          "report_generation",
+          "policy_reference_execute"
+        ]
+      },
+      "expected_program_id": "program.wave2c.control_artifacts_rebuild.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "refresh_safe_mirror_evidence",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GUARDS",
+      "expected_state_change": "guarded_only",
+      "produced_artifacts": [
+        "workspace_config/SAFE_MIRROR_MANIFEST.json"
+      ],
+      "expected_artifacts": [
+        "workspace_config/SAFE_MIRROR_MANIFEST.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "none_when_creator",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-004",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-004",
+      "raw_request": "creator-authorized program sequence",
+      "program_class": "creator_only_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "creator_only_program",
+        "program_id": "program.wave2c.creator_authorized_sequence.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "CREATOR_ONLY_MUTATION",
+        "execution_scope": "creator_authorized_sequence",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "governance_maintenance_check",
+          "refresh_safe_mirror_evidence",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.creator_authorized_sequence.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "governance_maintenance_check",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY",
+      "expected_state_change": "creator_only",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "blocked_when_helper",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-005",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-005",
+      "raw_request": "creator-authorized program sequence",
+      "program_class": "creator_only_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "creator_only_program",
+        "program_id": "program.wave2c.creator_authorized_sequence.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "CREATOR_ONLY_MUTATION",
+        "execution_scope": "creator_authorized_sequence",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "governance_maintenance_check",
+          "refresh_safe_mirror_evidence",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.creator_authorized_sequence.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "governance_maintenance_check",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY",
+      "expected_state_change": "creator_only",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "blocked_when_helper",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-006",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-006",
+      "raw_request": "authority-required program",
+      "program_class": "creator_only_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "creator_only_program",
+        "program_id": "program.wave2c.authority_required_program.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "CREATOR_ONLY_MUTATION",
+        "execution_scope": "authority_required_sequence",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "governance_maintenance_check",
+          "refresh_safe_mirror_evidence",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.authority_required_program.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY",
+      "expected_state_change": "creator_only",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "blocked_when_helper",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-007",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-007",
+      "raw_request": "install governed system program",
+      "program_class": "controlled_lifecycle_program",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "controlled_lifecycle_program",
+        "program_id": "program.wave2c.controlled_install_lifecycle.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "GUARDED_STATE_CHANGE",
+        "execution_scope": "controlled_install_lifecycle",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "install_system",
+          "remove_system",
+          "governance_maintenance_check",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.controlled_install_lifecycle.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "install_system",
+        "governance_maintenance_check",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_INPUTS_OR_AUTHORITY",
+      "expected_state_change": "guarded_lifecycle",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "blocked_without_system_id",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "workspace_config/shared_systems_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-008",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-008",
+      "raw_request": "remove governed system program",
+      "program_class": "controlled_lifecycle_program",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "controlled_lifecycle_program",
+        "program_id": "program.wave2c.controlled_remove_lifecycle.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "GUARDED_STATE_CHANGE",
+        "execution_scope": "controlled_remove_lifecycle",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "install_system",
+          "remove_system",
+          "governance_maintenance_check",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.controlled_remove_lifecycle.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "remove_system",
+        "governance_maintenance_check",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_INPUTS_OR_AUTHORITY",
+      "expected_state_change": "guarded_lifecycle",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "blocked_without_system_id",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-009",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-009",
+      "raw_request": "governed integration maintenance program",
+      "program_class": "controlled_lifecycle_program",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "controlled_lifecycle_program",
+        "program_id": "program.wave2c.controlled_remove_lifecycle.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "GUARDED_STATE_CHANGE",
+        "execution_scope": "controlled_remove_lifecycle",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "creator_acceptance_precheck",
+          "install_system",
+          "remove_system",
+          "governance_maintenance_check",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.controlled_remove_lifecycle.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "remove_system",
+        "governance_maintenance_check",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_INPUTS_OR_AUTHORITY",
+      "expected_state_change": "guarded_lifecycle",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "blocked_without_system_id",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-010",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-010",
+      "raw_request": "blocked creator-only program simulation",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "blocked_mutation_test_program",
+        "program_id": "program.wave2c.blocked_creator_gate_simulation.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "CREATOR_ONLY_MUTATION",
+        "execution_scope": "blocked_creator_gate_simulation",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "refresh_safe_mirror_evidence",
+          "handoff_prepare",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.blocked_creator_gate_simulation.v1",
+      "expected_step_plan": [
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_IN_HELPER_MODE",
+      "expected_state_change": "none_when_blocked",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "creator_authority_required",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-011",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-011",
+      "raw_request": "blocked creator-only program simulation",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "blocked_mutation_test_program",
+        "program_id": "program.wave2c.blocked_creator_gate_simulation.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "CREATOR_ONLY_MUTATION",
+        "execution_scope": "blocked_creator_gate_simulation",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "refresh_safe_mirror_evidence",
+          "handoff_prepare",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.blocked_creator_gate_simulation.v1",
+      "expected_step_plan": [
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_IN_HELPER_MODE",
+      "expected_state_change": "none_when_blocked",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "creator_authority_required",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-012",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-012",
+      "raw_request": "blocked program by missing preconditions",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "OPERATIONAL_ROUTING",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "blocked_mutation_test_program",
+        "program_id": "program.wave2c.blocked_missing_preconditions.v1",
+        "authority_requirement": "program_specific",
+        "creator_authority_required": false,
+        "mutability_level": "OPERATIONAL_ROUTING",
+        "execution_scope": "blocked_missing_preconditions",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "refresh_safe_mirror_evidence",
+          "handoff_prepare",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.blocked_missing_preconditions.v1",
+      "expected_step_plan": [
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_BY_PRECONDITION",
+      "expected_state_change": "none_when_blocked",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_checkpoint.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_checkpoint.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "required_input_missing",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-013",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-013",
+      "raw_request": "missing preconditions mutation block",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "OPERATIONAL_ROUTING",
+      "authority_expectation": "none",
+      "expected_program_contract": {
+        "program_class": "blocked_mutation_test_program",
+        "program_id": "program.wave2c.blocked_missing_preconditions.v1",
+        "authority_requirement": "program_specific",
+        "creator_authority_required": false,
+        "mutability_level": "OPERATIONAL_ROUTING",
+        "execution_scope": "blocked_missing_preconditions",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "refresh_safe_mirror_evidence",
+          "handoff_prepare",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.blocked_missing_preconditions.v1",
+      "expected_step_plan": [
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_BY_PRECONDITION",
+      "expected_state_change": "none_when_blocked",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_checkpoint.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_checkpoint.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "required_input_missing",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-014",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-014",
+      "raw_request": "blocked mutation by policy",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "blocked_mutation_test_program",
+        "program_id": "program.wave2c.blocked_policy_mutation.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "CREATOR_ONLY_MUTATION",
+        "execution_scope": "blocked_policy_mutation",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "refresh_safe_mirror_evidence",
+          "handoff_prepare",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.blocked_policy_mutation.v1",
+      "expected_step_plan": [
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_BY_POLICY",
+      "expected_state_change": "none_when_blocked",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "policy_basis_missing",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-015",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-015",
+      "raw_request": "policy blocked mutation test",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "blocked_mutation_test_program",
+        "program_id": "program.wave2c.blocked_policy_mutation.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "CREATOR_ONLY_MUTATION",
+        "execution_scope": "blocked_policy_mutation",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "refresh_safe_mirror_evidence",
+          "handoff_prepare",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.blocked_policy_mutation.v1",
+      "expected_step_plan": [
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_BY_POLICY",
+      "expected_state_change": "none_when_blocked",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "policy_basis_missing",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "FINAL-2C-016",
+      "source_wave": "2C",
+      "source_id": "W2C-GP-016",
+      "raw_request": "blocked creator-only program simulation",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_contract": {
+        "program_class": "blocked_mutation_test_program",
+        "program_id": "program.wave2c.blocked_creator_gate_simulation.v1",
+        "authority_requirement": "creator_required",
+        "creator_authority_required": true,
+        "mutability_level": "CREATOR_ONLY_MUTATION",
+        "execution_scope": "blocked_creator_gate_simulation",
+        "failure_policy": "stop_on_failure",
+        "resume_supported": true,
+        "stop_conditions": [
+          "any_step_failed",
+          "any_step_blocked"
+        ],
+        "command_dependencies": [
+          "refresh_safe_mirror_evidence",
+          "handoff_prepare",
+          "report_generation"
+        ]
+      },
+      "expected_program_id": "program.wave2c.blocked_creator_gate_simulation.v1",
+      "expected_step_plan": [
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_IN_HELPER_MODE",
+      "expected_state_change": "none_when_blocked",
+      "produced_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "expected_checkpoints": [],
+      "expected_resume_behavior": "",
+      "expected_step_behavior": "stop_on_failure",
+      "blocking_expectation": "creator_authority_required",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ],
+      "notes": ""
+    }
+  ]
+}

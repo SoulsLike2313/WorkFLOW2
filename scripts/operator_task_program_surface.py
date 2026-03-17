@@ -14,6 +14,8 @@ from detect_machine_mode import build_mode_payload
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_ROOT = r"E:\CVVCODEX"
 REGISTRY_PATH = ROOT / "workspace_config" / "operator_task_program_registry.json"
+GOLDEN_FINAL = ROOT / "docs" / "review_artifacts" / "OPERATOR_TASK_PROGRAM_GOLDEN_PACK_FINAL.json"
+GOLDEN_2A = ROOT / "docs" / "review_artifacts" / "OPERATOR_TASK_PROGRAM_GOLDEN_PACK_WAVE_2A.json"
 GOLDEN_2B = ROOT / "docs" / "review_artifacts" / "OPERATOR_TASK_PROGRAM_GOLDEN_PACK_WAVE_2B.json"
 GOLDEN_2C = ROOT / "docs" / "review_artifacts" / "OPERATOR_TASK_PROGRAM_GOLDEN_PACK_WAVE_2C.json"
 RUNTIME_DIR = ROOT / "runtime" / "repo_control_center"
@@ -199,9 +201,9 @@ def load_registry() -> tuple[dict[str, Any], dict[str, dict[str, Any]], dict[str
             merged["mutability_level"] = str(merged.get("mutability_level", "READ_ONLY")).strip().upper()
             if not merged["mutability_level"]:
                 merged["mutability_level"] = "READ_ONLY"
-            merged["creator_authority_required"] = bool(
-                merged.get("creator_authority_required", str(merged.get("authority_requirement", "none")) == "creator_required")
-            )
+            creator_flag = bool(merged.get("creator_authority_required", False))
+            creator_from_authority = str(merged.get("authority_requirement", "none")) == "creator_required"
+            merged["creator_authority_required"] = creator_flag or creator_from_authority
 
             index[program_id] = merged
             class_map[program_class].append(program_id)
@@ -968,7 +970,7 @@ def consistency_mode(args: argparse.Namespace) -> int:
 
 
 def parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description="Wave 2C guarded creator operator task/program surface.")
+    p = argparse.ArgumentParser(description="Finalized operator task/program surface (Wave 2A+2B+2C baseline).")
     sub = p.add_subparsers(dest="mode", required=True)
 
     ex = sub.add_parser("execute")
@@ -995,7 +997,7 @@ def parser() -> argparse.ArgumentParser:
     sub.add_parser("registry")
     sub.add_parser("status")
     cc = sub.add_parser("consistency-check")
-    cc.add_argument("--golden-file", default=str(GOLDEN_2C.relative_to(ROOT)))
+    cc.add_argument("--golden-file", default=str(GOLDEN_FINAL.relative_to(ROOT)))
     return p
 
 
