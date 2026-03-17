@@ -41,10 +41,28 @@ Machine must complete this canonical order before execution:
 35. `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
 36. `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
 37. `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
-38. `scripts/repo_control_center.py`
-39. `workspace_config/GITHUB_SYNC_POLICY.md`
-40. `workspace_config/AGENT_EXECUTION_POLICY.md`
-41. `workspace_config/MACHINE_REPO_READING_RULES.md`
+38. `docs/governance/CREATOR_AUTHORITY_POLICY.md`
+39. `docs/governance/HELPER_NODE_POLICY.md`
+40. `docs/governance/TASK_ID_EXECUTION_CONTRACT.md`
+41. `docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md`
+42. `docs/governance/INTEGRATION_INBOX_POLICY.md`
+43. `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md`
+44. `docs/governance/FEDERATION_ARCHITECTURE.md`
+45. `workspace_config/creator_mode_detection_contract.json`
+46. `workspace_config/federation_mode_contract.json`
+47. `workspace_config/block_task_schema.json`
+48. `workspace_config/handoff_package_schema.json`
+49. `workspace_config/integration_inbox_contract.json`
+50. `integration/README.md`
+51. `tasks/README.md`
+52. `scripts/detect_machine_mode.py`
+53. `scripts/resolve_task_id.py`
+54. `scripts/prepare_handoff_package.py`
+55. `scripts/review_integration_inbox.py`
+56. `scripts/repo_control_center.py`
+57. `workspace_config/GITHUB_SYNC_POLICY.md`
+58. `workspace_config/AGENT_EXECUTION_POLICY.md`
+59. `workspace_config/MACHINE_REPO_READING_RULES.md`
 
 If any mandatory step is skipped: `STATUS: REJECTED`.
 
@@ -112,8 +130,21 @@ Mandatory runtime evidence files:
 - `runtime/repo_control_center/repo_control_report.md`
 - `runtime/repo_control_center/evolution_status.json`
 - `runtime/repo_control_center/evolution_report.md`
+- `runtime/repo_control_center/machine_mode_status.json`
+- `runtime/repo_control_center/machine_mode_report.md`
 
 Tracked safe-state evidence contract:
 
 - `workspace_config/SAFE_MIRROR_MANIFEST.json` and `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md` describe `basis_head_sha` (basis commit evidence), not self-referential final commit hash.
 - In `tracked_evidence_refresh_commit` mode, current `HEAD` is valid if it is an evidence refresh commit over `basis_head_sha` and `basis..HEAD` changes only safe evidence files.
+
+## Rule 9: Federation Mode Enforcement
+
+- creator authority detection is defined only by:
+  - `workspace_config/creator_mode_detection_contract.json`
+  - env var `CVVCODEX_CREATOR_AUTHORITY_DIR`
+  - marker `creator_authority.json`
+- tracked repository must not disclose creator authority directory path.
+- full copy without valid authority marker is `helper` mode.
+- helper mode cannot declare canonical completion or governance acceptance.
+- integration inbox is mandatory entrypoint for external helper deliveries.

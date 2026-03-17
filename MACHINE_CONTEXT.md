@@ -48,11 +48,28 @@
 35. `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
 36. `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
 37. `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
-38. `scripts/repo_control_center.py`
-39. `workspace_config/GITHUB_SYNC_POLICY.md`
-40. `workspace_config/AGENT_EXECUTION_POLICY.md`
-41. `workspace_config/MACHINE_REPO_READING_RULES.md`
-42. target `PROJECT_MANIFEST.json`
+38. `docs/governance/CREATOR_AUTHORITY_POLICY.md`
+39. `docs/governance/HELPER_NODE_POLICY.md`
+40. `docs/governance/TASK_ID_EXECUTION_CONTRACT.md`
+41. `docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md`
+42. `docs/governance/INTEGRATION_INBOX_POLICY.md`
+43. `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md`
+44. `docs/governance/FEDERATION_ARCHITECTURE.md`
+45. `scripts/repo_control_center.py`
+46. `workspace_config/federation_mode_contract.json`
+47. `workspace_config/block_task_schema.json`
+48. `workspace_config/handoff_package_schema.json`
+49. `workspace_config/integration_inbox_contract.json`
+50. `workspace_config/creator_mode_detection_contract.json`
+51. `integration/README.md`
+52. `tasks/README.md`
+53. `scripts/detect_machine_mode.py`
+54. `scripts/resolve_task_id.py`
+55. `scripts/prepare_handoff_package.py`
+56. `scripts/review_integration_inbox.py`
+57. `workspace_config/GITHUB_SYNC_POLICY.md`
+58. `workspace_config/AGENT_EXECUTION_POLICY.md`
+59. `workspace_config/MACHINE_REPO_READING_RULES.md`
 
 ## Execution Guardrails
 
@@ -60,6 +77,7 @@
 - No completion without sync parity (`HEAD == safe_mirror/main`, divergence `0/0`).
 - No completion without mandatory self-verification.
 - No side work and no silent scope expansion.
+- Full repo copy without creator marker resolves to helper mode and cannot declare canonical completion.
 
 ## Canonical ChatGPT Request Workflow
 
@@ -82,6 +100,14 @@ Audit-safe runtime evidence export:
 3. Run `python scripts/repo_control_center.py evolution`.
 4. Run `python scripts/repo_control_center.py full-check`.
 5. Use generated runtime reports as evidence package for completion/promotion decisions.
+
+## Federation / Integration Workflow
+
+1. Detect mode: `python scripts/detect_machine_mode.py --intent auto`.
+2. Resolve block contract: `python scripts/resolve_task_id.py --task-id <TASK_ID>`.
+3. Helper prepares delivery: `python scripts/prepare_handoff_package.py ...`.
+4. Canonical machine reviews inbox: `python scripts/review_integration_inbox.py`.
+5. Final acceptance remains creator-only operation.
 
 ## Governance v1.1 Hardening Focus
 

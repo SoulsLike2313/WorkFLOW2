@@ -111,3 +111,18 @@ Before completion claim, run:
 4. `python scripts/repo_control_center.py full-check`
 
 If trust/sync/admission are blocked, completion is forbidden.
+
+## Rule 10: Federation Mode Enforcement
+
+- Mode detection contract:
+  - `workspace_config/creator_mode_detection_contract.json`
+  - env var `CVVCODEX_CREATOR_AUTHORITY_DIR`
+  - marker `creator_authority.json`
+- Full repo copy without valid creator marker is `helper` mode.
+- Helper mode cannot:
+  - declare canonical completion
+  - override governance
+  - perform final acceptance of external deliveries
+- External helper deliveries must go through:
+  - `integration/inbox/`
+  - `scripts/review_integration_inbox.py` review flow

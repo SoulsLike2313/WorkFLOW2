@@ -7,6 +7,7 @@
 - `WorkFLOW2` is not the full working repository and must receive only approved safe state.
 - Official external reading channel for ChatGPT: targeted bundle export (`scripts/export_chatgpt_bundle.py`).
 - Governance brain stack is mandatory interpretation layer for all machine/agent execution.
+- Federation/Integration layer v1 is mandatory for multi-node collaboration (`creator`, `helper`, `integration` modes).
 
 ## Active Project
 
@@ -21,6 +22,27 @@
 3. Run sync and self-verification gates.
 4. Push approved safe state to `safe_mirror/main` (`WorkFLOW2`).
 5. For ChatGPT reading, export targeted bundle instead of exposing full repo.
+
+## Federation / Integration Layer V1
+
+Machine role model:
+
+- `creator` - canonical machine with final acceptance rights.
+- `helper` - external/full-copy node without creator authority marker; block execution only.
+- `integration` - canonical review mode for external handoff packages.
+
+Creator authority contract:
+
+- env var: `CVVCODEX_CREATOR_AUTHORITY_DIR`
+- marker file: `creator_authority.json`
+- required marker fields:
+  - `authority_mode = "creator"`
+  - `profile_version = "v1"`
+  - `machine_role = "canonical_creator_machine"`
+
+Hard rule:
+
+- full repository copy without valid authority marker is always `helper` mode and cannot declare canonical completion.
 
 ## Governance Brain Stack (Mandatory)
 
@@ -62,6 +84,16 @@
 - `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
 - `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
 
+### Federation / Integration Policies
+
+- `docs/governance/CREATOR_AUTHORITY_POLICY.md`
+- `docs/governance/HELPER_NODE_POLICY.md`
+- `docs/governance/TASK_ID_EXECUTION_CONTRACT.md`
+- `docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md`
+- `docs/governance/INTEGRATION_INBOX_POLICY.md`
+- `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md`
+- `docs/governance/FEDERATION_ARCHITECTURE.md`
+
 ## Repo Control Center V1 (CLI-First)
 
 Canonical control entrypoint:
@@ -73,6 +105,8 @@ python scripts/repo_control_center.py <mode>
 Supported modes:
 
 - `status`
+- `mode`
+- `integration`
 - `audit`
 - `trust`
 - `sync`
@@ -96,6 +130,8 @@ Runtime artifacts:
 - `runtime/repo_control_center/repo_control_report.md`
 - `runtime/repo_control_center/evolution_status.json`
 - `runtime/repo_control_center/evolution_report.md`
+- `runtime/repo_control_center/machine_mode_status.json`
+- `runtime/repo_control_center/machine_mode_report.md`
 
 ## Completion Gate (Hard)
 
@@ -130,6 +166,12 @@ Modes:
 - `request --request-file <file>`
 - `audit-runtime --include-rcc-runtime` (only allowlisted RCC runtime reports)
 
+Federated helper workflow commands:
+
+- resolve task: `python scripts/resolve_task_id.py --task-id <TASK_ID>`
+- prepare handoff package: `python scripts/prepare_handoff_package.py --task-id <TASK_ID> --node-id <NODE_ID>`
+- review inbox (canonical): `python scripts/review_integration_inbox.py`
+
 Protocol reference:
 
 - `docs/CHATGPT_BUNDLE_EXPORT.md`
@@ -142,6 +184,8 @@ Protocol reference:
 - `scripts/` - execution and validation scripts.
 - `docs/` - governance and review artifacts.
 - `runtime/` - generated runtime outputs (non-authoritative).
+- `integration/` - canonical inbox/review/accepted/rejected/quarantine flow.
+- `tasks/` - block task registry for helper execution contracts.
 
 ## Source-of-Truth Order
 

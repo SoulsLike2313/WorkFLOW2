@@ -1,0 +1,35 @@
+{
+  "task_id": "TASK-PLATFORM_TEST_AGENT-001",
+  "task_type": "block_feature_or_fix",
+  "title": "Example helper block for platform_test_agent",
+  "target_scope": "projects/platform_test_agent",
+  "allowed_paths": [
+    "projects/platform_test_agent/",
+    "docs/review_artifacts/"
+  ],
+  "forbidden_paths": [
+    "docs/governance/",
+    "workspace_config/",
+    "scripts/repo_control_center.py",
+    "README.md",
+    "MACHINE_CONTEXT.md",
+    "REPO_MAP.md"
+  ],
+  "required_outputs": [
+    "changed_files_list",
+    "local_check_summary",
+    "handoff_package"
+  ],
+  "required_checks": [
+    "python scripts/validate_workspace.py",
+    "python scripts/check_repo_sync.py --remote safe_mirror --branch main"
+  ],
+  "delivery_mode": "integration_inbox_package",
+  "handoff_target": "integration/inbox/",
+  "non_goals": [
+    "governance_core_edits",
+    "canonical_acceptance_claim",
+    "global_architecture_changes"
+  ]
+}
+

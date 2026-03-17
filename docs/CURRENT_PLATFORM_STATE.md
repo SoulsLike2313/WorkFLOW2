@@ -1,7 +1,7 @@
 # Current Platform State
 
-- snapshot_id: `platform-state-20260314-machine-alignment`
-- snapshot_date_utc: `2026-03-14`
+- snapshot_id: `platform-state-20260317-federation-integration-v1`
+- snapshot_date_utc: `2026-03-17`
 - source_of_truth:
   - `workspace_config/workspace_manifest.json`
   - `workspace_config/codex_manifest.json`
@@ -52,6 +52,13 @@ Not accepted for execution:
 2. insufficient-contract tasks
 3. out-of-scope tasks
 4. broad creative asks without strict repo contract
+
+## Governance / Federation State
+
+- governance foundation: `accepted`
+- repo control center: `accepted`
+- targeted bundle export: `accepted`
+- next active layer: `federation / integration layer v1`
 
 ## Shared Systems Baseline
 

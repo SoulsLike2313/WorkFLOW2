@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "required_fields": [
+    "task_id",
+    "task_type",
+    "title",
+    "target_scope",
+    "allowed_paths",
+    "forbidden_paths",
+    "required_outputs",
+    "required_checks",
+    "delivery_mode",
+    "handoff_target",
+    "non_goals"
+  ],
+  "task_id_regex": "^TASK-[A-Z0-9_]+-[0-9]{3}$",
+  "delivery_mode_values": [
+    "integration_inbox_package"
+  ],
+  "notes": "Schema is operational validation contract for helper task execution."
+}
+

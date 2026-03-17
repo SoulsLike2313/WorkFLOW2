@@ -6,49 +6,69 @@
 - Public safe mirror only: `safe_mirror/main` -> `WorkFLOW2`
 - `WorkFLOW2` is not full development workspace.
 - External reading channel: targeted ChatGPT bundle export.
+- Creator authority path is never tracked; machine role is detected only via env+marker contract.
 
 ## Read Order (Bootstrap)
 
 1. `README.md`
 2. `workspace_config/workspace_manifest.json`
 3. `workspace_config/codex_manifest.json`
-4. `MACHINE_CONTEXT.md`
-5. `docs/INSTRUCTION_INDEX.md`
-6. `docs/CURRENT_PLATFORM_STATE.md`
-7. `docs/NEXT_CANONICAL_STEP.md`
-8. `docs/governance/FIRST_PRINCIPLES.md`
-9. `docs/governance/GOVERNANCE_HIERARCHY.md`
-10. `docs/governance/SELF_VERIFICATION_POLICY.md`
-11. `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
-12. `docs/governance/ADMISSION_GATE_POLICY.md`
-13. `docs/governance/ANTI_DRIFT_POLICY.md`
-14. `docs/governance/DEVIATION_INTELLIGENCE_POLICY.md`
-15. `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
-16. `docs/governance/CREATIVE_REASONING_POLICY.md`
-17. `docs/governance/AGENT_CHARACTER_PROFILE.md`
-18. `docs/governance/EVOLUTION_READINESS_POLICY.md`
-19. `docs/governance/MODEL_MATURITY_MODEL.md`
-20. `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
-21. `docs/governance/POLICY_EVOLUTION_LOG.md`
-22. `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
-23. `docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md`
-24. `docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md`
-25. `docs/governance/VERIFICATION_DEPTH_POLICY.md`
-26. `docs/governance/EVIDENCE_RETENTION_POLICY.md`
-27. `docs/governance/PROMOTION_THRESHOLD_POLICY.md`
-28. `docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md`
-29. `docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md`
-30. `docs/governance/OPERATIONAL_METRICS_POLICY.md`
-31. `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
-32. `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
-33. `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
-34. `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
-35. `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
-36. `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
-37. `scripts/repo_control_center.py`
-38. `workspace_config/GITHUB_SYNC_POLICY.md`
-39. `workspace_config/AGENT_EXECUTION_POLICY.md`
-40. `workspace_config/MACHINE_REPO_READING_RULES.md`
+4. `REPO_MAP.md`
+5. `MACHINE_CONTEXT.md`
+6. `docs/INSTRUCTION_INDEX.md`
+7. `docs/CURRENT_PLATFORM_STATE.md`
+8. `docs/NEXT_CANONICAL_STEP.md`
+9. `docs/governance/FIRST_PRINCIPLES.md`
+10. `docs/governance/GOVERNANCE_HIERARCHY.md`
+11. `docs/governance/SELF_VERIFICATION_POLICY.md`
+12. `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
+13. `docs/governance/ADMISSION_GATE_POLICY.md`
+14. `docs/governance/ANTI_DRIFT_POLICY.md`
+15. `docs/governance/DEVIATION_INTELLIGENCE_POLICY.md`
+16. `docs/governance/GOVERNANCE_EVOLUTION_POLICY.md`
+17. `docs/governance/CREATIVE_REASONING_POLICY.md`
+18. `docs/governance/AGENT_CHARACTER_PROFILE.md`
+19. `docs/governance/EVOLUTION_READINESS_POLICY.md`
+20. `docs/governance/MODEL_MATURITY_MODEL.md`
+21. `docs/governance/EVOLUTION_SIGNAL_REGISTRY.md`
+22. `docs/governance/POLICY_EVOLUTION_LOG.md`
+23. `docs/governance/NEXT_EVOLUTION_CANDIDATE.md`
+24. `docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md`
+25. `docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md`
+26. `docs/governance/VERIFICATION_DEPTH_POLICY.md`
+27. `docs/governance/EVIDENCE_RETENTION_POLICY.md`
+28. `docs/governance/PROMOTION_THRESHOLD_POLICY.md`
+29. `docs/governance/SECURITY_AND_EXPOSURE_INCIDENT_POLICY.md`
+30. `docs/governance/DEPRECATION_AND_RETIREMENT_POLICY.md`
+31. `docs/governance/OPERATIONAL_METRICS_POLICY.md`
+32. `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
+33. `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
+34. `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
+35. `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
+36. `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
+37. `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
+38. `docs/governance/CREATOR_AUTHORITY_POLICY.md`
+39. `docs/governance/HELPER_NODE_POLICY.md`
+40. `docs/governance/TASK_ID_EXECUTION_CONTRACT.md`
+41. `docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md`
+42. `docs/governance/INTEGRATION_INBOX_POLICY.md`
+43. `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md`
+44. `docs/governance/FEDERATION_ARCHITECTURE.md`
+45. `scripts/repo_control_center.py`
+46. `workspace_config/federation_mode_contract.json`
+47. `workspace_config/block_task_schema.json`
+48. `workspace_config/handoff_package_schema.json`
+49. `workspace_config/integration_inbox_contract.json`
+50. `workspace_config/creator_mode_detection_contract.json`
+51. `integration/README.md`
+52. `tasks/README.md`
+53. `scripts/detect_machine_mode.py`
+54. `scripts/resolve_task_id.py`
+55. `scripts/prepare_handoff_package.py`
+56. `scripts/review_integration_inbox.py`
+57. `workspace_config/GITHUB_SYNC_POLICY.md`
+58. `workspace_config/AGENT_EXECUTION_POLICY.md`
+59. `workspace_config/MACHINE_REPO_READING_RULES.md`
 
 ## Canonical Top-Level Directories
 
@@ -58,6 +78,8 @@
 - `scripts/` - validation, sync, export, startup tooling.
 - `docs/` - governance and review artifacts.
 - `runtime/` - generated runtime outputs.
+- `integration/` - external block intake/review state machine.
+- `tasks/` - task_id registry for helper block contracts.
 
 ## Project Registry Source
 
@@ -78,10 +100,11 @@ Current canonical active project:
 ## Repo Control Center
 
 - Canonical CLI: `python scripts/repo_control_center.py <mode>`
-- Primary modes: `status`, `trust`, `sync`, `bundle`, `evolution`, `full-check`
+- Primary modes: `status`, `mode`, `integration`, `trust`, `sync`, `bundle`, `evolution`, `full-check`
 - Machine-readable outputs:
   - `runtime/repo_control_center/repo_control_status.json`
   - `runtime/repo_control_center/evolution_status.json`
+  - `runtime/repo_control_center/machine_mode_status.json`
 
 ## Governance v1.1 Hardening Policies
 
@@ -102,6 +125,16 @@ Current canonical active project:
 - `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
 - `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
 - `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
+
+## Federation / Integration Contracts
+
+- `workspace_config/federation_mode_contract.json`
+- `workspace_config/creator_mode_detection_contract.json`
+- `workspace_config/block_task_schema.json`
+- `workspace_config/handoff_package_schema.json`
+- `workspace_config/integration_inbox_contract.json`
+- `integration/README.md`
+- `tasks/README.md`
 
 ## Completion Guard
 

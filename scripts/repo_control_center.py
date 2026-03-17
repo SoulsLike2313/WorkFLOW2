@@ -55,6 +55,42 @@ EVOLUTION_LAYER_DOCS = [
     "docs/governance/NEXT_EVOLUTION_CANDIDATE.md",
 ]
 
+FEDERATION_LAYER_DOCS = [
+    "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+    "docs/governance/HELPER_NODE_POLICY.md",
+    "docs/governance/TASK_ID_EXECUTION_CONTRACT.md",
+    "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
+    "docs/governance/INTEGRATION_INBOX_POLICY.md",
+    "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+    "docs/governance/FEDERATION_ARCHITECTURE.md",
+]
+
+FEDERATION_CONTRACT_FILES = [
+    "workspace_config/federation_mode_contract.json",
+    "workspace_config/block_task_schema.json",
+    "workspace_config/handoff_package_schema.json",
+    "workspace_config/integration_inbox_contract.json",
+    "workspace_config/creator_mode_detection_contract.json",
+]
+
+INTEGRATION_STRUCTURE_PATHS = [
+    "integration/README.md",
+    "integration/inbox",
+    "integration/review_queue",
+    "integration/accepted",
+    "integration/rejected",
+    "integration/quarantine",
+]
+
+TASK_FLOW_FILES = [
+    "tasks/README.md",
+    "tasks/registry/example_block_task.json",
+    "scripts/detect_machine_mode.py",
+    "scripts/resolve_task_id.py",
+    "scripts/prepare_handoff_package.py",
+    "scripts/review_integration_inbox.py",
+]
+
 GOVERNANCE_V11_HARDENING_DOCS = [
     "docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md",
     "docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md",
@@ -93,6 +129,7 @@ BOOTSTRAP_REQUIRED = [
     "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
     "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
     "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
+    *FEDERATION_LAYER_DOCS,
     "scripts/repo_control_center.py",
     "workspace_config/GITHUB_SYNC_POLICY.md",
     "workspace_config/AGENT_EXECUTION_POLICY.md",
@@ -267,6 +304,139 @@ def bootstrap_enforcement_checks() -> dict[str, Any]:
     }
 
 
+def machine_mode_checks() -> dict[str, Any]:
+    blockers: list[str] = []
+    warnings: list[str] = []
+    evidence: dict[str, Any] = {}
+
+    detect_script = REPO_ROOT / "scripts/detect_machine_mode.py"
+    detection_contract = REPO_ROOT / "workspace_config/creator_mode_detection_contract.json"
+    federation_contract = REPO_ROOT / "workspace_config/federation_mode_contract.json"
+
+    if not detect_script.exists():
+        blockers.append("missing scripts/detect_machine_mode.py")
+    if not detection_contract.exists():
+        blockers.append("missing workspace_config/creator_mode_detection_contract.json")
+    if not federation_contract.exists():
+        blockers.append("missing workspace_config/federation_mode_contract.json")
+
+    if detection_contract.exists():
+        text = detection_contract.read_text(encoding="utf-8-sig")
+        if re.search(r"[A-Za-z]:\\\\", text):
+            blockers.append("creator detection contract leaks local absolute path")
+
+    payload: dict[str, Any] | None = None
+    if not blockers:
+        proc = subprocess.run(
+            ["python", str(detect_script), "--intent", "auto", "--json-only", "--no-write"],
+            cwd=REPO_ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        evidence["detect_exit_code"] = proc.returncode
+        if proc.returncode != 0:
+            blockers.append("detect_machine_mode.py returned non-zero")
+        else:
+            try:
+                payload = json.loads(proc.stdout)
+            except Exception as exc:
+                blockers.append(f"detect_machine_mode output is not valid JSON: {exc}")
+
+    if payload:
+        evidence["machine_mode"] = payload.get("machine_mode")
+        evidence["authority_present"] = payload.get("authority", {}).get("authority_present")
+        evidence["detection_state"] = payload.get("authority", {}).get("detection_state")
+        evidence["env_var_name"] = payload.get("authority", {}).get("env_var_name")
+        evidence["marker_filename"] = payload.get("authority", {}).get("marker_filename")
+        evidence["allowed_operations"] = payload.get("operations", {}).get("allowed", [])
+        evidence["forbidden_operations"] = payload.get("operations", {}).get("forbidden", [])
+        evidence["warnings"] = payload.get("warnings", [])
+
+        mode = str(payload.get("machine_mode", "helper"))
+        if mode == "helper":
+            warnings.append("machine is in helper mode (creator authority absent)")
+
+    if blockers:
+        verdict = "BLOCKED"
+    elif warnings:
+        verdict = "WARNING"
+    else:
+        verdict = "PASS"
+
+    return {
+        "verdict": verdict,
+        "basis": "federation machine-mode detection via external creator authority contract",
+        "evidence": evidence,
+        "blockers": blockers,
+        "warnings": warnings,
+        "next_step": "Establish creator authority marker for canonical creator operations." if warnings else "Machine mode detection is valid.",
+    }
+
+
+def integration_inbox_checks() -> dict[str, Any]:
+    blockers: list[str] = []
+    warnings: list[str] = []
+    evidence: dict[str, Any] = {}
+
+    missing_structure = missing_paths(INTEGRATION_STRUCTURE_PATHS)
+    missing_contracts = missing_paths(FEDERATION_CONTRACT_FILES)
+    missing_task_flow = missing_paths(TASK_FLOW_FILES)
+    evidence["missing_structure"] = missing_structure
+    evidence["missing_contracts"] = missing_contracts
+    evidence["missing_task_flow"] = missing_task_flow
+
+    blockers.extend([f"missing integration structure path: {p}" for p in missing_structure])
+    blockers.extend([f"missing federation contract file: {p}" for p in missing_contracts])
+    blockers.extend([f"missing task-flow file: {p}" for p in missing_task_flow])
+
+    review_script = REPO_ROOT / "scripts/review_integration_inbox.py"
+    if review_script.exists():
+        proc = subprocess.run(
+            ["python", str(review_script), "--help"],
+            cwd=REPO_ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        evidence["review_script_help_exit_code"] = proc.returncode
+        if proc.returncode != 0:
+            blockers.append("integration inbox review script help failed")
+    else:
+        blockers.append("missing scripts/review_integration_inbox.py")
+
+    resolve_script = REPO_ROOT / "scripts/resolve_task_id.py"
+    if resolve_script.exists():
+        proc = subprocess.run(
+            ["python", str(resolve_script), "--task-id", "TASK-PLATFORM_TEST_AGENT-001"],
+            cwd=REPO_ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        evidence["resolve_example_exit_code"] = proc.returncode
+        if proc.returncode != 0:
+            blockers.append("resolve_task_id example check failed")
+    else:
+        blockers.append("missing scripts/resolve_task_id.py")
+
+    if blockers:
+        verdict = "BLOCKED"
+    elif warnings:
+        verdict = "WARNING"
+    else:
+        verdict = "PASS"
+
+    return {
+        "verdict": verdict,
+        "basis": "integration inbox structure and review flow readiness",
+        "evidence": evidence,
+        "blockers": blockers,
+        "warnings": warnings,
+        "next_step": "Fix integration inbox blockers." if blockers else "Integration inbox flow is ready.",
+    }
+
+
 def contradiction_checks(git_state: GitState) -> dict[str, Any]:
     contradictions: list[dict[str, str]] = []
 
@@ -358,11 +528,13 @@ def governance_checks() -> dict[str, Any]:
     missing_stack = missing_paths(GOVERNANCE_BRAIN_STACK)
     missing_evolution = missing_paths(EVOLUTION_LAYER_DOCS)
     missing_hardening = missing_paths(GOVERNANCE_V11_HARDENING_DOCS)
+    missing_federation = missing_paths(FEDERATION_LAYER_DOCS)
+    missing_federation_contracts = missing_paths(FEDERATION_CONTRACT_FILES)
     missing_core = missing_paths(CORE_DOCS)
     missing_acceptance = missing_paths([GOVERNANCE_ACCEPTANCE_DOC])
 
     weak_docs: list[str] = []
-    for rel in GOVERNANCE_BRAIN_STACK + EVOLUTION_LAYER_DOCS:
+    for rel in GOVERNANCE_BRAIN_STACK + EVOLUTION_LAYER_DOCS + FEDERATION_LAYER_DOCS:
         if exists(rel):
             lines = [ln for ln in read_text(rel).splitlines() if ln.strip()]
             if len(lines) < 20:
@@ -379,11 +551,18 @@ def governance_checks() -> dict[str, Any]:
             governance_refs_missing.append(f"workspace_manifest missing {rel}")
         if rel not in cm_stack:
             governance_refs_missing.append(f"codex_manifest missing {rel}")
+    for rel in FEDERATION_LAYER_DOCS:
+        if rel not in wm_stack:
+            governance_refs_missing.append(f"workspace_manifest missing federation doc {rel}")
+        if rel not in cm_stack:
+            governance_refs_missing.append(f"codex_manifest missing federation doc {rel}")
 
     blockers = [
         *[f"missing governance doc: {p}" for p in missing_stack],
         *[f"missing evolution doc: {p}" for p in missing_evolution],
         *[f"missing hardening doc: {p}" for p in missing_hardening],
+        *[f"missing federation doc: {p}" for p in missing_federation],
+        *[f"missing federation contract: {p}" for p in missing_federation_contracts],
         *[f"missing governance acceptance gate: {p}" for p in missing_acceptance],
         *[f"missing core doc: {p}" for p in missing_core],
         *governance_refs_missing,
@@ -406,6 +585,8 @@ def governance_checks() -> dict[str, Any]:
             "missing_stack": missing_stack,
             "missing_evolution": missing_evolution,
             "missing_hardening": missing_hardening,
+            "missing_federation": missing_federation,
+            "missing_federation_contracts": missing_federation_contracts,
             "missing_acceptance": missing_acceptance,
             "missing_core": missing_core,
             "weak_docs": weak_docs,
@@ -626,6 +807,8 @@ def trust_checks(
     mirror: dict[str, Any],
     bundle: dict[str, Any],
     bootstrap: dict[str, Any],
+    machine_mode: dict[str, Any],
+    integration_inbox: dict[str, Any],
 ) -> dict[str, Any]:
     blockers: list[str] = []
     warnings: list[str] = []
@@ -655,6 +838,16 @@ def trust_checks(
     if bundle["verdict"] != "READY":
         blockers.append("bundle readiness blocked")
 
+    if machine_mode["verdict"] == "BLOCKED":
+        blockers.append("machine mode detection blocked")
+    elif machine_mode["verdict"] == "WARNING":
+        warnings.append("machine mode is helper-only (creator authority absent)")
+
+    if integration_inbox["verdict"] == "BLOCKED":
+        blockers.append("integration inbox flow blocked")
+    elif integration_inbox["verdict"] == "WARNING":
+        warnings.append("integration inbox flow warning")
+
     if blockers:
         verdict = "NOT_TRUSTED"
     elif warnings:
@@ -673,6 +866,8 @@ def trust_checks(
             "mirror_verdict": mirror["verdict"],
             "bootstrap_verdict": bootstrap["verdict"],
             "bundle_verdict": bundle["verdict"],
+            "machine_mode_verdict": machine_mode["verdict"],
+            "integration_inbox_verdict": integration_inbox["verdict"],
         },
         "blockers": blockers,
         "warnings": warnings,
@@ -686,6 +881,7 @@ def admission_checks(
     governance: dict[str, Any],
     contradictions: dict[str, Any],
     governance_acceptance: dict[str, Any],
+    machine_mode: dict[str, Any],
 ) -> dict[str, Any]:
     blockers: list[str] = []
     if trust["verdict"] == "NOT_TRUSTED":
@@ -698,6 +894,8 @@ def admission_checks(
         blockers.append("critical contradictions unresolved")
     if governance_acceptance["verdict"] != "PASS":
         blockers.append("governance acceptance gate not PASS")
+    if machine_mode.get("evidence", {}).get("machine_mode") != "creator":
+        blockers.append("machine mode is not creator")
 
     if blockers:
         verdict = "REJECTED"
@@ -716,6 +914,7 @@ def admission_checks(
             "critical_contradictions": contradictions["critical_count"],
             "major_contradictions": contradictions["major_count"],
             "governance_acceptance_verdict": governance_acceptance["verdict"],
+            "machine_mode": machine_mode.get("evidence", {}).get("machine_mode"),
         },
         "blockers": blockers,
         "next_step": "Clear blockers to reach ADMISSIBLE." if blockers else "Admission gate is clear.",
@@ -731,6 +930,7 @@ def governance_acceptance_checks(
     mirror: dict[str, Any],
     bundle: dict[str, Any],
     bootstrap: dict[str, Any],
+    machine_mode: dict[str, Any],
     git_state: GitState,
 ) -> dict[str, Any]:
     blockers: list[str] = []
@@ -743,6 +943,8 @@ def governance_acceptance_checks(
         "bootstrap_verdict": bootstrap["verdict"],
         "mirror_verdict": mirror["verdict"],
         "bundle_verdict": bundle["verdict"],
+        "machine_mode_verdict": machine_mode["verdict"],
+        "machine_mode": machine_mode.get("evidence", {}).get("machine_mode"),
         "critical_contradictions": contradictions["critical_count"],
         "worktree_clean": git_state.worktree_clean,
         "divergence": f"{git_state.ahead}/{git_state.behind}",
@@ -752,10 +954,15 @@ def governance_acceptance_checks(
         blockers.append("missing governance acceptance gate document")
 
     next_step_text = read_text("docs/NEXT_CANONICAL_STEP.md") if exists("docs/NEXT_CANONICAL_STEP.md") else ""
-    has_governance_closure = "governance acceptance closure" in next_step_text.lower()
+    next_step_lower = next_step_text.lower()
+    has_governance_closure = "governance acceptance closure" in next_step_lower
+    has_federation_transition = "federation / integration layer v1" in next_step_lower or "next-step-federation-integration-layer-v1" in next_step_lower
+    has_valid_route = has_governance_closure or has_federation_transition
     evidence["next_step_has_governance_acceptance_closure"] = has_governance_closure
-    if not has_governance_closure:
-        blockers.append("NEXT_CANONICAL_STEP does not route to governance acceptance closure")
+    evidence["next_step_has_federation_transition"] = has_federation_transition
+    evidence["next_step_has_valid_post_acceptance_route"] = has_valid_route
+    if not has_valid_route:
+        blockers.append("NEXT_CANONICAL_STEP missing governance-accepted canonical route")
 
     if sync["verdict"] != "IN_SYNC":
         blockers.append("sync gate not IN_SYNC")
@@ -769,6 +976,10 @@ def governance_acceptance_checks(
         blockers.append("safe mirror evidence gate not PASS")
     if bundle["verdict"] != "READY":
         blockers.append("bundle gate not READY")
+    if machine_mode["verdict"] == "BLOCKED":
+        blockers.append("machine mode detection blocked")
+    if machine_mode.get("evidence", {}).get("machine_mode") != "creator":
+        blockers.append("creator authority required for governance acceptance PASS")
     if contradictions["critical_count"] > 0:
         blockers.append("critical contradictions unresolved")
     if not git_state.worktree_clean:
@@ -1029,11 +1240,13 @@ def build_results(fetch: bool) -> dict[str, Any]:
     git_state = build_git_state(fetch=fetch)
     contradictions = contradiction_checks(git_state)
     bootstrap = bootstrap_enforcement_checks()
+    machine_mode = machine_mode_checks()
+    integration_inbox = integration_inbox_checks()
     governance = governance_checks()
     sync = sync_checks(git_state)
     mirror = mirror_checks(git_state)
     bundle = bundle_checks()
-    trust = trust_checks(sync, governance, contradictions, mirror, bundle, bootstrap)
+    trust = trust_checks(sync, governance, contradictions, mirror, bundle, bootstrap, machine_mode, integration_inbox)
     governance_acceptance = governance_acceptance_checks(
         sync=sync,
         trust=trust,
@@ -1042,9 +1255,10 @@ def build_results(fetch: bool) -> dict[str, Any]:
         mirror=mirror,
         bundle=bundle,
         bootstrap=bootstrap,
+        machine_mode=machine_mode,
         git_state=git_state,
     )
-    admission = admission_checks(trust, sync, governance, contradictions, governance_acceptance)
+    admission = admission_checks(trust, sync, governance, contradictions, governance_acceptance, machine_mode)
     evolution = evolution_checks(sync, governance, contradictions, trust, admission, mirror, bundle)
 
     repo_health = "PASS"
@@ -1082,6 +1296,8 @@ def build_results(fetch: bool) -> dict[str, Any]:
             "contradictions": contradictions,
             "drift": drift_status,
             "bootstrap": bootstrap,
+            "machine_mode": machine_mode,
+            "integration_inbox": integration_inbox,
             "mirror": mirror,
             "bundle": bundle,
             "governance_acceptance": governance_acceptance,
@@ -1097,6 +1313,22 @@ def build_results(fetch: bool) -> dict[str, Any]:
                 "next_step": "Resolve governance blockers." if governance["blockers"] else "Maintain governance parity.",
             },
             "governance_acceptance": governance_acceptance,
+            "machine_mode": {
+                "verdict": machine_mode["verdict"],
+                "basis": machine_mode["basis"],
+                "evidence": machine_mode["evidence"],
+                "blockers": machine_mode["blockers"],
+                "warnings": machine_mode["warnings"],
+                "next_step": machine_mode["next_step"],
+            },
+            "integration_inbox": {
+                "verdict": integration_inbox["verdict"],
+                "basis": integration_inbox["basis"],
+                "evidence": integration_inbox["evidence"],
+                "blockers": integration_inbox["blockers"],
+                "warnings": integration_inbox["warnings"],
+                "next_step": integration_inbox["next_step"],
+            },
             "admission": admission,
             "evolution": evolution,
         },
@@ -1125,6 +1357,8 @@ def markdown_report(result: dict[str, Any]) -> str:
         f"- GOVERNANCE VERDICT: `{v['governance']['verdict']}`",
         f"- ADMISSION VERDICT: `{v['admission']['verdict']}`",
         f"- EVOLUTION VERDICT: `{v['evolution']['verdict']}`",
+        f"- MACHINE MODE VERDICT: `{v['machine_mode']['verdict']}`",
+        f"- INTEGRATION INBOX VERDICT: `{v['integration_inbox']['verdict']}`",
         "",
         "## Contradictions",
         f"- critical: `{result['checks']['contradictions']['critical_count']}`",
@@ -1141,6 +1375,13 @@ def markdown_report(result: dict[str, Any]) -> str:
         "",
         "## Bootstrap Enforcement",
         f"- verdict: `{result['checks']['bootstrap']['verdict']}`",
+        "",
+        "## Machine Mode",
+        f"- verdict: `{result['checks']['machine_mode']['verdict']}`",
+        f"- detected_mode: `{result['checks']['machine_mode']['evidence'].get('machine_mode', 'unknown')}`",
+        "",
+        "## Integration Inbox",
+        f"- verdict: `{result['checks']['integration_inbox']['verdict']}`",
         "",
         "## Safe Mirror Health",
         f"- verdict: `{result['checks']['mirror']['verdict']}`",
@@ -1219,6 +1460,38 @@ def write_runtime_reports(result: dict[str, Any]) -> None:
     )
     (RUNTIME_DIR / "evolution_report.md").write_text(evolution_markdown(result), encoding="utf-8")
 
+    machine_mode_status = {
+        "run_id": result["run_id"],
+        "generated_at": result["generated_at"],
+        "machine_mode": result["checks"]["machine_mode"],
+    }
+    (RUNTIME_DIR / "machine_mode_status.json").write_text(
+        json.dumps(machine_mode_status, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    mm = result["checks"]["machine_mode"]
+    mm_lines = [
+        "# Machine Mode Report",
+        "",
+        f"- run_id: `{result['run_id']}`",
+        f"- generated_at: `{result['generated_at']}`",
+        f"- verdict: `{mm['verdict']}`",
+        f"- machine_mode: `{mm['evidence'].get('machine_mode', 'unknown')}`",
+        f"- detection_state: `{mm['evidence'].get('detection_state', 'unknown')}`",
+        "",
+        "## Allowed Operations",
+    ]
+    mm_lines.extend([f"- {x}" for x in mm["evidence"].get("allowed_operations", [])] or ["- none"])
+    mm_lines += ["", "## Forbidden Operations"]
+    mm_lines.extend([f"- {x}" for x in mm["evidence"].get("forbidden_operations", [])] or ["- none"])
+    if mm.get("warnings"):
+        mm_lines += ["", "## Warnings"]
+        mm_lines.extend([f"- {x}" for x in mm["warnings"]])
+    if mm.get("blockers"):
+        mm_lines += ["", "## Blockers"]
+        mm_lines.extend([f"- {x}" for x in mm["blockers"]])
+    (RUNTIME_DIR / "machine_mode_report.md").write_text("\n".join(mm_lines) + "\n", encoding="utf-8")
+
 
 def summarize_for_mode(result: dict[str, Any], mode: str) -> dict[str, Any]:
     v = result["verdicts"]
@@ -1234,9 +1507,15 @@ def summarize_for_mode(result: dict[str, Any], mode: str) -> dict[str, Any]:
             "sync": v["sync"]["verdict"],
             "governance": v["governance"]["verdict"],
             "governance_acceptance": v["governance_acceptance"]["verdict"],
+            "machine_mode": v["machine_mode"]["verdict"],
+            "integration_inbox": v["integration_inbox"]["verdict"],
             "admission": v["admission"]["verdict"],
             "evolution": v["evolution"]["verdict"],
         }
+    elif mode == "mode":
+        base["machine_mode"] = v["machine_mode"]
+    elif mode == "integration":
+        base["integration_inbox"] = v["integration_inbox"]
     elif mode == "trust":
         base["trust"] = v["trust"]
         base["governance"] = v["governance"]
@@ -1257,6 +1536,10 @@ def summarize_for_mode(result: dict[str, Any], mode: str) -> dict[str, Any]:
 
 def exit_code_for_mode(result: dict[str, Any], mode: str) -> int:
     v = result["verdicts"]
+    if mode == "mode":
+        return 0 if v["machine_mode"]["verdict"] in {"PASS", "WARNING"} else 1
+    if mode == "integration":
+        return 0 if v["integration_inbox"]["verdict"] in {"PASS", "WARNING"} else 1
     if mode == "sync":
         return 0 if v["sync"]["verdict"] == "IN_SYNC" else 1
     if mode == "trust":
@@ -1270,7 +1553,7 @@ def exit_code_for_mode(result: dict[str, Any], mode: str) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Repo Control Center V1 (CLI-first)")
-    parser.add_argument("mode", choices=["status", "audit", "trust", "sync", "mirror", "bundle", "evolution", "full-check"])
+    parser.add_argument("mode", choices=["status", "mode", "integration", "audit", "trust", "sync", "mirror", "bundle", "evolution", "full-check"])
     parser.add_argument("--no-fetch", action="store_true", help="Skip git fetch --all --prune before checks.")
     return parser
 

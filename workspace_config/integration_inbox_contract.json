@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "root": "integration",
+  "paths": {
+    "inbox": "integration/inbox",
+    "review_queue": "integration/review_queue",
+    "accepted": "integration/accepted",
+    "rejected": "integration/rejected",
+    "quarantine": "integration/quarantine"
+  },
+  "queue_states": [
+    "INBOX",
+    "REVIEW_QUEUE",
+    "ACCEPT_CANDIDATE",
+    "REJECT",
+    "QUARANTINE"
+  ],
+  "acceptance_states": [
+    "ACCEPT_CANDIDATE"
+  ],
+  "quarantine_states": [
+    "QUARANTINE"
+  ],
+  "required_review_artifacts": [
+    "review_result.json",
+    "review_result.md"
+  ]
+}
+

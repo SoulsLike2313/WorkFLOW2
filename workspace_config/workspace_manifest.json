@@ -100,7 +100,14 @@
       "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
       "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
       "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
-      "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
+      "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
+      "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+      "docs/governance/HELPER_NODE_POLICY.md",
+      "docs/governance/TASK_ID_EXECUTION_CONTRACT.md",
+      "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
+      "docs/governance/INTEGRATION_INBOX_POLICY.md",
+      "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+      "docs/governance/FEDERATION_ARCHITECTURE.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -147,7 +154,49 @@
     ],
     "governance_acceptance_gate_path": "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
     "chatgpt_audit_runtime_allowlist_path": "workspace_config/chatgpt_audit_runtime_allowlist.json",
-    "audit_runtime_export_mode_required": true
+    "audit_runtime_export_mode_required": true,
+    "creator_authority_policy_path": "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+    "helper_node_policy_path": "docs/governance/HELPER_NODE_POLICY.md",
+    "task_id_execution_contract_path": "docs/governance/TASK_ID_EXECUTION_CONTRACT.md",
+    "external_block_handoff_policy_path": "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
+    "integration_inbox_policy_path": "docs/governance/INTEGRATION_INBOX_POLICY.md",
+    "canonical_machine_protection_policy_path": "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+    "federation_architecture_path": "docs/governance/FEDERATION_ARCHITECTURE.md",
+    "federation_mode_contract_path": "workspace_config/federation_mode_contract.json",
+    "block_task_schema_path": "workspace_config/block_task_schema.json",
+    "handoff_package_schema_path": "workspace_config/handoff_package_schema.json",
+    "integration_inbox_contract_path": "workspace_config/integration_inbox_contract.json",
+    "creator_mode_detection_contract_path": "workspace_config/creator_mode_detection_contract.json",
+    "creator_authority_env_var_name": "CVVCODEX_CREATOR_AUTHORITY_DIR",
+    "creator_authority_marker_filename": "creator_authority.json",
+    "creator_authority_external_only": true,
+    "creator_path_disclosure_forbidden": true,
+    "federation_enabled": true,
+    "canonical_acceptance_mode": "creator_only",
+    "helper_mode_without_marker_default": true,
+    "integration_mode_requires_creator_authority": true,
+    "integration_inbox_root": "integration/inbox",
+    "machine_mode_detection_script": "scripts/detect_machine_mode.py",
+    "task_id_resolver_script": "scripts/resolve_task_id.py",
+    "handoff_package_script": "scripts/prepare_handoff_package.py",
+    "integration_inbox_review_script": "scripts/review_integration_inbox.py",
+    "task_registry_root": "tasks/registry",
+    "federation_layer_paths": [
+      "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+      "docs/governance/HELPER_NODE_POLICY.md",
+      "docs/governance/TASK_ID_EXECUTION_CONTRACT.md",
+      "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
+      "docs/governance/INTEGRATION_INBOX_POLICY.md",
+      "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+      "docs/governance/FEDERATION_ARCHITECTURE.md"
+    ],
+    "federation_contract_paths": [
+      "workspace_config/federation_mode_contract.json",
+      "workspace_config/block_task_schema.json",
+      "workspace_config/handoff_package_schema.json",
+      "workspace_config/integration_inbox_contract.json",
+      "workspace_config/creator_mode_detection_contract.json"
+    ]
   },
   "shared_systems": {
     "root_path": "shared_systems",
@@ -188,7 +237,11 @@
     "push_safe_mirror": "powershell -ExecutionPolicy Bypass -File .\\scripts\\push_safe_mirror.ps1",
     "repo_control_center_status": "python scripts/repo_control_center.py status",
     "repo_control_center_full_check": "python scripts/repo_control_center.py full-check",
-    "repo_control_center_evolution": "python scripts/repo_control_center.py evolution"
+    "repo_control_center_evolution": "python scripts/repo_control_center.py evolution",
+    "detect_machine_mode": "python scripts/detect_machine_mode.py --intent auto",
+    "resolve_task_id": "python scripts/resolve_task_id.py --task-id <task_id>",
+    "prepare_handoff_package": "python scripts/prepare_handoff_package.py --task-id <task_id> --node-id <node_id>",
+    "review_integration_inbox": "python scripts/review_integration_inbox.py"
   },
   "verification_entrypoints": {
     "active_project_verify": "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>",
@@ -489,7 +542,11 @@
     "public_safe_mirror_only": true,
     "public_safe_mirror_not_full_working_repo": true,
     "chatgpt_external_reading_channel": "targeted_bundle_export",
-    "targeted_bundle_export_script": "scripts/export_chatgpt_bundle.py"
+    "targeted_bundle_export_script": "scripts/export_chatgpt_bundle.py",
+    "federation_enabled": true,
+    "canonical_acceptance_mode": "creator_only",
+    "creator_authority_detection": "external_env_marker",
+    "integration_inbox_root": "integration/inbox"
   },
   "governance_brain_stack": {
     "required": true,
@@ -523,7 +580,14 @@
       "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md",
       "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
       "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
-      "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
+      "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
+      "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+      "docs/governance/HELPER_NODE_POLICY.md",
+      "docs/governance/TASK_ID_EXECUTION_CONTRACT.md",
+      "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
+      "docs/governance/INTEGRATION_INBOX_POLICY.md",
+      "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+      "docs/governance/FEDERATION_ARCHITECTURE.md"
     ],
     "repo_control_center": "scripts/repo_control_center.py"
   },
@@ -532,6 +596,25 @@
     "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
     "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md",
     "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
-    "workspace_config/chatgpt_audit_runtime_allowlist.json"
+    "workspace_config/chatgpt_audit_runtime_allowlist.json",
+    "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+    "docs/governance/HELPER_NODE_POLICY.md",
+    "docs/governance/TASK_ID_EXECUTION_CONTRACT.md",
+    "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
+    "docs/governance/INTEGRATION_INBOX_POLICY.md",
+    "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+    "docs/governance/FEDERATION_ARCHITECTURE.md",
+    "workspace_config/federation_mode_contract.json",
+    "workspace_config/block_task_schema.json",
+    "workspace_config/handoff_package_schema.json",
+    "workspace_config/integration_inbox_contract.json",
+    "workspace_config/creator_mode_detection_contract.json",
+    "scripts/detect_machine_mode.py",
+    "scripts/resolve_task_id.py",
+    "scripts/prepare_handoff_package.py",
+    "scripts/review_integration_inbox.py",
+    "integration/README.md",
+    "tasks/README.md",
+    "tasks/registry/example_block_task.json"
   ]
 }

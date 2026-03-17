@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "required_fields": [
+    "block_id",
+    "task_id",
+    "node_id",
+    "mode",
+    "changed_files",
+    "checks",
+    "risks",
+    "blockers",
+    "verdict",
+    "delivery_timestamp"
+  ],
+  "mode_values": [
+    "helper",
+    "integration"
+  ],
+  "verdict_values": [
+    "PASS",
+    "PASS_WITH_WARNINGS",
+    "FAIL",
+    "BLOCKED"
+  ],
+  "optional_fields": [
+    "attachments",
+    "notes"
+  ]
+}
+

@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "supported_modes": [
+    "creator",
+    "helper",
+    "integration"
+  ],
+  "canonical_acceptance_mode": "creator_only",
+  "authority_detection": "external_env_marker",
+  "integration_requires_creator_authority": true,
+  "creator_mode": {
+    "allowed_operations": [
+      "canonical_acceptance",
+      "integration_review_decision",
+      "governance_protected_layer_edit",
+      "final_completion_claim"
+    ],
+    "forbidden_operations": []
+  },
+  "helper_mode": {
+    "allowed_operations": [
+      "task_block_execution",
+      "local_block_validation",
+      "handoff_package_generation"
+    ],
+    "forbidden_operations": [
+      "canonical_acceptance",
+      "governance_override",
+      "final_completion_claim"
+    ]
+  },
+  "integration_mode": {
+    "allowed_operations": [
+      "inbox_scan",
+      "schema_validation",
+      "scope_validation",
+      "accept_candidate_decision",
+      "reject_decision",
+      "quarantine_decision"
+    ],
+    "forbidden_operations": [
+      "automatic_canonical_merge_without_creator_decision"
+    ]
+  }
+}
+

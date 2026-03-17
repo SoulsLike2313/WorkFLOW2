@@ -49,22 +49,40 @@ Architecture anchor:
 35. `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
 36. `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
 37. `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
-38. `scripts/repo_control_center.py`
-39. `workspace_config/TASK_RULES.md`
-40. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
-41. `workspace_config/TASK_SOURCE_POLICY.md`
-42. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
-43. `workspace_config/AGENT_EXECUTION_POLICY.md`
-44. `workspace_config/MACHINE_REPO_READING_RULES.md`
-45. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-46. `workspace_config/PROJECT_AUDIT_POLICY.md`
-47. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-48. `workspace_config/GITHUB_SYNC_POLICY.md`
-49. `workspace_config/COMPLETION_GATE_RULES.md`
-50. relevant `PROJECT_MANIFEST.json`
-51. relevant project `README.md`
-52. relevant `CODEX.md` if present
-53. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+38. `docs/governance/CREATOR_AUTHORITY_POLICY.md`
+39. `docs/governance/HELPER_NODE_POLICY.md`
+40. `docs/governance/TASK_ID_EXECUTION_CONTRACT.md`
+41. `docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md`
+42. `docs/governance/INTEGRATION_INBOX_POLICY.md`
+43. `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md`
+44. `docs/governance/FEDERATION_ARCHITECTURE.md`
+45. `workspace_config/creator_mode_detection_contract.json`
+46. `workspace_config/federation_mode_contract.json`
+47. `workspace_config/block_task_schema.json`
+48. `workspace_config/handoff_package_schema.json`
+49. `workspace_config/integration_inbox_contract.json`
+50. `integration/README.md`
+51. `tasks/README.md`
+52. `scripts/detect_machine_mode.py`
+53. `scripts/resolve_task_id.py`
+54. `scripts/prepare_handoff_package.py`
+55. `scripts/review_integration_inbox.py`
+56. `scripts/repo_control_center.py`
+57. `workspace_config/TASK_RULES.md`
+58. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
+59. `workspace_config/TASK_SOURCE_POLICY.md`
+60. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
+61. `workspace_config/AGENT_EXECUTION_POLICY.md`
+62. `workspace_config/MACHINE_REPO_READING_RULES.md`
+63. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+64. `workspace_config/PROJECT_AUDIT_POLICY.md`
+65. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+66. `workspace_config/GITHUB_SYNC_POLICY.md`
+67. `workspace_config/COMPLETION_GATE_RULES.md`
+68. relevant `PROJECT_MANIFEST.json`
+69. relevant project `README.md`
+70. relevant `CODEX.md` if present
+71. relevant `SYSTEM_MANIFEST.json` if shared system is involved
 
 If this order is not completed, task status is `REJECTED`.
 
@@ -98,10 +116,14 @@ If this order is not completed, task status is `REJECTED`.
 - `docs/governance/OPERATIONAL_METRICS_POLICY.md`
 - `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md`
 - `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md`
-- `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
-- `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
-- `docs/governance/ZERO_CONFIG_OPERATION_POLICY.md`
 - `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md`
+- `docs/governance/CREATOR_AUTHORITY_POLICY.md`
+- `docs/governance/HELPER_NODE_POLICY.md`
+- `docs/governance/TASK_ID_EXECUTION_CONTRACT.md`
+- `docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md`
+- `docs/governance/INTEGRATION_INBOX_POLICY.md`
+- `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md`
+- `docs/governance/FEDERATION_ARCHITECTURE.md`
 
 ## Canonical Index
 
@@ -137,6 +159,22 @@ If this order is not completed, task status is `REJECTED`.
 | `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md` | Mandatory notification/escalation and silence-forbidden rules | P1 |
 | `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md` | Schema versioning, compatibility, migration and drift rules | P1 |
 | `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md` | Formal gate that must pass before next-stage transition | P1 |
+| `docs/governance/CREATOR_AUTHORITY_POLICY.md` | Creator authority detection rules and creator-only rights | P1 |
+| `docs/governance/HELPER_NODE_POLICY.md` | Helper execution boundaries and forbidden canonical actions | P1 |
+| `docs/governance/TASK_ID_EXECUTION_CONTRACT.md` | Canonical task-id block execution contract | P1 |
+| `docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md` | Required external block handoff package format | P1 |
+| `docs/governance/INTEGRATION_INBOX_POLICY.md` | Inbox/review/accepted/rejected/quarantine review model | P1 |
+| `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md` | Protection rules for canonical machine and protected layers | P1 |
+| `docs/governance/FEDERATION_ARCHITECTURE.md` | Federated creator/helper/integration architecture map | P1 |
+| `workspace_config/creator_mode_detection_contract.json` | Machine-readable creator authority detection contract | P1 |
+| `workspace_config/federation_mode_contract.json` | Machine-mode permissions contract | P1 |
+| `workspace_config/block_task_schema.json` | Task-id block schema contract | P1 |
+| `workspace_config/handoff_package_schema.json` | External handoff package schema | P1 |
+| `workspace_config/integration_inbox_contract.json` | Integration inbox state machine contract | P1 |
+| `scripts/detect_machine_mode.py` | Creator/helper/integration mode detection and reporting | P1 |
+| `scripts/resolve_task_id.py` | Task-id resolver and scope summary | P1 |
+| `scripts/prepare_handoff_package.py` | Handoff package builder for integration inbox | P1 |
+| `scripts/review_integration_inbox.py` | Integration inbox audit decision flow | P1 |
 | `workspace_config/SAFE_MIRROR_MANIFEST.json` | Safe mirror machine snapshot | P1 |
 | `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md` | Safe mirror evidence report | P2 |
 | `docs/review_artifacts/PUBLIC_REPO_SANITIZATION_REPORT.md` | Legacy/non-canonical historical artifact | P3 |

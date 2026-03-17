@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "env_var_name": "CVVCODEX_CREATOR_AUTHORITY_DIR",
+  "marker_filename": "creator_authority.json",
+  "required_marker_fields": {
+    "authority_mode": "creator",
+    "profile_version": "v1",
+    "machine_role": "canonical_creator_machine"
+  },
+  "detection_result_states": [
+    "env_var_missing",
+    "authority_dir_missing",
+    "marker_missing",
+    "marker_invalid",
+    "creator_authority_present"
+  ]
+}
+

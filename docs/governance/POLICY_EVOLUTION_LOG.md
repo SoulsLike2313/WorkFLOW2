@@ -75,3 +75,47 @@ Machine continuity log for governance evolution events.
   - run full RCC chain and verify:
     - governance acceptance verdict = PASS
     - standard files/paths mode still blocks non-allowlisted runtime
+
+### Entry: federation-integration-layer-v1-20260317
+
+- run_id: `federation-integration-layer-v1-20260317`
+- date_utc: `2026-03-17`
+- baseline_head: `83b3944cf9fbfef00b3c9c6c3b3e1a94daca2e26`
+- evidence_basis:
+  - governance acceptance foundation already PASS
+  - no formal creator/helper/integration execution contract in machine-readable form
+  - no canonical task-id helper workflow with integration inbox review routing
+- detected_issue_or_gap:
+  - external full repo copies had no formal authority downgrade to helper mode
+  - external block deliveries lacked canonical inbox review state machine
+- policy_change_proposed:
+  - add federation/integration policy layer and contracts
+  - add creator authority detection path using external env+marker contract
+  - add task-id resolve / handoff package / inbox review scripts
+  - extend RCC with machine mode and integration readiness checks
+- decision: `APPROVED`
+- implemented_files:
+  - `docs/governance/CREATOR_AUTHORITY_POLICY.md`
+  - `docs/governance/HELPER_NODE_POLICY.md`
+  - `docs/governance/TASK_ID_EXECUTION_CONTRACT.md`
+  - `docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md`
+  - `docs/governance/INTEGRATION_INBOX_POLICY.md`
+  - `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md`
+  - `docs/governance/FEDERATION_ARCHITECTURE.md`
+  - `workspace_config/federation_mode_contract.json`
+  - `workspace_config/creator_mode_detection_contract.json`
+  - `workspace_config/block_task_schema.json`
+  - `workspace_config/handoff_package_schema.json`
+  - `workspace_config/integration_inbox_contract.json`
+  - `scripts/detect_machine_mode.py`
+  - `scripts/resolve_task_id.py`
+  - `scripts/prepare_handoff_package.py`
+  - `scripts/review_integration_inbox.py`
+  - `scripts/repo_control_center.py`
+- impact_assessment:
+  - helper mode fallback became deterministic without tracked authority path leakage
+  - integration inbox path became canonical gate for external block delivery review
+- next_check:
+  - validate creator mode with external mock marker
+  - validate helper fallback without marker
+  - validate task-id -> handoff -> inbox review decision chain

@@ -9,6 +9,7 @@ Architecture anchor:
 - local working source: `E:\CVVCODEX`
 - public safe mirror only: `WorkFLOW2` (`safe_mirror/main`)
 - ChatGPT reads request-scoped safe bundles, not full repository state
+- federation model: helper nodes may provide block evidence, but canonical acceptance remains creator-only
 
 ## Governance Coupling
 
@@ -39,6 +40,11 @@ python scripts/export_chatgpt_bundle.py audit-runtime --include-rcc-runtime
 3. Exporter validates request against safety policy.
 4. Exporter generates zip + manifest + report.
 5. User uploads bundle only.
+
+Federated note:
+
+- helper deliveries for integration review use `integration/inbox/` handoff packages.
+- canonical creator machine decides acceptance; bundle export is reading channel, not merge authority.
 
 ## Safety Scan Requirements
 
