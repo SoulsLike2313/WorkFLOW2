@@ -80,6 +80,13 @@
 68. `workspace_config/operator_command_registry.json`
 69. `scripts/operator_command_surface.py`
 70. `docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json`
+71. `docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md`
+72. `docs/governance/OPERATOR_PROGRAM_CATALOG.md`
+73. `docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md`
+74. `docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md`
+75. `workspace_config/operator_program_registry.json`
+76. `scripts/operator_program_surface.py`
+77. `docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json`
 
 ## Canonical Top-Level Directories
 
@@ -129,6 +136,19 @@ Current canonical active project:
   - `runtime/operator_command_layer/command_surface_status.json`
   - `runtime/operator_command_layer/command_surface_report.md`
   - `runtime/operator_command_layer/operator_command_consistency_check.json`
+
+## Operator Task / Program Layer
+
+- Program surface: `scripts/operator_program_surface.py`
+- Registry: `workspace_config/operator_program_registry.json`
+- Golden pack: `docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json`
+- Consistency report: `docs/review_artifacts/OPERATOR_PROGRAM_CONSISTENCY_REPORT.md`
+- Runtime outputs:
+  - `runtime/operator_program_layer/last_execution.json`
+  - `runtime/operator_program_layer/program_execution_log.jsonl`
+  - `runtime/operator_program_layer/program_surface_status.json`
+  - `runtime/operator_program_layer/program_surface_report.md`
+  - `runtime/operator_program_layer/operator_program_consistency_check.json`
 
 ## Governance v1.1 Hardening Policies
 

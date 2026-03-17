@@ -94,6 +94,13 @@ Architecture anchor:
 80. `workspace_config/operator_command_registry.json`
 81. `scripts/operator_command_surface.py`
 82. `docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json`
+83. `docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md`
+84. `docs/governance/OPERATOR_PROGRAM_CATALOG.md`
+85. `docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md`
+86. `docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md`
+87. `workspace_config/operator_program_registry.json`
+88. `scripts/operator_program_surface.py`
+89. `docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json`
 
 If this order is not completed, task status is `REJECTED`.
 
@@ -154,6 +161,12 @@ If this order is not completed, task status is `REJECTED`.
 | `docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md` | Deterministic command routing precedence | P0 |
 | `workspace_config/operator_command_registry.json` | Unified machine-readable command registry | P0 |
 | `scripts/operator_command_surface.py` | CLI execution surface (`execute/classify/status/registry/consistency-check`) | P0 |
+| `docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md` | Program-layer baseline declaration over governance/query/command truth | P0 |
+| `docs/governance/OPERATOR_PROGRAM_CATALOG.md` | Canonical program class catalog (Wave 2A/2B/2C) | P0 |
+| `docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md` | Mandatory task/program execution contract and checkpoint semantics | P0 |
+| `docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md` | Deterministic program routing precedence | P0 |
+| `workspace_config/operator_program_registry.json` | Unified machine-readable task/program registry | P0 |
+| `scripts/operator_program_surface.py` | CLI program surface (`execute/classify/status/registry/consistency-check`) | P0 |
 | `workspace_config/GITHUB_SYNC_POLICY.md` | Sync and repo-visible completion rules | P0 |
 | `workspace_config/AGENT_EXECUTION_POLICY.md` | Execution boundaries and refusal rules | P0 |
 | `workspace_config/MACHINE_REPO_READING_RULES.md` | Deterministic reading contract | P0 |

@@ -36,6 +36,7 @@ If any item fails: `NOT_COMPLETED`.
 - `python scripts/repo_control_center.py sync`
 - `python scripts/repo_control_center.py trust`
 - `python scripts/operator_command_surface.py status` (if command layer was used)
+- `python scripts/operator_program_surface.py status` (if program layer was used)
 
 ## Repo-Visible Truth Rule
 
@@ -51,6 +52,15 @@ If execution was performed via `scripts/operator_command_surface.py`:
 1. command runtime evidence must exist (`runtime/operator_command_layer/*`)
 2. mutable command runs require post-run sync verification
 3. completion is forbidden when command evidence says `BLOCKED`/`FAILED` and blockers are unresolved
+
+## Operator Task / Program Execution Link
+
+If execution was performed via `scripts/operator_program_surface.py`:
+
+1. program runtime evidence must exist (`runtime/operator_program_layer/*`)
+2. checkpoint evidence must include current step, blocking factors, and next step
+3. mutable program runs require post-run sync verification
+4. completion is forbidden when program evidence says `BLOCKED`/`FAILED` and blockers are unresolved
 
 ## Governance Linkage
 

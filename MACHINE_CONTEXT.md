@@ -91,6 +91,13 @@ Read these first when you need plain-language status without deep policy parsing
 68. `workspace_config/operator_command_registry.json`
 69. `scripts/operator_command_surface.py`
 70. `docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json`
+71. `docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md`
+72. `docs/governance/OPERATOR_PROGRAM_CATALOG.md`
+73. `docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md`
+74. `docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md`
+75. `workspace_config/operator_program_registry.json`
+76. `scripts/operator_program_surface.py`
+77. `docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json`
 
 ## Execution Guardrails
 
@@ -129,6 +136,14 @@ Audit-safe runtime evidence export:
 3. Validate deterministic routing: `python scripts/operator_command_surface.py consistency-check`.
 4. Review command runtime evidence in `runtime/operator_command_layer/`.
 5. Re-run `python scripts/repo_control_center.py full-check` after mutable command execution.
+
+## Operator Task / Program Workflow
+
+1. Classify request: `python scripts/operator_program_surface.py classify --request "<text>"`.
+2. Execute program: `python scripts/operator_program_surface.py execute --request "<text>" [flags]`.
+3. Validate deterministic routing: `python scripts/operator_program_surface.py consistency-check`.
+4. Review program runtime evidence in `runtime/operator_program_layer/`.
+5. Re-run `python scripts/repo_control_center.py full-check` after guarded mutation programs.
 
 ## Federation / Integration Workflow
 

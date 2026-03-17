@@ -139,3 +139,22 @@ If trust/sync/admission are blocked, completion is forbidden.
 - Mutable actions are forbidden unless guarded:
   - default dry-run
   - explicit `--allow-mutation` for approved guarded actions only
+
+## Rule 12: Operator Task / Program Layer
+
+- Program execution must use:
+  - `scripts/operator_program_surface.py`
+- Program class/program_id authority comes only from:
+  - `workspace_config/operator_program_registry.json`
+- Every executed program must emit contract evidence in:
+  - `runtime/operator_program_layer/last_execution.json`
+  - `runtime/operator_program_layer/program_surface_status.json`
+  - `runtime/operator_program_layer/program_surface_report.md`
+- Program execution must be checkpointed:
+  - explicit step plan
+  - current step tracking
+  - blocking factor emission
+  - deterministic next-step output
+- Guarded mutation programs are forbidden unless explicitly approved:
+  - `--allow-mutation`
+  - `--confirm-mutation` when required by policy

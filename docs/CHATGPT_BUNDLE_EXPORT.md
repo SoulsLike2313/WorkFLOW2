@@ -23,6 +23,8 @@ Exporter execution must respect governance brain stack:
 - `workspace_config/AGENT_EXECUTION_POLICY.md`
 - `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md`
 - `workspace_config/operator_command_registry.json`
+- `docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md`
+- `workspace_config/operator_program_registry.json`
 
 ## Modes
 

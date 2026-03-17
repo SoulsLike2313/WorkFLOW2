@@ -10,6 +10,7 @@
 | Runtime reporting | Emit machine-readable and operator-readable status artifacts | Output reflects current run only |
 | Integration readiness | Validate integration inbox structure and task/handoff tooling presence | Missing structure/contracts block integration verdict |
 | Command execution | Execute policy-bound operator commands via deterministic routing | Mutable commands are guarded and authority-bound |
+| Program execution | Execute checkpointed operator task/program flows via command-layer units | Preconditions, authority, and failure policy are enforced |
 
 ## Authority-Bound Actions
 Creator-only:
@@ -36,6 +37,11 @@ Creator-only:
 - `runtime/operator_command_layer/command_surface_status.json`
 - `runtime/operator_command_layer/command_surface_report.md`
 - `runtime/operator_command_layer/operator_command_consistency_check.json`
+- `runtime/operator_program_layer/last_execution.json`
+- `runtime/operator_program_layer/program_execution_log.jsonl`
+- `runtime/operator_program_layer/program_surface_status.json`
+- `runtime/operator_program_layer/program_surface_report.md`
+- `runtime/operator_program_layer/operator_program_consistency_check.json`
 
 ## Verdict Naming Discipline
 - Verdict fields: `*_verdict`

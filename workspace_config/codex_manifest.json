@@ -104,7 +104,14 @@
     "read docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md",
     "read workspace_config/operator_command_registry.json",
     "read scripts/operator_command_surface.py",
-    "run python scripts/operator_command_surface.py status"
+    "run python scripts/operator_command_surface.py status",
+    "read docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md",
+    "read docs/governance/OPERATOR_PROGRAM_CATALOG.md",
+    "read docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
+    "read docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md",
+    "read workspace_config/operator_program_registry.json",
+    "read scripts/operator_program_surface.py",
+    "run python scripts/operator_program_surface.py status"
   ],
   "task_governance": {
     "instruction_read_before_task_required": true,
@@ -230,7 +237,11 @@
       "docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md",
       "docs/governance/OPERATOR_COMMAND_CATALOG.md",
       "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md",
-      "docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md"
+      "docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md",
+      "docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md",
+      "docs/governance/OPERATOR_PROGRAM_CATALOG.md",
+      "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
+      "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -326,7 +337,14 @@
     "operator_command_catalog_path": "docs/governance/OPERATOR_COMMAND_CATALOG.md",
     "operator_command_execution_contract_path": "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md",
     "operator_command_intent_routing_path": "docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md",
-    "operator_command_layer_required": true
+    "operator_command_layer_required": true,
+    "operator_program_registry_path": "workspace_config/operator_program_registry.json",
+    "operator_program_surface_script": "scripts/operator_program_surface.py",
+    "operator_program_execution_baseline_path": "docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md",
+    "operator_program_catalog_path": "docs/governance/OPERATOR_PROGRAM_CATALOG.md",
+    "operator_program_execution_contract_path": "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
+    "operator_program_intent_routing_path": "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md",
+    "operator_program_layer_required": true
   },
   "scope_controls": {
     "allow_cross_project_changes_without_request": false,
@@ -449,7 +467,18 @@
     "docs/review_artifacts/OPERATOR_COMMAND_CONSISTENCY_REPORT.md",
     "docs/review_artifacts/OPERATOR_COMMAND_READINESS_BASELINE.md",
     "docs/review_artifacts/OPERATOR_COMMAND_LAYER_CERTIFICATION.md",
-    "docs/review_artifacts/OPERATOR_COMMAND_LAYER_SUMMARY.md"
+    "docs/review_artifacts/OPERATOR_COMMAND_LAYER_SUMMARY.md",
+    "docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md",
+    "docs/governance/OPERATOR_PROGRAM_CATALOG.md",
+    "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
+    "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md",
+    "workspace_config/operator_program_registry.json",
+    "scripts/operator_program_surface.py",
+    "docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json",
+    "docs/review_artifacts/OPERATOR_PROGRAM_CONSISTENCY_REPORT.md",
+    "docs/review_artifacts/OPERATOR_PROGRAM_READINESS_BASELINE.md",
+    "docs/review_artifacts/OPERATOR_PROGRAM_LAYER_CERTIFICATION.md",
+    "docs/review_artifacts/OPERATOR_PROGRAM_LAYER_SUMMARY.md"
   ],
   "required_active_project_files": [
     "projects/platform_test_agent/PROJECT_MANIFEST.json",
@@ -468,7 +497,8 @@
     "canonical_acceptance_mode": "creator_only",
     "creator_authority_detection": "external_env_marker",
     "integration_inbox_root": "integration/inbox",
-    "operator_command_execution_layer": "policy_bound_cli_v1"
+    "operator_command_execution_layer": "policy_bound_cli_v1",
+    "operator_task_program_layer": "policy_bound_cli_v1"
   },
   "governance_brain_stack": {
     "required": true,
@@ -516,7 +546,11 @@
       "docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md",
       "docs/governance/OPERATOR_COMMAND_CATALOG.md",
       "docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md",
-      "docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md"
+      "docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md",
+      "docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md",
+      "docs/governance/OPERATOR_PROGRAM_CATALOG.md",
+      "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
+      "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md"
     ],
     "repo_control_center": "scripts/repo_control_center.py"
   },
@@ -590,6 +624,13 @@
     "docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md",
     "workspace_config/operator_command_registry.json",
     "scripts/operator_command_surface.py",
-    "docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json"
+    "docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json",
+    "docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md",
+    "docs/governance/OPERATOR_PROGRAM_CATALOG.md",
+    "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
+    "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md",
+    "workspace_config/operator_program_registry.json",
+    "scripts/operator_program_surface.py",
+    "docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json"
   ]
 }

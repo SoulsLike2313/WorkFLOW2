@@ -1,0 +1,360 @@
+{
+  "schema_version": "operator_program_registry.v1.0.0",
+  "execution_contract_version": "operator_program_execution_contract.v1.0.0",
+  "baseline": "docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md",
+  "command_layer_dependency": {
+    "script": "scripts/operator_command_surface.py",
+    "registry": "workspace_config/operator_command_registry.json"
+  },
+  "program_classes": [
+    {
+      "wave": "2A",
+      "program_class": "safe_read_validate_report_program",
+      "execution_scope": "safe_read_validate_report",
+      "mutability_level": "read_only",
+      "allowed_modes": ["creator", "helper", "integration"],
+      "creator_authority_required": false,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "resume_supported": true,
+      "rollback_supported": false,
+      "failure_policy": "stop_on_failure",
+      "operator_confirmation_required": false,
+      "policy_basis": [
+        "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
+        "docs/governance/SELF_VERIFICATION_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "programs": [
+        {
+          "program_id": "program.safe_status_validation_report.v1",
+          "resolved_goal": "Refresh status, execute validation checks, and generate program report evidence.",
+          "route_tokens": ["status validation report", "safe status validation", "validate and report"],
+          "required_inputs": [],
+          "stop_conditions": ["any_step_failed", "any_step_blocked"],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "status refresh",
+              "action": "status_refresh",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "run validation",
+              "action": "validation_run",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "generate execution report",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            }
+          ]
+        },
+        {
+          "program_id": "program.safe_evidence_bundle.v1",
+          "resolved_goal": "Produce safe context evidence bundle and execution report.",
+          "route_tokens": ["evidence bundle program", "safe evidence bundle", "bundle evidence program"],
+          "required_inputs": [],
+          "stop_conditions": ["any_step_failed", "any_step_blocked"],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "status refresh",
+              "action": "status_refresh",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "build evidence bundle",
+              "action": "evidence_bundle_context",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "generate execution report",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            }
+          ]
+        },
+        {
+          "program_id": "program.safe_policy_reference.v1",
+          "resolved_goal": "Generate policy reference evidence for a requested topic and report.",
+          "route_tokens": ["policy reference program", "safe policy reference", "policy basis program"],
+          "required_inputs": [],
+          "stop_conditions": ["any_step_failed", "any_step_blocked"],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "policy reference execution",
+              "action": "policy_reference_execute",
+              "pass_args": ["policy_topic"],
+              "static_args": {},
+              "allow_mutation": false
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "generate execution report",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "wave": "2B",
+      "program_class": "operational_handoff_review_program",
+      "execution_scope": "handoff_review_packaging",
+      "mutability_level": "guarded_state_change",
+      "allowed_modes": ["creator", "helper", "integration"],
+      "creator_authority_required": false,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "resume_supported": true,
+      "rollback_supported": false,
+      "failure_policy": "stop_on_failure",
+      "operator_confirmation_required": false,
+      "policy_basis": [
+        "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
+        "docs/governance/INTEGRATION_INBOX_POLICY.md",
+        "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md"
+      ],
+      "programs": [
+        {
+          "program_id": "program.task_handoff_review_packaging.v1",
+          "resolved_goal": "Resolve task, prepare handoff package, review inbox, route runtime evidence.",
+          "route_tokens": ["task handoff review packaging", "handoff review packaging program", "integration handoff program"],
+          "required_inputs": ["task_id", "node_id"],
+          "stop_conditions": ["any_step_failed", "any_step_blocked"],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "script_run",
+              "command": ["python", "scripts/resolve_task_id.py", "--task-id", "{task_id}"]
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "prepare handoff",
+              "action": "handoff_prepare",
+              "pass_args": ["task_id", "node_id"],
+              "static_args": {},
+              "allow_mutation": false
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "inbox review",
+              "action": "inbox_review",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            },
+            {
+              "step_id": "S4",
+              "step_type": "command_execute",
+              "command": "evidence routing",
+              "action": "evidence_routing",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            }
+          ]
+        },
+        {
+          "program_id": "program.integration_inbox_triage.v1",
+          "resolved_goal": "Run deterministic integration inbox triage and report generation.",
+          "route_tokens": ["integration inbox triage", "inbox triage program", "review inbox program"],
+          "required_inputs": [],
+          "stop_conditions": ["any_step_failed", "any_step_blocked"],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "inbox review",
+              "action": "inbox_review",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "generate execution report",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "wave": "2B",
+      "program_class": "operational_task_routing_program",
+      "execution_scope": "deterministic_task_routing",
+      "mutability_level": "read_only",
+      "allowed_modes": ["creator", "helper", "integration"],
+      "creator_authority_required": false,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "resume_supported": true,
+      "rollback_supported": false,
+      "failure_policy": "stop_on_failure",
+      "operator_confirmation_required": false,
+      "policy_basis": [
+        "docs/governance/TASK_ID_EXECUTION_CONTRACT.md",
+        "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md"
+      ],
+      "programs": [
+        {
+          "program_id": "program.deterministic_task_route.v1",
+          "resolved_goal": "Resolve task-id contract and generate policy-reference support artifact.",
+          "route_tokens": ["deterministic task route", "resolve task program", "task routing program"],
+          "required_inputs": ["task_id"],
+          "stop_conditions": ["any_step_failed", "any_step_blocked"],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "script_run",
+              "command": ["python", "scripts/resolve_task_id.py", "--task-id", "{task_id}"]
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "policy reference execution",
+              "action": "policy_reference_execute",
+              "pass_args": ["policy_topic"],
+              "static_args": {
+                "policy_topic": "task_id_execution_contract"
+              },
+              "allow_mutation": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "wave": "2C",
+      "program_class": "creator_guarded_program",
+      "execution_scope": "creator_guarded_programs",
+      "mutability_level": "guarded_state_change",
+      "allowed_modes": ["creator"],
+      "creator_authority_required": true,
+      "requires_in_sync": false,
+      "requires_clean_worktree": false,
+      "resume_supported": true,
+      "rollback_supported": true,
+      "failure_policy": "stop_on_failure",
+      "operator_confirmation_required": true,
+      "policy_basis": [
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+        "docs/governance/INCIDENT_AND_ROLLBACK_POLICY.md",
+        "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md"
+      ],
+      "programs": [
+        {
+          "program_id": "program.creator_guarded_refresh_precheck.v1",
+          "resolved_goal": "Run guarded safe-state refresh and creator-grade precheck chain.",
+          "route_tokens": ["creator guarded refresh precheck", "creator refresh precheck", "creator guarded program"],
+          "required_inputs": [],
+          "stop_conditions": ["any_step_failed", "any_step_blocked"],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "refresh safe mirror evidence",
+              "action": "refresh_safe_mirror_evidence",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": true
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "creator acceptance precheck",
+              "action": "creator_acceptance_precheck",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "governance maintenance check",
+              "action": "governance_maintenance_check",
+              "pass_args": [],
+              "static_args": {},
+              "allow_mutation": false
+            }
+          ]
+        },
+        {
+          "program_id": "program.creator_install_remove_cycle.v1",
+          "resolved_goal": "Execute controlled install/remove cycle with rollback-ready evidence.",
+          "route_tokens": ["creator install remove cycle", "controlled install remove", "install remove program"],
+          "required_inputs": ["project_slug", "system_slug"],
+          "stop_conditions": ["any_step_failed", "any_step_blocked"],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "install system",
+              "action": "install_system",
+              "pass_args": ["project_slug", "system_slug"],
+              "static_args": {},
+              "allow_mutation": true
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "remove system",
+              "action": "remove_system",
+              "pass_args": ["project_slug", "system_slug"],
+              "static_args": {},
+              "allow_mutation": true
+            }
+          ],
+          "rollback_plan": [
+            {
+              "step_id": "RB1",
+              "step_type": "command_execute",
+              "command": "remove system",
+              "action": "remove_system",
+              "pass_args": ["project_slug", "system_slug"],
+              "static_args": {},
+              "allow_mutation": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

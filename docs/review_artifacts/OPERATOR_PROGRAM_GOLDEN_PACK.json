@@ -1,0 +1,33 @@
+{
+  "schema_version": "operator_program_golden_pack.v1.0.0",
+  "description": "Deterministic routing acceptance pack for operator task/program layer.",
+  "items": [
+    {"id": "PG-001", "raw_request": "safe status validation report", "program_class": "safe_read_validate_report_program", "program_id": "program.safe_status_validation_report.v1"},
+    {"id": "PG-002", "raw_request": "status validation report", "program_class": "safe_read_validate_report_program", "program_id": "program.safe_status_validation_report.v1"},
+    {"id": "PG-003", "raw_request": "validate and report", "program_class": "safe_read_validate_report_program", "program_id": "program.safe_status_validation_report.v1"},
+    {"id": "PG-004", "raw_request": "safe evidence bundle", "program_class": "safe_read_validate_report_program", "program_id": "program.safe_evidence_bundle.v1"},
+    {"id": "PG-005", "raw_request": "evidence bundle program", "program_class": "safe_read_validate_report_program", "program_id": "program.safe_evidence_bundle.v1"},
+    {"id": "PG-006", "raw_request": "bundle evidence program", "program_class": "safe_read_validate_report_program", "program_id": "program.safe_evidence_bundle.v1"},
+    {"id": "PG-007", "raw_request": "safe policy reference", "program_class": "safe_read_validate_report_program", "program_id": "program.safe_policy_reference.v1"},
+    {"id": "PG-008", "raw_request": "policy reference program", "program_class": "safe_read_validate_report_program", "program_id": "program.safe_policy_reference.v1"},
+    {"id": "PG-009", "raw_request": "policy basis program", "program_class": "safe_read_validate_report_program", "program_id": "program.safe_policy_reference.v1"},
+
+    {"id": "PG-010", "raw_request": "task handoff review packaging", "program_class": "operational_handoff_review_program", "program_id": "program.task_handoff_review_packaging.v1"},
+    {"id": "PG-011", "raw_request": "handoff review packaging program", "program_class": "operational_handoff_review_program", "program_id": "program.task_handoff_review_packaging.v1"},
+    {"id": "PG-012", "raw_request": "integration handoff program", "program_class": "operational_handoff_review_program", "program_id": "program.task_handoff_review_packaging.v1"},
+    {"id": "PG-013", "raw_request": "integration inbox triage", "program_class": "operational_handoff_review_program", "program_id": "program.integration_inbox_triage.v1"},
+    {"id": "PG-014", "raw_request": "inbox triage program", "program_class": "operational_handoff_review_program", "program_id": "program.integration_inbox_triage.v1"},
+    {"id": "PG-015", "raw_request": "review inbox program", "program_class": "operational_handoff_review_program", "program_id": "program.integration_inbox_triage.v1"},
+
+    {"id": "PG-016", "raw_request": "deterministic task route", "program_class": "operational_task_routing_program", "program_id": "program.deterministic_task_route.v1"},
+    {"id": "PG-017", "raw_request": "resolve task program", "program_class": "operational_task_routing_program", "program_id": "program.deterministic_task_route.v1"},
+    {"id": "PG-018", "raw_request": "task routing program", "program_class": "operational_task_routing_program", "program_id": "program.deterministic_task_route.v1"},
+
+    {"id": "PG-019", "raw_request": "creator guarded refresh precheck", "program_class": "creator_guarded_program", "program_id": "program.creator_guarded_refresh_precheck.v1"},
+    {"id": "PG-020", "raw_request": "creator refresh precheck", "program_class": "creator_guarded_program", "program_id": "program.creator_guarded_refresh_precheck.v1"},
+    {"id": "PG-021", "raw_request": "creator guarded program", "program_class": "creator_guarded_program", "program_id": "program.creator_guarded_refresh_precheck.v1"},
+    {"id": "PG-022", "raw_request": "creator install remove cycle", "program_class": "creator_guarded_program", "program_id": "program.creator_install_remove_cycle.v1"},
+    {"id": "PG-023", "raw_request": "controlled install remove", "program_class": "creator_guarded_program", "program_id": "program.creator_install_remove_cycle.v1"},
+    {"id": "PG-024", "raw_request": "install remove program", "program_class": "creator_guarded_program", "program_id": "program.creator_install_remove_cycle.v1"}
+  ]
+}

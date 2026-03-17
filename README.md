@@ -171,6 +171,44 @@ python scripts/operator_command_surface.py execute --command "prepare handoff" -
 python scripts/operator_command_surface.py consistency-check
 ```
 
+## Operator Task / Program Layer V1 (CLI-First)
+
+Canonical execution entrypoint:
+
+```powershell
+python scripts/operator_program_surface.py <mode>
+```
+
+Modes:
+
+- `execute`
+- `classify`
+- `status`
+- `registry`
+- `consistency-check`
+
+Program execution contract is fixed by:
+
+- `docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md`
+- `workspace_config/operator_program_registry.json`
+
+Program runtime artifacts:
+
+- `runtime/operator_program_layer/last_execution.json`
+- `runtime/operator_program_layer/program_execution_log.jsonl`
+- `runtime/operator_program_layer/program_surface_status.json`
+- `runtime/operator_program_layer/program_surface_report.md`
+- `runtime/operator_program_layer/operator_program_consistency_check.json`
+
+Example commands:
+
+```powershell
+python scripts/operator_program_surface.py classify --request "safe status validation report"
+python scripts/operator_program_surface.py execute --request "safe status validation report"
+python scripts/operator_program_surface.py execute --request "task handoff review packaging" --task-id WF-TASK-EXAMPLE-001 --node-id helper-node-01
+python scripts/operator_program_surface.py consistency-check
+```
+
 ## Completion Gate (Hard)
 
 Completion is forbidden if any of the following is missing:

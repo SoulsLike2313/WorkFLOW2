@@ -50,6 +50,20 @@ Required execution evidence:
 - `runtime/operator_command_layer/command_surface_status.json`
 - `runtime/operator_command_layer/command_surface_report.md`
 
+## Operator Task / Program Surface
+Execution entrypoint:
+- `python scripts/operator_program_surface.py execute --request "<program request>"`
+
+Routing/contract references:
+- `docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md`
+- `docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md`
+- `workspace_config/operator_program_registry.json`
+
+Required execution evidence:
+- `runtime/operator_program_layer/last_execution.json`
+- `runtime/operator_program_layer/program_surface_status.json`
+- `runtime/operator_program_layer/program_surface_report.md`
+
 ## Block Routing
 Route by:
 - `blocking_reason_category`

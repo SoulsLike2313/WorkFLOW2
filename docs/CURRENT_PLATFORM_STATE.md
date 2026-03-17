@@ -59,7 +59,8 @@ Not accepted for execution:
 - repo control center: `accepted`
 - targeted bundle export: `accepted`
 - operator query layer: `accepted`
-- next active layer: `operator command execution layer v1`
+- operator command execution layer: `accepted`
+- next active layer: `operator task / program layer v1`
 
 ## Shared Systems Baseline
 

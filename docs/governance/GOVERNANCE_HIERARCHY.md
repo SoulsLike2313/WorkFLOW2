@@ -96,6 +96,12 @@ Expected documents:
 - `workspace_config/operator_command_registry.json`
 - `scripts/repo_control_center.py`
 - `scripts/operator_command_surface.py`
+- `docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md`
+- `docs/governance/OPERATOR_PROGRAM_CATALOG.md`
+- `docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md`
+- `docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md`
+- `workspace_config/operator_program_registry.json`
+- `scripts/operator_program_surface.py`
 
 Conflict resolution rule:
 

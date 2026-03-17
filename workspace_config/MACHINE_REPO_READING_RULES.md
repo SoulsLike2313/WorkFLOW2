@@ -74,6 +74,13 @@ Machine must complete this canonical order before execution:
 68. `workspace_config/operator_command_registry.json`
 69. `scripts/operator_command_surface.py`
 70. `docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json`
+71. `docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md`
+72. `docs/governance/OPERATOR_PROGRAM_CATALOG.md`
+73. `docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md`
+74. `docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md`
+75. `workspace_config/operator_program_registry.json`
+76. `scripts/operator_program_surface.py`
+77. `docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json`
 
 If any mandatory step is skipped: `STATUS: REJECTED`.
 
@@ -172,3 +179,18 @@ Tracked safe-state evidence contract:
 - mutable command actions must be:
   - explicit `--allow-mutation`
   - or dry-run mode with formal execution contract output
+
+## Rule 11: Operator Task / Program Surface Enforcement
+
+- program execution layer entrypoint:
+  - `scripts/operator_program_surface.py`
+- unified program registry:
+  - `workspace_config/operator_program_registry.json`
+- mandatory program evidence outputs:
+  - `runtime/operator_program_layer/last_execution.json`
+  - `runtime/operator_program_layer/program_surface_status.json`
+- program execution must emit:
+  - checkpoint state
+  - step results
+  - blocking factors
+  - next-step remediation path
