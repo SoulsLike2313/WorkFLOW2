@@ -1363,7 +1363,13 @@ def compute_status_layers(
     else:
         governance_status = "GATE_BLOCKED"
 
-    admission_status = admission["verdict"]
+    admission_verdict = admission["verdict"]
+    if admission_verdict == "ADMISSIBLE":
+        admission_status = "ADMISSION_GATE_OPEN"
+    elif admission_verdict == "CONDITIONAL":
+        admission_status = "ADMISSION_GATE_CONDITIONAL"
+    else:
+        admission_status = "ADMISSION_GATE_BLOCKED"
 
     explainability_missing = missing_paths(
         [
@@ -1401,6 +1407,7 @@ def one_screen_status_payload(result: dict[str, Any]) -> dict[str, Any]:
         machine_mode=v["machine_mode"],
     )
     payload = {
+        "schema_version": "one_screen_status.v1.1.0",
         "run_id": result["run_id"],
         "generated_at": result["generated_at"],
         "branch": result["repo"]["branch"],
@@ -1416,7 +1423,6 @@ def one_screen_status_payload(result: dict[str, Any]) -> dict[str, Any]:
         "governance_acceptance_verdict": v["governance_acceptance"]["verdict"],
         "admission_verdict": v["admission"]["verdict"],
         "evolution_verdict": v["evolution"]["verdict"],
-        "repo_health": result["repo"]["repo_health"],
         "workspace_health": result.get("status_layers", {}).get("workspace_health", "UNKNOWN"),
         "authority_status": result.get("status_layers", {}).get("authority_status", "UNKNOWN"),
         "governance_status": result.get("status_layers", {}).get("governance_status", "UNKNOWN"),
@@ -1447,6 +1453,7 @@ def plain_status_markdown(result: dict[str, Any], one_screen: dict[str, Any]) ->
         "# Runtime Status (Engineering One-Screen)",
         "",
         "## Runtime Identity",
+        f"- schema_version: `{one_screen['schema_version']}`",
         f"- run_id: `{one_screen['run_id']}`",
         f"- generated_at_utc: `{one_screen['generated_at']}`",
         f"- branch: `{one_screen['branch']}`",
@@ -1468,7 +1475,6 @@ def plain_status_markdown(result: dict[str, Any], one_screen: dict[str, Any]) ->
         f"- evolution_verdict: `{one_screen['evolution_verdict']}`",
         "",
         "## Acceptance / Admission State",
-        f"- repo_health: `{one_screen['repo_health']}`",
         f"- workspace_health: `{one_screen['workspace_health']}`",
         f"- governance_status: `{one_screen['governance_status']}`",
         f"- admission_verdict: `{one_screen['admission_verdict']}`",

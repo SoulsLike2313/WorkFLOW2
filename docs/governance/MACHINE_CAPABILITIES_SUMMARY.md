@@ -1,31 +1,29 @@
 ﻿# MACHINE_CAPABILITIES_SUMMARY
 
-## Capability Surface
-- Detect machine role and authority state (`creator`/`helper`/`integration`).
-- Evaluate control gates: trust, sync, governance, governance acceptance, admission, evolution.
-- Validate safe-state evidence chain and bootstrap contract.
-- Emit runtime evidence reports for audit and operator review.
+## Capability Matrix
+
+| Domain | Capability | Constraint |
+| --- | --- | --- |
+| Mode detection | Detect `creator` / `helper` / `integration` from authority contract | Contract must resolve; otherwise mode is constrained |
+| Gate evaluation | Compute trust/sync/governance/governance-acceptance/admission/evolution verdict chain | Hard blockers prevent PASS-class gates |
+| Evidence validation | Validate safe-state evidence contract (`basis_head_sha`, evidence mode, evidence freshness) | Non-compliant evidence degrades mirror/trust chain |
+| Runtime reporting | Emit machine-readable and operator-readable status artifacts | Output reflects current run only |
+| Integration readiness | Validate integration inbox structure and task/handoff tooling presence | Missing structure/contracts block integration verdict |
 
 ## Authority-Bound Actions
-Creator-only actions:
+Creator-only:
 - Canonical acceptance decisions.
-- Final completion claim for canonical flow.
-- Protected governance-layer mutations.
+- Final completion claims for canonical flow.
+- Protected governance-layer changes.
 - Final integration admission decisions.
 
-## Helper/Integration Boundaries
-- Helper node can execute scoped block tasks only.
-- Helper node cannot declare canonical completion.
-- Integration flow can review/route handoff packages but does not auto-accept canon.
-
 ## Forbidden Actions
-- Bypass sync parity requirements.
-- Return PASS while critical gate blockers exist.
-- Treat role limitations as governance compliance.
-- Suppress blocking evidence or contradiction signals.
+- Bypass sync parity discipline.
+- Report PASS while hard blockers are unresolved.
+- Treat role limitation as governance compliance.
+- Suppress blocking evidence in runtime outputs.
 
-## Reporting and Verdict Behavior
-Mandatory runtime outputs:
+## Runtime Output Surface
 - `runtime/repo_control_center/repo_control_status.json`
 - `runtime/repo_control_center/repo_control_report.md`
 - `runtime/repo_control_center/evolution_status.json`
@@ -33,13 +31,11 @@ Mandatory runtime outputs:
 - `runtime/repo_control_center/one_screen_status.json`
 - `runtime/repo_control_center/plain_status.md`
 
-Verdict model:
-- trust: `TRUSTED` | `WARNING` | `NOT_TRUSTED`
-- sync: `IN_SYNC` | `DRIFTED` | `BLOCKED`
-- governance: `COMPLIANT` | `PARTIAL` | `NON_COMPLIANT`
-- admission: `ADMISSIBLE` | `CONDITIONAL` | `REJECTED`
-- evolution: `HOLD` | `PREPARE` | `V2_CANDIDATE` | `V2_READY` | `PROMOTE` | `BLOCKED`
+## Verdict Naming Discipline
+- Verdict fields: `*_verdict`
+- Status layer fields: `*_status`
+- Health field: `workspace_health`
 
-## Transfer Surface
-- Targeted ChatGPT bundle export for controlled external reading.
-- Audit-safe runtime export mode with explicit allowlist only.
+## External Transfer Surface
+- Targeted ChatGPT bundle export is canonical external read path.
+- Runtime exports are restricted to explicit audit-runtime allowlist.
