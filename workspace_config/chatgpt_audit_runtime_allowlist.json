@@ -10,6 +10,12 @@
     "runtime/projects/platform_test_agent/audit_reports/test-agent-intake-platform_test_agent-20260316T165222Z/admission_decision.json",
     "runtime/projects/platform_test_agent/audit_reports/test-agent-intake-platform_test_agent-20260316T165222Z/evidence_manifest.json",
     "runtime/projects/platform_test_agent/audit_reports/test-agent-intake-platform_test_agent-20260316T165222Z/final_machine_report.json",
-    "runtime/projects/platform_test_agent/audit_reports/test-agent-intake-platform_test_agent-20260316T165222Z/final_machine_report.md"
+    "runtime/projects/platform_test_agent/audit_reports/test-agent-intake-platform_test_agent-20260316T165222Z/final_machine_report.md",
+    "runtime/repo_control_center/plain_status.md",
+    "runtime/repo_control_center/one_screen_status.json",
+    "runtime/repo_control_center/creator_authority_env_output.txt",
+    "runtime/repo_control_center/creator_detect_machine_mode_output.json",
+    "runtime/repo_control_center/creator_repo_control_bundle_output.json",
+    "runtime/repo_control_center/creator_repo_control_full_check_output.json"
   ]
 }

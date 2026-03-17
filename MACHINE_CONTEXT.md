@@ -9,6 +9,16 @@
 - Governance brain stack is mandatory for interpretation and execution
 - Active project: `platform_test_agent`
 
+## Explainability Quick Files
+
+Read these first when you need plain-language status without deep policy parsing:
+
+- `docs/governance/MACHINE_OPERATOR_GUIDE.md`
+- `docs/governance/MACHINE_CAPABILITIES_SUMMARY.md`
+- `docs/governance/POLICY_DIGEST.md`
+- `runtime/repo_control_center/plain_status.md`
+- `runtime/repo_control_center/one_screen_status.json`
+
 ## Mandatory Bootstrap Read Order
 
 1. `README.md`

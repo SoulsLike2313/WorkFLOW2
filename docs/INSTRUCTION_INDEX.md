@@ -132,12 +132,17 @@ If this order is not completed, task status is `REJECTED`.
 | `README.md` | Root architecture and operating model | P0 |
 | `REPO_MAP.md` | Fast repository navigation and bootstrap map | P0 |
 | `MACHINE_CONTEXT.md` | Deterministic machine context | P0 |
+| `docs/governance/MACHINE_OPERATOR_GUIDE.md` | Plain-language operator guide for mode/gates/actions | P0 |
+| `docs/governance/MACHINE_CAPABILITIES_SUMMARY.md` | Fast capability/permission sheet | P0 |
+| `docs/governance/POLICY_DIGEST.md` | Compressed map of policy stack and controlled gates | P0 |
 | `workspace_config/workspace_manifest.json` | Workspace registry and statuses | P0 |
 | `workspace_config/codex_manifest.json` | Machine onboarding and read order contracts | P0 |
 | `workspace_config/GITHUB_SYNC_POLICY.md` | Sync and repo-visible completion rules | P0 |
 | `workspace_config/AGENT_EXECUTION_POLICY.md` | Execution boundaries and refusal rules | P0 |
 | `workspace_config/MACHINE_REPO_READING_RULES.md` | Deterministic reading contract | P0 |
 | `scripts/repo_control_center.py` | CLI-first control layer and verdict engine (`status/audit/trust/sync/mirror/bundle/evolution/full-check`) | P0 |
+| `runtime/repo_control_center/plain_status.md` | One-page plain-language status snapshot | P0 |
+| `runtime/repo_control_center/one_screen_status.json` | Compact machine-readable one-screen status | P0 |
 | `docs/CHATGPT_BUNDLE_EXPORT.md` | Targeted external reading protocol | P1 |
 | `docs/repo_publication_policy.md` | Publication-safe boundary policy | P1 |
 | `docs/governance/EVOLUTION_READINESS_POLICY.md` | Promotion gate rules and required evidence model | P1 |

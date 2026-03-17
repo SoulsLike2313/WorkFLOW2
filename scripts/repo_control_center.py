@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 from dataclasses import dataclass
@@ -108,6 +109,9 @@ GOVERNANCE_ACCEPTANCE_DOC = "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md"
 MACHINE_BOOTSTRAP_CONTRACT = "docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md"
 CANONICAL_SOURCE_PRECEDENCE_DOC = "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md"
 ZERO_CONFIG_POLICY_DOC = "docs/governance/ZERO_CONFIG_OPERATION_POLICY.md"
+MACHINE_OPERATOR_GUIDE_DOC = "docs/governance/MACHINE_OPERATOR_GUIDE.md"
+MACHINE_CAPABILITIES_SUMMARY_DOC = "docs/governance/MACHINE_CAPABILITIES_SUMMARY.md"
+POLICY_DIGEST_DOC = "docs/governance/POLICY_DIGEST.md"
 
 SAFE_STATE_FILES = [
     "workspace_config/SAFE_MIRROR_MANIFEST.json",
@@ -1236,6 +1240,235 @@ def evolution_checks(sync: dict[str, Any], governance: dict[str, Any], contradic
     }
 
 
+def parse_next_canonical_step() -> str:
+    rel = "docs/NEXT_CANONICAL_STEP.md"
+    if not exists(rel):
+        return "unknown-next-step"
+    text = read_text(rel)
+    match = re.search(r"-\s*step_id:\s*`([^`]+)`", text, flags=re.IGNORECASE)
+    if match:
+        return match.group(1).strip()
+    for line in text.splitlines():
+        value = line.strip()
+        if value and not value.startswith("#") and not value.startswith("-"):
+            return value[:120]
+    return "next-step-defined-in-doc"
+
+
+def classify_blocking_reason(
+    *,
+    sync: dict[str, Any],
+    governance: dict[str, Any],
+    governance_acceptance: dict[str, Any],
+    admission: dict[str, Any],
+    trust: dict[str, Any],
+    machine_mode: dict[str, Any],
+) -> tuple[str, str]:
+    if sync["verdict"] != "IN_SYNC":
+        detail = "; ".join(sync.get("blockers", [])) or "sync is not IN_SYNC"
+        return "SYNC", detail
+
+    if machine_mode["verdict"] == "BLOCKED":
+        detail = "; ".join(machine_mode.get("blockers", [])) or "machine mode detection blocked"
+        return "AUTHORITY", detail
+
+    mode = machine_mode.get("evidence", {}).get("machine_mode", "unknown")
+    authority_present = bool(machine_mode.get("evidence", {}).get("authority_present", False))
+    if governance_acceptance["verdict"] != "PASS" and (mode != "creator" or not authority_present):
+        detail = "creator-only governance acceptance unavailable in current machine mode"
+        return "ROLE_AUTHORITY", detail
+
+    if governance["verdict"] == "NON_COMPLIANT":
+        detail = "; ".join(governance.get("blockers", [])) or "governance non-compliant"
+        return "GOVERNANCE_POLICY", detail
+
+    if admission["verdict"] == "REJECTED":
+        detail = "; ".join(admission.get("blockers", [])) or "admission rejected"
+        return "ADMISSION_GATE", detail
+
+    if trust["verdict"] == "NOT_TRUSTED":
+        detail = "; ".join(trust.get("blockers", [])) or "trust verdict is NOT_TRUSTED"
+        return "TRUST", detail
+
+    if trust["verdict"] == "WARNING":
+        detail = "; ".join(trust.get("warnings", [])) or "trust has warnings"
+        return "WARNING", detail
+
+    return "NONE", "no blocking reason"
+
+
+def compute_status_layers(
+    *,
+    sync: dict[str, Any],
+    governance: dict[str, Any],
+    contradictions: dict[str, Any],
+    bootstrap: dict[str, Any],
+    mirror: dict[str, Any],
+    bundle: dict[str, Any],
+    governance_acceptance: dict[str, Any],
+    admission: dict[str, Any],
+    machine_mode: dict[str, Any],
+) -> dict[str, Any]:
+    workspace_blockers: list[str] = []
+    workspace_warnings: list[str] = []
+
+    if sync["verdict"] != "IN_SYNC":
+        workspace_blockers.append("sync_not_in_sync")
+    if contradictions["critical_count"] > 0:
+        workspace_blockers.append("critical_contradictions_present")
+    if governance["verdict"] == "NON_COMPLIANT":
+        workspace_blockers.append("governance_non_compliant")
+    if bootstrap["verdict"] == "BLOCKED":
+        workspace_blockers.append("bootstrap_blocked")
+    if bundle["verdict"] != "READY":
+        workspace_blockers.append("bundle_not_ready")
+    if mirror["verdict"] == "BLOCKED":
+        workspace_blockers.append("safe_mirror_blocked")
+
+    if contradictions["major_count"] > 0:
+        workspace_warnings.append("major_contradictions_present")
+    if governance["verdict"] == "PARTIAL":
+        workspace_warnings.append("governance_partial")
+    if bootstrap["verdict"] == "WARNING":
+        workspace_warnings.append("bootstrap_warning")
+    if mirror["verdict"] == "WARNING":
+        workspace_warnings.append("safe_mirror_warning")
+
+    if workspace_blockers:
+        workspace_health = "FAIL"
+    elif workspace_warnings:
+        workspace_health = "WARNING"
+    else:
+        workspace_health = "PASS"
+
+    mode = machine_mode.get("evidence", {}).get("machine_mode", "unknown")
+    authority_present = bool(machine_mode.get("evidence", {}).get("authority_present", False))
+    if machine_mode["verdict"] == "BLOCKED":
+        authority_status = "BLOCKED"
+    elif mode == "creator" and authority_present:
+        authority_status = "CREATOR_AUTHORITY_ACTIVE"
+    elif mode == "helper" and not authority_present:
+        authority_status = "HELPER_MODE_NO_AUTHORITY"
+    elif mode == "integration" and authority_present:
+        authority_status = "INTEGRATION_AUTHORITY_ACTIVE"
+    else:
+        authority_status = "LIMITED_OR_UNKNOWN"
+
+    if governance["verdict"] == "NON_COMPLIANT":
+        governance_status = "NON_COMPLIANT"
+    elif governance_acceptance["verdict"] == "PASS":
+        governance_status = "ACCEPTED"
+    elif mode != "creator":
+        governance_status = "ROLE_LIMITED_ACCEPTANCE"
+    else:
+        governance_status = "GATE_BLOCKED"
+
+    admission_status = admission["verdict"]
+
+    explainability_missing = missing_paths(
+        [
+            MACHINE_OPERATOR_GUIDE_DOC,
+            MACHINE_CAPABILITIES_SUMMARY_DOC,
+            POLICY_DIGEST_DOC,
+            "docs/NEXT_CANONICAL_STEP.md",
+            "MACHINE_CONTEXT.md",
+        ]
+    )
+    explainability_status = "READY" if not explainability_missing else "MISSING_EXPLAINABILITY_DOCS"
+
+    return {
+        "workspace_health": workspace_health,
+        "workspace_blockers": workspace_blockers,
+        "workspace_warnings": workspace_warnings,
+        "authority_status": authority_status,
+        "governance_status": governance_status,
+        "admission_status": admission_status,
+        "explainability_status": explainability_status,
+        "explainability_missing": explainability_missing,
+    }
+
+
+def one_screen_status_payload(result: dict[str, Any]) -> dict[str, Any]:
+    v = result["verdicts"]
+    checks = result["checks"]
+    authority_path = os.getenv("CVVCODEX_CREATOR_AUTHORITY_DIR", "")
+    block_category, block_detail = classify_blocking_reason(
+        sync=v["sync"],
+        governance=v["governance"],
+        governance_acceptance=v["governance_acceptance"],
+        admission=v["admission"],
+        trust=v["trust"],
+        machine_mode=v["machine_mode"],
+    )
+    payload = {
+        "run_id": result["run_id"],
+        "generated_at": result["generated_at"],
+        "machine_mode": v["machine_mode"]["evidence"].get("machine_mode", "unknown"),
+        "authority_present": bool(v["machine_mode"]["evidence"].get("authority_present", False)),
+        "authority_path": authority_path,
+        "trust_verdict": v["trust"]["verdict"],
+        "sync_verdict": v["sync"]["verdict"],
+        "governance_verdict": v["governance"]["verdict"],
+        "governance_acceptance": v["governance_acceptance"]["verdict"],
+        "admission_verdict": v["admission"]["verdict"],
+        "repo_health": result["repo"]["repo_health"],
+        "workspace_health": result.get("status_layers", {}).get("workspace_health", "UNKNOWN"),
+        "authority_status": result.get("status_layers", {}).get("authority_status", "UNKNOWN"),
+        "governance_status": result.get("status_layers", {}).get("governance_status", "UNKNOWN"),
+        "admission_status": result.get("status_layers", {}).get("admission_status", "UNKNOWN"),
+        "explainability_status": result.get("status_layers", {}).get("explainability_status", "UNKNOWN"),
+        "next_canonical_step": result.get("next_canonical_step", "unknown-next-step"),
+        "blocking_reason_category": block_category,
+        "blocking_reason_detail": block_detail,
+        "critical_contradictions": checks["contradictions"]["critical_count"],
+        "major_contradictions": checks["contradictions"]["major_count"],
+    }
+    return payload
+
+
+def plain_status_markdown(result: dict[str, Any], one_screen: dict[str, Any]) -> str:
+    good_signals = [
+        f"sync={one_screen['sync_verdict']}",
+        f"governance={one_screen['governance_verdict']}",
+        f"governance_acceptance={one_screen['governance_acceptance']}",
+        f"admission={one_screen['admission_verdict']}",
+    ]
+    lines = [
+        "# Plain Status (One Screen)",
+        "",
+        f"- generated_at: `{one_screen['generated_at']}`",
+        f"- machine_mode: `{one_screen['machine_mode']}`",
+        f"- creator_authority_present: `{one_screen['authority_present']}`",
+        f"- creator_authority_path: `{one_screen['authority_path'] or 'not-set-in-environment'}`",
+        "",
+        "## What This Means",
+        "- `creator authority`: local permission switch for creator-only operations.",
+        "- `governance acceptance`: governance gate for moving forward as canonical machine.",
+        "- `admission`: final operational gate for controlled progression.",
+        "- `trust`: overall confidence from sync + governance + policy checks.",
+        "",
+        "## Current Health",
+        f"- repo_health: `{one_screen['repo_health']}`",
+        f"- workspace_health: `{one_screen['workspace_health']}`",
+        f"- authority_status: `{one_screen['authority_status']}`",
+        f"- governance_status: `{one_screen['governance_status']}`",
+        f"- admission_status: `{one_screen['admission_status']}`",
+        f"- explainability_status: `{one_screen['explainability_status']}`",
+        "",
+        "## What Is Good",
+        f"- {', '.join(good_signals)}",
+        f"- contradictions: critical={one_screen['critical_contradictions']}, major={one_screen['major_contradictions']}",
+        "",
+        "## What Is Not Good (if any)",
+        f"- blocking_reason_category: `{one_screen['blocking_reason_category']}`",
+        f"- blocking_reason_detail: `{one_screen['blocking_reason_detail']}`",
+        "",
+        "## Operator Next Step",
+        f"- next_canonical_step: `{one_screen['next_canonical_step']}`",
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def build_results(fetch: bool) -> dict[str, Any]:
     git_state = build_git_state(fetch=fetch)
     contradictions = contradiction_checks(git_state)
@@ -1261,11 +1494,19 @@ def build_results(fetch: bool) -> dict[str, Any]:
     admission = admission_checks(trust, sync, governance, contradictions, governance_acceptance, machine_mode)
     evolution = evolution_checks(sync, governance, contradictions, trust, admission, mirror, bundle)
 
-    repo_health = "PASS"
-    if trust["verdict"] == "NOT_TRUSTED" or admission["verdict"] == "REJECTED" or governance_acceptance["verdict"] != "PASS":
-        repo_health = "FAIL"
-    elif trust["verdict"] == "WARNING" or admission["verdict"] == "CONDITIONAL":
-        repo_health = "WARNING"
+    status_layers = compute_status_layers(
+        sync=sync,
+        governance=governance,
+        contradictions=contradictions,
+        bootstrap=bootstrap,
+        mirror=mirror,
+        bundle=bundle,
+        governance_acceptance=governance_acceptance,
+        admission=admission,
+        machine_mode=machine_mode,
+    )
+    repo_health = status_layers["workspace_health"]
+    next_canonical_step = parse_next_canonical_step()
 
     drift_status = {
         "critical": contradictions["critical_count"] > 0 or sync["verdict"] != "IN_SYNC",
@@ -1291,7 +1532,10 @@ def build_results(fetch: bool) -> dict[str, Any]:
             "worktree_clean": git_state.worktree_clean,
             "status_short": git_state.status_short,
             "repo_health": repo_health,
+            "workspace_health": status_layers["workspace_health"],
         },
+        "next_canonical_step": next_canonical_step,
+        "status_layers": status_layers,
         "checks": {
             "contradictions": contradictions,
             "drift": drift_status,
@@ -1350,6 +1594,11 @@ def markdown_report(result: dict[str, Any]) -> str:
         f"- ahead/behind: `{result['repo']['ahead']}/{result['repo']['behind']}`",
         f"- worktree_clean: `{result['repo']['worktree_clean']}`",
         f"- repo_health: `{result['repo']['repo_health']}`",
+        f"- workspace_health: `{result['repo'].get('workspace_health', 'UNKNOWN')}`",
+        f"- authority_status: `{result.get('status_layers', {}).get('authority_status', 'UNKNOWN')}`",
+        f"- governance_status: `{result.get('status_layers', {}).get('governance_status', 'UNKNOWN')}`",
+        f"- admission_status: `{result.get('status_layers', {}).get('admission_status', 'UNKNOWN')}`",
+        f"- explainability_status: `{result.get('status_layers', {}).get('explainability_status', 'UNKNOWN')}`",
         "",
         "## Verdicts",
         f"- TRUST VERDICT: `{v['trust']['verdict']}`",
@@ -1388,6 +1637,9 @@ def markdown_report(result: dict[str, Any]) -> str:
         "",
         "## Governance Acceptance Gate",
         f"- verdict: `{result['checks']['governance_acceptance']['verdict']}`",
+        "",
+        "## Next Canonical Step",
+        f"- `{result.get('next_canonical_step', 'unknown-next-step')}`",
         "",
         "## EVOLUTION",
         f"- current_level: `{v['evolution']['evolution_block']['current_level']}`",
@@ -1492,6 +1744,16 @@ def write_runtime_reports(result: dict[str, Any]) -> None:
         mm_lines.extend([f"- {x}" for x in mm["blockers"]])
     (RUNTIME_DIR / "machine_mode_report.md").write_text("\n".join(mm_lines) + "\n", encoding="utf-8")
 
+    one_screen = one_screen_status_payload(result)
+    (RUNTIME_DIR / "one_screen_status.json").write_text(
+        json.dumps(one_screen, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    (RUNTIME_DIR / "plain_status.md").write_text(
+        plain_status_markdown(result, one_screen),
+        encoding="utf-8",
+    )
+
 
 def summarize_for_mode(result: dict[str, Any], mode: str) -> dict[str, Any]:
     v = result["verdicts"]
@@ -1503,6 +1765,11 @@ def summarize_for_mode(result: dict[str, Any], mode: str) -> dict[str, Any]:
     if mode == "status":
         base["summary"] = {
             "repo_health": result["repo"]["repo_health"],
+            "workspace_health": result["repo"].get("workspace_health", "UNKNOWN"),
+            "authority_status": result.get("status_layers", {}).get("authority_status", "UNKNOWN"),
+            "governance_status": result.get("status_layers", {}).get("governance_status", "UNKNOWN"),
+            "admission_status": result.get("status_layers", {}).get("admission_status", "UNKNOWN"),
+            "explainability_status": result.get("status_layers", {}).get("explainability_status", "UNKNOWN"),
             "trust": v["trust"]["verdict"],
             "sync": v["sync"]["verdict"],
             "governance": v["governance"]["verdict"],
@@ -1511,6 +1778,7 @@ def summarize_for_mode(result: dict[str, Any], mode: str) -> dict[str, Any]:
             "integration_inbox": v["integration_inbox"]["verdict"],
             "admission": v["admission"]["verdict"],
             "evolution": v["evolution"]["verdict"],
+            "next_canonical_step": result.get("next_canonical_step", "unknown-next-step"),
         }
     elif mode == "mode":
         base["machine_mode"] = v["machine_mode"]
