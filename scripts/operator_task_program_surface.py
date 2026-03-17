@@ -15,22 +15,29 @@ ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_ROOT = r"E:\CVVCODEX"
 REGISTRY_PATH = ROOT / "workspace_config" / "operator_task_program_registry.json"
 GOLDEN_2B = ROOT / "docs" / "review_artifacts" / "OPERATOR_TASK_PROGRAM_GOLDEN_PACK_WAVE_2B.json"
+GOLDEN_2C = ROOT / "docs" / "review_artifacts" / "OPERATOR_TASK_PROGRAM_GOLDEN_PACK_WAVE_2C.json"
 RUNTIME_DIR = ROOT / "runtime" / "repo_control_center"
 OUTPUTS_DIR = RUNTIME_DIR / "operator_program_outputs"
 STATUS_PATH = RUNTIME_DIR / "operator_program_status.json"
 REPORT_PATH = RUNTIME_DIR / "operator_program_report.md"
 CHECKPOINT_PATH = RUNTIME_DIR / "operator_program_checkpoint.json"
 HISTORY_PATH = RUNTIME_DIR / "operator_program_history.json"
+AUDIT_TRAIL_PATH = RUNTIME_DIR / "operator_program_audit_trail.json"
 CONSISTENCY_PATH = RUNTIME_DIR / "operator_task_program_consistency.json"
 LOG_PATH = RUNTIME_DIR / "operator_program_log.jsonl"
 ONE_SCREEN_PATH = RUNTIME_DIR / "one_screen_status.json"
 COMMAND_SCRIPT = ROOT / "scripts" / "operator_command_surface.py"
 
-EXEC_SCHEMA = "operator_task_program_contract.wave2b.v1.0.0"
-STATUS_SCHEMA = "operator_task_program_status.wave2b.v1.0.0"
-HISTORY_SCHEMA = "operator_task_program_history.wave2b.v1.0.0"
-CONSISTENCY_SCHEMA = "operator_task_program_consistency.wave2b.v1.0.0"
+EXEC_SCHEMA = "operator_task_program_contract.wave2c.v1.0.0"
+STATUS_SCHEMA = "operator_task_program_status.wave2c.v1.0.0"
+HISTORY_SCHEMA = "operator_task_program_history.wave2c.v1.0.0"
+CONSISTENCY_SCHEMA = "operator_task_program_consistency.wave2c.v1.0.0"
+AUDIT_TRAIL_SCHEMA = "operator_task_program_audit_trail.wave2c.v1.0.0"
 DEFAULT_ORDER = (
+    "blocked_mutation_test_program",
+    "creator_only_program",
+    "controlled_lifecycle_program",
+    "guarded_maintenance_program",
     "certification_program",
     "evidence_delivery_program",
     "inbox_review_program",
@@ -39,6 +46,34 @@ DEFAULT_ORDER = (
     "evidence_pack_program",
     "report_program",
     "status_refresh_program",
+)
+
+MUTABILITY_LEVELS = {
+    "READ_ONLY",
+    "REFRESH_ONLY",
+    "PACKAGE_ONLY",
+    "OPERATIONAL_ROUTING",
+    "GUARDED_STATE_CHANGE",
+    "CREATOR_ONLY_MUTATION",
+}
+
+RISKY_ROUTE_TOKENS = (
+    "guarded",
+    "creator-only",
+    "creator only",
+    "authority-required",
+    "state change",
+    "mutation",
+    "lifecycle",
+    "install",
+    "remove",
+    "creator-authorized",
+    "blocked mutation",
+    "guarded maintenance",
+    "controlled lifecycle",
+    "creator-only governance program",
+    "authority required program",
+    "creator-authorized program sequence",
 )
 
 
@@ -119,6 +154,9 @@ def load_registry() -> tuple[dict[str, Any], dict[str, dict[str, Any]], dict[str
         defaults = {
             "allowed_modes": cls.get("allowed_modes", []),
             "authority_requirement": cls.get("authority_requirement", "none"),
+            "creator_authority_required": bool(
+                cls.get("creator_authority_required", str(cls.get("authority_requirement", "none")) == "creator_required")
+            ),
             "policy_basis": cls.get("policy_basis", []),
             "mutability_level": cls.get("mutability_level", "READ_ONLY"),
             "resume_supported": bool(cls.get("resume_supported", True)),
@@ -136,6 +174,11 @@ def load_registry() -> tuple[dict[str, Any], dict[str, dict[str, Any]], dict[str
             "delivery_target": cls.get("delivery_target", "none"),
             "required_inputs": cls.get("required_inputs", []),
             "step_sequences": cls.get("step_sequences", []),
+            "rollback_supported": bool(cls.get("rollback_supported", False)),
+            "approval_basis": cls.get("approval_basis", []),
+            "audit_trail_reference": cls.get("audit_trail_reference", "runtime/repo_control_center/operator_program_audit_trail.json"),
+            "escalation_path": cls.get("escalation_path", "none"),
+            "audit_outputs": cls.get("audit_outputs", []),
         }
 
         for program in cls.get("programs", []):
@@ -153,6 +196,12 @@ def load_registry() -> tuple[dict[str, Any], dict[str, dict[str, Any]], dict[str
             }
             for key, value in defaults.items():
                 merged[key] = program.get(key, value)
+            merged["mutability_level"] = str(merged.get("mutability_level", "READ_ONLY")).strip().upper()
+            if not merged["mutability_level"]:
+                merged["mutability_level"] = "READ_ONLY"
+            merged["creator_authority_required"] = bool(
+                merged.get("creator_authority_required", str(merged.get("authority_requirement", "none")) == "creator_required")
+            )
 
             index[program_id] = merged
             class_map[program_class].append(program_id)
@@ -202,6 +251,13 @@ def route(
     fallback = "program.wave2a.status_refresh_surface.v1"
     key = fallback if fallback in index else sorted(index.keys())[0]
     return key, index[key], "fallback_status_refresh"
+
+
+def is_risky_fallback_request(request: str) -> bool:
+    normalized = " ".join(request.lower().split())
+    if not normalized:
+        return False
+    return any(token in normalized for token in RISKY_ROUTE_TOKENS)
 
 def add_arg(cmd: list[str], key: str, value: Any) -> None:
     if value is None:
@@ -376,7 +432,8 @@ def gate(
     authority_blockers: list[str] = []
     if policy.get("allowed_modes") and machine_mode not in policy["allowed_modes"]:
         authority_blockers.append(f"machine_mode '{machine_mode}' not allowed for '{policy['program_id']}'")
-    if str(policy.get("authority_requirement", "none")) == "creator_required" and not authority_present:
+    creator_required = bool(policy.get("creator_authority_required", False)) or str(policy.get("authority_requirement", "none")) == "creator_required"
+    if creator_required and not authority_present:
         authority_blockers.append("creator authority required but not present")
 
     missing_policy_files = [p for p in policy.get("policy_basis", []) if not (ROOT / str(p)).exists()]
@@ -388,6 +445,9 @@ def gate(
         precondition_failures.append("sync_in_sync")
     if bool(policy.get("requires_clean_worktree", False)) and not git_before.get("worktree_clean", False):
         precondition_failures.append("worktree_clean")
+    mutability_level = str(policy.get("mutability_level", "READ_ONLY")).upper()
+    if mutability_level not in MUTABILITY_LEVELS:
+        precondition_failures.append("mutability_level_supported")
 
     total_steps = max(len(policy.get("step_plan", [])), 1)
     if resume_from_step < 1 or resume_from_step > total_steps:
@@ -404,6 +464,7 @@ def gate(
     authority_check = {
         "required_modes": policy.get("allowed_modes", []),
         "authority_requirement": policy.get("authority_requirement", "none"),
+        "creator_authority_required": creator_required,
         "machine_mode": machine_mode,
         "authority_present": authority_present,
         "detection_state": authority.get("detection_state", "unknown"),
@@ -428,11 +489,16 @@ def write_runtime(payload: dict[str, Any]) -> None:
         "generated_at": payload.get("generated_at", utc_now()),
         "active_or_last_program": payload.get("task_id_or_program_id", ""),
         "program_class": payload.get("program_class", ""),
+        "mutability_level": payload.get("state_change", {}).get("mutability_level", "READ_ONLY"),
+        "creator_authority_required": payload.get("creator_authority_required", False),
         "execution_result": payload.get("execution_result", {}),
         "current_step": payload.get("current_step", ""),
         "checkpoint_state": payload.get("checkpoint_state", {}),
         "completed_steps": payload.get("checkpoint_state", {}).get("completed_steps", []),
         "pending_steps": payload.get("checkpoint_state", {}).get("pending_steps", []),
+        "rollback_supported": payload.get("rollback_supported", False),
+        "rollback_required": payload.get("rollback_required", False),
+        "approval_basis": payload.get("approval_basis", []),
         "review_requirement": payload.get("review_requirement", "none"),
         "delivery_target": payload.get("delivery_target", "none"),
         "artifacts_produced": payload.get("artifacts_produced", []),
@@ -459,16 +525,59 @@ def write_runtime(payload: dict[str, Any]) -> None:
             "generated_at": payload.get("generated_at", utc_now()),
             "program_id": payload.get("task_id_or_program_id", ""),
             "program_class": payload.get("program_class", ""),
+            "mutability_level": payload.get("state_change", {}).get("mutability_level", "READ_ONLY"),
+            "creator_authority_required": payload.get("creator_authority_required", False),
             "execution_result": payload.get("execution_result", {}).get("verdict", ""),
             "current_step": payload.get("current_step", ""),
             "resume_pointer": payload.get("checkpoint_state", {}).get("resume_pointer", 1),
             "can_resume": payload.get("checkpoint_state", {}).get("can_resume", False),
             "stop_condition_triggered": payload.get("checkpoint_state", {}).get("stop_condition_triggered", False),
             "stop_condition_reason": payload.get("checkpoint_state", {}).get("stop_condition_reason", ""),
+            "rollback_required": payload.get("rollback_required", False),
             "blocking_factors": payload.get("blocking_factors", []),
         }
     )
     write_json(HISTORY_PATH, {"schema_version": HISTORY_SCHEMA, "generated_at": payload.get("generated_at", utc_now()), "entries": entries[-200:]})
+
+    audit_payload: dict[str, Any]
+    if AUDIT_TRAIL_PATH.exists():
+        try:
+            audit_payload = read_json(AUDIT_TRAIL_PATH)
+        except Exception:
+            audit_payload = {"schema_version": AUDIT_TRAIL_SCHEMA, "entries": []}
+    else:
+        audit_payload = {"schema_version": AUDIT_TRAIL_SCHEMA, "entries": []}
+    audit_entries = audit_payload.get("entries", [])
+    if not isinstance(audit_entries, list):
+        audit_entries = []
+    audit_entries.append(
+        {
+            "run_id": payload.get("run_id", ""),
+            "generated_at": payload.get("generated_at", utc_now()),
+            "program_class": payload.get("program_class", ""),
+            "resolved_goal": payload.get("resolved_goal", ""),
+            "mutability_level": payload.get("state_change", {}).get("mutability_level", "READ_ONLY"),
+            "authority_check": payload.get("authority_check", {}),
+            "policy_check": payload.get("policy_check", {}),
+            "approval_basis": payload.get("approval_basis", []),
+            "step_results": payload.get("step_results", []),
+            "stop_condition": payload.get("checkpoint_state", {}).get("stop_condition_reason", ""),
+            "rollback_supported": payload.get("rollback_supported", False),
+            "rollback_required": payload.get("rollback_required", False),
+            "artifacts_produced": payload.get("artifacts_produced", []),
+            "execution_result": payload.get("execution_result", {}),
+            "blocking_factors": payload.get("blocking_factors", []),
+            "audit_trail_reference": payload.get("audit_trail_reference", rel(AUDIT_TRAIL_PATH)),
+        }
+    )
+    write_json(
+        AUDIT_TRAIL_PATH,
+        {
+            "schema_version": AUDIT_TRAIL_SCHEMA,
+            "generated_at": payload.get("generated_at", utc_now()),
+            "entries": audit_entries[-200:],
+        },
+    )
 
     lines = [
         "# OPERATOR PROGRAM REPORT",
@@ -480,12 +589,18 @@ def write_runtime(payload: dict[str, Any]) -> None:
         f"- route_basis: `{payload.get('route_basis', '')}`",
         "",
         "## Program Contract",
+        f"- mutability_level: `{payload.get('state_change', {}).get('mutability_level', 'READ_ONLY')}`",
+        f"- creator_authority_required: `{payload.get('creator_authority_required', False)}`",
         f"- failure_policy: `{payload.get('failure_policy', '')}`",
         f"- resume_supported: `{payload.get('resume_supported', False)}`",
+        f"- rollback_supported: `{payload.get('rollback_supported', False)}`",
+        f"- rollback_required: `{payload.get('rollback_required', False)}`",
         f"- stop_conditions: `{', '.join(payload.get('stop_conditions', [])) or 'none'}`",
         f"- delivery_target: `{payload.get('delivery_target', 'none')}`",
         f"- review_requirement: `{payload.get('review_requirement', 'none')}`",
         f"- escalation_requirement: `{payload.get('escalation_requirement', False)}`",
+        f"- approval_basis_count: `{len(payload.get('approval_basis', []))}`",
+        f"- audit_trail_reference: `{payload.get('audit_trail_reference', rel(AUDIT_TRAIL_PATH))}`",
         "",
         "## Result",
         f"- verdict: `{payload.get('execution_result', {}).get('verdict', '')}`",
@@ -513,7 +628,7 @@ def write_runtime(payload: dict[str, Any]) -> None:
 
 def execute_mode(args: argparse.Namespace) -> int:
     registry_payload, index, class_map, class_order = load_registry()
-    run_id = f"program-wave2b-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')}"
+    run_id = f"program-wave2c-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')}"
     mode_payload = build_mode_payload(intent=args.intent)
     one_screen = read_json(ONE_SCREEN_PATH) if ONE_SCREEN_PATH.exists() else {}
     git_before = git_state()
@@ -536,6 +651,17 @@ def execute_mode(args: argparse.Namespace) -> int:
     authority_check, policy_check, preconditions, gate_blockers = gate(
         policy, mode_payload, one_screen, git_before, context, args.resume_from_step
     )
+    if route_basis == "fallback_status_refresh" and is_risky_fallback_request(context["request_text"]):
+        gate_blockers.append("risky_request_not_mapped_to_guarded_program")
+        gate_blockers.append("fallback_to_safe_program_for_risky_request_forbidden")
+
+    creator_authority_required = bool(policy.get("creator_authority_required", False))
+    mutability_level = str(policy.get("mutability_level", "READ_ONLY")).upper()
+    rollback_supported = bool(policy.get("rollback_supported", False))
+    approval_basis = [str(x).strip() for x in policy.get("approval_basis", []) if str(x).strip()]
+    audit_trail_reference = str(policy.get("audit_trail_reference", rel(AUDIT_TRAIL_PATH))).strip() or rel(AUDIT_TRAIL_PATH)
+    if mutability_level in {"GUARDED_STATE_CHANGE", "CREATOR_ONLY_MUTATION"} and not creator_authority_required:
+        gate_blockers.append("creator_authority_required_for_guarded_mutation")
 
     step_results: list[dict[str, Any]] = []
     step_artifacts: list[str] = []
@@ -546,9 +672,10 @@ def execute_mode(args: argparse.Namespace) -> int:
     failed_index = 0
     stop_triggered = False
     stop_reason = ""
+    allow_mutation = False
 
     if not gate_blockers:
-        allow_mutation = bool(args.allow_mutation and not args.dry_run and policy.get("mutability_level") != "READ_ONLY")
+        allow_mutation = bool(args.allow_mutation and not args.dry_run and mutability_level in {"GUARDED_STATE_CHANGE", "CREATOR_ONLY_MUTATION", "OPERATIONAL_ROUTING"})
         for idx in range(args.resume_from_step - 1, len(policy.get("step_plan", []))):
             step = policy["step_plan"][idx]
             current_step = str(step.get("step_id", f"S{idx + 1}")).strip()
@@ -625,16 +752,28 @@ def execute_mode(args: argparse.Namespace) -> int:
             next_step = "Run python scripts/repo_control_center.py full-check."
     else:
         all_blockers = gate_blockers + step_blockers
+        if "risky_request_not_mapped_to_guarded_program" in all_blockers:
+            next_step = "Use explicit --program-id/--program-class for guarded execution; fallback is forbidden for risky requests."
+        elif mutability_level in {"GUARDED_STATE_CHANGE", "CREATOR_ONLY_MUTATION"} and rollback_supported:
+            next_step = "Program blocked/failed in guarded mutation path. Run rollback sequence before retry."
         if any("creator authority required" in x.lower() for x in all_blockers):
             next_step = "Enable creator authority and rerun creator-bound program."
         elif checkpoint["can_resume"]:
             next_step = f"Resume with --program-id {program_id} --resume-from-step {resume_pointer}."
-        else:
+        elif not (mutability_level in {"GUARDED_STATE_CHANGE", "CREATOR_ONLY_MUTATION"} and rollback_supported):
             next_step = "Inspect step outputs and clear blockers before rerun."
 
     git_after = git_state()
     changed_files = sorted(set(git_before["status_files"]).symmetric_difference(set(git_after["status_files"])))
-    artifacts = sorted(set(step_artifacts + list(policy.get("evidence_outputs", [])) + [rel(STATUS_PATH), rel(REPORT_PATH), rel(CHECKPOINT_PATH), rel(HISTORY_PATH)]))
+    rollback_required = bool(rollback_supported and verdict in {"FAILED", "BLOCKED"} and mutability_level in {"GUARDED_STATE_CHANGE", "CREATOR_ONLY_MUTATION"})
+    artifacts = sorted(
+        set(
+            step_artifacts
+            + list(policy.get("evidence_outputs", []))
+            + list(policy.get("audit_outputs", []))
+            + [rel(STATUS_PATH), rel(REPORT_PATH), rel(CHECKPOINT_PATH), rel(HISTORY_PATH), rel(AUDIT_TRAIL_PATH)]
+        )
+    )
 
     payload = {
         "schema_version": EXEC_SCHEMA,
@@ -655,11 +794,11 @@ def execute_mode(args: argparse.Namespace) -> int:
         "execution_result": {"verdict": verdict, "summary": summary, "exit_code": exit_code},
         "artifacts_produced": artifacts,
         "state_change": {
-            "mutability_level": policy.get("mutability_level", "READ_ONLY"),
+            "mutability_level": mutability_level,
             "execution_mode": (
                 "live_mutation"
-                if (args.allow_mutation and not args.dry_run and policy.get("mutability_level", "READ_ONLY") != "READ_ONLY")
-                else ("read_only" if policy.get("mutability_level", "READ_ONLY") == "READ_ONLY" else "dry_run")
+                if allow_mutation
+                else ("read_only" if mutability_level == "READ_ONLY" else "dry_run")
             ),
             "state_change_detected": bool(changed_files),
             "changed_files": changed_files,
@@ -678,13 +817,19 @@ def execute_mode(args: argparse.Namespace) -> int:
         "delivery_artifacts": policy.get("delivery_artifacts", []),
         "failure_policy": policy.get("failure_policy", "stop_on_failure"),
         "resume_supported": bool(policy.get("resume_supported", True)),
+        "rollback_supported": rollback_supported,
+        "rollback_required": rollback_required,
         "stop_conditions": policy.get("stop_conditions", []),
         "delivery_target": context.get("delivery_target") or policy.get("delivery_target", "none"),
         "review_requirement": policy.get("review_requirement", "none"),
         "escalation_requirement": bool(policy.get("escalation_requirement", False)),
+        "escalation_path": str(policy.get("escalation_path", "none")),
+        "creator_authority_required": creator_authority_required,
+        "approval_basis": approval_basis,
+        "audit_trail_reference": audit_trail_reference,
         "step_results": step_results,
         "route_basis": route_basis,
-        "notes": [f"mutability_level={policy.get('mutability_level', 'READ_ONLY')}", f"class_order={','.join(class_order)}"],
+        "notes": [f"mutability_level={mutability_level}", f"class_order={','.join(class_order)}"],
     }
 
     write_runtime(payload)
@@ -709,12 +854,16 @@ def classify_mode(args: argparse.Namespace) -> int:
                 "command_dependencies": policy.get("command_dependencies", []),
                 "review_dependencies": policy.get("review_dependencies", []),
                 "mutability_level": policy.get("mutability_level", "READ_ONLY"),
+                "creator_authority_required": bool(policy.get("creator_authority_required", False)),
                 "failure_policy": policy.get("failure_policy", "stop_on_failure"),
                 "resume_supported": bool(policy.get("resume_supported", True)),
+                "rollback_supported": bool(policy.get("rollback_supported", False)),
                 "stop_conditions": policy.get("stop_conditions", []),
                 "delivery_target": policy.get("delivery_target", "none"),
                 "review_requirement": policy.get("review_requirement", "none"),
                 "escalation_requirement": bool(policy.get("escalation_requirement", False)),
+                "approval_basis": policy.get("approval_basis", []),
+                "audit_trail_reference": policy.get("audit_trail_reference", rel(AUDIT_TRAIL_PATH)),
             },
             ensure_ascii=False,
             indent=2,
@@ -758,6 +907,8 @@ def consistency_mode(args: argparse.Namespace) -> int:
         expected_class = str(item.get("program_class", "")).strip()
         expected_program_id = str(item.get("expected_program_id", "")).strip()
         expected_actions = [str(x).strip() for x in item.get("expected_step_plan", []) if str(x).strip()]
+        expected_mutability = str(item.get("mutability_level", "")).strip().upper()
+        authority_expectation = str(item.get("authority_expectation", "")).strip().lower()
         item_id = str(item.get("id", "")).strip() or f"item-{idx}"
 
         actual_program_id, policy, route_basis = route(raw_request, index, class_map, class_order, "", "")
@@ -770,6 +921,14 @@ def consistency_mode(args: argparse.Namespace) -> int:
             reasons.append("program_id_mismatch")
         if expected_actions and actual_actions != expected_actions:
             reasons.append("step_plan_mismatch")
+        if expected_mutability and str(policy.get("mutability_level", "")).upper() != expected_mutability:
+            reasons.append("mutability_level_mismatch")
+        if authority_expectation:
+            actual_creator_required = bool(policy.get("creator_authority_required", False))
+            if authority_expectation == "creator_required" and not actual_creator_required:
+                reasons.append("creator_authority_requirement_mismatch")
+            if authority_expectation in {"none", "not_required"} and actual_creator_required:
+                reasons.append("creator_authority_requirement_mismatch")
 
         if reasons:
             failures.append(
@@ -783,6 +942,10 @@ def consistency_mode(args: argparse.Namespace) -> int:
                     "actual_program_id": actual_program_id,
                     "expected_step_plan": expected_actions,
                     "actual_step_plan": actual_actions,
+                    "expected_mutability_level": expected_mutability,
+                    "actual_mutability_level": str(policy.get("mutability_level", "")),
+                    "expected_authority_expectation": authority_expectation,
+                    "actual_creator_authority_required": bool(policy.get("creator_authority_required", False)),
                     "reasons": reasons,
                 }
             )
@@ -805,7 +968,7 @@ def consistency_mode(args: argparse.Namespace) -> int:
 
 
 def parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description="Wave 2B controlled operator task/program surface.")
+    p = argparse.ArgumentParser(description="Wave 2C guarded creator operator task/program surface.")
     sub = p.add_subparsers(dest="mode", required=True)
 
     ex = sub.add_parser("execute")
@@ -832,7 +995,7 @@ def parser() -> argparse.ArgumentParser:
     sub.add_parser("registry")
     sub.add_parser("status")
     cc = sub.add_parser("consistency-check")
-    cc.add_argument("--golden-file", default=str(GOLDEN_2B.relative_to(ROOT)))
+    cc.add_argument("--golden-file", default=str(GOLDEN_2C.relative_to(ROOT)))
     return p
 
 

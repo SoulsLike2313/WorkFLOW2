@@ -1,6 +1,6 @@
 {
-  "schema_version": "operator_task_program_registry.wave2b.v1.0.0",
-  "wave": "2B",
+  "schema_version": "operator_task_program_registry.wave2c.v1.0.0",
+  "wave": "2C",
   "execution_contract_doc": "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md",
   "command_layer_dependency": {
     "script": "scripts/operator_command_surface.py",
@@ -9,10 +9,17 @@
   "mutability_levels_allowed": [
     "READ_ONLY",
     "REFRESH_ONLY",
-    "PACKAGE_ONLY"
+    "PACKAGE_ONLY",
+    "OPERATIONAL_ROUTING",
+    "GUARDED_STATE_CHANGE",
+    "CREATOR_ONLY_MUTATION"
   ],
   "routing_precedence": {
     "class_order": [
+      "blocked_mutation_test_program",
+      "creator_only_program",
+      "controlled_lifecycle_program",
+      "guarded_maintenance_program",
       "certification_program",
       "evidence_delivery_program",
       "inbox_review_program",
@@ -1323,6 +1330,709 @@
           "blocking_conditions": [
             "authority_mode_not_allowed",
             "step_execution_failed"
+          ]
+        }
+      ]
+    },
+    {
+      "program_class": "guarded_maintenance_program",
+      "description": "Creator-guarded maintenance and control artifact rebuild sequences.",
+      "allowed_modes": [
+        "creator"
+      ],
+      "authority_requirement": "creator_required",
+      "creator_authority_required": true,
+      "policy_basis": [
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md",
+        "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_MUTABILITY_MODEL.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md"
+      ],
+      "step_templates": [
+        "creator_acceptance_precheck",
+        "governance_maintenance_check",
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "step_sequences": [
+        "authority_gate",
+        "maintenance_scan",
+        "control_artifact_refresh",
+        "report_materialization"
+      ],
+      "command_dependencies": [
+        "creator_acceptance_precheck",
+        "governance_maintenance_check",
+        "refresh_safe_mirror_evidence",
+        "report_generation",
+        "policy_reference_execute"
+      ],
+      "review_dependencies": [
+        "creator_review"
+      ],
+      "delivery_artifacts": [
+        "workspace_config/SAFE_MIRROR_MANIFEST.json",
+        "docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_checkpoint.json",
+        "runtime/repo_control_center/operator_program_history.json",
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_checkpoint.json",
+        "runtime/repo_control_center/operator_program_history.json",
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "resume_supported": true,
+      "rollback_supported": true,
+      "failure_policy_default": "stop_on_failure",
+      "review_requirement": "creator_review",
+      "escalation_requirement": true,
+      "escalation_path": "creator_review_escalation",
+      "stop_conditions": [
+        "any_step_failed",
+        "any_step_blocked"
+      ],
+      "delivery_target": "runtime/repo_control_center",
+      "approval_basis": [
+        "docs/governance/ADMISSION_GATE_POLICY.md",
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_program_audit_trail.json",
+      "routing_precedence": 8,
+      "blocking_conditions": [
+        "creator_authority_required",
+        "policy_basis_missing",
+        "step_execution_failed"
+      ],
+      "programs": [
+        {
+          "program_id": "program.wave2c.guarded_governance_maintenance.v1",
+          "resolved_goal": "Execute creator-guarded governance maintenance sequence with audit trail.",
+          "execution_scope": "guarded_governance_maintenance",
+          "route_tokens": [
+            "??????? controlled governance maintenance program",
+            "??????? maintenance sequence ? audit trail",
+            "controlled governance maintenance program"
+          ],
+          "requires_in_sync": true,
+          "mutability_level": "GUARDED_STATE_CHANGE",
+          "creator_authority_required": true,
+          "rollback_supported": true,
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "creator acceptance precheck",
+              "action": "creator_acceptance_precheck",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "governance maintenance",
+              "action": "governance_maintenance_check",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "refresh safe mirror evidence",
+              "action": "refresh_safe_mirror_evidence",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S4",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ]
+        },
+        {
+          "program_id": "program.wave2c.control_artifacts_rebuild.v1",
+          "resolved_goal": "Rebuild approved control artifacts under creator-guarded mutation policy.",
+          "execution_scope": "control_artifacts_rebuild",
+          "route_tokens": [
+            "?????????? ? ?????????? approved control artifacts",
+            "rebuild approved control artifacts"
+          ],
+          "requires_in_sync": true,
+          "mutability_level": "GUARDED_STATE_CHANGE",
+          "creator_authority_required": true,
+          "rollback_supported": true,
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "creator acceptance precheck",
+              "action": "creator_acceptance_precheck",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "refresh safe mirror evidence",
+              "action": "refresh_safe_mirror_evidence",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "policy reference",
+              "action": "policy_reference_execute",
+              "pass_args": [],
+              "static_args": {
+                "policy_topic": "wave2c_guarded_maintenance"
+              }
+            },
+            {
+              "step_id": "S4",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "program_class": "creator_only_program",
+      "description": "Creator-authorized sequences that are forbidden for helper/integration execution.",
+      "allowed_modes": [
+        "creator"
+      ],
+      "authority_requirement": "creator_required",
+      "creator_authority_required": true,
+      "policy_basis": [
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_MUTABILITY_MODEL.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md"
+      ],
+      "step_templates": [
+        "creator_acceptance_precheck",
+        "governance_maintenance_check",
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "step_sequences": [
+        "authority_gate",
+        "creator_only_execution",
+        "report_materialization"
+      ],
+      "command_dependencies": [
+        "creator_acceptance_precheck",
+        "governance_maintenance_check",
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "review_dependencies": [
+        "creator_review"
+      ],
+      "delivery_artifacts": [
+        "runtime/repo_control_center"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_checkpoint.json",
+        "runtime/repo_control_center/operator_program_history.json",
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_checkpoint.json",
+        "runtime/repo_control_center/operator_program_history.json",
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "resume_supported": true,
+      "rollback_supported": true,
+      "failure_policy_default": "stop_on_failure",
+      "review_requirement": "creator_review",
+      "escalation_requirement": true,
+      "escalation_path": "creator_only_escalation",
+      "stop_conditions": [
+        "any_step_failed",
+        "any_step_blocked"
+      ],
+      "delivery_target": "runtime/repo_control_center",
+      "approval_basis": [
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_program_audit_trail.json",
+      "routing_precedence": 6,
+      "blocking_conditions": [
+        "creator_authority_required",
+        "authority_mode_not_allowed",
+        "step_execution_failed"
+      ],
+      "programs": [
+        {
+          "program_id": "program.wave2c.creator_authorized_sequence.v1",
+          "resolved_goal": "Execute creator-authorized governance sequence with strict authority gate.",
+          "execution_scope": "creator_authorized_sequence",
+          "route_tokens": [
+            "??????? creator-only governance program",
+            "??????? creator-authorized program sequence",
+            "creator-authorized program sequence"
+          ],
+          "mutability_level": "CREATOR_ONLY_MUTATION",
+          "creator_authority_required": true,
+          "rollback_supported": true,
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "creator acceptance precheck",
+              "action": "creator_acceptance_precheck",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "governance maintenance",
+              "action": "governance_maintenance_check",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ]
+        },
+        {
+          "program_id": "program.wave2c.authority_required_program.v1",
+          "resolved_goal": "Execute authority-required guarded sequence with control artifact refresh.",
+          "execution_scope": "authority_required_sequence",
+          "route_tokens": [
+            "??????? authority-required program",
+            "authority-required program"
+          ],
+          "requires_in_sync": true,
+          "mutability_level": "CREATOR_ONLY_MUTATION",
+          "creator_authority_required": true,
+          "rollback_supported": true,
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "creator acceptance precheck",
+              "action": "creator_acceptance_precheck",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "refresh safe mirror evidence",
+              "action": "refresh_safe_mirror_evidence",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "program_class": "controlled_lifecycle_program",
+      "description": "Policy-governed install/remove lifecycle programs for shared systems.",
+      "allowed_modes": [
+        "creator"
+      ],
+      "authority_requirement": "creator_required",
+      "creator_authority_required": true,
+      "policy_basis": [
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+        "workspace_config/AGENT_EXECUTION_POLICY.md",
+        "workspace_config/shared_systems_registry.json",
+        "docs/governance/OPERATOR_TASK_PROGRAM_MUTABILITY_MODEL.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md"
+      ],
+      "step_templates": [
+        "creator_acceptance_precheck",
+        "install_system",
+        "remove_system",
+        "governance_maintenance_check",
+        "report_generation"
+      ],
+      "step_sequences": [
+        "authority_gate",
+        "lifecycle_change",
+        "maintenance_validation",
+        "report_materialization"
+      ],
+      "command_dependencies": [
+        "creator_acceptance_precheck",
+        "install_system",
+        "remove_system",
+        "governance_maintenance_check",
+        "report_generation"
+      ],
+      "review_dependencies": [
+        "creator_review"
+      ],
+      "delivery_artifacts": [
+        "workspace_config/shared_systems_registry.json"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_checkpoint.json",
+        "runtime/repo_control_center/operator_program_history.json",
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_checkpoint.json",
+        "runtime/repo_control_center/operator_program_history.json",
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "resume_supported": true,
+      "rollback_supported": true,
+      "failure_policy_default": "stop_on_failure",
+      "review_requirement": "creator_review",
+      "escalation_requirement": true,
+      "escalation_path": "creator_lifecycle_escalation",
+      "stop_conditions": [
+        "any_step_failed",
+        "any_step_blocked"
+      ],
+      "delivery_target": "workspace_config/shared_systems_registry.json",
+      "approval_basis": [
+        "workspace_config/AGENT_EXECUTION_POLICY.md",
+        "workspace_config/shared_systems_registry.json"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_program_audit_trail.json",
+      "routing_precedence": 7,
+      "blocking_conditions": [
+        "creator_authority_required",
+        "required_input_missing",
+        "step_execution_failed"
+      ],
+      "programs": [
+        {
+          "program_id": "program.wave2c.controlled_install_lifecycle.v1",
+          "resolved_goal": "Execute controlled install lifecycle sequence for one governed system.",
+          "execution_scope": "controlled_install_lifecycle",
+          "required_inputs": [
+            "system_id"
+          ],
+          "route_tokens": [
+            "install/remove governed system program",
+            "controlled lifecycle update program",
+            "install governed system program"
+          ],
+          "mutability_level": "GUARDED_STATE_CHANGE",
+          "creator_authority_required": true,
+          "rollback_supported": true,
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "creator acceptance precheck",
+              "action": "creator_acceptance_precheck",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "install system",
+              "action": "install_system",
+              "pass_args": [
+                "system_id"
+              ],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "governance maintenance",
+              "action": "governance_maintenance_check",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S4",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ]
+        },
+        {
+          "program_id": "program.wave2c.controlled_remove_lifecycle.v1",
+          "resolved_goal": "Execute controlled remove lifecycle sequence for one governed system.",
+          "execution_scope": "controlled_remove_lifecycle",
+          "required_inputs": [
+            "system_id"
+          ],
+          "route_tokens": [
+            "remove governed system program",
+            "controlled remove lifecycle program",
+            "governed integration maintenance program"
+          ],
+          "mutability_level": "GUARDED_STATE_CHANGE",
+          "creator_authority_required": true,
+          "rollback_supported": true,
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "creator acceptance precheck",
+              "action": "creator_acceptance_precheck",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "remove system",
+              "action": "remove_system",
+              "pass_args": [
+                "system_id"
+              ],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "governance maintenance",
+              "action": "governance_maintenance_check",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S4",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "program_class": "blocked_mutation_test_program",
+      "description": "Policy-driven blocked mutation simulation programs for guard enforcement proof.",
+      "allowed_modes": [
+        "creator",
+        "helper",
+        "integration"
+      ],
+      "authority_requirement": "program_specific",
+      "creator_authority_required": false,
+      "policy_basis": [
+        "docs/governance/OPERATOR_TASK_PROGRAM_MUTABILITY_MODEL.md",
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md"
+      ],
+      "step_templates": [
+        "refresh_safe_mirror_evidence",
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "step_sequences": [
+        "guard_trigger",
+        "blocked_result_capture",
+        "report_materialization"
+      ],
+      "command_dependencies": [
+        "refresh_safe_mirror_evidence",
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "review_dependencies": [
+        "creator_review"
+      ],
+      "delivery_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_checkpoint.json",
+        "runtime/repo_control_center/operator_program_history.json",
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_checkpoint.json",
+        "runtime/repo_control_center/operator_program_history.json",
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "resume_supported": true,
+      "rollback_supported": true,
+      "failure_policy_default": "stop_on_failure",
+      "review_requirement": "creator_review",
+      "escalation_requirement": true,
+      "escalation_path": "mutation_guard_escalation",
+      "stop_conditions": [
+        "any_step_failed",
+        "any_step_blocked"
+      ],
+      "delivery_target": "runtime/repo_control_center",
+      "approval_basis": [
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_program_audit_trail.json",
+      "routing_precedence": 5,
+      "blocking_conditions": [
+        "creator_authority_required",
+        "required_input_missing",
+        "policy_basis_missing",
+        "step_execution_failed"
+      ],
+      "programs": [
+        {
+          "program_id": "program.wave2c.blocked_creator_gate_simulation.v1",
+          "resolved_goal": "Simulate unauthorized creator-only mutation path and verify formal block.",
+          "execution_scope": "blocked_creator_gate_simulation",
+          "allowed_modes": [
+            "helper",
+            "integration"
+          ],
+          "authority_requirement": "creator_required",
+          "creator_authority_required": true,
+          "mutability_level": "CREATOR_ONLY_MUTATION",
+          "rollback_supported": true,
+          "route_tokens": [
+            "????????? ???????????? mutation path",
+            "??????????? blocked response for unauthorized program",
+            "blocked creator-only program simulation"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "refresh safe mirror evidence",
+              "action": "refresh_safe_mirror_evidence",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ]
+        },
+        {
+          "program_id": "program.wave2c.blocked_missing_preconditions.v1",
+          "resolved_goal": "Simulate mutation block caused by missing required preconditions.",
+          "execution_scope": "blocked_missing_preconditions",
+          "mutability_level": "OPERATIONAL_ROUTING",
+          "creator_authority_required": false,
+          "required_inputs": [
+            "task_id",
+            "node_id"
+          ],
+          "rollback_supported": false,
+          "route_tokens": [
+            "??????? creator gate enforcement",
+            "blocked program by missing preconditions",
+            "missing preconditions mutation block"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "handoff prepare",
+              "action": "handoff_prepare",
+              "pass_args": [
+                "task_id",
+                "node_id"
+              ],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ]
+        },
+        {
+          "program_id": "program.wave2c.blocked_policy_mutation.v1",
+          "resolved_goal": "Simulate blocked mutation due to policy basis violation.",
+          "execution_scope": "blocked_policy_mutation",
+          "authority_requirement": "creator_required",
+          "creator_authority_required": true,
+          "mutability_level": "CREATOR_ONLY_MUTATION",
+          "rollback_supported": true,
+          "policy_basis": [
+            "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+            "docs/governance/NON_EXISTENT_WAVE2C_POLICY.md"
+          ],
+          "route_tokens": [
+            "blocked mutation by policy",
+            "policy blocked mutation test"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "refresh safe mirror evidence",
+              "action": "refresh_safe_mirror_evidence",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
           ]
         }
       ]

@@ -1,0 +1,376 @@
+{
+  "schema_version": "operator_task_program_golden_pack.wave2c.v1.0.0",
+  "wave": "2C",
+  "description": "Deterministic routing and guard expectations for Wave 2C guarded creator programs.",
+  "items": [
+    {
+      "id": "W2C-GP-001",
+      "raw_request": "controlled governance maintenance program",
+      "program_class": "guarded_maintenance_program",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.guarded_governance_maintenance.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "governance_maintenance_check",
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GUARDS",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "guarded_only",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "blocking_expectation": "none_when_creator",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-002",
+      "raw_request": "выполни controlled governance maintenance program",
+      "program_class": "guarded_maintenance_program",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.guarded_governance_maintenance.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "governance_maintenance_check",
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GUARDS",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "guarded_only",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "blocking_expectation": "none_when_creator",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-003",
+      "raw_request": "rebuild approved control artifacts",
+      "program_class": "guarded_maintenance_program",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.control_artifacts_rebuild.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "refresh_safe_mirror_evidence",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GUARDS",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "guarded_only",
+      "expected_artifacts": [
+        "workspace_config/SAFE_MIRROR_MANIFEST.json"
+      ],
+      "blocking_expectation": "none_when_creator",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-004",
+      "raw_request": "creator-authorized program sequence",
+      "program_class": "creator_only_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.creator_authorized_sequence.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "governance_maintenance_check",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "creator_only",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "blocking_expectation": "blocked_when_helper",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md"
+      ]
+    },
+    {
+      "id": "W2C-GP-005",
+      "raw_request": "creator-authorized program sequence",
+      "program_class": "creator_only_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.creator_authorized_sequence.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "governance_maintenance_check",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "creator_only",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "blocking_expectation": "blocked_when_helper",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-006",
+      "raw_request": "authority-required program",
+      "program_class": "creator_only_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.authority_required_program.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_AUTHORITY",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "creator_only",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "blocking_expectation": "blocked_when_helper",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-007",
+      "raw_request": "install governed system program",
+      "program_class": "controlled_lifecycle_program",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.controlled_install_lifecycle.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "install_system",
+        "governance_maintenance_check",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_INPUTS_OR_AUTHORITY",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "guarded_lifecycle",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "blocking_expectation": "blocked_without_system_id",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json",
+        "workspace_config/shared_systems_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-008",
+      "raw_request": "remove governed system program",
+      "program_class": "controlled_lifecycle_program",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.controlled_remove_lifecycle.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "remove_system",
+        "governance_maintenance_check",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_INPUTS_OR_AUTHORITY",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "guarded_lifecycle",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "blocking_expectation": "blocked_without_system_id",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-009",
+      "raw_request": "governed integration maintenance program",
+      "program_class": "controlled_lifecycle_program",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.controlled_remove_lifecycle.v1",
+      "expected_step_plan": [
+        "creator_acceptance_precheck",
+        "remove_system",
+        "governance_maintenance_check",
+        "report_generation"
+      ],
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_INPUTS_OR_AUTHORITY",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "guarded_lifecycle",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "blocking_expectation": "blocked_without_system_id",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-010",
+      "raw_request": "blocked creator-only program simulation",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.blocked_creator_gate_simulation.v1",
+      "expected_step_plan": [
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_IN_HELPER_MODE",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "none_when_blocked",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "blocking_expectation": "creator_authority_required",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-011",
+      "raw_request": "blocked creator-only program simulation",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.blocked_creator_gate_simulation.v1",
+      "expected_step_plan": [
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_IN_HELPER_MODE",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "none_when_blocked",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "blocking_expectation": "creator_authority_required",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-012",
+      "raw_request": "blocked program by missing preconditions",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "OPERATIONAL_ROUTING",
+      "authority_expectation": "none",
+      "expected_program_id": "program.wave2c.blocked_missing_preconditions.v1",
+      "expected_step_plan": [
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_BY_PRECONDITION",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "none_when_blocked",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_checkpoint.json"
+      ],
+      "blocking_expectation": "required_input_missing",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-013",
+      "raw_request": "missing preconditions mutation block",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "OPERATIONAL_ROUTING",
+      "authority_expectation": "none",
+      "expected_program_id": "program.wave2c.blocked_missing_preconditions.v1",
+      "expected_step_plan": [
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_BY_PRECONDITION",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "none_when_blocked",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_checkpoint.json"
+      ],
+      "blocking_expectation": "required_input_missing",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-014",
+      "raw_request": "blocked mutation by policy",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.blocked_policy_mutation.v1",
+      "expected_step_plan": [
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_BY_POLICY",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "none_when_blocked",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "blocking_expectation": "policy_basis_missing",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-015",
+      "raw_request": "policy blocked mutation test",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.blocked_policy_mutation.v1",
+      "expected_step_plan": [
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_BY_POLICY",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "none_when_blocked",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "blocking_expectation": "policy_basis_missing",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    },
+    {
+      "id": "W2C-GP-016",
+      "raw_request": "blocked creator-only program simulation",
+      "program_class": "blocked_mutation_test_program",
+      "mutability_level": "CREATOR_ONLY_MUTATION",
+      "authority_expectation": "creator_required",
+      "expected_program_id": "program.wave2c.blocked_creator_gate_simulation.v1",
+      "expected_step_plan": [
+        "refresh_safe_mirror_evidence",
+        "report_generation"
+      ],
+      "expected_result": "BLOCKED_IN_HELPER_MODE",
+      "expected_step_behavior": "stop_on_failure",
+      "expected_state_change": "none_when_blocked",
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_program_audit_trail.json"
+      ],
+      "blocking_expectation": "creator_authority_required",
+      "evidence_source": [
+        "workspace_config/operator_task_program_registry.json"
+      ]
+    }
+  ]
+}
