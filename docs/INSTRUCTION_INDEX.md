@@ -12,6 +12,7 @@ Architecture anchor:
 - mission layer: accepted/certified baseline
 - current canonical phase: constitution-first
 - constitutional core: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+- canonical vocabulary freeze: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 
 ## Mandatory Pre-Task Read Order
 
@@ -24,6 +25,7 @@ Architecture anchor:
 7. `docs/CURRENT_PLATFORM_STATE.md`
 8. `docs/NEXT_CANONICAL_STEP.md`
    constitution-first anchor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+   vocabulary freeze anchor: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 9. `docs/governance/FIRST_PRINCIPLES.md`
 10. `docs/governance/GOVERNANCE_HIERARCHY.md`
 11. `docs/governance/SELF_VERIFICATION_POLICY.md`
@@ -119,6 +121,7 @@ If this order is not completed, task status is `REJECTED`.
 
 - `docs/governance/FIRST_PRINCIPLES.md`
 - `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+- `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 - `docs/governance/GOVERNANCE_HIERARCHY.md`
 - `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
 - `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`

@@ -12,6 +12,7 @@
 - Current canonical phase: `constitution-first`
 - New brain-level implementation layers are blocked until constitutional closure.
 - Constitutional core path: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+- Vocabulary freeze path: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 
 ## Explainability Quick Files
 
@@ -34,6 +35,7 @@ Read these first when you need plain-language status without deep policy parsing
 7. `docs/CURRENT_PLATFORM_STATE.md`
 8. `docs/NEXT_CANONICAL_STEP.md`
    constitution-first anchor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+   vocabulary freeze anchor: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 9. `docs/governance/FIRST_PRINCIPLES.md`
 10. `docs/governance/GOVERNANCE_HIERARCHY.md`
 11. `docs/governance/SELF_VERIFICATION_POLICY.md`

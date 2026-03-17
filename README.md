@@ -29,6 +29,7 @@
 - Current phase: `Constitution-first`.
 - Constraint: no new brain-level implementation layers before constitutional closure.
 - Constitutional core: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`.
+- Vocabulary freeze: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`.
 
 ## Federation / Integration Layer V1
 
@@ -57,6 +58,7 @@ Hard rule:
 
 - `docs/governance/FIRST_PRINCIPLES.md`
 - `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+- `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 
 ### Level 1-4 Integration Anchor
 

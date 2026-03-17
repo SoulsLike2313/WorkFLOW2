@@ -73,6 +73,8 @@
     "governance_brain_stack_required": true,
     "governance_brain_stack_paths": [
       "docs/governance/FIRST_PRINCIPLES.md",
+      "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
+      "docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md",
       "docs/governance/GOVERNANCE_HIERARCHY.md",
       "docs/governance/SELF_VERIFICATION_POLICY.md",
       "docs/governance/CONTRADICTION_CONTROL_POLICY.md",
