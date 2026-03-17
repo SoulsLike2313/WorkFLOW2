@@ -38,6 +38,8 @@ ALLOWED_ROOTS = {
     "MACHINE_CONTEXT.md",
     ".gitignore",
     "docs/",
+    "integration/",
+    "tasks/",
     "workspace_config/",
     "scripts/",
     "projects/",
