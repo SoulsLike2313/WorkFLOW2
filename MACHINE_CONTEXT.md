@@ -118,6 +118,8 @@ Read these first when you need plain-language status without deep policy parsing
 88. `scripts/operator_mission_surface.py`
 89. `docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json`
 90. `docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md`
+91. `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+92. `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 
 ## Execution Guardrails
 
