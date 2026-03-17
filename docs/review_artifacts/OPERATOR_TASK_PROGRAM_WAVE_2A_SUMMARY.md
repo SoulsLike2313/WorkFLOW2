@@ -42,8 +42,19 @@ No guarded mutation flow is enabled in Wave 2A.
   - `docs/review_artifacts/OPERATOR_TASK_PROGRAM_CONSISTENCY_REPORT_WAVE_2A.md`
 
 ## 6) Creator-grade chain
-- status: `to be confirmed on clean synced state after commit/push`
-- proof outputs are generated under:
+- status: `PASS`
+- verification snapshot:
+  - `machine_mode=creator`
+  - `authority_present=true`
+  - `operator_task_program consistency-check=PASS (20/20)`
+  - `repo_control_center bundle=READY`
+  - `repo_control_center full-check=PASS`
+  - `trust_verdict=TRUSTED`
+  - `sync_verdict=IN_SYNC`
+  - `governance_verdict=COMPLIANT`
+  - `governance_acceptance_verdict=PASS`
+  - `admission_verdict=ADMISSIBLE`
+- proof outputs:
   - `runtime/repo_control_center/wave2a_*_output.json`
 
 ## 7) Wave 2B focus
