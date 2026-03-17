@@ -1,0 +1,3 @@
+﻿CVVCODEX_CREATOR_AUTHORITY_DIR=E:\CVVCODEX_authority_mock
+creator_marker_path=E:\CVVCODEX_authority_mock\creator_authority.json
+creator_marker_exists=True
