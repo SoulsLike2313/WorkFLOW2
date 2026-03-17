@@ -49,11 +49,26 @@
 - source: `docs/review_artifacts/OPERATOR_TASK_PROGRAM_SCENARIO_PACK.md`
 
 ## 7) Creator-grade PASS chain
-- finalized after latest run evidence in runtime outputs.
+- `python scripts/detect_machine_mode.py --intent creator --strict-intent` -> `PASS` (`machine_mode=creator`, `authority_present=true`)
+- `python scripts/operator_task_program_surface.py consistency-check` -> `PASS (52/52)`
+- `python scripts/repo_control_center.py bundle` -> `READY`
+- `python scripts/repo_control_center.py full-check` -> `PASS`
+- full-check chain:
+  - `trust=TRUSTED`
+  - `sync=IN_SYNC`
+  - `governance=COMPLIANT`
+  - `governance_acceptance=PASS`
+  - `admission=ADMISSIBLE`
+  - `workspace_health=PASS`
+  - `repo_health=PASS`
 
 ## 8) Baseline readiness
-- Task/Program Layer is baseline-ready when consistency-check + full-check both PASS on clean parity.
+- Task/Program Layer is baseline-ready on current baseline:
+  - clean parity with `safe_mirror/main` (`0/0`)
+  - consistency-check final benchmark `PASS`
+  - creator-grade repo control chain `PASS`
+  - blocked and guarded paths certified via Wave 2C safety artifacts
 
 ## 9) Next stage after baseline freeze
-- proceed to next governed evolution increment from frozen baseline,
+- proceed to next governed evolution increment from frozen baseline `next-step-operator-task-program-layer-v1`,
   without widening mutation scope outside policy-gated roadmap.
