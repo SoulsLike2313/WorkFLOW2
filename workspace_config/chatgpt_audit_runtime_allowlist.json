@@ -6,6 +6,10 @@
     "runtime/repo_control_center/repo_control_status.json",
     "runtime/repo_control_center/repo_control_report.md",
     "runtime/repo_control_center/evolution_status.json",
-    "runtime/repo_control_center/evolution_report.md"
+    "runtime/repo_control_center/evolution_report.md",
+    "runtime/projects/platform_test_agent/audit_reports/test-agent-intake-platform_test_agent-20260316T165222Z/admission_decision.json",
+    "runtime/projects/platform_test_agent/audit_reports/test-agent-intake-platform_test_agent-20260316T165222Z/evidence_manifest.json",
+    "runtime/projects/platform_test_agent/audit_reports/test-agent-intake-platform_test_agent-20260316T165222Z/final_machine_report.json",
+    "runtime/projects/platform_test_agent/audit_reports/test-agent-intake-platform_test_agent-20260316T165222Z/final_machine_report.md"
   ]
 }
