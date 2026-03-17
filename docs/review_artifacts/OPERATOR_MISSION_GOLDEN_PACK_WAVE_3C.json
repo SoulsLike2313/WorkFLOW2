@@ -1,438 +1,780 @@
 {
-  "schema_version": "operator_mission_golden_pack.wave3c.v1.0.0",
+  "schema_version": "operator_mission_golden_pack.wave3c.v1.1.0",
   "wave": "3C",
+  "generated_by": "scripts/operator_mission_surface.py consistency-check",
   "items": [
     {
-      "id": "W3C-MG-001",
-      "raw_request": "guarded creator mission",
-      "mission_class": "guarded_creator_mission",
-      "expected_mission_id": "mission.wave3c.guarded_creator_maintenance.v1",
+      "id": "W3C-001",
+      "raw_request": "guarded baseline transition mission",
+      "mission_class": "guarded_baseline_transition_mission",
+      "expected_mission_id": "mission.wave3c.guarded_baseline_transition.v1",
       "mutability_level": "GUARDED_STATE_CHANGE",
       "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "guarded_creator_mission",
-        "mission_id": "mission.wave3c.guarded_creator_maintenance.v1",
-        "mutability_level": "GUARDED_STATE_CHANGE",
-        "creator_authority_required": true
-      },
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
       "expected_program_plan": [
         "program.wave2c.guarded_governance_maintenance.v1",
-        "program.wave2c.control_artifacts_rebuild.v1"
+        "program.wave2c.control_artifacts_rebuild.v1",
+        "program.wave2b.review_certification_sequence.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
       ],
-      "notes": "Wave 3C mission benchmark"
+      "notes": "allowed guarded baseline transition mission"
     },
     {
-      "id": "W3C-MG-002",
-      "raw_request": "run guarded creator mission",
-      "mission_class": "guarded_creator_mission",
-      "expected_mission_id": "mission.wave3c.guarded_creator_maintenance.v1",
+      "id": "W3C-002",
+      "raw_request": "allowed guarded baseline transition mission",
+      "mission_class": "guarded_baseline_transition_mission",
+      "expected_mission_id": "mission.wave3c.guarded_baseline_transition.v1",
       "mutability_level": "GUARDED_STATE_CHANGE",
       "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "guarded_creator_mission",
-        "mission_id": "mission.wave3c.guarded_creator_maintenance.v1",
-        "mutability_level": "GUARDED_STATE_CHANGE",
-        "creator_authority_required": true
-      },
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
       "expected_program_plan": [
         "program.wave2c.guarded_governance_maintenance.v1",
-        "program.wave2c.control_artifacts_rebuild.v1"
+        "program.wave2c.control_artifacts_rebuild.v1",
+        "program.wave2b.review_certification_sequence.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
       ],
-      "notes": "Wave 3C mission benchmark"
+      "notes": "explicit allowed path"
     },
     {
-      "id": "W3C-MG-003",
-      "raw_request": "execute guarded creator mission end-to-end",
-      "mission_class": "guarded_creator_mission",
-      "expected_mission_id": "mission.wave3c.guarded_creator_maintenance.v1",
+      "id": "W3C-003",
+      "raw_request": "execute guarded baseline transition",
+      "mission_class": "guarded_baseline_transition_mission",
+      "expected_mission_id": "mission.wave3c.guarded_baseline_transition.v1",
       "mutability_level": "GUARDED_STATE_CHANGE",
       "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "guarded_creator_mission",
-        "mission_id": "mission.wave3c.guarded_creator_maintenance.v1",
-        "mutability_level": "GUARDED_STATE_CHANGE",
-        "creator_authority_required": true
-      },
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
       "expected_program_plan": [
         "program.wave2c.guarded_governance_maintenance.v1",
-        "program.wave2c.control_artifacts_rebuild.v1"
+        "program.wave2c.control_artifacts_rebuild.v1",
+        "program.wave2b.review_certification_sequence.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
       ],
-      "notes": "Wave 3C mission benchmark"
+      "notes": "token variant"
     },
     {
-      "id": "W3C-MG-004",
-      "raw_request": "perform guarded creator mission sequence",
-      "mission_class": "guarded_creator_mission",
-      "expected_mission_id": "mission.wave3c.guarded_creator_maintenance.v1",
+      "id": "W3C-004",
+      "raw_request": "guarded baseline transition mission stop-on-failure path",
+      "mission_class": "guarded_baseline_transition_mission",
+      "expected_mission_id": "mission.wave3c.guarded_baseline_transition.v1",
       "mutability_level": "GUARDED_STATE_CHANGE",
       "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "guarded_creator_mission",
-        "mission_id": "mission.wave3c.guarded_creator_maintenance.v1",
-        "mutability_level": "GUARDED_STATE_CHANGE",
-        "creator_authority_required": true
-      },
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
       "expected_program_plan": [
         "program.wave2c.guarded_governance_maintenance.v1",
-        "program.wave2c.control_artifacts_rebuild.v1"
+        "program.wave2c.control_artifacts_rebuild.v1",
+        "program.wave2b.review_certification_sequence.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
       ],
-      "notes": "Wave 3C mission benchmark"
+      "notes": "stop-on-failure scenario"
     },
     {
-      "id": "W3C-MG-005",
-      "raw_request": "creator only mission",
-      "mission_class": "creator_only_mission",
-      "expected_mission_id": "mission.wave3c.creator_only_acceptance_sequence.v1",
-      "mutability_level": "CREATOR_ONLY_MUTATION",
-      "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "creator_only_mission",
-        "mission_id": "mission.wave3c.creator_only_acceptance_sequence.v1",
-        "mutability_level": "CREATOR_ONLY_MUTATION",
-        "creator_authority_required": true
-      },
-      "expected_program_plan": [
-        "program.wave2c.creator_authorized_sequence.v1",
-        "program.wave2c.authority_required_program.v1"
-      ],
-      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
-        "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
-      ],
-      "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
-      ],
-      "notes": "Wave 3C mission benchmark"
-    },
-    {
-      "id": "W3C-MG-006",
-      "raw_request": "run creator only mission",
-      "mission_class": "creator_only_mission",
-      "expected_mission_id": "mission.wave3c.creator_only_acceptance_sequence.v1",
-      "mutability_level": "CREATOR_ONLY_MUTATION",
-      "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "creator_only_mission",
-        "mission_id": "mission.wave3c.creator_only_acceptance_sequence.v1",
-        "mutability_level": "CREATOR_ONLY_MUTATION",
-        "creator_authority_required": true
-      },
-      "expected_program_plan": [
-        "program.wave2c.creator_authorized_sequence.v1",
-        "program.wave2c.authority_required_program.v1"
-      ],
-      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
-        "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
-      ],
-      "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
-      ],
-      "notes": "Wave 3C mission benchmark"
-    },
-    {
-      "id": "W3C-MG-007",
-      "raw_request": "execute creator only mission end-to-end",
-      "mission_class": "creator_only_mission",
-      "expected_mission_id": "mission.wave3c.creator_only_acceptance_sequence.v1",
-      "mutability_level": "CREATOR_ONLY_MUTATION",
-      "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "creator_only_mission",
-        "mission_id": "mission.wave3c.creator_only_acceptance_sequence.v1",
-        "mutability_level": "CREATOR_ONLY_MUTATION",
-        "creator_authority_required": true
-      },
-      "expected_program_plan": [
-        "program.wave2c.creator_authorized_sequence.v1",
-        "program.wave2c.authority_required_program.v1"
-      ],
-      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
-        "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
-      ],
-      "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
-      ],
-      "notes": "Wave 3C mission benchmark"
-    },
-    {
-      "id": "W3C-MG-008",
-      "raw_request": "perform creator only mission sequence",
-      "mission_class": "creator_only_mission",
-      "expected_mission_id": "mission.wave3c.creator_only_acceptance_sequence.v1",
-      "mutability_level": "CREATOR_ONLY_MUTATION",
-      "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "creator_only_mission",
-        "mission_id": "mission.wave3c.creator_only_acceptance_sequence.v1",
-        "mutability_level": "CREATOR_ONLY_MUTATION",
-        "creator_authority_required": true
-      },
-      "expected_program_plan": [
-        "program.wave2c.creator_authorized_sequence.v1",
-        "program.wave2c.authority_required_program.v1"
-      ],
-      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
-        "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
-      ],
-      "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
-      ],
-      "notes": "Wave 3C mission benchmark"
-    },
-    {
-      "id": "W3C-MG-009",
-      "raw_request": "controlled lifecycle mission",
-      "mission_class": "controlled_state_change_mission",
-      "expected_mission_id": "mission.wave3c.controlled_state_change_cycle.v1",
+      "id": "W3C-005",
+      "raw_request": "guarded baseline transition mission rollback-required path",
+      "mission_class": "guarded_baseline_transition_mission",
+      "expected_mission_id": "mission.wave3c.guarded_baseline_transition.v1",
       "mutability_level": "GUARDED_STATE_CHANGE",
       "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "controlled_state_change_mission",
-        "mission_id": "mission.wave3c.controlled_state_change_cycle.v1",
-        "mutability_level": "GUARDED_STATE_CHANGE",
-        "creator_authority_required": true
-      },
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
       "expected_program_plan": [
-        "program.wave2c.controlled_install_lifecycle.v1",
-        "program.wave2c.controlled_remove_lifecycle.v1"
+        "program.wave2c.guarded_governance_maintenance.v1",
+        "program.wave2c.control_artifacts_rebuild.v1",
+        "program.wave2b.review_certification_sequence.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
       ],
-      "notes": "Wave 3C mission benchmark"
+      "notes": "rollback-required scenario"
     },
     {
-      "id": "W3C-MG-010",
-      "raw_request": "run controlled lifecycle mission",
-      "mission_class": "controlled_state_change_mission",
-      "expected_mission_id": "mission.wave3c.controlled_state_change_cycle.v1",
+      "id": "W3C-006",
+      "raw_request": "creator only certification mission",
+      "mission_class": "creator_only_certification_mission",
+      "expected_mission_id": "mission.wave3c.creator_only_certification.v1",
+      "mutability_level": "CREATOR_ONLY_TRANSITION",
+      "authority_expectation": "creator_required",
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
+      "expected_program_plan": [
+        "program.wave2a.creator_grade_validation.v1",
+        "program.wave2c.creator_authorized_sequence.v1",
+        "program.wave2c.authority_required_program.v1",
+        "program.wave2b.certification_pass.v1"
+      ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
+      ],
+      "notes": "creator-only certification with creator authority"
+    },
+    {
+      "id": "W3C-007",
+      "raw_request": "creator-only certification mission with creator authority",
+      "mission_class": "creator_only_certification_mission",
+      "expected_mission_id": "mission.wave3c.creator_only_certification.v1",
+      "mutability_level": "CREATOR_ONLY_TRANSITION",
+      "authority_expectation": "creator_required",
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
+      "expected_program_plan": [
+        "program.wave2a.creator_grade_validation.v1",
+        "program.wave2c.creator_authorized_sequence.v1",
+        "program.wave2c.authority_required_program.v1",
+        "program.wave2b.certification_pass.v1"
+      ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
+      ],
+      "notes": "explicit creator-authority path"
+    },
+    {
+      "id": "W3C-008",
+      "raw_request": "execute creator only certification mission",
+      "mission_class": "creator_only_certification_mission",
+      "expected_mission_id": "mission.wave3c.creator_only_certification.v1",
+      "mutability_level": "CREATOR_ONLY_TRANSITION",
+      "authority_expectation": "creator_required",
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
+      "expected_program_plan": [
+        "program.wave2a.creator_grade_validation.v1",
+        "program.wave2c.creator_authorized_sequence.v1",
+        "program.wave2c.authority_required_program.v1",
+        "program.wave2b.certification_pass.v1"
+      ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
+      ],
+      "notes": "token variant"
+    },
+    {
+      "id": "W3C-009",
+      "raw_request": "creator only certification mission rollback-required path",
+      "mission_class": "creator_only_certification_mission",
+      "expected_mission_id": "mission.wave3c.creator_only_certification.v1",
+      "mutability_level": "CREATOR_ONLY_TRANSITION",
+      "authority_expectation": "creator_required",
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
+      "expected_program_plan": [
+        "program.wave2a.creator_grade_validation.v1",
+        "program.wave2c.creator_authorized_sequence.v1",
+        "program.wave2c.authority_required_program.v1",
+        "program.wave2b.certification_pass.v1"
+      ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
+      ],
+      "notes": "rollback-required creator-only scenario"
+    },
+    {
+      "id": "W3C-010",
+      "raw_request": "creator only certification mission stop-on-failure path",
+      "mission_class": "creator_only_certification_mission",
+      "expected_mission_id": "mission.wave3c.creator_only_certification.v1",
+      "mutability_level": "CREATOR_ONLY_TRANSITION",
+      "authority_expectation": "creator_required",
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
+      "expected_program_plan": [
+        "program.wave2a.creator_grade_validation.v1",
+        "program.wave2c.creator_authorized_sequence.v1",
+        "program.wave2c.authority_required_program.v1",
+        "program.wave2b.certification_pass.v1"
+      ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
+      ],
+      "notes": "stop-on-failure creator-only scenario"
+    },
+    {
+      "id": "W3C-011",
+      "raw_request": "controlled upgrade mission",
+      "mission_class": "controlled_upgrade_mission",
+      "expected_mission_id": "mission.wave3c.controlled_upgrade.allowed.v1",
       "mutability_level": "GUARDED_STATE_CHANGE",
       "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "controlled_state_change_mission",
-        "mission_id": "mission.wave3c.controlled_state_change_cycle.v1",
-        "mutability_level": "GUARDED_STATE_CHANGE",
-        "creator_authority_required": true
-      },
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
       "expected_program_plan": [
-        "program.wave2c.controlled_install_lifecycle.v1",
-        "program.wave2c.controlled_remove_lifecycle.v1"
+        "program.wave2c.control_artifacts_rebuild.v1",
+        "program.wave2b.review_certification_sequence.v1",
+        "program.wave2a.operator_engineering_report.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
       ],
-      "notes": "Wave 3C mission benchmark"
+      "notes": "allowed controlled upgrade mission (policy supported)"
     },
     {
-      "id": "W3C-MG-011",
-      "raw_request": "execute controlled lifecycle mission end-to-end",
-      "mission_class": "controlled_state_change_mission",
-      "expected_mission_id": "mission.wave3c.controlled_state_change_cycle.v1",
+      "id": "W3C-012",
+      "raw_request": "allowed controlled upgrade mission",
+      "mission_class": "controlled_upgrade_mission",
+      "expected_mission_id": "mission.wave3c.controlled_upgrade.allowed.v1",
       "mutability_level": "GUARDED_STATE_CHANGE",
       "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "controlled_state_change_mission",
-        "mission_id": "mission.wave3c.controlled_state_change_cycle.v1",
-        "mutability_level": "GUARDED_STATE_CHANGE",
-        "creator_authority_required": true
-      },
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
       "expected_program_plan": [
-        "program.wave2c.controlled_install_lifecycle.v1",
-        "program.wave2c.controlled_remove_lifecycle.v1"
+        "program.wave2c.control_artifacts_rebuild.v1",
+        "program.wave2b.review_certification_sequence.v1",
+        "program.wave2a.operator_engineering_report.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
       ],
-      "notes": "Wave 3C mission benchmark"
+      "notes": "explicit allowed controlled upgrade"
     },
     {
-      "id": "W3C-MG-012",
-      "raw_request": "perform controlled lifecycle mission sequence",
-      "mission_class": "controlled_state_change_mission",
-      "expected_mission_id": "mission.wave3c.controlled_state_change_cycle.v1",
+      "id": "W3C-013",
+      "raw_request": "execute controlled upgrade mission",
+      "mission_class": "controlled_upgrade_mission",
+      "expected_mission_id": "mission.wave3c.controlled_upgrade.allowed.v1",
       "mutability_level": "GUARDED_STATE_CHANGE",
       "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "controlled_state_change_mission",
-        "mission_id": "mission.wave3c.controlled_state_change_cycle.v1",
-        "mutability_level": "GUARDED_STATE_CHANGE",
-        "creator_authority_required": true
-      },
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
       "expected_program_plan": [
-        "program.wave2c.controlled_install_lifecycle.v1",
-        "program.wave2c.controlled_remove_lifecycle.v1"
+        "program.wave2c.control_artifacts_rebuild.v1",
+        "program.wave2b.review_certification_sequence.v1",
+        "program.wave2a.operator_engineering_report.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
       ],
-      "notes": "Wave 3C mission benchmark"
+      "notes": "token variant"
     },
     {
-      "id": "W3C-MG-013",
-      "raw_request": "blocked mission certification",
-      "mission_class": "blocked_mission_test_mission",
-      "expected_mission_id": "mission.wave3c.blocked_mission_certification.v1",
-      "mutability_level": "READ_ONLY",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "blocked_mission_test_mission",
-        "mission_id": "mission.wave3c.blocked_mission_certification.v1",
-        "mutability_level": "READ_ONLY",
-        "creator_authority_required": false
-      },
+      "id": "W3C-014",
+      "raw_request": "blocked transition by policy",
+      "mission_class": "controlled_upgrade_mission",
+      "expected_mission_id": "mission.wave3c.controlled_upgrade.policy_blocked.v1",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
       "expected_program_plan": [
-        "program.wave2c.blocked_missing_preconditions.v1",
-        "program.wave2c.blocked_policy_mutation.v1"
+        "program.wave2c.control_artifacts_rebuild.v1",
+        "program.wave2a.operator_engineering_report.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
       ],
-      "notes": "Wave 3C mission benchmark"
+      "notes": "policy-blocked controlled upgrade transition"
     },
     {
-      "id": "W3C-MG-014",
-      "raw_request": "run blocked mission certification",
-      "mission_class": "blocked_mission_test_mission",
-      "expected_mission_id": "mission.wave3c.blocked_mission_certification.v1",
-      "mutability_level": "READ_ONLY",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "blocked_mission_test_mission",
-        "mission_id": "mission.wave3c.blocked_mission_certification.v1",
-        "mutability_level": "READ_ONLY",
-        "creator_authority_required": false
-      },
+      "id": "W3C-015",
+      "raw_request": "controlled upgrade policy blocked mission",
+      "mission_class": "controlled_upgrade_mission",
+      "expected_mission_id": "mission.wave3c.controlled_upgrade.policy_blocked.v1",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "authority_expectation": "creator_required",
+      "expected_creator_authority_required": true,
+      "expected_rollback_supported": true,
       "expected_program_plan": [
-        "program.wave2c.blocked_missing_preconditions.v1",
-        "program.wave2c.blocked_policy_mutation.v1"
+        "program.wave2c.control_artifacts_rebuild.v1",
+        "program.wave2a.operator_engineering_report.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
       ],
-      "notes": "Wave 3C mission benchmark"
+      "notes": "explicit policy-blocked transition"
     },
     {
-      "id": "W3C-MG-015",
-      "raw_request": "execute blocked mission certification end-to-end",
-      "mission_class": "blocked_mission_test_mission",
-      "expected_mission_id": "mission.wave3c.blocked_mission_certification.v1",
+      "id": "W3C-016",
+      "raw_request": "blocked creator-only mission without sufficient authority",
+      "mission_class": "blocked_mutation_mission",
+      "expected_mission_id": "mission.wave3c.blocked_mutation.creator_gate.v1",
       "mutability_level": "READ_ONLY",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "blocked_mission_test_mission",
-        "mission_id": "mission.wave3c.blocked_mission_certification.v1",
-        "mutability_level": "READ_ONLY",
-        "creator_authority_required": false
-      },
+      "authority_expectation": "not_required",
+      "expected_creator_authority_required": false,
+      "expected_rollback_supported": false,
       "expected_program_plan": [
-        "program.wave2c.blocked_missing_preconditions.v1",
-        "program.wave2c.blocked_policy_mutation.v1"
+        "program.wave2c.blocked_creator_gate_simulation.v1"
       ],
+      "expected_failure_policy": "stop_on_blocked",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
       ],
-      "notes": "Wave 3C mission benchmark"
+      "notes": "required blocked creator-only path"
     },
     {
-      "id": "W3C-MG-016",
-      "raw_request": "perform blocked mission certification sequence",
-      "mission_class": "blocked_mission_test_mission",
-      "expected_mission_id": "mission.wave3c.blocked_mission_certification.v1",
+      "id": "W3C-017",
+      "raw_request": "blocked creator-only mission",
+      "mission_class": "blocked_mutation_mission",
+      "expected_mission_id": "mission.wave3c.blocked_mutation.creator_gate.v1",
       "mutability_level": "READ_ONLY",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "blocked_mission_test_mission",
-        "mission_id": "mission.wave3c.blocked_mission_certification.v1",
-        "mutability_level": "READ_ONLY",
-        "creator_authority_required": false
-      },
+      "authority_expectation": "not_required",
+      "expected_creator_authority_required": false,
+      "expected_rollback_supported": false,
       "expected_program_plan": [
-        "program.wave2c.blocked_missing_preconditions.v1",
+        "program.wave2c.blocked_creator_gate_simulation.v1"
+      ],
+      "expected_failure_policy": "stop_on_blocked",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
+      ],
+      "notes": "token variant"
+    },
+    {
+      "id": "W3C-018",
+      "raw_request": "blocked mission by missing preconditions",
+      "mission_class": "blocked_mutation_mission",
+      "expected_mission_id": "mission.wave3c.blocked_mutation.missing_preconditions.v1",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "not_required",
+      "expected_creator_authority_required": false,
+      "expected_rollback_supported": false,
+      "expected_program_plan": [
+        "program.wave2c.blocked_missing_preconditions.v1"
+      ],
+      "expected_failure_policy": "stop_on_blocked",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
+      ],
+      "notes": "required missing-preconditions blocked path"
+    },
+    {
+      "id": "W3C-019",
+      "raw_request": "missing preconditions blocked mission",
+      "mission_class": "blocked_mutation_mission",
+      "expected_mission_id": "mission.wave3c.blocked_mutation.missing_preconditions.v1",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "not_required",
+      "expected_creator_authority_required": false,
+      "expected_rollback_supported": false,
+      "expected_program_plan": [
+        "program.wave2c.blocked_missing_preconditions.v1"
+      ],
+      "expected_failure_policy": "stop_on_blocked",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
+      ],
+      "notes": "token variant"
+    },
+    {
+      "id": "W3C-020",
+      "raw_request": "blocked mutation by policy",
+      "mission_class": "blocked_mutation_mission",
+      "expected_mission_id": "mission.wave3c.blocked_mutation.policy.v1",
+      "mutability_level": "READ_ONLY",
+      "authority_expectation": "not_required",
+      "expected_creator_authority_required": false,
+      "expected_rollback_supported": false,
+      "expected_program_plan": [
         "program.wave2c.blocked_policy_mutation.v1"
       ],
+      "expected_failure_policy": "stop_on_blocked",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "mission_classification_deterministic",
+        "checkpoint_and_stop_semantics_present",
+        "audit_trail_reporting_present"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md"
       ],
-      "notes": "Wave 3C mission benchmark"
+      "notes": "required blocked mutation policy path"
     }
   ]
 }

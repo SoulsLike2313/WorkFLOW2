@@ -17,7 +17,7 @@ REGISTRY_PATH = ROOT / "workspace_config" / "operator_mission_registry.json"
 TASK_REGISTRY_PATH = ROOT / "workspace_config" / "operator_task_program_registry.json"
 TASK_SCRIPT = ROOT / "scripts" / "operator_task_program_surface.py"
 ONE_SCREEN_PATH = ROOT / "runtime" / "repo_control_center" / "one_screen_status.json"
-GOLDEN_3B = ROOT / "docs" / "review_artifacts" / "OPERATOR_MISSION_GOLDEN_PACK_WAVE_3B.json"
+GOLDEN_3C = ROOT / "docs" / "review_artifacts" / "OPERATOR_MISSION_GOLDEN_PACK_WAVE_3C.json"
 
 RUNTIME_DIR = ROOT / "runtime" / "repo_control_center"
 OUTPUTS_DIR = RUNTIME_DIR / "operator_mission_outputs"
@@ -25,19 +25,25 @@ STATUS_PATH = RUNTIME_DIR / "operator_mission_status.json"
 REPORT_PATH = RUNTIME_DIR / "operator_mission_report.md"
 CHECKPOINT_PATH = RUNTIME_DIR / "operator_mission_checkpoint.json"
 HISTORY_PATH = RUNTIME_DIR / "operator_mission_history.json"
+AUDIT_TRAIL_PATH = RUNTIME_DIR / "operator_mission_audit_trail.json"
 CONSISTENCY_PATH = RUNTIME_DIR / "operator_mission_consistency.json"
 LOG_PATH = RUNTIME_DIR / "operator_mission_log.jsonl"
 
-EXEC_SCHEMA = "operator_mission_contract.wave3b.v1.0.0"
-CONSISTENCY_SCHEMA = "operator_mission_consistency.wave3b.v1.0.0"
+EXEC_SCHEMA = "operator_mission_contract.wave3c.v1.0.0"
+CONSISTENCY_SCHEMA = "operator_mission_consistency.wave3c.v1.0.0"
 MUTABILITY_LEVELS = {
     "READ_ONLY",
     "REFRESH_ONLY",
     "PACKAGE_ONLY",
-    "CERTIFICATION_ONLY",
-    "OPERATIONAL_ROUTING",
+    "REVIEW_DELIVERY",
+    "GUARDED_STATE_CHANGE",
+    "CREATOR_ONLY_TRANSITION",
 }
 DEFAULT_CLASS_ORDER = (
+    "guarded_baseline_transition_mission",
+    "creator_only_certification_mission",
+    "controlled_upgrade_mission",
+    "blocked_mutation_mission",
     "external_review_mission",
     "readiness_transition_mission",
     "handoff_delivery_mission",
@@ -130,6 +136,10 @@ def load_registry() -> tuple[dict[str, Any], dict[str, dict[str, Any]], dict[str
             "description": cls.get("description", ""),
             "allowed_modes": cls.get("allowed_modes", []),
             "authority_requirement": cls.get("authority_requirement", "none"),
+            "creator_authority_required": bool(
+                cls.get("creator_authority_required", False)
+                or str(cls.get("authority_requirement", "none")) == "creator_required"
+            ),
             "requires_in_sync": bool(cls.get("requires_in_sync", False)),
             "requires_clean_worktree": bool(cls.get("requires_clean_worktree", False)),
             "policy_basis": cls.get("policy_basis", []),
@@ -138,8 +148,10 @@ def load_registry() -> tuple[dict[str, Any], dict[str, dict[str, Any]], dict[str
             "acceptance_gates": cls.get("acceptance_gates", []),
             "mutability_level": str(cls.get("mutability_level", "READ_ONLY")).upper(),
             "resume_supported": bool(cls.get("resume_supported", True)),
+            "rollback_supported": bool(cls.get("rollback_supported", False)),
             "mission_priority": cls.get("mission_priority", "normal"),
             "evidence_outputs": cls.get("evidence_outputs", []),
+            "audit_outputs": cls.get("audit_outputs", []),
             "program_dependencies": cls.get("program_dependencies", []),
             "program_sequences": cls.get("program_sequences", []),
             "dependency_set": cls.get("dependency_set", []),
@@ -150,9 +162,14 @@ def load_registry() -> tuple[dict[str, Any], dict[str, dict[str, Any]], dict[str
             "delivery_target": cls.get("delivery_target", "none"),
             "review_requirement": cls.get("review_requirement", "none"),
             "escalation_requirement": bool(cls.get("escalation_requirement", False)),
+            "escalation_path": cls.get("escalation_path", "mission_escalation"),
             "required_context": cls.get("required_context", []),
             "default_context": cls.get("default_context", {}),
             "blocking_conditions": cls.get("blocking_conditions", []),
+            "approval_basis": cls.get("approval_basis", []),
+            "audit_trail_reference": cls.get("audit_trail_reference", "runtime/repo_control_center/operator_mission_audit_trail.json"),
+            "acceptance_transition_semantics": cls.get("acceptance_transition_semantics", "no_acceptance_transition"),
+            "policy_supported": bool(cls.get("policy_supported", True)),
         }
 
         if defaults["mutability_level"] not in MUTABILITY_LEVELS:
@@ -175,7 +192,10 @@ def load_registry() -> tuple[dict[str, Any], dict[str, dict[str, Any]], dict[str
                     "completion_rule": mission.get("completion_rule", "certify_on_success"),
                 }
             )
-            merged["creator_authority_required"] = str(merged.get("authority_requirement", "none")) == "creator_required"
+            merged["creator_authority_required"] = bool(
+                merged.get("creator_authority_required", False)
+                or str(merged.get("authority_requirement", "none")) == "creator_required"
+            )
 
             for step in merged.get("program_plan", []):
                 pid = str(step.get("program_id", "")).strip()
@@ -256,12 +276,17 @@ def gate(
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], list[str]]:
     machine_mode = str(mode_payload.get("machine_mode", "unknown"))
     authority_present = bool(mode_payload.get("authority", {}).get("authority_present", False))
+    mutability_level = str(policy.get("mutability_level", "READ_ONLY")).upper()
 
     blockers: list[str] = []
     if policy.get("allowed_modes") and machine_mode not in policy["allowed_modes"]:
         blockers.append(f"machine_mode '{machine_mode}' not allowed")
     if bool(policy.get("creator_authority_required", False)) and not authority_present:
         blockers.append("creator authority required but not present")
+    if mutability_level in {"GUARDED_STATE_CHANGE", "CREATOR_ONLY_TRANSITION"} and not authority_present:
+        blockers.append(f"guarded mission mutability '{mutability_level}' requires creator authority")
+    if not bool(policy.get("policy_supported", True)):
+        blockers.append("policy support explicitly disabled for this mission")
 
     missing_policy = [p for p in policy.get("policy_basis", []) if not (ROOT / str(p)).exists()]
 
@@ -357,7 +382,9 @@ def execute_program_step(run_id: str, mission_id: str, step: dict[str, Any], int
     return result, result["artifacts_produced"], result["blocking_factors"]
 
 
-def should_stop(verdict: str, failure_policy: str, stop_conditions: list[str]) -> tuple[bool, str]:
+def should_stop(verdict: str, failure_policy: str, stop_conditions: list[str], step_success: bool) -> tuple[bool, str]:
+    if step_success:
+        return False, ""
     v = verdict.upper()
     cond = {str(x).strip() for x in stop_conditions}
     if v == "BLOCKED" and "any_program_blocked" in cond:
@@ -371,7 +398,7 @@ def should_stop(verdict: str, failure_policy: str, stop_conditions: list[str]) -
     return False, ""
 
 def execute_mode(args: argparse.Namespace) -> int:
-    run_id = f"mission-wave3b-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')}"
+    run_id = f"mission-wave3c-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')}"
     payload_registry, index, class_map, class_order = load_registry()
     mission_id, policy, route_basis = route(args.request or "", index, class_map, class_order, args.mission_id or "", args.mission_class or "")
 
@@ -407,23 +434,32 @@ def execute_mode(args: argparse.Namespace) -> int:
                 program_blockers.extend(blockers)
                 failed_program = current_program
                 failed_idx = idx + 1
-            stop_now, reason = should_stop(result["actual_verdict"], failure_policy, stop_conditions)
+            stop_now, reason = should_stop(
+                result["actual_verdict"],
+                failure_policy,
+                stop_conditions,
+                result["success"],
+            )
             if stop_now:
                 stop_triggered = True
                 stop_reason = reason
                 break
 
-    blocked_count = len([x for x in program_results if x.get("actual_verdict", "").upper() == "BLOCKED"])
-    failed_count = len([x for x in program_results if x.get("actual_verdict", "").upper() == "FAILED"])
+    unexpected_blocked = len(
+        [x for x in program_results if not bool(x.get("success", False)) and x.get("actual_verdict", "").upper() == "BLOCKED"]
+    )
+    unexpected_failed = len(
+        [x for x in program_results if not bool(x.get("success", False)) and x.get("actual_verdict", "").upper() == "FAILED"]
+    )
 
     if gate_blockers:
         verdict, summary, exit_code = "BLOCKED", "blocked by authority/policy/preconditions", 2
-    elif blocked_count > 0:
+    elif unexpected_blocked > 0:
         if failure_policy == "continue_on_failure" and not stop_triggered:
             verdict, summary, exit_code = "PARTIAL", "mission completed with blocked programs under continue_on_failure", 1
         else:
             verdict, summary, exit_code = "BLOCKED", f"blocked at program {failed_program or current_program}", 2
-    elif failed_count > 0:
+    elif unexpected_failed > 0:
         if failure_policy == "continue_on_failure" and not stop_triggered:
             verdict, summary, exit_code = "PARTIAL", "mission completed with failed programs under continue_on_failure", 1
         else:
@@ -446,22 +482,40 @@ def execute_mode(args: argparse.Namespace) -> int:
         "failed_program": failed_program,
         "resume_pointer": (failed_idx + 1 if failed_program else total + 1),
         "resume_supported": bool(policy.get("resume_supported", True)),
-        "can_resume": bool((failed_program or blocked_count > 0 or failed_count > 0) and len(pending) > 0 and policy.get("resume_supported", True)),
+        "can_resume": bool((failed_program or unexpected_blocked > 0 or unexpected_failed > 0) and len(pending) > 0 and policy.get("resume_supported", True)),
         "stop_condition_triggered": stop_triggered,
         "stop_condition_reason": stop_reason,
     }
 
-    completion_verdict = "BLOCKED" if gate_blockers else (
-        "CERTIFIED"
-        if verdict == "SUCCESS" and str(policy.get("completion_rule", "certify_on_success")).startswith("certify_on_")
-        else ("SUCCESS" if verdict == "SUCCESS" else ("PARTIAL" if verdict == "PARTIAL" else verdict))
-    )
+    completion_rule = str(policy.get("completion_rule", "certify_on_success"))
+    if gate_blockers and completion_rule != "certify_on_expected_block":
+        completion_verdict = "BLOCKED"
+    elif verdict == "SUCCESS" and completion_rule.startswith("certify_on_"):
+        completion_verdict = "CERTIFIED"
+    elif verdict == "BLOCKED" and completion_rule == "certify_on_expected_block":
+        completion_verdict = "CERTIFIED"
+    elif verdict == "SUCCESS":
+        completion_verdict = "SUCCESS"
+    elif verdict == "PARTIAL":
+        completion_verdict = "PARTIAL"
+    else:
+        completion_verdict = verdict
 
     blockers = sorted(set(gate_blockers + program_blockers))
+    rollback_supported = bool(policy.get("rollback_supported", False))
+    rollback_required = bool(
+        rollback_supported
+        and str(policy.get("mutability_level", "READ_ONLY")).upper() in {"GUARDED_STATE_CHANGE", "CREATOR_ONLY_TRANSITION"}
+        and (verdict in {"FAILED", "BLOCKED"} or bool(gate_blockers))
+    )
     next_step = "Mission certified. Use mission runtime artifacts as evidence."
     if verdict != "SUCCESS":
         if any("creator authority required" in x.lower() for x in blockers):
             next_step = "Enable creator authority and rerun creator-bound mission."
+        elif completion_rule == "certify_on_expected_block" and verdict == "BLOCKED":
+            next_step = "Expected blocked path certified. Review mission audit trail."
+        elif rollback_required:
+            next_step = "Rollback required before retrying guarded transition mission."
         elif checkpoint["can_resume"]:
             next_step = f"Resume mission with --mission-id {mission_id} --resume-from-program {checkpoint['resume_pointer']}."
         else:
@@ -471,7 +525,7 @@ def execute_mode(args: argparse.Namespace) -> int:
         set(
             program_artifacts
             + list(policy.get("evidence_outputs", []))
-            + [rel(STATUS_PATH), rel(REPORT_PATH), rel(CHECKPOINT_PATH), rel(HISTORY_PATH)]
+            + [rel(STATUS_PATH), rel(REPORT_PATH), rel(CHECKPOINT_PATH), rel(HISTORY_PATH), rel(AUDIT_TRAIL_PATH)]
         )
     )
 
@@ -499,6 +553,8 @@ def execute_mode(args: argparse.Namespace) -> int:
             "mutability_level": str(policy.get("mutability_level", "READ_ONLY")).upper(),
             "execution_mode": "safe_program_execution",
             "state_change_detected": False,
+            "rollback_supported": rollback_supported,
+            "rollback_required": rollback_required,
         },
         "blocking_factors": blockers,
         "acceptance_criteria": policy.get("acceptance_criteria", []),
@@ -523,10 +579,16 @@ def execute_mode(args: argparse.Namespace) -> int:
         "dependency_set": policy.get("dependency_set", []),
         "failure_policy": failure_policy,
         "resume_supported": bool(policy.get("resume_supported", True)),
+        "rollback_supported": rollback_supported,
+        "creator_authority_required": bool(policy.get("creator_authority_required", False)),
+        "approval_basis": policy.get("approval_basis", []),
+        "audit_trail_reference": policy.get("audit_trail_reference", rel(AUDIT_TRAIL_PATH)),
         "stop_conditions": stop_conditions,
         "delivery_target": policy.get("delivery_target", "none"),
         "review_requirement": policy.get("review_requirement", "none"),
         "escalation_requirement": bool(policy.get("escalation_requirement", False)),
+        "escalation_path": policy.get("escalation_path", "mission_escalation"),
+        "acceptance_transition_semantics": policy.get("acceptance_transition_semantics", "no_acceptance_transition"),
         "review_dependencies": policy.get("review_dependencies", []),
         "delivery_artifacts": policy.get("delivery_artifacts", []),
         "context": context,
@@ -539,11 +601,15 @@ def execute_mode(args: argparse.Namespace) -> int:
     write_json(
         STATUS_PATH,
         {
-            "schema_version": "operator_mission_status.wave3b.v1.0.0",
+            "schema_version": "operator_mission_status.wave3c.v1.0.0",
             "generated_at": payload["generated_at"],
             "active_or_last_mission": mission_id,
             "mission_class": payload["mission_class"],
             "run_id": run_id,
+            "mutability_level": payload["state_change"]["mutability_level"],
+            "creator_authority_required": payload["creator_authority_required"],
+            "rollback_supported": rollback_supported,
+            "rollback_required": rollback_required,
             "execution_result": payload["execution_result"],
             "completion_verdict": completion_verdict,
             "current_program": current_program,
@@ -555,23 +621,27 @@ def execute_mode(args: argparse.Namespace) -> int:
     )
     write_json(CHECKPOINT_PATH, checkpoint)
 
-    history = {"schema_version": "operator_mission_history.wave3b.v1.0.0", "items": []}
+    history = {"schema_version": "operator_mission_history.wave3c.v1.0.0", "items": []}
     if HISTORY_PATH.exists():
         try:
             old = read_json(HISTORY_PATH)
             if isinstance(old.get("items"), list):
                 history["items"] = old["items"]
         except Exception:
-            history = {"schema_version": "operator_mission_history.wave3b.v1.0.0", "items": []}
+            history = {"schema_version": "operator_mission_history.wave3c.v1.0.0", "items": []}
     history["items"].append(
         {
             "run_id": run_id,
             "generated_at": payload["generated_at"],
             "mission_id": mission_id,
             "mission_class": payload["mission_class"],
+            "mutability_level": payload["state_change"]["mutability_level"],
+            "creator_authority_required": payload["creator_authority_required"],
             "execution_verdict": verdict,
             "completion_verdict": completion_verdict,
             "failure_policy": failure_policy,
+            "rollback_supported": rollback_supported,
+            "rollback_required": rollback_required,
             "delivery_target": policy.get("delivery_target", "none"),
             "review_requirement": policy.get("review_requirement", "none"),
             "blocking_factors": blockers,
@@ -580,8 +650,45 @@ def execute_mode(args: argparse.Namespace) -> int:
     history["items"] = history["items"][-200:]
     write_json(HISTORY_PATH, history)
 
+    audit = {"schema_version": "operator_mission_audit_trail.wave3c.v1.0.0", "entries": []}
+    if AUDIT_TRAIL_PATH.exists():
+        try:
+            old_audit = read_json(AUDIT_TRAIL_PATH)
+            if isinstance(old_audit.get("entries"), list):
+                audit["entries"] = old_audit["entries"]
+        except Exception:
+            audit = {"schema_version": "operator_mission_audit_trail.wave3c.v1.0.0", "entries": []}
+    audit["entries"].append(
+        {
+            "run_id": run_id,
+            "generated_at": payload["generated_at"],
+            "mission_id": mission_id,
+            "mission_class": payload["mission_class"],
+            "mutability_level": payload["state_change"]["mutability_level"],
+            "creator_authority_required": payload["creator_authority_required"],
+            "authority_context": {
+                "machine_mode": authority.get("machine_mode", "unknown"),
+                "authority_present": authority.get("authority_present", False),
+            },
+            "policy_check_verdict": policy_check.get("verdict", "UNKNOWN"),
+            "preconditions_verdict": preconditions.get("verdict", "UNKNOWN"),
+            "execution_verdict": verdict,
+            "completion_verdict": completion_verdict,
+            "stop_condition_triggered": stop_triggered,
+            "stop_condition_reason": stop_reason,
+            "rollback_supported": rollback_supported,
+            "rollback_required": rollback_required,
+            "escalation_requirement": bool(policy.get("escalation_requirement", False)),
+            "escalation_path": policy.get("escalation_path", "mission_escalation"),
+            "blocking_factors": blockers,
+            "audit_outputs": policy.get("audit_outputs", []),
+        }
+    )
+    audit["entries"] = audit["entries"][-300:]
+    write_json(AUDIT_TRAIL_PATH, audit)
+
     report_lines = [
-        "# Operator Mission Report (Wave 3B)",
+        "# Operator Mission Report (Wave 3C)",
         "",
         "## Runtime Identity",
         f"- run_id: `{run_id}`",
@@ -592,12 +699,18 @@ def execute_mode(args: argparse.Namespace) -> int:
         "## Mission Chain",
         f"- execution_verdict: `{verdict}`",
         f"- completion_verdict: `{completion_verdict}`",
+        f"- mutability_level: `{payload['state_change']['mutability_level']}`",
+        f"- creator_authority_required: `{payload['creator_authority_required']}`",
         f"- failure_policy: `{failure_policy}`",
         f"- stop_conditions: `{', '.join(stop_conditions) if stop_conditions else 'none'}`",
         f"- resume_supported: `{payload['resume_supported']}`",
+        f"- rollback_supported: `{rollback_supported}`",
+        f"- rollback_required: `{rollback_required}`",
         f"- delivery_target: `{policy.get('delivery_target', 'none')}`",
         f"- review_requirement: `{policy.get('review_requirement', 'none')}`",
         f"- escalation_requirement: `{bool(policy.get('escalation_requirement', False))}`",
+        f"- escalation_path: `{policy.get('escalation_path', 'mission_escalation')}`",
+        f"- acceptance_transition_semantics: `{policy.get('acceptance_transition_semantics', 'no_acceptance_transition')}`",
         "",
         "## Program Results",
     ]
@@ -644,6 +757,10 @@ def classify_mode(args: argparse.Namespace) -> int:
         "non_goals": policy.get("non_goals", []),
         "mutability_level": policy.get("mutability_level", "READ_ONLY"),
         "creator_authority_required": bool(policy.get("creator_authority_required", False)),
+        "rollback_supported": bool(policy.get("rollback_supported", False)),
+        "approval_basis": policy.get("approval_basis", []),
+        "audit_trail_reference": policy.get("audit_trail_reference", rel(AUDIT_TRAIL_PATH)),
+        "acceptance_transition_semantics": policy.get("acceptance_transition_semantics", "no_acceptance_transition"),
         "allowed_modes": policy.get("allowed_modes", []),
         "program_plan": [str(x.get("program_id", "")).strip() for x in policy.get("program_plan", [])],
         "program_sequences": policy.get("program_sequences", []),
@@ -685,7 +802,7 @@ def status_mode() -> int:
         print(
             json.dumps(
                 {
-                    "schema_version": "operator_mission_status.wave3b.v1.0.0",
+                    "schema_version": "operator_mission_status.wave3c.v1.0.0",
                     "generated_at": now_utc(),
                     "status": "NO_MISSION_RUN",
                 },
@@ -715,6 +832,8 @@ def consistency_mode(args: argparse.Namespace) -> int:
         expected_failure_policy = str(item.get("expected_failure_policy", "")).strip()
         expected_review = str(item.get("expected_review_requirement", "")).strip()
         expected_delivery = str(item.get("expected_delivery_target", "")).strip()
+        expected_creator_required = item.get("expected_creator_authority_required", None)
+        expected_rollback_supported = item.get("expected_rollback_supported", None)
         authority_expectation = str(item.get("authority_expectation", "")).strip().lower()
         item_id = str(item.get("id", "")).strip() or f"item-{idx}"
 
@@ -736,6 +855,10 @@ def consistency_mode(args: argparse.Namespace) -> int:
             reasons.append("review_requirement_mismatch")
         if expected_delivery and str(policy.get("delivery_target", "")).strip() != expected_delivery:
             reasons.append("delivery_target_mismatch")
+        if expected_creator_required is not None and bool(policy.get("creator_authority_required", False)) != bool(expected_creator_required):
+            reasons.append("creator_authority_required_mismatch")
+        if expected_rollback_supported is not None and bool(policy.get("rollback_supported", False)) != bool(expected_rollback_supported):
+            reasons.append("rollback_supported_mismatch")
         if authority_expectation:
             actual_creator_required = bool(policy.get("creator_authority_required", False))
             if authority_expectation == "creator_required" and not actual_creator_required:
@@ -777,7 +900,7 @@ def consistency_mode(args: argparse.Namespace) -> int:
 
 
 def parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description="Operator mission execution surface (Wave 3A + Wave 3B).")
+    p = argparse.ArgumentParser(description="Operator mission execution surface (Wave 3A + Wave 3B + Wave 3C).")
     sub = p.add_subparsers(dest="mode", required=True)
 
     ex = sub.add_parser("execute")
@@ -802,7 +925,7 @@ def parser() -> argparse.ArgumentParser:
     sub.add_parser("status")
 
     cc = sub.add_parser("consistency-check")
-    cc.add_argument("--golden-file", default=str(GOLDEN_3B.relative_to(ROOT)))
+    cc.add_argument("--golden-file", default=str(GOLDEN_3C.relative_to(ROOT)))
     return p
 
 

@@ -1,7 +1,7 @@
-# OPERATOR_MISSION_CONTRACT
+﻿# OPERATOR_MISSION_CONTRACT
 
 ## Scope
-Wave 3A + Wave 3B mission execution contract over accepted governance/query/command/task-program baseline.
+Wave 3A + Wave 3B + Wave 3C mission execution contract over accepted governance/query/command/task-program baseline.
 
 ## Required Mission Execution Shape
 - `mission_class`
@@ -34,6 +34,12 @@ Wave 3A + Wave 3B mission execution contract over accepted governance/query/comm
 - `delivery_target`
 - `review_requirement`
 - `escalation_requirement`
+- `mutability_level`
+- `rollback_supported`
+- `creator_authority_required`
+- `approval_basis`
+- `audit_trail_reference`
+- `acceptance_transition_semantics`
 
 ## Wave 3A Mission Classes
 - `certification_mission`
@@ -47,16 +53,19 @@ Wave 3A + Wave 3B mission execution contract over accepted governance/query/comm
 - `handoff_delivery_mission`
 - `evidence_consolidation_mission`
 
-## Wave 3A Mutability Boundaries
+## Wave 3C Mission Classes
+- `guarded_baseline_transition_mission`
+- `creator_only_certification_mission`
+- `controlled_upgrade_mission`
+- `blocked_mutation_mission`
+
+## Mission Mutability Levels
 - `READ_ONLY`
 - `REFRESH_ONLY`
 - `PACKAGE_ONLY`
-- `CERTIFICATION_ONLY`
-
-## Wave 3B Mutability Boundaries
-- `OPERATIONAL_ROUTING`
-- `PACKAGE_ONLY`
-- `CERTIFICATION_ONLY`
+- `REVIEW_DELIVERY`
+- `GUARDED_STATE_CHANGE`
+- `CREATOR_ONLY_TRANSITION`
 
 ## Execution Rules
 - Mission routing is registry-based only (`workspace_config/operator_mission_registry.json`).
@@ -64,13 +73,21 @@ Wave 3A + Wave 3B mission execution contract over accepted governance/query/comm
 - Authority/policy/precondition gates are mandatory before mission program execution.
 - Mission outcomes are explicit: `SUCCESS`, `BLOCKED`, `FAILED`, `PARTIAL`, `CERTIFIED`.
 - Mission layer may execute only safe certification/readiness/review/package flows on Wave 3A.
-- Wave 3B mission layer may execute controlled multi-program operational flows through registered program sequences only.
-- Mutation-heavy or uncontrolled autonomous mission behavior is forbidden on Wave 3A/3B.
+- Wave 3B may execute controlled multi-program operational review/delivery flows only.
+- Wave 3C may execute guarded creator missions only with explicit mutability/authority gates.
+- Mutation-heavy or uncontrolled autonomous mission behavior is forbidden.
 - Hidden branching outside registry routing precedence is forbidden.
 
-## Failure / Resume / Delivery Semantics (Wave 3B)
-- `dependency_set`: required program chain and mission-level gate dependencies.
-- `failure_policy`: supported values:
+## Guarded Mission Semantics (Wave 3C)
+- `creator_authority_required=true` enforces creator mode + valid authority marker.
+- `mutability_level` must be one of supported mission mutability levels.
+- `rollback_supported=true` requires rollback-required reporting for failed guarded transitions.
+- `approval_basis` must reference policy documents that authorize the guarded transition.
+- `audit_trail_reference` must point to mission-level auditable runtime artifact.
+- `acceptance_transition_semantics` must explicitly define how completion affects acceptance/transition state.
+
+## Failure / Resume / Delivery Semantics
+- `failure_policy` supported values:
   - `stop_on_failure`
   - `stop_on_blocked`
   - `continue_on_failure`
@@ -78,4 +95,4 @@ Wave 3A + Wave 3B mission execution contract over accepted governance/query/comm
 - `stop_conditions`: explicit triggers for stop behavior.
 - `delivery_target`: mission-level delivery route for operational outputs.
 - `review_requirement`: required review gate before mission acceptance.
-- `escalation_requirement`: explicit escalation requirement flag for blocked/critical operational missions.
+- `escalation_requirement`: explicit escalation requirement flag for blocked/critical missions.

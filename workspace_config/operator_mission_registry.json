@@ -1,6 +1,6 @@
 {
-  "schema_version": "operator_mission_registry.wave3b.v1.0.0",
-  "wave": "3B",
+  "schema_version": "operator_mission_registry.wave3c.v1.0.0",
+  "wave": "3C",
   "mission_contract_doc": "docs/governance/OPERATOR_MISSION_CONTRACT.md",
   "task_program_dependency": {
     "script": "scripts/operator_task_program_surface.py",
@@ -10,11 +10,16 @@
     "READ_ONLY",
     "REFRESH_ONLY",
     "PACKAGE_ONLY",
-    "CERTIFICATION_ONLY",
-    "OPERATIONAL_ROUTING"
+    "REVIEW_DELIVERY",
+    "GUARDED_STATE_CHANGE",
+    "CREATOR_ONLY_TRANSITION"
   ],
   "routing_precedence": {
     "class_order": [
+      "guarded_baseline_transition_mission",
+      "creator_only_certification_mission",
+      "controlled_upgrade_mission",
+      "blocked_mutation_mission",
       "external_review_mission",
       "readiness_transition_mission",
       "handoff_delivery_mission",
@@ -86,7 +91,7 @@
         "validation_gate",
         "admission_gate"
       ],
-      "mutability_level": "CERTIFICATION_ONLY",
+      "mutability_level": "CREATOR_ONLY_TRANSITION",
       "resume_supported": true,
       "failure_policy_default": "stop_on_failure",
       "stop_conditions": [
@@ -140,7 +145,24 @@
           "completion_rule": "certify_on_success",
           "mission_priority": "high"
         }
-      ]
+      ],
+      "creator_authority_required": true,
+      "rollback_supported": true,
+      "approval_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_mission_audit_trail.json",
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "escalation_path": "mission_escalation",
+      "acceptance_transition_semantics": "no_acceptance_transition"
     },
     {
       "wave": "3A",
@@ -201,7 +223,7 @@
         "authority_gate",
         "readiness_gate"
       ],
-      "mutability_level": "CERTIFICATION_ONLY",
+      "mutability_level": "CREATOR_ONLY_TRANSITION",
       "resume_supported": true,
       "failure_policy_default": "stop_on_failure",
       "stop_conditions": [
@@ -258,7 +280,24 @@
           "completion_rule": "certify_on_success",
           "mission_priority": "high"
         }
-      ]
+      ],
+      "creator_authority_required": true,
+      "rollback_supported": true,
+      "approval_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/PROMOTION_THRESHOLD_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_mission_audit_trail.json",
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "escalation_path": "mission_escalation",
+      "acceptance_transition_semantics": "no_acceptance_transition"
     },
     {
       "wave": "3A",
@@ -366,7 +405,24 @@
           "completion_rule": "certify_on_success",
           "mission_priority": "normal"
         }
-      ]
+      ],
+      "creator_authority_required": false,
+      "rollback_supported": false,
+      "approval_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_mission_audit_trail.json",
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "escalation_path": "mission_escalation",
+      "acceptance_transition_semantics": "no_acceptance_transition"
     },
     {
       "wave": "3A",
@@ -472,7 +528,23 @@
           "completion_rule": "certify_on_success",
           "mission_priority": "normal"
         }
-      ]
+      ],
+      "creator_authority_required": false,
+      "rollback_supported": false,
+      "approval_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/SELF_VERIFICATION_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_mission_audit_trail.json",
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "escalation_path": "mission_escalation",
+      "acceptance_transition_semantics": "no_acceptance_transition"
     },
     {
       "wave": "3B",
@@ -536,7 +608,7 @@
         "delivery_gate",
         "review_gate"
       ],
-      "mutability_level": "OPERATIONAL_ROUTING",
+      "mutability_level": "REVIEW_DELIVERY",
       "resume_supported": true,
       "failure_policy_default": "stop_on_failure",
       "stop_conditions": [
@@ -602,7 +674,25 @@
           "completion_rule": "certify_on_success",
           "mission_priority": "high"
         }
-      ]
+      ],
+      "creator_authority_required": false,
+      "rollback_supported": false,
+      "approval_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
+        "docs/governance/INTEGRATION_INBOX_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_mission_audit_trail.json",
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "escalation_path": "mission_escalation",
+      "acceptance_transition_semantics": "no_acceptance_transition"
     },
     {
       "wave": "3B",
@@ -662,7 +752,7 @@
         "authority_gate",
         "transition_gate"
       ],
-      "mutability_level": "CERTIFICATION_ONLY",
+      "mutability_level": "CREATOR_ONLY_TRANSITION",
       "resume_supported": true,
       "failure_policy_default": "stop_on_failure",
       "stop_conditions": [
@@ -724,7 +814,25 @@
           "completion_rule": "certify_on_success",
           "mission_priority": "high"
         }
-      ]
+      ],
+      "creator_authority_required": true,
+      "rollback_supported": true,
+      "approval_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
+        "docs/governance/PROMOTION_THRESHOLD_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_mission_audit_trail.json",
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "escalation_path": "mission_escalation",
+      "acceptance_transition_semantics": "no_acceptance_transition"
     },
     {
       "wave": "3B",
@@ -785,7 +893,7 @@
         "delivery_gate",
         "review_gate"
       ],
-      "mutability_level": "OPERATIONAL_ROUTING",
+      "mutability_level": "REVIEW_DELIVERY",
       "resume_supported": true,
       "failure_policy_default": "stop_on_blocked",
       "stop_conditions": [
@@ -850,7 +958,25 @@
           "completion_rule": "certify_on_success",
           "mission_priority": "high"
         }
-      ]
+      ],
+      "creator_authority_required": false,
+      "rollback_supported": false,
+      "approval_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/TASK_ID_EXECUTION_CONTRACT.md",
+        "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
+        "docs/governance/INTEGRATION_INBOX_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_mission_audit_trail.json",
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "escalation_path": "mission_escalation",
+      "acceptance_transition_semantics": "no_acceptance_transition"
     },
     {
       "wave": "3B",
@@ -969,6 +1095,602 @@
             }
           ],
           "completion_rule": "certify_on_success",
+          "mission_priority": "normal"
+        }
+      ],
+      "creator_authority_required": false,
+      "rollback_supported": false,
+      "approval_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+        "docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_mission_audit_trail.json",
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "escalation_path": "mission_escalation",
+      "acceptance_transition_semantics": "no_acceptance_transition"
+    },
+    {
+      "wave": "3C",
+      "mission_class": "guarded_baseline_transition_mission",
+      "description": "Guarded creator baseline transition mission with controlled acceptance semantics.",
+      "allowed_modes": [
+        "creator"
+      ],
+      "authority_requirement": "creator_required",
+      "creator_authority_required": true,
+      "requires_in_sync": true,
+      "requires_clean_worktree": true,
+      "policy_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md",
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "scope_definition": "guarded_baseline_transition_scope",
+      "non_goals": [
+        "unrestricted mutation",
+        "product project orchestration",
+        "governance override"
+      ],
+      "program_dependencies": [
+        "program.wave2c.guarded_governance_maintenance.v1",
+        "program.wave2c.control_artifacts_rebuild.v1",
+        "program.wave2b.review_certification_sequence.v1"
+      ],
+      "program_sequences": [
+        "guarded_maintenance",
+        "artifact_rebuild",
+        "review_certification"
+      ],
+      "dependency_set": [
+        "creator_authority",
+        "sync_in_sync",
+        "worktree_clean"
+      ],
+      "review_dependencies": [
+        "creator_review"
+      ],
+      "delivery_artifacts": [
+        "runtime/repo_control_center"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "acceptance_criteria": [
+        "guarded maintenance sequence completed",
+        "review certification completed",
+        "audit trail captured"
+      ],
+      "acceptance_gates": [
+        "authority_gate",
+        "transition_gate",
+        "review_gate"
+      ],
+      "acceptance_transition_semantics": "guarded_baseline_transition",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "resume_supported": true,
+      "rollback_supported": true,
+      "failure_policy_default": "stop_on_failure",
+      "stop_conditions": [
+        "any_program_failed",
+        "any_program_blocked"
+      ],
+      "delivery_target": "runtime/repo_control_center",
+      "review_requirement": "creator_review",
+      "escalation_requirement": true,
+      "escalation_path": "guarded_baseline_transition_escalation",
+      "approval_basis": [
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_mission_audit_trail.json",
+      "routing_precedence": 10,
+      "required_context": [],
+      "default_context": {},
+      "blocking_conditions": [
+        "creator_authority_required",
+        "sync_in_sync",
+        "worktree_clean",
+        "policy_basis_missing",
+        "program_execution_failed"
+      ],
+      "missions": [
+        {
+          "mission_id": "mission.wave3c.guarded_baseline_transition.v1",
+          "resolved_goal": "Execute guarded baseline transition with controlled acceptance semantics.",
+          "mission_scope": "guarded_baseline_transition_scope",
+          "route_tokens": [
+            "guarded baseline transition mission",
+            "allowed guarded baseline transition mission",
+            "execute guarded baseline transition"
+          ],
+          "program_plan": [
+            {
+              "program_id": "program.wave2c.guarded_governance_maintenance.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2c.control_artifacts_rebuild.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2b.review_certification_sequence.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            }
+          ],
+          "completion_rule": "certify_on_success",
+          "mission_priority": "high"
+        }
+      ]
+    },
+    {
+      "wave": "3C",
+      "mission_class": "creator_only_certification_mission",
+      "description": "Creator-only certification mission with authority-required transition chain.",
+      "allowed_modes": [
+        "creator"
+      ],
+      "authority_requirement": "creator_required",
+      "creator_authority_required": true,
+      "requires_in_sync": true,
+      "requires_clean_worktree": true,
+      "policy_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md",
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md"
+      ],
+      "scope_definition": "creator_only_certification_scope",
+      "non_goals": [
+        "helper/integration acceptance override",
+        "uncontrolled transition mutation"
+      ],
+      "program_dependencies": [
+        "program.wave2a.creator_grade_validation.v1",
+        "program.wave2c.creator_authorized_sequence.v1",
+        "program.wave2c.authority_required_program.v1",
+        "program.wave2b.certification_pass.v1"
+      ],
+      "program_sequences": [
+        "creator_validation",
+        "creator_authorized_sequence",
+        "authority_required_sequence",
+        "certification_pass"
+      ],
+      "dependency_set": [
+        "creator_authority",
+        "sync_in_sync",
+        "worktree_clean"
+      ],
+      "review_dependencies": [
+        "creator_review"
+      ],
+      "delivery_artifacts": [
+        "runtime/repo_control_center"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "acceptance_criteria": [
+        "creator-only certification chain completed",
+        "authority-required programs executed",
+        "audit trail captured"
+      ],
+      "acceptance_gates": [
+        "creator_authority_gate",
+        "certification_gate"
+      ],
+      "acceptance_transition_semantics": "creator_only_certification_transition",
+      "mutability_level": "CREATOR_ONLY_TRANSITION",
+      "resume_supported": true,
+      "rollback_supported": true,
+      "failure_policy_default": "stop_on_failure",
+      "stop_conditions": [
+        "any_program_failed",
+        "any_program_blocked"
+      ],
+      "delivery_target": "runtime/repo_control_center",
+      "review_requirement": "creator_review",
+      "escalation_requirement": true,
+      "escalation_path": "creator_only_certification_escalation",
+      "approval_basis": [
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_mission_audit_trail.json",
+      "routing_precedence": 20,
+      "required_context": [],
+      "default_context": {},
+      "blocking_conditions": [
+        "creator_authority_required",
+        "sync_in_sync",
+        "worktree_clean",
+        "policy_basis_missing",
+        "program_execution_failed"
+      ],
+      "missions": [
+        {
+          "mission_id": "mission.wave3c.creator_only_certification.v1",
+          "resolved_goal": "Execute creator-only certification mission under strict authority gates.",
+          "mission_scope": "creator_only_certification_scope",
+          "route_tokens": [
+            "creator only certification mission",
+            "creator-only certification mission with creator authority",
+            "execute creator only certification mission"
+          ],
+          "program_plan": [
+            {
+              "program_id": "program.wave2a.creator_grade_validation.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2c.creator_authorized_sequence.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2c.authority_required_program.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2b.certification_pass.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            }
+          ],
+          "completion_rule": "certify_on_success",
+          "mission_priority": "high"
+        }
+      ]
+    },
+    {
+      "wave": "3C",
+      "mission_class": "controlled_upgrade_mission",
+      "description": "Policy-supported controlled upgrade mission with guarded transition semantics.",
+      "allowed_modes": [
+        "creator"
+      ],
+      "authority_requirement": "creator_required",
+      "creator_authority_required": true,
+      "requires_in_sync": true,
+      "requires_clean_worktree": true,
+      "policy_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md",
+        "workspace_config/AGENT_EXECUTION_POLICY.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_CATALOG_WAVE_2C.md"
+      ],
+      "scope_definition": "controlled_upgrade_scope",
+      "non_goals": [
+        "unrestricted lifecycle mutation",
+        "product-domain upgrades"
+      ],
+      "program_dependencies": [
+        "program.wave2c.control_artifacts_rebuild.v1",
+        "program.wave2b.review_certification_sequence.v1",
+        "program.wave2a.operator_engineering_report.v1"
+      ],
+      "program_sequences": [
+        "artifact_rebuild",
+        "review_certification",
+        "engineering_report"
+      ],
+      "dependency_set": [
+        "creator_authority",
+        "sync_in_sync",
+        "worktree_clean",
+        "policy_upgrade_support"
+      ],
+      "review_dependencies": [
+        "creator_review"
+      ],
+      "delivery_artifacts": [
+        "runtime/repo_control_center"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "acceptance_criteria": [
+        "controlled upgrade sequence completed",
+        "review certification completed",
+        "audit trail captured"
+      ],
+      "acceptance_gates": [
+        "creator_authority_gate",
+        "upgrade_policy_gate",
+        "review_gate"
+      ],
+      "acceptance_transition_semantics": "controlled_upgrade_transition",
+      "mutability_level": "GUARDED_STATE_CHANGE",
+      "resume_supported": true,
+      "rollback_supported": true,
+      "failure_policy_default": "stop_on_failure",
+      "stop_conditions": [
+        "any_program_failed",
+        "any_program_blocked"
+      ],
+      "delivery_target": "runtime/repo_control_center",
+      "review_requirement": "creator_review",
+      "escalation_requirement": true,
+      "escalation_path": "controlled_upgrade_escalation",
+      "approval_basis": [
+        "workspace_config/AGENT_EXECUTION_POLICY.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_CATALOG_WAVE_2C.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_mission_audit_trail.json",
+      "routing_precedence": 30,
+      "required_context": [],
+      "default_context": {},
+      "blocking_conditions": [
+        "creator_authority_required",
+        "sync_in_sync",
+        "worktree_clean",
+        "policy_basis_missing",
+        "program_execution_failed"
+      ],
+      "missions": [
+        {
+          "mission_id": "mission.wave3c.controlled_upgrade.allowed.v1",
+          "resolved_goal": "Execute policy-supported controlled upgrade mission.",
+          "mission_scope": "controlled_upgrade_scope",
+          "route_tokens": [
+            "controlled upgrade mission",
+            "allowed controlled upgrade mission",
+            "execute controlled upgrade mission"
+          ],
+          "program_plan": [
+            {
+              "program_id": "program.wave2c.control_artifacts_rebuild.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2b.review_certification_sequence.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2a.operator_engineering_report.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            }
+          ],
+          "completion_rule": "certify_on_success",
+          "mission_priority": "high"
+        },
+        {
+          "mission_id": "mission.wave3c.controlled_upgrade.policy_blocked.v1",
+          "resolved_goal": "Prove blocked transition when controlled upgrade policy basis is invalid.",
+          "mission_scope": "controlled_upgrade_policy_blocked_scope",
+          "policy_basis": [
+            "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+            "docs/governance/NON_EXISTENT_WAVE3C_UPGRADE_POLICY.md"
+          ],
+          "route_tokens": [
+            "blocked transition by policy",
+            "controlled upgrade policy blocked mission"
+          ],
+          "program_plan": [
+            {
+              "program_id": "program.wave2c.control_artifacts_rebuild.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            },
+            {
+              "program_id": "program.wave2a.operator_engineering_report.v1",
+              "expected_verdicts": [
+                "SUCCESS"
+              ]
+            }
+          ],
+          "completion_rule": "blocked_on_policy_gate",
+          "mission_priority": "normal"
+        }
+      ]
+    },
+    {
+      "wave": "3C",
+      "mission_class": "blocked_mutation_mission",
+      "description": "Blocked mutation mission for creator/precondition/policy guard-certification paths.",
+      "allowed_modes": [
+        "creator",
+        "helper",
+        "integration"
+      ],
+      "authority_requirement": "none",
+      "creator_authority_required": false,
+      "policy_basis": [
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+        "docs/governance/OPERATOR_MISSION_MUTABILITY_MODEL.md",
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md"
+      ],
+      "scope_definition": "blocked_mutation_guard_certification",
+      "non_goals": [
+        "successful mutation execution",
+        "silent acceptance transition"
+      ],
+      "program_dependencies": [
+        "program.wave2c.blocked_creator_gate_simulation.v1",
+        "program.wave2c.blocked_missing_preconditions.v1",
+        "program.wave2c.blocked_policy_mutation.v1"
+      ],
+      "program_sequences": [
+        "creator_gate_block",
+        "precondition_block",
+        "policy_block"
+      ],
+      "dependency_set": [
+        "guard_contract"
+      ],
+      "review_dependencies": [
+        "creator_review"
+      ],
+      "delivery_artifacts": [
+        "runtime/repo_control_center"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "audit_outputs": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json",
+        "runtime/repo_control_center/operator_mission_audit_trail.json"
+      ],
+      "acceptance_criteria": [
+        "blocked mutation path detected",
+        "blocked reason captured",
+        "mission audit trail updated"
+      ],
+      "acceptance_gates": [
+        "mutation_guard_gate"
+      ],
+      "acceptance_transition_semantics": "blocked_mutation_certification",
+      "mutability_level": "READ_ONLY",
+      "resume_supported": true,
+      "rollback_supported": false,
+      "failure_policy_default": "stop_on_blocked",
+      "stop_conditions": [
+        "any_program_blocked"
+      ],
+      "delivery_target": "runtime/repo_control_center",
+      "review_requirement": "creator_review",
+      "escalation_requirement": true,
+      "escalation_path": "blocked_mutation_escalation",
+      "approval_basis": [
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md"
+      ],
+      "audit_trail_reference": "runtime/repo_control_center/operator_mission_audit_trail.json",
+      "routing_precedence": 40,
+      "required_context": [],
+      "default_context": {},
+      "blocking_conditions": [
+        "expected_block_not_triggered",
+        "policy_basis_missing",
+        "program_execution_failed"
+      ],
+      "missions": [
+        {
+          "mission_id": "mission.wave3c.blocked_mutation.creator_gate.v1",
+          "resolved_goal": "Certify blocked creator-only mission without sufficient authority context.",
+          "mission_scope": "blocked_creator_gate_scope",
+          "route_tokens": [
+            "blocked creator-only mission without sufficient authority",
+            "blocked creator-only mission"
+          ],
+          "program_plan": [
+            {
+              "program_id": "program.wave2c.blocked_creator_gate_simulation.v1",
+              "expected_verdicts": [
+                "BLOCKED"
+              ]
+            }
+          ],
+          "completion_rule": "certify_on_expected_block",
+          "mission_priority": "normal"
+        },
+        {
+          "mission_id": "mission.wave3c.blocked_mutation.missing_preconditions.v1",
+          "resolved_goal": "Certify blocked mission by missing preconditions.",
+          "mission_scope": "blocked_missing_preconditions_scope",
+          "route_tokens": [
+            "blocked mission by missing preconditions",
+            "missing preconditions blocked mission"
+          ],
+          "required_context": [
+            "task_id",
+            "node_id"
+          ],
+          "default_context": {},
+          "program_plan": [
+            {
+              "program_id": "program.wave2c.blocked_missing_preconditions.v1",
+              "expected_verdicts": [
+                "BLOCKED"
+              ]
+            }
+          ],
+          "completion_rule": "certify_on_expected_block",
+          "mission_priority": "normal"
+        },
+        {
+          "mission_id": "mission.wave3c.blocked_mutation.policy.v1",
+          "resolved_goal": "Certify blocked mutation transition by policy.",
+          "mission_scope": "blocked_policy_mutation_scope",
+          "route_tokens": [
+            "blocked mutation by policy",
+            "blocked transition by policy"
+          ],
+          "program_plan": [
+            {
+              "program_id": "program.wave2c.blocked_policy_mutation.v1",
+              "expected_verdicts": [
+                "BLOCKED"
+              ]
+            }
+          ],
+          "completion_rule": "certify_on_expected_block",
           "mission_priority": "normal"
         }
       ]
