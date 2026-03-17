@@ -23,6 +23,13 @@
 4. Push approved safe state to `safe_mirror/main` (`WorkFLOW2`).
 5. For ChatGPT reading, export targeted bundle instead of exposing full repo.
 
+## Current Canonical Phase
+
+- Mission / Work Package Layer: `accepted / certified baseline`.
+- Current phase: `Constitution-first`.
+- Constraint: no new brain-level implementation layers before constitutional closure.
+- Constitutional core: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`.
+
 ## Federation / Integration Layer V1
 
 Machine role model:
@@ -49,6 +56,7 @@ Hard rule:
 ### Level 0
 
 - `docs/governance/FIRST_PRINCIPLES.md`
+- `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 
 ### Level 1-4 Integration Anchor
 
@@ -243,8 +251,8 @@ Mission runtime artifacts:
 Example commands:
 
 ```powershell
-python scripts/operator_mission_surface.py classify --request "status refresh mission"
-python scripts/operator_mission_surface.py execute --mission-id mission.wave3a.status_refresh_certification.v1 --intent creator
+python scripts/operator_mission_surface.py classify --request "status consolidation mission"
+python scripts/operator_mission_surface.py execute --mission-id mission.wave3a.status_consolidation.complete.v1 --intent creator
 python scripts/operator_mission_surface.py consistency-check
 ```
 

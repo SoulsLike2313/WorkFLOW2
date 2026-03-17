@@ -8,6 +8,10 @@
 - Canonical external reading path: targeted bundles from `scripts/export_chatgpt_bundle.py`
 - Governance brain stack is mandatory for interpretation and execution
 - Active project: `platform_test_agent`
+- Mission Layer: `accepted / certified baseline`
+- Current canonical phase: `constitution-first`
+- New brain-level implementation layers are blocked until constitutional closure.
+- Constitutional core path: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 
 ## Explainability Quick Files
 
@@ -29,6 +33,7 @@ Read these first when you need plain-language status without deep policy parsing
 6. `docs/INSTRUCTION_INDEX.md`
 7. `docs/CURRENT_PLATFORM_STATE.md`
 8. `docs/NEXT_CANONICAL_STEP.md`
+   constitution-first anchor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 9. `docs/governance/FIRST_PRINCIPLES.md`
 10. `docs/governance/GOVERNANCE_HIERARCHY.md`
 11. `docs/governance/SELF_VERIFICATION_POLICY.md`

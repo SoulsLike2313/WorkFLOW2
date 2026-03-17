@@ -1078,18 +1078,25 @@ def governance_acceptance_checks(
         or "operator mission layer v1" in next_step_lower
         or "next-step-operator-mission-layer-v1" in next_step_lower
     )
+    has_constitution_transition = (
+        "constitution-first phase" in next_step_lower
+        or "next-step-constitution-first-phase-v0" in next_step_lower
+        or "workflow2_constitution_v0" in next_step_lower
+    )
     has_valid_route = (
         has_governance_closure
         or has_federation_transition
         or has_operator_command_transition
         or has_operator_program_transition
         or has_operator_mission_transition
+        or has_constitution_transition
     )
     evidence["next_step_has_governance_acceptance_closure"] = has_governance_closure
     evidence["next_step_has_federation_transition"] = has_federation_transition
     evidence["next_step_has_operator_command_transition"] = has_operator_command_transition
     evidence["next_step_has_operator_program_transition"] = has_operator_program_transition
     evidence["next_step_has_operator_mission_transition"] = has_operator_mission_transition
+    evidence["next_step_has_constitution_transition"] = has_constitution_transition
     evidence["next_step_has_valid_post_acceptance_route"] = has_valid_route
     if not has_valid_route:
         blockers.append("NEXT_CANONICAL_STEP missing governance-accepted canonical route")

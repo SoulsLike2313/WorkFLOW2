@@ -1,7 +1,7 @@
 # Current Platform State
 
-- snapshot_id: `platform-state-20260317-federation-integration-v1`
-- snapshot_date_utc: `2026-03-17`
+- snapshot_id: `platform-state-20260318-mission-baseline-accepted`
+- snapshot_date_utc: `2026-03-18`
 - source_of_truth:
   - `workspace_config/workspace_manifest.json`
   - `workspace_config/codex_manifest.json`
@@ -61,7 +61,10 @@ Not accepted for execution:
 - operator query layer: `accepted`
 - operator command execution layer: `accepted`
 - operator task / program layer: `accepted`
-- next active layer: `work package / mission layer v1`
+- work package / mission layer: `accepted / certified baseline`
+- current canonical phase: `constitution-first`
+- next canonical phase goal: `constitutional closure before any new brain-level implementation layers`
+- constitutional bootstrap artifact: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 
 ## Shared Systems Baseline
 

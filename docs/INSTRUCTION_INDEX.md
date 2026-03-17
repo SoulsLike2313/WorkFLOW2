@@ -9,6 +9,9 @@ Architecture anchor:
 - local working source: `E:\CVVCODEX`
 - public safe mirror only: `WorkFLOW2` (`safe_mirror/main`)
 - targeted bundle export: official external reading channel
+- mission layer: accepted/certified baseline
+- current canonical phase: constitution-first
+- constitutional core: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 
 ## Mandatory Pre-Task Read Order
 
@@ -20,6 +23,7 @@ Architecture anchor:
 6. `docs/INSTRUCTION_INDEX.md`
 7. `docs/CURRENT_PLATFORM_STATE.md`
 8. `docs/NEXT_CANONICAL_STEP.md`
+   constitution-first anchor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 9. `docs/governance/FIRST_PRINCIPLES.md`
 10. `docs/governance/GOVERNANCE_HIERARCHY.md`
 11. `docs/governance/SELF_VERIFICATION_POLICY.md`
@@ -114,6 +118,7 @@ If this order is not completed, task status is `REJECTED`.
 ## Governance Brain Stack (Mandatory)
 
 - `docs/governance/FIRST_PRINCIPLES.md`
+- `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 - `docs/governance/GOVERNANCE_HIERARCHY.md`
 - `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
 - `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`

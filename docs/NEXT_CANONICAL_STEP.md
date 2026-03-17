@@ -1,65 +1,63 @@
 # Next Canonical Step
 
-- step_id: `next-step-operator-mission-layer-v1`
-- effective_date_utc: `2026-03-17`
-- previous_accepted_stage: `operator-task-program-layer-v1-accepted`
+- step_id: `next-step-constitution-first-phase-v0`
+- effective_date_utc: `2026-03-18`
+- previous_accepted_stage: `operator-mission-layer-v1-accepted`
 
 ## What Do We Do Next
 
 Canonical next execution step is:
 
-`work package / mission layer v1`
+`constitution-first phase`
 
 This means:
 
-1. map mission-level requests to deterministic `mission_class` and `mission_id`
-2. decompose mission into registered program plans only
-3. enforce authority/policy/precondition checks before mission execution
-4. execute mission plans through accepted task/program layer
-5. emit mission checkpoints, evidence aggregation, and completion verdict
+1. close narrative gaps after mission certification
+2. define constitutional core entities and truth-state semantics
+3. formalize authority lattice and completion/contradiction laws at constitutional level
+4. lock anti-sloppiness and initiative boundary laws before new implementation layers
+5. align canonical surfaces so they do not conflict about current phase or next step
 
 ## Canonical Goal
 
-Make repeatable operator missions executable without relaxing governance boundaries:
+Lock constitutional clarity as execution prerequisite for next-scale evolution:
 
-1. no uncontrolled autonomous mission planning
-2. creator-only missions remain creator-only
-3. guarded state changes stay blocked unless explicit guard conditions are met
-4. every mission run leaves repo-visible runtime evidence and deterministic next step
+1. mission layer remains accepted baseline, not active build target
+2. canonical surfaces must report one consistent phase state
+3. no new brain-level implementation layers before constitutional closure
+4. source precedence and contradiction handling are explicit and enforced
 
 ## Canonical Scope
 
 - target layer:
-  - `docs/governance/OPERATOR_MISSION_*`
-  - `workspace_config/operator_mission_registry.json`
-  - `scripts/operator_mission_surface.py`
-  - `runtime/repo_control_center/operator_mission_*`
-  - `docs/review_artifacts/OPERATOR_MISSION_*`
-  - root context docs/manifests integration
+  - `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+  - canonical narrative surfaces (`README.md`, `REPO_MAP.md`, `MACHINE_CONTEXT.md`, `docs/CURRENT_PLATFORM_STATE.md`, `docs/NEXT_CANONICAL_STEP.md`)
+  - post-mission alignment and machine-access hygiene review artifacts
 - forbidden scope:
   - product feature development
-  - governance baseline rewrite
+  - governance architecture rewrite
   - authority model weakening
   - UI expansion
+  - creation of new brain-level implementation layers
 
 ## Canonical Acceptance Criteria
 
-1. Wave `3A/3B/3C` mission classes implemented
-2. unified mission registry and execution contract are active
-3. mission routing consistency check passes on final golden pack
-4. creator-grade chain remains green after integration
-5. sync parity with `safe_mirror/main` remains `0/0` and worktree clean
+1. Mission Layer explicitly marked `accepted / certified baseline` across canonical surfaces
+2. constitutional v0 document exists with enforceable laws
+3. post-mission narrative realignment report exists and contradictions are listed/resolved
+4. machine-access hygiene review exists with low-risk proposals and risk tags
+5. creator-grade chain remains green with clean sync parity
 
 ## Canonical Prohibitions For This Step
 
-1. no mission may bypass policy checks
-2. no mission may bypass authority checks
-3. no guarded mutation without explicit guard and policy basis
-4. no completion claim when mission-layer evidence is missing
+1. no launch of new brain-level implementation layers
+2. no premature federation/factory expansion
+3. no cosmetic architecture growth in place of constitutional closure
+4. no completion claim if canonical surfaces still conflict on current phase
 
 ## Rejection Condition
 
-Any request that requires policy/authority override must be rejected:
+Any request that bypasses constitution-first gate must be rejected:
 
 ```text
 STATUS: REJECTED
