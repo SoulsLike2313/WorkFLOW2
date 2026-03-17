@@ -1,20 +1,20 @@
 # SAFE MIRROR Build Report
 
-- generated_at: `2026-03-17T08:30:46.122083+00:00`
+- generated_at: `2026-03-17T09:53:53.606187+00:00`
 - local_source_root: `E:\CVVCODEX`
 - repo_name: `WorkFLOW2`
 - evidence_contract_version: `2.0.0`
 - evidence_mode: `tracked_evidence_refresh_commit`
-- basis_head_sha: `e2a9f747d83a83b0da490aeb72f9be7449ac3907`
-- evidence_generated_at: `2026-03-17T08:30:46.122083+00:00`
-- evidence_commit_note: `Evidence refresh after federation allowlist update`
+- basis_head_sha: `45cdf2188bb7f458f11adccefaf8f932e0ff080d`
+- evidence_generated_at: `2026-03-17T09:53:53.606187+00:00`
+- evidence_commit_note: `Evidence refresh commit for audit targeted bundle 2026-03-17`
 - active_project: `platform_test_agent`
 - branch: `main`
-- head_sha (basis): `e2a9f747d83a83b0da490aeb72f9be7449ac3907`
+- head_sha (basis): `45cdf2188bb7f458f11adccefaf8f932e0ff080d`
 - tracking_branch: `safe_mirror/main`
 - ahead/behind: `1/0`
 - worktree_clean: `False`
-- tracked_files_count: `1082`
+- tracked_files_count: `1084`
 - sync_verdict: `PASS`
 - publication_safe_verdict: `PASS`
 
