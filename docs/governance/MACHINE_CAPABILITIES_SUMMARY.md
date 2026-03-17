@@ -1,48 +1,45 @@
 ﻿# MACHINE_CAPABILITIES_SUMMARY
 
-## Machine can
-- Detect current machine mode.
-- Validate sync/trust/governance/admission/evolution gates.
-- Generate runtime status artifacts.
-- Generate one-screen human-readable status.
-- Validate integration inbox readiness.
+## Capability Surface
+- Detect machine role and authority state (`creator`/`helper`/`integration`).
+- Evaluate control gates: trust, sync, governance, governance acceptance, admission, evolution.
+- Validate safe-state evidence chain and bootstrap contract.
+- Emit runtime evidence reports for audit and operator review.
 
-## Machine cannot
-- Canonically accept changes in helper mode.
-- Override governance gates.
-- Ignore sync drift or dirty worktree for acceptance gates.
+## Authority-Bound Actions
+Creator-only actions:
+- Canonical acceptance decisions.
+- Final completion claim for canonical flow.
+- Protected governance-layer mutations.
+- Final integration admission decisions.
 
-## Machine is allowed to
-- Report clear gate verdicts.
-- Block unsafe progression.
-- Propose next step from canonical routing.
+## Helper/Integration Boundaries
+- Helper node can execute scoped block tasks only.
+- Helper node cannot declare canonical completion.
+- Integration flow can review/route handoff packages but does not auto-accept canon.
 
-## Machine is not allowed to
-- Claim PASS when hard gates are failing.
-- Treat role limitations as governance pass.
-- Hide blockers.
+## Forbidden Actions
+- Bypass sync parity requirements.
+- Return PASS while critical gate blockers exist.
+- Treat role limitations as governance compliance.
+- Suppress blocking evidence or contradiction signals.
 
-## Machine reports
-- trust verdict
-- sync verdict
-- governance verdict
-- governance acceptance
-- admission verdict
-- evolution verdict
-- machine mode and authority state
-- next canonical step
+## Reporting and Verdict Behavior
+Mandatory runtime outputs:
+- `runtime/repo_control_center/repo_control_status.json`
+- `runtime/repo_control_center/repo_control_report.md`
+- `runtime/repo_control_center/evolution_status.json`
+- `runtime/repo_control_center/evolution_report.md`
+- `runtime/repo_control_center/one_screen_status.json`
+- `runtime/repo_control_center/plain_status.md`
 
-## Machine blocks when
-- sync is not `IN_SYNC`
-- governance is non-compliant
-- admission is rejected
-- creator-only gate is requested without creator authority
+Verdict model:
+- trust: `TRUSTED` | `WARNING` | `NOT_TRUSTED`
+- sync: `IN_SYNC` | `DRIFTED` | `BLOCKED`
+- governance: `COMPLIANT` | `PARTIAL` | `NON_COMPLIANT`
+- admission: `ADMISSIBLE` | `CONDITIONAL` | `REJECTED`
+- evolution: `HOLD` | `PREPARE` | `V2_CANDIDATE` | `V2_READY` | `PROMOTE` | `BLOCKED`
 
-## Machine hands off
-- Runtime reports for audit-safe review.
-- Structured one-screen snapshot for operator decisions.
-
-## Machine confirms
-- Current mode and authority visibility.
-- Which gate is failing and why.
-- What operator should do next.
+## Transfer Surface
+- Targeted ChatGPT bundle export for controlled external reading.
+- Audit-safe runtime export mode with explicit allowlist only.

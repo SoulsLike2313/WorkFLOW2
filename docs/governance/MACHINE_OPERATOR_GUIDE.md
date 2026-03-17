@@ -1,47 +1,59 @@
 ﻿# MACHINE_OPERATOR_GUIDE
 
-## What This Machine Is
-WorkFLOW2 controller machine is a governance-first repo operator.
-It validates repo truth, policy compliance, and admission readiness before any canonical acceptance.
+## Scope
+Engineering operator guide for WorkFLOW2 governance/control runtime.
+This document defines operating semantics, not product features.
 
-## What It Does
-- Runs machine mode detection (`creator`, `helper`, `integration`).
-- Runs repo control checks (`bundle`, `full-check`, `sync`, `trust`, `evolution`).
-- Produces machine-readable runtime reports.
-- Produces plain one-screen status for human operators.
-- Enforces creator-only canonical acceptance.
+## System Role
+- Control plane for repo truth, policy compliance, and admission gating.
+- Canonical source: local `E:\CVVCODEX`.
+- Public safe mirror: `safe_mirror/main` (`WorkFLOW2`) only.
 
-## What It Cannot Do
-- Cannot declare canonical acceptance in `helper` mode.
-- Cannot bypass governance gates when `governance_acceptance != PASS`.
-- Cannot treat drifted sync as accepted state.
+## Machine Modes
+- `creator`: creator authority detected; canonical acceptance operations allowed.
+- `helper`: creator authority absent; block execution only; no canonical acceptance.
+- `integration`: canonical review path for external handoff packages.
 
-## Modes
-- `creator`: creator authority present, canonical acceptance allowed.
-- `helper`: no creator authority, block work only, no canonical acceptance.
-- `integration`: review mode for external handoff/inbox processing.
+## Authority Contract
+- Detection input: `CVVCODEX_CREATOR_AUTHORITY_DIR` + `creator_authority.json` marker.
+- Authority state is external to tracked repo.
+- Full repo copy without valid marker resolves to `helper` mode.
 
-## Verdict Meanings
-- `PASS` / `TRUSTED` / `IN_SYNC` / `ADMISSIBLE`: gate is clear for its scope.
-- `WARNING`: system usable, but operator attention is required.
-- `BLOCKED`: gate cannot proceed until blockers are removed.
-- `REJECTED`: admission is denied for current state.
+## Gate Chain
+Execution order for decision quality:
+1. `sync` (`IN_SYNC` required for canonical completion)
+2. `trust` (`TRUSTED` required for clean admission)
+3. `governance` (`COMPLIANT` required)
+4. `governance_acceptance` (`PASS` required)
+5. `admission` (`ADMISSIBLE` required)
+6. `evolution` (progression signal; not a replacement for admission)
 
-## Key Terms In Plain Language
-- `creator authority`: local authority switch proving this is the canonical creator machine.
-- `governance acceptance`: hard governance gate before next-stage progression.
-- `admission`: final operational permission gate for controlled progression.
-- `trust`: combined confidence from sync + governance + contradiction + mirror/bundle checks.
-- `evolution`: maturity progression status, separate from current operational health.
+## Verdict Semantics
+- `PASS` / `TRUSTED` / `IN_SYNC` / `ADMISSIBLE`: gate condition satisfied.
+- `WARNING`: condition is operational but contains non-fatal risk.
+- `BLOCKED`: gate cannot proceed due to hard blocker.
+- `REJECTED`: admission gate denied.
 
-## Operator Action Model
-1. Run `python scripts/repo_control_center.py bundle`.
-2. Run `python scripts/repo_control_center.py full-check`.
-3. Read `runtime/repo_control_center/plain_status.md`.
-4. If blocked, follow `blocking_reason_category` and `blocking_reason_detail` from `one_screen_status.json`.
-5. Continue only when required gates are green for the intended action.
+## Health Model
+- `workspace_health`: technical integrity of current workspace checks.
+- `authority_status`: current role authority state (creator/helper/integration).
+- `governance_status`: governance compliance + acceptance state.
+- `admission_status`: admission gate state.
+- `repo_health`: summary health derived from workspace control checks.
 
-## Fast Decision Rules
-- Want canonical acceptance: require `machine_mode=creator`, `authority_present=true`, `governance_acceptance=PASS`, `admission=ADMISSIBLE`.
-- Want bundle export only: `bundle=READY` is required.
-- Want progression planning: read `evolution` and `next_canonical_step`.
+## Operator Runbook
+1. `python scripts/repo_control_center.py bundle`
+2. `python scripts/repo_control_center.py full-check`
+3. Review:
+   - `runtime/repo_control_center/one_screen_status.json`
+   - `runtime/repo_control_center/plain_status.md`
+4. If blocked, route by:
+   - `blocking_reason_category`
+   - `blocking_reason_detail`
+5. Proceed only when target gate set is satisfied for intended operation.
+
+## Non-Overridable Constraints
+- No canonical completion in `helper` mode.
+- No completion with sync drift or dirty worktree.
+- No completion with unresolved critical contradictions.
+- No bypass of governance acceptance gate.

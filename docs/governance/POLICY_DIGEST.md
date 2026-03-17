@@ -1,120 +1,30 @@
 ﻿# POLICY_DIGEST
 
-Quick map of the policy/governance layer used by Repo Control Center.
+Compact governance/policy digest for Repo Control Center verdict chain.
+Coverage: documents that directly affect control gates and machine-mode behavior.
 
-## Core principles and hierarchy
-- `docs/governance/FIRST_PRINCIPLES.md`
-  - Purpose: non-overridable laws.
-  - Gate: all gates (foundation).
-  - Used by: all modes.
-  - Linked with: hierarchy + control/evolution/creative policies.
-  - Bootstrap: yes.
+## Digest Records
 
-- `docs/governance/GOVERNANCE_HIERARCHY.md`
-  - Purpose: precedence and conflict resolution by levels.
-  - Gate: governance consistency.
-  - Used by: creator/integration operators.
-  - Linked with: all policy layers.
-  - Bootstrap: yes.
+| Document | Purpose | Controlled Gate/Area | Primary Consumer | Bootstrap Required |
+| --- | --- | --- | --- | --- |
+| `docs/governance/FIRST_PRINCIPLES.md` | Non-overridable operating laws | All gates (foundation) | All modes | Yes |
+| `docs/governance/GOVERNANCE_HIERARCHY.md` | Policy precedence and conflict order | Governance consistency | Creator/Integration | Yes |
+| `docs/governance/SELF_VERIFICATION_POLICY.md` | Mandatory self-check before PASS claims | Trust/Admission discipline | Repo control cycles | Yes |
+| `docs/governance/CONTRADICTION_CONTROL_POLICY.md` | Contradiction detection and escalation | Contradiction gate | Trust/Governance checks | Yes |
+| `docs/governance/ADMISSION_GATE_POLICY.md` | Formal admission conditions | Admission verdict | Creator acceptance flow | Yes |
+| `docs/governance/ANTI_DRIFT_POLICY.md` | Drift detection and response | Drift/Trust quality | Control cycles | Yes |
+| `docs/governance/CREATOR_AUTHORITY_POLICY.md` | Creator authority contract and detection | Machine mode / authority gate | Mode detection + full-check | Yes |
+| `docs/governance/HELPER_NODE_POLICY.md` | Helper operation boundaries | Role restrictions | Helper execution flow | Yes |
+| `docs/governance/INTEGRATION_INBOX_POLICY.md` | Handoff inbox review state machine | Integration readiness | Integration review flow | Yes |
+| `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md` | Protection of creator-only control zones | Canonical acceptance safety | Creator mode operations | Yes |
+| `docs/governance/EVOLUTION_READINESS_POLICY.md` | Maturity readiness contract | Evolution readiness | Evolution checks | Yes |
+| `docs/governance/PROMOTION_THRESHOLD_POLICY.md` | Formal thresholds for promotion | Evolution promotion guard | Evolution checks | Yes |
+| `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md` | Mandatory gate before next stage | Governance acceptance | Full-check chain | Yes |
+| `workspace_config/GITHUB_SYNC_POLICY.md` | Sync parity and completion discipline | Sync verdict | Sync checks / completion gate | Yes |
+| `workspace_config/AGENT_EXECUTION_POLICY.md` | Execution boundaries and refusal discipline | Execution governance | Agent runtime behavior | Yes |
+| `workspace_config/MACHINE_REPO_READING_RULES.md` | Canonical read order contract | Bootstrap enforcement | New machine onboarding | Yes |
 
-## Control layer
-- `docs/governance/SELF_VERIFICATION_POLICY.md`
-  - Purpose: mandatory self-check before pass claims.
-  - Gate: trust/admission discipline.
-  - Used by: repo control cycles.
-  - Linked with: admission gate.
-  - Bootstrap: yes.
-
-- `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
-  - Purpose: detect and escalate contradictions.
-  - Gate: contradiction status.
-  - Used by: trust/governance checks.
-  - Linked with: repo-visible truth.
-  - Bootstrap: yes.
-
-- `docs/governance/ADMISSION_GATE_POLICY.md`
-  - Purpose: define completion/admission requirements.
-  - Gate: admission verdict.
-  - Used by: creator acceptance flow.
-  - Linked with: sync + trust + governance acceptance.
-  - Bootstrap: yes.
-
-- `docs/governance/ANTI_DRIFT_POLICY.md`
-  - Purpose: stop scope/cosmetic/architecture drift.
-  - Gate: drift and trust quality.
-  - Used by: ongoing control cycles.
-  - Linked with: self-verification + contradiction control.
-  - Bootstrap: yes.
-
-## Federation and authority
-- `docs/governance/CREATOR_AUTHORITY_POLICY.md`
-  - Purpose: creator authority contract and detection rules.
-  - Gate: machine mode and creator-only operations.
-  - Used by: detect_machine_mode + full-check.
-  - Linked with: helper/integration policies.
-  - Bootstrap: yes.
-
-- `docs/governance/HELPER_NODE_POLICY.md`
-  - Purpose: helper permissions and restrictions.
-  - Gate: role boundaries.
-  - Used by: helper operations.
-  - Linked with: task-id contract and handoff.
-  - Bootstrap: yes.
-
-- `docs/governance/INTEGRATION_INBOX_POLICY.md`
-  - Purpose: inbound package review flow.
-  - Gate: integration readiness.
-  - Used by: integration mode.
-  - Linked with: handoff schema and inbox contract.
-  - Bootstrap: yes.
-
-- `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md`
-  - Purpose: protect creator-only canonical zones.
-  - Gate: canonical acceptance safety.
-  - Used by: creator mode.
-  - Linked with: creator authority policy.
-  - Bootstrap: yes.
-
-## Evolution layer
-- `docs/governance/EVOLUTION_READINESS_POLICY.md`
-  - Purpose: readiness criteria for maturity transitions.
-  - Gate: evolution verdict.
-  - Used by: evolution checks.
-  - Linked with: maturity model and threshold policy.
-  - Bootstrap: yes.
-
-- `docs/governance/MODEL_MATURITY_MODEL.md`
-  - Purpose: maturity levels and required capabilities.
-  - Gate: evolution interpretation.
-  - Used by: operator and automation checks.
-  - Linked with: readiness + signal registry.
-  - Bootstrap: yes.
-
-- `docs/governance/PROMOTION_THRESHOLD_POLICY.md`
-  - Purpose: hard thresholds for V1->V2 progression.
-  - Gate: evolution promotion guard.
-  - Used by: repo_control_center evolution logic.
-  - Linked with: policy evolution log.
-  - Bootstrap: yes.
-
-## Explainability and operating policies
-- `workspace_config/GITHUB_SYNC_POLICY.md`
-  - Purpose: sync discipline and canonical parity rules.
-  - Gate: sync verdict.
-  - Used by: repo control sync checks.
-  - Linked with: admission and trust.
-  - Bootstrap: yes.
-
-- `workspace_config/AGENT_EXECUTION_POLICY.md`
-  - Purpose: operator behavior contract.
-  - Gate: execution discipline.
-  - Used by: agent/assistant operation.
-  - Linked with: machine reading rules.
-  - Bootstrap: yes.
-
-- `workspace_config/MACHINE_REPO_READING_RULES.md`
-  - Purpose: canonical reading/boot order.
-  - Gate: bootstrap enforcement.
-  - Used by: new machine onboarding.
-  - Linked with: codex manifest bootstrap list.
-  - Bootstrap: yes.
+## Role Separation
+- `MACHINE_OPERATOR_GUIDE.md`: runbook and gate interpretation.
+- `MACHINE_CAPABILITIES_SUMMARY.md`: capability/authority matrix.
+- `POLICY_DIGEST.md` (this file): compressed map of policy control responsibilities.

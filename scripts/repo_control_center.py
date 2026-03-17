@@ -1403,14 +1403,19 @@ def one_screen_status_payload(result: dict[str, Any]) -> dict[str, Any]:
     payload = {
         "run_id": result["run_id"],
         "generated_at": result["generated_at"],
+        "branch": result["repo"]["branch"],
+        "head": result["repo"]["head"],
+        "safe_mirror_main": result["repo"]["safe_mirror_main"],
         "machine_mode": v["machine_mode"]["evidence"].get("machine_mode", "unknown"),
+        "machine_mode_verdict": v["machine_mode"]["verdict"],
         "authority_present": bool(v["machine_mode"]["evidence"].get("authority_present", False)),
         "authority_path": authority_path,
         "trust_verdict": v["trust"]["verdict"],
         "sync_verdict": v["sync"]["verdict"],
         "governance_verdict": v["governance"]["verdict"],
-        "governance_acceptance": v["governance_acceptance"]["verdict"],
+        "governance_acceptance_verdict": v["governance_acceptance"]["verdict"],
         "admission_verdict": v["admission"]["verdict"],
+        "evolution_verdict": v["evolution"]["verdict"],
         "repo_health": result["repo"]["repo_health"],
         "workspace_health": result.get("status_layers", {}).get("workspace_health", "UNKNOWN"),
         "authority_status": result.get("status_layers", {}).get("authority_status", "UNKNOWN"),
@@ -1420,6 +1425,7 @@ def one_screen_status_payload(result: dict[str, Any]) -> dict[str, Any]:
         "next_canonical_step": result.get("next_canonical_step", "unknown-next-step"),
         "blocking_reason_category": block_category,
         "blocking_reason_detail": block_detail,
+        "operator_action_required": block_category != "NONE",
         "critical_contradictions": checks["contradictions"]["critical_count"],
         "major_contradictions": checks["contradictions"]["major_count"],
     }
@@ -1427,45 +1433,59 @@ def one_screen_status_payload(result: dict[str, Any]) -> dict[str, Any]:
 
 
 def plain_status_markdown(result: dict[str, Any], one_screen: dict[str, Any]) -> str:
-    good_signals = [
-        f"sync={one_screen['sync_verdict']}",
-        f"governance={one_screen['governance_verdict']}",
-        f"governance_acceptance={one_screen['governance_acceptance']}",
-        f"admission={one_screen['admission_verdict']}",
-    ]
+    notes: list[str] = []
+    if one_screen["blocking_reason_category"] == "NONE":
+        notes.append("no_blocking_factors_detected")
+    else:
+        notes.append("blocking_factors_present")
+    if one_screen["operator_action_required"]:
+        notes.append("operator_action_required=true")
+    else:
+        notes.append("operator_action_required=false")
+
     lines = [
-        "# Plain Status (One Screen)",
+        "# Runtime Status (Engineering One-Screen)",
         "",
-        f"- generated_at: `{one_screen['generated_at']}`",
+        "## Runtime Identity",
+        f"- run_id: `{one_screen['run_id']}`",
+        f"- generated_at_utc: `{one_screen['generated_at']}`",
+        f"- branch: `{one_screen['branch']}`",
+        f"- head: `{one_screen['head']}`",
+        f"- safe_mirror_main: `{one_screen['safe_mirror_main']}`",
         f"- machine_mode: `{one_screen['machine_mode']}`",
-        f"- creator_authority_present: `{one_screen['authority_present']}`",
-        f"- creator_authority_path: `{one_screen['authority_path'] or 'not-set-in-environment'}`",
+        f"- machine_mode_verdict: `{one_screen['machine_mode_verdict']}`",
         "",
-        "## What This Means",
-        "- `creator authority`: local permission switch for creator-only operations.",
-        "- `governance acceptance`: governance gate for moving forward as canonical machine.",
-        "- `admission`: final operational gate for controlled progression.",
-        "- `trust`: overall confidence from sync + governance + policy checks.",
+        "## Authority State",
+        f"- authority_present: `{one_screen['authority_present']}`",
+        f"- authority_status: `{one_screen['authority_status']}`",
+        f"- authority_path: `{one_screen['authority_path'] or 'not-set-in-environment'}`",
         "",
-        "## Current Health",
+        "## Trust / Sync / Governance Chain",
+        f"- trust_verdict: `{one_screen['trust_verdict']}`",
+        f"- sync_verdict: `{one_screen['sync_verdict']}`",
+        f"- governance_verdict: `{one_screen['governance_verdict']}`",
+        f"- governance_acceptance_verdict: `{one_screen['governance_acceptance_verdict']}`",
+        f"- evolution_verdict: `{one_screen['evolution_verdict']}`",
+        "",
+        "## Acceptance / Admission State",
         f"- repo_health: `{one_screen['repo_health']}`",
         f"- workspace_health: `{one_screen['workspace_health']}`",
-        f"- authority_status: `{one_screen['authority_status']}`",
         f"- governance_status: `{one_screen['governance_status']}`",
+        f"- admission_verdict: `{one_screen['admission_verdict']}`",
         f"- admission_status: `{one_screen['admission_status']}`",
         f"- explainability_status: `{one_screen['explainability_status']}`",
         "",
-        "## What Is Good",
-        f"- {', '.join(good_signals)}",
-        f"- contradictions: critical={one_screen['critical_contradictions']}, major={one_screen['major_contradictions']}",
-        "",
-        "## What Is Not Good (if any)",
+        "## Blocking Factors",
         f"- blocking_reason_category: `{one_screen['blocking_reason_category']}`",
         f"- blocking_reason_detail: `{one_screen['blocking_reason_detail']}`",
+        f"- contradictions: critical=`{one_screen['critical_contradictions']}` major=`{one_screen['major_contradictions']}`",
         "",
-        "## Operator Next Step",
+        "## Canonical Next Step",
         f"- next_canonical_step: `{one_screen['next_canonical_step']}`",
+        "",
+        "## Notes / Exceptions",
     ]
+    lines.extend([f"- {item}" for item in notes])
     return "\n".join(lines) + "\n"
 
 
@@ -1770,14 +1790,14 @@ def summarize_for_mode(result: dict[str, Any], mode: str) -> dict[str, Any]:
             "governance_status": result.get("status_layers", {}).get("governance_status", "UNKNOWN"),
             "admission_status": result.get("status_layers", {}).get("admission_status", "UNKNOWN"),
             "explainability_status": result.get("status_layers", {}).get("explainability_status", "UNKNOWN"),
-            "trust": v["trust"]["verdict"],
-            "sync": v["sync"]["verdict"],
-            "governance": v["governance"]["verdict"],
-            "governance_acceptance": v["governance_acceptance"]["verdict"],
-            "machine_mode": v["machine_mode"]["verdict"],
-            "integration_inbox": v["integration_inbox"]["verdict"],
-            "admission": v["admission"]["verdict"],
-            "evolution": v["evolution"]["verdict"],
+            "trust_verdict": v["trust"]["verdict"],
+            "sync_verdict": v["sync"]["verdict"],
+            "governance_verdict": v["governance"]["verdict"],
+            "governance_acceptance_verdict": v["governance_acceptance"]["verdict"],
+            "machine_mode_verdict": v["machine_mode"]["verdict"],
+            "integration_inbox_verdict": v["integration_inbox"]["verdict"],
+            "admission_verdict": v["admission"]["verdict"],
+            "evolution_verdict": v["evolution"]["verdict"],
             "next_canonical_step": result.get("next_canonical_step", "unknown-next-step"),
         }
     elif mode == "mode":
