@@ -80,13 +80,20 @@
 68. `workspace_config/operator_command_registry.json`
 69. `scripts/operator_command_surface.py`
 70. `docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json`
-71. `docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md`
-72. `docs/governance/OPERATOR_PROGRAM_CATALOG.md`
-73. `docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md`
-74. `docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md`
-75. `workspace_config/operator_program_registry.json`
-76. `scripts/operator_program_surface.py`
-77. `docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json`
+71. `docs/governance/OPERATOR_TASK_PROGRAM_LAYER_BASELINE.md`
+72. `docs/governance/OPERATOR_TASK_PROGRAM_BASELINE.md`
+73. `docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md`
+74. `docs/governance/OPERATOR_TASK_PROGRAM_REGISTRY.md`
+75. `workspace_config/operator_task_program_registry.json`
+76. `scripts/operator_task_program_surface.py`
+77. `docs/review_artifacts/OPERATOR_TASK_PROGRAM_GOLDEN_PACK_FINAL.json`
+78. `docs/governance/OPERATOR_MISSION_LAYER_BASELINE.md`
+79. `docs/governance/OPERATOR_MISSION_BASELINE.md`
+80. `docs/governance/OPERATOR_MISSION_CONTRACT.md`
+81. `docs/governance/OPERATOR_MISSION_REGISTRY.md`
+82. `workspace_config/operator_mission_registry.json`
+83. `scripts/operator_mission_surface.py`
+84. `docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json`
 
 ## Canonical Top-Level Directories
 
@@ -139,16 +146,31 @@ Current canonical active project:
 
 ## Operator Task / Program Layer
 
-- Program surface: `scripts/operator_program_surface.py`
-- Registry: `workspace_config/operator_program_registry.json`
-- Golden pack: `docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json`
-- Consistency report: `docs/review_artifacts/OPERATOR_PROGRAM_CONSISTENCY_REPORT.md`
+- Program surface: `scripts/operator_task_program_surface.py`
+- Registry: `workspace_config/operator_task_program_registry.json`
+- Golden pack: `docs/review_artifacts/OPERATOR_TASK_PROGRAM_GOLDEN_PACK_FINAL.json`
+- Consistency report: `docs/review_artifacts/OPERATOR_TASK_PROGRAM_CERTIFICATION_REPORT.md`
 - Runtime outputs:
-  - `runtime/operator_program_layer/last_execution.json`
-  - `runtime/operator_program_layer/program_execution_log.jsonl`
-  - `runtime/operator_program_layer/program_surface_status.json`
-  - `runtime/operator_program_layer/program_surface_report.md`
-  - `runtime/operator_program_layer/operator_program_consistency_check.json`
+  - `runtime/repo_control_center/operator_program_status.json`
+  - `runtime/repo_control_center/operator_program_report.md`
+  - `runtime/repo_control_center/operator_program_checkpoint.json`
+  - `runtime/repo_control_center/operator_program_history.json`
+  - `runtime/repo_control_center/operator_program_audit_trail.json`
+  - `runtime/repo_control_center/operator_task_program_consistency.json`
+
+## Work Package / Mission Layer
+
+- Mission surface: `scripts/operator_mission_surface.py`
+- Registry: `workspace_config/operator_mission_registry.json`
+- Golden pack: `docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json`
+- Certification report: `docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md`
+- Runtime outputs:
+  - `runtime/repo_control_center/operator_mission_status.json`
+  - `runtime/repo_control_center/operator_mission_report.md`
+  - `runtime/repo_control_center/operator_mission_checkpoint.json`
+  - `runtime/repo_control_center/operator_mission_history.json`
+  - `runtime/repo_control_center/operator_mission_audit_trail.json`
+  - `runtime/repo_control_center/operator_mission_consistency.json`
 
 ## Governance v1.1 Hardening Policies
 

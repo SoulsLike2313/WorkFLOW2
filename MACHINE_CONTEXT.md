@@ -98,6 +98,19 @@ Read these first when you need plain-language status without deep policy parsing
 75. `workspace_config/operator_program_registry.json`
 76. `scripts/operator_program_surface.py`
 77. `docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json`
+78. `docs/governance/OPERATOR_TASK_PROGRAM_LAYER_BASELINE.md`
+79. `docs/governance/OPERATOR_TASK_PROGRAM_BASELINE.md`
+80. `docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md`
+81. `workspace_config/operator_task_program_registry.json`
+82. `scripts/operator_task_program_surface.py`
+83. `docs/governance/OPERATOR_MISSION_LAYER_BASELINE.md`
+84. `docs/governance/OPERATOR_MISSION_BASELINE.md`
+85. `docs/governance/OPERATOR_MISSION_CONTRACT.md`
+86. `docs/governance/OPERATOR_MISSION_REGISTRY.md`
+87. `workspace_config/operator_mission_registry.json`
+88. `scripts/operator_mission_surface.py`
+89. `docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json`
+90. `docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md`
 
 ## Execution Guardrails
 
@@ -139,11 +152,19 @@ Audit-safe runtime evidence export:
 
 ## Operator Task / Program Workflow
 
-1. Classify request: `python scripts/operator_program_surface.py classify --request "<text>"`.
-2. Execute program: `python scripts/operator_program_surface.py execute --request "<text>" [flags]`.
-3. Validate deterministic routing: `python scripts/operator_program_surface.py consistency-check`.
-4. Review program runtime evidence in `runtime/operator_program_layer/`.
+1. Classify request: `python scripts/operator_task_program_surface.py classify --request "<text>"`.
+2. Execute program: `python scripts/operator_task_program_surface.py execute --request "<text>" [flags]`.
+3. Validate deterministic routing: `python scripts/operator_task_program_surface.py consistency-check`.
+4. Review program runtime evidence in `runtime/repo_control_center/operator_program_*.json|md`.
 5. Re-run `python scripts/repo_control_center.py full-check` after guarded mutation programs.
+
+## Work Package / Mission Workflow
+
+1. Classify mission request: `python scripts/operator_mission_surface.py classify --request "<text>"`.
+2. Execute mission: `python scripts/operator_mission_surface.py execute --request "<text>" [flags]`.
+3. Validate deterministic routing: `python scripts/operator_mission_surface.py consistency-check`.
+4. Review mission runtime evidence in `runtime/repo_control_center/operator_mission_*.json|md`.
+5. Re-run `python scripts/repo_control_center.py full-check` after guarded creator missions.
 
 ## Federation / Integration Workflow
 

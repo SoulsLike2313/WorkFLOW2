@@ -119,7 +119,21 @@
       "docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md",
       "docs/governance/OPERATOR_PROGRAM_CATALOG.md",
       "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
-      "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md"
+      "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_LAYER_BASELINE.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_BASELINE.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_REGISTRY.md",
+      "docs/governance/OPERATOR_MISSION_LAYER_BASELINE.md",
+      "docs/governance/OPERATOR_MISSION_BASELINE.md",
+      "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+      "docs/governance/OPERATOR_MISSION_REGISTRY.md",
+      "docs/review_artifacts/OPERATOR_TASK_PROGRAM_GOLDEN_PACK_FINAL.json",
+      "docs/review_artifacts/OPERATOR_TASK_PROGRAM_CERTIFICATION_REPORT.md",
+      "docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json",
+      "docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md",
+      "docs/review_artifacts/OPERATOR_MISSION_SCENARIO_PACK.md",
+      "docs/review_artifacts/OPERATOR_MISSION_LAYER_FINAL_SUMMARY.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -222,7 +236,13 @@
     "operator_program_catalog_path": "docs/governance/OPERATOR_PROGRAM_CATALOG.md",
     "operator_program_execution_contract_path": "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
     "operator_program_intent_routing_path": "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md",
-    "operator_program_layer_required": true
+    "operator_program_layer_required": true,
+    "operator_task_program_registry_path": "workspace_config/operator_task_program_registry.json",
+    "operator_task_program_surface_script": "scripts/operator_task_program_surface.py",
+    "operator_task_program_layer_required": true,
+    "operator_mission_registry_path": "workspace_config/operator_mission_registry.json",
+    "operator_mission_surface_script": "scripts/operator_mission_surface.py",
+    "operator_mission_layer_required": true
   },
   "shared_systems": {
     "root_path": "shared_systems",
@@ -277,7 +297,17 @@
     "operator_program_surface_classify": "python scripts/operator_program_surface.py classify --request <operator_program_request>",
     "operator_program_surface_consistency_check": "python scripts/operator_program_surface.py consistency-check",
     "operator_program_surface_status": "python scripts/operator_program_surface.py status",
-    "operator_program_surface_registry": "python scripts/operator_program_surface.py registry"
+    "operator_program_surface_registry": "python scripts/operator_program_surface.py registry",
+    "operator_task_program_surface_execute": "python scripts/operator_task_program_surface.py execute --request <operator_program_request>",
+    "operator_task_program_surface_classify": "python scripts/operator_task_program_surface.py classify --request <operator_program_request>",
+    "operator_task_program_surface_consistency_check": "python scripts/operator_task_program_surface.py consistency-check",
+    "operator_task_program_surface_status": "python scripts/operator_task_program_surface.py status",
+    "operator_task_program_surface_registry": "python scripts/operator_task_program_surface.py registry",
+    "operator_mission_surface_execute": "python scripts/operator_mission_surface.py execute --request <operator_mission_request>",
+    "operator_mission_surface_classify": "python scripts/operator_mission_surface.py classify --request <operator_mission_request>",
+    "operator_mission_surface_consistency_check": "python scripts/operator_mission_surface.py consistency-check",
+    "operator_mission_surface_status": "python scripts/operator_mission_surface.py status",
+    "operator_mission_surface_registry": "python scripts/operator_mission_surface.py registry"
   },
   "verification_entrypoints": {
     "active_project_verify": "powershell -ExecutionPolicy Bypass -File .\\projects\\platform_test_agent\\run_project.ps1 -Mode verify -TargetProjectSlug <project_slug>",
@@ -637,7 +667,15 @@
       "docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md",
       "docs/governance/OPERATOR_PROGRAM_CATALOG.md",
       "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
-      "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md"
+      "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_LAYER_BASELINE.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_BASELINE.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_REGISTRY.md",
+      "docs/governance/OPERATOR_MISSION_LAYER_BASELINE.md",
+      "docs/governance/OPERATOR_MISSION_BASELINE.md",
+      "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+      "docs/governance/OPERATOR_MISSION_REGISTRY.md"
     ],
     "repo_control_center": "scripts/repo_control_center.py"
   },

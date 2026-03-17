@@ -1,40 +1,40 @@
 # Next Canonical Step
 
-- step_id: `next-step-operator-task-program-layer-v1`
+- step_id: `next-step-operator-mission-layer-v1`
 - effective_date_utc: `2026-03-17`
-- previous_accepted_stage: `operator-command-execution-layer-v1-accepted`
+- previous_accepted_stage: `operator-task-program-layer-v1-accepted`
 
 ## What Do We Do Next
 
 Canonical next execution step is:
 
-`operator task / program layer v1`
+`work package / mission layer v1`
 
 This means:
 
-1. map operator task/program requests to deterministic `program_class` and `program_id`
-2. enforce authority/policy/precondition checks before step execution
-3. execute step plans through accepted operator command execution layer
-4. emit checkpoint, step-level evidence, and final program contract
-5. freeze readiness only after golden consistency + creator-grade validation
+1. map mission-level requests to deterministic `mission_class` and `mission_id`
+2. decompose mission into registered program plans only
+3. enforce authority/policy/precondition checks before mission execution
+4. execute mission plans through accepted task/program layer
+5. emit mission checkpoints, evidence aggregation, and completion verdict
 
 ## Canonical Goal
 
-Make repeatable operator programs executable without relaxing governance boundaries:
+Make repeatable operator missions executable without relaxing governance boundaries:
 
-1. no uncontrolled autonomous planning
-2. creator-only program flows remain creator-only
-3. mutable program steps stay guarded and dry-run by default
-4. every run leaves repo-visible runtime evidence and deterministic next step
+1. no uncontrolled autonomous mission planning
+2. creator-only missions remain creator-only
+3. guarded state changes stay blocked unless explicit guard conditions are met
+4. every mission run leaves repo-visible runtime evidence and deterministic next step
 
 ## Canonical Scope
 
 - target layer:
-  - `docs/governance/OPERATOR_PROGRAM_*`
-  - `workspace_config/operator_program_registry.json`
-  - `scripts/operator_program_surface.py`
-  - `runtime/operator_program_layer/*`
-  - `docs/review_artifacts/OPERATOR_PROGRAM_*`
+  - `docs/governance/OPERATOR_MISSION_*`
+  - `workspace_config/operator_mission_registry.json`
+  - `scripts/operator_mission_surface.py`
+  - `runtime/repo_control_center/operator_mission_*`
+  - `docs/review_artifacts/OPERATOR_MISSION_*`
   - root context docs/manifests integration
 - forbidden scope:
   - product feature development
@@ -44,18 +44,18 @@ Make repeatable operator programs executable without relaxing governance boundar
 
 ## Canonical Acceptance Criteria
 
-1. Wave `2A/2B/2C` program classes implemented
-2. unified registry and execution contract are active
-3. program routing consistency check passes on golden pack
+1. Wave `3A/3B/3C` mission classes implemented
+2. unified mission registry and execution contract are active
+3. mission routing consistency check passes on final golden pack
 4. creator-grade chain remains green after integration
 5. sync parity with `safe_mirror/main` remains `0/0` and worktree clean
 
 ## Canonical Prohibitions For This Step
 
-1. no program may bypass policy checks
-2. no program may bypass authority checks
-3. no mutable execution without guard (`dry_run` or explicit `--allow-mutation` + confirmation)
-4. no completion claim when program layer evidence is missing
+1. no mission may bypass policy checks
+2. no mission may bypass authority checks
+3. no guarded mutation without explicit guard and policy basis
+4. no completion claim when mission-layer evidence is missing
 
 ## Rejection Condition
 

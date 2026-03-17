@@ -38,6 +38,19 @@
     "runtime/repo_control_center/wave2c_guarded_program_execute_output.json",
     "runtime/repo_control_center/wave2c_blocked_program_execute_output.json",
     "runtime/repo_control_center/wave2c_repo_control_bundle_output.json",
-    "runtime/repo_control_center/wave2c_repo_control_full_check_output.json"
+    "runtime/repo_control_center/wave2c_repo_control_full_check_output.json",
+    "runtime/repo_control_center/operator_mission_status.json",
+    "runtime/repo_control_center/operator_mission_report.md",
+    "runtime/repo_control_center/operator_mission_checkpoint.json",
+    "runtime/repo_control_center/operator_mission_history.json",
+    "runtime/repo_control_center/operator_mission_audit_trail.json",
+    "runtime/repo_control_center/operator_mission_consistency.json",
+    "runtime/repo_control_center/wave3_detect_machine_mode_output.json",
+    "runtime/repo_control_center/wave3_operator_task_program_consistency_output.json",
+    "runtime/repo_control_center/wave3_operator_mission_consistency_output.json",
+    "runtime/repo_control_center/wave3_operator_mission_execute_output.json",
+    "runtime/repo_control_center/wave3_operator_mission_blocked_mode_output.json",
+    "runtime/repo_control_center/wave3_repo_control_bundle_output.json",
+    "runtime/repo_control_center/wave3_repo_control_full_check_output.json"
   ]
 }

@@ -176,7 +176,7 @@ python scripts/operator_command_surface.py consistency-check
 Canonical execution entrypoint:
 
 ```powershell
-python scripts/operator_program_surface.py <mode>
+python scripts/operator_task_program_surface.py <mode>
 ```
 
 Modes:
@@ -189,24 +189,63 @@ Modes:
 
 Program execution contract is fixed by:
 
-- `docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md`
-- `workspace_config/operator_program_registry.json`
+- `docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md`
+- `workspace_config/operator_task_program_registry.json`
 
 Program runtime artifacts:
 
-- `runtime/operator_program_layer/last_execution.json`
-- `runtime/operator_program_layer/program_execution_log.jsonl`
-- `runtime/operator_program_layer/program_surface_status.json`
-- `runtime/operator_program_layer/program_surface_report.md`
-- `runtime/operator_program_layer/operator_program_consistency_check.json`
+- `runtime/repo_control_center/operator_program_status.json`
+- `runtime/repo_control_center/operator_program_report.md`
+- `runtime/repo_control_center/operator_program_checkpoint.json`
+- `runtime/repo_control_center/operator_program_history.json`
+- `runtime/repo_control_center/operator_program_audit_trail.json`
+- `runtime/repo_control_center/operator_task_program_consistency.json`
 
 Example commands:
 
 ```powershell
-python scripts/operator_program_surface.py classify --request "safe status validation report"
-python scripts/operator_program_surface.py execute --request "safe status validation report"
-python scripts/operator_program_surface.py execute --request "task handoff review packaging" --task-id WF-TASK-EXAMPLE-001 --node-id helper-node-01
-python scripts/operator_program_surface.py consistency-check
+python scripts/operator_task_program_surface.py classify --request "safe status validation report"
+python scripts/operator_task_program_surface.py execute --request "safe status validation report"
+python scripts/operator_task_program_surface.py execute --request "task handoff review packaging" --task-id WF-TASK-EXAMPLE-001 --node-id helper-node-01
+python scripts/operator_task_program_surface.py consistency-check
+```
+
+## Work Package / Mission Layer V1 (CLI-First)
+
+Canonical execution entrypoint:
+
+```powershell
+python scripts/operator_mission_surface.py <mode>
+```
+
+Modes:
+
+- `execute`
+- `classify`
+- `status`
+- `registry`
+- `consistency-check`
+
+Mission execution contract is fixed by:
+
+- `docs/governance/OPERATOR_MISSION_CONTRACT.md`
+- `workspace_config/operator_mission_registry.json`
+
+Mission runtime artifacts:
+
+- `runtime/repo_control_center/operator_mission_status.json`
+- `runtime/repo_control_center/operator_mission_report.md`
+- `runtime/repo_control_center/operator_mission_checkpoint.json`
+- `runtime/repo_control_center/operator_mission_history.json`
+- `runtime/repo_control_center/operator_mission_audit_trail.json`
+- `runtime/repo_control_center/operator_mission_consistency.json`
+
+Example commands:
+
+```powershell
+python scripts/operator_mission_surface.py classify --request "status refresh mission"
+python scripts/operator_mission_surface.py execute --mission-id mission.wave3a.status_refresh_certification.v1 --intent creator
+python scripts/operator_mission_surface.py consistency-check
 ```
 
 ## Completion Gate (Hard)

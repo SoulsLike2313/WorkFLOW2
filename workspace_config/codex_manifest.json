@@ -105,13 +105,20 @@
     "read workspace_config/operator_command_registry.json",
     "read scripts/operator_command_surface.py",
     "run python scripts/operator_command_surface.py status",
-    "read docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md",
-    "read docs/governance/OPERATOR_PROGRAM_CATALOG.md",
-    "read docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
-    "read docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md",
-    "read workspace_config/operator_program_registry.json",
-    "read scripts/operator_program_surface.py",
-    "run python scripts/operator_program_surface.py status"
+    "read docs/governance/OPERATOR_TASK_PROGRAM_LAYER_BASELINE.md",
+    "read docs/governance/OPERATOR_TASK_PROGRAM_BASELINE.md",
+    "read docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md",
+    "read docs/governance/OPERATOR_TASK_PROGRAM_REGISTRY.md",
+    "read workspace_config/operator_task_program_registry.json",
+    "read scripts/operator_task_program_surface.py",
+    "run python scripts/operator_task_program_surface.py status",
+    "read docs/governance/OPERATOR_MISSION_LAYER_BASELINE.md",
+    "read docs/governance/OPERATOR_MISSION_BASELINE.md",
+    "read docs/governance/OPERATOR_MISSION_CONTRACT.md",
+    "read docs/governance/OPERATOR_MISSION_REGISTRY.md",
+    "read workspace_config/operator_mission_registry.json",
+    "read scripts/operator_mission_surface.py",
+    "run python scripts/operator_mission_surface.py status"
   ],
   "task_governance": {
     "instruction_read_before_task_required": true,
@@ -241,7 +248,21 @@
       "docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md",
       "docs/governance/OPERATOR_PROGRAM_CATALOG.md",
       "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
-      "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md"
+      "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_LAYER_BASELINE.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_BASELINE.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_REGISTRY.md",
+      "docs/governance/OPERATOR_MISSION_LAYER_BASELINE.md",
+      "docs/governance/OPERATOR_MISSION_BASELINE.md",
+      "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+      "docs/governance/OPERATOR_MISSION_REGISTRY.md",
+      "docs/review_artifacts/OPERATOR_TASK_PROGRAM_GOLDEN_PACK_FINAL.json",
+      "docs/review_artifacts/OPERATOR_TASK_PROGRAM_CERTIFICATION_REPORT.md",
+      "docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json",
+      "docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md",
+      "docs/review_artifacts/OPERATOR_MISSION_SCENARIO_PACK.md",
+      "docs/review_artifacts/OPERATOR_MISSION_LAYER_FINAL_SUMMARY.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -344,7 +365,13 @@
     "operator_program_catalog_path": "docs/governance/OPERATOR_PROGRAM_CATALOG.md",
     "operator_program_execution_contract_path": "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
     "operator_program_intent_routing_path": "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md",
-    "operator_program_layer_required": true
+    "operator_program_layer_required": true,
+    "operator_task_program_registry_path": "workspace_config/operator_task_program_registry.json",
+    "operator_task_program_surface_script": "scripts/operator_task_program_surface.py",
+    "operator_task_program_layer_required": true,
+    "operator_mission_registry_path": "workspace_config/operator_mission_registry.json",
+    "operator_mission_surface_script": "scripts/operator_mission_surface.py",
+    "operator_mission_layer_required": true
   },
   "scope_controls": {
     "allow_cross_project_changes_without_request": false,
@@ -550,7 +577,15 @@
       "docs/governance/OPERATOR_PROGRAM_EXECUTION_BASELINE.md",
       "docs/governance/OPERATOR_PROGRAM_CATALOG.md",
       "docs/governance/OPERATOR_PROGRAM_EXECUTION_CONTRACT.md",
-      "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md"
+      "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_LAYER_BASELINE.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_BASELINE.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md",
+      "docs/governance/OPERATOR_TASK_PROGRAM_REGISTRY.md",
+      "docs/governance/OPERATOR_MISSION_LAYER_BASELINE.md",
+      "docs/governance/OPERATOR_MISSION_BASELINE.md",
+      "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+      "docs/governance/OPERATOR_MISSION_REGISTRY.md"
     ],
     "repo_control_center": "scripts/repo_control_center.py"
   },
@@ -631,6 +666,19 @@
     "docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md",
     "workspace_config/operator_program_registry.json",
     "scripts/operator_program_surface.py",
-    "docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json"
+    "docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json",
+    "docs/governance/OPERATOR_TASK_PROGRAM_LAYER_BASELINE.md",
+    "docs/governance/OPERATOR_TASK_PROGRAM_BASELINE.md",
+    "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md",
+    "workspace_config/operator_task_program_registry.json",
+    "scripts/operator_task_program_surface.py",
+    "docs/governance/OPERATOR_MISSION_LAYER_BASELINE.md",
+    "docs/governance/OPERATOR_MISSION_BASELINE.md",
+    "docs/governance/OPERATOR_MISSION_CONTRACT.md",
+    "workspace_config/operator_mission_registry.json",
+    "scripts/operator_mission_surface.py",
+    "docs/governance/OPERATOR_MISSION_REGISTRY.md",
+    "docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json",
+    "docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md"
   ]
 }

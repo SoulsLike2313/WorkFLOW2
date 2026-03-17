@@ -81,6 +81,19 @@ Machine must complete this canonical order before execution:
 75. `workspace_config/operator_program_registry.json`
 76. `scripts/operator_program_surface.py`
 77. `docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json`
+78. `docs/governance/OPERATOR_TASK_PROGRAM_LAYER_BASELINE.md`
+79. `docs/governance/OPERATOR_TASK_PROGRAM_BASELINE.md`
+80. `docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md`
+81. `workspace_config/operator_task_program_registry.json`
+82. `scripts/operator_task_program_surface.py`
+83. `docs/governance/OPERATOR_MISSION_LAYER_BASELINE.md`
+84. `docs/governance/OPERATOR_MISSION_BASELINE.md`
+85. `docs/governance/OPERATOR_MISSION_CONTRACT.md`
+86. `docs/governance/OPERATOR_MISSION_REGISTRY.md`
+87. `workspace_config/operator_mission_registry.json`
+88. `scripts/operator_mission_surface.py`
+89. `docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json`
+90. `docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md`
 
 If any mandatory step is skipped: `STATUS: REJECTED`.
 
@@ -183,14 +196,36 @@ Tracked safe-state evidence contract:
 ## Rule 11: Operator Task / Program Surface Enforcement
 
 - program execution layer entrypoint:
-  - `scripts/operator_program_surface.py`
+  - `scripts/operator_task_program_surface.py`
 - unified program registry:
-  - `workspace_config/operator_program_registry.json`
+  - `workspace_config/operator_task_program_registry.json`
 - mandatory program evidence outputs:
-  - `runtime/operator_program_layer/last_execution.json`
-  - `runtime/operator_program_layer/program_surface_status.json`
+  - `runtime/repo_control_center/operator_program_status.json`
+  - `runtime/repo_control_center/operator_program_report.md`
+  - `runtime/repo_control_center/operator_program_checkpoint.json`
+  - `runtime/repo_control_center/operator_program_history.json`
+  - `runtime/repo_control_center/operator_program_audit_trail.json`
 - program execution must emit:
   - checkpoint state
   - step results
   - blocking factors
   - next-step remediation path
+
+## Rule 12: Work Package / Mission Surface Enforcement
+
+- mission execution layer entrypoint:
+  - `scripts/operator_mission_surface.py`
+- unified mission registry:
+  - `workspace_config/operator_mission_registry.json`
+- mandatory mission evidence outputs:
+  - `runtime/repo_control_center/operator_mission_status.json`
+  - `runtime/repo_control_center/operator_mission_report.md`
+  - `runtime/repo_control_center/operator_mission_checkpoint.json`
+  - `runtime/repo_control_center/operator_mission_history.json`
+  - `runtime/repo_control_center/operator_mission_audit_trail.json`
+  - `runtime/repo_control_center/operator_mission_consistency.json`
+- mission execution must emit:
+  - program plan and mission checkpoint state
+  - authority/policy/precondition checks
+  - completion verdict (`CERTIFIED|SUCCESS|BLOCKED|PARTIAL`)
+  - blocking factors and next-step remediation path

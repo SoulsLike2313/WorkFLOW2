@@ -60,7 +60,8 @@ Not accepted for execution:
 - targeted bundle export: `accepted`
 - operator query layer: `accepted`
 - operator command execution layer: `accepted`
-- next active layer: `operator task / program layer v1`
+- operator task / program layer: `accepted`
+- next active layer: `work package / mission layer v1`
 
 ## Shared Systems Baseline
 
