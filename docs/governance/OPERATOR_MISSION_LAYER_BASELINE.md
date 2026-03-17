@@ -16,6 +16,26 @@ Mission Layer is accepted as operator-facing work-package execution layer above 
 - `runtime/repo_control_center/operator_mission_history.json`
 - `runtime/repo_control_center/operator_mission_audit_trail.json`
 
+## Supported Mission Classes
+- `certification_mission`
+- `readiness_mission`
+- `review_prep_mission`
+- `status_consolidation_mission`
+- `external_review_mission`
+- `readiness_transition_mission`
+- `handoff_delivery_mission`
+- `evidence_consolidation_mission`
+- `guarded_baseline_transition_mission`
+- `creator_only_certification_mission`
+- `controlled_upgrade_mission`
+- `blocked_mutation_mission`
+
+## Intentionally Unsupported
+- product-project orchestration missions
+- uncontrolled autonomous mutation missions
+- silent governance override missions
+- helper-mode creator transition missions
+
 ## Baseline Readiness Criteria
 - mission consistency-check PASS
 - creator-grade chain PASS
