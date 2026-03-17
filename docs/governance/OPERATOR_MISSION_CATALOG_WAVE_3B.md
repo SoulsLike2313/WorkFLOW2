@@ -1,23 +1,131 @@
 # OPERATOR_MISSION_CATALOG_WAVE_3B
 
 ## Scope
-Controlled multi-program operational missions for packaging/review/readiness transitions.
+Wave 3B controlled operational missions on top of Wave 3A safe mission foundation.
 
-## Mission Classes
-- `multi_program_operational_mission`
-  - mission: `mission.wave3b.operational_delivery_cycle.v1`
-  - programs: `program.wave2b.handoff_preparation_end_to_end.v1`, `program.wave2b.inbox_review_cycle.v1`
-- `packaging_review_transition_mission`
-  - mission: `mission.wave3b.packaging_review_transition.v1`
-  - programs: `program.wave2b.delivery_ready_handoff_package.v1`, `program.wave2b.evidence_delivery_chain.v1`
-- `evidence_aggregation_mission`
-  - mission: `mission.wave3b.evidence_aggregation_cycle.v1`
-  - programs: `program.wave2a.governance_evidence_pack.v1`, `program.wave2b.evidence_delivery_chain.v1`, `program.wave2a.status_evidence_report.v1`
-- `readiness_transition_mission`
-  - mission: `mission.wave3b.readiness_transition_cycle.v1`
-  - programs: `program.wave2b.certification_pass.v1`, `program.wave2b.review_certification_sequence.v1`
+## Mission: `external_review_mission`
+- Goal: assemble external engineering review package with certification + evidence + handoff + inbox review chain.
+- Scope: review preparation and controlled delivery routing.
+- Non-goals:
+  - policy mutation
+  - creator-only guarded state changes
+  - product-project orchestration
+- Program sequence:
+  - `program.wave2b.certification_pass.v1`
+  - `program.wave2a.governance_evidence_pack.v1`
+  - `program.wave2b.delivery_ready_handoff_package.v1`
+  - `program.wave2b.inbox_review_cycle.v1`
+- Mission checkpoints:
+  - certification pass complete
+  - evidence package prepared
+  - delivery-ready handoff generated
+  - inbox review run complete
+- Delivery/review behavior:
+  - `delivery_target`: `integration/inbox`
+  - `review_requirement`: `integration_review`
+  - `escalation_requirement`: `true`
+- Failure/resume behavior:
+  - `failure_policy`: `stop_on_failure`
+  - `resume_supported`: `true`
+  - `stop_conditions`: `any_program_failed`, `any_program_blocked`
+- Blocking conditions:
+  - missing required context (`task_id`, `node_id`, `inbox_mode`)
+  - program execution failure
+  - delivery gate failure
+- Expected final outputs:
+  - `runtime/repo_control_center/operator_mission_status.json`
+  - `runtime/repo_control_center/operator_mission_report.md`
+  - `runtime/repo_control_center/operator_mission_checkpoint.json`
+  - `runtime/repo_control_center/operator_mission_history.json`
 
-## Wave 3B Controls
-- required inputs enforced (`task_id`, `node_id`) where declared
-- failure/resume model remains deterministic
-- no unrestricted mutation paths
+## Mission: `readiness_transition_mission`
+- Goal: transition layer to next-stage readiness using creator-grade chain.
+- Scope: readiness transition and certification closure.
+- Non-goals:
+  - uncontrolled operational branching
+  - mutation-heavy flows
+- Program sequence:
+  - `program.wave2a.creator_grade_validation.v1`
+  - `program.wave2b.certification_pass.v1`
+  - `program.wave2b.review_certification_sequence.v1`
+  - `program.wave2a.operator_engineering_report.v1`
+- Mission checkpoints:
+  - creator validation complete
+  - certification pass complete
+  - review certification sequence complete
+  - final engineering report generated
+- Delivery/review behavior:
+  - `delivery_target`: `runtime/repo_control_center`
+  - `review_requirement`: `creator_review`
+  - `escalation_requirement`: `true`
+- Failure/resume behavior:
+  - `failure_policy`: `stop_on_failure`
+  - `resume_supported`: `true`
+  - `stop_conditions`: `any_program_failed`, `any_program_blocked`
+- Blocking conditions:
+  - creator authority missing
+  - sync or clean-state precondition failure
+  - required context missing (`inbox_mode`)
+- Expected final outputs:
+  - readiness transition evidence in mission runtime artifacts.
+
+## Mission: `handoff_delivery_mission`
+- Goal: execute full handoff delivery cycle as mission-level sequence.
+- Scope: handoff preparation, delivery packaging, inbox review, status evidence closure.
+- Non-goals:
+  - governance override
+  - mutation beyond controlled routing
+- Program sequence:
+  - `program.wave2b.handoff_preparation_end_to_end.v1`
+  - `program.wave2b.delivery_ready_handoff_package.v1`
+  - `program.wave2b.inbox_review_cycle.v1`
+  - `program.wave2a.status_evidence_report.v1`
+- Mission checkpoints:
+  - handoff package generated
+  - delivery-ready package generated
+  - inbox review processed
+  - status evidence report generated
+- Delivery/review behavior:
+  - `delivery_target`: `integration/inbox`
+  - `review_requirement`: `integration_review`
+  - `escalation_requirement`: `true`
+- Failure/resume behavior:
+  - `failure_policy`: `stop_on_blocked`
+  - `resume_supported`: `true`
+  - `stop_conditions`: `any_program_blocked`
+- Blocking conditions:
+  - missing required context (`task_id`, `node_id`, `inbox_mode`)
+  - delivery blocked
+  - program execution failure
+- Expected final outputs:
+  - mission status/report/checkpoint/history with delivery chain evidence.
+
+## Mission: `evidence_consolidation_mission`
+- Goal: consolidate certification/readiness/review evidence into one mission package.
+- Scope: evidence aggregation and reporting chain.
+- Non-goals:
+  - policy mutation
+  - guarded mutation programs
+- Program sequence:
+  - `program.wave2a.governance_evidence_pack.v1`
+  - `program.wave2b.evidence_delivery_chain.v1`
+  - `program.wave2a.status_evidence_report.v1`
+  - `program.wave2a.operator_engineering_report.v1`
+- Mission checkpoints:
+  - evidence pack built
+  - evidence delivery chain executed
+  - status evidence report executed
+  - engineering report executed
+- Delivery/review behavior:
+  - `delivery_target`: `runtime/repo_control_center`
+  - `review_requirement`: `operator_review`
+  - `escalation_requirement`: `false`
+- Failure/resume behavior:
+  - `failure_policy`: `continue_on_failure`
+  - `resume_supported`: `true`
+  - `stop_conditions`: `any_program_blocked`
+- Blocking conditions:
+  - missing required context (`package_path`)
+  - blocked program in chain
+- Expected final outputs:
+  - consolidated evidence chain reflected in mission runtime artifacts and mission report.

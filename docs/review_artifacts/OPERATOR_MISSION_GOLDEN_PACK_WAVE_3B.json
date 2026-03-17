@@ -1,442 +1,727 @@
 {
-  "schema_version": "operator_mission_golden_pack.wave3b.v1.0.0",
+  "schema_version": "operator_mission_golden_pack.wave3b.v1.1.0",
   "wave": "3B",
+  "generated_by": "scripts/operator_mission_surface.py consistency-check",
   "items": [
     {
-      "id": "W3B-MG-001",
-      "raw_request": "operational delivery mission",
-      "mission_class": "multi_program_operational_mission",
-      "expected_mission_id": "mission.wave3b.operational_delivery_cycle.v1",
+      "id": "W3B-001",
+      "raw_request": "external review mission",
+      "mission_class": "external_review_mission",
+      "expected_mission_id": "mission.wave3b.external_review.prep.v1",
       "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "multi_program_operational_mission",
-        "mission_id": "mission.wave3b.operational_delivery_cycle.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": false
-      },
+      "authority_expectation": "not_required",
       "expected_program_plan": [
-        "program.wave2b.handoff_preparation_end_to_end.v1",
+        "program.wave2b.certification_pass.v1",
+        "program.wave2a.governance_evidence_pack.v1",
+        "program.wave2b.delivery_ready_handoff_package.v1",
         "program.wave2b.inbox_review_cycle.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "integration_review",
+      "expected_delivery_target": "integration/inbox",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
       ],
-      "notes": "Wave 3B mission benchmark"
+      "notes": "baseline external-review routing"
     },
     {
-      "id": "W3B-MG-002",
-      "raw_request": "run operational delivery mission",
-      "mission_class": "multi_program_operational_mission",
-      "expected_mission_id": "mission.wave3b.operational_delivery_cycle.v1",
+      "id": "W3B-002",
+      "raw_request": "prepare full package for external engineering review",
+      "mission_class": "external_review_mission",
+      "expected_mission_id": "mission.wave3b.external_review.prep.v1",
       "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "multi_program_operational_mission",
-        "mission_id": "mission.wave3b.operational_delivery_cycle.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": false
-      },
+      "authority_expectation": "not_required",
       "expected_program_plan": [
-        "program.wave2b.handoff_preparation_end_to_end.v1",
+        "program.wave2b.certification_pass.v1",
+        "program.wave2a.governance_evidence_pack.v1",
+        "program.wave2b.delivery_ready_handoff_package.v1",
         "program.wave2b.inbox_review_cycle.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "integration_review",
+      "expected_delivery_target": "integration/inbox",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
       ],
-      "notes": "Wave 3B mission benchmark"
+      "notes": "token variant"
     },
     {
-      "id": "W3B-MG-003",
-      "raw_request": "execute operational delivery mission end-to-end",
-      "mission_class": "multi_program_operational_mission",
-      "expected_mission_id": "mission.wave3b.operational_delivery_cycle.v1",
+      "id": "W3B-003",
+      "raw_request": "execute external review prep mission",
+      "mission_class": "external_review_mission",
+      "expected_mission_id": "mission.wave3b.external_review.prep.v1",
       "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "multi_program_operational_mission",
-        "mission_id": "mission.wave3b.operational_delivery_cycle.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": false
-      },
+      "authority_expectation": "not_required",
       "expected_program_plan": [
-        "program.wave2b.handoff_preparation_end_to_end.v1",
+        "program.wave2b.certification_pass.v1",
+        "program.wave2a.governance_evidence_pack.v1",
+        "program.wave2b.delivery_ready_handoff_package.v1",
         "program.wave2b.inbox_review_cycle.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "integration_review",
+      "expected_delivery_target": "integration/inbox",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
       ],
-      "notes": "Wave 3B mission benchmark"
+      "notes": "token variant"
     },
     {
-      "id": "W3B-MG-004",
-      "raw_request": "perform operational delivery mission sequence",
-      "mission_class": "multi_program_operational_mission",
-      "expected_mission_id": "mission.wave3b.operational_delivery_cycle.v1",
+      "id": "W3B-004",
+      "raw_request": "drive layer to external-review-ready state",
+      "mission_class": "external_review_mission",
+      "expected_mission_id": "mission.wave3b.external_review.prep.v1",
       "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "multi_program_operational_mission",
-        "mission_id": "mission.wave3b.operational_delivery_cycle.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": false
-      },
+      "authority_expectation": "not_required",
       "expected_program_plan": [
-        "program.wave2b.handoff_preparation_end_to_end.v1",
+        "program.wave2b.certification_pass.v1",
+        "program.wave2a.governance_evidence_pack.v1",
+        "program.wave2b.delivery_ready_handoff_package.v1",
         "program.wave2b.inbox_review_cycle.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "integration_review",
+      "expected_delivery_target": "integration/inbox",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
       ],
-      "notes": "Wave 3B mission benchmark"
+      "notes": "token variant"
     },
     {
-      "id": "W3B-MG-005",
-      "raw_request": "packaging transition mission",
-      "mission_class": "packaging_review_transition_mission",
-      "expected_mission_id": "mission.wave3b.packaging_review_transition.v1",
+      "id": "W3B-005",
+      "raw_request": "execute external review prep mission with partial failure and resume",
+      "mission_class": "external_review_mission",
+      "expected_mission_id": "mission.wave3b.external_review.prep.v1",
       "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "packaging_review_transition_mission",
-        "mission_id": "mission.wave3b.packaging_review_transition.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": false
-      },
+      "authority_expectation": "not_required",
       "expected_program_plan": [
-        "program.wave2b.delivery_ready_handoff_package.v1",
-        "program.wave2b.evidence_delivery_chain.v1"
-      ],
-      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
-        "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
-      ],
-      "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
-      ],
-      "notes": "Wave 3B mission benchmark"
-    },
-    {
-      "id": "W3B-MG-006",
-      "raw_request": "run packaging transition mission",
-      "mission_class": "packaging_review_transition_mission",
-      "expected_mission_id": "mission.wave3b.packaging_review_transition.v1",
-      "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "packaging_review_transition_mission",
-        "mission_id": "mission.wave3b.packaging_review_transition.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": false
-      },
-      "expected_program_plan": [
-        "program.wave2b.delivery_ready_handoff_package.v1",
-        "program.wave2b.evidence_delivery_chain.v1"
-      ],
-      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
-        "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
-      ],
-      "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
-      ],
-      "notes": "Wave 3B mission benchmark"
-    },
-    {
-      "id": "W3B-MG-007",
-      "raw_request": "execute packaging transition mission end-to-end",
-      "mission_class": "packaging_review_transition_mission",
-      "expected_mission_id": "mission.wave3b.packaging_review_transition.v1",
-      "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "packaging_review_transition_mission",
-        "mission_id": "mission.wave3b.packaging_review_transition.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": false
-      },
-      "expected_program_plan": [
-        "program.wave2b.delivery_ready_handoff_package.v1",
-        "program.wave2b.evidence_delivery_chain.v1"
-      ],
-      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
-        "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
-      ],
-      "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
-      ],
-      "notes": "Wave 3B mission benchmark"
-    },
-    {
-      "id": "W3B-MG-008",
-      "raw_request": "perform packaging transition mission sequence",
-      "mission_class": "packaging_review_transition_mission",
-      "expected_mission_id": "mission.wave3b.packaging_review_transition.v1",
-      "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "packaging_review_transition_mission",
-        "mission_id": "mission.wave3b.packaging_review_transition.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": false
-      },
-      "expected_program_plan": [
-        "program.wave2b.delivery_ready_handoff_package.v1",
-        "program.wave2b.evidence_delivery_chain.v1"
-      ],
-      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
-        "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
-      ],
-      "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
-      ],
-      "notes": "Wave 3B mission benchmark"
-    },
-    {
-      "id": "W3B-MG-009",
-      "raw_request": "evidence aggregation mission",
-      "mission_class": "evidence_aggregation_mission",
-      "expected_mission_id": "mission.wave3b.evidence_aggregation_cycle.v1",
-      "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "evidence_aggregation_mission",
-        "mission_id": "mission.wave3b.evidence_aggregation_cycle.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": false
-      },
-      "expected_program_plan": [
+        "program.wave2b.certification_pass.v1",
         "program.wave2a.governance_evidence_pack.v1",
-        "program.wave2b.evidence_delivery_chain.v1",
-        "program.wave2a.status_evidence_report.v1"
+        "program.wave2b.delivery_ready_handoff_package.v1",
+        "program.wave2b.inbox_review_cycle.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "integration_review",
+      "expected_delivery_target": "integration/inbox",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
       ],
+      "expected_resume_behavior": "resume_expected_after_failed_program",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
       ],
-      "notes": "Wave 3B mission benchmark"
+      "notes": "partial-failure+resume scenario"
     },
     {
-      "id": "W3B-MG-010",
-      "raw_request": "run evidence aggregation mission",
-      "mission_class": "evidence_aggregation_mission",
-      "expected_mission_id": "mission.wave3b.evidence_aggregation_cycle.v1",
-      "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "evidence_aggregation_mission",
-        "mission_id": "mission.wave3b.evidence_aggregation_cycle.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": false
-      },
-      "expected_program_plan": [
-        "program.wave2a.governance_evidence_pack.v1",
-        "program.wave2b.evidence_delivery_chain.v1",
-        "program.wave2a.status_evidence_report.v1"
-      ],
-      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
-        "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
-      ],
-      "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
-      ],
-      "notes": "Wave 3B mission benchmark"
-    },
-    {
-      "id": "W3B-MG-011",
-      "raw_request": "execute evidence aggregation mission end-to-end",
-      "mission_class": "evidence_aggregation_mission",
-      "expected_mission_id": "mission.wave3b.evidence_aggregation_cycle.v1",
-      "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "evidence_aggregation_mission",
-        "mission_id": "mission.wave3b.evidence_aggregation_cycle.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": false
-      },
-      "expected_program_plan": [
-        "program.wave2a.governance_evidence_pack.v1",
-        "program.wave2b.evidence_delivery_chain.v1",
-        "program.wave2a.status_evidence_report.v1"
-      ],
-      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
-        "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
-      ],
-      "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
-      ],
-      "notes": "Wave 3B mission benchmark"
-    },
-    {
-      "id": "W3B-MG-012",
-      "raw_request": "perform evidence aggregation mission sequence",
-      "mission_class": "evidence_aggregation_mission",
-      "expected_mission_id": "mission.wave3b.evidence_aggregation_cycle.v1",
-      "mutability_level": "OPERATIONAL_ROUTING",
-      "authority_expectation": "none",
-      "expected_mission_contract": {
-        "mission_class": "evidence_aggregation_mission",
-        "mission_id": "mission.wave3b.evidence_aggregation_cycle.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": false
-      },
-      "expected_program_plan": [
-        "program.wave2a.governance_evidence_pack.v1",
-        "program.wave2b.evidence_delivery_chain.v1",
-        "program.wave2a.status_evidence_report.v1"
-      ],
-      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
-        "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
-      ],
-      "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
-      ],
-      "notes": "Wave 3B mission benchmark"
-    },
-    {
-      "id": "W3B-MG-013",
+      "id": "W3B-006",
       "raw_request": "readiness transition mission",
       "mission_class": "readiness_transition_mission",
-      "expected_mission_id": "mission.wave3b.readiness_transition_cycle.v1",
-      "mutability_level": "OPERATIONAL_ROUTING",
+      "expected_mission_id": "mission.wave3b.readiness_transition.next_stage.v1",
+      "mutability_level": "CERTIFICATION_ONLY",
       "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "readiness_transition_mission",
-        "mission_id": "mission.wave3b.readiness_transition_cycle.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": true
-      },
       "expected_program_plan": [
+        "program.wave2a.creator_grade_validation.v1",
         "program.wave2b.certification_pass.v1",
-        "program.wave2b.review_certification_sequence.v1"
+        "program.wave2b.review_certification_sequence.v1",
+        "program.wave2a.operator_engineering_report.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
       ],
-      "notes": "Wave 3B mission benchmark"
+      "notes": "baseline readiness transition"
     },
     {
-      "id": "W3B-MG-014",
-      "raw_request": "run readiness transition mission",
+      "id": "W3B-007",
+      "raw_request": "execute readiness transition mission",
       "mission_class": "readiness_transition_mission",
-      "expected_mission_id": "mission.wave3b.readiness_transition_cycle.v1",
-      "mutability_level": "OPERATIONAL_ROUTING",
+      "expected_mission_id": "mission.wave3b.readiness_transition.next_stage.v1",
+      "mutability_level": "CERTIFICATION_ONLY",
       "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "readiness_transition_mission",
-        "mission_id": "mission.wave3b.readiness_transition_cycle.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": true
-      },
       "expected_program_plan": [
+        "program.wave2a.creator_grade_validation.v1",
         "program.wave2b.certification_pass.v1",
-        "program.wave2b.review_certification_sequence.v1"
+        "program.wave2b.review_certification_sequence.v1",
+        "program.wave2a.operator_engineering_report.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
       ],
-      "notes": "Wave 3B mission benchmark"
+      "notes": "token variant"
     },
     {
-      "id": "W3B-MG-015",
-      "raw_request": "execute readiness transition mission end-to-end",
+      "id": "W3B-008",
+      "raw_request": "move layer to next-stage readiness",
       "mission_class": "readiness_transition_mission",
-      "expected_mission_id": "mission.wave3b.readiness_transition_cycle.v1",
-      "mutability_level": "OPERATIONAL_ROUTING",
+      "expected_mission_id": "mission.wave3b.readiness_transition.next_stage.v1",
+      "mutability_level": "CERTIFICATION_ONLY",
       "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "readiness_transition_mission",
-        "mission_id": "mission.wave3b.readiness_transition_cycle.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": true
-      },
       "expected_program_plan": [
+        "program.wave2a.creator_grade_validation.v1",
         "program.wave2b.certification_pass.v1",
-        "program.wave2b.review_certification_sequence.v1"
+        "program.wave2b.review_certification_sequence.v1",
+        "program.wave2a.operator_engineering_report.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
       ],
-      "notes": "Wave 3B mission benchmark"
+      "notes": "token variant"
     },
     {
-      "id": "W3B-MG-016",
-      "raw_request": "perform readiness transition mission sequence",
+      "id": "W3B-009",
+      "raw_request": "assemble transition package for next stage",
       "mission_class": "readiness_transition_mission",
-      "expected_mission_id": "mission.wave3b.readiness_transition_cycle.v1",
-      "mutability_level": "OPERATIONAL_ROUTING",
+      "expected_mission_id": "mission.wave3b.readiness_transition.next_stage.v1",
+      "mutability_level": "CERTIFICATION_ONLY",
       "authority_expectation": "creator_required",
-      "expected_mission_contract": {
-        "mission_class": "readiness_transition_mission",
-        "mission_id": "mission.wave3b.readiness_transition_cycle.v1",
-        "mutability_level": "OPERATIONAL_ROUTING",
-        "creator_authority_required": true
-      },
       "expected_program_plan": [
+        "program.wave2a.creator_grade_validation.v1",
         "program.wave2b.certification_pass.v1",
-        "program.wave2b.review_certification_sequence.v1"
+        "program.wave2b.review_certification_sequence.v1",
+        "program.wave2a.operator_engineering_report.v1"
       ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
       "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
-      "produced_artifacts": [
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
         "runtime/repo_control_center/operator_mission_status.json",
-        "runtime/repo_control_center/operator_mission_report.md"
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
       ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
       "evidence_source": [
-        "workspace_config/operator_mission_registry.json"
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
       ],
-      "notes": "Wave 3B mission benchmark"
+      "notes": "token variant"
+    },
+    {
+      "id": "W3B-010",
+      "raw_request": "execute readiness transition mission with precondition gate check",
+      "mission_class": "readiness_transition_mission",
+      "expected_mission_id": "mission.wave3b.readiness_transition.next_stage.v1",
+      "mutability_level": "CERTIFICATION_ONLY",
+      "authority_expectation": "creator_required",
+      "expected_program_plan": [
+        "program.wave2a.creator_grade_validation.v1",
+        "program.wave2b.certification_pass.v1",
+        "program.wave2b.review_certification_sequence.v1",
+        "program.wave2a.operator_engineering_report.v1"
+      ],
+      "expected_failure_policy": "stop_on_failure",
+      "expected_review_requirement": "creator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
+      ],
+      "expected_resume_behavior": "blocked_if_creator_or_sync_missing",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
+      ],
+      "notes": "authority/precondition gated scenario"
+    },
+    {
+      "id": "W3B-011",
+      "raw_request": "handoff delivery mission",
+      "mission_class": "handoff_delivery_mission",
+      "expected_mission_id": "mission.wave3b.handoff_delivery.sequence.v1",
+      "mutability_level": "OPERATIONAL_ROUTING",
+      "authority_expectation": "not_required",
+      "expected_program_plan": [
+        "program.wave2b.handoff_preparation_end_to_end.v1",
+        "program.wave2b.delivery_ready_handoff_package.v1",
+        "program.wave2b.inbox_review_cycle.v1",
+        "program.wave2a.status_evidence_report.v1"
+      ],
+      "expected_failure_policy": "stop_on_blocked",
+      "expected_review_requirement": "integration_review",
+      "expected_delivery_target": "integration/inbox",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
+      ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
+      ],
+      "notes": "baseline handoff delivery"
+    },
+    {
+      "id": "W3B-012",
+      "raw_request": "execute full handoff delivery mission",
+      "mission_class": "handoff_delivery_mission",
+      "expected_mission_id": "mission.wave3b.handoff_delivery.sequence.v1",
+      "mutability_level": "OPERATIONAL_ROUTING",
+      "authority_expectation": "not_required",
+      "expected_program_plan": [
+        "program.wave2b.handoff_preparation_end_to_end.v1",
+        "program.wave2b.delivery_ready_handoff_package.v1",
+        "program.wave2b.inbox_review_cycle.v1",
+        "program.wave2a.status_evidence_report.v1"
+      ],
+      "expected_failure_policy": "stop_on_blocked",
+      "expected_review_requirement": "integration_review",
+      "expected_delivery_target": "integration/inbox",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
+      ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
+      ],
+      "notes": "token variant"
+    },
+    {
+      "id": "W3B-013",
+      "raw_request": "build and deliver delivery-ready mission package",
+      "mission_class": "handoff_delivery_mission",
+      "expected_mission_id": "mission.wave3b.handoff_delivery.sequence.v1",
+      "mutability_level": "OPERATIONAL_ROUTING",
+      "authority_expectation": "not_required",
+      "expected_program_plan": [
+        "program.wave2b.handoff_preparation_end_to_end.v1",
+        "program.wave2b.delivery_ready_handoff_package.v1",
+        "program.wave2b.inbox_review_cycle.v1",
+        "program.wave2a.status_evidence_report.v1"
+      ],
+      "expected_failure_policy": "stop_on_blocked",
+      "expected_review_requirement": "integration_review",
+      "expected_delivery_target": "integration/inbox",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
+      ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
+      ],
+      "notes": "token variant"
+    },
+    {
+      "id": "W3B-014",
+      "raw_request": "finish review handoff sequence as mission",
+      "mission_class": "handoff_delivery_mission",
+      "expected_mission_id": "mission.wave3b.handoff_delivery.sequence.v1",
+      "mutability_level": "OPERATIONAL_ROUTING",
+      "authority_expectation": "not_required",
+      "expected_program_plan": [
+        "program.wave2b.handoff_preparation_end_to_end.v1",
+        "program.wave2b.delivery_ready_handoff_package.v1",
+        "program.wave2b.inbox_review_cycle.v1",
+        "program.wave2a.status_evidence_report.v1"
+      ],
+      "expected_failure_policy": "stop_on_blocked",
+      "expected_review_requirement": "integration_review",
+      "expected_delivery_target": "integration/inbox",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
+      ],
+      "expected_resume_behavior": "resume_from_program_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
+      ],
+      "notes": "token variant"
+    },
+    {
+      "id": "W3B-015",
+      "raw_request": "execute full handoff delivery mission with blocked delivery case",
+      "mission_class": "handoff_delivery_mission",
+      "expected_mission_id": "mission.wave3b.handoff_delivery.sequence.v1",
+      "mutability_level": "OPERATIONAL_ROUTING",
+      "authority_expectation": "not_required",
+      "expected_program_plan": [
+        "program.wave2b.handoff_preparation_end_to_end.v1",
+        "program.wave2b.delivery_ready_handoff_package.v1",
+        "program.wave2b.inbox_review_cycle.v1",
+        "program.wave2a.status_evidence_report.v1"
+      ],
+      "expected_failure_policy": "stop_on_blocked",
+      "expected_review_requirement": "integration_review",
+      "expected_delivery_target": "integration/inbox",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
+      ],
+      "expected_resume_behavior": "blocked_delivery_stops_and_resume_available",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
+      ],
+      "notes": "blocked delivery scenario"
+    },
+    {
+      "id": "W3B-016",
+      "raw_request": "evidence consolidation mission",
+      "mission_class": "evidence_consolidation_mission",
+      "expected_mission_id": "mission.wave3b.evidence_consolidation.chain.v1",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "not_required",
+      "expected_program_plan": [
+        "program.wave2a.governance_evidence_pack.v1",
+        "program.wave2b.evidence_delivery_chain.v1",
+        "program.wave2a.status_evidence_report.v1",
+        "program.wave2a.operator_engineering_report.v1"
+      ],
+      "expected_failure_policy": "continue_on_failure",
+      "expected_review_requirement": "operator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
+      ],
+      "expected_resume_behavior": "continue_on_failure_then_resume_optional",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
+      ],
+      "notes": "baseline evidence consolidation"
+    },
+    {
+      "id": "W3B-017",
+      "raw_request": "build mission-level consolidated evidence chain",
+      "mission_class": "evidence_consolidation_mission",
+      "expected_mission_id": "mission.wave3b.evidence_consolidation.chain.v1",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "not_required",
+      "expected_program_plan": [
+        "program.wave2a.governance_evidence_pack.v1",
+        "program.wave2b.evidence_delivery_chain.v1",
+        "program.wave2a.status_evidence_report.v1",
+        "program.wave2a.operator_engineering_report.v1"
+      ],
+      "expected_failure_policy": "continue_on_failure",
+      "expected_review_requirement": "operator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
+      ],
+      "expected_resume_behavior": "continue_on_failure_then_resume_optional",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
+      ],
+      "notes": "token variant"
+    },
+    {
+      "id": "W3B-018",
+      "raw_request": "execute evidence consolidation mission",
+      "mission_class": "evidence_consolidation_mission",
+      "expected_mission_id": "mission.wave3b.evidence_consolidation.chain.v1",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "not_required",
+      "expected_program_plan": [
+        "program.wave2a.governance_evidence_pack.v1",
+        "program.wave2b.evidence_delivery_chain.v1",
+        "program.wave2a.status_evidence_report.v1",
+        "program.wave2a.operator_engineering_report.v1"
+      ],
+      "expected_failure_policy": "continue_on_failure",
+      "expected_review_requirement": "operator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
+      ],
+      "expected_resume_behavior": "continue_on_failure_then_resume_optional",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
+      ],
+      "notes": "token variant"
+    },
+    {
+      "id": "W3B-019",
+      "raw_request": "merge certification readiness review artifacts into one mission package",
+      "mission_class": "evidence_consolidation_mission",
+      "expected_mission_id": "mission.wave3b.evidence_consolidation.chain.v1",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "not_required",
+      "expected_program_plan": [
+        "program.wave2a.governance_evidence_pack.v1",
+        "program.wave2b.evidence_delivery_chain.v1",
+        "program.wave2a.status_evidence_report.v1",
+        "program.wave2a.operator_engineering_report.v1"
+      ],
+      "expected_failure_policy": "continue_on_failure",
+      "expected_review_requirement": "operator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
+      ],
+      "expected_resume_behavior": "continue_on_failure_then_resume_optional",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
+      ],
+      "notes": "token variant"
+    },
+    {
+      "id": "W3B-020",
+      "raw_request": "execute evidence consolidation mission with partial failure and resume case",
+      "mission_class": "evidence_consolidation_mission",
+      "expected_mission_id": "mission.wave3b.evidence_consolidation.chain.v1",
+      "mutability_level": "PACKAGE_ONLY",
+      "authority_expectation": "not_required",
+      "expected_program_plan": [
+        "program.wave2a.governance_evidence_pack.v1",
+        "program.wave2b.evidence_delivery_chain.v1",
+        "program.wave2a.status_evidence_report.v1",
+        "program.wave2a.operator_engineering_report.v1"
+      ],
+      "expected_failure_policy": "continue_on_failure",
+      "expected_review_requirement": "operator_review",
+      "expected_delivery_target": "runtime/repo_control_center",
+      "expected_result": "SUCCESS_OR_BLOCKED_BY_GATES",
+      "expected_checkpoints": [
+        "program_sequence_resolved",
+        "mission_checkpoint_tracking",
+        "delivery_review_gates_enforced"
+      ],
+      "expected_artifacts": [
+        "runtime/repo_control_center/operator_mission_status.json",
+        "runtime/repo_control_center/operator_mission_report.md",
+        "runtime/repo_control_center/operator_mission_checkpoint.json",
+        "runtime/repo_control_center/operator_mission_history.json"
+      ],
+      "expected_resume_behavior": "partial_failure_allowed_resume_supported",
+      "expected_acceptance_criteria": "registry_defined_acceptance_criteria",
+      "evidence_source": [
+        "workspace_config/operator_mission_registry.json",
+        "docs/governance/OPERATOR_MISSION_CONTRACT.md"
+      ],
+      "notes": "partial-failure+resume scenario"
     }
   ]
 }
