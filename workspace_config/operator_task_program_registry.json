@@ -1,6 +1,6 @@
 {
-  "schema_version": "operator_task_program_registry.wave2a.v1.0.0",
-  "wave": "2A",
+  "schema_version": "operator_task_program_registry.wave2b.v1.0.0",
+  "wave": "2B",
   "execution_contract_doc": "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md",
   "command_layer_dependency": {
     "script": "scripts/operator_command_surface.py",
@@ -11,6 +11,18 @@
     "REFRESH_ONLY",
     "PACKAGE_ONLY"
   ],
+  "routing_precedence": {
+    "class_order": [
+      "certification_program",
+      "evidence_delivery_program",
+      "inbox_review_program",
+      "handoff_preparation_program",
+      "validation_program",
+      "evidence_pack_program",
+      "report_program",
+      "status_refresh_program"
+    ]
+  },
   "program_classes": [
     {
       "program_class": "status_refresh_program",
@@ -578,6 +590,738 @@
             "runtime/operator_command_layer/policy_reference_output.md"
           ],
           "blocking_conditions": [
+            "step_execution_failed"
+          ]
+        }
+      ]
+    },
+    {
+      "program_class": "handoff_preparation_program",
+      "description": "Controlled multi-step handoff preparation sequences for delivery-ready packages.",
+      "allowed_modes": [
+        "creator",
+        "helper",
+        "integration"
+      ],
+      "authority_requirement": "none",
+      "policy_basis": [
+        "docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md",
+        "docs/governance/INTEGRATION_INBOX_POLICY.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md"
+      ],
+      "step_templates": [
+        "validation_run",
+        "evidence_bundle_context",
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "step_sequences": [
+        "validate_workspace_state",
+        "package_evidence",
+        "prepare_handoff",
+        "materialize_program_report"
+      ],
+      "command_dependencies": [
+        "validation_run",
+        "evidence_bundle_context",
+        "handoff_prepare",
+        "report_generation"
+      ],
+      "review_dependencies": [
+        "integration_review_required"
+      ],
+      "delivery_artifacts": [
+        "integration/inbox"
+      ],
+      "evidence_outputs": [
+        "runtime/operator_command_layer/handoff_prepare_output.json",
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_checkpoint.json",
+        "runtime/repo_control_center/operator_program_history.json"
+      ],
+      "mutability_level": "PACKAGE_ONLY",
+      "resume_supported": true,
+      "failure_policy_default": "stop_on_failure",
+      "review_requirement": "integration_review_required",
+      "escalation_requirement": false,
+      "stop_conditions": [
+        "any_step_failed",
+        "any_step_blocked"
+      ],
+      "delivery_target": "integration/inbox",
+      "routing_precedence": 40,
+      "blocking_conditions": [
+        "required_input_missing",
+        "step_execution_failed",
+        "delivery_target_unavailable"
+      ],
+      "programs": [
+        {
+          "program_id": "program.wave2b.handoff_preparation_end_to_end.v1",
+          "resolved_goal": "Execute end-to-end handoff preparation with validation and evidence package.",
+          "execution_scope": "handoff_preparation_end_to_end",
+          "allowed_modes": [
+            "creator",
+            "helper",
+            "integration"
+          ],
+          "authority_requirement": "none",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "PACKAGE_ONLY",
+          "failure_policy": "stop_on_failure",
+          "resume_supported": true,
+          "review_requirement": "integration_review_required",
+          "escalation_requirement": false,
+          "stop_conditions": [
+            "any_step_failed",
+            "any_step_blocked"
+          ],
+          "delivery_target": "integration/inbox",
+          "required_inputs": [
+            "task_id",
+            "node_id"
+          ],
+          "route_tokens": [
+            "подготовь handoff program",
+            "собери delivery-ready governance package",
+            "выполни handoff preparation end-to-end",
+            "prepare handoff program",
+            "handoff preparation end-to-end"
+          ],
+          "step_sequences": [
+            "validation_run",
+            "evidence_bundle_context",
+            "handoff_prepare",
+            "report_generation"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "validation run",
+              "action": "validation_run",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "evidence bundle context",
+              "action": "evidence_bundle_context",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "handoff prepare",
+              "action": "handoff_prepare",
+              "pass_args": [
+                "task_id",
+                "node_id"
+              ],
+              "static_args": {}
+            },
+            {
+              "step_id": "S4",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/operator_command_layer/handoff_prepare_output.json",
+            "runtime/repo_control_center/operator_program_report.md"
+          ],
+          "blocking_conditions": [
+            "required_input_missing",
+            "step_execution_failed"
+          ]
+        },
+        {
+          "program_id": "program.wave2b.delivery_ready_handoff_package.v1",
+          "resolved_goal": "Build delivery-ready handoff package with policy reference trace.",
+          "execution_scope": "delivery_ready_handoff_package",
+          "allowed_modes": [
+            "creator",
+            "helper",
+            "integration"
+          ],
+          "authority_requirement": "none",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "PACKAGE_ONLY",
+          "failure_policy": "stop_on_failure",
+          "resume_supported": true,
+          "review_requirement": "integration_review_required",
+          "escalation_requirement": false,
+          "stop_conditions": [
+            "any_step_failed",
+            "any_step_blocked"
+          ],
+          "delivery_target": "integration/inbox",
+          "required_inputs": [
+            "task_id",
+            "node_id"
+          ],
+          "route_tokens": [
+            "delivery-ready governance package",
+            "handoff delivery ready package",
+            "prepare delivery handoff package"
+          ],
+          "step_sequences": [
+            "validation_run",
+            "policy_reference_execute",
+            "handoff_prepare",
+            "report_generation"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "validation run",
+              "action": "validation_run",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "policy reference",
+              "action": "policy_reference_execute",
+              "pass_args": [],
+              "static_args": {
+                "policy_topic": "handoff_preparation_program"
+              }
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "handoff prepare",
+              "action": "handoff_prepare",
+              "pass_args": [
+                "task_id",
+                "node_id"
+              ],
+              "static_args": {}
+            },
+            {
+              "step_id": "S4",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/operator_command_layer/handoff_prepare_output.json",
+            "runtime/repo_control_center/operator_program_report.md"
+          ],
+          "blocking_conditions": [
+            "required_input_missing",
+            "step_execution_failed"
+          ]
+        }
+      ]
+    },
+    {
+      "program_class": "inbox_review_program",
+      "description": "Controlled integration inbox and review queue cycle.",
+      "allowed_modes": [
+        "creator",
+        "integration"
+      ],
+      "authority_requirement": "none",
+      "policy_basis": [
+        "docs/governance/INTEGRATION_INBOX_POLICY.md",
+        "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md"
+      ],
+      "step_templates": [
+        "inbox_review",
+        "report_generation",
+        "policy_reference_execute"
+      ],
+      "step_sequences": [
+        "inbox_scan",
+        "review_classification",
+        "report_materialization"
+      ],
+      "command_dependencies": [
+        "inbox_review",
+        "report_generation",
+        "policy_reference_execute"
+      ],
+      "review_dependencies": [
+        "canonical_review_flow"
+      ],
+      "delivery_artifacts": [
+        "integration/review_queue",
+        "integration/accepted",
+        "integration/rejected",
+        "integration/quarantine"
+      ],
+      "evidence_outputs": [
+        "runtime/operator_command_layer/inbox_review_output.json",
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_checkpoint.json",
+        "runtime/repo_control_center/operator_program_history.json"
+      ],
+      "mutability_level": "READ_ONLY",
+      "resume_supported": true,
+      "failure_policy_default": "stop_on_blocked",
+      "review_requirement": "canonical_review_flow",
+      "escalation_requirement": true,
+      "stop_conditions": [
+        "any_step_blocked"
+      ],
+      "delivery_target": "integration/review_queue",
+      "routing_precedence": 30,
+      "blocking_conditions": [
+        "authority_mode_not_allowed",
+        "step_execution_failed",
+        "review_dependency_missing"
+      ],
+      "programs": [
+        {
+          "program_id": "program.wave2b.inbox_review_cycle.v1",
+          "resolved_goal": "Execute inbox review cycle with deterministic classification trail.",
+          "execution_scope": "inbox_review_cycle",
+          "allowed_modes": [
+            "creator",
+            "integration"
+          ],
+          "authority_requirement": "none",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "READ_ONLY",
+          "failure_policy": "stop_on_blocked",
+          "resume_supported": true,
+          "review_requirement": "canonical_review_flow",
+          "escalation_requirement": true,
+          "stop_conditions": [
+            "any_step_blocked",
+            "any_step_failed"
+          ],
+          "delivery_target": "integration/review_queue",
+          "route_tokens": [
+            "выполни полный inbox review cycle",
+            "прогони review queue program",
+            "проверь incoming package и классифицируй его",
+            "inbox review cycle"
+          ],
+          "step_sequences": [
+            "inbox_review",
+            "policy_reference_execute",
+            "report_generation"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "inbox review",
+              "action": "inbox_review",
+              "pass_args": [
+                "inbox_mode"
+              ],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "policy reference",
+              "action": "policy_reference_execute",
+              "pass_args": [],
+              "static_args": {
+                "policy_topic": "integration_inbox_policy"
+              }
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/operator_command_layer/inbox_review_output.json",
+            "runtime/repo_control_center/operator_program_report.md"
+          ],
+          "blocking_conditions": [
+            "authority_mode_not_allowed",
+            "step_execution_failed"
+          ]
+        }
+      ]
+    },
+    {
+      "program_class": "evidence_delivery_program",
+      "description": "Operational evidence routing and review-ready delivery sequences.",
+      "allowed_modes": [
+        "creator",
+        "integration"
+      ],
+      "authority_requirement": "none",
+      "policy_basis": [
+        "docs/governance/EVIDENCE_RETENTION_POLICY.md",
+        "docs/governance/INTEGRATION_INBOX_POLICY.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md"
+      ],
+      "step_templates": [
+        "status_refresh",
+        "validation_run",
+        "evidence_routing",
+        "report_generation"
+      ],
+      "step_sequences": [
+        "refresh_runtime_truth",
+        "validate_workspace",
+        "route_evidence",
+        "emit_delivery_report"
+      ],
+      "command_dependencies": [
+        "status_refresh",
+        "validation_run",
+        "evidence_routing",
+        "report_generation"
+      ],
+      "review_dependencies": [
+        "integration_review_required"
+      ],
+      "delivery_artifacts": [
+        "integration/inbox",
+        "runtime/operator_command_layer/evidence_routing_output.json"
+      ],
+      "evidence_outputs": [
+        "runtime/operator_command_layer/evidence_routing_output.json",
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_checkpoint.json",
+        "runtime/repo_control_center/operator_program_history.json"
+      ],
+      "mutability_level": "PACKAGE_ONLY",
+      "resume_supported": true,
+      "failure_policy_default": "stop_on_failure",
+      "review_requirement": "integration_review_required",
+      "escalation_requirement": false,
+      "stop_conditions": [
+        "any_step_failed",
+        "any_step_blocked"
+      ],
+      "delivery_target": "integration/inbox",
+      "routing_precedence": 20,
+      "blocking_conditions": [
+        "step_execution_failed",
+        "delivery_target_unavailable"
+      ],
+      "programs": [
+        {
+          "program_id": "program.wave2b.evidence_delivery_chain.v1",
+          "resolved_goal": "Build and route policy-backed evidence delivery package.",
+          "execution_scope": "evidence_delivery_chain",
+          "allowed_modes": [
+            "creator",
+            "integration"
+          ],
+          "authority_requirement": "none",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "PACKAGE_ONLY",
+          "failure_policy": "stop_on_failure",
+          "resume_supported": true,
+          "review_requirement": "integration_review_required",
+          "escalation_requirement": false,
+          "stop_conditions": [
+            "any_step_failed",
+            "any_step_blocked"
+          ],
+          "delivery_target": "integration/inbox",
+          "route_tokens": [
+            "собери и разложи evidence для review",
+            "подготовь delivery-ready evidence chain",
+            "собери policy-backed evidence routing program",
+            "evidence delivery program"
+          ],
+          "step_sequences": [
+            "status_refresh",
+            "validation_run",
+            "evidence_routing",
+            "report_generation"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "status refresh",
+              "action": "status_refresh",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "validation run",
+              "action": "validation_run",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "evidence routing",
+              "action": "evidence_routing",
+              "pass_args": [
+                "package_path"
+              ],
+              "static_args": {}
+            },
+            {
+              "step_id": "S4",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/operator_command_layer/evidence_routing_output.json",
+            "runtime/repo_control_center/operator_program_report.md"
+          ],
+          "blocking_conditions": [
+            "step_execution_failed"
+          ]
+        }
+      ]
+    },
+    {
+      "program_class": "certification_program",
+      "description": "Controlled readiness and certification sequences over governance chain.",
+      "allowed_modes": [
+        "creator",
+        "integration"
+      ],
+      "authority_requirement": "program_specific",
+      "policy_basis": [
+        "docs/governance/PROMOTION_THRESHOLD_POLICY.md",
+        "docs/governance/ADMISSION_GATE_POLICY.md",
+        "docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md",
+        "docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md"
+      ],
+      "step_templates": [
+        "creator_acceptance_precheck",
+        "validation_run",
+        "inbox_review",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "step_sequences": [
+        "authority_precheck",
+        "validation",
+        "review",
+        "certification_report"
+      ],
+      "command_dependencies": [
+        "creator_acceptance_precheck",
+        "validation_run",
+        "inbox_review",
+        "policy_reference_execute",
+        "report_generation"
+      ],
+      "review_dependencies": [
+        "creator_review",
+        "canonical_review_flow"
+      ],
+      "delivery_artifacts": [
+        "runtime/repo_control_center/repo_control_status.json",
+        "runtime/repo_control_center/operator_program_report.md"
+      ],
+      "evidence_outputs": [
+        "runtime/repo_control_center/repo_control_status.json",
+        "runtime/repo_control_center/repo_control_report.md",
+        "runtime/repo_control_center/operator_program_status.json",
+        "runtime/repo_control_center/operator_program_report.md",
+        "runtime/repo_control_center/operator_program_checkpoint.json",
+        "runtime/repo_control_center/operator_program_history.json"
+      ],
+      "mutability_level": "READ_ONLY",
+      "resume_supported": true,
+      "failure_policy_default": "stop_on_failure",
+      "review_requirement": "creator_review",
+      "escalation_requirement": true,
+      "stop_conditions": [
+        "any_step_failed",
+        "any_step_blocked"
+      ],
+      "delivery_target": "runtime/repo_control_center",
+      "routing_precedence": 10,
+      "blocking_conditions": [
+        "creator_authority_required",
+        "policy_basis_missing",
+        "step_execution_failed"
+      ],
+      "programs": [
+        {
+          "program_id": "program.wave2b.certification_pass.v1",
+          "resolved_goal": "Run certification pass across creator precheck, validation, and policy trace.",
+          "execution_scope": "creator_certification_pass",
+          "allowed_modes": [
+            "creator"
+          ],
+          "authority_requirement": "creator_required",
+          "requires_in_sync": true,
+          "requires_clean_worktree": false,
+          "mutability_level": "READ_ONLY",
+          "failure_policy": "stop_on_failure",
+          "resume_supported": true,
+          "review_requirement": "creator_review",
+          "escalation_requirement": true,
+          "stop_conditions": [
+            "any_step_failed",
+            "any_step_blocked"
+          ],
+          "delivery_target": "runtime/repo_control_center",
+          "route_tokens": [
+            "выполни certification pass",
+            "собери readiness certification package",
+            "прогоняй review certification sequence",
+            "certification pass"
+          ],
+          "step_sequences": [
+            "creator_acceptance_precheck",
+            "validation_run",
+            "policy_reference_execute",
+            "report_generation"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "creator acceptance precheck",
+              "action": "creator_acceptance_precheck",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "validation run",
+              "action": "validation_run",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "policy reference",
+              "action": "policy_reference_execute",
+              "pass_args": [],
+              "static_args": {
+                "policy_topic": "certification_program"
+              }
+            },
+            {
+              "step_id": "S4",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/repo_control_center/repo_control_status.json",
+            "runtime/repo_control_center/operator_program_report.md"
+          ],
+          "blocking_conditions": [
+            "creator_authority_required",
+            "step_execution_failed",
+            "sync_not_in_sync"
+          ]
+        },
+        {
+          "program_id": "program.wave2b.review_certification_sequence.v1",
+          "resolved_goal": "Run review-oriented certification sequence with inbox classification trace.",
+          "execution_scope": "review_certification_sequence",
+          "allowed_modes": [
+            "creator",
+            "integration"
+          ],
+          "authority_requirement": "none",
+          "requires_in_sync": false,
+          "requires_clean_worktree": false,
+          "mutability_level": "READ_ONLY",
+          "failure_policy": "continue_on_failure",
+          "resume_supported": true,
+          "review_requirement": "canonical_review_flow",
+          "escalation_requirement": true,
+          "stop_conditions": [
+            "any_step_blocked"
+          ],
+          "delivery_target": "integration/review_queue",
+          "route_tokens": [
+            "review certification sequence",
+            "certification review cycle",
+            "inbox backed certification program"
+          ],
+          "step_sequences": [
+            "validation_run",
+            "inbox_review",
+            "policy_reference_execute",
+            "report_generation"
+          ],
+          "step_plan": [
+            {
+              "step_id": "S1",
+              "step_type": "command_execute",
+              "command": "validation run",
+              "action": "validation_run",
+              "pass_args": [],
+              "static_args": {}
+            },
+            {
+              "step_id": "S2",
+              "step_type": "command_execute",
+              "command": "inbox review",
+              "action": "inbox_review",
+              "pass_args": [
+                "inbox_mode"
+              ],
+              "static_args": {}
+            },
+            {
+              "step_id": "S3",
+              "step_type": "command_execute",
+              "command": "policy reference",
+              "action": "policy_reference_execute",
+              "pass_args": [],
+              "static_args": {
+                "policy_topic": "certification_review_sequence"
+              }
+            },
+            {
+              "step_id": "S4",
+              "step_type": "command_execute",
+              "command": "report generation",
+              "action": "report_generation",
+              "pass_args": [],
+              "static_args": {}
+            }
+          ],
+          "evidence_outputs": [
+            "runtime/operator_command_layer/inbox_review_output.json",
+            "runtime/repo_control_center/operator_program_report.md"
+          ],
+          "blocking_conditions": [
+            "authority_mode_not_allowed",
             "step_execution_failed"
           ]
         }

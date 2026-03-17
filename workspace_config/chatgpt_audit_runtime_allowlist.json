@@ -10,6 +10,7 @@
     "runtime/repo_control_center/operator_program_status.json",
     "runtime/repo_control_center/operator_program_report.md",
     "runtime/repo_control_center/operator_program_checkpoint.json",
+    "runtime/repo_control_center/operator_program_history.json",
     "runtime/repo_control_center/operator_task_program_consistency.json",
     "runtime/projects/platform_test_agent/audit_reports/test-agent-intake-platform_test_agent-20260316T165222Z/admission_decision.json",
     "runtime/projects/platform_test_agent/audit_reports/test-agent-intake-platform_test_agent-20260316T165222Z/evidence_manifest.json",
@@ -25,6 +26,11 @@
     "runtime/repo_control_center/wave2a_detect_machine_mode_output.json",
     "runtime/repo_control_center/wave2a_operator_task_program_consistency_output.json",
     "runtime/repo_control_center/wave2a_repo_control_bundle_output.json",
-    "runtime/repo_control_center/wave2a_repo_control_full_check_output.json"
+    "runtime/repo_control_center/wave2a_repo_control_full_check_output.json",
+    "runtime/repo_control_center/wave2b_detect_machine_mode_output.json",
+    "runtime/repo_control_center/wave2b_operator_task_program_consistency_output.json",
+    "runtime/repo_control_center/wave2b_program_execute_output.json",
+    "runtime/repo_control_center/wave2b_repo_control_bundle_output.json",
+    "runtime/repo_control_center/wave2b_repo_control_full_check_output.json"
   ]
 }

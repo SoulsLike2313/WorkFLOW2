@@ -1,7 +1,7 @@
 # OPERATOR_TASK_PROGRAM_CONTRACT
 
 ## Scope
-Wave 2A contract for safe operator task/program execution over the accepted governance/query/command baseline.
+Unified contract for Wave 2A and Wave 2B task/program execution over governance/query/command baseline.
 
 ## Required Execution Shape
 - `program_class`
@@ -21,35 +21,51 @@ Wave 2A contract for safe operator task/program execution over the accepted gove
 - `next_step`
 - `evidence_source`
 
-## Optional Fields
-- `resume_supported`
+## Wave 2B Required Extensions
 - `failure_policy`
+- `resume_supported`
+- `stop_conditions`
+- `delivery_target`
+- `review_requirement`
+- `escalation_requirement`
+
+## Optional Fields
 - `notes`
+- `command_dependencies`
+- `review_dependencies`
+- `delivery_artifacts`
 
 ## Contract Semantics
-- `program_class`: one of Wave 2A safe classes (`status_refresh_program`, `validation_program`, `evidence_pack_program`, `report_program`).
-- `task_id_or_program_id`: deterministic program identifier resolved from request.
-- `execution_scope`: bounded scope from registry; no out-of-registry planning is allowed.
-- `authority_check`: mode/authority gate result from machine-mode detection contract.
+- `program_class`: one registered class in `workspace_config/operator_task_program_registry.json`.
+- `task_id_or_program_id`: deterministic program identifier resolved via registry or explicit override.
+- `execution_scope`: bounded scope declared by registry; no out-of-registry planning is allowed.
+- `authority_check`: mode and creator-authority gate result from machine-mode detection contract.
 - `policy_check`: policy-basis file presence and policy gate status.
 - `preconditions`: explicit precondition checks and failed items.
-- `step_plan`: ordered step model, each step mapped to command-layer execution units.
+- `step_plan`: ordered step model where each step maps to command-layer execution units.
 - `current_step`: active or last executed step id.
-- `checkpoint_state`: completed steps, failed step, resume pointer, resume capability.
+- `checkpoint_state`: completed steps, pending steps, failed step, resume pointer, stop condition state.
 - `execution_result`: `SUCCESS | FAILED | BLOCKED`.
-- `artifacts_produced`: program artifacts + step output artifacts.
-- `state_change`: git-status based state-delta snapshot.
+- `artifacts_produced`: declared evidence outputs plus step-produced artifacts.
+- `state_change`: git-status based state-delta snapshot plus mutability/execution mode.
 - `blocking_factors`: exact blockers; no generic placeholders.
-- `next_step`: deterministic remediation or continuation path.
+- `next_step`: deterministic remediation, resume path, or follow-up review path.
 - `evidence_source`: canonical files and runtime outputs used for verdict.
+- `failure_policy`: minimum supported values are `stop_on_failure`, `stop_on_blocked`, `continue_on_failure`.
+- `stop_conditions`: hard stop triggers for multi-step operational programs.
+- `delivery_target`: declared handoff/review destination path class.
+- `review_requirement`: required review model before acceptance.
+- `escalation_requirement`: explicit escalation flag for creator/integration review chain.
 
-## Wave 2A Safety Boundaries
-- Allowed mutability levels only: `READ_ONLY`, `REFRESH_ONLY`, `PACKAGE_ONLY`.
-- No guarded mutation flows in Wave 2A.
-- No autonomous planning outside registry.
+## Wave Boundaries
+- Wave 2A classes: `status_refresh_program`, `validation_program`, `evidence_pack_program`, `report_program`.
+- Wave 2B classes: `handoff_preparation_program`, `inbox_review_program`, `evidence_delivery_program`, `certification_program`.
+- Allowed mutability levels remain bounded to `READ_ONLY`, `REFRESH_ONLY`, `PACKAGE_ONLY`.
+- No unrestricted mutation programs in Wave 2B.
 - Command execution must be delegated to `scripts/operator_command_surface.py`.
 
-## Failure and Resume Rules
-- Default failure policy: `stop_on_failure`.
-- Resume is allowed only when `resume_supported=true` and checkpoint pointer is valid.
-- Blocked precondition/authority/policy checks must return `BLOCKED` before step execution.
+## Failure/Resume/Delivery Rules
+- Blocked authority/policy/precondition checks must return `BLOCKED` before step execution.
+- Resume is allowed only when `resume_supported=true` and `resume_pointer` is within step range.
+- `failure_policy` and `stop_conditions` together define deterministic stop behavior for multi-step programs.
+- Delivery/review semantics must be explicit: `delivery_target` and `review_requirement` are mandatory for Wave 2B operational classes.
