@@ -39,8 +39,15 @@
 ## 6) Creator-grade chain status
 - creator intent detection: `PASS`
 - bundle check: `READY`
-- full-check: `FAIL` (expected while worktree is dirty during Wave 2B implementation)
-- failure category: sync/trust gate blocked by in-progress dirty state, not by missing creator authority
+- full-check: `PASS`
+- chain status:
+  - `trust_verdict=TRUSTED`
+  - `sync_verdict=IN_SYNC`
+  - `governance_verdict=COMPLIANT`
+  - `governance_acceptance_verdict=PASS`
+  - `admission_verdict=ADMISSIBLE`
+  - `machine_mode=creator`
+  - `authority_present=true`
 
 ## 7) Wave 2C focus
 - guarded creator-grade programs with controlled state-changing flows
