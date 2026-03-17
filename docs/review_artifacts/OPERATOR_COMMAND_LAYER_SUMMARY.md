@@ -26,12 +26,14 @@ Operator Command Execution Layer V1 implementation over accepted governance/quer
   - blocked_runs: `0`
 
 ## Failure Semantics Observed
-- Validation and creator precheck failures were produced under dirty-worktree conditions; refusal behavior is contract-consistent.
+- Validation and creator-precheck failures were produced under dirty-worktree conditions; refusal behavior is contract-consistent.
 - Incompatible install attempt (`platform_test_agent` + `verification_toolkit`) returned formal failure with policy/precondition evidence.
 - Compatible install/remove path (`tiktok_agent_platform` + `verification_toolkit`) succeeded in controlled dry-run mode.
 
-## Consistency Status
-- routing_consistency_verdict: `PASS`
-- checked: `25`
-- matched: `25`
-- mismatches: `0`
+## Final Validation Snapshot
+- consistency_verdict: `PASS` (`25/25`, mismatches `0`)
+- creator mode: `PASS` (`authority_present=true`)
+- repo_control bundle: `READY`
+- repo_control full-check: `PASS`
+- trust/sync/governance/admission chain: `TRUSTED / IN_SYNC / COMPLIANT / ADMISSIBLE`
+- safe_mirror parity: `0/0`
