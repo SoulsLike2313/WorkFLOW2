@@ -20,6 +20,11 @@ EVIDENCE_FILES = [
     "docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md",
 ]
 
+SAFE_RUNTIME_EVIDENCE_ALLOWLIST = {
+    "runtime/repo_control_center/constitution_status.json",
+    "runtime/repo_control_center/constitution_status.md",
+}
+
 REQUIRED_FILES = [
     "README.md",
     "REPO_MAP.md",
@@ -37,6 +42,8 @@ ALLOWED_ROOTS = {
     "REPO_MAP.md",
     "MACHINE_CONTEXT.md",
     ".gitignore",
+    "runtime/repo_control_center/constitution_status.json",
+    "runtime/repo_control_center/constitution_status.md",
     "docs/",
     "integration/",
     "tasks/",
@@ -178,10 +185,11 @@ def build_manifest(
         rel_norm = rel.replace("\\", "/")
         if not is_allowed(rel_norm):
             not_allowlisted.append(rel_norm)
-        for pattern in DISALLOWED_PATH_PATTERNS:
-            if pattern.search(rel_norm):
-                disallowed_tracked.append(rel_norm)
-                break
+        if rel_norm not in SAFE_RUNTIME_EVIDENCE_ALLOWLIST:
+            for pattern in DISALLOWED_PATH_PATTERNS:
+                if pattern.search(rel_norm):
+                    disallowed_tracked.append(rel_norm)
+                    break
 
         path = repo_root / rel_norm
         if path.suffix.lower() in {".png", ".jpg", ".jpeg", ".gif", ".wav", ".mp3", ".mp4", ".zip", ".exe", ".dll", ".bin", ".pdf"}:

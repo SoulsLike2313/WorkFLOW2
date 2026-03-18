@@ -649,6 +649,15 @@ def execute_mode(args: argparse.Namespace) -> int:
         context["request_text"], index, class_map, class_order, args.program_id or "", args.program_class or ""
     )
     context["program_id"] = program_id
+    for key, value in (policy.get("default_context", {}) or {}).items():
+        key_text = str(key).strip()
+        if not key_text:
+            continue
+        current = context.get(key_text)
+        if current is None or (isinstance(current, str) and not current.strip()):
+            context[key_text] = value
+    if not str(context.get("inbox_mode", "")).strip():
+        context["inbox_mode"] = "review_queue"
 
     authority_check, policy_check, preconditions, gate_blockers = gate(
         policy, mode_payload, one_screen, git_before, context, args.resume_from_step

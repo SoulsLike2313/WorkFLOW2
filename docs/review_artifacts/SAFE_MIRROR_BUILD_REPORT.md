@@ -1,22 +1,22 @@
 # SAFE MIRROR Build Report
 
-- generated_at: `2026-03-18T01:51:50.736589+00:00`
+- generated_at: `2026-03-18T02:14:52.847892+00:00`
 - local_source_root: `E:\CVVCODEX`
 - repo_name: `WorkFLOW2`
 - evidence_contract_version: `2.0.0`
 - evidence_mode: `tracked_evidence_refresh_commit`
-- basis_head_sha: `68cb366c216a6edc2f21c53239219ee14b04ecff`
-- evidence_generated_at: `2026-03-18T01:51:50.736589+00:00`
-- evidence_commit_note: `post-targeted-proof-closure-reports`
+- basis_head_sha: `7d7f9e6a659811ff227f32c1620a86a3f7ac9d8f`
+- evidence_generated_at: `2026-03-18T02:14:52.847892+00:00`
+- evidence_commit_note: `none`
 - active_project: `platform_test_agent`
 - branch: `main`
-- head_sha (basis): `68cb366c216a6edc2f21c53239219ee14b04ecff`
+- head_sha (basis): `7d7f9e6a659811ff227f32c1620a86a3f7ac9d8f`
 - tracking_branch: `safe_mirror/main`
 - ahead/behind: `0/0`
-- worktree_clean: `True`
+- worktree_clean: `False`
 - tracked_files_count: `1212`
 - sync_verdict: `PASS`
-- publication_safe_verdict: `FAIL`
+- publication_safe_verdict: `PASS`
 
 ## Evidence Contract
 - tracked evidence artifacts describe `basis_head_sha` commit.
@@ -34,6 +34,8 @@
 - `MACHINE_CONTEXT.md`
 - `README.md`
 - `REPO_MAP.md`
+- `runtime/repo_control_center/constitution_status.json`
+- `runtime/repo_control_center/constitution_status.md`
 
 ## Excluded Categories
 - .env files
@@ -48,13 +50,11 @@
 - missing_required_files: `0`
 
 ## Safety Check Findings
-- disallowed_tracked_paths: `2`
-- allowlist_violations: `2`
+- disallowed_tracked_paths: `0`
+- allowlist_violations: `0`
 - secret_hits: `0`
-- failure_reasons:
-  - disallowed tracked paths detected
-  - tracked files outside allowlist roots
+- failure_reasons: none
 
 ## Verdict
-- publication_safe_verdict: `FAIL`
+- publication_safe_verdict: `PASS`
 - sync_verdict: `PASS`

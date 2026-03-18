@@ -490,14 +490,21 @@ def action_handoff_prepare(run_id: str, args: argparse.Namespace, execution_mode
 
 def action_inbox_review(run_id: str, args: argparse.Namespace, execution_mode: str) -> ActionOutcome:
     cmd = [sys.executable, str(REPO_ROOT / "scripts" / "review_integration_inbox.py")]
-    if args.route and execution_mode == "live_mutation":
+    route_requested = bool(args.route)
+    inbox_mode = str(getattr(args, "inbox_mode", "") or "").strip().lower()
+    if inbox_mode in {"route", "route_apply"}:
+        route_requested = True
+
+    if route_requested and execution_mode == "live_mutation":
         cmd.append("--route")
 
     completed = run_cmd(cmd, allow_fail=True)
     output_rel = write_command_output(run_id, "inbox_review", cmd, completed, safe_parse_json(completed.stdout))
     notes: list[str] = []
-    if args.route and execution_mode != "live_mutation":
+    if route_requested and execution_mode != "live_mutation":
         notes.append("route requested but execution mode is dry_run/read_only; route suppressed")
+    if inbox_mode and inbox_mode not in {"route", "route_apply", "review_queue", "inbox", "status_only"}:
+        notes.append(f"inbox_mode '{inbox_mode}' accepted as metadata hint only")
 
     return ActionOutcome(
         execution_result={"verdict": "SUCCESS" if completed.returncode == 0 else "FAILED", "summary": "integration inbox review completed" if completed.returncode == 0 else f"inbox review failed rc={completed.returncode}", "exit_code": completed.returncode},
@@ -1118,6 +1125,7 @@ def build_parser() -> argparse.ArgumentParser:
     execute.add_argument("--system-slug", default="")
     execute.add_argument("--policy-topic", default="")
     execute.add_argument("--output-dir", default="")
+    execute.add_argument("--inbox-mode", default="")
     execute.add_argument("--route", action="store_true")
     execute.add_argument("--changed-file", action="append", default=[])
     execute.add_argument("--check", action="append", default=[])
