@@ -1,0 +1,58 @@
+{
+  "constitution_phase": "constitution-first",
+  "constitution_version": "WORKFLOW2_CONSTITUTION_V0",
+  "vocabulary_freeze_status": "PASS",
+  "truth_state_schema_status": "PASS",
+  "contradiction_scan_status": "PASS",
+  "registry_doc_drift_status": "PASS",
+  "proof_output_naming_policy_status": "PASS",
+  "hygiene_checklist_status": "PASS",
+  "sync_status": "UNKNOWN",
+  "trust_status": "UNKNOWN",
+  "governance_acceptance": "UNKNOWN",
+  "last_checked_at": "2026-03-18T00:12:35.613527+00:00",
+  "overall_verdict": "PARTIAL",
+  "blockers": [],
+  "warnings": [
+    "sync_status is UNKNOWN",
+    "trust_status is UNKNOWN",
+    "governance_acceptance is UNKNOWN"
+  ],
+  "notes": [
+    "repo_control_status is stale vs current HEAD (reported=95c8a84c353f, current=260f31baf91a)"
+  ],
+  "sources": [
+    "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
+    "docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md",
+    "docs/governance/TRUTH_STATE_MODEL_V1.md",
+    "workspace_config/schemas/truth_state_schema.json",
+    "runtime/repo_control_center/validation/canonical_contradiction_scan.json",
+    "runtime/repo_control_center/validation/registry_doc_drift_report.json",
+    "runtime/repo_control_center/repo_control_status.json"
+  ],
+  "schema_version": "constitution_status_surface.v1.0.0",
+  "command_results": [
+    {
+      "cmd": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "scripts/validation/scan_canonical_contradictions.py",
+        "--output",
+        "runtime\\repo_control_center\\validation\\canonical_contradiction_scan.json"
+      ],
+      "exit_code": 0,
+      "stdout_tail": "{\n  \"schema_version\": \"canonical_contradiction_scan.v1.0.0\",\n  \"generated_at\": \"2026-03-18T00:12:35.456896+00:00\",\n  \"files_scanned\": [\n    \"docs/CURRENT_PLATFORM_STATE.md\",\n    \"docs/NEXT_CANONICAL_STEP.md\",\n    \"README.md\",\n    \"REPO_MAP.md\",\n    \"MACHINE_CONTEXT.md\",\n    \"docs/INSTRUCTION_INDEX.md\"\n  ],\n  \"claims\": {\n    \"phase_claims_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"constitution-first\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"constitution-first\",\n      \"README.md\": \"constitution-first\",\n      \"REPO_MAP.md\": \"constitution-first\",\n      \"MACHINE_CONTEXT.md\": \"constitution-first\",\n      \"docs/INSTRUCTION_INDEX.md\": \"constitution-first\"\n    },\n    \"next_step_claims_by_file\": {\n      \"docs/NEXT_CANONICAL_STEP.md\": \"next-step-constitution-first-phase-v0\"\n    },\n    \"mission_layer_status_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"accepted\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"accepted\",\n      \"REPO_MAP.md\": \"accepted\",\n      \"MACHINE_CONTEXT.md\": \"accepted\",\n      \"docs/INSTRUCTION_INDEX.md\": \"accepted\"\n    },\n    \"stale_phrase_hits\": {}\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "cmd": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "scripts/validation/check_registry_doc_drift.py",
+        "--output",
+        "runtime\\repo_control_center\\validation\\registry_doc_drift_report.json"
+      ],
+      "exit_code": 0,
+      "stdout_tail": "cs/governance/OPERATOR_MISSION_REGISTRY.md\",\n        \"docs/governance/OPERATOR_MISSION_CATALOG_WAVE_3A.md\",\n        \"docs/governance/OPERATOR_MISSION_CATALOG_WAVE_3B.md\",\n        \"docs/governance/OPERATOR_MISSION_CATALOG_WAVE_3C.md\",\n        \"docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md\",\n        \"docs/review_artifacts/OPERATOR_MISSION_LAYER_FINAL_SUMMARY.md\",\n        \"docs/NEXT_CANONICAL_STEP.md\"\n      ],\n      \"found_examples_by_doc\": {\n        \"README.md\": [\n          \"mission.wave3a.status_consolidation.complete.v1\"\n        ],\n        \"docs/governance/OPERATOR_MISSION_REGISTRY.md\": [\n          \"mission.wave3a.certification.baseline.v1\",\n          \"mission.wave3a.readiness.next_stage.v1\",\n          \"mission.wave3a.review_prep.package.v1\",\n          \"mission.wave3a.status_consolidation.complete.v1\",\n          \"mission.wave3b.evidence_consolidation.chain.v1\",\n          \"mission.wave3b.external_review.prep.v1\",\n          \"mission.wave3b.handoff_delivery.sequence.v1\",\n          \"mission.wave3b.readiness_transition.next_stage.v1\",\n          \"mission.wave3c.blocked_mutation.creator_gate.v1\",\n          \"mission.wave3c.blocked_mutation.missing_preconditions.v1\",\n          \"mission.wave3c.blocked_mutation.policy.v1\",\n          \"mission.wave3c.controlled_upgrade.allowed.v1\",\n          \"mission.wave3c.controlled_upgrade.policy_blocked.v1\",\n          \"mission.wave3c.creator_only_certification.v1\",\n          \"mission.wave3c.guarded_baseline_transition.v1\"\n        ],\n        \"docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md\": [\n          \"mission.wave3a.status_consolidation.complete.v1\"\n        ]\n      },\n      \"missing_registry_links\": []\n    }\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  },\n  \"coverage_gaps\": [\n    \"No deep semantic markdown parsing beyond direct token checks.\",\n    \"Does not verify every mission-related doc in repo; focuses on high-value canonical surfaces.\"\n  ]\n}\n",
+      "stderr_tail": ""
+    }
+  ]
+}
