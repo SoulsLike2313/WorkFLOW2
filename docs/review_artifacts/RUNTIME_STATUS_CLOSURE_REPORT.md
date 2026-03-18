@@ -68,22 +68,36 @@ No `NEEDS_OWNER_POLICY_DECISION` blocker identified for these three files.
   - scope: `constitution_status.json|md` + bounded closure reports.
 - [OBSERVED] Post-commit `repo_control_center full-check` exposed a hidden mechanical dependency:
   - mirror evidence contract (`tracked_evidence_refresh_commit`) became stale because non-evidence tracked files changed after prior evidence basis commit.
-- [INFERRED] Required narrow follow-up: separate mirror-evidence refresh commit after non-evidence runtime/report commit.
+- [OBSERVED] Applied dual-step closure discipline explicitly:
+  1. non-evidence closure checkpoint commit:
+     - `b591e09f0c8f6f22d7e74d191a4aafec5085dcdd`
+  2. dedicated mirror-evidence refresh commit:
+     - `0f0c1b66836670fc7fa882c4998bc796e318805a`
+- [OBSERVED] Pushed both commits to `safe_mirror/main`.
 
 ## 5) Post-Action Checks
 
+- [OBSERVED] `git status --short --branch` -> clean (`## main...safe_mirror/main`).
+- [OBSERVED] `git rev-parse HEAD` == `git rev-parse safe_mirror/main` (`0f0c1b66836670fc7fa882c4998bc796e318805a`).
+- [OBSERVED] `git rev-list --left-right --count HEAD...safe_mirror/main` -> `0 0`.
 - [OBSERVED] `python scripts/check_repo_sync.py --remote safe_mirror --branch main` -> `PASS`.
-- [OBSERVED] `python scripts/repo_control_center.py full-check` -> `FAIL` at this checkpoint:
-  - `mirror=WARNING`
-  - `trust=WARNING`
-  - `governance_acceptance=FAIL`
-  - blocker reason: stale tracked mirror evidence contract after non-evidence commit.
-- [OBSERVED] `python scripts/validation/run_constitution_checks.py` -> `FAIL` (downstream of governance acceptance fail).
+- [OBSERVED] `python scripts/repo_control_center.py full-check` -> `PASS`:
+  - `mirror=PASS`
+  - `sync=IN_SYNC`
+  - `trust=TRUSTED`
+  - `governance_acceptance=PASS`
+  - `admission=ADMISSIBLE`
+- [OBSERVED] `python scripts/validation/run_constitution_checks.py` (verification-mode with external output paths) -> `PASS`:
+  - `overall_verdict=PASS`
+  - `sync_status=IN_SYNC`
+  - `trust_status=TRUSTED`
+  - `governance_acceptance=PASS`
+- [OBSERVED] Post-verification worktree remains clean.
 
 ## 6) Final Determination
 
-- [OBSERVED] Runtime-status policy is clear (tracked constitutional runtime surfaces), but closure requires dual-step discipline:
-  1. non-evidence runtime/report commit;
-  2. dedicated mirror-evidence refresh commit.
-- [INFERRED] Until step (2) is executed, state is:
-  - `GREEN_CHECKPOINT_ONLY__CLEAN_POLICY_PENDING`.
+- [OBSERVED] Runtime-status policy is clear and closed with dual-step discipline:
+  1. non-evidence runtime/report closure;
+  2. mirror-evidence refresh closure.
+- [OBSERVED] Final state:
+  - `GREEN_AND_CLEAN_RETAINED`.
