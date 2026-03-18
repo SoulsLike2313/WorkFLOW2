@@ -1,20 +1,20 @@
 # SAFE MIRROR Build Report
 
-- generated_at: `2026-03-18T02:14:52.847892+00:00`
+- generated_at: `2026-03-18T10:10:14.593481+00:00`
 - local_source_root: `E:\CVVCODEX`
 - repo_name: `WorkFLOW2`
 - evidence_contract_version: `2.0.0`
 - evidence_mode: `tracked_evidence_refresh_commit`
-- basis_head_sha: `7d7f9e6a659811ff227f32c1620a86a3f7ac9d8f`
-- evidence_generated_at: `2026-03-18T02:14:52.847892+00:00`
-- evidence_commit_note: `none`
+- basis_head_sha: `690327e1ad88b2891ad1be1f007fa14bdfba29d8`
+- evidence_generated_at: `2026-03-18T10:10:14.593481+00:00`
+- evidence_commit_note: `pilot-preflight-freshness-refresh`
 - active_project: `platform_test_agent`
 - branch: `main`
-- head_sha (basis): `7d7f9e6a659811ff227f32c1620a86a3f7ac9d8f`
+- head_sha (basis): `690327e1ad88b2891ad1be1f007fa14bdfba29d8`
 - tracking_branch: `safe_mirror/main`
 - ahead/behind: `0/0`
-- worktree_clean: `False`
-- tracked_files_count: `1212`
+- worktree_clean: `True`
+- tracked_files_count: `1222`
 - sync_verdict: `PASS`
 - publication_safe_verdict: `PASS`
 
