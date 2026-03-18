@@ -7,31 +7,170 @@
   "registry_doc_drift_status": "PASS",
   "proof_output_naming_policy_status": "PASS",
   "hygiene_checklist_status": "PASS",
-  "sync_status": "UNKNOWN",
-  "trust_status": "UNKNOWN",
-  "governance_acceptance": "UNKNOWN",
-  "last_checked_at": "2026-03-18T00:12:35.613527+00:00",
-  "overall_verdict": "PARTIAL",
-  "blockers": [],
-  "warnings": [
-    "sync_status is UNKNOWN",
-    "trust_status is UNKNOWN",
-    "governance_acceptance is UNKNOWN"
-  ],
+  "repo_control_status_freshness": "FRESH",
+  "sync_status": "DRIFTED",
+  "trust_status": "NOT_TRUSTED",
+  "governance_acceptance": "FAIL",
+  "last_checked_at": "2026-03-18T00:24:27.232394+00:00",
   "notes": [
-    "repo_control_status is stale vs current HEAD (reported=95c8a84c353f, current=260f31baf91a)"
+    "command returned non-zero (1): C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe scripts/repo_control_center.py full-check"
   ],
+  "check_assessment": [
+    {
+      "check": "constitution_phase",
+      "status": "constitution-first",
+      "severity": "INFO",
+      "rationale": "phase claim aligned with constitution-first routing"
+    },
+    {
+      "check": "vocabulary_freeze_status",
+      "status": "PASS",
+      "severity": "INFO",
+      "rationale": "canonical vocabulary surface exists"
+    },
+    {
+      "check": "truth_state_schema_status",
+      "status": "PASS",
+      "severity": "INFO",
+      "rationale": "truth-state schema is present and valid"
+    },
+    {
+      "check": "contradiction_scan_status",
+      "status": "PASS",
+      "severity": "INFO",
+      "rationale": "no contradiction class currently failing"
+    },
+    {
+      "check": "registry_doc_drift_status",
+      "status": "PASS",
+      "severity": "INFO",
+      "rationale": "registry/doc drift guard is green"
+    },
+    {
+      "check": "proof_output_naming_policy_status",
+      "status": "PASS",
+      "severity": "INFO",
+      "rationale": "proof output naming policy is available"
+    },
+    {
+      "check": "hygiene_checklist_status",
+      "status": "PASS",
+      "severity": "INFO",
+      "rationale": "hygiene checklist is available"
+    },
+    {
+      "check": "repo_control_status_freshness",
+      "status": "FRESH",
+      "severity": "INFO",
+      "rationale": "repo control snapshot aligned with current HEAD"
+    },
+    {
+      "check": "sync_status",
+      "status": "DRIFTED",
+      "severity": "HARD_FAIL",
+      "rationale": "sync state blocks completion and certification"
+    },
+    {
+      "check": "trust_status",
+      "status": "NOT_TRUSTED",
+      "severity": "HARD_FAIL",
+      "rationale": "trust chain is broken"
+    },
+    {
+      "check": "governance_acceptance",
+      "status": "FAIL",
+      "severity": "HARD_FAIL",
+      "rationale": "governance acceptance gate is closed"
+    }
+  ],
+  "unknown_critical_dependencies": [],
+  "gate_actions": {
+    "completion_claim": {
+      "action": "BLOCK",
+      "reasons": [
+        "governance_acceptance(HARD_FAIL)",
+        "sync_status(HARD_FAIL)",
+        "trust_status(HARD_FAIL)"
+      ]
+    },
+    "certification_claim": {
+      "action": "BLOCK",
+      "reasons": [
+        "governance_acceptance(HARD_FAIL)",
+        "sync_status(HARD_FAIL)",
+        "trust_status(HARD_FAIL)"
+      ]
+    },
+    "mirror_refresh": {
+      "action": "BLOCK",
+      "reasons": [
+        "governance_acceptance(HARD_FAIL)",
+        "sync_status(HARD_FAIL)",
+        "trust_status(HARD_FAIL)"
+      ]
+    },
+    "phase_transition": {
+      "action": "BLOCK",
+      "reasons": [
+        "governance_acceptance(HARD_FAIL)",
+        "sync_status(HARD_FAIL)",
+        "trust_status(HARD_FAIL)"
+      ]
+    }
+  },
+  "severity_counts": {
+    "INFO": 8,
+    "WARNING": 0,
+    "SOFT_FAIL": 0,
+    "HARD_FAIL": 3
+  },
+  "overall_verdict": "FAIL",
+  "blockers": [
+    "sync_status: DRIFTED",
+    "trust_status: NOT_TRUSTED",
+    "governance_acceptance: FAIL"
+  ],
+  "warnings": [],
+  "severity_model_version": "constitution_gate_severity_model.v1.0.0",
+  "overall_verdict_logic": {
+    "PASS": "no hard-fail, no soft-fail, no warning, no unknown-critical dependency",
+    "PARTIAL": "no hard-fail; at least one warning or soft-fail",
+    "FAIL": "one or more hard-fail checks",
+    "UNKNOWN": "unknown-critical dependency blocks reliable decision"
+  },
+  "schema_version": "constitution_status_surface.v1.1.0",
   "sources": [
     "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
     "docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md",
     "docs/governance/TRUTH_STATE_MODEL_V1.md",
     "workspace_config/schemas/truth_state_schema.json",
+    "docs/governance/PROOF_OUTPUT_NAMING_POLICY_V1.md",
+    "docs/governance/CONSTITUTION_PHASE_HYGIENE_CHECKLIST_V1.md",
     "runtime/repo_control_center/validation/canonical_contradiction_scan.json",
     "runtime/repo_control_center/validation/registry_doc_drift_report.json",
     "runtime/repo_control_center/repo_control_status.json"
   ],
-  "schema_version": "constitution_status_surface.v1.0.0",
   "command_results": [
+    {
+      "cmd": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "scripts/repo_control_center.py",
+        "bundle"
+      ],
+      "exit_code": 0,
+      "stdout_tail": "{\n  \"run_id\": \"rcc-20260318T002423Z\",\n  \"mode\": \"bundle\",\n  \"repo\": {\n    \"branch\": \"main\",\n    \"head\": \"5ca6b443f68abe188752f2d68343b26e8a886891\",\n    \"safe_mirror_main\": \"5ca6b443f68abe188752f2d68343b26e8a886891\",\n    \"ahead\": 0,\n    \"behind\": 0,\n    \"worktree_clean\": false,\n    \"status_short\": \"## main...safe_mirror/main\\n M docs/governance/CONSTITUTIONAL_ADMISSION_FLOW_V1.md\\n M scripts/validation/run_constitution_checks.py\\n M workspace_config/codex_manifest.json\\n M workspace_config/workspace_manifest.json\\n?? docs/governance/CONSTITUTION_GATE_SEVERITY_MODEL_V1.md\\n?? docs/governance/CONSTITUTION_OPERATOR_RESPONSE_GUIDE_V1.md\\n?? docs/review_artifacts/CONSTITUTION_CHECK_CALIBRATION_REPORT.md\\n?? docs/review_artifacts/CONSTITUTION_V1_GATE_CALIBRATION_REPORT.md\",\n    \"repo_health\": \"FAIL\",\n    \"workspace_health\": \"FAIL\"\n  },\n  \"bundle\": {\n    \"verdict\": \"READY\",\n    \"basis\": \"targeted bundle exporter availability and mode surface\",\n    \"evidence\": {\n      \"help_exit_code\": 0\n    },\n    \"blockers\": [],\n    \"next_step\": \"Bundle export path is ready.\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "cmd": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "scripts/repo_control_center.py",
+        "full-check"
+      ],
+      "exit_code": 1,
+      "stdout_tail": "didate_cycles_complete\": false,\n          \"ready_cycles_complete\": false,\n          \"promote_cycles_complete\": false,\n          \"false_pass_history_entries\": 0,\n          \"false_pass_unresolved\": false,\n          \"unresolved_contradiction_history_hits\": 0,\n          \"governance_hardening_evidence\": true,\n          \"repeated_failure_reduction_evidence\": false,\n          \"formal_promotion_thresholds_confirmed\": false,\n          \"promotion_requirements_missing\": [\n            \"required observation window incomplete: 0/5 clean cycles\",\n            \"blocking signals present\",\n            \"repeated failure reduction evidence missing\",\n            \"safe mirror evidence stale\"\n          ],\n          \"explicit_promote_approval\": false\n        },\n        \"blockers\": [\n          \"broken_sync_discipline\",\n          \"hidden_blocker_or_failed_trust\",\n          \"required observation window incomplete: 0/5 clean cycles\",\n          \"blocking signals present\",\n          \"repeated failure reduction evidence missing\",\n          \"safe mirror evidence stale\"\n        ],\n        \"next_step\": \"Clear blocking signals.\",\n        \"evolution_block\": {\n          \"current_level\": \"V1_STABLE\",\n          \"candidate_level\": \"V1_STABLE\",\n          \"readiness\": \"BLOCKED\",\n          \"signals_gained\": [\n            \"governance_compliant\",\n            \"brain_stack_complete\",\n            \"evolution_layer_present\",\n            \"critical_contradictions_zero\",\n            \"bundle_ready\"\n          ],\n          \"blocking_signals\": [\n            \"broken_sync_discipline\",\n            \"hidden_blocker_or_failed_trust\"\n          ],\n          \"policy_changes_proposed\": [\n            \"Refresh SAFE_MIRROR_MANIFEST and SAFE_MIRROR_BUILD_REPORT to current HEAD.\",\n            \"Record measurable repeated-failure reduction evidence in POLICY_EVOLUTION_LOG.\",\n            \"Accumulate 5 consecutive clean full-check cycles with evidence linkage.\"\n          ],\n          \"recommendation\": \"PREPARE\"\n        }\n      }\n    }\n  }\n}\n",
+      "stderr_tail": ""
+    },
     {
       "cmd": [
         "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
@@ -40,7 +179,7 @@
         "runtime\\repo_control_center\\validation\\canonical_contradiction_scan.json"
       ],
       "exit_code": 0,
-      "stdout_tail": "{\n  \"schema_version\": \"canonical_contradiction_scan.v1.0.0\",\n  \"generated_at\": \"2026-03-18T00:12:35.456896+00:00\",\n  \"files_scanned\": [\n    \"docs/CURRENT_PLATFORM_STATE.md\",\n    \"docs/NEXT_CANONICAL_STEP.md\",\n    \"README.md\",\n    \"REPO_MAP.md\",\n    \"MACHINE_CONTEXT.md\",\n    \"docs/INSTRUCTION_INDEX.md\"\n  ],\n  \"claims\": {\n    \"phase_claims_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"constitution-first\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"constitution-first\",\n      \"README.md\": \"constitution-first\",\n      \"REPO_MAP.md\": \"constitution-first\",\n      \"MACHINE_CONTEXT.md\": \"constitution-first\",\n      \"docs/INSTRUCTION_INDEX.md\": \"constitution-first\"\n    },\n    \"next_step_claims_by_file\": {\n      \"docs/NEXT_CANONICAL_STEP.md\": \"next-step-constitution-first-phase-v0\"\n    },\n    \"mission_layer_status_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"accepted\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"accepted\",\n      \"REPO_MAP.md\": \"accepted\",\n      \"MACHINE_CONTEXT.md\": \"accepted\",\n      \"docs/INSTRUCTION_INDEX.md\": \"accepted\"\n    },\n    \"stale_phrase_hits\": {}\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  }\n}\n",
+      "stdout_tail": "{\n  \"schema_version\": \"canonical_contradiction_scan.v1.0.0\",\n  \"generated_at\": \"2026-03-18T00:24:27.066881+00:00\",\n  \"files_scanned\": [\n    \"docs/CURRENT_PLATFORM_STATE.md\",\n    \"docs/NEXT_CANONICAL_STEP.md\",\n    \"README.md\",\n    \"REPO_MAP.md\",\n    \"MACHINE_CONTEXT.md\",\n    \"docs/INSTRUCTION_INDEX.md\"\n  ],\n  \"claims\": {\n    \"phase_claims_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"constitution-first\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"constitution-first\",\n      \"README.md\": \"constitution-first\",\n      \"REPO_MAP.md\": \"constitution-first\",\n      \"MACHINE_CONTEXT.md\": \"constitution-first\",\n      \"docs/INSTRUCTION_INDEX.md\": \"constitution-first\"\n    },\n    \"next_step_claims_by_file\": {\n      \"docs/NEXT_CANONICAL_STEP.md\": \"next-step-constitution-first-phase-v0\"\n    },\n    \"mission_layer_status_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"accepted\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"accepted\",\n      \"REPO_MAP.md\": \"accepted\",\n      \"MACHINE_CONTEXT.md\": \"accepted\",\n      \"docs/INSTRUCTION_INDEX.md\": \"accepted\"\n    },\n    \"stale_phrase_hits\": {}\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  }\n}\n",
       "stderr_tail": ""
     },
     {

@@ -7,6 +7,8 @@ Lightweight admission/completion integration path for constitutional checks with
 - `python scripts/validation/scan_canonical_contradictions.py`
 - `python scripts/validation/check_registry_doc_drift.py`
 - `python scripts/validation/run_constitution_checks.py`
+- severity interpretation:
+  - `docs/governance/CONSTITUTION_GATE_SEVERITY_MODEL_V1.md`
 
 ## Recommended Invocation Order
 1. Refresh core operational state:
@@ -42,9 +44,17 @@ Run constitutional checks:
   - `PASS`: no registry-doc drift blocker.
 
 - `run_constitution_checks.py` overall:
-  - `BLOCKED`: completion/certification blocked.
-  - `PARTIAL`: admission allowed only with explicit debt declaration.
+  - `FAIL`: hard blocking state for completion/certification/phase transition.
+  - `UNKNOWN`: insufficient reliable inputs; treat as blocked for completion/certification until refreshed.
+  - `PARTIAL`: no hard fail, but review/refresh required before protected claims.
   - `PASS`: admission-grade constitutional health satisfied.
+
+## Freshness Discipline
+- `repo_control_status` stale vs current `HEAD` is treated as `SOFT_FAIL` in constitutional aggregation.
+- operator must refresh:
+  - `python scripts/repo_control_center.py bundle`
+  - `python scripts/repo_control_center.py full-check`
+  - then rerun `python scripts/validation/run_constitution_checks.py`.
 
 ## Artifacts Produced
 - `runtime/repo_control_center/validation/canonical_contradiction_scan.json`

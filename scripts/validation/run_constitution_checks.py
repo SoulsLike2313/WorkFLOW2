@@ -39,6 +39,47 @@ REQUIRED_TRUTH_STATES = {
 
 PHASE_PATTERN = re.compile(r"current canonical phase:\s*`?([^`\n]+)`?", re.IGNORECASE)
 
+SEVERITY_ORDER = {
+    "INFO": 0,
+    "WARNING": 1,
+    "SOFT_FAIL": 2,
+    "HARD_FAIL": 3,
+}
+
+GATE_ACTION_ORDER = {
+    "ALLOW": 0,
+    "ALLOW_WITH_NOTE": 1,
+    "REVIEW_REQUIRED": 2,
+    "BLOCK": 3,
+}
+
+SEVERITY_GATE_EFFECT = {
+    "INFO": {
+        "completion_claim": "ALLOW",
+        "certification_claim": "ALLOW",
+        "mirror_refresh": "ALLOW",
+        "phase_transition": "ALLOW",
+    },
+    "WARNING": {
+        "completion_claim": "ALLOW_WITH_NOTE",
+        "certification_claim": "REVIEW_REQUIRED",
+        "mirror_refresh": "ALLOW_WITH_NOTE",
+        "phase_transition": "REVIEW_REQUIRED",
+    },
+    "SOFT_FAIL": {
+        "completion_claim": "BLOCK",
+        "certification_claim": "BLOCK",
+        "mirror_refresh": "REVIEW_REQUIRED",
+        "phase_transition": "BLOCK",
+    },
+    "HARD_FAIL": {
+        "completion_claim": "BLOCK",
+        "certification_claim": "BLOCK",
+        "mirror_refresh": "BLOCK",
+        "phase_transition": "BLOCK",
+    },
+}
+
 
 def now_utc() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -67,7 +108,10 @@ def git_head() -> str | None:
     result = run_cmd(["git", "rev-parse", "HEAD"])
     if result["exit_code"] != 0:
         return None
-    return str(result["stdout_tail"]).strip().splitlines()[-1].strip() if str(result["stdout_tail"]).strip() else None
+    out = str(result["stdout_tail"]).strip()
+    if not out:
+        return None
+    return out.splitlines()[-1].strip()
 
 
 def detect_phase() -> str:
@@ -120,14 +164,14 @@ def load_scan_verdict(path: Path, label: str) -> tuple[str, list[str]]:
     return verdict, []
 
 
-def load_repo_control() -> tuple[str, str, str, list[str]]:
-    warnings: list[str] = []
+def load_repo_control() -> tuple[str, str, str, str, list[str]]:
+    notes: list[str] = []
     if not RCC_STATUS.exists():
-        return "UNKNOWN", "UNKNOWN", "UNKNOWN", ["repo_control_status.json missing"]
+        return "UNKNOWN", "UNKNOWN", "UNKNOWN", "MISSING", ["repo_control_status.json missing"]
     try:
         payload = load_json(RCC_STATUS)
     except Exception as exc:  # pragma: no cover - defensive
-        return "UNKNOWN", "UNKNOWN", "UNKNOWN", [f"repo_control_status parse failed: {exc}"]
+        return "UNKNOWN", "UNKNOWN", "UNKNOWN", "PARSE_ERROR", [f"repo_control_status parse failed: {exc}"]
 
     verdicts = payload.get("verdicts", {})
     sync = str(verdicts.get("sync", {}).get("verdict", "UNKNOWN")).upper()
@@ -137,64 +181,183 @@ def load_repo_control() -> tuple[str, str, str, list[str]]:
     current_head = git_head()
 
     if reported_head and current_head and reported_head != current_head:
-        warnings.append(
+        notes.append(
             "repo_control_status is stale vs current HEAD "
             f"(reported={reported_head[:12]}, current={current_head[:12]})"
         )
-        return "UNKNOWN", "UNKNOWN", "UNKNOWN", warnings
+        return "UNKNOWN", "UNKNOWN", "UNKNOWN", "STALE", notes
 
+    freshness = "FRESH"
     if sync == "UNKNOWN" or trust == "UNKNOWN" or governance_acceptance == "UNKNOWN":
-        warnings.append("repo_control_status lacks one or more expected verdict fields")
-    return sync, trust, governance_acceptance, warnings
+        notes.append("repo_control_status lacks one or more expected verdict fields")
+        freshness = "UNKNOWN_FIELDS"
+    return sync, trust, governance_acceptance, freshness, notes
 
 
-def compute_overall(status: dict[str, str]) -> tuple[str, list[str], list[str]]:
+def classify_status_payload(status: dict[str, str], notes: list[str]) -> tuple[list[dict[str, str]], list[str]]:
+    unknown_critical: list[str] = []
+    checks: list[dict[str, str]] = []
+
+    def add(check_name: str, check_status: str, severity: str, rationale: str) -> None:
+        checks.append(
+            {
+                "check": check_name,
+                "status": check_status,
+                "severity": severity,
+                "rationale": rationale,
+            }
+        )
+
+    phase = status["constitution_phase"]
+    if phase == "constitution-first":
+        add("constitution_phase", phase, "INFO", "phase claim aligned with constitution-first routing")
+    elif phase == "unknown":
+        add("constitution_phase", phase, "SOFT_FAIL", "current phase claim is missing")
+    else:
+        add("constitution_phase", phase, "SOFT_FAIL", "phase claim diverges from constitution-first baseline")
+
+    vocab = status["vocabulary_freeze_status"]
+    if vocab == "PASS":
+        add("vocabulary_freeze_status", vocab, "INFO", "canonical vocabulary surface exists")
+    else:
+        add("vocabulary_freeze_status", vocab, "HARD_FAIL", "canonical vocabulary surface missing or invalid")
+
+    truth = status["truth_state_schema_status"]
+    if truth == "PASS":
+        add("truth_state_schema_status", truth, "INFO", "truth-state schema is present and valid")
+    elif truth == "WARNING":
+        add("truth_state_schema_status", truth, "WARNING", "truth-state schema has non-blocking deviations")
+    else:
+        add("truth_state_schema_status", truth, "HARD_FAIL", "truth-state schema is not reliable")
+
+    contradiction = status["contradiction_scan_status"]
+    if contradiction == "PASS":
+        add("contradiction_scan_status", contradiction, "INFO", "no contradiction class currently failing")
+    elif contradiction == "WARNING":
+        add("contradiction_scan_status", contradiction, "SOFT_FAIL", "contradiction warning requires review before completion")
+    elif contradiction == "FAIL":
+        add("contradiction_scan_status", contradiction, "HARD_FAIL", "critical contradiction state detected")
+    else:
+        add("contradiction_scan_status", contradiction, "SOFT_FAIL", "contradiction scan result unavailable")
+        unknown_critical.append("contradiction_scan_status")
+
+    drift = status["registry_doc_drift_status"]
+    if drift == "PASS":
+        add("registry_doc_drift_status", drift, "INFO", "registry/doc drift guard is green")
+    elif drift == "WARNING":
+        add("registry_doc_drift_status", drift, "WARNING", "non-critical registry/doc drift detected")
+    elif drift == "FAIL":
+        add("registry_doc_drift_status", drift, "SOFT_FAIL", "registry/doc drift must be resolved before completion")
+    else:
+        add("registry_doc_drift_status", drift, "SOFT_FAIL", "registry/doc drift status unavailable")
+        unknown_critical.append("registry_doc_drift_status")
+
+    proof = status["proof_output_naming_policy_status"]
+    if proof == "PASS":
+        add("proof_output_naming_policy_status", proof, "INFO", "proof output naming policy is available")
+    else:
+        add("proof_output_naming_policy_status", proof, "WARNING", "proof output naming policy missing")
+
+    hygiene = status["hygiene_checklist_status"]
+    if hygiene == "PASS":
+        add("hygiene_checklist_status", hygiene, "INFO", "hygiene checklist is available")
+    else:
+        add("hygiene_checklist_status", hygiene, "SOFT_FAIL", "hygiene checklist is missing")
+
+    freshness = status["repo_control_status_freshness"]
+    if freshness == "FRESH":
+        add("repo_control_status_freshness", freshness, "INFO", "repo control snapshot aligned with current HEAD")
+    elif freshness == "STALE":
+        add("repo_control_status_freshness", freshness, "SOFT_FAIL", "refresh repo control status before admission claim")
+    elif freshness in {"MISSING", "PARSE_ERROR"}:
+        add("repo_control_status_freshness", freshness, "SOFT_FAIL", "repo control snapshot is unavailable")
+        unknown_critical.append("repo_control_status_freshness")
+    else:
+        add("repo_control_status_freshness", freshness, "SOFT_FAIL", "repo control snapshot is incomplete")
+        unknown_critical.append("repo_control_status_freshness")
+
+    sync = status["sync_status"]
+    if sync == "IN_SYNC":
+        add("sync_status", sync, "INFO", "sync parity is clean")
+    elif sync in {"DRIFTED", "BLOCKED"}:
+        add("sync_status", sync, "HARD_FAIL", "sync state blocks completion and certification")
+    elif sync == "UNKNOWN":
+        add("sync_status", sync, "SOFT_FAIL", "sync status is unknown")
+    else:
+        add("sync_status", sync, "SOFT_FAIL", "sync status is non-canonical")
+
+    trust = status["trust_status"]
+    if trust == "TRUSTED":
+        add("trust_status", trust, "INFO", "trust chain is green")
+    elif trust == "NOT_TRUSTED":
+        add("trust_status", trust, "HARD_FAIL", "trust chain is broken")
+    elif trust in {"WARNING", "UNKNOWN"}:
+        add("trust_status", trust, "SOFT_FAIL", "trust state requires review/refresh")
+    else:
+        add("trust_status", trust, "SOFT_FAIL", "trust status is non-canonical")
+
+    acceptance = status["governance_acceptance"]
+    if acceptance == "PASS":
+        add("governance_acceptance", acceptance, "INFO", "governance acceptance is open")
+    elif acceptance == "FAIL":
+        add("governance_acceptance", acceptance, "HARD_FAIL", "governance acceptance gate is closed")
+    elif acceptance in {"PARTIAL", "UNKNOWN"}:
+        add("governance_acceptance", acceptance, "SOFT_FAIL", "governance acceptance requires refresh/review")
+    else:
+        add("governance_acceptance", acceptance, "SOFT_FAIL", "governance acceptance is non-canonical")
+
+    for note in notes:
+        if "parse failed" in note.lower():
+            unknown_critical.append("repo_control_status_freshness")
+
+    unknown_critical = sorted(set(unknown_critical))
+    return checks, unknown_critical
+
+
+def aggregate_gate_actions(checks: list[dict[str, str]]) -> dict[str, dict[str, Any]]:
+    gates: dict[str, dict[str, Any]] = {}
+    gate_names = ["completion_claim", "certification_claim", "mirror_refresh", "phase_transition"]
+
+    for gate in gate_names:
+        worst_action = "ALLOW"
+        reasons: list[str] = []
+        for item in checks:
+            severity = item["severity"]
+            action = SEVERITY_GATE_EFFECT[severity][gate]
+            if GATE_ACTION_ORDER[action] > GATE_ACTION_ORDER[worst_action]:
+                worst_action = action
+                reasons = [f"{item['check']}({severity})"]
+            elif GATE_ACTION_ORDER[action] == GATE_ACTION_ORDER[worst_action] and action != "ALLOW":
+                reasons.append(f"{item['check']}({severity})")
+
+        gates[gate] = {
+            "action": worst_action,
+            "reasons": sorted(set(reasons)),
+        }
+    return gates
+
+
+def summarize_verdict(checks: list[dict[str, str]], unknown_critical: list[str]) -> tuple[str, list[str], list[str], dict[str, int]]:
+    severity_counts = {"INFO": 0, "WARNING": 0, "SOFT_FAIL": 0, "HARD_FAIL": 0}
     blockers: list[str] = []
     warnings: list[str] = []
 
-    if status["truth_state_schema_status"] in {"FAIL", "MISSING"}:
-        blockers.append("truth_state_schema_status is not PASS")
-    elif status["truth_state_schema_status"] == "WARNING":
-        warnings.append("truth_state_schema_status is WARNING")
+    for item in checks:
+        sev = item["severity"]
+        severity_counts[sev] += 1
+        if sev == "HARD_FAIL":
+            blockers.append(f"{item['check']}: {item['status']}")
+        elif sev in {"SOFT_FAIL", "WARNING"}:
+            warnings.append(f"{item['check']}: {item['status']}")
 
-    if status["vocabulary_freeze_status"] != "PASS":
-        blockers.append("vocabulary_freeze_status is not PASS")
-
-    if status["contradiction_scan_status"] == "FAIL":
-        blockers.append("contradiction_scan_status is FAIL")
-    elif status["contradiction_scan_status"] in {"WARNING", "UNKNOWN"}:
-        warnings.append(f"contradiction_scan_status is {status['contradiction_scan_status']}")
-
-    if status["registry_doc_drift_status"] == "FAIL":
-        blockers.append("registry_doc_drift_status is FAIL")
-    elif status["registry_doc_drift_status"] in {"WARNING", "UNKNOWN"}:
-        warnings.append(f"registry_doc_drift_status is {status['registry_doc_drift_status']}")
-
-    if status["proof_output_naming_policy_status"] != "PASS":
-        warnings.append("proof_output_naming_policy_status is not PASS")
-    if status["hygiene_checklist_status"] != "PASS":
-        warnings.append("hygiene_checklist_status is not PASS")
-
-    if status["sync_status"] in {"DRIFTED", "BLOCKED"}:
-        blockers.append(f"sync_status is {status['sync_status']}")
-    elif status["sync_status"] == "UNKNOWN":
-        warnings.append("sync_status is UNKNOWN")
-
-    if status["trust_status"] == "NOT_TRUSTED":
-        blockers.append("trust_status is NOT_TRUSTED")
-    elif status["trust_status"] in {"WARNING", "UNKNOWN"}:
-        warnings.append(f"trust_status is {status['trust_status']}")
-
-    if status["governance_acceptance"] == "FAIL":
-        blockers.append("governance_acceptance is FAIL")
-    elif status["governance_acceptance"] in {"PARTIAL", "UNKNOWN"}:
-        warnings.append(f"governance_acceptance is {status['governance_acceptance']}")
-
-    if blockers:
-        return "BLOCKED", blockers, warnings
-    if warnings:
-        return "PARTIAL", blockers, warnings
-    return "PASS", blockers, warnings
+    if severity_counts["HARD_FAIL"] > 0:
+        return "FAIL", blockers, warnings, severity_counts
+    if unknown_critical:
+        blockers.append(f"unknown critical dependencies: {', '.join(unknown_critical)}")
+        return "UNKNOWN", blockers, warnings, severity_counts
+    if severity_counts["SOFT_FAIL"] > 0 or severity_counts["WARNING"] > 0:
+        return "PARTIAL", blockers, warnings, severity_counts
+    return "PASS", blockers, warnings, severity_counts
 
 
 def render_markdown(payload: dict[str, Any]) -> str:
@@ -209,6 +372,7 @@ def render_markdown(payload: dict[str, Any]) -> str:
         f"- registry_doc_drift_status: `{payload['registry_doc_drift_status']}`",
         f"- proof_output_naming_policy_status: `{payload['proof_output_naming_policy_status']}`",
         f"- hygiene_checklist_status: `{payload['hygiene_checklist_status']}`",
+        f"- repo_control_status_freshness: `{payload['repo_control_status_freshness']}`",
         f"- sync_status: `{payload['sync_status']}`",
         f"- trust_status: `{payload['trust_status']}`",
         f"- governance_acceptance: `{payload['governance_acceptance']}`",
@@ -217,9 +381,23 @@ def render_markdown(payload: dict[str, Any]) -> str:
         "",
     ]
 
+    lines.append("## Gate Actions")
+    for gate, entry in payload.get("gate_actions", {}).items():
+        lines.append(f"- {gate}: `{entry.get('action', 'UNKNOWN')}`")
+    lines.append("")
+
+    lines.append("## Severity Counts")
+    sev_counts = payload.get("severity_counts", {})
+    lines.append(f"- INFO: `{sev_counts.get('INFO', 0)}`")
+    lines.append(f"- WARNING: `{sev_counts.get('WARNING', 0)}`")
+    lines.append(f"- SOFT_FAIL: `{sev_counts.get('SOFT_FAIL', 0)}`")
+    lines.append(f"- HARD_FAIL: `{sev_counts.get('HARD_FAIL', 0)}`")
+    lines.append("")
+
     blockers = payload.get("blockers", [])
     warnings = payload.get("warnings", [])
     notes = payload.get("notes", [])
+    unknown_critical = payload.get("unknown_critical_dependencies", [])
 
     lines.append("## Blockers")
     if blockers:
@@ -231,6 +409,13 @@ def render_markdown(payload: dict[str, Any]) -> str:
     lines.append("## Warnings")
     if warnings:
         lines.extend([f"- {item}" for item in warnings])
+    else:
+        lines.append("- none")
+    lines.append("")
+
+    lines.append("## Unknown Critical Dependencies")
+    if unknown_critical:
+        lines.extend([f"- {item}" for item in unknown_critical])
     else:
         lines.append("- none")
     lines.append("")
@@ -267,7 +452,6 @@ def main() -> int:
         out_md = (ROOT / out_md).resolve()
 
     command_results: list[dict[str, Any]] = []
-
     if args.run_repo_control:
         command_results.append(run_cmd([sys.executable, "scripts/repo_control_center.py", "bundle"]))
         command_results.append(run_cmd([sys.executable, "scripts/repo_control_center.py", "full-check"]))
@@ -290,9 +474,9 @@ def main() -> int:
     hygiene_status, hygiene_notes = check_file_status(HYGIENE_PATH)
     contradiction_status, contradiction_notes = load_scan_verdict(SCAN_OUTPUT, "canonical_contradiction_scan")
     drift_status, drift_notes = load_scan_verdict(DRIFT_OUTPUT, "registry_doc_drift_guard")
-    sync_status, trust_status, governance_acceptance, repo_notes = load_repo_control()
+    sync_status, trust_status, governance_acceptance, repo_freshness, repo_notes = load_repo_control()
 
-    status_payload = {
+    status_payload: dict[str, Any] = {
         "constitution_phase": detect_phase(),
         "constitution_version": "WORKFLOW2_CONSTITUTION_V0",
         "vocabulary_freeze_status": vocabulary_status,
@@ -301,16 +485,13 @@ def main() -> int:
         "registry_doc_drift_status": drift_status,
         "proof_output_naming_policy_status": proof_policy_status,
         "hygiene_checklist_status": hygiene_status,
+        "repo_control_status_freshness": repo_freshness,
         "sync_status": sync_status,
         "trust_status": trust_status,
         "governance_acceptance": governance_acceptance,
         "last_checked_at": now_utc(),
     }
 
-    overall, blockers, warnings = compute_overall(status_payload)
-    status_payload["overall_verdict"] = overall
-    status_payload["blockers"] = blockers
-    status_payload["warnings"] = warnings
     status_payload["notes"] = (
         vocabulary_notes
         + truth_notes
@@ -321,26 +502,48 @@ def main() -> int:
         + repo_notes
         + notes
     )
+
+    check_assessment, unknown_critical = classify_status_payload(status_payload, status_payload["notes"])
+    gate_actions = aggregate_gate_actions(check_assessment)
+    overall, blockers, warnings, severity_counts = summarize_verdict(check_assessment, unknown_critical)
+
+    status_payload["check_assessment"] = check_assessment
+    status_payload["unknown_critical_dependencies"] = unknown_critical
+    status_payload["gate_actions"] = gate_actions
+    status_payload["severity_counts"] = severity_counts
+    status_payload["overall_verdict"] = overall
+    status_payload["blockers"] = blockers
+    status_payload["warnings"] = warnings
+    status_payload["severity_model_version"] = "constitution_gate_severity_model.v1.0.0"
+    status_payload["overall_verdict_logic"] = {
+        "PASS": "no hard-fail, no soft-fail, no warning, no unknown-critical dependency",
+        "PARTIAL": "no hard-fail; at least one warning or soft-fail",
+        "FAIL": "one or more hard-fail checks",
+        "UNKNOWN": "unknown-critical dependency blocks reliable decision",
+    }
+    status_payload["schema_version"] = "constitution_status_surface.v1.1.0"
     status_payload["sources"] = [
         "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
         "docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md",
         "docs/governance/TRUTH_STATE_MODEL_V1.md",
         "workspace_config/schemas/truth_state_schema.json",
+        "docs/governance/PROOF_OUTPUT_NAMING_POLICY_V1.md",
+        "docs/governance/CONSTITUTION_PHASE_HYGIENE_CHECKLIST_V1.md",
         "runtime/repo_control_center/validation/canonical_contradiction_scan.json",
         "runtime/repo_control_center/validation/registry_doc_drift_report.json",
         "runtime/repo_control_center/repo_control_status.json",
     ]
-    status_payload["schema_version"] = "constitution_status_surface.v1.0.0"
     status_payload["command_results"] = command_results
 
     write_json(out_json, status_payload)
     out_md.parent.mkdir(parents=True, exist_ok=True)
     out_md.write_text(render_markdown(status_payload), encoding="utf-8")
-
     print(json.dumps(status_payload, ensure_ascii=False, indent=2))
 
-    if overall == "BLOCKED":
+    if overall == "FAIL":
         return 1
+    if overall == "UNKNOWN":
+        return 2
     return 0
 
 

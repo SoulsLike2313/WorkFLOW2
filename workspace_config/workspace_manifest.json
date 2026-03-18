@@ -141,7 +141,9 @@
       "docs/governance/PROOF_OUTPUT_NAMING_POLICY_V1.md",
       "docs/governance/CONSTITUTION_PHASE_HYGIENE_CHECKLIST_V1.md",
       "docs/governance/CONSTITUTIONAL_ADMISSION_FLOW_V1.md",
-      "docs/governance/CONSTITUTION_V1_STABILIZATION_CRITERIA.md"
+      "docs/governance/CONSTITUTION_V1_STABILIZATION_CRITERIA.md",
+      "docs/governance/CONSTITUTION_GATE_SEVERITY_MODEL_V1.md",
+      "docs/governance/CONSTITUTION_OPERATOR_RESPONSE_GUIDE_V1.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -259,7 +261,9 @@
     "registry_doc_drift_guard_script": "scripts/validation/check_registry_doc_drift.py",
     "constitution_checks_wrapper_script": "scripts/validation/run_constitution_checks.py",
     "constitutional_admission_flow_path": "docs/governance/CONSTITUTIONAL_ADMISSION_FLOW_V1.md",
-    "constitution_v1_stabilization_criteria_path": "docs/governance/CONSTITUTION_V1_STABILIZATION_CRITERIA.md"
+    "constitution_v1_stabilization_criteria_path": "docs/governance/CONSTITUTION_V1_STABILIZATION_CRITERIA.md",
+    "constitution_gate_severity_model_path": "docs/governance/CONSTITUTION_GATE_SEVERITY_MODEL_V1.md",
+    "constitution_operator_response_guide_path": "docs/governance/CONSTITUTION_OPERATOR_RESPONSE_GUIDE_V1.md"
   },
   "shared_systems": {
     "root_path": "shared_systems",
