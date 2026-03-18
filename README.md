@@ -8,6 +8,7 @@
 - Official external reading channel for ChatGPT: targeted bundle export (`scripts/export_chatgpt_bundle.py`).
 - Governance brain stack is mandatory interpretation layer for all machine/agent execution.
 - Federation/Integration layer v1 is mandatory for multi-node collaboration (`creator`, `helper`, `integration` modes).
+- Rapid full-context onboarding (GPT/Codex): `docs/governance/WORKFLOW2_GPT_ONBOARDING_MASTER_V1.md`.
 
 ## Active Project
 

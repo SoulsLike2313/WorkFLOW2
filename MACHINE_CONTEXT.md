@@ -20,6 +20,7 @@
 
 Read these first when you need plain-language status without deep policy parsing:
 
+- `docs/governance/WORKFLOW2_GPT_ONBOARDING_MASTER_V1.md`
 - `docs/governance/MACHINE_OPERATOR_GUIDE.md`
 - `docs/governance/MACHINE_CAPABILITIES_SUMMARY.md`
 - `docs/governance/POLICY_DIGEST.md`

@@ -15,6 +15,7 @@ Architecture anchor:
 - constitutional core: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
 - constitutional predecessor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 - canonical vocabulary freeze: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
+- rapid full-context onboarding: `docs/governance/WORKFLOW2_GPT_ONBOARDING_MASTER_V1.md`
 
 ## Mandatory Pre-Task Read Order
 
@@ -167,6 +168,7 @@ If this order is not completed, task status is `REJECTED`.
 | File | Role | Priority |
 | --- | --- | --- |
 | `README.md` | Root architecture and operating model | P0 |
+| `docs/governance/WORKFLOW2_GPT_ONBOARDING_MASTER_V1.md` | Single high-density onboarding brief for new GPT/Codex sessions | P0 |
 | `REPO_MAP.md` | Fast repository navigation and bootstrap map | P0 |
 | `MACHINE_CONTEXT.md` | Deterministic machine context | P0 |
 | `docs/governance/MACHINE_OPERATOR_GUIDE.md` | Plain-language operator guide for mode/gates/actions | P0 |

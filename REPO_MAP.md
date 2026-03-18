@@ -13,6 +13,7 @@
 - Constitution anchor: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`.
 - Constitution V0 status: `historical bootstrap`.
 - Vocabulary anchor: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`.
+- Rapid full-context onboarding: `docs/governance/WORKFLOW2_GPT_ONBOARDING_MASTER_V1.md`.
 
 ## Read Order (Bootstrap)
 
