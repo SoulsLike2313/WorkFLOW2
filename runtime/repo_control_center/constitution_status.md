@@ -8,39 +8,36 @@
 - registry_doc_drift_status: `PASS`
 - proof_output_naming_policy_status: `PASS`
 - hygiene_checklist_status: `PASS`
-- repo_control_status_freshness: `STALE`
-- sync_status: `UNKNOWN`
-- trust_status: `UNKNOWN`
-- governance_acceptance: `UNKNOWN`
-- overall_verdict: `PARTIAL`
-- last_checked_at: `2026-03-18T00:38:55.434757+00:00`
+- repo_control_status_freshness: `FRESH`
+- sync_status: `IN_SYNC`
+- trust_status: `TRUSTED`
+- governance_acceptance: `PASS`
+- overall_verdict: `PASS`
+- last_checked_at: `2026-03-18T10:10:35.192032+00:00`
 
 ## Gate Actions
-- completion_claim: `BLOCK`
-- certification_claim: `BLOCK`
-- mirror_refresh: `REVIEW_REQUIRED`
-- phase_transition: `BLOCK`
+- completion_claim: `ALLOW`
+- certification_claim: `ALLOW`
+- mirror_refresh: `ALLOW`
+- phase_transition: `ALLOW`
 
 ## Severity Counts
-- INFO: `7`
+- INFO: `11`
 - WARNING: `0`
-- SOFT_FAIL: `4`
+- SOFT_FAIL: `0`
 - HARD_FAIL: `0`
 
 ## Blockers
 - none
 
 ## Warnings
-- repo_control_status_freshness: STALE
-- sync_status: UNKNOWN
-- trust_status: UNKNOWN
-- governance_acceptance: UNKNOWN
+- none
 
 ## Unknown Critical Dependencies
 - none
 
 ## Notes
-- repo_control_status is stale vs current HEAD (reported=5ca6b443f68a, current=ac6b03fe19ed)
+- none
 
 ## Sources
 - `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`

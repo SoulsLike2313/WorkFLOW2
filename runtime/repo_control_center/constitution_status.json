@@ -7,14 +7,12 @@
   "registry_doc_drift_status": "PASS",
   "proof_output_naming_policy_status": "PASS",
   "hygiene_checklist_status": "PASS",
-  "repo_control_status_freshness": "STALE",
-  "sync_status": "UNKNOWN",
-  "trust_status": "UNKNOWN",
-  "governance_acceptance": "UNKNOWN",
-  "last_checked_at": "2026-03-18T00:38:55.434757+00:00",
-  "notes": [
-    "repo_control_status is stale vs current HEAD (reported=5ca6b443f68a, current=ac6b03fe19ed)"
-  ],
+  "repo_control_status_freshness": "FRESH",
+  "sync_status": "IN_SYNC",
+  "trust_status": "TRUSTED",
+  "governance_acceptance": "PASS",
+  "last_checked_at": "2026-03-18T10:10:35.192032+00:00",
+  "notes": [],
   "check_assessment": [
     {
       "check": "constitution_phase",
@@ -60,82 +58,57 @@
     },
     {
       "check": "repo_control_status_freshness",
-      "status": "STALE",
-      "severity": "SOFT_FAIL",
-      "rationale": "refresh repo control status before admission claim"
+      "status": "FRESH",
+      "severity": "INFO",
+      "rationale": "repo control snapshot aligned with current HEAD"
     },
     {
       "check": "sync_status",
-      "status": "UNKNOWN",
-      "severity": "SOFT_FAIL",
-      "rationale": "sync status is unknown"
+      "status": "IN_SYNC",
+      "severity": "INFO",
+      "rationale": "sync parity is clean"
     },
     {
       "check": "trust_status",
-      "status": "UNKNOWN",
-      "severity": "SOFT_FAIL",
-      "rationale": "trust state requires review/refresh"
+      "status": "TRUSTED",
+      "severity": "INFO",
+      "rationale": "trust chain is green"
     },
     {
       "check": "governance_acceptance",
-      "status": "UNKNOWN",
-      "severity": "SOFT_FAIL",
-      "rationale": "governance acceptance requires refresh/review"
+      "status": "PASS",
+      "severity": "INFO",
+      "rationale": "governance acceptance is open"
     }
   ],
   "unknown_critical_dependencies": [],
   "gate_actions": {
     "completion_claim": {
-      "action": "BLOCK",
-      "reasons": [
-        "governance_acceptance(SOFT_FAIL)",
-        "repo_control_status_freshness(SOFT_FAIL)",
-        "sync_status(SOFT_FAIL)",
-        "trust_status(SOFT_FAIL)"
-      ]
+      "action": "ALLOW",
+      "reasons": []
     },
     "certification_claim": {
-      "action": "BLOCK",
-      "reasons": [
-        "governance_acceptance(SOFT_FAIL)",
-        "repo_control_status_freshness(SOFT_FAIL)",
-        "sync_status(SOFT_FAIL)",
-        "trust_status(SOFT_FAIL)"
-      ]
+      "action": "ALLOW",
+      "reasons": []
     },
     "mirror_refresh": {
-      "action": "REVIEW_REQUIRED",
-      "reasons": [
-        "governance_acceptance(SOFT_FAIL)",
-        "repo_control_status_freshness(SOFT_FAIL)",
-        "sync_status(SOFT_FAIL)",
-        "trust_status(SOFT_FAIL)"
-      ]
+      "action": "ALLOW",
+      "reasons": []
     },
     "phase_transition": {
-      "action": "BLOCK",
-      "reasons": [
-        "governance_acceptance(SOFT_FAIL)",
-        "repo_control_status_freshness(SOFT_FAIL)",
-        "sync_status(SOFT_FAIL)",
-        "trust_status(SOFT_FAIL)"
-      ]
+      "action": "ALLOW",
+      "reasons": []
     }
   },
   "severity_counts": {
-    "INFO": 7,
+    "INFO": 11,
     "WARNING": 0,
-    "SOFT_FAIL": 4,
+    "SOFT_FAIL": 0,
     "HARD_FAIL": 0
   },
-  "overall_verdict": "PARTIAL",
+  "overall_verdict": "PASS",
   "blockers": [],
-  "warnings": [
-    "repo_control_status_freshness: STALE",
-    "sync_status: UNKNOWN",
-    "trust_status: UNKNOWN",
-    "governance_acceptance: UNKNOWN"
-  ],
+  "warnings": [],
   "severity_model_version": "constitution_gate_severity_model.v1.0.0",
   "overall_verdict_logic": {
     "PASS": "no hard-fail, no soft-fail, no warning, no unknown-critical dependency",
@@ -160,12 +133,32 @@
     {
       "cmd": [
         "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "scripts/repo_control_center.py",
+        "bundle"
+      ],
+      "exit_code": 0,
+      "stdout_tail": "{\n  \"run_id\": \"rcc-20260318T101031Z\",\n  \"mode\": \"bundle\",\n  \"repo\": {\n    \"branch\": \"main\",\n    \"head\": \"317941556b3f5c8291e3ee7087e3e54b2c93c571\",\n    \"safe_mirror_main\": \"317941556b3f5c8291e3ee7087e3e54b2c93c571\",\n    \"ahead\": 0,\n    \"behind\": 0,\n    \"worktree_clean\": true,\n    \"status_short\": \"## main...safe_mirror/main\",\n    \"repo_health\": \"PASS\",\n    \"workspace_health\": \"PASS\"\n  },\n  \"bundle\": {\n    \"verdict\": \"READY\",\n    \"basis\": \"targeted bundle exporter availability and mode surface\",\n    \"evidence\": {\n      \"help_exit_code\": 0\n    },\n    \"blockers\": [],\n    \"next_step\": \"Bundle export path is ready.\"\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "cmd": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "scripts/repo_control_center.py",
+        "full-check"
+      ],
+      "exit_code": 0,
+      "stdout_tail": "   \"candidate_cycles_required\": 3,\n            \"ready_cycles_required\": 5,\n            \"promote_cycles_required\": 5\n          },\n          \"observed_clean_cycles\": 1,\n          \"observation_window_complete\": false,\n          \"candidate_cycles_complete\": false,\n          \"ready_cycles_complete\": false,\n          \"promote_cycles_complete\": false,\n          \"false_pass_history_entries\": 0,\n          \"false_pass_unresolved\": false,\n          \"unresolved_contradiction_history_hits\": 0,\n          \"governance_hardening_evidence\": true,\n          \"repeated_failure_reduction_evidence\": false,\n          \"formal_promotion_thresholds_confirmed\": false,\n          \"promotion_requirements_missing\": [\n            \"required observation window incomplete: 1/5 clean cycles\",\n            \"repeated failure reduction evidence missing\"\n          ],\n          \"explicit_promote_approval\": false\n        },\n        \"blockers\": [\n          \"required observation window incomplete: 1/5 clean cycles\",\n          \"repeated failure reduction evidence missing\"\n        ],\n        \"next_step\": \"Execute proposed validations for next maturity step.\",\n        \"evolution_block\": {\n          \"current_level\": \"V1_STABLE\",\n          \"candidate_level\": \"V2_CANDIDATE\",\n          \"readiness\": \"MEDIUM_HIGH\",\n          \"signals_gained\": [\n            \"sync_in_sync\",\n            \"worktree_clean\",\n            \"governance_compliant\",\n            \"brain_stack_complete\",\n            \"evolution_layer_present\",\n            \"critical_contradictions_zero\",\n            \"admission_gate_green\",\n            \"bundle_ready\",\n            \"safe_mirror_fresh\",\n            \"trust_not_failed\"\n          ],\n          \"blocking_signals\": [],\n          \"policy_changes_proposed\": [\n            \"Record measurable repeated-failure reduction evidence in POLICY_EVOLUTION_LOG.\",\n            \"Accumulate 5 consecutive clean full-check cycles with evidence linkage.\"\n          ],\n          \"recommendation\": \"PREPARE\"\n        }\n      }\n    }\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "cmd": [
+        "C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
         "scripts/validation/scan_canonical_contradictions.py",
         "--output",
         "runtime\\repo_control_center\\validation\\canonical_contradiction_scan.json"
       ],
       "exit_code": 0,
-      "stdout_tail": "{\n  \"schema_version\": \"canonical_contradiction_scan.v1.0.0\",\n  \"generated_at\": \"2026-03-18T00:38:55.274849+00:00\",\n  \"files_scanned\": [\n    \"docs/CURRENT_PLATFORM_STATE.md\",\n    \"docs/NEXT_CANONICAL_STEP.md\",\n    \"README.md\",\n    \"REPO_MAP.md\",\n    \"MACHINE_CONTEXT.md\",\n    \"docs/INSTRUCTION_INDEX.md\"\n  ],\n  \"claims\": {\n    \"phase_claims_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"constitution-v1-finalized\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"constitution-v1-finalized\",\n      \"README.md\": \"constitution-v1-finalized\",\n      \"REPO_MAP.md\": \"constitution-v1-finalized\",\n      \"MACHINE_CONTEXT.md\": \"constitution-v1-finalized\",\n      \"docs/INSTRUCTION_INDEX.md\": \"constitution-v1-finalized\"\n    },\n    \"next_step_claims_by_file\": {\n      \"docs/NEXT_CANONICAL_STEP.md\": \"next-step-post-constitution-v1-option-selection\"\n    },\n    \"mission_layer_status_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"accepted\",\n      \"REPO_MAP.md\": \"accepted\",\n      \"MACHINE_CONTEXT.md\": \"accepted\",\n      \"docs/INSTRUCTION_INDEX.md\": \"accepted\"\n    },\n    \"stale_phrase_hits\": {}\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  }\n}\n",
+      "stdout_tail": "{\n  \"schema_version\": \"canonical_contradiction_scan.v1.0.0\",\n  \"generated_at\": \"2026-03-18T10:10:35.019903+00:00\",\n  \"files_scanned\": [\n    \"docs/CURRENT_PLATFORM_STATE.md\",\n    \"docs/NEXT_CANONICAL_STEP.md\",\n    \"README.md\",\n    \"REPO_MAP.md\",\n    \"MACHINE_CONTEXT.md\",\n    \"docs/INSTRUCTION_INDEX.md\"\n  ],\n  \"claims\": {\n    \"phase_claims_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"constitution-v1-finalized\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"constitution-v1-finalized\",\n      \"README.md\": \"constitution-v1-finalized\",\n      \"REPO_MAP.md\": \"constitution-v1-finalized\",\n      \"MACHINE_CONTEXT.md\": \"constitution-v1-finalized\",\n      \"docs/INSTRUCTION_INDEX.md\": \"constitution-v1-finalized\"\n    },\n    \"next_step_claims_by_file\": {\n      \"docs/NEXT_CANONICAL_STEP.md\": \"next-step-post-constitution-v1-option-selection\"\n    },\n    \"mission_layer_status_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"accepted\",\n      \"REPO_MAP.md\": \"accepted\",\n      \"MACHINE_CONTEXT.md\": \"accepted\",\n      \"docs/INSTRUCTION_INDEX.md\": \"accepted\"\n    },\n    \"stale_phrase_hits\": {}\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  }\n}\n",
       "stderr_tail": ""
     },
     {
