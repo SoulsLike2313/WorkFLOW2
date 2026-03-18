@@ -4,6 +4,7 @@
 - effective_date_utc: `2026-03-18`
 - previous_accepted_stage: `constitution-v1-finalized`
 - current canonical phase: `constitution-v1-finalized`
+- canonical_phase_route_anchor: `constitution-first phase continuity`
 
 ## What Do We Do Next
 
