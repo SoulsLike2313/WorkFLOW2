@@ -9,9 +9,11 @@
 - Governance brain stack is mandatory for interpretation and execution
 - Active project: `platform_test_agent`
 - Mission Layer: `accepted / certified baseline`
-- Current canonical phase: `constitution-first`
-- New brain-level implementation layers are blocked until constitutional closure.
-- Constitutional core path: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+- Current canonical phase: `constitution-v1-finalized`
+- Current regime: `lightweight constitutional enforcement`
+- New brain-level implementation layers are not the default next move after V1 finalization.
+- Constitutional core path: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
+- Constitutional predecessor path: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 - Vocabulary freeze path: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 
 ## Explainability Quick Files
@@ -34,7 +36,8 @@ Read these first when you need plain-language status without deep policy parsing
 6. `docs/INSTRUCTION_INDEX.md`
 7. `docs/CURRENT_PLATFORM_STATE.md`
 8. `docs/NEXT_CANONICAL_STEP.md`
-   constitution-first anchor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+   constitutional anchor: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
+   historical predecessor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
    vocabulary freeze anchor: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 9. `docs/governance/FIRST_PRINCIPLES.md`
 10. `docs/governance/GOVERNANCE_HIERARCHY.md`
@@ -118,8 +121,9 @@ Read these first when you need plain-language status without deep policy parsing
 88. `scripts/operator_mission_surface.py`
 89. `docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json`
 90. `docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md`
-91. `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
-92. `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
+91. `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
+92. `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+93. `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 
 ## Execution Guardrails
 

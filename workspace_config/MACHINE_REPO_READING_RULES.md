@@ -94,8 +94,9 @@ Machine must complete this canonical order before execution:
 88. `scripts/operator_mission_surface.py`
 89. `docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json`
 90. `docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md`
-91. `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
-92. `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
+91. `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
+92. `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+93. `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 
 If any mandatory step is skipped: `STATUS: REJECTED`.
 

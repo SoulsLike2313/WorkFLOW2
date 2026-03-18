@@ -1,6 +1,6 @@
 {
-  "constitution_phase": "constitution-first",
-  "constitution_version": "WORKFLOW2_CONSTITUTION_V0",
+  "constitution_phase": "constitution-v1-finalized",
+  "constitution_version": "WORKFLOW2_CONSTITUTION_V1",
   "vocabulary_freeze_status": "PASS",
   "truth_state_schema_status": "PASS",
   "contradiction_scan_status": "PASS",
@@ -11,16 +11,16 @@
   "sync_status": "UNKNOWN",
   "trust_status": "UNKNOWN",
   "governance_acceptance": "UNKNOWN",
-  "last_checked_at": "2026-03-18T00:26:31.071553+00:00",
+  "last_checked_at": "2026-03-18T00:38:55.434757+00:00",
   "notes": [
-    "repo_control_status is stale vs current HEAD (reported=5ca6b443f68a, current=be4d5c711658)"
+    "repo_control_status is stale vs current HEAD (reported=5ca6b443f68a, current=ac6b03fe19ed)"
   ],
   "check_assessment": [
     {
       "check": "constitution_phase",
-      "status": "constitution-first",
+      "status": "constitution-v1-finalized",
       "severity": "INFO",
-      "rationale": "phase claim aligned with constitution-first routing"
+      "rationale": "phase claim aligned with finalized Constitution V1 regime"
     },
     {
       "check": "vocabulary_freeze_status",
@@ -145,6 +145,7 @@
   },
   "schema_version": "constitution_status_surface.v1.1.0",
   "sources": [
+    "docs/governance/WORKFLOW2_CONSTITUTION_V1.md",
     "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
     "docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md",
     "docs/governance/TRUTH_STATE_MODEL_V1.md",
@@ -164,7 +165,7 @@
         "runtime\\repo_control_center\\validation\\canonical_contradiction_scan.json"
       ],
       "exit_code": 0,
-      "stdout_tail": "{\n  \"schema_version\": \"canonical_contradiction_scan.v1.0.0\",\n  \"generated_at\": \"2026-03-18T00:26:30.909104+00:00\",\n  \"files_scanned\": [\n    \"docs/CURRENT_PLATFORM_STATE.md\",\n    \"docs/NEXT_CANONICAL_STEP.md\",\n    \"README.md\",\n    \"REPO_MAP.md\",\n    \"MACHINE_CONTEXT.md\",\n    \"docs/INSTRUCTION_INDEX.md\"\n  ],\n  \"claims\": {\n    \"phase_claims_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"constitution-first\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"constitution-first\",\n      \"README.md\": \"constitution-first\",\n      \"REPO_MAP.md\": \"constitution-first\",\n      \"MACHINE_CONTEXT.md\": \"constitution-first\",\n      \"docs/INSTRUCTION_INDEX.md\": \"constitution-first\"\n    },\n    \"next_step_claims_by_file\": {\n      \"docs/NEXT_CANONICAL_STEP.md\": \"next-step-constitution-first-phase-v0\"\n    },\n    \"mission_layer_status_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"accepted\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"accepted\",\n      \"REPO_MAP.md\": \"accepted\",\n      \"MACHINE_CONTEXT.md\": \"accepted\",\n      \"docs/INSTRUCTION_INDEX.md\": \"accepted\"\n    },\n    \"stale_phrase_hits\": {}\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  }\n}\n",
+      "stdout_tail": "{\n  \"schema_version\": \"canonical_contradiction_scan.v1.0.0\",\n  \"generated_at\": \"2026-03-18T00:38:55.274849+00:00\",\n  \"files_scanned\": [\n    \"docs/CURRENT_PLATFORM_STATE.md\",\n    \"docs/NEXT_CANONICAL_STEP.md\",\n    \"README.md\",\n    \"REPO_MAP.md\",\n    \"MACHINE_CONTEXT.md\",\n    \"docs/INSTRUCTION_INDEX.md\"\n  ],\n  \"claims\": {\n    \"phase_claims_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"constitution-v1-finalized\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"constitution-v1-finalized\",\n      \"README.md\": \"constitution-v1-finalized\",\n      \"REPO_MAP.md\": \"constitution-v1-finalized\",\n      \"MACHINE_CONTEXT.md\": \"constitution-v1-finalized\",\n      \"docs/INSTRUCTION_INDEX.md\": \"constitution-v1-finalized\"\n    },\n    \"next_step_claims_by_file\": {\n      \"docs/NEXT_CANONICAL_STEP.md\": \"next-step-post-constitution-v1-option-selection\"\n    },\n    \"mission_layer_status_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"accepted\",\n      \"REPO_MAP.md\": \"accepted\",\n      \"MACHINE_CONTEXT.md\": \"accepted\",\n      \"docs/INSTRUCTION_INDEX.md\": \"accepted\"\n    },\n    \"stale_phrase_hits\": {}\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  }\n}\n",
       "stderr_tail": ""
     },
     {

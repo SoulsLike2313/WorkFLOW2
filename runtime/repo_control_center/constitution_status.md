@@ -1,7 +1,7 @@
 # CONSTITUTION STATUS
 
-- constitution_phase: `constitution-first`
-- constitution_version: `WORKFLOW2_CONSTITUTION_V0`
+- constitution_phase: `constitution-v1-finalized`
+- constitution_version: `WORKFLOW2_CONSTITUTION_V1`
 - vocabulary_freeze_status: `PASS`
 - truth_state_schema_status: `PASS`
 - contradiction_scan_status: `PASS`
@@ -13,7 +13,7 @@
 - trust_status: `UNKNOWN`
 - governance_acceptance: `UNKNOWN`
 - overall_verdict: `PARTIAL`
-- last_checked_at: `2026-03-18T00:26:31.071553+00:00`
+- last_checked_at: `2026-03-18T00:38:55.434757+00:00`
 
 ## Gate Actions
 - completion_claim: `BLOCK`
@@ -40,9 +40,10 @@
 - none
 
 ## Notes
-- repo_control_status is stale vs current HEAD (reported=5ca6b443f68a, current=be4d5c711658)
+- repo_control_status is stale vs current HEAD (reported=5ca6b443f68a, current=ac6b03fe19ed)
 
 ## Sources
+- `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
 - `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 - `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 - `docs/governance/TRUTH_STATE_MODEL_V1.md`

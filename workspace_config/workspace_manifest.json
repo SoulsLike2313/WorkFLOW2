@@ -73,6 +73,7 @@
     "governance_brain_stack_required": true,
     "governance_brain_stack_paths": [
       "docs/governance/FIRST_PRINCIPLES.md",
+      "docs/governance/WORKFLOW2_CONSTITUTION_V1.md",
       "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
       "docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md",
       "docs/governance/TRUTH_STATE_MODEL_V1.md",
@@ -143,7 +144,11 @@
       "docs/governance/CONSTITUTIONAL_ADMISSION_FLOW_V1.md",
       "docs/governance/CONSTITUTION_V1_STABILIZATION_CRITERIA.md",
       "docs/governance/CONSTITUTION_GATE_SEVERITY_MODEL_V1.md",
-      "docs/governance/CONSTITUTION_OPERATOR_RESPONSE_GUIDE_V1.md"
+      "docs/governance/CONSTITUTION_OPERATOR_RESPONSE_GUIDE_V1.md",
+      "docs/governance/CONSTITUTION_V1_FINALIZATION_NOTE.md",
+      "docs/governance/CONSTITUTION_V1_SCOPE_BOUNDARIES.md",
+      "docs/review_artifacts/CONSTITUTION_V1_FINALIZATION_REPORT.md",
+      "docs/review_artifacts/POST_CONSTITUTION_V1_OPTIONS.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -253,6 +258,8 @@
     "operator_mission_registry_path": "workspace_config/operator_mission_registry.json",
     "operator_mission_surface_script": "scripts/operator_mission_surface.py",
     "operator_mission_layer_required": true,
+    "constitution_v1_path": "docs/governance/WORKFLOW2_CONSTITUTION_V1.md",
+    "constitution_v0_legacy_path": "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
     "truth_state_model_path": "docs/governance/TRUTH_STATE_MODEL_V1.md",
     "truth_state_schema_path": "workspace_config/schemas/truth_state_schema.json",
     "proof_output_naming_policy_path": "docs/governance/PROOF_OUTPUT_NAMING_POLICY_V1.md",
@@ -263,7 +270,11 @@
     "constitutional_admission_flow_path": "docs/governance/CONSTITUTIONAL_ADMISSION_FLOW_V1.md",
     "constitution_v1_stabilization_criteria_path": "docs/governance/CONSTITUTION_V1_STABILIZATION_CRITERIA.md",
     "constitution_gate_severity_model_path": "docs/governance/CONSTITUTION_GATE_SEVERITY_MODEL_V1.md",
-    "constitution_operator_response_guide_path": "docs/governance/CONSTITUTION_OPERATOR_RESPONSE_GUIDE_V1.md"
+    "constitution_operator_response_guide_path": "docs/governance/CONSTITUTION_OPERATOR_RESPONSE_GUIDE_V1.md",
+    "constitution_v1_finalization_note_path": "docs/governance/CONSTITUTION_V1_FINALIZATION_NOTE.md",
+    "constitution_v1_scope_boundaries_path": "docs/governance/CONSTITUTION_V1_SCOPE_BOUNDARIES.md",
+    "constitution_v1_finalization_report_path": "docs/review_artifacts/CONSTITUTION_V1_FINALIZATION_REPORT.md",
+    "post_constitution_v1_options_path": "docs/review_artifacts/POST_CONSTITUTION_V1_OPTIONS.md"
   },
   "shared_systems": {
     "root_path": "shared_systems",

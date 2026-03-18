@@ -1,5 +1,9 @@
 # WORKFLOW2_CONSTITUTION_V0
 
+Status:
+- state: `historical_bootstrap`
+- successor: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
+
 ## 1. Purpose
 WorkFLOW2 is an evidence-governed operator control system where execution rights, completion claims, and canonical state are determined by explicit authority, policy gates, and repo-visible proof.
 

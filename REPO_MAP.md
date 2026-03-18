@@ -8,8 +8,10 @@
 - External reading channel: targeted ChatGPT bundle export.
 - Creator authority path is never tracked; machine role is detected only via env+marker contract.
 - Mission Layer status: `accepted / certified baseline`.
-- Current canonical phase: `constitution-first`.
-- Constitution anchor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`.
+- Current canonical phase: `constitution-v1-finalized`.
+- Constitutional regime: `lightweight constitutional enforcement`.
+- Constitution anchor: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`.
+- Constitution V0 status: `historical bootstrap`.
 - Vocabulary anchor: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`.
 
 ## Read Order (Bootstrap)
@@ -22,7 +24,8 @@
 6. `docs/INSTRUCTION_INDEX.md`
 7. `docs/CURRENT_PLATFORM_STATE.md`
 8. `docs/NEXT_CANONICAL_STEP.md`
-   constitution-first anchor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+   constitutional anchor: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
+   historical predecessor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
    vocabulary freeze anchor: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 9. `docs/governance/FIRST_PRINCIPLES.md`
 10. `docs/governance/GOVERNANCE_HIERARCHY.md`

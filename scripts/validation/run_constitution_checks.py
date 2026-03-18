@@ -209,12 +209,14 @@ def classify_status_payload(status: dict[str, str], notes: list[str]) -> tuple[l
         )
 
     phase = status["constitution_phase"]
-    if phase == "constitution-first":
-        add("constitution_phase", phase, "INFO", "phase claim aligned with constitution-first routing")
+    if phase == "constitution-v1-finalized":
+        add("constitution_phase", phase, "INFO", "phase claim aligned with finalized Constitution V1 regime")
+    elif phase == "constitution-first":
+        add("constitution_phase", phase, "WARNING", "phase remains pre-finalization constitution-first")
     elif phase == "unknown":
         add("constitution_phase", phase, "SOFT_FAIL", "current phase claim is missing")
     else:
-        add("constitution_phase", phase, "SOFT_FAIL", "phase claim diverges from constitution-first baseline")
+        add("constitution_phase", phase, "SOFT_FAIL", "phase claim diverges from allowed constitutional phases")
 
     vocab = status["vocabulary_freeze_status"]
     if vocab == "PASS":
@@ -478,7 +480,7 @@ def main() -> int:
 
     status_payload: dict[str, Any] = {
         "constitution_phase": detect_phase(),
-        "constitution_version": "WORKFLOW2_CONSTITUTION_V0",
+        "constitution_version": "WORKFLOW2_CONSTITUTION_V1",
         "vocabulary_freeze_status": vocabulary_status,
         "truth_state_schema_status": truth_status,
         "contradiction_scan_status": contradiction_status,
@@ -523,6 +525,7 @@ def main() -> int:
     }
     status_payload["schema_version"] = "constitution_status_surface.v1.1.0"
     status_payload["sources"] = [
+        "docs/governance/WORKFLOW2_CONSTITUTION_V1.md",
         "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
         "docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md",
         "docs/governance/TRUTH_STATE_MODEL_V1.md",

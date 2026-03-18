@@ -62,9 +62,11 @@ Not accepted for execution:
 - operator command execution layer: `accepted`
 - operator task / program layer: `accepted`
 - work package / mission layer: `accepted / certified baseline`
-- current canonical phase: `constitution-first`
-- next canonical phase goal: `constitutional closure before any new brain-level implementation layers`
-- constitutional bootstrap artifact: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+- current canonical phase: `constitution-v1-finalized`
+- current constitutional regime: `lightweight constitutional enforcement`
+- constitutional core artifact: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
+- constitutional predecessor artifact: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
+- next canonical direction: `select post-constitution path from controlled options; no automatic new brain-layer launch`
 
 ## Shared Systems Baseline
 

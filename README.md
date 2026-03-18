@@ -26,9 +26,11 @@
 ## Current Canonical Phase
 
 - Mission / Work Package Layer: `accepted / certified baseline`.
-- Current phase: `Constitution-first`.
-- Constraint: no new brain-level implementation layers before constitutional closure.
-- Constitutional core: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`.
+- Current phase: `constitution-v1-finalized`.
+- Current regime: `lightweight constitutional enforcement`.
+- Constraint: no new brain-level implementation layers by default after finalization.
+- Constitutional core: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`.
+- Historical predecessor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`.
 - Vocabulary freeze: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`.
 
 ## Federation / Integration Layer V1
@@ -57,6 +59,7 @@ Hard rule:
 ### Level 0
 
 - `docs/governance/FIRST_PRINCIPLES.md`
+- `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
 - `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 - `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
 

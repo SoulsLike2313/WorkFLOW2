@@ -16,9 +16,9 @@ Design and current implementation contract for:
 - `phase_conflict` (FAIL): different current-phase claims across canonical surfaces.
 - `next_step_conflict` (FAIL): conflicting explicit next-step claims.
 - `mission_status_conflict` (FAIL): mission layer marked both accepted and pending.
-- `stale_phrase_detected` (FAIL): stale routing phrases contradict constitution-first routing.
+- `stale_phrase_detected` (FAIL): stale routing phrases contradict current constitutional routing.
 - `phase_claim_missing` (WARNING): surface without explicit phase marker.
-- `phase_not_constitution_first` (WARNING): phase claim not aligned with constitution-first.
+- `phase_not_allowed` (WARNING): phase claim not in allowed constitutional phase set.
 
 ## Warning vs Fail
 - FAIL:

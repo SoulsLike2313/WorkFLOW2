@@ -32,6 +32,7 @@ CANONICAL_DOCS_FOR_MISSION_IDS = [
 MISSION_ID_PATTERN = re.compile(r"\bmission\.[A-Za-z0-9_.-]+\b")
 
 REQUIRED_ANCHORS = [
+    "docs/governance/WORKFLOW2_CONSTITUTION_V1.md",
     "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
     "docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md",
     "docs/governance/TRUTH_STATE_MODEL_V1.md",

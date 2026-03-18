@@ -33,6 +33,11 @@ PHASE_PATTERNS = [
     re.compile(r"current phase:\s*`?([^`\n]+)`?", re.IGNORECASE),
 ]
 
+ALLOWED_PHASES = {
+    "constitution-first",
+    "constitution-v1-finalized",
+}
+
 NEXT_STEP_ID_PATTERN = re.compile(r"step_id:\s*`([^`]+)`", re.IGNORECASE)
 NEXT_STEP_LABEL_PATTERN = re.compile(r"canonical next execution step is:\s*[\r\n]+\s*`([^`]+)`", re.IGNORECASE)
 MISSION_ACCEPTED_PATTERN = re.compile(r"(mission layer|work package / mission layer).*accepted", re.IGNORECASE)
@@ -138,8 +143,8 @@ def run_scan() -> dict[str, Any]:
     phase_values = sorted(set(claims["phase_claims_by_file"].values()))
     if len(phase_values) > 1:
         add_finding(findings, "FAIL", "phase_conflict", "*", f"conflicting phase claims: {phase_values}")
-    if len(phase_values) == 1 and phase_values[0] != "constitution-first":
-        add_finding(findings, "WARNING", "phase_not_constitution_first", "*", f"detected phase '{phase_values[0]}'")
+    if len(phase_values) == 1 and phase_values[0] not in ALLOWED_PHASES:
+        add_finding(findings, "WARNING", "phase_not_allowed", "*", f"detected phase '{phase_values[0]}' not in allowed set")
 
     next_step_values = sorted(set(claims["next_step_claims_by_file"].values()))
     if len(next_step_values) > 1:
