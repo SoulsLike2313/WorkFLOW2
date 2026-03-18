@@ -8,38 +8,39 @@
 - registry_doc_drift_status: `PASS`
 - proof_output_naming_policy_status: `PASS`
 - hygiene_checklist_status: `PASS`
-- repo_control_status_freshness: `FRESH`
-- sync_status: `DRIFTED`
-- trust_status: `NOT_TRUSTED`
-- governance_acceptance: `FAIL`
-- overall_verdict: `FAIL`
-- last_checked_at: `2026-03-18T00:24:27.232394+00:00`
+- repo_control_status_freshness: `STALE`
+- sync_status: `UNKNOWN`
+- trust_status: `UNKNOWN`
+- governance_acceptance: `UNKNOWN`
+- overall_verdict: `PARTIAL`
+- last_checked_at: `2026-03-18T00:26:31.071553+00:00`
 
 ## Gate Actions
 - completion_claim: `BLOCK`
 - certification_claim: `BLOCK`
-- mirror_refresh: `BLOCK`
+- mirror_refresh: `REVIEW_REQUIRED`
 - phase_transition: `BLOCK`
 
 ## Severity Counts
-- INFO: `8`
+- INFO: `7`
 - WARNING: `0`
-- SOFT_FAIL: `0`
-- HARD_FAIL: `3`
+- SOFT_FAIL: `4`
+- HARD_FAIL: `0`
 
 ## Blockers
-- sync_status: DRIFTED
-- trust_status: NOT_TRUSTED
-- governance_acceptance: FAIL
+- none
 
 ## Warnings
-- none
+- repo_control_status_freshness: STALE
+- sync_status: UNKNOWN
+- trust_status: UNKNOWN
+- governance_acceptance: UNKNOWN
 
 ## Unknown Critical Dependencies
 - none
 
 ## Notes
-- command returned non-zero (1): C:\Users\PC\AppData\Local\Programs\Python\Python312\python.exe scripts/repo_control_center.py full-check
+- repo_control_status is stale vs current HEAD (reported=5ca6b443f68a, current=be4d5c711658)
 
 ## Sources
 - `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
