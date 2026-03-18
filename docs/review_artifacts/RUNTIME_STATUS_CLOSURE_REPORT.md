@@ -62,12 +62,28 @@ No `NEEDS_OWNER_POLICY_DECISION` blocker identified for these three files.
 
 ## 4) Actions Taken
 
-Pending post-action execution block.
+- [OBSERVED] Captured policy evidence from constitutional admission flow, finalization report, allowlist-closure report, and validator scripts.
+- [OBSERVED] Initial runtime-status policy closure commit was pushed:
+  - commit `d36d7b016246c5185c22fdb5c15f451b4db991af`
+  - scope: `constitution_status.json|md` + bounded closure reports.
+- [OBSERVED] Post-commit `repo_control_center full-check` exposed a hidden mechanical dependency:
+  - mirror evidence contract (`tracked_evidence_refresh_commit`) became stale because non-evidence tracked files changed after prior evidence basis commit.
+- [INFERRED] Required narrow follow-up: separate mirror-evidence refresh commit after non-evidence runtime/report commit.
 
 ## 5) Post-Action Checks
 
-Pending post-action execution block.
+- [OBSERVED] `python scripts/check_repo_sync.py --remote safe_mirror --branch main` -> `PASS`.
+- [OBSERVED] `python scripts/repo_control_center.py full-check` -> `FAIL` at this checkpoint:
+  - `mirror=WARNING`
+  - `trust=WARNING`
+  - `governance_acceptance=FAIL`
+  - blocker reason: stale tracked mirror evidence contract after non-evidence commit.
+- [OBSERVED] `python scripts/validation/run_constitution_checks.py` -> `FAIL` (downstream of governance acceptance fail).
 
 ## 6) Final Determination
 
-Pending post-action execution block.
+- [OBSERVED] Runtime-status policy is clear (tracked constitutional runtime surfaces), but closure requires dual-step discipline:
+  1. non-evidence runtime/report commit;
+  2. dedicated mirror-evidence refresh commit.
+- [INFERRED] Until step (2) is executed, state is:
+  - `GREEN_CHECKPOINT_ONLY__CLEAN_POLICY_PENDING`.

@@ -20,28 +20,28 @@
 - sovereign_claim_denial_status: `ALLOW`
 - repo_control_status_freshness: `FRESH`
 - sync_status: `IN_SYNC`
-- trust_status: `TRUSTED`
-- governance_acceptance: `PASS`
-- overall_verdict: `PASS`
-- last_checked_at: `2026-03-18T18:32:06.063608+00:00`
+- trust_status: `WARNING`
+- governance_acceptance: `FAIL`
+- overall_verdict: `FAIL`
+- last_checked_at: `2026-03-18T18:39:54.205006+00:00`
 
 ## Gate Actions
-- completion_claim: `ALLOW`
-- certification_claim: `ALLOW`
-- mirror_refresh: `ALLOW`
-- phase_transition: `ALLOW`
+- completion_claim: `BLOCK`
+- certification_claim: `BLOCK`
+- mirror_refresh: `BLOCK`
+- phase_transition: `BLOCK`
 
 ## Severity Counts
-- INFO: `21`
+- INFO: `19`
 - WARNING: `0`
-- SOFT_FAIL: `0`
-- HARD_FAIL: `0`
+- SOFT_FAIL: `1`
+- HARD_FAIL: `1`
 
 ## Blockers
-- none
+- governance_acceptance: FAIL
 
 ## Warnings
-- none
+- trust_status: WARNING
 
 ## Unknown Critical Dependencies
 - none
