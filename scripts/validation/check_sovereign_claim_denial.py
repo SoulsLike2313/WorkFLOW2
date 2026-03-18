@@ -12,21 +12,54 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = ROOT / "runtime" / "repo_control_center" / "validation" / "sovereign_claim_denial.json"
 
 SOVEREIGN_ONLY_CLAIMS = {
-    "sovereign_acceptance_claim",
-    "sovereign_transition_claim",
-    "sovereign_rank_assertion",
+    "canonical_acceptance_claim",
+    "sovereign_policy_change_claim",
+    "emperor_rank_claim",
+    "unrestricted_structural_mutation_claim",
 }
 
 PRIMARCH_ALLOWED = {
     "denial_as_expected_claim",
-    "primarch_reintegration_claim",
-    "bounded_acceptance_recommendation",
+    "bounded_engineering_proposal",
+    "execution_report_claim",
 }
 
 ASTARTES_ALLOWED = {
     "denial_as_expected_claim",
-    "bounded_review_claim",
+    "execution_report_claim",
 }
+
+CANONICAL_CLAIMS = SOVEREIGN_ONLY_CLAIMS | PRIMARCH_ALLOWED | ASTARTES_ALLOWED
+CANONICAL_CLAIMS_SORTED = sorted(CANONICAL_CLAIMS)
+
+LEGACY_CLAIM_ALIAS = {
+    "sovereign_acceptance_claim": "canonical_acceptance_claim",
+    "sovereign_transition_claim": "sovereign_policy_change_claim",
+    "sovereign_rank_assertion": "emperor_rank_claim",
+    "primarch_reintegration_claim": "bounded_engineering_proposal",
+    "bounded_acceptance_recommendation": "bounded_engineering_proposal",
+    "bounded_review_claim": "execution_report_claim",
+}
+
+ASSURANCE_ORDER = {
+    "unsigned": 0,
+    "self_asserted": 1,
+    "structurally_bound": 2,
+    "locally_verifiable": 3,
+    "emperor_local_only_verifiable": 4,
+    # tolerated legacy synonym
+    "cryptographically_bound": 4,
+    "unknown": -1,
+}
+
+
+def normalize_claim_class(claim_class: str) -> str:
+    claim = claim_class.strip()
+    return LEGACY_CLAIM_ALIAS.get(claim, claim)
+
+
+def assurance_meets(actual: str, minimum: str) -> bool:
+    return ASSURANCE_ORDER.get(actual, -1) >= ASSURANCE_ORDER.get(minimum, 999)
 
 
 def now_utc() -> str:
@@ -47,39 +80,48 @@ def evaluate_claim(
     warrant_status: str,
     charter_status: str,
 ) -> tuple[bool, str, str]:
-    claim = claim_class.strip()
+    claim = normalize_claim_class(claim_class)
     rank = detected_rank.strip().upper()
 
     if not canonical_root_valid:
         return False, "canonical_root_invalid", "HARD_FAIL"
+
+    if claim == "denial_as_expected_claim":
+        return True, "", "INFO"
+
+    if claim not in CANONICAL_CLAIMS:
+        return False, f"unknown_claim_class:{claim}", "SOFT_FAIL"
+
     if signature_status != "valid":
         return False, "signature_invalid", "HARD_FAIL"
     if issuer_identity_status not in {"verified", "trusted"}:
         return False, "issuer_identity_not_verified", "HARD_FAIL"
-    if signature_assurance not in {"structurally_bound", "cryptographically_bound"}:
-        return False, "signature_assurance_insufficient", "SOFT_FAIL"
+
+    if claim in SOVEREIGN_ONLY_CLAIMS and not assurance_meets(signature_assurance, "locally_verifiable"):
+        return False, "signature_assurance_insufficient_for_sovereign_claim", "HARD_FAIL"
+    if claim == "bounded_engineering_proposal" and not assurance_meets(signature_assurance, "structurally_bound"):
+        return False, "signature_assurance_insufficient_for_bounded_engineering", "SOFT_FAIL"
+    if claim == "execution_report_claim":
+        if signature_assurance in {"unknown", "unsigned"}:
+            return False, "signature_assurance_insufficient_for_execution_report", "SOFT_FAIL"
 
     if claim in SOVEREIGN_ONLY_CLAIMS and rank != "EMPEROR":
         return False, f"claim_requires_emperor_rank:{claim}", "HARD_FAIL"
 
     if rank == "EMPEROR":
-        if claim == "sovereign_transition_claim" and warrant_status not in {"valid", "not_required"}:
-            return False, "warrant_invalid_for_transition", "HARD_FAIL"
-        if claim == "sovereign_transition_claim" and charter_status not in {"valid", "not_required"}:
-            return False, "charter_invalid_for_transition", "HARD_FAIL"
         return True, "", "INFO"
 
     if rank == "PRIMARCH":
         if claim not in PRIMARCH_ALLOWED:
             return False, f"claim_not_allowed_for_primarch:{claim}", "SOFT_FAIL"
-        if warrant_status not in {"valid", "not_required"}:
-            return False, "warrant_invalid_for_primarch_claim", "SOFT_FAIL"
         return True, "", "INFO"
 
     if claim not in ASTARTES_ALLOWED:
         return False, f"claim_not_allowed_for_astartes:{claim}", "SOFT_FAIL"
-    if warrant_status not in {"valid", "not_required"}:
-        return False, "warrant_invalid_for_astartes_claim", "SOFT_FAIL"
+
+    if claim == "execution_report_claim":
+        if warrant_status != "valid" and charter_status != "valid":
+            return False, "warrant_or_charter_required_for_astartes_execution_report", "SOFT_FAIL"
     return True, "", "INFO"
 
 
@@ -96,7 +138,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--signature-assurance", default="structurally_bound", help="Signature assurance level.")
     parser.add_argument("--warrant-status", default="not_required", help="Warrant status.")
     parser.add_argument("--charter-status", default="not_required", help="Charter status.")
-    parser.add_argument("--claim-class", action="append", required=True, help="Claim class to evaluate (repeatable).")
+    parser.add_argument(
+        "--claim-class",
+        action="append",
+        required=True,
+        help=(
+            "Claim class to evaluate (repeatable). Canonical classes: "
+            + ", ".join(CANONICAL_CLAIMS_SORTED)
+            + ". Legacy aliases are accepted and normalized."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -122,6 +173,7 @@ def main() -> int:
     severity_order = {"INFO": 0, "SOFT_FAIL": 1, "HARD_FAIL": 2}
 
     for claim in args.claim_class:
+        normalized_claim = normalize_claim_class(claim)
         allowed, reason, severity = evaluate_claim(
             claim_class=claim,
             detected_rank=detected_rank,
@@ -143,7 +195,8 @@ def main() -> int:
 
         claim_results.append(
             {
-                "claim_class": claim,
+                "claim_class_input": claim,
+                "claim_class_normalized": normalized_claim,
                 "allowed": allowed,
                 "denied": denied,
                 "claim_severity": severity,
@@ -164,6 +217,7 @@ def main() -> int:
         "warrant_status": warrant_status,
         "charter_status": charter_status,
         "claim_inputs": args.claim_class,
+        "claim_inputs_normalized": [normalize_claim_class(value) for value in args.claim_class],
         "claim_results": claim_results,
         "claim_allowed": not any_denied,
         "claim_denied": any_denied,

@@ -1,0 +1,82 @@
+﻿{
+  "contract_version": "1.0.0",
+  "contract_kind": "claim_taxonomy_contract",
+  "status": "active",
+  "scope": "shared claim/rank/denial vocabulary for validation and governance tooling",
+  "source_docs": [
+    "docs/governance/NODE_AUTHORITY_RANK_POLICY_V1.md",
+    "docs/governance/SOVEREIGN_CLAIM_DENIAL_POLICY_V1.md",
+    "docs/governance/SOVEREIGN_RANK_PROOF_MODEL_V1.md",
+    "docs/governance/WORKFLOW2_CONSTITUTION_V1.md"
+  ],
+  "rank_labels": [
+    "EMPEROR",
+    "PRIMARCH",
+    "ASTARTES",
+    "UNKNOWN"
+  ],
+  "authority_classes": [
+    "sovereign",
+    "operational_creator_grade_non_sovereign",
+    "delegated_constrained_execution"
+  ],
+  "claim_classes": {
+    "sovereign_only": [
+      "canonical_acceptance_claim",
+      "sovereign_policy_change_claim",
+      "emperor_rank_claim",
+      "unrestricted_structural_mutation_claim"
+    ],
+    "primarch_allowed": [
+      "bounded_engineering_proposal",
+      "execution_report_claim",
+      "denial_as_expected_claim"
+    ],
+    "astartes_allowed": [
+      "execution_report_claim",
+      "denial_as_expected_claim"
+    ]
+  },
+  "legacy_aliases": {
+    "sovereign_acceptance_claim": "canonical_acceptance_claim",
+    "sovereign_transition_claim": "sovereign_policy_change_claim",
+    "sovereign_rank_assertion": "emperor_rank_claim",
+    "primarch_reintegration_claim": "bounded_engineering_proposal",
+    "bounded_acceptance_recommendation": "bounded_engineering_proposal",
+    "bounded_review_claim": "execution_report_claim"
+  },
+  "signature_assurance": {
+    "ordered_levels": [
+      "unsigned",
+      "self_asserted",
+      "structurally_bound",
+      "locally_verifiable",
+      "emperor_local_only_verifiable"
+    ],
+    "tolerated_legacy_synonyms": {
+      "cryptographically_bound": "emperor_local_only_verifiable"
+    },
+    "minimum_by_claim_family": {
+      "sovereign_only": "locally_verifiable",
+      "bounded_engineering": "structurally_bound",
+      "execution_report": "structurally_bound"
+    }
+  },
+  "denial_reason_vocabulary": [
+    "canonical_root_invalid",
+    "unknown_claim_class",
+    "signature_invalid",
+    "issuer_identity_not_verified",
+    "signature_assurance_insufficient_for_sovereign_claim",
+    "signature_assurance_insufficient_for_bounded_engineering",
+    "signature_assurance_insufficient_for_execution_report",
+    "claim_requires_emperor_rank",
+    "claim_not_allowed_for_primarch",
+    "claim_not_allowed_for_astartes",
+    "warrant_or_charter_required_for_astartes_execution_report"
+  ],
+  "notes": [
+    "Contract is canonical vocabulary source for claim-denial checks and related reports.",
+    "Per-department ownership semantics are intentionally out of scope for this contract."
+  ]
+}

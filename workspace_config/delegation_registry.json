@@ -1,0 +1,149 @@
+﻿{
+  "registry_version": "1.0.0",
+  "registry_kind": "federation_delegation_registry",
+  "status": "active",
+  "generated_scope": "bounded_architecture_hardening",
+  "canonical_root": "E:\\CVVCODEX",
+  "federation_scope": "assembly_development_block_only",
+  "non_goals": [
+    "no_rank_model_rewrite",
+    "no_auto_department_ownership_inference",
+    "no_sovereign_to_federation_layer_merge"
+  ],
+  "source_refs": {
+    "constitution": "docs/governance/WORKFLOW2_CONSTITUTION_V1.md",
+    "rank_policy": "docs/governance/NODE_AUTHORITY_RANK_POLICY_V1.md",
+    "claim_denial_policy": "docs/governance/SOVEREIGN_CLAIM_DENIAL_POLICY_V1.md",
+    "claim_taxonomy_contract": "workspace_config/claim_taxonomy_contract.json",
+    "federation_architecture": "docs/governance/FEDERATION_ARCHITECTURE.md",
+    "creator_policy": "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+    "helper_policy": "docs/governance/HELPER_NODE_POLICY.md",
+    "integration_policy": "docs/governance/INTEGRATION_INBOX_POLICY.md",
+    "task_contract": "docs/governance/TASK_ID_EXECUTION_CONTRACT.md",
+    "machine_protection_policy": "docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md"
+  },
+  "claim_taxonomy": {
+    "sovereign_only_claim_classes": [
+      "canonical_acceptance_claim",
+      "sovereign_policy_change_claim",
+      "emperor_rank_claim",
+      "unrestricted_structural_mutation_claim"
+    ],
+    "non_sovereign_claim_classes": [
+      "bounded_engineering_proposal",
+      "execution_report_claim",
+      "denial_as_expected_claim"
+    ],
+    "legacy_aliases_tolerated": {
+      "sovereign_acceptance_claim": "canonical_acceptance_claim",
+      "sovereign_transition_claim": "sovereign_policy_change_claim",
+      "sovereign_rank_assertion": "emperor_rank_claim",
+      "primarch_reintegration_claim": "bounded_engineering_proposal",
+      "bounded_acceptance_recommendation": "bounded_engineering_proposal",
+      "bounded_review_claim": "execution_report_claim"
+    }
+  },
+  "delegation_roles": [
+    {
+      "rank": "EMPEROR",
+      "authority_class": "sovereign",
+      "role_scope": "canonical_sovereign_oversight",
+      "allowed_command_scope": [
+        "canonical_acceptance",
+        "sovereign_policy_change",
+        "warrant_charter_issuance",
+        "creator_grade_operations"
+      ],
+      "allowed_delegation_scope": [
+        "bounded_charter_or_warrant_delegation",
+        "non_sovereign_operational_direction"
+      ],
+      "forbidden_claim_scope": [
+        "sovereignty_transfer_via_bundle_mirror_or_import"
+      ],
+      "relation_to_federation": "external_oversight_for_assembly_block",
+      "relation_to_departments": "oversight_and_signoff_boundary_only",
+      "oversight_execution_boundary": {
+        "oversight": "final_sovereign_decision",
+        "execution": "delegated_or_operational_layers"
+      },
+      "intake_implementation_boundary": {
+        "intake": "integration_review_and_signoff_gate",
+        "implementation": "department_execution_layers"
+      },
+      "confidence": "OBSERVED"
+    },
+    {
+      "rank": "PRIMARCH",
+      "authority_class": "operational_creator_grade_non_sovereign",
+      "role_scope": "bounded_federation_command_and_execution",
+      "allowed_command_scope": [
+        "bounded_engineering_proposal",
+        "execution_report_submission",
+        "department_level_direction_within_policy"
+      ],
+      "allowed_delegation_scope": [
+        "task_scoped_execution_delegation",
+        "integration_review_preparation"
+      ],
+      "forbidden_claim_scope": [
+        "canonical_acceptance_claim",
+        "sovereign_policy_change_claim",
+        "emperor_rank_claim",
+        "unrestricted_structural_mutation_claim"
+      ],
+      "relation_to_federation": "primary_operational_command_layer",
+      "relation_to_departments": "cross_department_direction_without_sovereign_closure",
+      "oversight_execution_boundary": {
+        "oversight": "non_sovereign_direction_and_review_preparation",
+        "execution": "direct_execution_or_astartes_delegation_within_contract"
+      },
+      "intake_implementation_boundary": {
+        "intake": "review_prep_and_accept_candidate_recommendation",
+        "implementation": "department_execution_under_task_and_policy_bounds"
+      },
+      "confidence": "OBSERVED"
+    },
+    {
+      "rank": "ASTARTES",
+      "authority_class": "delegated_constrained_execution",
+      "role_scope": "bounded_execution_and_evidence_delivery",
+      "allowed_command_scope": [
+        "execution_report_claim",
+        "denial_as_expected_claim",
+        "task_scoped_implementation"
+      ],
+      "allowed_delegation_scope": [
+        "none"
+      ],
+      "forbidden_claim_scope": [
+        "canonical_acceptance_claim",
+        "sovereign_policy_change_claim",
+        "emperor_rank_claim",
+        "unrestricted_structural_mutation_claim",
+        "unbounded_engineering_ownership"
+      ],
+      "relation_to_federation": "execution_lane_only",
+      "relation_to_departments": "department_task_worker_under_contract",
+      "oversight_execution_boundary": {
+        "oversight": "none",
+        "execution": "assigned_task_or_program_scope_only"
+      },
+      "intake_implementation_boundary": {
+        "intake": "handoff_to_integration_queue",
+        "implementation": "task_scoped_changes_with_required_checks"
+      },
+      "confidence": "OBSERVED"
+    }
+  ],
+  "department_binding_model": {
+    "status": "NOT_FORMALIZED",
+    "owner_assignment": "not_defined_machine_readably",
+    "guardrail": "department_specific_sovereign_or_rank_ownership_must_not_be_inferred_without_new_canonical_registry"
+  },
+  "escalation_rules_default": {
+    "astartes_to_primarch": "required_for_scope_expansion_or_unexpected_blocker",
+    "primarch_to_emperor": "required_for_sovereign_claims_or_canonical_acceptance",
+    "integration_gate_required_before_canonical_acceptance": true
+  }
+}
