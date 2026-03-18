@@ -18,6 +18,7 @@ This means:
 3. choose one bounded option from `docs/review_artifacts/POST_CONSTITUTION_V1_OPTIONS.md`;
 4. run within calibrated constitutional gate discipline;
 5. preserve source precedence and narrative consistency across canonical surfaces.
+6. preserve canonical node root expectation (`E:\CVVCODEX`) and do not treat safe mirror as sovereign source.
 
 ## Canonical Goal
 

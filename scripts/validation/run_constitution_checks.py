@@ -24,6 +24,13 @@ TRUTH_SCHEMA_PATH = ROOT / "workspace_config" / "schemas" / "truth_state_schema.
 PROOF_POLICY_PATH = ROOT / "docs" / "governance" / "PROOF_OUTPUT_NAMING_POLICY_V1.md"
 HYGIENE_PATH = ROOT / "docs" / "governance" / "CONSTITUTION_PHASE_HYGIENE_CHECKLIST_V1.md"
 NEXT_STEP_PATH = ROOT / "docs" / "NEXT_CANONICAL_STEP.md"
+CANONICAL_NODE_ROOT_POLICY_PATH = ROOT / "docs" / "governance" / "CANONICAL_NODE_ROOT_POLICY_V1.md"
+SOVEREIGN_RANK_PROOF_MODEL_PATH = ROOT / "docs" / "governance" / "SOVEREIGN_RANK_PROOF_MODEL_V1.md"
+SOVEREIGN_CLAIM_DENIAL_POLICY_PATH = ROOT / "docs" / "governance" / "SOVEREIGN_CLAIM_DENIAL_POLICY_V1.md"
+INTER_NODE_DOCUMENT_ARCHITECTURE_PATH = ROOT / "docs" / "governance" / "INTER_NODE_DOCUMENT_ARCHITECTURE_V1.md"
+INTER_NODE_DOCUMENT_SCHEMA_PATH = ROOT / "docs" / "governance" / "INTER_NODE_DOCUMENT_SCHEMA_V1.md"
+NODE_RANK_SCRIPT = ROOT / "scripts" / "validation" / "detect_node_rank.py"
+CLAIM_DENIAL_SCRIPT = ROOT / "scripts" / "validation" / "check_sovereign_claim_denial.py"
 
 REQUIRED_TRUTH_STATES = {
     "fact",
@@ -99,9 +106,23 @@ def run_cmd(cmd: list[str]) -> dict[str, Any]:
     return {
         "cmd": cmd,
         "exit_code": proc.returncode,
+        "stdout": proc.stdout or "",
+        "stderr": proc.stderr or "",
         "stdout_tail": (proc.stdout or "")[-2000:],
         "stderr_tail": (proc.stderr or "")[-2000:],
     }
+
+
+def parse_cmd_json(result: dict[str, Any], label: str) -> tuple[dict[str, Any] | None, list[str]]:
+    if result.get("exit_code", 1) != 0:
+        return None, [f"{label} command failed: {' '.join(result.get('cmd', []))}"]
+    raw = str(result.get("stdout", "")).strip()
+    if not raw:
+        return None, [f"{label} command returned empty stdout"]
+    try:
+        return json.loads(raw), []
+    except Exception as exc:
+        return None, [f"{label} stdout JSON parse failed: {exc}"]
 
 
 def git_head() -> str | None:
@@ -266,6 +287,75 @@ def classify_status_payload(status: dict[str, str], notes: list[str]) -> tuple[l
     else:
         add("hygiene_checklist_status", hygiene, "SOFT_FAIL", "hygiene checklist is missing")
 
+    node_root_policy = status["canonical_node_root_policy_status"]
+    if node_root_policy == "PASS":
+        add("canonical_node_root_policy_status", node_root_policy, "INFO", "canonical root policy artifact exists")
+    else:
+        add("canonical_node_root_policy_status", node_root_policy, "WARNING", "canonical root policy artifact missing")
+
+    sovereign_rank_model = status["sovereign_rank_proof_model_status"]
+    if sovereign_rank_model == "PASS":
+        add("sovereign_rank_proof_model_status", sovereign_rank_model, "INFO", "sovereign rank proof model artifact exists")
+    else:
+        add("sovereign_rank_proof_model_status", sovereign_rank_model, "WARNING", "sovereign rank proof model missing")
+
+    sovereign_claim_policy = status["sovereign_claim_denial_policy_status"]
+    if sovereign_claim_policy == "PASS":
+        add("sovereign_claim_denial_policy_status", sovereign_claim_policy, "INFO", "sovereign claim denial policy artifact exists")
+    else:
+        add("sovereign_claim_denial_policy_status", sovereign_claim_policy, "WARNING", "sovereign claim denial policy missing")
+
+    inter_node_architecture = status["inter_node_document_architecture_status"]
+    if inter_node_architecture == "PASS":
+        add(
+            "inter_node_document_architecture_status",
+            inter_node_architecture,
+            "INFO",
+            "inter-node document architecture artifact exists",
+        )
+    else:
+        add("inter_node_document_architecture_status", inter_node_architecture, "WARNING", "inter-node architecture missing")
+
+    inter_node_schema = status["inter_node_document_schema_status"]
+    if inter_node_schema == "PASS":
+        add("inter_node_document_schema_status", inter_node_schema, "INFO", "inter-node document schema artifact exists")
+    else:
+        add("inter_node_document_schema_status", inter_node_schema, "WARNING", "inter-node schema missing")
+
+    node_rank_detection = status["node_rank_detection_status"]
+    if node_rank_detection == "PASS":
+        add("node_rank_detection_status", node_rank_detection, "INFO", "node rank detection passed with fail-closed logic")
+    elif node_rank_detection == "UNKNOWN":
+        add("node_rank_detection_status", node_rank_detection, "SOFT_FAIL", "node rank detection unavailable")
+    else:
+        add("node_rank_detection_status", node_rank_detection, "WARNING", "node rank detection has warnings")
+
+    root_validity = status["canonical_root_validity"]
+    if root_validity == "VALID":
+        add("canonical_root_validity", root_validity, "INFO", "canonical node root context is valid")
+    elif root_validity == "INVALID":
+        add("canonical_root_validity", root_validity, "HARD_FAIL", "canonical node root context is invalid")
+    else:
+        add("canonical_root_validity", root_validity, "SOFT_FAIL", "canonical root validity unknown")
+
+    detected_rank = status["detected_node_rank"]
+    if detected_rank in {"EMPEROR", "PRIMARCH", "ASTARTES"}:
+        add("detected_node_rank", detected_rank, "INFO", "node rank resolved")
+    else:
+        add("detected_node_rank", detected_rank, "SOFT_FAIL", "node rank unresolved")
+
+    sovereign_proof = status["sovereign_proof_status"]
+    if sovereign_proof in {"VALID", "MISSING_OR_INVALID", "NOT_REQUIRED"}:
+        add("sovereign_proof_status", sovereign_proof, "INFO", "sovereign proof state recorded")
+    else:
+        add("sovereign_proof_status", sovereign_proof, "SOFT_FAIL", "sovereign proof state unknown")
+
+    sovereign_claim_denial = status["sovereign_claim_denial_status"]
+    if sovereign_claim_denial in {"ALLOW", "DENY"}:
+        add("sovereign_claim_denial_status", sovereign_claim_denial, "INFO", "sovereign claim evaluation recorded")
+    else:
+        add("sovereign_claim_denial_status", sovereign_claim_denial, "SOFT_FAIL", "sovereign claim evaluation missing")
+
     freshness = status["repo_control_status_freshness"]
     if freshness == "FRESH":
         add("repo_control_status_freshness", freshness, "INFO", "repo control snapshot aligned with current HEAD")
@@ -374,6 +464,16 @@ def render_markdown(payload: dict[str, Any]) -> str:
         f"- registry_doc_drift_status: `{payload['registry_doc_drift_status']}`",
         f"- proof_output_naming_policy_status: `{payload['proof_output_naming_policy_status']}`",
         f"- hygiene_checklist_status: `{payload['hygiene_checklist_status']}`",
+        f"- canonical_node_root_policy_status: `{payload['canonical_node_root_policy_status']}`",
+        f"- sovereign_rank_proof_model_status: `{payload['sovereign_rank_proof_model_status']}`",
+        f"- sovereign_claim_denial_policy_status: `{payload['sovereign_claim_denial_policy_status']}`",
+        f"- inter_node_document_architecture_status: `{payload['inter_node_document_architecture_status']}`",
+        f"- inter_node_document_schema_status: `{payload['inter_node_document_schema_status']}`",
+        f"- node_rank_detection_status: `{payload['node_rank_detection_status']}`",
+        f"- detected_node_rank: `{payload['detected_node_rank']}`",
+        f"- sovereign_proof_status: `{payload['sovereign_proof_status']}`",
+        f"- canonical_root_validity: `{payload['canonical_root_validity']}`",
+        f"- sovereign_claim_denial_status: `{payload['sovereign_claim_denial_status']}`",
         f"- repo_control_status_freshness: `{payload['repo_control_status_freshness']}`",
         f"- sync_status: `{payload['sync_status']}`",
         f"- trust_status: `{payload['trust_status']}`",
@@ -465,6 +565,64 @@ def main() -> int:
         run_cmd([sys.executable, "scripts/validation/check_registry_doc_drift.py", "--output", str(DRIFT_OUTPUT.relative_to(ROOT))])
     )
 
+    node_rank_result: dict[str, Any] | None = None
+    claim_denial_result: dict[str, Any] | None = None
+    if NODE_RANK_SCRIPT.exists():
+        rank_cmd = run_cmd(
+            [
+                sys.executable,
+                str(NODE_RANK_SCRIPT),
+                "--json-only",
+                "--no-write",
+                "--canonical-root-expected",
+                str(ROOT),
+            ]
+        )
+        command_results.append(rank_cmd)
+        node_rank_result, node_rank_notes = parse_cmd_json(rank_cmd, "detect_node_rank")
+    else:
+        node_rank_notes = [f"missing node rank validator: {NODE_RANK_SCRIPT.relative_to(ROOT).as_posix()}"]
+
+    detected_rank = "UNKNOWN"
+    canonical_root_valid = "UNKNOWN"
+    if node_rank_result:
+        detected_rank = str(node_rank_result.get("detected_rank", "UNKNOWN")).upper()
+        canonical_root_valid = "VALID" if bool(node_rank_result.get("canonical_root_valid", False)) else "INVALID"
+
+    if CLAIM_DENIAL_SCRIPT.exists() and detected_rank != "UNKNOWN":
+        claim_cmd = run_cmd(
+            [
+                sys.executable,
+                str(CLAIM_DENIAL_SCRIPT),
+                "--json-only",
+                "--no-write",
+                "--detected-rank",
+                detected_rank,
+                "--canonical-root-valid",
+                "true" if canonical_root_valid == "VALID" else "false",
+                "--context-surface",
+                "local_runtime",
+                "--signature-status",
+                "valid",
+                "--issuer-identity-status",
+                "verified",
+                "--signature-assurance",
+                "structurally_bound",
+                "--warrant-status",
+                "not_required",
+                "--charter-status",
+                "not_required",
+                "--claim-class",
+                "denial_as_expected_claim",
+            ]
+        )
+        command_results.append(claim_cmd)
+        claim_denial_result, claim_denial_notes = parse_cmd_json(claim_cmd, "check_sovereign_claim_denial")
+    elif not CLAIM_DENIAL_SCRIPT.exists():
+        claim_denial_notes = [f"missing sovereign claim validator: {CLAIM_DENIAL_SCRIPT.relative_to(ROOT).as_posix()}"]
+    else:
+        claim_denial_notes = ["sovereign claim validator skipped: detected rank unknown"]
+
     notes: list[str] = []
     for result in command_results:
         if result["exit_code"] != 0:
@@ -474,9 +632,37 @@ def main() -> int:
     truth_status, truth_notes = check_truth_schema()
     proof_policy_status, proof_policy_notes = check_file_status(PROOF_POLICY_PATH)
     hygiene_status, hygiene_notes = check_file_status(HYGIENE_PATH)
+    canonical_node_root_policy_status, canonical_node_root_policy_notes = check_file_status(CANONICAL_NODE_ROOT_POLICY_PATH)
+    sovereign_rank_proof_model_status, sovereign_rank_proof_model_notes = check_file_status(SOVEREIGN_RANK_PROOF_MODEL_PATH)
+    sovereign_claim_denial_policy_status, sovereign_claim_denial_policy_notes = check_file_status(SOVEREIGN_CLAIM_DENIAL_POLICY_PATH)
+    inter_node_document_architecture_status, inter_node_document_architecture_notes = check_file_status(
+        INTER_NODE_DOCUMENT_ARCHITECTURE_PATH
+    )
+    inter_node_document_schema_status, inter_node_document_schema_notes = check_file_status(INTER_NODE_DOCUMENT_SCHEMA_PATH)
     contradiction_status, contradiction_notes = load_scan_verdict(SCAN_OUTPUT, "canonical_contradiction_scan")
     drift_status, drift_notes = load_scan_verdict(DRIFT_OUTPUT, "registry_doc_drift_guard")
     sync_status, trust_status, governance_acceptance, repo_freshness, repo_notes = load_repo_control()
+
+    node_rank_detection_status = "PASS" if node_rank_result else "UNKNOWN"
+    sovereign_proof_status = "MISSING_OR_INVALID"
+    sovereign_proof_present = False
+    primarch_authority_path_valid = False
+    if node_rank_result:
+        sovereign_proof_status = str(
+            node_rank_result.get("proof_status", {}).get("emperor", {}).get("status", "MISSING_OR_INVALID")
+        ).upper()
+        sovereign_proof_present = bool(node_rank_result.get("sovereign_proof_present", False))
+        primarch_authority_path_valid = bool(node_rank_result.get("primarch_authority_path_valid", False))
+
+    sovereign_claim_denial_status = "UNKNOWN"
+    sovereign_claim_denial_reason = ""
+    sovereign_claim_denial_severity = "INFO"
+    sovereign_claim_inputs: list[str] = []
+    if claim_denial_result:
+        sovereign_claim_denial_status = str(claim_denial_result.get("overall_verdict", "UNKNOWN")).upper()
+        sovereign_claim_denial_reason = str(claim_denial_result.get("denial_reason", ""))
+        sovereign_claim_denial_severity = str(claim_denial_result.get("claim_severity", "INFO")).upper()
+        sovereign_claim_inputs = [str(x) for x in claim_denial_result.get("claim_inputs", [])]
 
     status_payload: dict[str, Any] = {
         "constitution_phase": detect_phase(),
@@ -487,6 +673,21 @@ def main() -> int:
         "registry_doc_drift_status": drift_status,
         "proof_output_naming_policy_status": proof_policy_status,
         "hygiene_checklist_status": hygiene_status,
+        "canonical_node_root_policy_status": canonical_node_root_policy_status,
+        "sovereign_rank_proof_model_status": sovereign_rank_proof_model_status,
+        "sovereign_claim_denial_policy_status": sovereign_claim_denial_policy_status,
+        "inter_node_document_architecture_status": inter_node_document_architecture_status,
+        "inter_node_document_schema_status": inter_node_document_schema_status,
+        "node_rank_detection_status": node_rank_detection_status,
+        "detected_node_rank": detected_rank,
+        "sovereign_proof_status": sovereign_proof_status,
+        "sovereign_proof_present": str(sovereign_proof_present).lower(),
+        "primarch_authority_path_valid": str(primarch_authority_path_valid).lower(),
+        "canonical_root_validity": canonical_root_valid,
+        "sovereign_claim_denial_status": sovereign_claim_denial_status,
+        "sovereign_claim_denial_reason": sovereign_claim_denial_reason,
+        "sovereign_claim_denial_severity": sovereign_claim_denial_severity,
+        "sovereign_claim_inputs": sovereign_claim_inputs,
         "repo_control_status_freshness": repo_freshness,
         "sync_status": sync_status,
         "trust_status": trust_status,
@@ -501,6 +702,13 @@ def main() -> int:
         + drift_notes
         + proof_policy_notes
         + hygiene_notes
+        + canonical_node_root_policy_notes
+        + sovereign_rank_proof_model_notes
+        + sovereign_claim_denial_policy_notes
+        + inter_node_document_architecture_notes
+        + inter_node_document_schema_notes
+        + node_rank_notes
+        + claim_denial_notes
         + repo_notes
         + notes
     )
@@ -532,6 +740,13 @@ def main() -> int:
         "workspace_config/schemas/truth_state_schema.json",
         "docs/governance/PROOF_OUTPUT_NAMING_POLICY_V1.md",
         "docs/governance/CONSTITUTION_PHASE_HYGIENE_CHECKLIST_V1.md",
+        "docs/governance/CANONICAL_NODE_ROOT_POLICY_V1.md",
+        "docs/governance/SOVEREIGN_RANK_PROOF_MODEL_V1.md",
+        "docs/governance/SOVEREIGN_CLAIM_DENIAL_POLICY_V1.md",
+        "docs/governance/INTER_NODE_DOCUMENT_ARCHITECTURE_V1.md",
+        "docs/governance/INTER_NODE_DOCUMENT_SCHEMA_V1.md",
+        "scripts/validation/detect_node_rank.py",
+        "scripts/validation/check_sovereign_claim_denial.py",
         "runtime/repo_control_center/validation/canonical_contradiction_scan.json",
         "runtime/repo_control_center/validation/registry_doc_drift_report.json",
         "runtime/repo_control_center/repo_control_status.json",

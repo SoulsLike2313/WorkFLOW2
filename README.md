@@ -5,6 +5,8 @@
 - Working source of truth: `E:\CVVCODEX`.
 - Public safe mirror only: `WorkFLOW2` (`safe_mirror/main`, `https://github.com/SoulsLike2313/WorkFLOW2.git`).
 - `WorkFLOW2` is not the full working repository and must receive only approved safe state.
+- Expected canonical workspace root on Emperor / Primarch / Astartes nodes: `E:\CVVCODEX` unless explicit documented exception.
+- Path drift from `E:\CVVCODEX` must reduce trust/admission/rank confidence (fail-closed).
 - Official external reading channel for ChatGPT: targeted bundle export (`scripts/export_chatgpt_bundle.py`).
 - Governance brain stack is mandatory interpretation layer for all machine/agent execution.
 - Federation/Integration layer v1 is mandatory for multi-node collaboration (`creator`, `helper`, `integration` modes).
@@ -325,6 +327,11 @@ Protocol reference:
 5. project `PROJECT_MANIFEST.json`
 6. this `README.md`
 7. review artifacts as evidence only
+
+## Root And Mirror Clarification
+
+1. `E:\CVVCODEX` is canonical local source-of-truth root for operational control.
+2. `WorkFLOW2` safe mirror is external orientation/export surface and never sovereign rank proof source.
 
 ## Legacy Note
 

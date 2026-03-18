@@ -5,6 +5,8 @@
 - Working source of truth: `E:\CVVCODEX`
 - Public safe mirror only: `WorkFLOW2` via `safe_mirror/main`
 - Public mirror is not full working repository
+- Expected canonical workspace root across nodes: `E:\CVVCODEX` (unless explicit documented exception)
+- Path drift from canonical root narrows authority/rank confidence by fail-closed rule
 - Canonical external reading path: targeted bundles from `scripts/export_chatgpt_bundle.py`
 - Governance brain stack is mandatory for interpretation and execution
 - Active project: `platform_test_agent`
@@ -220,3 +222,4 @@ Do not use as source of truth:
 - runtime-only outputs,
 - local untracked files,
 - legacy remote assumptions.
+- safe mirror presence without canonical local root validation.

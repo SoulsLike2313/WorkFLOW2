@@ -68,6 +68,13 @@ Not accepted for execution:
 - constitutional predecessor artifact: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 - next canonical direction: `select post-constitution path from controlled options; no automatic new brain-layer launch`
 
+## Canonical Root Context
+
+- canonical operational workspace root: `E:\CVVCODEX`
+- safe mirror orientation surface: `WorkFLOW2` (`safe_mirror/main`)
+- safe mirror is not sovereign source-of-truth and cannot elevate node rank
+- path drift from `E:\CVVCODEX` must reduce trust/admission/rank confidence until revalidated
+
 ## Shared Systems Baseline
 
 Installed system baseline for guarded projects:

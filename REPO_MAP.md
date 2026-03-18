@@ -5,6 +5,8 @@
 - Local working source: `E:\CVVCODEX`
 - Public safe mirror only: `safe_mirror/main` -> `WorkFLOW2`
 - `WorkFLOW2` is not full development workspace.
+- Expected canonical workspace root across nodes: `E:\CVVCODEX` unless exception is explicitly documented.
+- Path drift from canonical root is non-authoritative for sovereign/rank claims until revalidated.
 - External reading channel: targeted ChatGPT bundle export.
 - Creator authority path is never tracked; machine role is detected only via env+marker contract.
 - Mission Layer status: `accepted / certified baseline`.
@@ -131,6 +133,7 @@ Current canonical active project:
 - Public baseline: `WorkFLOW2` safe mirror.
 - Request-scoped context/code: `python scripts/export_chatgpt_bundle.py ...`
 - Full-repo publication for ChatGPT reading is non-canonical.
+- Safe mirror is never sovereign rank proof source.
 
 ## Repo Control Center
 
