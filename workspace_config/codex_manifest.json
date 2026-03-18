@@ -46,6 +46,7 @@
     "run python scripts/validate_workspace.py",
     "read docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
     "read docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md",
+    "read docs/governance/TRUTH_STATE_MODEL_V1.md",
     "read docs/governance/FIRST_PRINCIPLES.md",
     "read docs/governance/GOVERNANCE_HIERARCHY.md",
     "read docs/governance/SELF_VERIFICATION_POLICY.md",
@@ -120,7 +121,10 @@
     "read docs/governance/OPERATOR_MISSION_REGISTRY.md",
     "read workspace_config/operator_mission_registry.json",
     "read scripts/operator_mission_surface.py",
-    "run python scripts/operator_mission_surface.py status"
+    "run python scripts/operator_mission_surface.py status",
+    "read workspace_config/schemas/truth_state_schema.json",
+    "read docs/governance/PROOF_OUTPUT_NAMING_POLICY_V1.md",
+    "read docs/governance/CONSTITUTION_PHASE_HYGIENE_CHECKLIST_V1.md"
   ],
   "task_governance": {
     "instruction_read_before_task_required": true,
@@ -206,6 +210,7 @@
       "docs/governance/FIRST_PRINCIPLES.md",
       "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
       "docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md",
+      "docs/governance/TRUTH_STATE_MODEL_V1.md",
       "docs/governance/GOVERNANCE_HIERARCHY.md",
       "docs/governance/SELF_VERIFICATION_POLICY.md",
       "docs/governance/CONTRADICTION_CONTROL_POLICY.md",
@@ -266,7 +271,10 @@
       "docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json",
       "docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md",
       "docs/review_artifacts/OPERATOR_MISSION_SCENARIO_PACK.md",
-      "docs/review_artifacts/OPERATOR_MISSION_LAYER_FINAL_SUMMARY.md"
+      "docs/review_artifacts/OPERATOR_MISSION_LAYER_FINAL_SUMMARY.md",
+      "workspace_config/schemas/truth_state_schema.json",
+      "docs/governance/PROOF_OUTPUT_NAMING_POLICY_V1.md",
+      "docs/governance/CONSTITUTION_PHASE_HYGIENE_CHECKLIST_V1.md"
     ],
     "working_source_of_truth_root": "E:\\CVVCODEX",
     "public_safe_mirror_only_not_full_repo": true,
@@ -375,7 +383,13 @@
     "operator_task_program_layer_required": true,
     "operator_mission_registry_path": "workspace_config/operator_mission_registry.json",
     "operator_mission_surface_script": "scripts/operator_mission_surface.py",
-    "operator_mission_layer_required": true
+    "operator_mission_layer_required": true,
+    "truth_state_model_path": "docs/governance/TRUTH_STATE_MODEL_V1.md",
+    "truth_state_schema_path": "workspace_config/schemas/truth_state_schema.json",
+    "proof_output_naming_policy_path": "docs/governance/PROOF_OUTPUT_NAMING_POLICY_V1.md",
+    "constitution_phase_hygiene_checklist_path": "docs/governance/CONSTITUTION_PHASE_HYGIENE_CHECKLIST_V1.md",
+    "canonical_contradiction_scan_script": "scripts/validation/scan_canonical_contradictions.py",
+    "registry_doc_drift_guard_script": "scripts/validation/check_registry_doc_drift.py"
   },
   "scope_controls": {
     "allow_cross_project_changes_without_request": false,
@@ -604,6 +618,7 @@
     "docs/NEXT_CANONICAL_STEP.md",
     "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
     "docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md",
+    "docs/governance/TRUTH_STATE_MODEL_V1.md",
     "docs/governance/FIRST_PRINCIPLES.md",
     "docs/governance/GOVERNANCE_HIERARCHY.md",
     "docs/governance/SELF_VERIFICATION_POLICY.md",
@@ -685,6 +700,9 @@
     "scripts/operator_mission_surface.py",
     "docs/governance/OPERATOR_MISSION_REGISTRY.md",
     "docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json",
-    "docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md"
+    "docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md",
+    "workspace_config/schemas/truth_state_schema.json",
+    "docs/governance/PROOF_OUTPUT_NAMING_POLICY_V1.md",
+    "docs/governance/CONSTITUTION_PHASE_HYGIENE_CHECKLIST_V1.md"
   ]
 }

@@ -3,6 +3,7 @@
 - step_id: `next-step-constitution-first-phase-v0`
 - effective_date_utc: `2026-03-18`
 - previous_accepted_stage: `operator-mission-layer-v1-accepted`
+- current canonical phase: `constitution-first`
 
 ## What Do We Do Next
 

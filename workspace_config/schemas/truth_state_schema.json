@@ -1,0 +1,162 @@
+{
+  "schema_version": "truth_state_schema.v1.0.0",
+  "model_id": "workflow2_truth_state_model_v1",
+  "type": "object",
+  "required": [
+    "truth_state"
+  ],
+  "properties": {
+    "truth_state": {
+      "type": "string",
+      "enum": [
+        "fact",
+        "hypothesis",
+        "proposal",
+        "decision",
+        "certified_result",
+        "stale",
+        "rejected",
+        "superseded",
+        "unknown"
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "decision_basis": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "review_required": {
+      "type": "boolean"
+    },
+    "certification_required": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "state_semantics": {
+    "fact": {
+      "requires_evidence": true,
+      "allows_completion_claim": false
+    },
+    "hypothesis": {
+      "requires_evidence": false,
+      "allows_completion_claim": false
+    },
+    "proposal": {
+      "requires_evidence": false,
+      "allows_completion_claim": false
+    },
+    "decision": {
+      "requires_evidence": true,
+      "allows_completion_claim": false
+    },
+    "certified_result": {
+      "requires_evidence": true,
+      "requires_review": true,
+      "requires_certification": true,
+      "allows_completion_claim": true
+    },
+    "stale": {
+      "requires_newer_canonical_reference": true,
+      "allows_completion_claim": false
+    },
+    "rejected": {
+      "requires_reason": true,
+      "allows_completion_claim": false
+    },
+    "superseded": {
+      "requires_replacement_reference": true,
+      "allows_completion_claim": false
+    },
+    "unknown": {
+      "requires_evidence_request": true,
+      "allows_completion_claim": false
+    }
+  },
+  "forbidden_conflations": [
+    [
+      "fact",
+      "certified_result"
+    ],
+    [
+      "proposal",
+      "decision"
+    ],
+    [
+      "stale",
+      "superseded"
+    ],
+    [
+      "unknown",
+      "rejected"
+    ]
+  ],
+  "allowed_transitions": {
+    "hypothesis": [
+      "proposal",
+      "fact",
+      "rejected",
+      "unknown"
+    ],
+    "proposal": [
+      "decision",
+      "rejected",
+      "stale"
+    ],
+    "fact": [
+      "decision",
+      "stale",
+      "superseded"
+    ],
+    "decision": [
+      "certified_result",
+      "rejected",
+      "superseded"
+    ],
+    "certified_result": [
+      "superseded",
+      "stale"
+    ],
+    "unknown": [
+      "hypothesis",
+      "proposal",
+      "fact",
+      "rejected"
+    ],
+    "rejected": [
+      "proposal",
+      "superseded"
+    ],
+    "stale": [
+      "superseded"
+    ],
+    "superseded": []
+  },
+  "forbidden_transitions": [
+    [
+      "unknown",
+      "certified_result"
+    ],
+    [
+      "proposal",
+      "certified_result"
+    ],
+    [
+      "rejected",
+      "certified_result"
+    ],
+    [
+      "stale",
+      "certified_result"
+    ]
+  ]
+}
