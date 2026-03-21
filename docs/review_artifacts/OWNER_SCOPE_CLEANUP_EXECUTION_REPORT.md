@@ -25,6 +25,9 @@
   - hash: `1cf1557`
   - message: `owner-scope closure: commit canonical keep set and archive review artifact noise`
   - summary: `101 files changed, 9700 insertions(+), 662 deletions(-)`
+- [OBSERVED] Follow-up report commits:
+  - `f909420` (`owner-scope cleanup: add execution and residual dirty snapshot reports`)
+  - `095d8c7` (`owner-scope cleanup: refresh post-clean snapshot divergence to final state`)
 
 ### 3) Owner-manual-only cluster left untouched
 - [OBSERVED] Not touched by Codex (per matrix):
