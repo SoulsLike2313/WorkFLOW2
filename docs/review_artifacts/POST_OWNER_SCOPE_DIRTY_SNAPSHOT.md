@@ -1,7 +1,7 @@
 # POST_OWNER_SCOPE_DIRTY_SNAPSHOT
 
 - [OBSERVED] branch: `main`
-- [OBSERVED] divergence vs `safe_mirror/main`: `ahead 2, behind 0`
+- [OBSERVED] divergence vs `safe_mirror/main`: `ahead 0, behind 0`
 - [OBSERVED] tracked dirty count: `2`
 - [OBSERVED] untracked count: `0`
 - [OBSERVED] total dirty count: `2`

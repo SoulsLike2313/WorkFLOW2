@@ -28,6 +28,10 @@
 - [OBSERVED] Follow-up report commits:
   - `f909420` (`owner-scope cleanup: add execution and residual dirty snapshot reports`)
   - `095d8c7` (`owner-scope cleanup: refresh post-clean snapshot divergence to final state`)
+  - `3065ebf` (`owner-scope cleanup: update execution report with final commit chain`)
+- [OBSERVED] Sync normalization after commit chain:
+  - pushed `main` to `safe_mirror/main`
+  - branch parity returned to `ahead 0, behind 0`
 
 ### 3) Owner-manual-only cluster left untouched
 - [OBSERVED] Not touched by Codex (per matrix):
