@@ -1,0 +1,24 @@
+{
+  "report": "POST_OWNER_SCOPE_DIRTY_SNAPSHOT",
+  "generated_at_utc": "2026-03-21T15:14:40Z",
+  "branch": "main",
+  "ahead_behind_vs_safe_mirror_main": "ahead 1, behind 0",
+  "counts": {
+    "tracked_dirty_count": 2,
+    "untracked_count": 0,
+    "total_dirty_count": 2
+  },
+  "residual_groups": [
+    {
+      "group": "owner_manual_integration_review_result_pair",
+      "paths": [
+        "integration/review_queue/20260317T094958Z_TASK-PLATFORM_TEST_AGENT-001_helper-node-audit/review_result.json",
+        "integration/review_queue/20260317T094958Z_TASK-PLATFORM_TEST_AGENT-001_helper-node-audit/review_result.md"
+      ],
+      "classification": "owner-manual-only",
+      "blocks_all_green": true,
+      "blocking_reason": "worktree_clean=false while these tracked files remain modified"
+    }
+  ],
+  "residual_scope_zero": false
+}
