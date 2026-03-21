@@ -1,7 +1,7 @@
 {
   "package": "20260317T094958Z_TASK-PLATFORM_TEST_AGENT-001_helper-node-audit",
   "package_path": "integration/inbox/20260317T094958Z_TASK-PLATFORM_TEST_AGENT-001_helper-node-audit",
-  "reviewed_at": "2026-03-17T12:50:58.513941+00:00",
+  "reviewed_at": "2026-03-20T10:40:28.025675+00:00",
   "decision": "ACCEPT_CANDIDATE",
   "reasons": [
     "schema and scope checks passed"
