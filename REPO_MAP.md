@@ -8,13 +8,25 @@
 - Expected canonical workspace root across nodes: `E:\CVVCODEX` unless exception is explicitly documented.
 - Path drift from canonical root is non-authoritative for sovereign/rank claims until revalidated.
 - External reading channel: targeted ChatGPT bundle export.
-- Creator authority path is never tracked; machine role is detected only via env+marker contract.
+- Codex output discipline default: ultra-short chat + bundle-first details (`docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md`, `workspace_config/codex_output_mode_contract.json`).
+- Creator authority path is never tracked and is legacy compatibility telemetry only; machine mode is derived from rank model v2.
 - Mission Layer status: `accepted / certified baseline`.
 - Current canonical phase: `constitution-v1-finalized`.
 - Constitutional regime: `lightweight constitutional enforcement`.
 - Constitution anchor: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`.
+- Reference Brain V1 anchor: `docs/governance/REFERENCE_BRAIN_V1_MODEL.md`.
+- Reference Brain V1 machine-readable status: `workspace_config/reference_brain_v1_status.json`.
 - Constitution V0 status: `historical bootstrap`.
 - Vocabulary anchor: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`.
+- Constitutional mutation authority surfaces:
+  - `docs/governance/CONSTITUTION_CHANGE_AUTHORITY_POLICY.md`
+  - `docs/governance/CONSTITUTION_AMENDMENT_FLOW.md`
+  - `docs/governance/CONSTITUTION_IMMUTABILITY_BOUNDARY.md`
+- Status/will/binding triad surfaces:
+  - `docs/governance/GENOME_DOCTRINE_V1.md`
+  - `docs/governance/GRAMOTA_DOCTRINE_V1.md`
+  - `docs/governance/ASSIGNMENT_BINDING_DOCTRINE_V1.md`
+  - `workspace_config/genome_gramota_assignment_binding_contract.json`
 - Rapid full-context onboarding: `docs/governance/WORKFLOW2_GPT_ONBOARDING_MASTER_V1.md`.
 
 ## Read Order (Bootstrap)
@@ -71,7 +83,7 @@
 47. `workspace_config/block_task_schema.json`
 48. `workspace_config/handoff_package_schema.json`
 49. `workspace_config/integration_inbox_contract.json`
-50. `workspace_config/creator_mode_detection_contract.json`
+50. `workspace_config/creator_mode_detection_contract.json` (legacy compatibility only; non-load-bearing for rank/mode)
 51. `integration/README.md`
 52. `tasks/README.md`
 53. `scripts/detect_machine_mode.py`
@@ -127,13 +139,26 @@ Authoritative registry:
 Current canonical active project:
 
 - `platform_test_agent` -> `projects/platform_test_agent`
+- current Federation department implementation: `Analytics Department`
+- non-department intake/analysis lines:
+  - `tiktok_agent_platform`
+  - `game_ru_ai`
+  - `voice_launcher`
+  - `adaptive_trading`
+- analytics/intake doctrine:
+  - `docs/governance/ANALYTICS_DEPARTMENT_DOCTRINE.md`
+  - `docs/governance/TEST_PRODUCT_INTAKE_MODEL.md`
+  - `workspace_config/test_product_intake_contract.json`
 
 ## External Reading Path
 
 - Public baseline: `WorkFLOW2` safe mirror.
 - Request-scoped context/code: `python scripts/export_chatgpt_bundle.py ...`
+- Canonical fallback path when tracked exporter is insufficient: `python scripts/export_manual_safe_bundle.py ...` (see `docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md`)
+- Canonical fallback path for bounded policy-safe search/read: `python scripts/search_repo_safe.py ...` (see `docs/governance/REPO_SEARCH_ENTRYPOINTS.md`)
 - Full-repo publication for ChatGPT reading is non-canonical.
 - Safe mirror is never sovereign rank proof source.
+- Large tasks should deliver detailed analysis through bundle/report artifacts; chat remains short and navigational.
 
 ## Repo Control Center
 
@@ -208,7 +233,7 @@ Current canonical active project:
 ## Federation / Integration Contracts
 
 - `workspace_config/federation_mode_contract.json`
-- `workspace_config/creator_mode_detection_contract.json`
+- `workspace_config/creator_mode_detection_contract.json` (legacy compatibility only; non-load-bearing for rank/mode)
 - `workspace_config/block_task_schema.json`
 - `workspace_config/handoff_package_schema.json`
 - `workspace_config/integration_inbox_contract.json`

@@ -1,0 +1,98 @@
+{
+  "report": "TRACKED_STATUS_SURFACES_FORENSIC_AUDIT",
+  "scope": "tracked_status_and_evidence_surfaces_that_can_self_dirty_worktree",
+  "verification_chain": [
+    "python scripts/check_repo_sync.py --remote safe_mirror --branch main",
+    "python scripts/repo_control_center.py status",
+    "python scripts/repo_control_center.py full-check",
+    "python scripts/validation/run_constitution_checks.py"
+  ],
+  "surfaces": [
+    {
+      "path": "runtime/repo_control_center/constitution_status.json",
+      "writer_scripts": [
+        "scripts/validation/run_constitution_checks.py"
+      ],
+      "rewrite_triggers": [
+        "explicit_flag:--write-surfaces"
+      ],
+      "tracked": true,
+      "rewrite_deterministic": false,
+      "blocks_worktree_clean_when_rewritten": true,
+      "intended_canonical_evidence": true,
+      "better_classification": "tracked_snapshot_with_explicit_write_gate",
+      "self_dirty_paradox_in_default_chain": false,
+      "evidence_markers": [
+        "last_checked_at",
+        "status_surface_write_mode"
+      ]
+    },
+    {
+      "path": "runtime/repo_control_center/constitution_status.md",
+      "writer_scripts": [
+        "scripts/validation/run_constitution_checks.py"
+      ],
+      "rewrite_triggers": [
+        "explicit_flag:--write-surfaces"
+      ],
+      "tracked": true,
+      "rewrite_deterministic": false,
+      "blocks_worktree_clean_when_rewritten": true,
+      "intended_canonical_evidence": true,
+      "better_classification": "tracked_snapshot_with_explicit_write_gate",
+      "self_dirty_paradox_in_default_chain": false,
+      "evidence_markers": [
+        "last_checked_at",
+        "human_readable_snapshot"
+      ]
+    },
+    {
+      "path": "workspace_config/SAFE_MIRROR_MANIFEST.json",
+      "writer_scripts": [
+        "scripts/build_safe_mirror_manifest.py"
+      ],
+      "rewrite_triggers": [
+        "explicit_command:build_safe_mirror_manifest"
+      ],
+      "tracked": true,
+      "rewrite_deterministic": false,
+      "blocks_worktree_clean_when_rewritten": true,
+      "intended_canonical_evidence": true,
+      "better_classification": "tracked_refresh_by_intent",
+      "self_dirty_paradox_in_default_chain": false,
+      "evidence_markers": [
+        "evidence_generated_at",
+        "basis_head_sha",
+        "evidence_contract_version"
+      ]
+    },
+    {
+      "path": "docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md",
+      "writer_scripts": [
+        "scripts/build_safe_mirror_manifest.py"
+      ],
+      "rewrite_triggers": [
+        "explicit_command:build_safe_mirror_manifest"
+      ],
+      "tracked": true,
+      "rewrite_deterministic": false,
+      "blocks_worktree_clean_when_rewritten": true,
+      "intended_canonical_evidence": true,
+      "better_classification": "tracked_refresh_by_intent",
+      "self_dirty_paradox_in_default_chain": false,
+      "evidence_markers": [
+        "evidence_generated_at",
+        "basis_head_sha",
+        "evidence_mode"
+      ]
+    }
+  ],
+  "reproduction": {
+    "chain_after_restore_changes_any_of_4": false,
+    "explicit_write_surfaces_changes_constitution_pair": true
+  },
+  "conclusion": {
+    "default_constitution_self_dirty_closed": true,
+    "remaining_all_green_blocker_is_large_dirty_scope": true
+  }
+}

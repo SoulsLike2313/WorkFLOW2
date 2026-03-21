@@ -1,0 +1,75 @@
+{
+  "contract_version": "1.0.0",
+  "contract_kind": "codex_output_mode",
+  "status": "active",
+  "scope_root": "E:\\CVVCODEX",
+  "default_output_mode": "ultra_short_chat_bundle_first",
+  "chat_surface": {
+    "ultra_short_required_by_default": true,
+    "navigation_only": true,
+    "preferred_sections_order": [
+      "STATUS",
+      "WHAT_WAS_CHANGED",
+      "BUNDLES_OR_FILES",
+      "IMPORTANT_LIMIT",
+      "NEXT_STEP"
+    ],
+    "forbidden_verbose_payloads_when_bundle_present": [
+      "long_analytic_walkthrough",
+      "deep_diff_dump",
+      "matrix_dump",
+      "inventory_dump",
+      "full_proof_chain_dump"
+    ]
+  },
+  "bundle_surface": {
+    "bundle_first_for_large_tasks": true,
+    "bundle_required_for_large_task_completion": true,
+    "detail_carrier_required_payloads": [
+      "detailed_reasoning",
+      "evidence_chain",
+      "diff_summary",
+      "maps_matrices",
+      "gap_and_risk_maps",
+      "history_recovery",
+      "review_depth_payload"
+    ],
+    "large_task_classes": [
+      "full_review",
+      "architecture_analysis",
+      "inventory_sweep",
+      "doctrine_hardening",
+      "cross_phase_verification",
+      "multi_file_change_set"
+    ],
+    "small_task_bundle_optional_if_clear": true
+  },
+  "safe_mode_handling": {
+    "protected_content_export_forbidden": true,
+    "chat_must_flag_limits_briefly": true,
+    "bundle_must_include_safe_summary": true,
+    "bundle_must_include_redacted_summary": true,
+    "bundle_must_include_exclusions_map": true
+  },
+  "persistence": {
+    "workspace_default_until_explicit_user_override": true
+  },
+  "completion_semantics": {
+    "large_task_without_required_bundle_is_not_done": true,
+    "allowed_status_without_bundle_when_required": [
+      "PARTIAL",
+      "BLOCKED"
+    ]
+  },
+  "non_goals": [
+    "bundle_lifecycle_cleanup_policy"
+  ],
+  "anchors": [
+    "docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md",
+    "docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md",
+    "workspace_config/bundle_fallback_contract.json",
+    "MACHINE_CONTEXT.md",
+    "REPO_MAP.md",
+    "docs/INSTRUCTION_INDEX.md"
+  ]
+}

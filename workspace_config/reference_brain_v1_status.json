@@ -1,0 +1,205 @@
+{
+  "schema_version": "reference_brain_v1_status.v1.1.0",
+  "model_id": "reference_brain_v1",
+  "status": "active",
+  "canonical_root": "E:\\CVVCODEX",
+  "federation_relation": "governing_core_not_operational_block",
+  "overall_verdict": "PARTIAL_HARDENED_GOVERNING_CORE",
+  "strong_enough_verdict_test": {
+    "verdict": "V1_STRONG_BUT_NOT_YET_EXEMPLAR",
+    "witness_pack": "docs/review_artifacts/REFERENCE_BRAIN_V1_WITNESS_PACK.md",
+    "blocking_remainder": [
+      "named_guardian_identity_binding_not_formalized",
+      "full_runtime_triad_arbitration_not_machine_enforced",
+      "complete_stale_secondary_retirement_not_closed"
+    ],
+    "non_blocking_remainder": [
+      "cross_validator_taxonomy_lockstep_not_absolute_but_core_path_hardened"
+    ]
+  },
+  "blocks": [
+    {
+      "id": "A",
+      "name": "constitutional_block",
+      "status": "STRONG",
+      "core_surfaces": [
+        "docs/governance/WORKFLOW2_CONSTITUTION_V1.md",
+        "docs/governance/CONSTITUTION_CHANGE_AUTHORITY_POLICY.md",
+        "docs/governance/CONSTITUTION_AMENDMENT_FLOW.md",
+        "docs/governance/CONSTITUTION_IMMUTABILITY_BOUNDARY.md"
+      ],
+      "main_gap": ""
+    },
+    {
+      "id": "B",
+      "name": "sovereign_authority_block",
+      "status": "STRONG",
+      "core_surfaces": [
+        "docs/governance/NODE_AUTHORITY_RANK_POLICY_V1.md",
+        "docs/governance/SOVEREIGN_RANK_PROOF_MODEL_V1.md",
+        "workspace_config/emperor_local_proof_contract.json",
+        "scripts/validation/detect_node_rank.py"
+      ],
+      "main_gap": ""
+    },
+    {
+      "id": "C",
+      "name": "rank_and_access_block",
+      "status": "STRONG",
+      "core_surfaces": [
+        "docs/governance/NODE_AUTHORITY_RANK_POLICY_V1.md",
+        "docs/governance/CREATOR_AUTHORITY_POLICY.md",
+        "docs/governance/HELPER_NODE_POLICY.md",
+        "docs/governance/INTEGRATION_INBOX_POLICY.md",
+        "workspace_config/creator_mode_detection_contract.json",
+        "scripts/detect_machine_mode.py"
+      ],
+      "main_gap": ""
+    },
+    {
+      "id": "D",
+      "name": "proof_and_legitimacy_block",
+      "status": "PARTIAL",
+      "core_surfaces": [
+        "docs/governance/SOVEREIGN_RANK_PROOF_MODEL_V1.md",
+        "docs/governance/SOVEREIGN_CLAIM_DENIAL_POLICY_V1.md",
+        "docs/governance/ISSUER_IDENTITY_AND_SIGNATURE_DISCIPLINE_V1.md",
+        "workspace_config/emperor_local_proof_contract.json",
+        "scripts/validation/check_sovereign_claim_denial.py",
+        "scripts/validation/detect_node_rank.py"
+      ],
+      "main_gap": "full_validator_wide_taxonomy_and_signature_coupling_not_yet_absolute"
+    },
+    {
+      "id": "E",
+      "name": "status_command_binding_documents_block",
+      "status": "PARTIAL",
+      "core_surfaces": [
+        "docs/governance/GENOME_DOCTRINE_V1.md",
+        "docs/governance/GRAMOTA_DOCTRINE_V1.md",
+        "docs/governance/ASSIGNMENT_BINDING_DOCTRINE_V1.md",
+        "workspace_config/genome_gramota_assignment_binding_contract.json",
+        "docs/governance/INTER_NODE_DOCUMENT_ARCHITECTURE_V1.md",
+        "docs/governance/INTER_NODE_DOCUMENT_SCHEMA_V1.md"
+      ],
+      "main_gap": "runtime_triage_and_conflict_arbitration_for_triad_not_fully_machine_enforced"
+    },
+    {
+      "id": "F",
+      "name": "intake_analysis_routing_block",
+      "status": "STRONG",
+      "core_surfaces": [
+        "docs/governance/FEDERATION_OPERATIONAL_MODEL.md",
+        "docs/governance/ANALYTICS_DEPARTMENT_DOCTRINE.md",
+        "docs/governance/TEST_PRODUCT_INTAKE_MODEL.md",
+        "workspace_config/test_product_intake_contract.json"
+      ],
+      "main_gap": ""
+    },
+    {
+      "id": "G",
+      "name": "validation_and_trust_block",
+      "status": "PARTIAL",
+      "core_surfaces": [
+        "scripts/repo_control_center.py",
+        "scripts/validation/run_constitution_checks.py",
+        "scripts/validation/scan_canonical_contradictions.py",
+        "scripts/validation/check_registry_doc_drift.py",
+        "docs/governance/CONSTITUTIONAL_ADMISSION_FLOW_V1.md",
+        "docs/governance/CONSTITUTION_GATE_SEVERITY_MODEL_V1.md"
+      ],
+      "main_gap": "invocation_driven_and_snapshot_freshness_sensitive_by_design"
+    },
+    {
+      "id": "H",
+      "name": "runtime_truth_surfaces_block",
+      "status": "PARTIAL",
+      "core_surfaces": [
+        "runtime/repo_control_center/repo_control_status.json",
+        "runtime/repo_control_center/constitution_status.json",
+        "runtime/repo_control_center/constitution_status.md",
+        "runtime/repo_control_center/plain_status.md",
+        "runtime/repo_control_center/one_screen_status.json"
+      ],
+      "main_gap": "runtime_status_surfaces_can_be_stale_without_refresh_discipline"
+    },
+    {
+      "id": "I",
+      "name": "delegation_and_escalation_block",
+      "status": "PARTIAL",
+      "core_surfaces": [
+        "workspace_config/delegation_registry.json",
+        "workspace_config/department_guardian_registry.json",
+        "workspace_config/department_exception_escalation_contract.json",
+        "docs/governance/FEDERATION_DEPARTMENT_ESCALATION_MATRIX.md",
+        "docs/governance/DEPARTMENT_EXCEPTION_ESCALATION_HARDENING_V1.md",
+        "docs/governance/PRIMARCH_ASTARTES_DELEGATION_MATRIX.md"
+      ],
+      "main_gap": "named_guardian_identity_binding_not_formalized"
+    },
+    {
+      "id": "J",
+      "name": "memory_maps_history_hygiene_block",
+      "status": "PARTIAL",
+      "core_surfaces": [
+        "workspace_config/workspace_manifest.json",
+        "workspace_config/codex_manifest.json",
+        "docs/INSTRUCTION_INDEX.md",
+        "REPO_MAP.md",
+        "MACHINE_CONTEXT.md",
+        "docs/governance/CANONICAL_SOURCE_PRECEDENCE.md",
+        "docs/review_artifacts/STALE_SECONDARY_CLEANUP_REPORT.md",
+        "docs/review_artifacts/STALE_SECONDARY_CLEANUP_COMPLETION_REPORT.md"
+      ],
+      "main_gap": "stale_secondary_artifact_layer_not_fully_retired"
+    },
+    {
+      "id": "K",
+      "name": "trusted_output_block",
+      "status": "PARTIAL",
+      "core_surfaces": [
+        "docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md",
+        "workspace_config/codex_output_mode_contract.json",
+        "docs/governance/BRAIN_TRUST_AND_EVIDENCE_MODEL_V1.md",
+        "docs/governance/BRAIN_CANON_DEVIATION_PROTECTION_MODEL_V1.md",
+        "docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md",
+        "docs/governance/REPO_SEARCH_ENTRYPOINTS.md"
+      ],
+      "main_gap": "witness_pack_present_but_exemplar_threshold_blockers_remain"
+    }
+  ],
+  "strong_blocks": [
+    "A",
+    "B",
+    "C",
+    "F"
+  ],
+  "partial_blocks": [
+    "D",
+    "E",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K"
+  ],
+  "not_formalized_items": [
+    "named_guardian_identity_binding",
+    "full_triage_runtime_validation_for_status_will_binding_contract",
+    "full_cross_validator_shared_taxonomy_lockstep",
+    "complete_stale_secondary_retirement_protocol"
+  ],
+  "hardening_order": [
+    "named_guardian_identity_binding_contract_and_verifier",
+    "cross_validator_taxonomy_consumption_expansion",
+    "runtime_triad_validation_integration",
+    "runtime_truth_freshness_discipline_tightening",
+    "stale_secondary_high_confusion_cleanup_completion",
+    "independent_witness_pack_for_strong_brain_claim"
+  ],
+  "notes": [
+    "Reference Brain V1 is governing core and is not equivalent to Federation.",
+    "Federation remains an operational development block under this governing core.",
+    "Current stage has one real department: Analytics Department (platform_test_agent implementation)."
+  ]
+}

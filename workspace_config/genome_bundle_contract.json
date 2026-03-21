@@ -1,0 +1,45 @@
+{
+  "contract_version": "2.0.0",
+  "contract_kind": "genome_bundle_contract",
+  "status": "active",
+  "scope": "owner-issued offline genome bundle for PRIMARCH elevation only",
+  "bundle_env_var_name": "CVVCODEX_PRIMARCH_GENOME_BUNDLE_DIR",
+  "bundle_marker_filename": "primarch_genome_bundle.json",
+  "root_binding_field": "workspace_slug_binding",
+  "required_root_binding_value": "workflow",
+  "required_marker_fields": {
+    "bundle_kind": "owner_issued_genome_bundle",
+    "profile_version": "v2",
+    "issuer_rank": "EMPEROR",
+    "granted_rank": "PRIMARCH"
+  },
+  "required_literal_fields": {
+    "bundle_scope": "offline_manual_transfer_only",
+    "authority_surface": "primarch_grade_non_sovereign"
+  },
+  "required_boolean_fields": {
+    "non_sovereign_bundle": true,
+    "grants_emperor_authority": false,
+    "network_transfer_required": false,
+    "offline_manual_transfer_only": true
+  },
+  "required_signature_fields": {
+    "signature_class": "genome_status_signature",
+    "signature_assurance_min": "locally_verifiable"
+  },
+  "forbidden_origin_tokens": [
+    "safe_mirror",
+    "portable_session_imports",
+    "portable_session_exports",
+    "import_bundle",
+    "staging"
+  ],
+  "path_rules": {
+    "must_be_outside_repo_root": true
+  },
+  "issuance_rule": "only_emperor_rank_may_issue_genome_bundle",
+  "notes": [
+    "Genome bundle is PRIMARCH-only elevation material and can never grant EMPEROR.",
+    "Bundle use is owner-manual offline only and should not be treated as network trust material."
+  ]
+}

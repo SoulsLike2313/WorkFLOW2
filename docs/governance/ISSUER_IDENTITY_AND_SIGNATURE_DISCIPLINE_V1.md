@@ -61,13 +61,22 @@ Documents that must carry identity/signature fields:
 7. execution report;
 8. task return dossier;
 9. bounded completion report.
+10. genome;
+11. gramota;
+12. assignment_binding.
+
+Triad signature class baseline:
+1. genome -> `genome_status_signature`
+2. gramota -> `gramota_directive_signature`
+3. assignment_binding -> `assignment_binding_signature`
 
 ## 6) Required Behavior by Claim Sensitivity
 
 1. sovereign claim classes require at least `locally_verifiable` assurance and `signature_status=valid`, `issuer_identity_status=verified`.
 2. bounded engineering proposals require at least `structurally_bound` assurance.
 3. execution reports require at least non-`unsigned` assurance; unknown assurance narrows to deny in authority-bearing contexts.
-4. unknown signature/identity state never expands authority.
+4. assignment-binding requires at least `locally_verifiable` assurance.
+5. unknown signature/identity state never expands authority.
 
 ## 7) Emperor-Local-Only Checks
 
@@ -75,6 +84,7 @@ Must be validated on Emperor machine:
 1. emperor-local-only verifiable signature assumptions;
 2. binding between issuer identity and sovereign acceptance authority;
 3. final acceptance of authority-bearing documents affecting canonical truth.
+4. genome bundle issuance authority claims (`genome_bundle_issuance_claim`) where relevant.
 
 ## 8) What Is Achievable Now (Without Heavy PKI)
 
@@ -92,3 +102,7 @@ Not fully achievable now:
 ## 9) Fail-Closed Rule
 
 If any of `issuer_rank`, `issuer_identity`, `signature_status`, `signature_assurance`, `issuer_identity_status` is missing/unknown in authority-bearing context, claim scope narrows (deny elevation).
+
+Local sovereign substrate boundary:
+1. signature metadata alone never substitutes `local_sovereign_substrate`;
+2. Emperor elevation still requires local substrate proof contract pass.

@@ -1,0 +1,71 @@
+{
+  "contract_version": "2.0.0",
+  "contract_kind": "status_model_v2",
+  "status": "active",
+  "scope": "machine rank determination for ASTARTES/PRIMARCH/EMPEROR using fail-closed local inputs",
+  "rank_resolution_order": [
+    "EMPEROR",
+    "PRIMARCH",
+    "ASTARTES",
+    "UNKNOWN"
+  ],
+  "rank_resolution_rules": {
+    "repo_copy_only": "ASTARTES",
+    "repo_copy_plus_genome_bundle": "PRIMARCH",
+    "repo_copy_plus_local_sovereign_substrate": "EMPEROR",
+    "repo_copy_plus_genome_plus_local_sovereign_substrate": "EMPEROR"
+  },
+  "rank_resolution_disambiguation": {
+    "substrate_decisive_when_present": true,
+    "genome_never_elevates_to_emperor": true,
+    "both_inputs_not_dual_emperor_paths": true
+  },
+  "rank_derived_machine_mode_map": {
+    "EMPEROR": {
+      "machine_mode": "creator",
+      "helper_tier": null
+    },
+    "PRIMARCH": {
+      "machine_mode": "helper",
+      "helper_tier": "high"
+    },
+    "ASTARTES": {
+      "machine_mode": "helper",
+      "helper_tier": "low"
+    }
+  },
+  "repo_copy_validation": {
+    "required": true,
+    "required_anchor_files": [
+      "README.md",
+      "MACHINE_CONTEXT.md",
+      "REPO_MAP.md",
+      "workspace_config/workspace_manifest.json",
+      "docs/governance/WORKFLOW2_CONSTITUTION_V1.md",
+      "scripts/validation/detect_node_rank.py",
+      "scripts/validation/check_sovereign_claim_denial.py"
+    ],
+    "workspace_slug_expected": "workflow",
+    "workspace_manifest_path": "workspace_config/workspace_manifest.json"
+  },
+  "primarch_genome_bundle": {
+    "contract_path": "workspace_config/genome_bundle_contract.json",
+    "required_for_primarch": true
+  },
+  "local_sovereign_substrate": {
+    "contract_path": "workspace_config/emperor_local_proof_contract.json",
+    "required_for_emperor": true
+  },
+  "forbidden_shortcuts": [
+    "repo_copy_never_grants_primarch_or_emperor_without_extra_local_layer",
+    "creator_authority_never_required_for_emperor_v2",
+    "genome_bundle_never_grants_emperor",
+    "legacy_emperor_env_fallback_must_not_be_authority_source",
+    "safe_mirror_or_portable_bundle_never_grants_emperor",
+    "metadata_only_identity_never_grants_emperor"
+  ],
+  "deprecations": {
+    "creator_authority_for_emperor": "deprecated_load_bearing_removed_in_v2",
+    "legacy_creator_dependency": "compatibility_only"
+  }
+}

@@ -19,10 +19,13 @@ Lightweight admission/completion integration path for constitutional checks with
 - `python scripts/validation/scan_canonical_contradictions.py`
 - `python scripts/validation/check_registry_doc_drift.py`
 
-3. Aggregate constitution status surface:
+3. Aggregate constitution status verdict (default no-write):
 - `python scripts/validation/run_constitution_checks.py`
 
-4. Optional single-command path:
+4. Optional explicit status-surface refresh:
+- `python scripts/validation/run_constitution_checks.py --write-surfaces`
+
+5. Optional single-command path:
 - `python scripts/validation/run_constitution_checks.py --run-repo-control`
 
 ## Discipline Points
@@ -59,8 +62,13 @@ Run constitutional checks:
 ## Artifacts Produced
 - `runtime/repo_control_center/validation/canonical_contradiction_scan.json`
 - `runtime/repo_control_center/validation/registry_doc_drift_report.json`
-- `runtime/repo_control_center/constitution_status.json`
-- `runtime/repo_control_center/constitution_status.md`
+
+## Status Surface Write Policy
+- default invocation (`run_constitution_checks.py`) is **no-write** for constitution status surfaces to avoid self-dirtying tracked worktree during verification loops;
+- explicit refresh path is `--write-surfaces` when operator intentionally wants persisted constitution status files;
+- persisted surfaces:
+  - `runtime/repo_control_center/constitution_status.json`
+  - `runtime/repo_control_center/constitution_status.md`
 
 ## Non-Goals
 - No replacement of existing governance engine.

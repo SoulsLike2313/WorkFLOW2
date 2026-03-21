@@ -27,10 +27,13 @@
       "canonical_acceptance_claim",
       "sovereign_policy_change_claim",
       "emperor_rank_claim",
-      "unrestricted_structural_mutation_claim"
+      "unrestricted_structural_mutation_claim",
+      "constitutional_mutation_claim"
     ],
     "non_sovereign_claim_classes": [
       "bounded_engineering_proposal",
+      "constitutional_amendment_candidate_claim",
+      "constitutional_commentary_claim",
       "execution_report_claim",
       "denial_as_expected_claim"
     ],
@@ -40,7 +43,8 @@
       "sovereign_rank_assertion": "emperor_rank_claim",
       "primarch_reintegration_claim": "bounded_engineering_proposal",
       "bounded_acceptance_recommendation": "bounded_engineering_proposal",
-      "bounded_review_claim": "execution_report_claim"
+      "bounded_review_claim": "execution_report_claim",
+      "sovereign_constitutional_mutation_claim": "constitutional_mutation_claim"
     }
   },
   "delegation_roles": [
@@ -62,7 +66,7 @@
         "sovereignty_transfer_via_bundle_mirror_or_import"
       ],
       "relation_to_federation": "external_oversight_for_assembly_block",
-      "relation_to_departments": "oversight_and_signoff_boundary_only",
+      "relation_to_departments": "oversight_and_signoff_boundary_for_current_department",
       "oversight_execution_boundary": {
         "oversight": "final_sovereign_decision",
         "execution": "delegated_or_operational_layers"
@@ -88,12 +92,13 @@
       ],
       "forbidden_claim_scope": [
         "canonical_acceptance_claim",
+        "constitutional_mutation_claim",
         "sovereign_policy_change_claim",
         "emperor_rank_claim",
         "unrestricted_structural_mutation_claim"
       ],
       "relation_to_federation": "primary_operational_command_layer",
-      "relation_to_departments": "cross_department_direction_without_sovereign_closure",
+      "relation_to_departments": "current_department_direction_without_sovereign_closure",
       "oversight_execution_boundary": {
         "oversight": "non_sovereign_direction_and_review_preparation",
         "execution": "direct_execution_or_astartes_delegation_within_contract"
@@ -118,13 +123,14 @@
       ],
       "forbidden_claim_scope": [
         "canonical_acceptance_claim",
+        "constitutional_mutation_claim",
         "sovereign_policy_change_claim",
         "emperor_rank_claim",
         "unrestricted_structural_mutation_claim",
         "unbounded_engineering_ownership"
       ],
       "relation_to_federation": "execution_lane_only",
-      "relation_to_departments": "department_task_worker_under_contract",
+      "relation_to_departments": "current_department_task_worker_under_contract",
       "oversight_execution_boundary": {
         "oversight": "none",
         "execution": "assigned_task_or_program_scope_only"
@@ -137,9 +143,21 @@
     }
   ],
   "department_binding_model": {
-    "status": "NOT_FORMALIZED",
-    "owner_assignment": "not_defined_machine_readably",
-    "guardrail": "department_specific_sovereign_or_rank_ownership_must_not_be_inferred_without_new_canonical_registry"
+    "status": "PARTIAL_SINGLE_DEPARTMENT_FORMALIZED",
+    "current_department": {
+      "department_name": "Analytics Department",
+      "implementation_slug": "platform_test_agent",
+      "implementation_path": "projects/platform_test_agent",
+      "operational_role": "intake_audit_state_estimation_initial_plan_recommendation"
+    },
+    "non_department_lines_current_stage": [
+      "tiktok_agent_platform",
+      "game_ru_ai",
+      "voice_launcher",
+      "adaptive_trading"
+    ],
+    "owner_assignment": "named_guardian_identity_not_defined_machine_readably",
+    "guardrail": "only Analytics Department is current operational department; other lines must not be inferred as departments without new canonical doctrine"
   },
   "escalation_rules_default": {
     "astartes_to_primarch": "required_for_scope_expansion_or_unexpected_blocker",

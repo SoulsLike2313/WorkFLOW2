@@ -1,0 +1,82 @@
+{
+  "contract_version": "1.0.0",
+  "contract_kind": "manual_safe_bundle_fallback",
+  "status": "active",
+  "scope_root": "E:\\CVVCODEX",
+  "default_paths": {
+    "staging_root": "runtime/manual_safe_bundle_staging",
+    "export_root": "runtime/chatgpt_bundle_exports"
+  },
+  "naming": {
+    "bundle_name_pattern": "<topic>_manual_safe_bundle_<timestamp_utc>",
+    "timestamp_format_utc": "%Y%m%dT%H%M%SZ"
+  },
+  "required_bundle_files": [
+    "bundle_include_manifest.json",
+    "bundle_summary.md",
+    "bundle_reading_order.md",
+    "bundle_exclusions.md",
+    "manual_safe_export_report.md"
+  ],
+  "required_payload_root": "exported",
+  "fallback_triggers": [
+    "exists_but_not_tracked",
+    "scoped_payload_incomplete_in_default_exporter",
+    "large_step_requires_fresh_untracked_artifacts",
+    "operator_explicit_manual_safe_fallback"
+  ],
+  "safe_mode": {
+    "runtime_paths_mode": "allowlist_only",
+    "runtime_allowlist_paths": [
+      "runtime/repo_control_center/repo_control_status.json",
+      "runtime/repo_control_center/repo_control_report.md",
+      "runtime/repo_control_center/evolution_status.json",
+      "runtime/repo_control_center/evolution_report.md",
+      "runtime/repo_control_center/plain_status.md",
+      "runtime/repo_control_center/one_screen_status.json",
+      "runtime/repo_control_center/constitution_status.json",
+      "runtime/repo_control_center/constitution_status.md"
+    ],
+    "deny_path_patterns": [
+      "(^|/)\\.env(\\.|$)",
+      "\\.(pem|key|p12|pfx)$",
+      "(^|/)(credentials|secrets?)(\\.|/|$)",
+      "(^|/)(id_rsa|id_ed25519)$",
+      "(^|/)setup_reports(/|$)",
+      "(^|/)tools/public_mirror(/|$)",
+      "(^|/)(logs?|tmp|temp|cache)(/|$)",
+      "(^|/)(router|tunnel|wan|lan|network_trace|network_traces|network_diagnostics?)(/|$)",
+      "(^|/)runtime/(portable_session_imports|portable_session_exports|manual_transfer)(/|$)",
+      "(^|/)runtime/manual_safe_bundle_staging(/|$)",
+      "(^|/)runtime/chatgpt_bundle_exports(/|$)",
+      "(^|/)(emperor_sovereign_proof\\.json|emperor_machine_binding\\.proof|sovereign_continuity\\.seal|proof_possession\\.local)$",
+      "\\.(etl|pcap|dmp|bak|orig)$"
+    ],
+    "deny_content_patterns": [
+      "AKIA[0-9A-Z]{16}",
+      "gh[pousr]_[A-Za-z0-9]{30,}",
+      "sk-[A-Za-z0-9]{20,}",
+      "-----BEGIN [A-Z ]*PRIVATE KEY-----",
+      "https?://[^\\s:@/]+:[^\\s@/]+@",
+      "(?i)\\b(password|token|secret|credentials?)\\b\\s*[:=]\\s*['\\\"]?[A-Za-z0-9_\\-]{8,}"
+    ],
+    "max_text_scan_bytes": 1000000
+  },
+  "quality_requirements": [
+    "evidence_density_preserved",
+    "reading_order_present",
+    "exclusions_transparency_present",
+    "safe_summary_present",
+    "claim_density_preserved_observed_inferred_not_proven"
+  ],
+  "completion_semantics": {
+    "large_task_bundle_required": true,
+    "missing_required_bundle_is_not_done": true
+  },
+  "anchors": [
+    "docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md",
+    "docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md",
+    "docs/CHATGPT_BUNDLE_EXPORT.md",
+    "scripts/export_manual_safe_bundle.py"
+  ]
+}

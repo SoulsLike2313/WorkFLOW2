@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0.0",
+  "manifest_kind": "repo_search_zones",
+  "status": "active",
+  "scope_root": "E:\\CVVCODEX",
+  "purpose": "Policy-safe bounded search/read acceleration without unrestricted repo sweeps.",
+  "fast_entry_surfaces": [
+    "README.md",
+    "MACHINE_CONTEXT.md",
+    "REPO_MAP.md",
+    "docs/INSTRUCTION_INDEX.md",
+    "docs/CURRENT_PLATFORM_STATE.md",
+    "docs/NEXT_CANONICAL_STEP.md",
+    "workspace_config/workspace_manifest.json",
+    "workspace_config/codex_manifest.json"
+  ],
+  "load_bearing_surfaces": [
+    "docs/governance/WORKFLOW2_CONSTITUTION_V1.md",
+    "docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md",
+    "docs/governance/CODEX_ACCELERATION_PLAN_SAFE_MODE_V1.md",
+    "docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md",
+    "workspace_config/search_zone_manifest.json",
+    "scripts/search_repo_safe.py"
+  ],
+  "secondary_or_historical_surfaces": [
+    "docs/review_artifacts",
+    "runtime/chatgpt_bundle_exports",
+    "runtime/manual_safe_bundle_staging"
+  ],
+  "heavy_staged_reading_surfaces": [
+    "workspace_config/codex_manifest.json",
+    "workspace_config/workspace_manifest.json",
+    "runtime/repo_control_center",
+    "docs/review_artifacts"
+  ],
+  "default_search_zone_order": [
+    "bootstrap_core",
+    "governance_core",
+    "workspace_contracts",
+    "validation_scripts",
+    "review_artifacts"
+  ],
+  "zones": [
+    {
+      "zone_id": "bootstrap_core",
+      "classification": "FAST_ENTRY",
+      "paths": [
+        "README.md",
+        "MACHINE_CONTEXT.md",
+        "REPO_MAP.md",
+        "docs/INSTRUCTION_INDEX.md",
+        "docs/CURRENT_PLATFORM_STATE.md",
+        "docs/NEXT_CANONICAL_STEP.md"
+      ],
+      "staged_reading_required": false
+    },
+    {
+      "zone_id": "workspace_contracts",
+      "classification": "LOAD_BEARING",
+      "paths": [
+        "workspace_config"
+      ],
+      "staged_reading_required": true
+    },
+    {
+      "zone_id": "governance_core",
+      "classification": "LOAD_BEARING",
+      "paths": [
+        "docs/governance"
+      ],
+      "staged_reading_required": true
+    },
+    {
+      "zone_id": "validation_scripts",
+      "classification": "LOAD_BEARING",
+      "paths": [
+        "scripts",
+        "scripts/validation"
+      ],
+      "staged_reading_required": true
+    },
+    {
+      "zone_id": "runtime_control",
+      "classification": "SECONDARY_RUNTIME",
+      "paths": [
+        "runtime/repo_control_center"
+      ],
+      "staged_reading_required": true
+    },
+    {
+      "zone_id": "review_artifacts",
+      "classification": "SECONDARY_HISTORICAL",
+      "paths": [
+        "docs/review_artifacts"
+      ],
+      "staged_reading_required": true
+    }
+  ],
+  "safe_search_policy": {
+    "disallowed_path_patterns": [
+      "(^|/)\\.git(/|$)",
+      "(^|/)node_modules(/|$)",
+      "(^|/)(logs?|tmp|temp|cache)(/|$)",
+      "(^|/)runtime/(portable_session_imports|portable_session_exports|manual_transfer|chatgpt_bundle_exports|manual_safe_bundle_staging)(/|$)",
+      "(^|/)(credentials|secrets?)(\\.|/|$)",
+      "(^|/)setup_reports(/|$)",
+      "(^|/)tools/public_mirror(/|$)"
+    ],
+    "default_max_files": 1500,
+    "default_max_results": 200,
+    "allowed_text_extensions": [
+      ".md",
+      ".txt",
+      ".json",
+      ".yaml",
+      ".yml",
+      ".toml",
+      ".py",
+      ".ps1",
+      ".js",
+      ".ts",
+      ".ini",
+      ".cfg",
+      ".csv",
+      ".xml"
+    ]
+  },
+  "fallback_hierarchy": [
+    "step_1_read_fast_entry_surfaces",
+    "step_2_read_workspace_manifests_and_indexes",
+    "step_3_search_bounded_zones_via_search_repo_safe",
+    "step_4_staged_deep_scan_load_bearing_zones_only_if_needed",
+    "step_5_use_bundle_indexes_before_raw_repo_sweep"
+  ],
+  "anchors": [
+    "docs/governance/REPO_SEARCH_ENTRYPOINTS.md",
+    "workspace_config/MACHINE_REPO_READING_RULES.md",
+    "docs/governance/CODEX_ACCELERATION_PLAN_SAFE_MODE_V1.md"
+  ]
+}

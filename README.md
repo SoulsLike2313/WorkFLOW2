@@ -8,6 +8,8 @@
 - Expected canonical workspace root on Emperor / Primarch / Astartes nodes: `E:\CVVCODEX` unless explicit documented exception.
 - Path drift from `E:\CVVCODEX` must reduce trust/admission/rank confidence (fail-closed).
 - Official external reading channel for ChatGPT: targeted bundle export (`scripts/export_chatgpt_bundle.py`).
+- Canonical fallback for tracked/inclusion gaps: `scripts/export_manual_safe_bundle.py` per `docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md`.
+- Canonical fallback for policy-safe bounded search/read: `scripts/search_repo_safe.py` per `docs/governance/REPO_SEARCH_ENTRYPOINTS.md`.
 - Governance brain stack is mandatory interpretation layer for all machine/agent execution.
 - Federation/Integration layer v1 is mandatory for multi-node collaboration (`creator`, `helper`, `integration` modes).
 - Rapid full-context onboarding (GPT/Codex): `docs/governance/WORKFLOW2_GPT_ONBOARDING_MASTER_V1.md`.
@@ -17,6 +19,12 @@
 - Active project slug: `platform_test_agent`
 - Active path: `projects/platform_test_agent`
 - Canonical project registry source: `workspace_config/workspace_manifest.json`
+- Current Federation operational department: `Analytics Department` (implemented by `platform_test_agent`)
+- Other registry project lines are currently treated as `test_products` / `intake_subjects` / `analysis_candidates` (not departments)
+- Analytics + intake doctrine anchors:
+  - `docs/governance/ANALYTICS_DEPARTMENT_DOCTRINE.md`
+  - `docs/governance/TEST_PRODUCT_INTAKE_MODEL.md`
+  - `workspace_config/test_product_intake_contract.json`
 
 ## Canonical Workflow
 
@@ -35,27 +43,49 @@
 - Constitutional core: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`.
 - Historical predecessor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`.
 - Vocabulary freeze: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`.
+- Constitutional hardening surfaces:
+  - `docs/governance/CONSTITUTION_CHANGE_AUTHORITY_POLICY.md`
+  - `docs/governance/CONSTITUTION_AMENDMENT_FLOW.md`
+  - `docs/governance/CONSTITUTION_IMMUTABILITY_BOUNDARY.md`
+- Status/Will/Binding triad surfaces:
+  - `docs/governance/GENOME_DOCTRINE_V1.md`
+  - `docs/governance/GRAMOTA_DOCTRINE_V1.md`
+  - `docs/governance/ASSIGNMENT_BINDING_DOCTRINE_V1.md`
+  - `workspace_config/genome_gramota_assignment_binding_contract.json`
 
 ## Federation / Integration Layer V1
 
-Machine role model:
+Rank-derived machine mode model (v2):
 
-- `creator` - canonical machine with final acceptance rights.
-- `helper` - external/full-copy node without creator authority marker; block execution only.
-- `integration` - canonical review mode for external handoff packages.
+- `EMPEROR` -> `creator` (canonical acceptance/certification authority).
+- `PRIMARCH` -> `helper(high)` (non-sovereign director-grade helper authority).
+- `ASTARTES` -> `helper(low)` (execution-grade helper authority).
+- `integration` -> work posture/intent overlay only; never rank and never authority source.
 
-Creator authority contract:
+Status-to-rank mapping (decisive rules):
 
-- env var: `CVVCODEX_CREATOR_AUTHORITY_DIR`
-- marker file: `creator_authority.json`
-- required marker fields:
-  - `authority_mode = "creator"`
-  - `profile_version = "v1"`
-  - `machine_role = "canonical_creator_machine"`
+- `repo only` -> `ASTARTES`
+- `repo + genome` -> `PRIMARCH`
+- `repo + local sovereign substrate` -> `EMPEROR`
+- `repo + genome + local sovereign substrate` -> `EMPEROR` (substrate decisive; genome non-elevating for emperor)
 
-Hard rule:
+Legacy compatibility surface:
 
-- full repository copy without valid authority marker is always `helper` mode and cannot declare canonical completion.
+- `CVVCODEX_CREATOR_AUTHORITY_DIR` / `creator_authority.json` remains telemetry-only compatibility surface.
+- Legacy creator marker is deprecated and non-load-bearing for both rank and machine mode.
+
+Hard rules:
+
+- creator mode is derived only from rank (`EMPEROR` required);
+- genome never yields emperor status;
+- legacy creator marker alone never yields creator mode.
+
+Operational framing (current stage):
+
+1. one real department: `Analytics Department` (`platform_test_agent` implementation);
+2. `tiktok_agent_platform`, `game_ru_ai`, `voice_launcher`, `adaptive_trading` are not departments in current stage;
+3. historical traces such as `shortform_core` / `tiktok_automation_app` are not current operational entities.
+4. canonical reference: `docs/governance/FEDERATION_OPERATIONAL_MODEL.md`.
 
 ## Governance Brain Stack (Mandatory)
 
@@ -306,6 +336,7 @@ Federated helper workflow commands:
 Protocol reference:
 
 - `docs/CHATGPT_BUNDLE_EXPORT.md`
+- `docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md`
 
 ## Root Map
 

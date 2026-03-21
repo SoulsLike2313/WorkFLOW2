@@ -17,7 +17,7 @@
   ],
   "authority_classes": [
     "sovereign",
-    "operational_creator_grade_non_sovereign",
+    "operational_non_sovereign",
     "delegated_constrained_execution"
   ],
   "claim_classes": {
@@ -25,25 +25,44 @@
       "canonical_acceptance_claim",
       "sovereign_policy_change_claim",
       "emperor_rank_claim",
-      "unrestricted_structural_mutation_claim"
+      "genome_bundle_issuance_claim",
+      "local_sovereign_substrate_activation_claim",
+      "unrestricted_structural_mutation_claim",
+      "constitutional_mutation_claim"
     ],
     "primarch_allowed": [
+      "primarch_rank_claim",
       "bounded_engineering_proposal",
+      "constitutional_amendment_candidate_claim",
+      "constitutional_commentary_claim",
       "execution_report_claim",
       "denial_as_expected_claim"
     ],
     "astartes_allowed": [
+      "constitutional_commentary_claim",
       "execution_report_claim",
       "denial_as_expected_claim"
     ]
+  },
+  "constitutional_change_classes": {
+    "commentary": "constitutional_commentary_claim",
+    "proposal": "bounded_engineering_proposal",
+    "amendment_candidate": "constitutional_amendment_candidate_claim",
+    "sovereign_mutation": "constitutional_mutation_claim"
   },
   "legacy_aliases": {
     "sovereign_acceptance_claim": "canonical_acceptance_claim",
     "sovereign_transition_claim": "sovereign_policy_change_claim",
     "sovereign_rank_assertion": "emperor_rank_claim",
+    "primarch_status_assertion": "primarch_rank_claim",
+    "genome_issuance_claim": "genome_bundle_issuance_claim",
+    "emperor_substrate_activation_claim": "local_sovereign_substrate_activation_claim",
     "primarch_reintegration_claim": "bounded_engineering_proposal",
     "bounded_acceptance_recommendation": "bounded_engineering_proposal",
-    "bounded_review_claim": "execution_report_claim"
+    "bounded_review_claim": "execution_report_claim",
+    "constitution_amendment_candidate_claim": "constitutional_amendment_candidate_claim",
+    "constitution_commentary_claim": "constitutional_commentary_claim",
+    "sovereign_constitutional_mutation_claim": "constitutional_mutation_claim"
   },
   "signature_assurance": {
     "ordered_levels": [
@@ -69,8 +88,13 @@
     "issuer_identity_not_verified",
     "signature_assurance_insufficient_for_sovereign_claim",
     "signature_assurance_insufficient_for_bounded_engineering",
+    "signature_assurance_insufficient_for_amendment_candidate",
     "signature_assurance_insufficient_for_execution_report",
+    "claim_requires_emperor_rank_for_constitutional_mutation",
+    "claim_requires_emperor_rank_for_genome_bundle_issuance",
+    "claim_requires_emperor_rank_for_local_sovereign_substrate_activation",
     "claim_requires_emperor_rank",
+    "claim_requires_primarch_or_emperor_rank",
     "claim_not_allowed_for_primarch",
     "claim_not_allowed_for_astartes",
     "warrant_or_charter_required_for_astartes_execution_report"

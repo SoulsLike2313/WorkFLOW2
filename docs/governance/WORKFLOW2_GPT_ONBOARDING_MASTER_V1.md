@@ -23,27 +23,35 @@ This file is a summary layer, not a replacement for source authority contracts.
 4. No silent scope expansion.
 5. No side work outside explicit task scope.
 6. No canonical acceptance in helper mode.
-7. No creator authority path disclosure in tracked repo.
+7. No local sovereign substrate path/raw detail disclosure in tracked repo.
 8. No publishing full private runtime/content via unsafe export paths.
 
 ## 4. Authority and Machine Mode
 
-Creator authority detection contract:
+Rank-derived model (v2):
 
-- Env var: `CVVCODEX_CREATOR_AUTHORITY_DIR`
-- Marker filename: `creator_authority.json`
-- Required marker fields:
-  - `authority_mode = "creator"`
-  - `profile_version = "v1"`
-  - `machine_role = "canonical_creator_machine"`
+- `EMPEROR` -> `creator`
+- `PRIMARCH` -> `helper(high)`
+- `ASTARTES` -> `helper(low)`
+
+Rank source:
+
+- `repo only` -> `ASTARTES`
+- `repo + genome` -> `PRIMARCH`
+- `repo + local sovereign substrate` -> `EMPEROR`
+- `repo + genome + local sovereign substrate` -> `EMPEROR` (substrate decisive).
 
 Mode consequences:
 
-- `creator`: can perform canonical acceptance/certification decisions.
-- `helper`: block-bound execution only, no canonical acceptance.
-- `integration`: canonical review intake mode for external deliveries.
+- `creator`: canonical acceptance/certification decisions.
+- `helper(high)`: non-sovereign director-grade helper envelope.
+- `helper(low)`: execution-grade helper envelope.
+- `integration`: work posture/intent overlay only (`authority_effect=none`).
 
-Hard rule: full repo copy without valid external marker remains helper mode.
+Legacy compatibility note:
+
+- `CVVCODEX_CREATOR_AUTHORITY_DIR` / `creator_authority.json` remains telemetry-only compatibility surface.
+- It is non-load-bearing for rank and non-load-bearing for creator mode.
 
 ## 5. Canonical Source Precedence
 
@@ -195,7 +203,7 @@ Portable workflow references:
 - `runtime/portable_session/portable_session_manifest.json`
 - `runtime/portable_session/RETURN_BUNDLE_INSTRUCTIONS_V1.md`
 
-Portable transfer never overrides canonical source precedence or creator authority discipline.
+Portable transfer never overrides canonical source precedence or rank-derived authority discipline.
 
 ## 15. Operator Do/Do-Not Quick Matrix
 

@@ -24,7 +24,7 @@ Programs:
 - `program.wave2c.control_artifacts_rebuild.v1`
 
 ### creator_only_program
-- Purpose: execute creator-authorized governance sequences that are forbidden for helper/integration modes.
+- Purpose: execute creator-authorized governance sequences that are forbidden for helper authority and integration posture.
 - Mutability: `CREATOR_ONLY_MUTATION`.
 - Authority: creator-required (strict).
 - Command classes used:

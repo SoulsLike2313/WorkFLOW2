@@ -98,3 +98,10 @@ Current lightweight validation contract:
 3. all other states are deny-by-default for that claim context.
 
 This contract is intentionally lightweight and does not replace future stronger signature verification.
+
+## 10) Relation To Genome / Gramota / Assignment-binding
+
+1. warrant/charter are execution-envelope documents, not status-attestation documents.
+2. `genome` is status layer and does not replace warrant/charter.
+3. `gramota` is direct Emperor will/order layer and may issue tasking/signoff intent.
+4. `assignment_binding` is responsibility/delegation binding layer and does not replace direct Emperor gramota.

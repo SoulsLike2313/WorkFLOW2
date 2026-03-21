@@ -13,8 +13,48 @@ Architecture anchor:
 - current canonical phase: constitution-v1-finalized
 - constitutional regime: lightweight constitutional enforcement
 - constitutional core: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
+- reference brain v1 anchor: `docs/governance/REFERENCE_BRAIN_V1_MODEL.md`
+- reference brain v1 machine-readable status: `workspace_config/reference_brain_v1_status.json`
+- reference brain trust/evidence anchor: `docs/governance/BRAIN_TRUST_AND_EVIDENCE_MODEL_V1.md`
+- reference brain canon-deviation protection anchor: `docs/governance/BRAIN_CANON_DEVIATION_PROTECTION_MODEL_V1.md`
 - constitutional predecessor: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 - canonical vocabulary freeze: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
+- constitutional mutation authority surfaces:
+  - `docs/governance/CONSTITUTION_CHANGE_AUTHORITY_POLICY.md`
+  - `docs/governance/CONSTITUTION_AMENDMENT_FLOW.md`
+  - `docs/governance/CONSTITUTION_IMMUTABILITY_BOUNDARY.md`
+- status/will/binding doctrine surfaces:
+  - `docs/governance/GENOME_DOCTRINE_V1.md`
+  - `docs/governance/GRAMOTA_DOCTRINE_V1.md`
+  - `docs/governance/ASSIGNMENT_BINDING_DOCTRINE_V1.md`
+  - `workspace_config/genome_gramota_assignment_binding_contract.json`
+- current federation operational model: single real department (`Analytics Department` via `platform_test_agent`)
+- analytics/intake doctrine:
+  - `docs/governance/ANALYTICS_DEPARTMENT_DOCTRINE.md`
+  - `docs/governance/TEST_PRODUCT_INTAKE_MODEL.md`
+  - `workspace_config/test_product_intake_contract.json`
+- ownership/escalation/taxonomy hardening:
+  - `workspace_config/department_guardian_registry.json`
+  - `docs/governance/DEPARTMENT_EXCEPTION_ESCALATION_HARDENING_V1.md`
+  - `workspace_config/department_exception_escalation_contract.json`
+  - `workspace_config/shared_taxonomy_contract.json`
+- emperor proof contract anchor:
+  - `workspace_config/emperor_local_proof_contract.json`
+- status model v2 anchors:
+  - `docs/governance/STATUS_MODEL_V2_SPEC.md`
+  - `workspace_config/status_model_v2_contract.json`
+  - `workspace_config/genome_bundle_contract.json`
+- codex output discipline default:
+  - `docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md`
+  - `workspace_config/codex_output_mode_contract.json`
+- manual-safe bundle fallback standard:
+  - `docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md`
+  - `workspace_config/bundle_fallback_contract.json`
+  - `scripts/export_manual_safe_bundle.py`
+- search acceleration fallback standard:
+  - `docs/governance/REPO_SEARCH_ENTRYPOINTS.md`
+  - `workspace_config/search_zone_manifest.json`
+  - `scripts/search_repo_safe.py`
 - rapid full-context onboarding: `docs/governance/WORKFLOW2_GPT_ONBOARDING_MASTER_V1.md`
 
 ## Mandatory Pre-Task Read Order
@@ -66,58 +106,67 @@ Architecture anchor:
 42. `docs/governance/INTEGRATION_INBOX_POLICY.md`
 43. `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md`
 44. `docs/governance/FEDERATION_ARCHITECTURE.md`
-45. `workspace_config/creator_mode_detection_contract.json`
-46. `workspace_config/federation_mode_contract.json`
-47. `workspace_config/block_task_schema.json`
-48. `workspace_config/handoff_package_schema.json`
-49. `workspace_config/integration_inbox_contract.json`
-50. `integration/README.md`
-51. `tasks/README.md`
-52. `scripts/detect_machine_mode.py`
-53. `scripts/resolve_task_id.py`
-54. `scripts/prepare_handoff_package.py`
-55. `scripts/review_integration_inbox.py`
-56. `scripts/repo_control_center.py`
-57. `workspace_config/TASK_RULES.md`
-58. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
-59. `workspace_config/TASK_SOURCE_POLICY.md`
-60. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
-61. `workspace_config/AGENT_EXECUTION_POLICY.md`
-62. `workspace_config/MACHINE_REPO_READING_RULES.md`
-63. `workspace_config/PROMPT_OUTPUT_POLICY.md`
-64. `workspace_config/PROJECT_AUDIT_POLICY.md`
-65. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
-66. `workspace_config/GITHUB_SYNC_POLICY.md`
-67. `workspace_config/COMPLETION_GATE_RULES.md`
-68. relevant `PROJECT_MANIFEST.json`
-69. relevant project `README.md`
-70. relevant `CODEX.md` if present
-71. relevant `SYSTEM_MANIFEST.json` if shared system is involved
-72. `docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md`
-73. `docs/governance/OPERATOR_QUERY_CATALOG.md`
-74. `docs/governance/OPERATOR_RESPONSE_CONTRACT.md`
-75. `docs/governance/OPERATOR_INTENT_ROUTING.md`
-76. `docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md`
-77. `docs/governance/OPERATOR_COMMAND_CATALOG.md`
-78. `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md`
-79. `docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md`
-80. `workspace_config/operator_command_registry.json`
-81. `scripts/operator_command_surface.py`
-82. `docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json`
-83. `docs/governance/OPERATOR_TASK_PROGRAM_LAYER_BASELINE.md`
-84. `docs/governance/OPERATOR_TASK_PROGRAM_BASELINE.md`
-85. `docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md`
-86. `docs/governance/OPERATOR_TASK_PROGRAM_REGISTRY.md`
-87. `workspace_config/operator_task_program_registry.json`
-88. `scripts/operator_task_program_surface.py`
-89. `docs/review_artifacts/OPERATOR_TASK_PROGRAM_GOLDEN_PACK_FINAL.json`
-90. `docs/governance/OPERATOR_MISSION_LAYER_BASELINE.md`
-91. `docs/governance/OPERATOR_MISSION_BASELINE.md`
-92. `docs/governance/OPERATOR_MISSION_CONTRACT.md`
-93. `docs/governance/OPERATOR_MISSION_REGISTRY.md`
-94. `workspace_config/operator_mission_registry.json`
-95. `scripts/operator_mission_surface.py`
-96. `docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json`
+45. `docs/governance/FEDERATION_OPERATIONAL_MODEL.md`
+46. `docs/governance/ANALYTICS_DEPARTMENT_DOCTRINE.md`
+47. `docs/governance/TEST_PRODUCT_INTAKE_MODEL.md`
+48. `workspace_config/test_product_intake_contract.json`
+49. `workspace_config/department_guardian_registry.json`
+50. `docs/governance/DEPARTMENT_EXCEPTION_ESCALATION_HARDENING_V1.md`
+51. `workspace_config/department_exception_escalation_contract.json`
+52. `workspace_config/shared_taxonomy_contract.json`
+53. `workspace_config/creator_mode_detection_contract.json` (legacy compatibility only; non-load-bearing for rank/mode)
+54. `workspace_config/emperor_local_proof_contract.json`
+55. `workspace_config/federation_mode_contract.json`
+56. `workspace_config/block_task_schema.json`
+57. `workspace_config/handoff_package_schema.json`
+58. `workspace_config/integration_inbox_contract.json`
+59. `integration/README.md`
+60. `tasks/README.md`
+61. `scripts/detect_machine_mode.py`
+62. `scripts/resolve_task_id.py`
+63. `scripts/prepare_handoff_package.py`
+64. `scripts/review_integration_inbox.py`
+65. `scripts/repo_control_center.py`
+66. `workspace_config/TASK_RULES.md`
+67. `workspace_config/EXECUTION_ADMISSION_POLICY.md`
+68. `workspace_config/TASK_SOURCE_POLICY.md`
+69. `workspace_config/COMMUNICATION_STYLE_POLICY.md`
+70. `workspace_config/AGENT_EXECUTION_POLICY.md`
+71. `workspace_config/MACHINE_REPO_READING_RULES.md`
+72. `workspace_config/PROMPT_OUTPUT_POLICY.md`
+73. `workspace_config/PROJECT_AUDIT_POLICY.md`
+74. `workspace_config/TEST_AGENT_EXECUTION_POLICY.md`
+75. `workspace_config/GITHUB_SYNC_POLICY.md`
+76. `workspace_config/COMPLETION_GATE_RULES.md`
+77. relevant `PROJECT_MANIFEST.json`
+78. relevant project `README.md`
+79. relevant `CODEX.md` if present
+80. relevant `SYSTEM_MANIFEST.json` if shared system is involved
+81. `docs/governance/OPERATOR_QUERY_LAYER_BASELINE.md`
+82. `docs/governance/OPERATOR_QUERY_CATALOG.md`
+83. `docs/governance/OPERATOR_RESPONSE_CONTRACT.md`
+84. `docs/governance/OPERATOR_INTENT_ROUTING.md`
+85. `docs/governance/OPERATOR_COMMAND_EXECUTION_BASELINE.md`
+86. `docs/governance/OPERATOR_COMMAND_CATALOG.md`
+87. `docs/governance/OPERATOR_COMMAND_EXECUTION_CONTRACT.md`
+88. `docs/governance/OPERATOR_COMMAND_INTENT_ROUTING.md`
+89. `workspace_config/operator_command_registry.json`
+90. `scripts/operator_command_surface.py`
+91. `docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json`
+92. `docs/governance/OPERATOR_TASK_PROGRAM_LAYER_BASELINE.md`
+93. `docs/governance/OPERATOR_TASK_PROGRAM_BASELINE.md`
+94. `docs/governance/OPERATOR_TASK_PROGRAM_CONTRACT.md`
+95. `docs/governance/OPERATOR_TASK_PROGRAM_REGISTRY.md`
+96. `workspace_config/operator_task_program_registry.json`
+97. `scripts/operator_task_program_surface.py`
+98. `docs/review_artifacts/OPERATOR_TASK_PROGRAM_GOLDEN_PACK_FINAL.json`
+99. `docs/governance/OPERATOR_MISSION_LAYER_BASELINE.md`
+100. `docs/governance/OPERATOR_MISSION_BASELINE.md`
+101. `docs/governance/OPERATOR_MISSION_CONTRACT.md`
+102. `docs/governance/OPERATOR_MISSION_REGISTRY.md`
+103. `workspace_config/operator_mission_registry.json`
+104. `scripts/operator_mission_surface.py`
+105. `docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json`
 
 If this order is not completed, task status is `REJECTED`.
 
@@ -127,6 +176,9 @@ If this order is not completed, task status is `REJECTED`.
 - `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
 - `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 - `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
+- `docs/governance/CONSTITUTION_CHANGE_AUTHORITY_POLICY.md`
+- `docs/governance/CONSTITUTION_AMENDMENT_FLOW.md`
+- `docs/governance/CONSTITUTION_IMMUTABILITY_BOUNDARY.md`
 - `docs/governance/GOVERNANCE_HIERARCHY.md`
 - `docs/governance/MACHINE_BOOTSTRAP_CONTRACT.md`
 - `docs/governance/CANONICAL_SOURCE_PRECEDENCE.md`
@@ -162,6 +214,20 @@ If this order is not completed, task status is `REJECTED`.
 - `docs/governance/INTEGRATION_INBOX_POLICY.md`
 - `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md`
 - `docs/governance/FEDERATION_ARCHITECTURE.md`
+- `docs/governance/FEDERATION_OPERATIONAL_MODEL.md`
+- `docs/governance/ANALYTICS_DEPARTMENT_DOCTRINE.md`
+- `docs/governance/TEST_PRODUCT_INTAKE_MODEL.md`
+- `docs/governance/DEPARTMENT_EXCEPTION_ESCALATION_HARDENING_V1.md`
+- `docs/governance/INTER_NODE_DOCUMENT_ARCHITECTURE_V1.md`
+- `docs/governance/INTER_NODE_DOCUMENT_SCHEMA_V1.md`
+- `docs/governance/WARRANT_CHARTER_LIFECYCLE_V1.md`
+- `docs/governance/ISSUER_IDENTITY_AND_SIGNATURE_DISCIPLINE_V1.md`
+- `docs/governance/GENOME_DOCTRINE_V1.md`
+- `docs/governance/GRAMOTA_DOCTRINE_V1.md`
+- `docs/governance/ASSIGNMENT_BINDING_DOCTRINE_V1.md`
+- `workspace_config/department_guardian_registry.json`
+- `workspace_config/department_exception_escalation_contract.json`
+- `workspace_config/shared_taxonomy_contract.json`
 
 ## Canonical Index
 
@@ -171,6 +237,12 @@ If this order is not completed, task status is `REJECTED`.
 | `docs/governance/WORKFLOW2_GPT_ONBOARDING_MASTER_V1.md` | Single high-density onboarding brief for new GPT/Codex sessions | P0 |
 | `REPO_MAP.md` | Fast repository navigation and bootstrap map | P0 |
 | `MACHINE_CONTEXT.md` | Deterministic machine context | P0 |
+| `docs/governance/REFERENCE_BRAIN_V1_MODEL.md` | Canonical composition/status map of governing core (Reference Brain V1) | P0 |
+| `workspace_config/reference_brain_v1_status.json` | Machine-readable block-by-block status for Reference Brain V1 | P0 |
+| `docs/governance/BRAIN_TRUST_AND_EVIDENCE_MODEL_V1.md` | Trust classes, evidence chain, anti-overclaim boundaries for Reference Brain V1 outputs | P0 |
+| `docs/governance/BRAIN_CANON_DEVIATION_PROTECTION_MODEL_V1.md` | Coherent anti-drift/anti-bypass protection model for canonical law execution | P0 |
+| `docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md` | Default response discipline: ultra-short chat and bundle-first detailed delivery | P0 |
+| `workspace_config/codex_output_mode_contract.json` | Machine-readable Codex output mode contract for workspace default behavior | P0 |
 | `docs/governance/MACHINE_OPERATOR_GUIDE.md` | Plain-language operator guide for mode/gates/actions | P0 |
 | `docs/governance/MACHINE_CAPABILITIES_SUMMARY.md` | Fast capability/permission sheet | P0 |
 | `docs/governance/POLICY_DIGEST.md` | Compressed map of policy stack and controlled gates | P0 |
@@ -221,19 +293,38 @@ If this order is not completed, task status is `REJECTED`.
 | `docs/governance/NOTIFICATION_AND_ESCALATION_POLICY.md` | Mandatory notification/escalation and silence-forbidden rules | P1 |
 | `docs/governance/GOVERNANCE_SCHEMA_VERSIONING_POLICY.md` | Schema versioning, compatibility, migration and drift rules | P1 |
 | `docs/governance/GOVERNANCE_ACCEPTANCE_GATE.md` | Formal gate that must pass before next-stage transition | P1 |
-| `docs/governance/CREATOR_AUTHORITY_POLICY.md` | Creator authority detection rules and creator-only rights | P1 |
+| `docs/governance/CREATOR_AUTHORITY_POLICY.md` | Legacy creator-marker compatibility policy; creator authority is rank-derived from EMPEROR | P1 |
+| `docs/governance/STATUS_MODEL_V2_SPEC.md` | Canonical ASTARTES/PRIMARCH/EMPEROR ladder and fail-closed proof logic | P1 |
+| `workspace_config/status_model_v2_contract.json` | Machine-readable status-model v2 rank determination contract | P1 |
+| `workspace_config/genome_bundle_contract.json` | Machine-readable PRIMARCH genome bundle contract (offline owner-issued) | P1 |
 | `docs/governance/HELPER_NODE_POLICY.md` | Helper execution boundaries and forbidden canonical actions | P1 |
 | `docs/governance/TASK_ID_EXECUTION_CONTRACT.md` | Canonical task-id block execution contract | P1 |
 | `docs/governance/EXTERNAL_BLOCK_HANDOFF_POLICY.md` | Required external block handoff package format | P1 |
 | `docs/governance/INTEGRATION_INBOX_POLICY.md` | Inbox/review/accepted/rejected/quarantine review model | P1 |
 | `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md` | Protection rules for canonical machine and protected layers | P1 |
 | `docs/governance/FEDERATION_ARCHITECTURE.md` | Federated creator/helper/integration architecture map | P1 |
-| `workspace_config/creator_mode_detection_contract.json` | Machine-readable creator authority detection contract | P1 |
+| `docs/governance/FEDERATION_OPERATIONAL_MODEL.md` | Current single-department federation operational framing | P1 |
+| `docs/governance/ANALYTICS_DEPARTMENT_DOCTRINE.md` | Formal mission, inputs/outputs, boundaries of Analytics Department | P1 |
+| `docs/governance/TEST_PRODUCT_INTAKE_MODEL.md` | Formal intake/routing model for non-department test products | P1 |
+| `workspace_config/test_product_intake_contract.json` | Machine-readable current intake subjects and routing outcomes | P1 |
+| `workspace_config/department_guardian_registry.json` | Machine-readable guardian/ownership model for current department and intake zone | P1 |
+| `docs/governance/DEPARTMENT_EXCEPTION_ESCALATION_HARDENING_V1.md` | Escalation, exception and override hardening boundaries by rank | P1 |
+| `workspace_config/department_exception_escalation_contract.json` | Machine-readable escalation/override rules aligned with Gramota/Binding boundaries | P1 |
+| `workspace_config/shared_taxonomy_contract.json` | Unified cross-layer taxonomy for claims, documents, statuses and entities | P1 |
+| `docs/governance/GENOME_DOCTRINE_V1.md` | Status-document doctrine for Primarch attestation (Genome) | P1 |
+| `docs/governance/GRAMOTA_DOCTRINE_V1.md` | Emperor will/order doctrine (Gramota) | P1 |
+| `docs/governance/ASSIGNMENT_BINDING_DOCTRINE_V1.md` | Appointment/delegation binding doctrine | P1 |
+| `workspace_config/genome_gramota_assignment_binding_contract.json` | Machine-readable status/will/binding distinction contract | P1 |
+| `docs/governance/CONSTITUTION_CHANGE_AUTHORITY_POLICY.md` | Constitutional change authority and rank boundaries | P1 |
+| `docs/governance/CONSTITUTION_AMENDMENT_FLOW.md` | Constitutional amendment lifecycle (proposal->candidate->sovereign mutation) | P1 |
+| `docs/governance/CONSTITUTION_IMMUTABILITY_BOUNDARY.md` | Immutable constitutional boundary and mutation gate | P1 |
+| `workspace_config/creator_mode_detection_contract.json` | Machine-readable legacy creator-marker compatibility contract (non-load-bearing for rank/mode) | P1 |
+| `workspace_config/emperor_local_proof_contract.json` | Machine-readable emperor local proof marker contract for rank elevation checks | P1 |
 | `workspace_config/federation_mode_contract.json` | Machine-mode permissions contract | P1 |
 | `workspace_config/block_task_schema.json` | Task-id block schema contract | P1 |
 | `workspace_config/handoff_package_schema.json` | External handoff package schema | P1 |
 | `workspace_config/integration_inbox_contract.json` | Integration inbox state machine contract | P1 |
-| `scripts/detect_machine_mode.py` | Creator/helper/integration mode detection and reporting | P1 |
+| `scripts/detect_machine_mode.py` | Rank-derived creator/helper tier detection with integration posture overlay reporting | P1 |
 | `scripts/resolve_task_id.py` | Task-id resolver and scope summary | P1 |
 | `scripts/prepare_handoff_package.py` | Handoff package builder for integration inbox | P1 |
 | `scripts/review_integration_inbox.py` | Integration inbox audit decision flow | P1 |

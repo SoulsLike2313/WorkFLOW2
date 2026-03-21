@@ -1,68 +1,50 @@
-﻿# SOVEREIGN_CLAIM_DENIAL_POLICY_V1
+# SOVEREIGN_CLAIM_DENIAL_POLICY_V1
 
 Status:
-- policy_version: `v1`
-- scope: `deny unauthorized sovereign claims in runtime and reintegration`
+- policy_version: `v1.rewritten_for_status_model_v2`
+- scope: `deny unauthorized sovereign and elevation claims`
 
 ## 1) Claim Classes
 
+Sovereign-only:
 1. `canonical_acceptance_claim`
 2. `sovereign_policy_change_claim`
 3. `emperor_rank_claim`
-4. `unrestricted_structural_mutation_claim`
-5. `bounded_engineering_proposal`
-6. `execution_report_claim`
-7. `denial_as_expected_claim`
+4. `genome_bundle_issuance_claim`
+5. `local_sovereign_substrate_activation_claim`
+6. `unrestricted_structural_mutation_claim`
+7. `constitutional_mutation_claim`
 
-Sovereign classes:
-1. `canonical_acceptance_claim`
-2. `sovereign_policy_change_claim`
-3. `emperor_rank_claim`
-4. `unrestricted_structural_mutation_claim`
+Primarch-allowed non-sovereign:
+1. `primarch_rank_claim`
+2. `bounded_engineering_proposal`
+3. `constitutional_amendment_candidate_claim`
+4. `constitutional_commentary_claim`
+5. `execution_report_claim`
+6. `denial_as_expected_claim`
 
-## 2) Rank-Based Allow/Deny
+Astartes-allowed non-sovereign:
+1. `constitutional_commentary_claim`
+2. `execution_report_claim`
+3. `denial_as_expected_claim`
 
-### EMPEROR
-- may issue all classes subject to constitutional gates.
+## 2) Hard Guard Rules
 
-### PRIMARCH
-- allowed: `bounded_engineering_proposal`, `execution_report_claim`, `denial_as_expected_claim`.
-- denied: all sovereign claim classes.
+1. ASTARTES cannot claim `primarch_rank_claim`.
+2. ASTARTES cannot claim any sovereign-only class.
+3. PRIMARCH cannot claim sovereign-only classes.
+4. PRIMARCH cannot issue `constitutional_mutation_claim`.
+5. only EMPEROR can issue `genome_bundle_issuance_claim`.
+6. `genome bundle` material cannot satisfy `local_sovereign_substrate_activation_claim`.
 
-### ASTARTES
-- allowed: `execution_report_claim`, `denial_as_expected_claim`.
-- denied: all sovereign claim classes and unbounded engineering claims.
+## 3) Signature/Identity Gate
 
-## 3) Additional Hardening Gates
+1. sovereign-only classes require `signature_status=valid`, `issuer_identity_status=verified`, and assurance at least `locally_verifiable`.
+2. bounded engineering and amendment candidates require at least `structurally_bound`.
+3. insufficient/unknown assurance narrows authority fail-closed.
 
-### Signature/Identity gates
+## 4) Context Fail-Closed
 
-1. sovereign classes require:
-   - `signature_status=valid`
-   - `issuer_identity_status=verified`
-   - `signature_assurance` in `{locally_verifiable, emperor_local_only_verifiable}`.
-2. bounded engineering proposal requires `signature_assurance` at least `structurally_bound`.
-3. unknown or insufficient signature assurance narrows authority (deny elevation).
-
-### Warrant/Charter gates
-
-1. Astartes `execution_report_claim` requires at least one of:
-   - `warrant_status=valid`
-   - `charter_status=valid`.
-2. missing/invalid/expired/superseded/unknown warrant+charter states deny authority-bearing execution claim.
-
-## 4) Runtime/Reintegration Denial Points
-
-1. node-rank validation stage;
-2. constitutional aggregation stage;
-3. reintegration intake/review stage.
-
-## 5) Root and Context Fail-Closed Rules
-
-1. unknown rank -> deny elevated claims fail-closed;
-2. invalid canonical root -> deny elevated claims fail-closed;
-3. safe mirror/portable-only context never elevates claim authority.
-
-## 6) Expected Denial Semantics
-
-Denial of unauthorized claim is expected safe behavior, not an operational defect.
+1. invalid repo/root context -> deny elevated claims;
+2. safe mirror or portable/import context cannot elevate claims;
+3. denial under these rules is expected and correct behavior.

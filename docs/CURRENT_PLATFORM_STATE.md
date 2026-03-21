@@ -33,6 +33,37 @@
 | `voice_launcher` | `projects/voice_launcher` | `supporting` | `not_guarded` | `registry_project` |
 | `adaptive_trading` | `projects/adaptive_trading` | `experimental` | `not_guarded` | `registry_project` |
 
+## Federation Operational Framing (Current Stage)
+
+Current department:
+
+1. `Analytics Department`:
+   - implementation: `platform_test_agent` (`projects/platform_test_agent`)
+   - operational role: intake/audit/state-estimation/initial planning/recommendation layer
+
+Not departments in current operational framing:
+
+1. `tiktok_agent_platform` (`projects/wild_hunt_command_citadel/tiktok_agent_platform`)
+2. `game_ru_ai` (`projects/GameRuAI`)
+3. `voice_launcher` (`projects/voice_launcher`)
+4. `adaptive_trading` (`projects/adaptive_trading`)
+
+Current role for these lines:
+- `test_product`
+- `intake_subject`
+- `analysis_candidate`
+
+Canonical intake model anchors:
+1. `docs/governance/ANALYTICS_DEPARTMENT_DOCTRINE.md`
+2. `docs/governance/TEST_PRODUCT_INTAKE_MODEL.md`
+3. `workspace_config/test_product_intake_contract.json`
+
+Historical/non-operational traces (not current entities):
+
+1. `shortform_core`
+2. `tiktok_automation_app`
+3. `wild_hunt_command_citadel` (container path, not a department)
+
 ## Audit-Blocked Scope
 
 - `projects/wild_hunt_command_citadel/tiktok_agent_platform`: `manual_testing_blocked`
@@ -64,6 +95,8 @@ Not accepted for execution:
 - work package / mission layer: `accepted / certified baseline`
 - current canonical phase: `constitution-v1-finalized`
 - current constitutional regime: `lightweight constitutional enforcement`
+- federation operational model: `single real department (Analytics Department)`
+- federation model anchor: `docs/governance/FEDERATION_OPERATIONAL_MODEL.md`
 - constitutional core artifact: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
 - constitutional predecessor artifact: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 - next canonical direction: `select post-constitution path from controlled options; no automatic new brain-layer launch`

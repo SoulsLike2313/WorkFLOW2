@@ -1,0 +1,149 @@
+{
+  "contract_version": "1.0.0",
+  "contract_kind": "shared_operational_taxonomy",
+  "status": "active",
+  "scope": "unified vocabulary for claims, documents, roles, statuses, and intake semantics",
+  "source_contracts": [
+    "workspace_config/claim_taxonomy_contract.json",
+    "workspace_config/genome_gramota_assignment_binding_contract.json",
+    "workspace_config/delegation_registry.json",
+    "workspace_config/test_product_intake_contract.json",
+    "workspace_config/department_guardian_registry.json",
+    "workspace_config/department_exception_escalation_contract.json"
+  ],
+  "rank_labels": [
+    "EMPEROR",
+    "PRIMARCH",
+    "ASTARTES",
+    "UNKNOWN"
+  ],
+  "authority_classes": [
+    "sovereign",
+    "operational_non_sovereign",
+    "delegated_constrained_execution"
+  ],
+  "claim_classes": {
+    "sovereign_only": [
+      "canonical_acceptance_claim",
+      "sovereign_policy_change_claim",
+      "emperor_rank_claim",
+      "genome_bundle_issuance_claim",
+      "local_sovereign_substrate_activation_claim",
+      "unrestricted_structural_mutation_claim",
+      "constitutional_mutation_claim"
+    ],
+    "primarch_allowed_non_sovereign": [
+      "primarch_rank_claim",
+      "bounded_engineering_proposal",
+      "constitutional_amendment_candidate_claim",
+      "constitutional_commentary_claim",
+      "execution_report_claim",
+      "denial_as_expected_claim"
+    ],
+    "astartes_allowed_non_sovereign": [
+      "constitutional_commentary_claim",
+      "execution_report_claim",
+      "denial_as_expected_claim"
+    ]
+  },
+  "command_document_classes": {
+    "emperor_issued": [
+      "gramota",
+      "genome",
+      "assignment_binding",
+      "warrant",
+      "charter"
+    ],
+    "primarch_issued": [
+      "reintegration_proposal",
+      "engineering_directive_proposal",
+      "strategic_return_memo",
+      "assignment_binding_delegated"
+    ],
+    "astartes_issued": [
+      "execution_report",
+      "task_return_dossier",
+      "bounded_completion_report"
+    ]
+  },
+  "triad_document_classes": {
+    "status_layer": [
+      "genome"
+    ],
+    "will_layer": [
+      "gramota"
+    ],
+    "binding_layer": [
+      "assignment_binding"
+    ]
+  },
+  "operational_entity_classes": {
+    "department": [
+      "Analytics Department"
+    ],
+    "non_department_operational_subject": [
+      "test_product",
+      "intake_subject",
+      "analysis_candidate"
+    ],
+    "non_current_entity": [
+      "historical_trace",
+      "container_path"
+    ]
+  },
+  "current_department_state": {
+    "department_name": "Analytics Department",
+    "implementation_slug": "platform_test_agent",
+    "department_status": "active"
+  },
+  "status_classes": {
+    "project_registry_status": [
+      "active",
+      "manual_testing_blocked",
+      "audit_required",
+      "supporting",
+      "experimental",
+      "archived",
+      "legacy"
+    ],
+    "ownership_certainty_levels": [
+      "OBSERVED",
+      "INFERRED_DRAFT",
+      "NOT_FORMALIZED",
+      "NOT-PROVEN"
+    ]
+  },
+  "denial_reason_vocabulary": [
+    "canonical_root_invalid",
+    "unknown_claim_class",
+    "signature_invalid",
+    "issuer_identity_not_verified",
+    "signature_assurance_insufficient_for_sovereign_claim",
+    "signature_assurance_insufficient_for_bounded_engineering",
+    "signature_assurance_insufficient_for_amendment_candidate",
+    "signature_assurance_insufficient_for_execution_report",
+    "claim_requires_emperor_rank_for_constitutional_mutation",
+    "claim_requires_emperor_rank_for_genome_bundle_issuance",
+    "claim_requires_emperor_rank_for_local_sovereign_substrate_activation",
+    "claim_requires_emperor_rank",
+    "claim_requires_primarch_or_emperor_rank",
+    "claim_not_allowed_for_primarch",
+    "claim_not_allowed_for_astartes",
+    "warrant_or_charter_required_for_astartes_execution_report"
+  ],
+  "naming_guardrails": [
+    "do_not_label_test_products_as_departments_in_current_stage",
+    "do_not_confuse_status_document_with_will_or_binding_document",
+    "do_not_use_portable_or_mirror_context_as_sovereign_authority_source"
+  ],
+  "legacy_aliases_tolerated": {
+    "edict": "gramota",
+    "sovereign_acceptance_claim": "canonical_acceptance_claim",
+    "sovereign_transition_claim": "sovereign_policy_change_claim",
+    "sovereign_rank_assertion": "emperor_rank_claim",
+    "primarch_status_assertion": "primarch_rank_claim",
+    "genome_issuance_claim": "genome_bundle_issuance_claim",
+    "emperor_substrate_activation_claim": "local_sovereign_substrate_activation_claim",
+    "sovereign_constitutional_mutation_claim": "constitutional_mutation_claim"
+  }
+}

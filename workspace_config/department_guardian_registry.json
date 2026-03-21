@@ -1,0 +1,87 @@
+{
+  "registry_version": "1.0.0",
+  "registry_kind": "department_guardian_registry",
+  "status": "active",
+  "scope": "current operational layer ownership and guardian model",
+  "canonical_root": "E:\\CVVCODEX",
+  "current_operational_model": "single_real_department_plus_intake_zone",
+  "source_refs": [
+    "docs/governance/FEDERATION_OPERATIONAL_MODEL.md",
+    "docs/governance/ANALYTICS_DEPARTMENT_DOCTRINE.md",
+    "docs/governance/FEDERATION_DEPARTMENT_ESCALATION_MATRIX.md",
+    "docs/governance/DEPARTMENT_EXCEPTION_ESCALATION_HARDENING_V1.md",
+    "workspace_config/test_product_intake_contract.json"
+  ],
+  "entities": [
+    {
+      "entity_kind": "department",
+      "entity_name": "Analytics Department",
+      "implementation_slug": "platform_test_agent",
+      "implementation_path": "projects/platform_test_agent",
+      "operational_status": "active",
+      "guardian_layer": "PRIMARCH",
+      "oversight_layer": "PRIMARCH",
+      "execution_layer": "ASTARTES_helper_and_creator_grade_maintainers",
+      "escalation_owner": {
+        "operational_non_sovereign": "PRIMARCH",
+        "sovereign_signoff": "EMPEROR"
+      },
+      "sovereign_signoff_boundary": [
+        "canonical_acceptance_claim",
+        "sovereign_policy_change_claim",
+        "constitutional_mutation_claim",
+        "emperor_rank_claim",
+        "unrestricted_structural_mutation_claim"
+      ],
+      "certainty_level": "OBSERVED",
+      "notes": "Guardian is formalized at rank/layer level; named individual guardian identity is not formalized."
+    },
+    {
+      "entity_kind": "intake_zone",
+      "entity_name": "Test Product Intake Zone",
+      "managed_by_department": "Analytics Department",
+      "subject_slugs": [
+        "tiktok_agent_platform",
+        "game_ru_ai",
+        "voice_launcher",
+        "adaptive_trading"
+      ],
+      "subject_classification": [
+        "test_product",
+        "intake_subject",
+        "analysis_candidate"
+      ],
+      "guardian_layer": "PRIMARCH",
+      "execution_layer": "ASTARTES_helper_bounded_intake_execution",
+      "escalation_owner": {
+        "operational_non_sovereign": "PRIMARCH",
+        "sovereign_signoff": "EMPEROR"
+      },
+      "certainty_level": "OBSERVED"
+    },
+    {
+      "entity_kind": "future_downstream_block",
+      "entity_name": "Future Downstream Blocks",
+      "operational_status": "NOT_FORMALIZED",
+      "guardian_layer": "NOT_FORMALIZED",
+      "execution_layer": "NOT_FORMALIZED",
+      "escalation_owner": "NOT_FORMALIZED",
+      "certainty_level": "NOT-PROVEN"
+    }
+  ],
+  "hard_boundaries": [
+    "test_products_are_not_departments_in_current_stage",
+    "guardian_registry_does_not_grant_sovereign_authority",
+    "named_operator_guardian_identity_remains_not_formalized"
+  ],
+  "named_guardian_identity_binding": {
+    "status": "NOT_FORMALIZED",
+    "gap_anchor": "docs/review_artifacts/DEPARTMENT_GUARDIAN_IDENTITY_GAP.md",
+    "known_safe_binding": "rank_or_layer_guardian_binding_only",
+    "forbidden_shortcut": "do_not_infer_named_operator_guardian_from_runtime_or_repo_presence"
+  },
+  "future_hardening": [
+    "named_guardian_identity_binding",
+    "department_specific_exception_override_registry"
+  ]
+}

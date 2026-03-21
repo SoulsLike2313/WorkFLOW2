@@ -1,0 +1,50 @@
+{
+  "contract_version": "1.0.0",
+  "contract_kind": "department_exception_escalation_hardening",
+  "status": "active",
+  "scope": "rank-bound escalation and override semantics for current operational layer",
+  "source_docs": [
+    "docs/governance/DEPARTMENT_EXCEPTION_ESCALATION_HARDENING_V1.md",
+    "docs/governance/GRAMOTA_DOCTRINE_V1.md",
+    "docs/governance/ASSIGNMENT_BINDING_DOCTRINE_V1.md",
+    "docs/governance/CONSTITUTION_IMMUTABILITY_BOUNDARY.md",
+    "workspace_config/department_guardian_registry.json"
+  ],
+  "direct_emperor_required_claim_classes": [
+    "canonical_acceptance_claim",
+    "sovereign_policy_change_claim",
+    "constitutional_mutation_claim",
+    "emperor_rank_claim",
+    "unrestricted_structural_mutation_claim"
+  ],
+  "primarch_resolvable_claim_classes": [
+    "bounded_engineering_proposal",
+    "constitutional_amendment_candidate_claim",
+    "constitutional_commentary_claim",
+    "execution_report_claim",
+    "denial_as_expected_claim"
+  ],
+  "astartes_execution_claim_classes": [
+    "constitutional_commentary_claim",
+    "execution_report_claim",
+    "denial_as_expected_claim"
+  ],
+  "gramota_binding_interaction": {
+    "direct_emperor_gramota_priority": true,
+    "binding_cannot_override_direct_emperor_gramota": true,
+    "lower_order_cannot_override_binding": true,
+    "constitutional_boundary_outranks_all": true
+  },
+  "override_priority_order": [
+    "constitutional_boundary",
+    "direct_emperor_gramota",
+    "sovereign_assignment_binding",
+    "delegated_primarch_binding_or_order",
+    "astartes_execution_order_or_report"
+  ],
+  "current_stage_scope": {
+    "real_department": "Analytics Department",
+    "intake_zone": "Test Product Intake Zone",
+    "future_downstream_blocks": "NOT_FORMALIZED"
+  }
+}

@@ -23,22 +23,23 @@ Portable session bundle is not:
 
 Target node rank is resolved by policy:
 
-1. valid creator authority contract + valid Emperor local proofs -> `Emperor`
-2. valid creator authority contract (without Emperor local proofs) -> `Primarch`
-3. no valid creator authority contract -> `Astartes`
+1. valid repo copy + valid local sovereign substrate -> `Emperor`
+2. valid repo copy + valid genome bundle -> `Primarch`
+3. valid repo copy only -> `Astartes`
+4. invalid repo copy anchors -> `UNKNOWN` fail-closed
 
 Default portable outcome:
 - no Emperor sovereignty by bundle alone.
 
 ## 4) Authority Contract Requirement
 
-Primarch-grade operation requires valid external creator authority contract:
+Creator authority remains operational mode contract only:
 
-1. `CVVCODEX_CREATOR_AUTHORITY_DIR` set;
-2. pointed directory exists;
-3. valid `creator_authority.json` in that external path.
+1. creator marker can route creator-mode operations;
+2. creator marker does not grant `Primarch` or `Emperor` rank;
+3. rank elevation depends strictly on genome/local sovereign substrate contracts.
 
-If this contract fails, node operates as `Astartes` helper/integration mode.
+If creator contract fails, machine may still resolve rank via repo/genome/substrate inputs while operational mode can remain helper/integration.
 
 ## 4.1) Canonical Root Requirement
 

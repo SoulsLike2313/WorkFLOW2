@@ -1,0 +1,92 @@
+{
+  "contract_version": "1.0.0",
+  "contract_kind": "analytics_department_test_product_intake",
+  "status": "active",
+  "scope": "current-stage intake model for non-department product lines",
+  "source_docs": [
+    "docs/governance/ANALYTICS_DEPARTMENT_DOCTRINE.md",
+    "docs/governance/TEST_PRODUCT_INTAKE_MODEL.md",
+    "docs/governance/FEDERATION_OPERATIONAL_MODEL.md",
+    "docs/CURRENT_PLATFORM_STATE.md"
+  ],
+  "current_department": {
+    "department_name": "Analytics Department",
+    "implementation_slug": "platform_test_agent",
+    "implementation_path": "projects/platform_test_agent",
+    "department_status": "active"
+  },
+  "current_test_products": [
+    {
+      "slug": "tiktok_agent_platform",
+      "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform",
+      "registry_status": "manual_testing_blocked",
+      "classification": [
+        "test_product",
+        "intake_subject",
+        "analysis_candidate"
+      ]
+    },
+    {
+      "slug": "game_ru_ai",
+      "path": "projects/GameRuAI",
+      "registry_status": "audit_required",
+      "classification": [
+        "test_product",
+        "intake_subject",
+        "analysis_candidate"
+      ]
+    },
+    {
+      "slug": "voice_launcher",
+      "path": "projects/voice_launcher",
+      "registry_status": "supporting",
+      "classification": [
+        "test_product",
+        "intake_subject",
+        "analysis_candidate"
+      ]
+    },
+    {
+      "slug": "adaptive_trading",
+      "path": "projects/adaptive_trading",
+      "registry_status": "experimental",
+      "classification": [
+        "test_product",
+        "intake_subject",
+        "analysis_candidate"
+      ]
+    }
+  ],
+  "intake_pipeline": [
+    "receive_intake_payload",
+    "parse_and_normalize_subject",
+    "first_audit_pass",
+    "present_missing_map",
+    "initial_plan_generation",
+    "recommendation_generation",
+    "routing_outcome_emit"
+  ],
+  "routing_outcomes": [
+    "ROUTE_REMEDIATION",
+    "ROUTE_READINESS_PREP",
+    "ROUTE_CONTINUED_ANALYSIS",
+    "ROUTE_BLOCKED_OR_QUARANTINE"
+  ],
+  "promotion_rule": {
+    "auto_promotion_allowed": false,
+    "required_for_new_department": [
+      "explicit_doctrine_update",
+      "registry_formalization_update",
+      "authority_governance_acceptance_path"
+    ]
+  },
+  "hard_boundaries": [
+    "non_department_lines_must_not_be_treated_as_departments_by_default",
+    "analytics_department_cannot_grant_sovereign_acceptance",
+    "intake_routing_does_not_bypass_constitution_or_admission_gates"
+  ],
+  "not_yet_formalized": [
+    "automatic intake runner producing this contract outputs from runtime events",
+    "fully automated promotion decision engine"
+  ]
+}

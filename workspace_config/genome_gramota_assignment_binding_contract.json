@@ -1,0 +1,140 @@
+{
+  "contract_version": "1.0.0",
+  "contract_kind": "status_will_binding_triad",
+  "status": "active",
+  "scope": "bounded doctrinal contract for genome/gramota/assignment-binding distinction",
+  "source_docs": [
+    "docs/governance/GENOME_DOCTRINE_V1.md",
+    "docs/governance/GRAMOTA_DOCTRINE_V1.md",
+    "docs/governance/ASSIGNMENT_BINDING_DOCTRINE_V1.md",
+    "docs/governance/INTER_NODE_DOCUMENT_ARCHITECTURE_V1.md",
+    "docs/governance/ISSUER_IDENTITY_AND_SIGNATURE_DISCIPLINE_V1.md"
+  ],
+  "document_layers": [
+    "status",
+    "will",
+    "binding"
+  ],
+  "document_classes": {
+    "genome": {
+      "role_layer": "status",
+      "issuer_rank_allowed": [
+        "EMPEROR"
+      ],
+      "grants": [
+        "primarch_status_attestation"
+      ],
+      "forbidden_effects": [
+        "direct_tasking",
+        "direct_order_execution",
+        "sovereign_mutation_authority_grant"
+      ],
+      "required_markers": {
+        "document_role_layer": "status",
+        "status_granted_level": "PRIMARCH",
+        "tasking_marker": false,
+        "binding_marker": false
+      },
+      "signature_class": "genome_status_signature",
+      "minimum_signature_assurance": "locally_verifiable"
+    },
+    "gramota": {
+      "role_layer": "will",
+      "issuer_rank_allowed": [
+        "EMPEROR"
+      ],
+      "grants": [
+        "order_mandate_tasking_signoff_directive"
+      ],
+      "forbidden_effects": [
+        "status_attestation_substitute",
+        "assignment_binding_substitute"
+      ],
+      "required_markers": {
+        "document_role_layer": "will",
+        "directive_kind_enum": [
+          "order",
+          "mandate",
+          "tasking",
+          "signoff"
+        ],
+        "tasking_marker_for_tasking": true
+      },
+      "signature_class": "gramota_directive_signature",
+      "minimum_signature_assurance": "locally_verifiable",
+      "minimum_signature_assurance_sovereign_sensitive": "emperor_local_only_verifiable",
+      "legacy_aliases_tolerated": [
+        "edict"
+      ]
+    },
+    "assignment_binding": {
+      "role_layer": "binding",
+      "issuer_rank_allowed": [
+        "EMPEROR",
+        "PRIMARCH_DELEGATED_ONLY"
+      ],
+      "grants": [
+        "responsibility_binding",
+        "delegation_scope_binding"
+      ],
+      "forbidden_effects": [
+        "status_attestation_substitute",
+        "direct_emperor_will_substitute",
+        "constitutional_boundary_override"
+      ],
+      "required_markers": {
+        "document_role_layer": "binding",
+        "binding_marker": true,
+        "required_binding_fields": [
+          "assigner_identity",
+          "assignee_identity",
+          "target_level",
+          "responsibility_zone",
+          "execution_domain",
+          "validity_window",
+          "revocation_authority",
+          "mutation_authority",
+          "non_override_boundaries"
+        ]
+      },
+      "signature_class": "assignment_binding_signature",
+      "minimum_signature_assurance": "locally_verifiable"
+    }
+  },
+  "conflict_priority": [
+    {
+      "priority": 1,
+      "rule": "direct_emperor_gramota_overrides_lower_directives"
+    },
+    {
+      "priority": 2,
+      "rule": "sovereign_assignment_binding_subordinate_to_direct_emperor_gramota"
+    },
+    {
+      "priority": 3,
+      "rule": "delegated_primarch_binding_cannot_override_emperor_gramota_or_constitution"
+    },
+    {
+      "priority": 4,
+      "rule": "lower_delegated_order_cannot_override_valid_assignment_binding_envelope"
+    },
+    {
+      "priority": 5,
+      "rule": "constitutional_boundary_outranks_all_status_will_binding_conflicts"
+    }
+  ],
+  "non_overridable_boundaries": [
+    "docs/governance/CONSTITUTION_IMMUTABILITY_BOUNDARY.md",
+    "emperor_only_sovereign_claim_classes",
+    "canonical_acceptance_creator_authority_boundary",
+    "fail_closed_rank_and_claim_denial_model"
+  ],
+  "not_yet_machine_enforced": [
+    "full runtime validator consumption of this contract for every inter-node document",
+    "automatic conflict arbitration engine based on this contract"
+  ],
+  "future_hardening_notes": [
+    "validator integration can map document_type to required marker checks",
+    "signature_class enum can be enforced in inter-node schema validator stage"
+  ]
+}

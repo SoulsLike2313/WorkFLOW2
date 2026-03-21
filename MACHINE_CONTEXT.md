@@ -8,15 +8,35 @@
 - Expected canonical workspace root across nodes: `E:\CVVCODEX` (unless explicit documented exception)
 - Path drift from canonical root narrows authority/rank confidence by fail-closed rule
 - Canonical external reading path: targeted bundles from `scripts/export_chatgpt_bundle.py`
+- Canonical fallback export path for tracked inclusion gaps: `scripts/export_manual_safe_bundle.py` under `docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md`
+- Canonical fallback search/read path for policy-friction zones: `scripts/search_repo_safe.py` under `docs/governance/REPO_SEARCH_ENTRYPOINTS.md`
+- Codex output discipline default: ultra-short chat + bundle-first details (`docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md`, `workspace_config/codex_output_mode_contract.json`)
 - Governance brain stack is mandatory for interpretation and execution
 - Active project: `platform_test_agent`
+- Current Federation operational department: `Analytics Department` (implemented by `platform_test_agent`)
+- Current non-department operational lines: `tiktok_agent_platform`, `game_ru_ai`, `voice_launcher`, `adaptive_trading`
+- Intake model anchors:
+  - `docs/governance/ANALYTICS_DEPARTMENT_DOCTRINE.md`
+  - `docs/governance/TEST_PRODUCT_INTAKE_MODEL.md`
+  - `workspace_config/test_product_intake_contract.json`
 - Mission Layer: `accepted / certified baseline`
 - Current canonical phase: `constitution-v1-finalized`
 - Current regime: `lightweight constitutional enforcement`
 - New brain-level implementation layers are not the default next move after V1 finalization.
 - Constitutional core path: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md`
+- Reference Brain V1 model anchor: `docs/governance/REFERENCE_BRAIN_V1_MODEL.md`
+- Reference Brain V1 machine-readable status: `workspace_config/reference_brain_v1_status.json`
 - Constitutional predecessor path: `docs/governance/WORKFLOW2_CONSTITUTION_V0.md`
 - Vocabulary freeze path: `docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md`
+- Constitutional mutation authority paths:
+  - `docs/governance/CONSTITUTION_CHANGE_AUTHORITY_POLICY.md`
+  - `docs/governance/CONSTITUTION_AMENDMENT_FLOW.md`
+  - `docs/governance/CONSTITUTION_IMMUTABILITY_BOUNDARY.md`
+- Status/will/binding triad paths:
+  - `docs/governance/GENOME_DOCTRINE_V1.md`
+  - `docs/governance/GRAMOTA_DOCTRINE_V1.md`
+  - `docs/governance/ASSIGNMENT_BINDING_DOCTRINE_V1.md`
+  - `workspace_config/genome_gramota_assignment_binding_contract.json`
 
 ## Explainability Quick Files
 
@@ -156,6 +176,7 @@ Read these first when you need plain-language status without deep policy parsing
 3. Exporter performs safety scan.
 4. Exporter writes zip + `CHATGPT_BUNDLE_MANIFEST.json` + `EXPORT_REPORT.md`.
 5. User uploads only produced safe bundle.
+6. For large tasks, full technical detail stays in bundle; chat remains compressed navigation response.
 
 Audit-safe runtime evidence export:
 

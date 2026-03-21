@@ -1,79 +1,84 @@
-﻿# NODE_AUTHORITY_RANK_POLICY_V1
+# NODE_AUTHORITY_RANK_POLICY_V1
 
 Status:
-- policy_version: `v1`
-- scope: `node-rank identity and claim boundaries`
-- non_goal: `no federation/factory expansion; no new brain layer`
+- policy_version: `v1.rewritten_for_status_model_v2`
+- scope: `machine rank identity and claim boundaries`
+- enforcement_anchor: `scripts/validation/detect_node_rank.py`
 
-## 1) Purpose
+## 1) Rank Ladder (Canonical)
 
-Define rank authority classes:
-1. `Emperor` - canonical sovereign node.
-2. `Primarch` - creator-grade portable node without sovereign status.
-3. `Astartes` - helper/integration node with bounded authority.
+1. `ASTARTES` = valid full repo copy (1:1 working copy anchor) only.
+2. `PRIMARCH` = valid full repo copy + valid owner-issued offline genome bundle.
+3. `EMPEROR` = valid full repo copy + valid local sovereign substrate.
 
-Creator/helper mode remains execution routing logic, while rank governs sovereignty/claim authority.
+Hard boundaries:
+1. `EMPEROR` does not depend on genome bundle.
+2. `EMPEROR` does not depend on creator authority marker.
+3. full repo copy alone never elevates to `PRIMARCH` or `EMPEROR`.
 
 ## 2) Rank Resolution Order
 
-1. valid creator authority path + valid emperor-local proof -> `EMPEROR`
-2. valid creator authority path + no emperor-local proof -> `PRIMARCH`
-3. otherwise -> `ASTARTES`
+1. repo copy valid + local sovereign substrate valid -> `EMPEROR`
+2. repo copy valid + genome bundle valid -> `PRIMARCH`
+3. repo copy valid only -> `ASTARTES`
+4. invalid/partial repo copy evidence -> `UNKNOWN` fail-closed
 
-Hard rule:
-- portable/safe-mirror copy never auto-inherits Emperor rank.
+Disambiguation rule:
+1. repo copy + genome + substrate -> `EMPEROR` because substrate is decisive;
+2. this is not a second genome path to `EMPEROR`.
 
-## 3) Rank Capabilities and Limits
+## 2.1) Rank-Derived Machine Mode Mapping
 
-### Emperor
+1. `EMPEROR -> creator`
+2. `PRIMARCH -> helper(high)`
+3. `ASTARTES -> helper(low)`
+4. `integration` is intent/posture overlay only, never a rank and never an authority source.
+
+## 3) Capability Boundaries
+
+### EMPEROR
 Can:
-1. execute creator-grade operations;
-2. make sovereign canonical acceptance decisions;
-3. issue warrants/charters and sovereign directives.
+1. assert sovereign claim classes;
+2. issue genome bundles;
+3. execute sovereign constitutional mutation path.
 
 Cannot:
-1. transfer sovereignty by bundle copy;
+1. transfer sovereign substrate by tracked repo/mirror/network bundle;
 2. bypass constitutional fail-closed gates.
 
-### Primarch
+### PRIMARCH
 Can:
-1. execute creator-grade non-sovereign work;
-2. issue proposals/reintegration recommendations;
-3. operate within chartered boundaries.
+1. assert `primarch_rank_claim`;
+2. execute bounded non-sovereign proposal/report classes;
+3. operate under delegated envelopes.
 
 Cannot:
-1. assert Emperor rank;
-2. assert sovereign final acceptance;
-3. issue sovereign policy changes.
+1. assert `emperor_rank_claim`;
+2. issue sovereign policy changes;
+3. issue sovereign constitutional mutation;
+4. issue genome bundles.
 
-### Astartes
+### ASTARTES
 Can:
-1. execute helper/integration bounded tasks;
-2. submit execution evidence/report artifacts.
+1. execute bounded helper/integration tasks;
+2. publish bounded execution/report claims.
 
 Cannot:
-1. claim creator-grade sovereignty;
-2. claim sovereign acceptance;
-3. execute authority-bearing work without valid warrant/charter context.
+1. assert `primarch_rank_claim`;
+2. assert `emperor_rank_claim`;
+3. issue sovereign classes.
 
-## 4) Claim Restrictions by Rank
+## 4) Load-Bearing Inputs by Rank
 
-Emperor-only claim classes:
-1. `canonical_acceptance_claim`
-2. `sovereign_policy_change_claim`
-3. `emperor_rank_claim`
-4. `unrestricted_structural_mutation_claim`
+1. repo copy anchors: `workspace_config/status_model_v2_contract.json`
+2. genome bundle contract: `workspace_config/genome_bundle_contract.json`
+3. local sovereign substrate contract: `workspace_config/emperor_local_proof_contract.json`
 
-Primarch and Astartes are restricted to non-sovereign claims per `SOVEREIGN_CLAIM_DENIAL_POLICY_V1.md`.
+Compatibility-only surface:
+1. `creator authority` marker is deprecated compatibility telemetry, not a load-bearing authority source.
 
-## 5) Warrant/Charter and Signature Coupling
+## 5) Safe Mirror and Portable Constraint
 
-1. authority-bearing execution on Astartes requires valid warrant or charter per `WARRANT_CHARTER_LIFECYCLE_V1.md`;
-2. authority-bearing documents must carry issuer identity/signature assurance per `ISSUER_IDENTITY_AND_SIGNATURE_DISCIPLINE_V1.md`;
-3. unknown/invalid identity-signature states narrow claim scope fail-closed.
-
-## 6) Root and Mirror Constraints
-
-1. canonical root expectation: `E:\CVVCODEX`.
-2. `WorkFLOW2` is safe mirror only and does not provide sovereign rank proof.
-3. root ambiguity or mismatch narrows rank confidence and blocks sovereign elevation.
+1. `WorkFLOW2/safe_mirror` is non-sovereign and non-elevating.
+2. portable/import/metadata-only manifests cannot elevate to `PRIMARCH` or `EMPEROR`.
+3. absent local sovereign substrate always excludes `EMPEROR`.

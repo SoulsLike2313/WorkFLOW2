@@ -1,0 +1,82 @@
+{
+  "schema_version": "codex_acceleration_plan.v1.0.0",
+  "plan_id": "repo_safe_acceleration_v1",
+  "status": "active",
+  "scope_root": "E:\\CVVCODEX",
+  "safety_mode": "preserve_fail_closed",
+  "goals": [
+    "reduce_policy_friction",
+    "faster_repo_reading",
+    "faster_bundle_assembly",
+    "improve_large_output_handling",
+    "preserve_bundle_information_density"
+  ],
+  "friction_categories": [
+    {
+      "id": "F1",
+      "name": "shell_command_shape_rejection",
+      "classification": "policy_friction"
+    },
+    {
+      "id": "F2",
+      "name": "recursive_search_friction",
+      "classification": "policy_plus_tooling_friction"
+    },
+    {
+      "id": "F3",
+      "name": "exporter_untracked_skip",
+      "classification": "exporter_issue"
+    },
+    {
+      "id": "F4",
+      "name": "safe_share_verdict_coupled_to_global_state",
+      "classification": "bundle_pipeline_issue"
+    },
+    {
+      "id": "F5",
+      "name": "large_output_single_shot_operations",
+      "classification": "workflow_design_issue"
+    },
+    {
+      "id": "F6",
+      "name": "repeated_heavy_surface_reread",
+      "classification": "reading_indexing_issue"
+    }
+  ],
+  "principles": [
+    "no_security_loosening",
+    "bundle_first_for_large_tasks",
+    "small_step_command_preference",
+    "safe_fallback_standardization",
+    "evidence_density_preservation"
+  ],
+  "quick_wins": [
+    "manual_safe_bundle_fallback_template",
+    "scoped_search_fallback_pattern",
+    "phase_read_set_manifest_template",
+    "explicit_exporter_limit_note_in_bundle_report"
+  ],
+  "do_not_change_yet": [
+    "safe_mode_blocking_rules",
+    "global_runtime_allowlist_expansion",
+    "sync_trust_completion_gate_semantics",
+    "canonical_source_precedence"
+  ],
+  "prioritized_order": [
+    "bundle_acceleration_standard",
+    "search_acceleration_standard",
+    "reading_acceleration_standard",
+    "large_output_chunking_standard",
+    "friction_metrics_tracking"
+  ],
+  "anchors": [
+    "docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md",
+    "workspace_config/codex_output_mode_contract.json",
+    "docs/governance/CODEX_ACCELERATION_PLAN_SAFE_MODE_V1.md",
+    "docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md",
+    "workspace_config/bundle_fallback_contract.json",
+    "docs/governance/REPO_SEARCH_ENTRYPOINTS.md",
+    "workspace_config/search_zone_manifest.json",
+    "scripts/search_repo_safe.py"
+  ]
+}

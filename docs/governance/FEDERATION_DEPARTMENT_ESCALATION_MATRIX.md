@@ -1,9 +1,9 @@
-﻿# FEDERATION_DEPARTMENT_ESCALATION_MATRIX
+# FEDERATION_DEPARTMENT_ESCALATION_MATRIX
 
 Status:
-- matrix_version: `v1-bounded`
-- scope: `federation department escalation discipline`
-- non_goal: `no speculative per-department sovereign ownership assignment`
+- matrix_version: `v2-single-department`
+- scope: `federation department escalation discipline (current stage)`
+- non_goal: `no speculative multi-department ownership map`
 
 ## Global Rules
 
@@ -11,22 +11,41 @@ Status:
 2. Sovereign signoff is required for canonical acceptance and sovereign claim classes.
 3. Primarch layer may direct bounded operational execution but cannot issue sovereign claims.
 4. Astartes layer is execution-constrained and cannot self-elevate command authority.
-5. Per-department role ownership remains `NOT_FORMALIZED` unless explicitly declared in a canonical registry.
+5. Current department model is single-department (`Analytics Department`).
 
-## Department Escalation Matrix
+## Current Department Escalation Matrix
 
-| department | current_status | oversight_layer | execution_layer | escalation_path | sovereign_signoff_boundary | primarch_handling_boundary | astartes_handling_boundary | confidence |
-|---|---|---|---|---|---|---|---|---|
-| `platform_test_agent` | `active` | `PRIMARCH (operational oversight)` | `ASTARTES/helper execution + creator-grade maintainers` | `ASTARTES -> PRIMARCH -> EMPEROR (if sovereign claim needed)` | `canonical acceptance, sovereign policy change, unrestricted structural mutation` | `audit orchestration, bounded admission preparation, non-sovereign corrective direction` | `task-scoped audit execution and evidence reporting` | `INFERRED_DRAFT` |
-| `tiktok_agent_platform` | `manual_testing_blocked` | `PRIMARCH (operational oversight)` | `ASTARTES/helper execution under tester-agent gate` | `ASTARTES -> PRIMARCH -> EMPEROR (for final canonical transition)` | `lifting sovereign-level gates and final canonical acceptance claims` | `readiness planning, bounded fix directives, audit scheduling` | `bounded implementation and execution_report delivery` | `INFERRED_DRAFT` |
-| `game_ru_ai` | `audit_required` | `PRIMARCH (operational oversight)` | `ASTARTES/helper execution under audit-required policy` | `ASTARTES -> PRIMARCH -> EMPEROR (if acceptance transition requested)` | `sovereign acceptance and sovereign transition classes` | `non-sovereign remediation direction and evidence packaging` | `bounded remediation execution and report submission` | `INFERRED_DRAFT` |
-| `voice_launcher` | `supporting` | `PRIMARCH (cross-line coordination)` | `ASTARTES/helper execution for scoped updates` | `ASTARTES -> PRIMARCH; PRIMARCH -> EMPEROR only when sovereign signoff required` | `any canonical acceptance or sovereign policy claim` | `interface-level coordination and bounded integration decisions` | `implementation within task/program contract scope` | `INFERRED_DRAFT` |
-| `adaptive_trading` | `experimental` | `PRIMARCH (experimental governance)` | `ASTARTES/helper execution in bounded experimental scope` | `ASTARTES -> PRIMARCH; PRIMARCH -> EMPEROR for promotion to sovereign acceptance path` | `promotion beyond experimental posture into sovereign acceptance path` | `experimental continuation/retire/pivot proposals` | `bounded prototype execution and evidence generation` | `INFERRED_DRAFT` |
+| department | implementation | current_status | oversight_layer | execution_layer | escalation_path | sovereign_signoff_boundary | primarch_handling_boundary | astartes_handling_boundary | confidence |
+|---|---|---|---|---|---|---|---|---|---|
+| `Analytics Department` | `platform_test_agent` | `active` | `PRIMARCH (operational oversight)` | `ASTARTES/helper execution + creator-grade maintainers` | `ASTARTES -> PRIMARCH -> EMPEROR (if sovereign claim needed)` | `canonical acceptance, sovereign policy change, unrestricted structural mutation` | `audit orchestration, bounded intake triage, non-sovereign corrective direction` | `task-scoped audit execution and evidence reporting` | `OBSERVED` |
+
+## Non-Department Operational Lines (Escalation Routing)
+
+These lines are intake/analysis subjects in current stage, not departments:
+
+| line | status | operational_classification | routing model |
+|---|---|---|
+| `tiktok_agent_platform` | `manual_testing_blocked` | `test_product + intake_subject + analysis_candidate` | `route through Analytics Department intake/audit path` |
+| `game_ru_ai` | `audit_required` | `test_product + intake_subject + analysis_candidate` | `route through Analytics Department intake/audit path` |
+| `voice_launcher` | `supporting` | `test_product + intake_subject + analysis_candidate` | `route through Analytics Department intake/audit path when required` |
+| `adaptive_trading` | `experimental` | `test_product + intake_subject + analysis_candidate` | `route through Analytics Department intake/audit path when required` |
+
+## Not Current Operational Entities
+
+1. `shortform_core` - historical residue only.
+2. `tiktok_automation_app` - migration trace only.
+3. `wild_hunt_command_citadel` - container path, not a department.
 
 ## Not Yet Formalized
 
-1. Per-department permanent owner registry by rank.
-2. Machine-readable mandate/guardianship linkage between individual operators and departments.
+1. Permanent owner/guardian identity by individual operator.
+2. Machine-readable mandate linkage between named operators and the department.
 3. Department-specific sovereign signoff exception list.
 
-These remain intentionally open until canonical doctrine and registry artifacts are provided.
+These remain intentionally open until explicit canonical doctrine is provided.
+
+## Hardening Anchors
+
+1. Guardian/ownership registry: `workspace_config/department_guardian_registry.json`.
+2. Exception/escalation policy: `docs/governance/DEPARTMENT_EXCEPTION_ESCALATION_HARDENING_V1.md`.
+3. Exception/escalation contract: `workspace_config/department_exception_escalation_contract.json`.

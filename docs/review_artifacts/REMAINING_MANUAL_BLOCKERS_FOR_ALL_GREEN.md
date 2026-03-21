@@ -1,0 +1,56 @@
+# REMAINING_MANUAL_BLOCKERS_FOR_ALL_GREEN
+
+- generated_at_utc: `2026-03-21T11:36:37.088147+00:00`
+
+## Exact Remaining Blockers
+- path: `MACHINE_CONTEXT.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `README.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `REPO_MAP.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/CHATGPT_BUNDLE_EXPORT.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/CURRENT_PLATFORM_STATE.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/INSTRUCTION_INDEX.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/CREATOR_AUTHORITY_POLICY.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/EMPEROR_LOCAL_PROOF_MODEL_V1.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/FEDERATION_ARCHITECTURE.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/FEDERATION_DELEGATION_FORMALIZATION_LIMITS.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/FEDERATION_DEPARTMENT_ESCALATION_MATRIX.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/HELPER_NODE_POLICY.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/INTER_NODE_DOCUMENT_ARCHITECTURE_V1.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/INTER_NODE_DOCUMENT_SCHEMA_V1.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/ISSUER_IDENTITY_AND_SIGNATURE_DISCIPLINE_V1.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/NODE_AUTHORITY_RANK_POLICY_V1.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/OPERATOR_TASK_PROGRAM_BASELINE.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/OPERATOR_TASK_PROGRAM_CATALOG_WAVE_2C.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/POLICY_CHANGE_AUTHORITY_POLICY.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/PORTABLE_WORK_SESSION_PROTOCOL_V1.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/PRIMARCH_ASTARTES_DELEGATION_MATRIX.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/SOVEREIGN_CLAIM_DENIAL_POLICY_V1.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/SOVEREIGN_RANK_PROOF_MODEL_V1.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/WARRANT_CHARTER_LIFECYCLE_V1.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/WORKFLOW2_CONSTITUTION_V1.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/governance/WORKFLOW2_GPT_ONBOARDING_MASTER_V1.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/review_artifacts/DEPARTMENT_OWNERSHIP_GAP_REPORT.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/review_artifacts/PROJECT_PATH_STATUS_MATRIX.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `docs/review_artifacts/TAXONOMY_ALIGNMENT_REPORT.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `integration/review_queue/20260317T094958Z_TASK-PLATFORM_TEST_AGENT-001_helper-node-audit/review_result.json` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `integration/review_queue/20260317T094958Z_TASK-PLATFORM_TEST_AGENT-001_helper-node-audit/review_result.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `runtime/repo_control_center/constitution_status.json` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `runtime/repo_control_center/constitution_status.md` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `scripts/detect_machine_mode.py` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `scripts/repo_control_center.py` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `scripts/validation/check_sovereign_claim_denial.py` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `scripts/validation/detect_node_rank.py` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `scripts/validation/run_constitution_checks.py` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `workspace_config/SAFE_MIRROR_MANIFEST.json` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `workspace_config/claim_taxonomy_contract.json` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `workspace_config/creator_mode_detection_contract.json` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `workspace_config/delegation_registry.json` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `workspace_config/federation_mode_contract.json` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- path: `workspace_config/workspace_manifest.json` | reason: tracked dirty | owner_action: commit/discard with explicit decision | gate_blocked: `sync/trust/governance_acceptance/admission`
+- group: `untracked_governance_doctrine` (30 files) | reason: untracked set not closed | owner_action: commit or archive/move outside repo | gate_blocked: `sync/trust/governance_acceptance/admission`
+- group: `untracked_review_markdown_reports` (82 files) | reason: untracked set not closed | owner_action: commit or archive/move outside repo | gate_blocked: `sync/trust/governance_acceptance/admission`
+- group: `untracked_review_json_reports` (8 files) | reason: untracked set not closed | owner_action: commit or archive/move outside repo | gate_blocked: `sync/trust/governance_acceptance/admission`
+- group: `untracked_scripts` (4 files) | reason: untracked set not closed | owner_action: commit or archive/move outside repo | gate_blocked: `sync/trust/governance_acceptance/admission`
+- group: `untracked_workspace_contracts` (13 files) | reason: untracked set not closed | owner_action: commit or archive/move outside repo | gate_blocked: `sync/trust/governance_acceptance/admission`

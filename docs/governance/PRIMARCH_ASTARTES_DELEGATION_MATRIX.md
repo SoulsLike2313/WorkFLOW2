@@ -1,9 +1,9 @@
 # PRIMARCH_ASTARTES_DELEGATION_MATRIX
 
 Status:
-- matrix_version: `v1-draft-safe`
-- intent: `targeted doctrine intake for future Federation department command architecture`
-- scope: `oversight, delegation, execution boundaries, rank-to-department relation`
+- matrix_version: `v2-draft-safe-single-department`
+- intent: `targeted doctrine intake for current Federation operational command architecture`
+- scope: `oversight, delegation, execution boundaries, rank-to-federation relation`
 - non_goal: `no speculative leadership hierarchy beyond repo-visible doctrine`
 
 ## 1) Doctrine Strength Scale
@@ -31,27 +31,27 @@ Status:
 | `docs/governance/CANONICAL_MACHINE_PROTECTION_POLICY.md` | protected zones and anti-bypass rules | `LOAD_BEARING` | prevents delegation overreach into protected zones |
 | `workspace_config/federation_mode_contract.json` | mode-level allowed/forbidden operations | `LOAD_BEARING` | machine-enforced operational surface by mode |
 | `workspace_config/delegation_registry.json` | machine-readable rank/authority/delegation baseline | `LOAD_BEARING` | bounded formalization for federation command architecture |
-| `docs/governance/FEDERATION_DEPARTMENT_ESCALATION_MATRIX.md` | department-level escalation path baseline | `LOAD_BEARING` | explicit sovereign vs operational escalation boundaries |
+| `docs/governance/FEDERATION_DEPARTMENT_ESCALATION_MATRIX.md` | current department escalation + intake-subject routing baseline | `LOAD_BEARING` | explicit sovereign vs operational escalation boundaries |
 | `scripts/validation/detect_node_rank.py` | runtime rank detection (fail-closed fallback) | `LOAD_BEARING` | executable rank signal in current pipeline |
 | `scripts/validation/check_sovereign_claim_denial.py` | runtime claim denial evaluator | `LOAD_BEARING` | executable claim gate aligned with canonical claim classes (legacy aliases tolerated) |
 | `docs/governance/FEDERATION_ARCHITECTURE.md` | Federation role model (creator/helper/integration) | `SECONDARY` | strong context for command flow, not full department doctrine |
-| `docs/CURRENT_PLATFORM_STATE.md` | active project status reality | `SECONDARY` | current department candidates by project lines |
+| `docs/CURRENT_PLATFORM_STATE.md` | active project status reality | `SECONDARY` | current single department implementation + non-department intake subjects |
 | `docs/review_artifacts/PROJECT_PATH_STATUS_MATRIX.md` | project/path classification map | `SECONDARY` | distinguishes registry project vs container/layer traces |
 | `docs/governance/EMPEROR_MACHINE_GPT_BRIEFING_V1.md` | operational orientation for rank semantics | `SECONDARY` | useful interpretation guide |
 | `docs/governance/EMPEROR_MACHINE_CODEX_BRIEFING_V1.md` | operational orientation for acceptance flow | `SECONDARY` | useful interpretation guide |
 | `docs/review_artifacts/EMPEROR_ACCEPTANCE_DOSSIER_V1.md` | pre-sovereign recommendation packet | `REVIEW_ONLY` | explicitly non-final acceptance source |
-| `workspace_config/emperor_local_proof_contract.json` | expected explicit Emperor proof contract file | `TOO_WEAK` | file not present in tree; cannot be used as doctrine anchor |
+| `workspace_config/emperor_local_proof_contract.json` | explicit Emperor local proof contract file used by rank validator | `LOAD_BEARING` | anchor restored; used by `scripts/validation/detect_node_rank.py` |
 | `workspace_config/node_rank_claim_denial_contract.json` | expected explicit claim-denial contract file | `TOO_WEAK` | file not present in tree; cannot be used as doctrine anchor |
 
-## 3) Rank-to-Department Delegation Matrix (Draft-Safe)
+## 3) Rank-to-Federation Delegation Matrix (Draft-Safe, Current Stage)
 
-This matrix defines what can be safely stated now for Federation department command architecture.
+This matrix defines what can be safely stated now for Federation command architecture in the current single-department stage.
 
-| rank | relation to departments | may direct | may execute | may not claim | command stops | implementation begins |
+| rank | relation to federation operational model | may direct | may execute | may not claim | command stops | implementation begins |
 |---|---|---|---|---|---|---|
-| `EMPEROR` | sovereign oversight over federation/departments; final canonical authority | sovereign directives (`edict`), warrants/charters, canonical acceptance decisions | creator-grade operations including protected decisions | cannot transfer sovereignty by bundle/mirror/import; cannot bypass fail-closed gates | at sovereign acceptance and policy boundary | delegated execution under issued warrant/charter scope |
-| `PRIMARCH` | creator-grade non-sovereign department command/execution actor | reintegration/engineering proposals; delegated bounded warrants only when Emperor charter explicitly allows | creator-grade non-sovereign work; bounded delegated execution | cannot assert Emperor rank; cannot assert sovereign final acceptance; cannot issue sovereign policy change | at proposal/delegated-scope boundary; no sovereign finalization | project/department execution inside bounded non-sovereign scope |
-| `ASTARTES` | bounded execution lane for departments; no sovereign command role | bounded execution reporting; task return dossiers; only within warrant/charter and task scope | helper/integration bounded tasks and evidence delivery | cannot claim creator-grade sovereignty; cannot claim sovereign acceptance; cannot self-grant authority | at bounded execution/report boundary; no canonical acceptance | task/block implementation in allowed paths with required checks |
+| `EMPEROR` | sovereign oversight over federation; final canonical authority | sovereign directives (`edict`), warrants/charters, canonical acceptance decisions | creator-grade operations including protected decisions | cannot transfer sovereignty by bundle/mirror/import; cannot bypass fail-closed gates | at sovereign acceptance and policy boundary | delegated execution under issued warrant/charter scope |
+| `PRIMARCH` | creator-grade non-sovereign operational command actor for `Analytics Department` | reintegration/engineering proposals; delegated bounded warrants only when Emperor charter explicitly allows | creator-grade non-sovereign work; bounded delegated execution | cannot assert Emperor rank; cannot assert sovereign final acceptance; cannot issue sovereign policy change | at proposal/delegated-scope boundary; no sovereign finalization | `Analytics Department` execution and intake-subject routing inside bounded non-sovereign scope |
+| `ASTARTES` | bounded execution lane for assigned department tasks; no sovereign command role | bounded execution reporting; task return dossiers; only within warrant/charter and task scope | helper/integration bounded tasks and evidence delivery | cannot claim creator-grade sovereignty; cannot claim sovereign acceptance; cannot self-grant authority | at bounded execution/report boundary; no canonical acceptance | task/block implementation in allowed paths with required checks |
 
 ## 4) Command/Execution Boundary Cut
 
@@ -73,12 +73,12 @@ Known strong truth:
 2. Warrant/charter lifecycle provides delegated execution semantics.
 3. Creator-only final acceptance boundary is explicit.
 
-Not yet proven for deep department command architecture:
-1. no canonical per-department guardianship/ownership registry by rank;
-2. no machine-readable delegation registry mapping rank -> department -> mandate owner;
-3. no explicit escalation matrix tied to each department line;
-4. no machine-readable escalation override map for department-specific exceptions.
+Not yet proven for deep command architecture:
+1. no canonical named-operator guardianship/ownership registry for `Analytics Department`;
+2. no machine-readable delegation registry mapping rank -> named guardian -> mandate owner;
+3. no machine-readable escalation override map for exceptional routing;
+4. no canonically approved multi-department expansion doctrine for this stage.
 
 Safety implication:
 - This matrix is safe for draft-level architecture boundaries.
-- Final deep leadership/delegation architecture is still blocked until missing department-level doctrine artifacts are defined.
+- Final deep leadership/delegation architecture is still blocked until missing ownership/delegation doctrine artifacts are defined.

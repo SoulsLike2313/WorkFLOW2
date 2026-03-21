@@ -45,3 +45,16 @@ V1 is intentionally lightweight:
 ## 7. Relation To V0
 - V0 remains historical constitutional bootstrap artifact.
 - V1 is the canonical successor and primary constitutional reference.
+
+## 8. Constitutional Mutation Authority
+
+Constitutional mutation boundary is explicit:
+1. sovereign constitutional mutation is Emperor-only;
+2. Primarch may prepare proposals/amendment candidates but cannot finalize constitutional mutation;
+3. Astartes may provide commentary/evidence only;
+4. creator/development activity is not equivalent to constitutional sovereign authority.
+
+Bound references:
+1. `docs/governance/CONSTITUTION_CHANGE_AUTHORITY_POLICY.md`
+2. `docs/governance/CONSTITUTION_AMENDMENT_FLOW.md`
+3. `docs/governance/CONSTITUTION_IMMUTABILITY_BOUNDARY.md`

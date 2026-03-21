@@ -3,6 +3,9 @@
 ## Canonical Role
 
 `scripts/export_chatgpt_bundle.py` is the official external reading channel.
+When tracked-only behavior is insufficient for bounded safe scope, use canonical fallback:
+`scripts/export_manual_safe_bundle.py` under
+`docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md`.
 
 Architecture anchor:
 
@@ -37,6 +40,12 @@ python scripts/export_chatgpt_bundle.py request --request-file chatgpt_request.t
 python scripts/export_chatgpt_bundle.py audit-runtime --include-rcc-runtime
 ```
 
+Manual-safe fallback mode:
+
+```powershell
+python scripts/export_manual_safe_bundle.py --topic <topic> --include <paths...> --fallback-trigger exists_but_not_tracked
+```
+
 ## Canonical Workflow (ChatGPT requested files)
 
 1. ChatGPT sends exact files/paths.
@@ -44,6 +53,18 @@ python scripts/export_chatgpt_bundle.py audit-runtime --include-rcc-runtime
 3. Exporter validates request against safety policy.
 4. Exporter generates zip + manifest + report.
 5. User uploads bundle only.
+
+Fallback workflow (when default exporter cannot include required safe files):
+
+1. Build explicit include scope.
+2. Run `scripts/export_manual_safe_bundle.py`.
+3. Verify companion files:
+   - `bundle_include_manifest.json`
+   - `bundle_summary.md`
+   - `bundle_reading_order.md`
+   - `bundle_exclusions.md`
+   - `manual_safe_export_report.md`
+4. Upload only produced safe bundle zip.
 
 Federated note:
 
@@ -79,12 +100,14 @@ Audit-safe exception:
 Archive name:
 
 - `chatgpt_bundle_<mode>_<timestamp>.zip`
+- `<topic>_manual_safe_bundle_<timestamp>.zip` (fallback standard)
 
 Contains:
 
 - `CHATGPT_BUNDLE_MANIFEST.json`
 - `EXPORT_REPORT.md`
 - exported file tree
+- or fallback companion set defined in `docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md`
 
 `CHATGPT_BUNDLE_MANIFEST.json` includes sync verdict, requested/included/skipped/blocked lists, hashes, and safe-share verdict.
 

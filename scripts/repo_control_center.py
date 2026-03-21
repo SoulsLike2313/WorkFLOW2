@@ -373,15 +373,13 @@ def machine_mode_checks() -> dict[str, Any]:
 
     if not detect_script.exists():
         blockers.append("missing scripts/detect_machine_mode.py")
-    if not detection_contract.exists():
-        blockers.append("missing workspace_config/creator_mode_detection_contract.json")
     if not federation_contract.exists():
         blockers.append("missing workspace_config/federation_mode_contract.json")
 
     if detection_contract.exists():
         text = detection_contract.read_text(encoding="utf-8-sig")
         if re.search(r"[A-Za-z]:\\\\", text):
-            blockers.append("creator detection contract leaks local absolute path")
+            warnings.append("legacy creator detection contract contains local absolute path (compatibility surface)")
 
     payload: dict[str, Any] | None = None
     if not blockers:
@@ -403,17 +401,29 @@ def machine_mode_checks() -> dict[str, Any]:
 
     if payload:
         evidence["machine_mode"] = payload.get("machine_mode")
+        evidence["helper_tier"] = payload.get("helper_tier")
+        evidence["detected_rank"] = payload.get("detected_rank")
+        evidence["authority_source"] = payload.get("authority_source")
         evidence["authority_present"] = payload.get("authority", {}).get("authority_present")
         evidence["detection_state"] = payload.get("authority", {}).get("detection_state")
-        evidence["env_var_name"] = payload.get("authority", {}).get("env_var_name")
-        evidence["marker_filename"] = payload.get("authority", {}).get("marker_filename")
+        evidence["work_posture"] = payload.get("work_posture")
+        evidence["legacy_creator_authority_present"] = payload.get("legacy_creator_authority", {}).get("authority_present")
+        evidence["legacy_creator_detection_state"] = payload.get("legacy_creator_authority", {}).get("detection_state")
         evidence["allowed_operations"] = payload.get("operations", {}).get("allowed", [])
         evidence["forbidden_operations"] = payload.get("operations", {}).get("forbidden", [])
+        evidence["posture_overlay"] = payload.get("operations", {}).get("posture_overlay", {})
         evidence["warnings"] = payload.get("warnings", [])
+        evidence["rank_detection_verification_verdict"] = payload.get("rank_detection", {}).get("verification_verdict")
 
         mode = str(payload.get("machine_mode", "helper"))
+        tier = str(payload.get("helper_tier", "") or "")
+        detected_rank = str(payload.get("detected_rank", "UNKNOWN"))
         if mode == "helper":
-            warnings.append("machine is in helper mode (creator authority absent)")
+            warnings.append(f"machine is in helper mode (tier={tier or 'unknown'})")
+        if mode == "creator" and detected_rank != "EMPEROR":
+            blockers.append("creator mode derived without EMPEROR rank")
+        if payload.get("blockers"):
+            blockers.extend([f"detect_machine_mode blocker: {x}" for x in payload.get("blockers", [])])
 
     if blockers:
         verdict = "BLOCKED"
@@ -424,11 +434,11 @@ def machine_mode_checks() -> dict[str, Any]:
 
     return {
         "verdict": verdict,
-        "basis": "federation machine-mode detection via external creator authority contract",
+        "basis": "federation machine-mode detection derived from status-model-v2 rank (integration posture non-authority)",
         "evidence": evidence,
         "blockers": blockers,
         "warnings": warnings,
-        "next_step": "Establish creator authority marker for canonical creator operations." if warnings else "Machine mode detection is valid.",
+        "next_step": "Ensure rank-derived mode mapping and posture overlays are consistent." if warnings else "Machine mode detection is valid.",
     }
 
 
@@ -948,7 +958,7 @@ def trust_checks(
     if machine_mode["verdict"] == "BLOCKED":
         blockers.append("machine mode detection blocked")
     elif machine_mode["verdict"] == "WARNING":
-        warnings.append("machine mode is helper-only (creator authority absent)")
+        warnings.append("machine mode is helper-only (rank-derived non-emperor posture)")
 
     if integration_inbox["verdict"] == "BLOCKED":
         blockers.append("integration inbox flow blocked")
@@ -1002,7 +1012,7 @@ def admission_checks(
     if governance_acceptance["verdict"] != "PASS":
         blockers.append("governance acceptance gate not PASS")
     if machine_mode.get("evidence", {}).get("machine_mode") != "creator":
-        blockers.append("machine mode is not creator")
+        blockers.append("rank-derived machine mode is not creator")
 
     if blockers:
         verdict = "REJECTED"
@@ -1116,7 +1126,7 @@ def governance_acceptance_checks(
     if machine_mode["verdict"] == "BLOCKED":
         blockers.append("machine mode detection blocked")
     if machine_mode.get("evidence", {}).get("machine_mode") != "creator":
-        blockers.append("creator authority required for governance acceptance PASS")
+        blockers.append("rank-derived creator mode required for governance acceptance PASS")
     if contradictions["critical_count"] > 0:
         blockers.append("critical contradictions unresolved")
     if not git_state.worktree_clean:
@@ -1406,9 +1416,8 @@ def classify_blocking_reason(
         return "AUTHORITY", detail
 
     mode = machine_mode.get("evidence", {}).get("machine_mode", "unknown")
-    authority_present = bool(machine_mode.get("evidence", {}).get("authority_present", False))
-    if governance_acceptance["verdict"] != "PASS" and (mode != "creator" or not authority_present):
-        detail = "creator-only governance acceptance unavailable in current machine mode"
+    if governance_acceptance["verdict"] != "PASS" and mode != "creator":
+        detail = "creator-only governance acceptance unavailable in current rank-derived machine mode"
         return "ROLE_AUTHORITY", detail
 
     if governance["verdict"] == "NON_COMPLIANT":
@@ -1475,15 +1484,16 @@ def compute_status_layers(
         workspace_health = "PASS"
 
     mode = machine_mode.get("evidence", {}).get("machine_mode", "unknown")
-    authority_present = bool(machine_mode.get("evidence", {}).get("authority_present", False))
+    helper_tier = str(machine_mode.get("evidence", {}).get("helper_tier", "") or "")
+    detected_rank = str(machine_mode.get("evidence", {}).get("detected_rank", "UNKNOWN"))
     if machine_mode["verdict"] == "BLOCKED":
         authority_status = "BLOCKED"
-    elif mode == "creator" and authority_present:
-        authority_status = "CREATOR_AUTHORITY_ACTIVE"
-    elif mode == "helper" and not authority_present:
-        authority_status = "HELPER_MODE_NO_AUTHORITY"
-    elif mode == "integration" and authority_present:
-        authority_status = "INTEGRATION_AUTHORITY_ACTIVE"
+    elif mode == "creator" and detected_rank == "EMPEROR":
+        authority_status = "CREATOR_FROM_EMPEROR_RANK"
+    elif mode == "helper" and helper_tier == "high" and detected_rank == "PRIMARCH":
+        authority_status = "HELPER_HIGH_FROM_PRIMARCH_RANK"
+    elif mode == "helper" and helper_tier == "low" and detected_rank == "ASTARTES":
+        authority_status = "HELPER_LOW_FROM_ASTARTES_RANK"
     else:
         authority_status = "LIMITED_OR_UNKNOWN"
 
@@ -1530,7 +1540,9 @@ def compute_status_layers(
 def one_screen_status_payload(result: dict[str, Any]) -> dict[str, Any]:
     v = result["verdicts"]
     checks = result["checks"]
-    authority_path = os.getenv("CVVCODEX_CREATOR_AUTHORITY_DIR", "")
+    authority_path = os.getenv("CVVCODEX_LOCAL_SOVEREIGN_SUBSTRATE_DIR", "")
+    legacy_substrate_env_present = bool(os.getenv("CVVCODEX_EMPEROR_PROOF_DIR", ""))
+    legacy_creator_env_present = bool(os.getenv("CVVCODEX_CREATOR_AUTHORITY_DIR", ""))
     block_category, block_detail = classify_blocking_reason(
         sync=v["sync"],
         governance=v["governance"],
@@ -1540,7 +1552,7 @@ def one_screen_status_payload(result: dict[str, Any]) -> dict[str, Any]:
         machine_mode=v["machine_mode"],
     )
     payload = {
-        "schema_version": "one_screen_status.v1.1.0",
+        "schema_version": "one_screen_status.v1.2.0",
         "run_id": result["run_id"],
         "generated_at": result["generated_at"],
         "branch": result["repo"]["branch"],
@@ -1550,6 +1562,9 @@ def one_screen_status_payload(result: dict[str, Any]) -> dict[str, Any]:
         "machine_mode_verdict": v["machine_mode"]["verdict"],
         "authority_present": bool(v["machine_mode"]["evidence"].get("authority_present", False)),
         "authority_path": authority_path,
+        "legacy_substrate_env_present": legacy_substrate_env_present,
+        "legacy_creator_env_present": legacy_creator_env_present,
+        "legacy_envs_ignored_for_authority": True,
         "trust_verdict": v["trust"]["verdict"],
         "sync_verdict": v["sync"]["verdict"],
         "governance_verdict": v["governance"]["verdict"],
@@ -1599,6 +1614,9 @@ def plain_status_markdown(result: dict[str, Any], one_screen: dict[str, Any]) ->
         f"- authority_present: `{one_screen['authority_present']}`",
         f"- authority_status: `{one_screen['authority_status']}`",
         f"- authority_path: `{one_screen['authority_path'] or 'not-set-in-environment'}`",
+        f"- legacy_substrate_env_present: `{one_screen['legacy_substrate_env_present']}`",
+        f"- legacy_creator_env_present: `{one_screen['legacy_creator_env_present']}`",
+        f"- legacy_envs_ignored_for_authority: `{one_screen['legacy_envs_ignored_for_authority']}`",
         "",
         "## Trust / Sync / Governance Chain",
         f"- trust_verdict: `{one_screen['trust_verdict']}`",

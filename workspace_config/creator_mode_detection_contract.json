@@ -1,5 +1,8 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
+  "classification": "legacy_compatibility_surface",
+  "load_bearing_for_mode_or_rank": false,
+  "deprecated_by": "workspace_config/federation_mode_contract.json (mode_derivation=rank_model_v2)",
   "env_var_name": "CVVCODEX_CREATOR_AUTHORITY_DIR",
   "marker_filename": "creator_authority.json",
   "required_marker_fields": {
@@ -13,6 +16,9 @@
     "marker_missing",
     "marker_invalid",
     "creator_authority_present"
+  ],
+  "notes": [
+    "This contract may be read for historical compatibility telemetry only.",
+    "Creator mode is now derived from rank model v2 and not from this marker."
   ]
 }
-

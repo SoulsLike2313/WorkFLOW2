@@ -38,5 +38,5 @@ Freeze Task/Program Layer as the canonical operator-facing program execution bas
 ## Intentionally Unsupported
 - unrestricted autonomous mutation
 - silent auto-approval of guarded programs
-- policy override from helper/integration mode
+- policy override from helper authority or integration posture
 - product-domain orchestration outside governance/control scope

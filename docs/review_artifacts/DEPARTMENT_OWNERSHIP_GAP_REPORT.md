@@ -1,38 +1,49 @@
-﻿# DEPARTMENT_OWNERSHIP_GAP_REPORT
+# DEPARTMENT_OWNERSHIP_GAP_REPORT
 
 Status:
-- report_version: `v1`
-- scope: `ownership/guardian registry feasibility after delegation formalization`
+- report_version: `v3-single-department-partial-hardening`
+- scope: `ownership/guardian feasibility for current Federation operational model`
 
 ## 1) Feasibility Verdict
 
 - [OBSERVED] A machine-readable delegation baseline exists (`workspace_config/delegation_registry.json`).
-- [OBSERVED] Department escalation baseline exists (`docs/governance/FEDERATION_DEPARTMENT_ESCALATION_MATRIX.md`).
-- [NOT-PROVEN] No canonical source currently defines per-department owner/guardian identity by rank.
+- [OBSERVED] Current department escalation baseline exists (`docs/governance/FEDERATION_DEPARTMENT_ESCALATION_MATRIX.md`).
+- [OBSERVED] Current operational model is explicit (`docs/governance/FEDERATION_OPERATIONAL_MODEL.md`).
+- [OBSERVED] Canonical rank/layer guardian registry exists (`workspace_config/department_guardian_registry.json`).
+- [NOT-PROVEN] Named individual owner/guardian identity is not formalized.
 
 Overall feasibility:
-- per-department ownership/guardian registry in canonical (hard) form: `NOT_FORMALIZABLE_YET`.
+- canonical hard ownership/guardian registry: `PARTIAL_FORMALIZED`.
 
-## 2) Active Department Feasibility Matrix
+## 2) Current Department Feasibility Matrix
 
-| department | status | ownership_feasibility | basis | note |
-|---|---|---|---|---|
-| `platform_test_agent` | `active` | `INFERRED_DRAFT` | `workspace_manifest` + escalation matrix + rank doctrine | operational oversight boundary is inferable, owner identity is not canonicalized |
-| `tiktok_agent_platform` | `manual_testing_blocked` | `INFERRED_DRAFT` | status and gate context are observable | guardian identity and sovereign release authority are not assigned per department |
-| `game_ru_ai` | `audit_required` | `INFERRED_DRAFT` | audit-required posture is observable | department guardian role remains undocumented machine-readably |
-| `voice_launcher` | `supporting` | `NOT_FORMALIZABLE_YET` | only generic rank policy and project status are available | no explicit ownership chain artifacts |
-| `adaptive_trading` | `experimental` | `NOT_FORMALIZABLE_YET` | project status exists, ownership doctrine absent | no canonical promotion owner mapping |
+| department | implementation | status | ownership_feasibility | basis | note |
+|---|---|---|---|---|---|
+| `Analytics Department` | `platform_test_agent` | `active` | `OBSERVED` | `workspace_manifest` + escalation matrix + guardian registry + rank doctrine | rank/layer guardian is canonicalized; named guardian identity is not canonicalized |
 
-## 3) What Is Missing
+## 3) Non-Department Lines (Current Stage)
 
-1. Canonical per-department owner field in a machine-readable registry.
-2. Guardian/oversight assignment key with authority class and escalation responsibility.
-3. Department-level sovereign signoff routing exceptions (if any).
-4. Explicit tie between owner/guardian identity and integration/certification obligations.
+These are not departments and therefore are out of ownership-registry scope in current stage:
 
-## 4) Safe Next Step
+| line | current framing |
+|---|---|
+| `tiktok_agent_platform` | `test_product` + `intake_subject` + `analysis_candidate` |
+| `game_ru_ai` | `test_product` + `intake_subject` + `analysis_candidate` |
+| `voice_launcher` | `test_product` + `intake_subject` + `analysis_candidate` |
+| `adaptive_trading` | `test_product` + `intake_subject` + `analysis_candidate` |
+
+## 4) What Is Missing
+
+1. Named individual owner field for `Analytics Department` in machine-readable registry.
+2. Identity-bound guardian assignment key beyond rank/layer level.
+3. Explicit tie between named guardian identity and integration/certification obligations.
+
+## 5) Safe Next Step
 
 - Keep current state as:
-  - delegation formalized at rank/layer level;
-  - department ownership preserved as `INFERRED_DRAFT` or `NOT_FORMALIZABLE_YET`.
-- Do not create `department_guardian_registry.json` until doctrine artifacts above are canonically defined.
+  - rank/layer delegation formalized;
+  - guardian registry formalized at rank/layer level;
+  - named ownership assignment preserved as `NOT-PROVEN`.
+- Do not overclaim named-owner formalization until identity-bound doctrine exists.
+- Gap anchor:
+  - `docs/review_artifacts/DEPARTMENT_GUARDIAN_IDENTITY_GAP.md`

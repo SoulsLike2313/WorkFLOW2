@@ -1,8 +1,8 @@
 # SOVEREIGN_RANK_PROOF_MODEL_V1
 
 Status:
-- policy_version: `v1`
-- scope: `machine-enforced rank proof model`
+- policy_version: `v1.rewritten_for_status_model_v2`
+- scope: `machine-enforced rank proof chain`
 - design_rule: `fail-closed rank narrowing`
 
 ## 1) Rank Classes
@@ -10,91 +10,49 @@ Status:
 1. `EMPEROR`
 2. `PRIMARCH`
 3. `ASTARTES`
-4. `UNKNOWN` (ambiguity/error fallback)
+4. `UNKNOWN`
 
-## 2) Emperor-Only Local Proof
+## 2) Proof Inputs
 
-Emperor requires all required proof classes:
+### Repo-copy input (required for all ranks)
+1. anchor files and workspace slug checks from `workspace_config/status_model_v2_contract.json`.
 
-1. valid Primarch authority path contract (creator authority contract);
-2. valid canonical root context (`E:\CVVCODEX`);
-3. Emperor local proof contract:
-   - external proof directory;
-   - valid Emperor proof marker;
-   - required fields aligned with sovereign proof contract.
+### Primarch input
+1. valid genome bundle per `workspace_config/genome_bundle_contract.json`.
 
-Supporting proof classes (recommended but not mandatory in v1 hardening):
-1. local sovereign continuity evidence;
-2. local issuer identity binding metadata.
+### Emperor input
+1. valid local sovereign substrate per `workspace_config/emperor_local_proof_contract.json`.
 
-## 3) Primarch-Grade Proof
+## 3) Non-Inputs (Forbidden Shortcuts)
 
-Primarch requires:
-1. valid creator authority contract path;
-2. valid `creator_authority.json` fields;
-3. canonical root context valid.
+1. creator marker is not load-bearing for Emperor proof;
+2. genome bundle is not Emperor proof;
+3. safe mirror parity is not sovereign proof;
+4. metadata-only manifests are not sovereign proof;
+5. portable/import bundles are not sovereign proof.
 
-Primarch does not require Emperor-only proof and cannot inherit Emperor sovereignty by bundle copy.
+## 4) Resolution Semantics
 
-## 4) Astartes / Default Fallback
+1. Emperor path has highest priority when both Primarch and Emperor materials exist.
+2. Primarch path does not block Emperor path.
+3. partial/invalid artifacts always downgrade.
 
-Astartes is mandatory fallback when:
-1. Primarch authority path is invalid;
-2. canonical root context is invalid;
-3. rank signals are unknown/partial/contradictory;
-4. rank validator is unavailable or errored.
+## 5) Downgrade Behavior
 
-## 5) Required vs Supporting Proofs
+1. missing local sovereign substrate -> never `EMPEROR`.
+2. missing genome bundle -> never `PRIMARCH`.
+3. invalid repo-copy anchors -> `UNKNOWN` fail-closed.
 
-Required for Emperor:
-1. canonical root valid;
-2. primarch authority path valid;
-3. emperor proof marker valid.
+## 6) Export/Leakage Boundary
 
-Required for Primarch:
-1. canonical root valid;
-2. creator authority path valid.
+1. local sovereign substrate raw contents are local-only and non-exportable by default.
+2. exported bundles may include only safe-equivalent contracts/reports.
+3. proof of Emperor is surfaced as validator result, not raw substrate payload.
 
-Supporting:
-1. signed inter-node document identity metadata;
-2. reintegration proof chain completeness.
+## 7) Compatibility Layer
 
-## 6) Proofs Excluded From Normal Portable Bundles
+`creator authority` remains:
+1. compatibility metadata/telemetry surface only;
+2. optional migration signal in diagnostics.
 
-Must not be included in ordinary portable bundle payload:
-1. Emperor local proof marker and proof directory contents;
-2. local sovereign secret references;
-3. any artifact that can be interpreted as sovereign transfer token.
-
-## 7) Fail-Closed Logic
-
-Hard rules:
-1. missing Emperor proof never yields `EMPEROR`;
-2. invalid Primarch authority path never yields `PRIMARCH`;
-3. unknown/partial conditions narrow rank (`ASTARTES` or `UNKNOWN`);
-4. leftover portable files never elevate rank;
-5. safe mirror presence never elevates rank.
-
-## 8) Relation To Creator/Helper Modes
-
-Mode and rank are related but distinct:
-1. creator/helper/integration mode controls operation surface;
-2. sovereign rank controls claim authority boundaries.
-
-Rule:
-- creator-grade capability is not equal to Emperor sovereignty.
-
-## 9) Canonical Root Confidence
-
-`E:\CVVCODEX` validity is rank confidence anchor.
-
-If canonical root is invalid:
-1. Emperor is forbidden;
-2. Primarch confidence is reduced/fallback applied;
-3. claim scope must narrow.
-
-## 10) Safe Mirror Constraint
-
-`WorkFLOW2` safe mirror cannot be source of sovereign rank proof.
-
-Safe mirror is orientation/export surface only and has zero sovereign proof elevation power.
+It is no longer a required proof input for `EMPEROR` and no longer a load-bearing machine-mode source.

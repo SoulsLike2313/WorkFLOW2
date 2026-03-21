@@ -12,10 +12,10 @@ Protect canonical machine authority and prevent external helper nodes from mutat
 
 ## Rules
 
-- creator authority required for final canonical acceptance
+- creator-mode (rank-derived from `EMPEROR`) required for final canonical acceptance
 - external helper output must pass integration inbox review
 - helper nodes cannot grant themselves canonical rights
-- canonical machine must keep integration as explicit admission gate
+- canonical machine must keep integration as explicit admission posture/gate
 
 ## Forbidden External Actions
 
@@ -32,3 +32,7 @@ If external package attempts protected-zone mutation outside contract:
 3. keep canonical branch unchanged
 4. require explicit creator review
 
+## Mode Derivation Note
+
+1. creator mode is derived from rank model v2 (`EMPEROR -> creator`);
+2. legacy creator marker is compatibility-only telemetry, not an authority source.

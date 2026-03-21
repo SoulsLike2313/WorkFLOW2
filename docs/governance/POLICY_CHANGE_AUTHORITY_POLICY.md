@@ -13,8 +13,14 @@ Authority inputs:
 ### Level 0 (`FIRST_PRINCIPLES`)
 
 - Automatic change: forbidden.
-- Required authority: explicit owner approval in task contract.
+- Required authority: Emperor-level authority for constitutional mutation class.
 - Mandatory review: full self-audit + contradiction scan + sync proof.
+
+Constitutional hard rule:
+- any binding constitutional mutation must follow:
+  - `docs/governance/CONSTITUTION_CHANGE_AUTHORITY_POLICY.md`
+  - `docs/governance/CONSTITUTION_AMENDMENT_FLOW.md`
+  - `docs/governance/CONSTITUTION_IMMUTABILITY_BOUNDARY.md`
 
 ### Hierarchy (`GOVERNANCE_HIERARCHY`)
 
@@ -50,6 +56,7 @@ Allowed in ordinary execution when explicitly scoped:
 3. admission gate rule relaxation
 4. sync/completion gate relaxation
 5. promotion threshold reduction
+6. any constitutional mutation claim (`constitutional_mutation_claim`)
 
 ## 4) Forbidden in ordinary task execution
 

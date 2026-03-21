@@ -35,6 +35,8 @@ Status:
 26. `charter_status`
 27. `lifecycle_status`
 28. `notes`
+29. `document_role_layer`
+30. `signature_class`
 
 ## 2) Field Semantics
 
@@ -126,6 +128,13 @@ Status:
 ### `notes`
 - contextual clarifications; never authoritative by itself.
 
+### `document_role_layer`
+- enum: `status | will | binding | proposal | report`.
+
+### `signature_class`
+- class token identifying signature semantics by document family.
+- examples: `genome_status_signature`, `gramota_directive_signature`, `assignment_binding_signature`.
+
 ## 3) Validation Rules (v1)
 
 1. missing required field -> document invalid.
@@ -142,3 +151,31 @@ Status:
 ## 4) Future Compatibility
 
 Schema is prepared for future stronger verification fields (key-id, detached signature payload, replay nonce) without changing rank/authority semantics.
+
+## 5) Triad Conditional Fields (Genome / Gramota / Assignment-binding)
+
+### A) `document_type=genome`
+Required additional fields:
+1. `status_granted_level=PRIMARCH`
+2. `status_subject_identity`
+3. `grant_basis`
+4. `tasking_marker=false`
+5. `binding_marker=false`
+
+### B) `document_type=gramota`
+Required additional fields:
+1. `directive_kind in {order, mandate, tasking, signoff}`
+2. `directive_priority`
+3. `tasking_marker` (must be `true` for tasking directives)
+
+### C) `document_type=assignment_binding`
+Required additional fields:
+1. `assigner_identity`
+2. `assignee_identity`
+3. `target_level`
+4. `responsibility_zone`
+5. `execution_domain`
+6. `validity_window`
+7. `revocation_authority`
+8. `mutation_authority`
+9. `non_override_boundaries`

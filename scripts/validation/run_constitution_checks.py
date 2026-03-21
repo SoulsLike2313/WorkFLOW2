@@ -29,6 +29,8 @@ SOVEREIGN_RANK_PROOF_MODEL_PATH = ROOT / "docs" / "governance" / "SOVEREIGN_RANK
 SOVEREIGN_CLAIM_DENIAL_POLICY_PATH = ROOT / "docs" / "governance" / "SOVEREIGN_CLAIM_DENIAL_POLICY_V1.md"
 INTER_NODE_DOCUMENT_ARCHITECTURE_PATH = ROOT / "docs" / "governance" / "INTER_NODE_DOCUMENT_ARCHITECTURE_V1.md"
 INTER_NODE_DOCUMENT_SCHEMA_PATH = ROOT / "docs" / "governance" / "INTER_NODE_DOCUMENT_SCHEMA_V1.md"
+EMPEROR_LOCAL_PROOF_CONTRACT_PATH = ROOT / "workspace_config" / "emperor_local_proof_contract.json"
+SHARED_TAXONOMY_CONTRACT_PATH = ROOT / "workspace_config" / "shared_taxonomy_contract.json"
 NODE_RANK_SCRIPT = ROOT / "scripts" / "validation" / "detect_node_rank.py"
 CLAIM_DENIAL_SCRIPT = ROOT / "scripts" / "validation" / "check_sovereign_claim_denial.py"
 
@@ -170,6 +172,45 @@ def check_file_status(path: Path, status_on_exists: str = "PASS") -> tuple[str, 
     if path.exists():
         return status_on_exists, []
     return "MISSING", [f"missing file: {path.relative_to(ROOT).as_posix()}"]
+
+
+def load_claim_probe_from_shared_taxonomy() -> tuple[str, str, list[str]]:
+    notes: list[str] = []
+    default_probe = "denial_as_expected_claim"
+    if not SHARED_TAXONOMY_CONTRACT_PATH.exists():
+        return default_probe, "MISSING", [f"shared taxonomy missing: {SHARED_TAXONOMY_CONTRACT_PATH.relative_to(ROOT).as_posix()}"]
+
+    try:
+        payload = load_json(SHARED_TAXONOMY_CONTRACT_PATH)
+    except Exception as exc:  # pragma: no cover - defensive
+        return default_probe, "FAIL", [f"shared taxonomy parse failed: {exc}"]
+
+    claim_classes = payload.get("claim_classes", {})
+    primarch_claims = [str(x).strip() for x in claim_classes.get("primarch_allowed_non_sovereign", []) if str(x).strip()]
+    astartes_claims = [str(x).strip() for x in claim_classes.get("astartes_allowed_non_sovereign", []) if str(x).strip()]
+    sovereign_claims = [str(x).strip() for x in claim_classes.get("sovereign_only", []) if str(x).strip()]
+
+    all_claims = set(primarch_claims) | set(astartes_claims) | set(sovereign_claims)
+    if default_probe in all_claims:
+        return default_probe, "PASS", notes
+
+    if primarch_claims:
+        probe = primarch_claims[0]
+        notes.append(f"default probe claim missing in shared taxonomy; using primarch claim: {probe}")
+        return probe, "WARNING", notes
+
+    if astartes_claims:
+        probe = astartes_claims[0]
+        notes.append(f"default probe claim missing in shared taxonomy; using astartes claim: {probe}")
+        return probe, "WARNING", notes
+
+    if sovereign_claims:
+        probe = sovereign_claims[0]
+        notes.append(f"default probe claim missing in shared taxonomy; using sovereign claim: {probe}")
+        return probe, "WARNING", notes
+
+    notes.append("shared taxonomy contains no claim classes; using default probe claim")
+    return default_probe, "WARNING", notes
 
 
 def load_scan_verdict(path: Path, label: str) -> tuple[str, list[str]]:
@@ -322,6 +363,40 @@ def classify_status_payload(status: dict[str, str], notes: list[str]) -> tuple[l
     else:
         add("inter_node_document_schema_status", inter_node_schema, "WARNING", "inter-node schema missing")
 
+    emperor_local_proof_contract = status["emperor_local_proof_contract_status"]
+    if emperor_local_proof_contract == "PASS":
+        add(
+            "emperor_local_proof_contract_status",
+            emperor_local_proof_contract,
+            "INFO",
+            "emperor local proof contract artifact exists",
+        )
+    else:
+        add(
+            "emperor_local_proof_contract_status",
+            emperor_local_proof_contract,
+            "WARNING",
+            "emperor local proof contract artifact missing",
+        )
+
+    taxonomy_contract = status["shared_taxonomy_contract_status"]
+    if taxonomy_contract == "PASS":
+        add("shared_taxonomy_contract_status", taxonomy_contract, "INFO", "shared taxonomy contract is available")
+    elif taxonomy_contract == "WARNING":
+        add(
+            "shared_taxonomy_contract_status",
+            taxonomy_contract,
+            "WARNING",
+            "shared taxonomy contract is present but probe claim fallback was used",
+        )
+    else:
+        add(
+            "shared_taxonomy_contract_status",
+            taxonomy_contract,
+            "SOFT_FAIL",
+            "shared taxonomy contract is missing or invalid",
+        )
+
     node_rank_detection = status["node_rank_detection_status"]
     if node_rank_detection == "PASS":
         add("node_rank_detection_status", node_rank_detection, "INFO", "node rank detection passed with fail-closed logic")
@@ -469,6 +544,9 @@ def render_markdown(payload: dict[str, Any]) -> str:
         f"- sovereign_claim_denial_policy_status: `{payload['sovereign_claim_denial_policy_status']}`",
         f"- inter_node_document_architecture_status: `{payload['inter_node_document_architecture_status']}`",
         f"- inter_node_document_schema_status: `{payload['inter_node_document_schema_status']}`",
+        f"- emperor_local_proof_contract_status: `{payload['emperor_local_proof_contract_status']}`",
+        f"- shared_taxonomy_contract_status: `{payload['shared_taxonomy_contract_status']}`",
+        f"- claim_denial_probe_claim_class: `{payload['claim_denial_probe_claim_class']}`",
         f"- node_rank_detection_status: `{payload['node_rank_detection_status']}`",
         f"- detected_node_rank: `{payload['detected_node_rank']}`",
         f"- sovereign_proof_status: `{payload['sovereign_proof_status']}`",
@@ -541,6 +619,14 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--output-json", default=str(DEFAULT_JSON.relative_to(ROOT)), help="Path to constitution status JSON output.")
     p.add_argument("--output-md", default=str(DEFAULT_MD.relative_to(ROOT)), help="Path to constitution status markdown output.")
     p.add_argument("--run-repo-control", action="store_true", help="Also run repo_control_center bundle + full-check before aggregation.")
+    p.add_argument(
+        "--write-surfaces",
+        action="store_true",
+        help=(
+            "Persist constitution status surfaces to output paths. "
+            "Default behavior is no-write to avoid self-dirtying tracked worktree during verification runs."
+        ),
+    )
     return p.parse_args()
 
 
@@ -589,6 +675,13 @@ def main() -> int:
         detected_rank = str(node_rank_result.get("detected_rank", "UNKNOWN")).upper()
         canonical_root_valid = "VALID" if bool(node_rank_result.get("canonical_root_valid", False)) else "INVALID"
 
+    shared_taxonomy_contract_status, shared_taxonomy_notes = check_file_status(SHARED_TAXONOMY_CONTRACT_PATH)
+    claim_probe_class, claim_probe_status, claim_probe_notes = load_claim_probe_from_shared_taxonomy()
+    if shared_taxonomy_contract_status == "PASS" and claim_probe_status in {"WARNING", "FAIL", "MISSING"}:
+        shared_taxonomy_contract_status = "WARNING"
+    if shared_taxonomy_contract_status != "PASS" and claim_probe_status == "PASS":
+        shared_taxonomy_contract_status = "WARNING"
+
     if CLAIM_DENIAL_SCRIPT.exists() and detected_rank != "UNKNOWN":
         claim_cmd = run_cmd(
             [
@@ -613,7 +706,7 @@ def main() -> int:
                 "--charter-status",
                 "not_required",
                 "--claim-class",
-                "denial_as_expected_claim",
+                claim_probe_class,
             ]
         )
         command_results.append(claim_cmd)
@@ -639,6 +732,9 @@ def main() -> int:
         INTER_NODE_DOCUMENT_ARCHITECTURE_PATH
     )
     inter_node_document_schema_status, inter_node_document_schema_notes = check_file_status(INTER_NODE_DOCUMENT_SCHEMA_PATH)
+    emperor_local_proof_contract_status, emperor_local_proof_contract_notes = check_file_status(
+        EMPEROR_LOCAL_PROOF_CONTRACT_PATH
+    )
     contradiction_status, contradiction_notes = load_scan_verdict(SCAN_OUTPUT, "canonical_contradiction_scan")
     drift_status, drift_notes = load_scan_verdict(DRIFT_OUTPUT, "registry_doc_drift_guard")
     sync_status, trust_status, governance_acceptance, repo_freshness, repo_notes = load_repo_control()
@@ -647,12 +743,14 @@ def main() -> int:
     sovereign_proof_status = "MISSING_OR_INVALID"
     sovereign_proof_present = False
     primarch_authority_path_valid = False
+    primarch_genome_bundle_valid = False
     if node_rank_result:
         sovereign_proof_status = str(
             node_rank_result.get("proof_status", {}).get("emperor", {}).get("status", "MISSING_OR_INVALID")
         ).upper()
         sovereign_proof_present = bool(node_rank_result.get("sovereign_proof_present", False))
         primarch_authority_path_valid = bool(node_rank_result.get("primarch_authority_path_valid", False))
+        primarch_genome_bundle_valid = bool(node_rank_result.get("primarch_genome_bundle_valid", primarch_authority_path_valid))
 
     sovereign_claim_denial_status = "UNKNOWN"
     sovereign_claim_denial_reason = ""
@@ -678,10 +776,14 @@ def main() -> int:
         "sovereign_claim_denial_policy_status": sovereign_claim_denial_policy_status,
         "inter_node_document_architecture_status": inter_node_document_architecture_status,
         "inter_node_document_schema_status": inter_node_document_schema_status,
+        "emperor_local_proof_contract_status": emperor_local_proof_contract_status,
+        "shared_taxonomy_contract_status": shared_taxonomy_contract_status,
+        "claim_denial_probe_claim_class": claim_probe_class,
         "node_rank_detection_status": node_rank_detection_status,
         "detected_node_rank": detected_rank,
         "sovereign_proof_status": sovereign_proof_status,
         "sovereign_proof_present": str(sovereign_proof_present).lower(),
+        "primarch_genome_bundle_valid": str(primarch_genome_bundle_valid).lower(),
         "primarch_authority_path_valid": str(primarch_authority_path_valid).lower(),
         "canonical_root_validity": canonical_root_valid,
         "sovereign_claim_denial_status": sovereign_claim_denial_status,
@@ -707,10 +809,16 @@ def main() -> int:
         + sovereign_claim_denial_policy_notes
         + inter_node_document_architecture_notes
         + inter_node_document_schema_notes
+        + emperor_local_proof_contract_notes
+        + shared_taxonomy_notes
+        + claim_probe_notes
         + node_rank_notes
         + claim_denial_notes
         + repo_notes
         + notes
+        + [
+            "primarch_authority_path_valid is kept as compatibility alias; status model v2 uses primarch_genome_bundle_valid as load-bearing indicator"
+        ]
     )
 
     check_assessment, unknown_critical = classify_status_payload(status_payload, status_payload["notes"])
@@ -731,7 +839,8 @@ def main() -> int:
         "FAIL": "one or more hard-fail checks",
         "UNKNOWN": "unknown-critical dependency blocks reliable decision",
     }
-    status_payload["schema_version"] = "constitution_status_surface.v1.1.0"
+    status_payload["schema_version"] = "constitution_status_surface.v1.2.0"
+    status_payload["status_surface_write_mode"] = "write_surfaces" if args.write_surfaces else "no_write_default"
     status_payload["sources"] = [
         "docs/governance/WORKFLOW2_CONSTITUTION_V1.md",
         "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
@@ -745,6 +854,8 @@ def main() -> int:
         "docs/governance/SOVEREIGN_CLAIM_DENIAL_POLICY_V1.md",
         "docs/governance/INTER_NODE_DOCUMENT_ARCHITECTURE_V1.md",
         "docs/governance/INTER_NODE_DOCUMENT_SCHEMA_V1.md",
+        "workspace_config/emperor_local_proof_contract.json",
+        "workspace_config/shared_taxonomy_contract.json",
         "scripts/validation/detect_node_rank.py",
         "scripts/validation/check_sovereign_claim_denial.py",
         "runtime/repo_control_center/validation/canonical_contradiction_scan.json",
@@ -753,9 +864,14 @@ def main() -> int:
     ]
     status_payload["command_results"] = command_results
 
-    write_json(out_json, status_payload)
-    out_md.parent.mkdir(parents=True, exist_ok=True)
-    out_md.write_text(render_markdown(status_payload), encoding="utf-8")
+    if args.write_surfaces:
+        write_json(out_json, status_payload)
+        out_md.parent.mkdir(parents=True, exist_ok=True)
+        out_md.write_text(render_markdown(status_payload), encoding="utf-8")
+    else:
+        status_payload["notes"].append(
+            "status surfaces not written (default no-write mode); use --write-surfaces for explicit evidence refresh"
+        )
     print(json.dumps(status_payload, ensure_ascii=False, indent=2))
 
     if overall == "FAIL":

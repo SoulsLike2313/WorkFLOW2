@@ -11,13 +11,16 @@ Status:
 
 1. `warrant`
 2. `charter`
-3. `edict` (sovereign directive)
+3. `gramota` (order/mandate/tasking/signoff-bearing directive)
+4. `genome` (Primarch status attestation)
+5. `assignment_binding` (sovereign assignment/binding document)
 
 ### B) Primarch-issued
 
 1. `reintegration_proposal`
 2. `engineering_directive_proposal`
 3. `strategic_return_memo`
+4. `assignment_binding` (delegated only when Emperor envelope explicitly allows)
 
 ### C) Astartes-issued
 
@@ -31,7 +34,9 @@ Status:
 |---|---|---|---|---|---|---|
 | warrant | EMPEROR (or delegated PRIMARCH when charter allows) | PRIMARCH, ASTARTES | delegated execution authority | yes | yes | no |
 | charter | EMPEROR | PRIMARCH, ASTARTES | operating envelope | yes | yes | no |
-| edict | EMPEROR | PRIMARCH, ASTARTES | sovereign directive | yes | controlled | yes (Emperor only) |
+| gramota | EMPEROR | PRIMARCH, ASTARTES | order/mandate/tasking/signoff directive | yes | controlled | yes (Emperor only by claim class) |
+| genome | EMPEROR | PRIMARCH | status attestation | no (status by itself) | controlled | no |
+| assignment_binding | EMPEROR or delegated PRIMARCH | PRIMARCH, ASTARTES | appointment/delegation binding | yes | controlled | no (binding is non-sovereign by itself) |
 | reintegration_proposal | PRIMARCH | EMPEROR | proposal | yes | yes | no |
 | engineering_directive_proposal | PRIMARCH | EMPEROR | proposal | yes | yes | no |
 | strategic_return_memo | PRIMARCH | EMPEROR | recommendation | yes | yes | no |
@@ -55,6 +60,13 @@ Document is authority-bearing only when all pass:
 2. Astartes cannot claim creator-grade sovereignty or initiate sovereign policy changes.
 3. Portable/safe mirror copies cannot upgrade authority class.
 
+## 4.1) Status/Will/Binding Distinction
+
+1. `genome` = status layer (Primarch attestation), not order/tasking.
+2. `gramota` = will/order layer, not status attestation.
+3. `assignment_binding` = responsibility/delegation binding layer, not status and not direct Emperor order substitute.
+4. Direct Emperor `gramota` has priority over delegated binding/order in conflicts.
+
 ## 5) Safe Mirror and Root Context
 
 1. `WorkFLOW2` mirror is informational/orientation surface only.
@@ -66,3 +78,13 @@ Document is authority-bearing only when all pass:
 1. every authority-bearing class must carry signature status and assurance class;
 2. sovereign-sensitive acceptance may require `emperor_local_only_verifiable` assurance;
 3. metadata-only fields do not constitute sovereign-grade proof.
+
+## 7) Canonical Triad Contract
+
+Canonical machine-readable distinction contract:
+- `workspace_config/genome_gramota_assignment_binding_contract.json`
+
+Doctrinal anchors:
+1. `docs/governance/GENOME_DOCTRINE_V1.md`
+2. `docs/governance/GRAMOTA_DOCTRINE_V1.md`
+3. `docs/governance/ASSIGNMENT_BINDING_DOCTRINE_V1.md`

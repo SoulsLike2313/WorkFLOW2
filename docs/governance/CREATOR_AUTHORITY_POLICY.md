@@ -1,43 +1,46 @@
-# Creator Authority Policy
+# CREATOR_AUTHORITY_POLICY
 
 ## Purpose
 
-Define how canonical creator authority is detected without storing sensitive local authority paths in tracked repository files.
+Define treatment of legacy creator-authority marker under rank-derived mode model v2.
+
+## Scope Classification
+
+1. `creator authority` marker is a `LEGACY` compatibility telemetry surface.
+2. `creator authority` marker is `DEPRECATED` as a source of machine mode.
+3. `creator authority` marker is **not** load-bearing for EMPEROR rank.
+4. `creator authority` marker is **not** load-bearing for creator mode.
+5. Creator mode must be derived only from rank model v2 (`EMPEROR -> creator`).
 
 ## Canonical Detection Contract
 
 - env var name: `CVVCODEX_CREATOR_AUTHORITY_DIR`
 - marker filename: `creator_authority.json`
-- required marker schema:
+- required marker fields:
   - `authority_mode = "creator"`
   - `profile_version = "v1"`
   - `machine_role = "canonical_creator_machine"`
 
-Detection rules:
+## What Creator Authority Can Do (Compatibility Only)
 
-1. env var missing -> authority absent
-2. env var present but directory missing -> authority absent
-3. directory exists but marker missing -> authority absent
-4. marker present but invalid -> authority absent
-5. env+directory+valid marker -> authority present
+1. provide backward-compatibility telemetry for legacy scripts;
+2. support migration checks and historical diagnostics.
 
-## Creator-Only Operations
+## What Creator Authority Cannot Do
 
-- declare canonical completion
-- declare governance acceptance pass
-- perform final integration acceptance/rejection from inbox review
-- approve protected governance-layer changes
-- approve canonical state transition to next stage
+1. cannot produce creator mode without EMPEROR rank;
+2. cannot elevate ASTARTES to PRIMARCH;
+3. cannot elevate PRIMARCH to EMPEROR;
+4. cannot act as sovereign local substrate;
+5. cannot replace rank proof contracts.
 
-## Forbidden For Non-Creator Modes
+## Mandatory Mapping (Rank-Derived)
 
-- canonical completion claim
-- governance override
-- final acceptance of external blocks
-- direct canonical merge from external helper output without integration gate
+1. `EMPEROR -> creator`
+2. `PRIMARCH -> helper(high)`
+3. `ASTARTES -> helper(low)`
+4. `integration` is posture/intent overlay only and never an authority source.
 
-## Privacy Rule
+## Deprecation Note
 
-- tracked repository must never store real creator authority directory path
-- repository stores only detection contract logic (env var, marker name, marker fields)
-
+Any surface treating creator marker as a required authority source is deprecated and must be rewritten to rank-derived mode v2.
