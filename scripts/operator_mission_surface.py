@@ -10,6 +10,14 @@ from pathlib import Path
 from typing import Any
 
 from detect_machine_mode import build_mode_payload
+from operator_surface_common import (
+    normalize_rel as common_normalize_rel,
+    read_json as common_read_json,
+    run_command as common_run_command,
+    utc_now_iso as common_utc_now_iso,
+    write_json as common_write_json,
+    write_markdown as common_write_markdown,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_ROOT = r"E:\CVVCODEX"
@@ -57,14 +65,11 @@ FAILURE_POLICIES = {"stop_on_failure", "stop_on_blocked", "continue_on_failure"}
 
 
 def now_utc() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return common_utc_now_iso()
 
 
 def normalize_rel(path: str) -> str:
-    value = path.replace("\\", "/").strip()
-    while value.startswith("./"):
-        value = value[2:]
-    return value.strip("/")
+    return common_normalize_rel(path)
 
 
 def rel(path: Path) -> str:
@@ -72,24 +77,19 @@ def rel(path: Path) -> str:
 
 
 def read_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8-sig"))
+    return common_read_json(path)
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    common_write_json(path, payload)
 
 
 def write_md(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text.rstrip() + "\n", encoding="utf-8")
+    common_write_markdown(path, text)
 
 
 def run(cmd: list[str], allow_fail: bool = False) -> subprocess.CompletedProcess[str]:
-    cp = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True, check=False)
-    if cp.returncode != 0 and not allow_fail:
-        raise RuntimeError(cp.stderr.strip() or cp.stdout.strip() or f"failed: {' '.join(cmd)}")
-    return cp
+    return common_run_command(cmd, cwd=ROOT, allow_fail=allow_fail, error_prefix="failed")
 
 
 def parse_json(raw: str) -> dict[str, Any] | None:
@@ -279,7 +279,9 @@ def gate(
     mutability_level = str(policy.get("mutability_level", "READ_ONLY")).upper()
 
     blockers: list[str] = []
-    if policy.get("allowed_modes") and machine_mode not in policy["allowed_modes"]:
+    allowed_modes = list(policy.get("allowed_modes") or [])
+    creator_alias_allowed = machine_mode == "emperor" and ("creator" in allowed_modes)
+    if allowed_modes and machine_mode not in allowed_modes and not creator_alias_allowed:
         blockers.append(f"machine_mode '{machine_mode}' not allowed")
     if bool(policy.get("creator_authority_required", False)) and not authority_present:
         blockers.append("creator authority required but not present")

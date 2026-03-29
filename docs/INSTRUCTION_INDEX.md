@@ -7,7 +7,7 @@ Canonical instruction map for machine/agent execution.
 Architecture anchor:
 
 - local working source: `E:\CVVCODEX`
-- public safe mirror only: `WorkFLOW2` (`safe_mirror/main`)
+- external safe mirror/export: optional manual derivative only (`WorkFLOW2` / `safe_mirror/main`), not default canon path
 - targeted bundle export: official external reading channel
 - mission layer: accepted/certified baseline
 - current canonical phase: constitution-v1-finalized
@@ -46,7 +46,27 @@ Architecture anchor:
   - `workspace_config/genome_bundle_contract.json`
 - codex output discipline default:
   - `docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md`
+  - `docs/governance/CODEX_RESULT_BLOCK_OUTPUT_LAW_V1.md`
   - `workspace_config/codex_output_mode_contract.json`
+  - `workspace_config/review_bundle_output_contract.json`
+- codex output precedence hardening:
+  - `docs/governance/CODEX_OUTPUT_PRECEDENCE_MODEL.md`
+  - `docs/governance/OUTPUT_MODE_HARDENING_V1.md`
+- permanent limit economy mode:
+  - `docs/governance/LIMIT_ECONOMY_MODE_LAW_V1.md`
+  - `docs/governance/CORE_DELTA_PROMPT_DISCIPLINE_V1.md`
+  - `docs/governance/SHORT_FIRST_REPLY_LAW_V1.md`
+  - `docs/governance/VNEXT_PROMPT_COMPRESSION_PROFILE_V1.md`
+  - `docs/governance/CHECKPOINT_CAPSULE_CONTEXT_COMPRESSION_LAW_V1.md`
+  - `docs/governance/OWNER_CHATGPT_CODEX_ECONOMY_WORKFLOW_V1.md`
+  - `workspace_config/limit_economy_mode_contract.json`
+- canonical truth review bundle law:
+  - `docs/governance/CANONICAL_TRUTH_REVIEW_BUNDLE_LAW_V1.md`
+- ephemeral bundle ttl cleanup:
+  - `docs/governance/EPHEMERAL_BUNDLE_TTL_POLICY_V1.md`
+  - `workspace_config/EPHEMERAL_BUNDLE_TTL_CONTRACT.json`
+  - `scripts/ttl_bundle_janitor.py`
+  - `scripts/imperium_bundle_output_enforcer.py`
 - manual-safe bundle fallback standard:
   - `docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md`
   - `workspace_config/bundle_fallback_contract.json`
@@ -55,6 +75,66 @@ Architecture anchor:
   - `docs/governance/REPO_SEARCH_ENTRYPOINTS.md`
   - `workspace_config/search_zone_manifest.json`
   - `scripts/search_repo_safe.py`
+- factory strategic memory layer:
+  - `docs/governance/FACTORY_NORTH_STAR_V1.md`
+  - `docs/governance/FACTORY_STRATEGIC_ROADMAP_V1.md`
+  - `docs/governance/PRODUCT_CLASS_MAP_V1.md`
+  - `docs/governance/DEPARTMENT_EVOLUTION_MAP_V1.md`
+  - `docs/governance/DECISION_GATE_REGISTRY_V1.md`
+  - `docs/governance/STRATEGIC_PROGRAM_FRONTIER_V1.md`
+  - `docs/governance/FROZEN_FUTURE_PROGRAMS_V1.md`
+  - `docs/governance/RELEASE_GRADE_DEFINITION_V1.md`
+  - `docs/governance/FACTORY_STRATEGIC_MEMORY_INDEX_V1.md`
+- controlled emperor character layer:
+  - `docs/governance/EMPEROR_CHARACTER_LAYER_ARCHITECTURE_DECISION_V1.md`
+  - `docs/governance/EMPEROR_CHARACTER_KERNEL_V1.md`
+  - `docs/governance/OWNER_DRIFT_DETECTION_AND_RECOVERY_PROTOCOL_V1.md`
+  - `docs/governance/CHATGPT_OWNER_MIRROR_PROFILE_V1.md`
+  - `docs/governance/CODEX_OWNER_GUARD_PROFILE_V1.md`
+  - `docs/governance/EMPEROR_CHARACTER_EVOLUTION_LEDGER_V1.md`
+  - `docs/governance/EMPEROR_CHARACTER_LAYER_USAGE_LAW_V1.md`
+- directed evolution governance layer:
+  - `docs/governance/DIRECTED_EVOLUTION_GOVERNANCE_ARCHITECTURAL_DECISION_V1.md`
+  - `docs/governance/DIRECTED_EVOLUTION_CLUSTER_REGISTRY_V1.md`
+  - `docs/governance/DIRECTED_EVOLUTION_CLUSTER_REGISTRY_V1.json`
+  - `docs/governance/DIRECTED_EVOLUTION_ADMISSION_LAW_V1.md`
+  - `docs/governance/DIRECTED_EVOLUTION_CANDIDATE_LEDGER_V1.md`
+  - `docs/governance/DIRECTED_EVOLUTION_CROSS_CLUSTER_BOUNDARY_RULES_V1.md`
+  - `docs/governance/DIRECTED_EVOLUTION_CANON_INTEGRATION_V1.md`
+- worldheart and federated role doctrine drafts (target architecture, future activation only):
+  - `docs/governance/WORLDHEART_CORE_PORTABLE_SOVEREIGN_MODULE_DRAFT_V1.md`
+  - `docs/governance/FEDERATED_ROLE_DOCTRINE_PRIMARCH_ASTARTES_DRAFT_V1.md`
+- system foundation vs mutable canon entrypoint layer:
+  - `docs/governance/SYSTEM_ENTRYPOINT_V1.md`
+  - `docs/governance/FOUNDATION_VS_MUTABLE_READING_GUIDE_V1.md`
+  - `docs/governance/FOUNDATION_INDEX_V1.md`
+  - `docs/governance/LIVE_SYSTEM_INDEX_V1.md`
+  - `docs/governance/AUTHORITY_OF_CHANGE_MAP_V1.md`
+  - `docs/governance/SYSTEM_ONBOARDING_READING_ORDER_V1.md`
+  - `docs/governance/SYSTEM_CHEAP_ONBOARDING_CONTRACT_V1.md`
+  - `docs/governance/SINGLE_ARTIFACT_ENTRYPOINT_RESPONSE_LAW_V1.md`
+  - `docs/governance/PRIMARY_TRUTH_NAME_AND_SINGLE_ARTIFACT_PATH_RESPONSE_CONTRACT_V1.md`
+- system sovereignty/portability/imperial vector layer:
+  - `docs/governance/SYSTEM_SOVEREIGNTY_PORTABILITY_AND_IMPERIAL_VECTOR_DOCTRINE_V1.md`
+  - `docs/governance/REPOSITORY_SOVEREIGNTY_EXTERNAL_SURFACE_POLICY_V1.md`
+  - `docs/governance/PORTABLE_EMPEROR_MACHINE_BOOTSTRAP_VECTOR_V1.md`
+  - `docs/governance/TWO_DISK_AND_N_BACKUP_STORAGE_DOCTRINE_V1.md`
+  - `docs/governance/DISASTER_RECOVERY_TO_LAST_CANONICAL_STEP_VECTOR_V1.md`
+  - `docs/governance/IMPERIAL_DASHBOARD_VECTOR_DOCTRINE_V1.md`
+  - `docs/governance/IMPERIUM_EVOLUTION_CHANNEL_CANON_V1.md`
+  - `docs/governance/IMPERIUM_INQUISITION_CANON_V1.md`
+  - `docs/governance/FACTORY_OF_IMPERIUM_PRODUCTION_CANON_V1.md`
+  - `docs/governance/IMPERIUM_EVOLUTION_INQUISITION_DASHBOARD_BINDING_V1.md`
+  - `docs/governance/IMPERIUM_EVENT_FLOW_SPINE_CANON_V1.md`
+  - `docs/governance/IMPERIUM_DIFF_PREVIEW_PIPELINE_CANON_V1.md`
+  - `docs/governance/IMPERIUM_DASHBOARD_NEURO_MORPHOLOGY_CANON_V1.md`
+  - `docs/governance/IMPERIUM_TRUE_FORM_MATRYOSHKA_PREMIUM_VISUAL_CANON_V1.md`
+  - `docs/governance/IMPERIUM_FACTORY_MORPHOLOGY_ASSEMBLY_CANON_V1.md`
+  - `docs/governance/IMPERIUM_GOLDEN_THRONE_DISCOVERABILITY_CANON_V1.md`
+  - `docs/governance/IMPERIUM_LOW_RESOURCE_CHANNEL_DISCIPLINE_V1.md`
+  - `docs/governance/OWNER_DECISION_ESCALATION_DOCTRINE_V1.md`
+  - `docs/governance/OWNER_DECISION_ESCALATION_REGISTRY_V1.md`
+  - `docs/governance/CHAT_TRANSFER_CAPSULE_DOCTRINE_V1.md`
 - rapid full-context onboarding: `docs/governance/WORKFLOW2_GPT_ONBOARDING_MASTER_V1.md`
 
 ## Mandatory Pre-Task Read Order
@@ -242,7 +322,21 @@ If this order is not completed, task status is `REJECTED`.
 | `docs/governance/BRAIN_TRUST_AND_EVIDENCE_MODEL_V1.md` | Trust classes, evidence chain, anti-overclaim boundaries for Reference Brain V1 outputs | P0 |
 | `docs/governance/BRAIN_CANON_DEVIATION_PROTECTION_MODEL_V1.md` | Coherent anti-drift/anti-bypass protection model for canonical law execution | P0 |
 | `docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md` | Default response discipline: ultra-short chat and bundle-first detailed delivery | P0 |
+| `docs/governance/CODEX_RESULT_BLOCK_OUTPUT_LAW_V1.md` | Default bounded-step result block shape: fixed/touched/sync/path/essence/next | P0 |
 | `workspace_config/codex_output_mode_contract.json` | Machine-readable Codex output mode contract for workspace default behavior | P0 |
+| `docs/governance/CODEX_OUTPUT_PRECEDENCE_MODEL.md` | Output-law precedence and prompt override boundaries | P0 |
+| `docs/governance/OUTPUT_MODE_HARDENING_V1.md` | Hardening declaration for repo-derived response mode and path-first chat rule | P0 |
+| `docs/governance/LIMIT_ECONOMY_MODE_LAW_V1.md` | Permanent limit/token economy law that compresses repetition without weakening truth/evidence | P0 |
+| `docs/governance/CORE_DELTA_PROMPT_DISCIPLINE_V1.md` | Canonical prompt discipline: stable CORE in repo + delta-only step prompts | P0 |
+| `docs/governance/SHORT_FIRST_REPLY_LAW_V1.md` | Mandatory short first reply with exact path payload and bundle-first detail placement | P0 |
+| `docs/governance/VNEXT_PROMPT_COMPRESSION_PROFILE_V1.md` | vNext compression profile with permanent shorthand and safe block-level lower bound | P0 |
+| `docs/governance/CHECKPOINT_CAPSULE_CONTEXT_COMPRESSION_LAW_V1.md` | Checkpoint capsule rule for context compression across major steps | P0 |
+| `docs/governance/OWNER_CHATGPT_CODEX_ECONOMY_WORKFLOW_V1.md` | Preferred owner-ChatGPT-Codex limit-economy collaboration loop | P0 |
+| `workspace_config/limit_economy_mode_contract.json` | Machine-readable permanent limit economy contract and anti-distortion guardrails | P0 |
+| `docs/governance/CANONICAL_TRUTH_REVIEW_BUNDLE_LAW_V1.md` | One-primary-truth-bundle law for active step review tracking | P0 |
+| `docs/governance/EPHEMERAL_BUNDLE_TTL_POLICY_V1.md` | 24h TTL cleanup law for explicitly designated ephemeral bundle/revision outputs | P1 |
+| `workspace_config/EPHEMERAL_BUNDLE_TTL_CONTRACT.json` | Machine-readable TTL cleanup scope/protection contract | P1 |
+| `scripts/ttl_bundle_janitor.py` | Dry-run-first janitor for TTL cleanup with tracked-path protection and reports | P1 |
 | `docs/governance/MACHINE_OPERATOR_GUIDE.md` | Plain-language operator guide for mode/gates/actions | P0 |
 | `docs/governance/MACHINE_CAPABILITIES_SUMMARY.md` | Fast capability/permission sheet | P0 |
 | `docs/governance/POLICY_DIGEST.md` | Compressed map of policy stack and controlled gates | P0 |

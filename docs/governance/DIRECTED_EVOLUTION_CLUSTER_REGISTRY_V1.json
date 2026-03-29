@@ -1,0 +1,203 @@
+{
+  "schema_version": "directed_evolution_cluster_registry.v1",
+  "status": "ACTIVE",
+  "owner_control_mode": "MANDATORY",
+  "clusters": [
+    {
+      "cluster_id": "c1_truth_verification_evidence",
+      "title": "Truth / Verification / Evidence",
+      "purpose": "Preserve truth quality, evidence density, and verification integrity.",
+      "allowed_growth_directions": [
+        "validation_depth_increase",
+        "proof_path_hardening",
+        "contradiction_closure_tooling"
+      ],
+      "forbidden_drift_directions": [
+        "decorative_reporting_without_evidence_gain",
+        "confidence_claims_without_proof"
+      ],
+      "maturity_ladder": [
+        "SEED",
+        "ACTIVE",
+        "HARDENED",
+        "CERTIFIED"
+      ],
+      "promotion_conditions": [
+        "measurable_verification_gain",
+        "no_false_pass_risk_increase"
+      ],
+      "rollback_containment_logic": [
+        "revert_if_proof_quality_drops",
+        "contain_if_ambiguity_increases"
+      ]
+    },
+    {
+      "cluster_id": "c2_product_hardening_reliability",
+      "title": "Product Hardening / Reliability",
+      "purpose": "Convert product lanes from fragile to reliable release-grade shape.",
+      "allowed_growth_directions": [
+        "must_fix_foundation",
+        "reliability_hardening",
+        "release_shape_integrity"
+      ],
+      "forbidden_drift_directions": [
+        "premature_feature_sprawl",
+        "polish_before_foundation_green"
+      ],
+      "maturity_ladder": [
+        "INTAKE",
+        "FOUNDATION",
+        "STABILIZATION",
+        "RELEASE_READY"
+      ],
+      "promotion_conditions": [
+        "risk_board_improves",
+        "verification_alignment_green_for_required_gates"
+      ],
+      "rollback_containment_logic": [
+        "hold_promotion_on_trust_degradation",
+        "revert_to_previous_stable_tranche"
+      ]
+    },
+    {
+      "cluster_id": "c3_owner_observation_presence_ux",
+      "title": "Owner Observation / Presence UX",
+      "purpose": "Improve owner visibility and readability without truth distortion.",
+      "allowed_growth_directions": [
+        "readability_clarity_trust_polish",
+        "traceable_owner_facing_summaries"
+      ],
+      "forbidden_drift_directions": [
+        "fake_realtime_signals",
+        "decorative_masking_of_missing_data"
+      ],
+      "maturity_ladder": [
+        "SCAFFOLD",
+        "READABLE",
+        "TRUSTED",
+        "OPERATOR_GRADE"
+      ],
+      "promotion_conditions": [
+        "no_truth_loss",
+        "no_command_mode_regression",
+        "visual_evidence_confirms_gain"
+      ],
+      "rollback_containment_logic": [
+        "rollback_if_trust_clarity_drops",
+        "disable_presentation_layer_on_conflict"
+      ]
+    },
+    {
+      "cluster_id": "c4_growth_distribution_monetization",
+      "title": "Growth / Distribution / Monetization",
+      "purpose": "Controlled market-entry growth coupled to product reality.",
+      "allowed_growth_directions": [
+        "distribution_seeding",
+        "early_sales_readiness_artifacts",
+        "narrative_channel_starter_packs"
+      ],
+      "forbidden_drift_directions": [
+        "growth_claims_before_hardening_baseline",
+        "marketing_inflation_without_product_truth"
+      ],
+      "maturity_ladder": [
+        "SEED",
+        "PILOT",
+        "EARLY_SIGNAL",
+        "SYSTEMIZED"
+      ],
+      "promotion_conditions": [
+        "hardening_prerequisites_met",
+        "owner_approved_positioning"
+      ],
+      "rollback_containment_logic": [
+        "freeze_branch_on_hardening_regression"
+      ]
+    },
+    {
+      "cluster_id": "c5_factory_governance_memory_character",
+      "title": "Factory Governance / Memory / Character",
+      "purpose": "Protect governance coherence and controlled character-layer evolution.",
+      "allowed_growth_directions": [
+        "law_ledger_hardening",
+        "anti_drift_protocol_refinement",
+        "owner_controlled_memory_indexing"
+      ],
+      "forbidden_drift_directions": [
+        "hidden_personality_mutation",
+        "character_layer_override_of_governance"
+      ],
+      "maturity_ladder": [
+        "BASELINE",
+        "ENFORCED",
+        "INTEGRATED",
+        "AUDIT_STABLE"
+      ],
+      "promotion_conditions": [
+        "owner_acceptance_for_kernel_level_changes",
+        "no_governance_hierarchy_conflict"
+      ],
+      "rollback_containment_logic": [
+        "reject_and_revert_hidden_learning_candidates"
+      ]
+    },
+    {
+      "cluster_id": "c6_visual_language_theme_interface_maturity",
+      "title": "Visual Language / Theme / Interface Maturity",
+      "purpose": "Mature visual language while preserving hierarchy and traceability.",
+      "allowed_growth_directions": [
+        "token_system_refinement",
+        "readability_first_style_improvements",
+        "role_aware_screen_archetype_maturation"
+      ],
+      "forbidden_drift_directions": [
+        "visual_spectacle_over_trust",
+        "style_override_breaking_traceability"
+      ],
+      "maturity_ladder": [
+        "STYLE_BASE",
+        "STRUCTURED",
+        "CONSISTENT",
+        "PRODUCTION_UI"
+      ],
+      "promotion_conditions": [
+        "explicit_truth_labels_preserved",
+        "no_data_class_ambiguity"
+      ],
+      "rollback_containment_logic": [
+        "revert_style_changes_that_reduce_hierarchy_clarity"
+      ]
+    },
+    {
+      "cluster_id": "c7_interactive_campaign_future_modes",
+      "title": "Interactive / Campaign Future Modes",
+      "purpose": "Contain future interactive/campaign modes under trust boundaries.",
+      "allowed_growth_directions": [
+        "bounded_prototypes",
+        "optional_campaign_experiments_tied_to_truth_data"
+      ],
+      "forbidden_drift_directions": [
+        "gamified_state_misrepresentation",
+        "override_of_canonical_control_surfaces"
+      ],
+      "maturity_ladder": [
+        "FROZEN",
+        "PROTOTYPE",
+        "GUARDED_PILOT",
+        "ADMITTED_MODE"
+      ],
+      "promotion_conditions": [
+        "explicit_owner_gate",
+        "boundary_compliance_with_c1_and_c5"
+      ],
+      "rollback_containment_logic": [
+        "immediate_freeze_on_trust_distortion"
+      ]
+    }
+  ],
+  "rules": {
+    "single_primary_cluster_required": true,
+    "secondary_cluster_link_allowed_without_authority_transfer": true
+  }
+}
+

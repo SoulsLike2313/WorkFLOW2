@@ -1,58 +1,38 @@
-{
-  "contract_version": "2.0.0",
-  "contract_kind": "sovereign_local_contract",
+﻿{
+  "contract_version": "3.0.0",
+  "contract_kind": "golden_throne_authority_anchor_contract",
   "status": "active",
-  "scope": "local-only sovereign substrate interface used for EMPEROR rank proof",
+  "scope": "single sovereign authority anchor for EMPEROR rank on canonical machine",
   "canonical_source_reference": "E:\\CVVCODEX",
-  "local_sovereign_substrate_env_var_name": "CVVCODEX_LOCAL_SOVEREIGN_SUBSTRATE_DIR",
-  "legacy_env_var_names": [],
-  "emperor_local_proof_surface_filename": "emperor_local_proof_surface.json",
-  "legacy_marker_filenames": [],
-  "local_authority_root_marker_filename": "local_authority_root.marker",
-  "root_binding_field": "workspace_slug_binding",
-  "required_root_binding_value": "workflow",
-  "required_marker_fields": {
-    "proof_surface_class": "emperor_local_proof_surface",
-    "substrate_class": "local_sovereign_substrate",
-    "contract_class": "sovereign_local_contract",
-    "authority_root_class": "local_authority_root",
-    "profile_version": "v2",
-    "issuer_rank": "EMPEROR"
+  "authority_anchor_relative_path": "docs/governance/GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json",
+  "authority_anchor_canonical_path": "E:\\CVVCODEX\\docs\\governance\\GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json",
+  "required_anchor_fields": {
+    "anchor_id": "GOLDEN_THRONE_AUTHORITY_ANCHOR_V1",
+    "anchor_class": "golden_throne_authority_anchor",
+    "profile_version": "v1",
+    "authority_root": "emperor_machine",
+    "rank": "EMPEROR",
+    "machine_mode": "emperor"
   },
-  "required_literal_fields": {
-    "proof_scope": "local_only_non_exportable",
-    "export_class": "deny_by_default",
-    "transport_mode": "owner_manual_offline_only"
+  "required_anchor_literal_fields": {
+    "canonical_repo_root": "E:\\CVVCODEX"
   },
-  "required_boolean_fields": {
-    "non_exportable": true,
-    "portable_transferable": false,
-    "mirror_transferable": false,
-    "network_transferable": false
+  "required_anchor_boolean_fields": {
+    "full_system_authority": true,
+    "active": true
   },
-  "required_companion_files": [
-    "sovereign_continuity.seal",
-    "proof_possession.local"
-  ],
-  "path_rules": {
-    "must_be_outside_repo_root": true
-  },
-  "forbidden_origin_tokens": [
-    "safe_mirror",
-    "portable_session_imports",
-    "portable_session_exports",
-    "transferbundle",
-    "import_bundle",
-    "staging",
-    "chatgpt_bundle_exports"
-  ],
+  "expected_rank": "EMPEROR",
+  "expected_machine_mode": "emperor",
+  "expected_full_system_authority": true,
+  "enforce_exact_anchor_path": true,
   "notes": [
-    "Raw substrate internals remain local-only and are not tracked in repo.",
-    "Mirror/portable/import contexts never satisfy EMPEROR elevation semantics.",
-    "Legacy env var and marker names are deprecated and ignored for authority determination."
+    "Only the anchor file at canonical path is sovereign authority source.",
+    "Constitution/discoverability surfaces may warn or block but never define EMPEROR rank.",
+    "Missing/invalid/path-mismatch anchor must raise THRONE_BREACH and EMPEROR_STATUS_BLOCKED without PRIMARCH downgrade."
   ],
   "deprecations": {
-    "legacy_env_var_names": "ignored_for_authority_determination",
-    "legacy_marker_filenames": "ignored_for_authority_determination"
+    "local_sovereign_substrate_env_var_name": "deprecated_non_authority",
+    "legacy_env_var_names": "deprecated_non_authority",
+    "legacy_marker_filenames": "deprecated_non_authority"
   }
 }

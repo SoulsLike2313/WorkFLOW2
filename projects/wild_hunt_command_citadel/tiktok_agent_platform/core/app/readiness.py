@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from importlib.util import find_spec
 from pathlib import Path
 from typing import Any
 
@@ -8,6 +9,13 @@ import httpx
 
 from .config import AppConfig
 from .workspace.runtime import WorkspaceRuntime
+
+REQUIRED_RUNTIME_DEPENDENCIES = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "httpx",
+]
 
 
 @dataclass(frozen=True)
@@ -31,6 +39,7 @@ class ReadinessService:
     ) -> dict[str, Any]:
         items: list[ReadinessItem] = [
             self._config_ready(config),
+            self._dependency_contract_ready(),
             self._db_ready(config.storage.database_path),
             self._workspace_state_ready(config.storage.workspace_state_path),
             self._logs_dir_ready(config.storage.logs_dir),
@@ -81,6 +90,23 @@ class ReadinessService:
     def _config_ready(config: AppConfig) -> ReadinessItem:
         ok = bool(config.api_host) and int(config.api_port) > 0
         return ReadinessItem(name="config_ready", ready=ok, reason="" if ok else "invalid host/port config")
+
+    @staticmethod
+    def _dependency_contract_ready() -> ReadinessItem:
+        missing = [module for module in REQUIRED_RUNTIME_DEPENDENCIES if find_spec(module) is None]
+        if not missing:
+            return ReadinessItem(
+                name="dependency_contract_ready",
+                ready=True,
+                reason="runtime dependency contract satisfied",
+                details={"required_modules": REQUIRED_RUNTIME_DEPENDENCIES, "missing_modules": []},
+            )
+        return ReadinessItem(
+            name="dependency_contract_ready",
+            ready=False,
+            reason="runtime dependency contract missing modules",
+            details={"required_modules": REQUIRED_RUNTIME_DEPENDENCIES, "missing_modules": missing},
+        )
 
     @staticmethod
     def _db_ready(db_path: Path) -> ReadinessItem:

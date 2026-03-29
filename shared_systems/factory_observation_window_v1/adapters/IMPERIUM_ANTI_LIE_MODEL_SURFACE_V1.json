@@ -1,0 +1,60 @@
+{
+  "surface_id": "IMPERIUM_ANTI_LIE_MODEL_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "generated_at_utc": "2026-03-28T08:22:35Z",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "runtime/administratum/IMPERIUM_ANTI_LIE_MODEL_V1.json",
+  "payload": {
+    "surface_id": "IMPERIUM_ANTI_LIE_MODEL_V1",
+    "generated_at_utc": "2026-03-28T08:22:35Z",
+    "truth_class": "SOURCE_EXACT",
+    "status": "PASS",
+    "mode": "ANTI_LIE_FOUNDATION_ACTIVE",
+    "lie_classes": [
+      {
+        "class_id": "stale_pointer_or_line",
+        "severity": "CRITICAL",
+        "detected": false,
+        "detector": "seed_sync_scan",
+        "blocker": "truth_spine_gate",
+        "remediation": "sync current-point surfaces from mutable tracker authority"
+      },
+      {
+        "class_id": "cross_surface_current_point_mismatch",
+        "severity": "CRITICAL",
+        "detected": false,
+        "detector": "seed_sync_scan",
+        "blocker": "truth_spine_gate",
+        "remediation": "repair current-point mismatch in seed-facing files"
+      },
+      {
+        "class_id": "dashboard_unsourced_or_stale_display",
+        "severity": "CRITICAL",
+        "detected": false,
+        "detector": "dashboard_truth_engine",
+        "blocker": "dashboard_truth_engine_gate",
+        "remediation": "rerun dashboard truth checks and fix stale rendering source"
+      },
+      {
+        "class_id": "bundle_shell_core_result_mismatch",
+        "severity": "CRITICAL",
+        "detected": false,
+        "detector": "bundle_truth_chamber",
+        "blocker": "bundle_truth_chamber_gate",
+        "remediation": "rebuild transfer package and rerun self-read enforcement"
+      },
+      {
+        "class_id": "purity_drift_or_unclean_state",
+        "severity": "MAJOR",
+        "detected": false,
+        "detector": "worktree_purity_gate",
+        "blocker": "worktree_purity_gate",
+        "remediation": "apply baseline classification cleanup policy"
+      }
+    ],
+    "active_critical_count": 0,
+    "active_total_count": 0,
+    "remediation_policy": "detected_lie_class_triggers_remediation_loop"
+  }
+}

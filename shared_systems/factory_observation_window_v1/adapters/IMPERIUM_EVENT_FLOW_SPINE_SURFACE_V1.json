@@ -1,0 +1,256 @@
+﻿{
+  "surface_id": "IMPERIUM_EVENT_FLOW_SPINE_SURFACE_V1",
+  "version": "1.3.0",
+  "status": "ACTIVE",
+  "source_path": "docs/governance/IMPERIUM_EVENT_FLOW_SPINE_CANON_V1.md",
+  "channel_profile": {
+    "default_mode": "QUIET_HEARTBEAT",
+    "event_trigger_mode": "CHANGED_SECTOR_ONLY",
+    "deep_mode": "EXPLICIT_AUTHORIZATION_ONLY",
+    "resource_profile": "LOW_COST_POINTER_ROUTING",
+    "truth_class": "SOURCE_EXACT"
+  },
+  "event_classes": [
+    {
+      "event_class_id": "STEP_TRANSITION",
+      "description": "Step and checkpoint transitions in canonical execution line.",
+      "default_severity": "info",
+      "trigger_mode": "EVENT_TRIGGER"
+    },
+    {
+      "event_class_id": "FACTORY_STAGE_TRANSITION",
+      "description": "Factory stage movement and gate progression for product lines.",
+      "default_severity": "info",
+      "trigger_mode": "EVENT_TRIGGER"
+    },
+    {
+      "event_class_id": "EVOLUTION_SIGNAL",
+      "description": "Insight birth, candidate updates, accepted gain updates.",
+      "default_severity": "info",
+      "trigger_mode": "QUIET_HEARTBEAT"
+    },
+    {
+      "event_class_id": "INQUISITION_ALERT",
+      "description": "Canon integrity drift and heresy-class alerts.",
+      "default_severity": "warning",
+      "trigger_mode": "EVENT_TRIGGER"
+    },
+    {
+      "event_class_id": "HERESY_CASE",
+      "description": "New heresy case entry in holding zone with owner review boundary.",
+      "default_severity": "critical",
+      "trigger_mode": "EVENT_TRIGGER"
+    },
+    {
+      "event_class_id": "DASHBOARD_REFRESH_TRIGGER",
+      "description": "UI update trigger for changed sectors and owner-facing surfaces.",
+      "default_severity": "info",
+      "trigger_mode": "QUIET_HEARTBEAT"
+    },
+    {
+      "event_class_id": "DIFF_PREVIEW_TRIGGER",
+      "description": "Preview/diff generation trigger after visual capture runs.",
+      "default_severity": "info",
+      "trigger_mode": "MANUAL_DEEP_MODE"
+    },
+    {
+      "event_class_id": "CONTINUITY_UPDATE",
+      "description": "Mutable tracker and ladder update triggers.",
+      "default_severity": "info",
+      "trigger_mode": "EVENT_TRIGGER"
+    }
+  ],
+  "event_sources": [
+    "runtime/factory_observation/live_events.jsonl",
+    "shared_systems/factory_observation_window_v1/adapters/CURRENT_FACTORY_CANON_STATE_V1.json",
+    "shared_systems/factory_observation_window_v1/adapters/TIKTOK_WAVE1_CONTROL_SURFACES_V1.json",
+    "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_EVOLUTION_STATE_SURFACE_V1.json",
+    "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_INQUISITION_STATE_SURFACE_V1.json",
+    "runtime/repo_control_center/one_screen_status.json"
+  ],
+  "flow_chain": [
+    {
+      "step_id": "event_capture",
+      "title_ru": "Событие зафиксировано",
+      "default_state": "ACTIVE",
+      "description": "Изменение попало в live-event tail с source_path и truth_class."
+    },
+    {
+      "step_id": "assessment",
+      "title_ru": "Оценка канала",
+      "default_state": "ACTIVE",
+      "description": "Сигнал классифицируется как proof/risk/blocker/refresh."
+    },
+    {
+      "step_id": "case_or_insight",
+      "title_ru": "Кейс или инсайт",
+      "default_state": "PARTIALLY_IMPLEMENTED",
+      "description": "Сигнал связывается с Evolution fruit или Inquisition case."
+    },
+    {
+      "step_id": "stage_movement",
+      "title_ru": "Сдвиг этапа",
+      "default_state": "ACTIVE",
+      "description": "Изменение отражается в factory stage и product assembly path."
+    },
+    {
+      "step_id": "owner_review",
+      "title_ru": "Owner review/approval",
+      "default_state": "ACTIVE",
+      "description": "Сигнал попадает в review/approval очередь без auto-close."
+    }
+  ],
+  "changed_sector_routes": [
+    {
+      "route_id": "factory_to_dashboard",
+      "title_ru": "Factory -> Dashboard",
+      "from_sector": "factory",
+      "to_sector": "dashboard",
+      "default_state": "ACTIVE",
+      "trigger_classes": [
+        "FACTORY_STAGE_TRANSITION",
+        "DASHBOARD_REFRESH_TRIGGER"
+      ]
+    },
+    {
+      "route_id": "factory_to_evolution",
+      "title_ru": "Factory -> Evolution",
+      "from_sector": "factory",
+      "to_sector": "evolution",
+      "default_state": "PARTIALLY_IMPLEMENTED",
+      "trigger_classes": [
+        "FACTORY_STAGE_TRANSITION",
+        "EVOLUTION_SIGNAL"
+      ]
+    },
+    {
+      "route_id": "factory_to_inquisition",
+      "title_ru": "Factory -> Inquisition",
+      "from_sector": "factory",
+      "to_sector": "inquisition",
+      "default_state": "PARTIALLY_IMPLEMENTED",
+      "trigger_classes": [
+        "INQUISITION_ALERT",
+        "HERESY_CASE"
+      ]
+    },
+    {
+      "route_id": "inquisition_to_owner_queue",
+      "title_ru": "Inquisition -> Owner queue",
+      "from_sector": "inquisition",
+      "to_sector": "owner_queue",
+      "default_state": "ACTIVE",
+      "trigger_classes": [
+        "HERESY_CASE",
+        "CONTINUITY_UPDATE"
+      ]
+    },
+    {
+      "route_id": "diff_preview_to_review",
+      "title_ru": "Diff/Preview -> Review",
+      "from_sector": "preview",
+      "to_sector": "owner_review",
+      "default_state": "PARTIALLY_IMPLEMENTED",
+      "trigger_classes": [
+        "DIFF_PREVIEW_TRIGGER",
+        "DASHBOARD_REFRESH_TRIGGER"
+      ]
+    }
+  ],
+  "transition_markers": {
+    "active_now_fields": [
+      "live_operation_heartbeat.current_operation_code",
+      "live_operation_heartbeat.active_route_node_id",
+      "live_event_flow_state.latest_event"
+    ],
+    "waiting_fields": [
+      "live_gate_state.next_checkpoint",
+      "live_event_flow_state.owner_review_trigger_count"
+    ],
+    "blocked_fields": [
+      "live_operation_heartbeat.latest_blocker_summary",
+      "live_contradiction_state.critical_count"
+    ],
+    "proven_fields": [
+      "live_operation_heartbeat.latest_proof_summary",
+      "live_diff_preview_state.changed_count"
+    ]
+  },
+  "routing_model": {
+    "strategy": "SECTOR_ROUTED_SUMMARY_FIRST",
+    "summary_retention_limit": 64,
+    "changed_sector_refresh": true,
+    "raw_log_is_secondary": true,
+    "changed_sector_refresh_policy": "event_tail_delta_only"
+  },
+  "living_bloodflow_profile": {
+    "style_language": "COSMO_NEBULA_PURPLE_METALLIC",
+    "flow_contract": "EVENT_TO_REVIEW_TO_STAGE_TO_OWNER_CONSEQUENCE",
+    "always_on_mode": "QUIET_HEARTBEAT",
+    "event_trigger_mode": "CHANGED_SECTOR_ONLY",
+    "deep_review_mode": "EXPLICIT_OWNER_OR_CRITICAL_TRIGGER",
+    "resource_guard": "LOW_COST_SUMMARY_ROUTING",
+    "truth_class": "SOURCE_EXACT"
+  },
+  "signal_vessels": [
+    {
+      "vessel_id": "factory_to_review_vessel",
+      "title_ru": "Factory -> review/approval",
+      "route_sequence": [
+        "FACTORY_STAGE_TRANSITION",
+        "STEP_TRANSITION",
+        "CONTINUITY_UPDATE"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "vessel_id": "factory_to_evolution_vessel",
+      "title_ru": "Factory -> Evolution",
+      "route_sequence": [
+        "FACTORY_STAGE_TRANSITION",
+        "EVOLUTION_SIGNAL"
+      ],
+      "status": "PARTIALLY_IMPLEMENTED"
+    },
+    {
+      "vessel_id": "factory_to_inquisition_vessel",
+      "title_ru": "Factory -> Inquisition",
+      "route_sequence": [
+        "INQUISITION_ALERT",
+        "HERESY_CASE"
+      ],
+      "status": "PARTIALLY_IMPLEMENTED"
+    },
+    {
+      "vessel_id": "review_to_owner_decision_vessel",
+      "title_ru": "Review -> owner decision",
+      "route_sequence": [
+        "CONTINUITY_UPDATE",
+        "STEP_TRANSITION"
+      ],
+      "status": "ACTIVE"
+    }
+  ],
+  "dashboard_bindings": [
+    "visionSignalBand",
+    "visionEventFlowSpine",
+    "visionEvolutionChannel",
+    "visionInquisitionCore",
+    "visionFactoryAssembly",
+    "visionChanges",
+    "visionOwnerStage"
+  ],
+  "known_gaps": [
+    {
+      "id": "full_event_bus",
+      "status": "NOT_YET_IMPLEMENTED",
+      "unknown_reason": "not_implemented"
+    },
+    {
+      "id": "per_event_owner_queue_automation",
+      "status": "UNAVAILABLE_IN_STEP_SCOPE",
+      "unknown_reason": "unavailable_in_step_scope"
+    }
+  ],
+  "truth_class": "SOURCE_EXACT"
+}

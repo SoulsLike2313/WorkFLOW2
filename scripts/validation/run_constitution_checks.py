@@ -420,7 +420,9 @@ def classify_status_payload(status: dict[str, str], notes: list[str]) -> tuple[l
         add("detected_node_rank", detected_rank, "SOFT_FAIL", "node rank unresolved")
 
     sovereign_proof = status["sovereign_proof_status"]
-    if sovereign_proof in {"VALID", "MISSING_OR_INVALID", "NOT_REQUIRED"}:
+    if sovereign_proof == "EMPEROR_STATUS_BLOCKED":
+        add("sovereign_proof_status", sovereign_proof, "HARD_FAIL", "throne authority anchor is blocked; emperor status is blocked")
+    elif sovereign_proof in {"VALID", "MISSING_OR_INVALID", "NOT_REQUIRED"}:
         add("sovereign_proof_status", sovereign_proof, "INFO", "sovereign proof state recorded")
     else:
         add("sovereign_proof_status", sovereign_proof, "SOFT_FAIL", "sovereign proof state unknown")
@@ -446,6 +448,13 @@ def classify_status_payload(status: dict[str, str], notes: list[str]) -> tuple[l
     sync = status["sync_status"]
     if sync == "IN_SYNC":
         add("sync_status", sync, "INFO", "sync parity is clean")
+    elif sync == "IN_SYNC_CLASSIFIED":
+        add(
+            "sync_status",
+            sync,
+            "INFO",
+            "sync parity is aligned via controlled classified dirty delta",
+        )
     elif sync in {"DRIFTED", "BLOCKED"}:
         add("sync_status", sync, "HARD_FAIL", "sync state blocks completion and certification")
     elif sync == "UNKNOWN":
@@ -458,7 +467,9 @@ def classify_status_payload(status: dict[str, str], notes: list[str]) -> tuple[l
         add("trust_status", trust, "INFO", "trust chain is green")
     elif trust == "NOT_TRUSTED":
         add("trust_status", trust, "HARD_FAIL", "trust chain is broken")
-    elif trust in {"WARNING", "UNKNOWN"}:
+    elif trust in {"WARNING"}:
+        add("trust_status", trust, "WARNING", "trust chain is conditional; blockers reduced but unresolved")
+    elif trust in {"UNKNOWN"}:
         add("trust_status", trust, "SOFT_FAIL", "trust state requires review/refresh")
     else:
         add("trust_status", trust, "SOFT_FAIL", "trust status is non-canonical")
@@ -468,7 +479,9 @@ def classify_status_payload(status: dict[str, str], notes: list[str]) -> tuple[l
         add("governance_acceptance", acceptance, "INFO", "governance acceptance is open")
     elif acceptance == "FAIL":
         add("governance_acceptance", acceptance, "HARD_FAIL", "governance acceptance gate is closed")
-    elif acceptance in {"PARTIAL", "UNKNOWN"}:
+    elif acceptance in {"PARTIAL"}:
+        add("governance_acceptance", acceptance, "WARNING", "governance acceptance is partially open with explicit caveats")
+    elif acceptance in {"UNKNOWN"}:
         add("governance_acceptance", acceptance, "SOFT_FAIL", "governance acceptance requires refresh/review")
     else:
         add("governance_acceptance", acceptance, "SOFT_FAIL", "governance acceptance is non-canonical")

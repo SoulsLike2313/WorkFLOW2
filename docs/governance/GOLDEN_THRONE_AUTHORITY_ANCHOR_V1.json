@@ -1,0 +1,19 @@
+﻿{
+  "anchor_id": "GOLDEN_THRONE_AUTHORITY_ANCHOR_V1",
+  "anchor_class": "golden_throne_authority_anchor",
+  "profile_version": "v1",
+  "canonical_repo_root": "E:\\CVVCODEX",
+  "canonical_anchor_path": "E:\\CVVCODEX\\docs\\governance\\GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json",
+  "authority_root": "emperor_machine",
+  "rank": "EMPEROR",
+  "machine_mode": "emperor",
+  "full_system_authority": true,
+  "active": true,
+  "authority_source_policy": "single_physical_anchor_file",
+  "discoverability_is_non_authority": true,
+  "constitution_is_non_authority_for_rank": true,
+  "notes": [
+    "This file is the only sovereign authority source for Emperor rank on this machine.",
+    "If this file is missing, invalid, or moved from canonical path, authority must be blocked and THRONE_BREACH raised."
+  ]
+}

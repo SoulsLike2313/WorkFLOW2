@@ -1,0 +1,54 @@
+{
+  "model_version": "1.3.0",
+  "model_id": "queue_monitor_model_v1",
+  "queues": [
+    {
+      "queue_id": "intake_queue",
+      "title": "Intake Queue",
+      "items_count": 0,
+      "state": "stable",
+      "top_item": "none",
+      "owner_attention": "no"
+    },
+    {
+      "queue_id": "assignment_queue",
+      "title": "Assignment Queue",
+      "items_count": 1,
+      "state": "active",
+      "top_item": "Post-wave1 tranche A seam/reliability workset",
+      "owner_attention": "no"
+    },
+    {
+      "queue_id": "execution_queue",
+      "title": "Execution Queue",
+      "items_count": 2,
+      "state": "active",
+      "top_item": "Post-wave1 tranche A (orchestration seam + diagnostics + prompt-lineage)",
+      "owner_attention": "yes"
+    },
+    {
+      "queue_id": "review_queue",
+      "title": "Review Queue",
+      "items_count": 2,
+      "state": "active",
+      "top_item": "Bounded tranche A validation and owner review package",
+      "owner_attention": "yes"
+    },
+    {
+      "queue_id": "blocker_queue",
+      "title": "Blocker Queue",
+      "items_count": 1,
+      "state": "watch",
+      "top_item": "p2-ctr-001 post-wave1 seam/observability remainder",
+      "owner_attention": "yes"
+    },
+    {
+      "queue_id": "release_queue",
+      "title": "Release Queue",
+      "items_count": 0,
+      "state": "idle",
+      "top_item": "none",
+      "owner_attention": "no"
+    }
+  ]
+}

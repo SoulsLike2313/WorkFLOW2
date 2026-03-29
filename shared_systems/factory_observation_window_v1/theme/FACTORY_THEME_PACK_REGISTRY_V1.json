@@ -1,0 +1,52 @@
+{
+  "registry_id": "FACTORY_THEME_PACK_REGISTRY_V1",
+  "version": "1.0.0",
+  "active_pack": "NEBULA_METALLIC_COMMAND_STYLE_V1",
+  "packs": [
+    {
+      "id": "NEBULA_METALLIC_COMMAND_STYLE_V1",
+      "status": "ACTIVE",
+      "display_name": "Nebula Metallic Command",
+      "intent": "premium_private_futuristic_restrained",
+      "layer_scope": "STYLE_LAYER_ONLY",
+      "description": "Dark industrial command board with violet metallic accents and restrained nebula depth.",
+      "required_tokens": {
+        "color_and_material": "shared_systems/factory_observation_window_v1/theme/FACTORY_COLOR_AND_MATERIAL_TOKENS_V1.json",
+        "component_style": "shared_systems/factory_observation_window_v1/theme/FACTORY_COMPONENT_STYLE_TOKENS_V1.json"
+      },
+      "governance_surface": "docs/governance/NEBULA_METALLIC_COMMAND_STYLE_V1.md",
+      "truth_guardrails_required": [
+        "SOURCE_EXACT remains visually distinct",
+        "DERIVED_CANONICAL remains visually distinct",
+        "VIEW_ONLY remains non-authoritative",
+        "HUMAN_INTERPRETATION remains owner-overridable"
+      ],
+      "notes": "Primary pack for Owner command center v1."
+    },
+    {
+      "id": "ANATOMICAL_OVERLAY_INTERPRETER_V1",
+      "status": "FUTURE",
+      "display_name": "Anatomical Overlay Interpreter",
+      "intent": "secondary_interpretive_overlay_not_primary_layout",
+      "layer_scope": "STYLE_LAYER_ONLY",
+      "description": "Optional organ/metaphor overlay constrained to non-authoritative assistive visuals.",
+      "required_tokens": {
+        "color_and_material": "shared_systems/factory_observation_window_v1/theme/FACTORY_COLOR_AND_MATERIAL_TOKENS_V1.json",
+        "component_style": "shared_systems/factory_observation_window_v1/theme/FACTORY_COMPONENT_STYLE_TOKENS_V1.json"
+      },
+      "governance_surface": "docs/governance/FACTORY_THEME_SYSTEM_V1.md",
+      "truth_guardrails_required": [
+        "No replacement of command board hierarchy",
+        "No masking of blockers/gates",
+        "No distortion of trace links"
+      ],
+      "notes": "Allowed only as secondary layer after parity validation."
+    }
+  ],
+  "pack_lifecycle_rules": {
+    "new_pack_requires_governance_doc": true,
+    "new_pack_requires_token_validation": true,
+    "new_pack_requires_traceability_regression_check": true,
+    "pack_cannot_change_truth_layer_contract": true
+  }
+}

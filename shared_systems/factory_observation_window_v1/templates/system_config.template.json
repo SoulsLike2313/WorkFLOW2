@@ -1,0 +1,9 @@
+{
+  "host": "127.0.0.1",
+  "port": 8777,
+  "bundle_path": "runtime/chatgpt_bundle_exports/tiktok_wave1_tranche1_live_ongoing_checkpoint_manual_safe_bundle_latest.zip",
+  "bundle_fallback_path": "runtime/chatgpt_bundle_exports/tiktok_wave1_kickoff_checkpoint_manual_safe_bundle_latest.zip",
+  "bundle_companion_path": "runtime/chatgpt_bundle_exports/tiktok_agent_owner_gate_review_manual_safe_bundle_20260321T202031Z.zip",
+  "refresh_seconds": 10,
+  "local_only": true
+}

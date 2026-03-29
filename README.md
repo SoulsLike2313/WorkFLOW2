@@ -10,6 +10,8 @@
 - Official external reading channel for ChatGPT: targeted bundle export (`scripts/export_chatgpt_bundle.py`).
 - Canonical fallback for tracked/inclusion gaps: `scripts/export_manual_safe_bundle.py` per `docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md`.
 - Canonical fallback for policy-safe bounded search/read: `scripts/search_repo_safe.py` per `docs/governance/REPO_SEARCH_ENTRYPOINTS.md`.
+- Codex output mode is repo-derived by law (`docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md`, `docs/governance/CODEX_OUTPUT_PRECEDENCE_MODEL.md`, `workspace_config/codex_output_mode_contract.json`).
+- Ephemeral bundle/revision outputs are controlled by 24h TTL policy (`docs/governance/EPHEMERAL_BUNDLE_TTL_POLICY_V1.md`, `workspace_config/EPHEMERAL_BUNDLE_TTL_CONTRACT.json`, `scripts/ttl_bundle_janitor.py`).
 - Governance brain stack is mandatory interpretation layer for all machine/agent execution.
 - Federation/Integration layer v1 is mandatory for multi-node collaboration (`creator`, `helper`, `integration` modes).
 - Rapid full-context onboarding (GPT/Codex): `docs/governance/WORKFLOW2_GPT_ONBOARDING_MASTER_V1.md`.

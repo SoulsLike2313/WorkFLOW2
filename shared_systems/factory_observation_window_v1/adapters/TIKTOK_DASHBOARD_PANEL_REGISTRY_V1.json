@@ -1,0 +1,75 @@
+﻿{
+  "registry_version": "1.0.0",
+  "registry_id": "tiktok_dashboard_panel_registry_v1",
+  "focus_product": "tiktok_agent_platform",
+  "required_panels": [
+    {
+      "id": "product_identity",
+      "title": "Product Identity",
+      "required": true,
+      "owner_value": "Shows exactly what product bundle is under review and current stage." 
+    },
+    {
+      "id": "current_state",
+      "title": "Current State",
+      "required": true,
+      "owner_value": "Shows what is truly working versus fragile right now."
+    },
+    {
+      "id": "product_health",
+      "title": "Product Health",
+      "required": true,
+      "owner_value": "Summarizes defect/noise pressure in one board."
+    },
+    {
+      "id": "defect_noise_board",
+      "title": "Defect / Noise Board",
+      "required": true,
+      "owner_value": "Shows exact defect and slop zones without hiding pain."
+    },
+    {
+      "id": "abc_comparison",
+      "title": "A/B/C Comparison",
+      "required": true,
+      "owner_value": "Lets owner compare product evolution options before approval."
+    },
+    {
+      "id": "owner_gates",
+      "title": "Owner Gates",
+      "required": true,
+      "owner_value": "Shows mandatory decision gates and pending approvals."
+    },
+    {
+      "id": "recommended_path",
+      "title": "Recommended Path",
+      "required": true,
+      "owner_value": "Shows recommendation with clear owner override right."
+    },
+    {
+      "id": "learning_evolution",
+      "title": "Learning / Evolution",
+      "required": true,
+      "owner_value": "Shows controlled learning capture and anti-drift guardrails."
+    },
+    {
+      "id": "next_step",
+      "title": "Next Step",
+      "required": true,
+      "owner_value": "Shows immediate owner action and what is blocked until it is done."
+    }
+  ],
+  "traceability_requirements": {
+    "required_per_source": [
+      "source_path",
+      "source_section_or_member",
+      "data_class",
+      "present_in_bundle"
+    ],
+    "allowed_data_classes": [
+      "SOURCE_EXACT",
+      "DERIVED_CANONICAL",
+      "VIEW_ONLY",
+      "HUMAN_INTERPRETATION"
+    ]
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "surface_id": "IMPERIUM_BUNDLE_TRUTH_CHAMBER_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "generated_at_utc": "2026-03-28T08:22:35Z",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "runtime/administratum/IMPERIUM_BUNDLE_TRUTH_CHAMBER_V1.json",
+  "payload": {
+    "surface_id": "IMPERIUM_BUNDLE_TRUTH_CHAMBER_V1",
+    "generated_at_utc": "2026-03-28T08:22:35Z",
+    "truth_class": "SOURCE_EXACT",
+    "status": "PASS",
+    "enforcer_verdict": "PASS",
+    "transport_authority_source": "docs/review_artifacts/imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z/12_BUNDLE_OUTPUT_ENFORCEMENT_REPORT.json::chatgpt_transfer.transport_integrity",
+    "transport_integrity": {
+      "status": "PASS",
+      "expected_review_root": "docs/review_artifacts/imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z",
+      "manifest_review_root": "docs/review_artifacts/imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z",
+      "transfer_root": "docs/review_artifacts/imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z/chatgpt_transfer",
+      "manifest_transfer_root": "docs/review_artifacts/imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z/chatgpt_transfer",
+      "package_completeness": "COMPLETE",
+      "core_required": true,
+      "manifest_parts_total": 2,
+      "computed_parts_total": 2,
+      "upload_order_declared": [
+        "imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z__core_chatgpt_transfer.part01of01",
+        "imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z__visual_chatgpt_transfer.part01of01"
+      ],
+      "upload_order_computed": [
+        "imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z__core_chatgpt_transfer.part01of01",
+        "imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z__visual_chatgpt_transfer.part01of01"
+      ],
+      "upload_order_match": true,
+      "section_flags_match": true,
+      "readme_exists": true,
+      "readme_parts_total": 2,
+      "readme_upload_order_match": true,
+      "required_entries_missing": [],
+      "foreign_review_roots": [],
+      "allowed_review_roots": [
+        "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1",
+        "docs/review_artifacts/imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z"
+      ],
+      "detected_review_roots": [
+        "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1",
+        "docs/review_artifacts/imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z"
+      ],
+      "entry_count": 107,
+      "entrypoint_exists": true,
+      "entrypoint_step_id_match": true,
+      "entrypoint_matches_disk": true,
+      "final_result_exists": true,
+      "final_result_matches_manifest": true,
+      "final_result_matches_disk": true,
+      "final_result_mismatches": [],
+      "seed_truth_audit_required": true,
+      "seed_truth_audit_pass": true,
+      "seed_family_claims": [
+        "external_include_text",
+        "for_chatgpt",
+        "for_codex",
+        "review_standard_set",
+        "review_text_surfaces",
+        "seed_capsule_root",
+        "trackers",
+        "validation_truth_changed_surfaces"
+      ],
+      "seed_presence": {
+        "for_chatgpt_present": true,
+        "for_codex_present": true,
+        "seed_capsule_root_present": true,
+        "foundation_tracker_present": true,
+        "mutable_tracker_present": true,
+        "trackers_present": true
+      },
+      "seed_claim_mismatches": [],
+      "step_prefixed_naming_required": true,
+      "step_prefixed_naming_pass": true,
+      "manifest_name_prefixed": true,
+      "readme_name_prefixed": true,
+      "all_part_names_prefixed": true,
+      "error": ""
+    }
+  }
+}

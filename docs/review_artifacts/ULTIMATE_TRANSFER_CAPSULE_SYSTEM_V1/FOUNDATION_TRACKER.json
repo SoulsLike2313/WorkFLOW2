@@ -1,0 +1,26 @@
+﻿{
+  "schema_version": "transfer_capsule.foundation_tracker.v2",
+  "tracker_class": "foundation_immutable",
+  "source_of_truth": "E:/CVVCODEX",
+  "change_authority": "EMPEROR_ONLY",
+  "last_refreshed_utc": "2026-03-27T00:00:00Z",
+  "seed_capsule_mode": "SEED_ORGAN_ACTIVE",
+  "anchors": [
+    "docs/governance/SYSTEM_ENTRYPOINT_V1.md",
+    "docs/governance/FOUNDATION_VS_MUTABLE_READING_GUIDE_V1.md",
+    "docs/governance/FOUNDATION_INDEX_V1.md",
+    "docs/governance/CANONICAL_TRUTH_REVIEW_BUNDLE_LAW_V1.md",
+    "docs/governance/SINGLE_ARTIFACT_ENTRYPOINT_RESPONSE_LAW_V1.md",
+    "docs/governance/PRIMARY_TRUTH_NAME_AND_SINGLE_ARTIFACT_PATH_RESPONSE_CONTRACT_V1.md",
+    "docs/governance/CHAT_TRANSFER_CAPSULE_DOCTRINE_V1.md"
+  ],
+  "laws": {
+    "repo_law_first": true,
+    "bundle_first": true,
+    "delta_only": true,
+    "single_artifact_entrypoint": true,
+    "foundation_mutable_split_required": true
+  },
+  "seed_compression_law": "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/10_SEED_COMPRESSION_AND_ASSEMBLY_LAW.md",
+  "note": "Foundation changes require explicit canon change and Emperor-controlled decision."
+}

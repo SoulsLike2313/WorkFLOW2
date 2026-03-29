@@ -1,0 +1,27 @@
+{
+  "surface_id": "IMPERIUM_DOCTRINE_INTEGRITY_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "truth_class": "SOURCE_EXACT",
+  "generated_at_utc": "2026-03-28T02:11:58Z",
+  "source_path": "scripts/refresh_imperium_doctrine_integrity_surface.py",
+  "doctrine_inventory": {
+    "governance_docs_total": 286,
+    "governance_markdown_total": 280,
+    "system_entrypoint_exists": true,
+    "instruction_index_exists": true,
+    "next_canonical_step_exists": true,
+    "next_canonical_step_id": "IMPERIUM_FULL_GREEN_FIX_NOW_CLOSURE_DELTA"
+  },
+  "ui_disclosure_boundary": {
+    "status": "ACTIVE",
+    "policy": "owner_readable_first_technical_second",
+    "outside_ui_scope_allowed": true,
+    "outside_ui_scope_requires_explicit_note": true
+  },
+  "doctrine_gaps": [],
+  "notes": [
+    "Surface keeps doctrine visibility source-exact in dashboard coverage matrix.",
+    "No fake completeness: gaps remain explicit and machine-readable."
+  ]
+}

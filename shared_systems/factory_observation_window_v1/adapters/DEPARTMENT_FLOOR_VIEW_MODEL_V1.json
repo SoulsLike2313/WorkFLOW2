@@ -1,0 +1,76 @@
+﻿{
+  "model_version": "1.1.0",
+  "model_id": "department_floor_view_model_v1",
+  "departments": [
+    {
+      "id": "analytics_department",
+      "name": "Analytics",
+      "status": "ACTIVE",
+      "activation_level": "operational_support",
+      "primarch_required": true,
+      "current_load": "low",
+      "why_visible": "Historical wave analysis baseline is preserved for comparison",
+      "activation_condition": "already active"
+    },
+    {
+      "id": "engineering_department",
+      "name": "Engineering",
+      "status": "ACTIVE",
+      "activation_level": "operational",
+      "primarch_required": true,
+      "current_load": "high",
+      "why_visible": "Owns runtime seam split and behavior hardening in post-wave1 tranche A",
+      "activation_condition": "post-wave1 bounded tranche active"
+    },
+    {
+      "id": "verification_department",
+      "name": "Verification",
+      "status": "ACTIVE",
+      "activation_level": "operational",
+      "primarch_required": true,
+      "current_load": "medium",
+      "why_visible": "Tracks runtime readiness and prompt-lineage endpoint truth",
+      "activation_condition": "post-wave1 bounded tranche active"
+    },
+    {
+      "id": "release_integration_department",
+      "name": "Release & Integration",
+      "status": "SEED",
+      "activation_level": "seed_charter",
+      "primarch_required": true,
+      "current_load": "idle",
+      "why_visible": "Release-shape and handoff lane",
+      "activation_condition": "verification-ready release candidate"
+    },
+    {
+      "id": "tooling_infrastructure_department",
+      "name": "Tooling & Infrastructure",
+      "status": "SEED",
+      "activation_level": "seed_charter",
+      "primarch_required": true,
+      "current_load": "idle",
+      "why_visible": "Factory acceleration without safety regression",
+      "activation_condition": "repeated friction signals and approved tooling scope"
+    },
+    {
+      "id": "product_intelligence_research_department",
+      "name": "Product Intelligence / Research",
+      "status": "SEED",
+      "activation_level": "seed_charter",
+      "primarch_required": true,
+      "current_load": "idle",
+      "why_visible": "Owner decision support and option validation",
+      "activation_condition": "strategic product decision demand"
+    },
+    {
+      "id": "growth_distribution_department",
+      "name": "Growth / Distribution",
+      "status": "SEED",
+      "activation_level": "seed_charter",
+      "primarch_required": true,
+      "current_load": "idle",
+      "why_visible": "Bridge from hardening to distribution seeding and early sales entry",
+      "activation_condition": "product path selected and owner positioning hints approved"
+    }
+  ]
+}

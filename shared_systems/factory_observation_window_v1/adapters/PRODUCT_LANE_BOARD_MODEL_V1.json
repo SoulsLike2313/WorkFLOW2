@@ -1,0 +1,52 @@
+{
+  "model_version": "1.3.0",
+  "model_id": "product_lane_board_model_v1",
+  "products": [
+    {
+      "product_id": "tiktok_agent_platform",
+      "display_name": "TikTok Agent",
+      "lane_status": "post_wave1_tranche_a_in_progress",
+      "pipeline_stage": "post_wave1_control_reliability_observability",
+      "current_department": "engineering_department",
+      "next_department": "verification_department",
+      "next_step": "Finalize bounded tranche A verification+owner review package",
+      "active_wave": "wave_1_closed_by_owner",
+      "selected_option": "OPTION_B",
+      "gate_c_visual_decision": "old_visual_dna_rejected_deep_ui_rebuild_allowed",
+      "visual_doctrine": "NEBULA_METALLIC_COMMAND_STYLE_V1",
+      "hardening_worthy": true,
+      "active_tranche": "POST_WAVE1_TRANCHE_A_SEAMS_RELIABILITY_OBSERVABILITY",
+      "execution_state": "IN_PROGRESS"
+    },
+    {
+      "product_id": "voice_launcher",
+      "display_name": "Voice Launcher",
+      "lane_status": "intake_candidate",
+      "pipeline_stage": "awaiting_intake",
+      "current_department": "none",
+      "next_department": "analytics_department",
+      "next_step": "Create intake bundle",
+      "active_wave": "none"
+    },
+    {
+      "product_id": "game_ru_ai",
+      "display_name": "Game RU AI",
+      "lane_status": "intake_candidate",
+      "pipeline_stage": "awaiting_intake",
+      "current_department": "none",
+      "next_department": "analytics_department",
+      "next_step": "Create intake bundle",
+      "active_wave": "none"
+    },
+    {
+      "product_id": "adaptive_trading",
+      "display_name": "Adaptive Trading",
+      "lane_status": "intake_candidate",
+      "pipeline_stage": "awaiting_intake",
+      "current_department": "none",
+      "next_department": "analytics_department",
+      "next_step": "Create intake bundle",
+      "active_wave": "none"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+﻿{
+    "history_id":  "tiktok_wave1_production_history_seed_v1",
+    "version":  "2.0.0",
+    "status":  "ACTIVE_SEED",
+    "notes":  "History nodes are sourced only from repo-visible evidence and remain early-stage.",
+    "nodes":  [
+                  {
+                      "id":  "kickoff_active",
+                      "title":  "Kickoff",
+                      "summary":  "Wave 1 kickoff lane was activated as IN_PROGRESS through control surfaces.",
+                      "occurred_at_utc":  "2026-03-22T19:59:53.096108+00:00",
+                      "source_path":  "docs/review_artifacts/TIKTOK_WAVE1_STATUS_SURFACE_V1.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "truth_binding_stabilized",
+                      "title":  "Truth binding stabilized",
+                      "summary":  "Owner window switched to explicit active-source disclosure with companion dependency discipline.",
+                      "occurred_at_utc":  "2026-03-22T23:14:34.372143+00:00",
+                      "source_path":  "docs/review_artifacts/ACTIVE_TRUTH_BINDING_FIX_INTEGRATION_REPORT_V1.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "full_vision_live_breathing",
+                      "title":  "Live breathing enabled",
+                      "summary":  "Full Vision gained live in-place update capability without manual refresh.",
+                      "occurred_at_utc":  "2026-03-22T23:38:30.186488+00:00",
+                      "source_path":  "docs/review_artifacts/FULL_VISION_AQUARIUM_MODE_TRANCHE_C_LIVE_PROCESS_BREATHING_VALIDATION_REPORT_V1.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "w1_ctr001_delta01",
+                      "title":  "Contradiction delta-01",
+                      "summary":  "Fresh UI validation PASS and explicit UI truth lane entered verification flow.",
+                      "occurred_at_utc":  "2026-03-23T08:01:14.828121+00:00",
+                      "source_path":  "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V1.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "no_f5_live_fix",
+                      "title":  "No-F5 live fix",
+                      "summary":  "Owner window live feed reached in-place updates without page reload.",
+                      "occurred_at_utc":  "2026-03-23T09:35:00+00:00",
+                      "source_path":  "docs/review_artifacts/TIKTOK_WAVE1_DASHBOARD_LIVE_FIX_INTEGRATION_REPORT_V1.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "w1_ctr001_delta02",
+                      "title":  "Contradiction delta-02",
+                      "summary":  "Behavior-depth and release-shape truth evidence became explicit.",
+                      "occurred_at_utc":  "2026-03-23T09:42:49+00:00",
+                      "source_path":  "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V2.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "w1_ctr001_delta03",
+                      "title":  "Contradiction delta-03",
+                      "summary":  "Root/latest run alignment and required release-shape states were enforced.",
+                      "occurred_at_utc":  "2026-03-23T10:30:24+00:00",
+                      "source_path":  "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V3.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "owner_checkpoint_review_consolidated_v1",
+                      "title":  "Owner checkpoint review consolidated",
+                      "summary":  "Delta chain and remainder map were consolidated for owner checkpoint review.",
+                      "occurred_at_utc":  "2026-03-23T13:05:00+00:00",
+                      "source_path":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_REVIEW_CONSOLIDATED_STATE_V1.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "w1_ctr001_delta04",
+                      "title":  "Contradiction delta-04",
+                      "summary":  "Dependency-contract and skip-based partial verification truth are now explicit in product verification lanes.",
+                      "occurred_at_utc":  "2026-03-23T13:24:06.417059+00:00",
+                      "source_path":  "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V4.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "w1_ctr001_delta05",
+                      "title":  "Contradiction delta-05",
+                      "summary":  "Dependency-contract missing-module remainder was closed on canonical machine; api smoke/pytest reached verified status while runtime-readiness remainder stays open.",
+                      "occurred_at_utc":  "2026-03-24T16:41:24+00:00",
+                      "source_path":  "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V5.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "w1_ctr001_delta06",
+                      "title":  "Contradiction delta-06",
+                      "summary":  "Backend readiness/connectivity remainder closed in bounded v6 verification run; owner-gate boundary remains open.",
+                      "occurred_at_utc":  "2026-03-24T19:08:50+00:00",
+                      "source_path":  "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V6.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "owner_checkpoint_review_delta06",
+                      "title":  "Owner checkpoint review delta-06",
+                      "summary":  "Accumulated delta-06 truth consolidated; technical closure confirmed and owner boundary explicitly preserved as open.",
+                      "occurred_at_utc":  "2026-03-24T20:10:00Z",
+                      "source_path":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_REVIEW_DELTA06_CONSOLIDATED_STATE_V1.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "owner_manual_closure_gate_d_wave1",
+                      "title":  "Owner manual closure: Gate D and Wave 1",
+                      "summary":  "Owner explicitly closed Gate D and Wave 1; closure synced to active truth and owner-window surfaces without rewriting prior history.",
+                      "occurred_at_utc":  "2026-03-24T20:52:00Z",
+                      "source_path":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_MANUAL_CLOSURE_ARTIFACT_V1.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "post_wave1_tranche_a_started",
+                      "title":  "Post-wave1 bounded tranche A started",
+                      "summary":  "Agent runtime seams, behavior reliability checks, and prompt-lineage observability were started as one bounded tranche after owner closure.",
+                      "occurred_at_utc":  "2026-03-24T21:20:05Z",
+                      "source_path":  "docs/review_artifacts/TIKTOK_NEXT_STAGE_TRANCHE_A_INTEGRATION_REPORT_V1.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  },
+                  {
+                      "id":  "post_wave1_tranche_b_integrated",
+                      "title":  "Post-wave1 integrated tranche B",
+                      "summary":  "Agent runtime observability, owner live dashboard projection, control-brain visibility and prompt-lineage boundary were hardened as one bounded tranche.",
+                      "occurred_at_utc":  "2026-03-25T08:48:00Z",
+                      "source_path":  "docs/review_artifacts/TIKTOK_OWNER_LIVE_SYSTEM_INTEGRATED_TRANCHE_INTEGRATION_REPORT_V1.md",
+                      "truth_class":  "SOURCE_EXACT"
+                  }
+              ],
+    "boundaries":  {
+                       "wave_1_complete":  "CLOSED_BY_OWNER_MANUAL_DECISION",
+                       "gate_d_complete":  "CLOSED_BY_OWNER_MANUAL_DECISION",
+                       "history_seed_scope":  "WAVE_1_CLOSED_HISTORY_CONTINUES",
+                       "post_wave1_stage":  "TRANCHE_B_IN_PROGRESS"
+                   }
+}

@@ -1,0 +1,270 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Imperial Dashboard / Factory Observation Window V1</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Imperial Dashboard / Factory Observation Window V1</h1>
+    <p class="muted">Локальное окно Императора: truth-first, live-readable, без fake realtime</p>
+    <div class="mode-switch-wrap">
+      <div class="mode-switch-label">Режим окна владельца</div>
+      <div class="mode-switch" role="group" aria-label="Owner window mode switch">
+        <button id="modeCommandBtn" class="mode-btn" data-mode="command" type="button">COMMAND MODE</button>
+        <button id="modeFullVisionBtn" class="mode-btn" data-mode="fullvision" type="button">FULL VISION / AQUARIUM MODE</button>
+      </div>
+      <p id="modeStatusText" class="muted mode-status-text">Текущий режим: COMMAND MODE</p>
+    </div>
+    <div class="legend-row">
+      <span class="label-badge proven">PROVEN</span>
+      <span class="label-badge active">ACTIVE</span>
+      <span class="label-badge scaffolded">SCAFFOLDED</span>
+      <span class="label-badge partial">PARTIALLY IMPLEMENTED</span>
+      <span class="label-badge recommended">RECOMMENDED</span>
+      <span class="label-badge nyi">NOT YET IMPLEMENTED</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel command-mode">
+      <h2>Bundle Summary</h2>
+      <div id="bundleSummary" class="command-summary">loading...</div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Factory Overview</h2>
+      <div id="factoryOverview"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Current Canon Sync</h2>
+      <div id="canonStateSync" class="command-summary">loading...</div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>System Semantic State</h2>
+      <div id="systemSemanticState" class="command-summary">loading...</div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>TikTok / Stage Control Surfaces</h2>
+      <div id="wave1ControlSurfaces"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Live Factory State</h2>
+      <div id="liveFactoryState" class="command-summary">loading...</div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Live Vital Signs</h2>
+      <div id="liveVitalSigns"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Live Owner Gates</h2>
+      <div id="liveOwnerGates"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Live Change Feed</h2>
+      <div id="liveChangeFeed"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Live Preview Stream</h2>
+      <div id="livePreviews"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Before / After Zone</h2>
+      <div id="beforeAfterZone"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Department Floor</h2>
+      <div id="departmentFloor"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Product Lane Board</h2>
+      <div id="productLanes"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Queue Monitor</h2>
+      <div id="queueMonitor"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Force Map</h2>
+      <div id="forceMap"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Panel Traceability</h2>
+      <div id="panels"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Source Preview</h2>
+      <p class="muted">Нажмите source path, чтобы увидеть первичный фрагмент из bundle member.</p>
+      <pre id="sourcePreview">No source selected.</pre>
+    </section>
+
+    <section class="panel fullvision-mode vision-shell-panel zone-shell">
+      <h2>Проверочный пакет и disclosure</h2>
+      <div id="visionBundleHealth"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-primary-panel zone-signal">
+      <h2>Имперский сигнальный слой</h2>
+      <div id="visionSignalBand"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-primary-panel zone-matryoshka">
+      <h2>Истинная форма IMPERIUM: ядро и кольца секторов</h2>
+      <div id="visionMatryoshkaCore"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-primary-panel zone-immersion">
+      <h2>Матрешка-погружение: сектор -> смысл -> proof -> техслой</h2>
+      <div id="visionSectorImmersion"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-primary-panel imperial-overview-panel zone-overview">
+      <h2>Имперский обзор: состояние всей системы</h2>
+      <div id="visionImperialOverview"></div>
+    </section>
+
+    <section class="panel fullvision-mode owner-stage-panel vision-primary-panel zone-aquarium">
+      <h2>Производственная линия: живой маршрут выполнения</h2>
+      <div id="visionOwnerStage"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-control">
+      <h2>Мозг управления / конституция / канон</h2>
+      <div id="visionBrainCore"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-evolution">
+      <h2>Канал эволюции IMPERIUM</h2>
+      <div id="visionEvolutionChannel"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-inquisition">
+      <h2>Инквизиция IMPERIUM</h2>
+      <div id="visionInquisitionCore"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-custodes">
+      <h2>Adeptus Custodes: guardian контур</h2>
+      <div id="visionCustodesCore"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-mechanicus">
+      <h2>Adeptus Mechanicus: сердце исполнения</h2>
+      <div id="visionMechanicusCore"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-administratum">
+      <h2>Administratum: контрактный контур</h2>
+      <div id="visionAdministratumCore"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-force">
+      <h2>Force doctrine / емкость машины</h2>
+      <div id="visionForceDoctrine"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-gates">
+      <h2>Control Gates / authority control</h2>
+      <div id="visionControlGates"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-palace">
+      <h2>Palace / Archive / Node prep</h2>
+      <div id="visionPalaceArchive"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-eventflow">
+      <h2>Event-Flow Spine и маршрутизация изменений</h2>
+      <div id="visionEventFlowSpine"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-secondary-panel zone-preview">
+      <h2>Before/After diff и preview-пайплайн</h2>
+      <div id="visionDiffPreview"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-secondary-panel zone-throne">
+      <h2>Golden Throne discoverability</h2>
+      <div id="visionGoldenThrone"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-semantics">
+      <h2>Семантические поверхности системы</h2>
+      <div id="visionSystemSemantics"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-factory">
+      <h2>Завод Империума: сборка и производственные линии</h2>
+      <div id="visionFactoryAssembly"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-product">
+      <h2>Живой аквариум продукта</h2>
+      <div id="visionProductLive"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-core-panel zone-operation">
+      <h2>Текущая операция и фокус выполнения</h2>
+      <div id="visionCurrentOperation"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-secondary-panel zone-prompt">
+      <h2>Состояние prompt-lineage и границы доверия</h2>
+      <div id="visionPromptState"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-secondary-panel zone-changes">
+      <h2>Что изменилось только что</h2>
+      <div id="visionChanges"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-secondary-panel zone-decision">
+      <h2>Близость следующего owner checkpoint</h2>
+      <div id="visionCheckpoint"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-secondary-panel zone-memory">
+      <h2>Память / хронология / закрепленное состояние</h2>
+      <div id="visionMemoryChronology"></div>
+    </section>
+
+    <section class="panel fullvision-mode vision-secondary-panel zone-history">
+      <h2>История подтвержденных изменений</h2>
+      <div id="visionHistorySeed"></div>
+    </section>
+
+    <section class="panel command-mode">
+      <h2>Технический инспектор (audit/debug)</h2>
+      <div id="visionInspector"></div>
+    </section>
+
+    <section class="panel fullvision-mode" style="display:none;">
+      <div id="visionCanonState"></div>
+      <div id="visionOwnerBrief"></div>
+      <div id="visionWorkFocus"></div>
+      <div id="visionProven"></div>
+      <div id="visionQuestions"></div>
+      <div id="visionGrowthLane"></div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

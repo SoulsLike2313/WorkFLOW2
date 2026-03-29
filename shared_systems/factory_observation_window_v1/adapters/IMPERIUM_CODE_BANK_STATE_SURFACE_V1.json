@@ -1,0 +1,537 @@
+{
+  "surface_id": "IMPERIUM_CODE_BANK_STATE_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "truth_class": "SOURCE_EXACT",
+  "generated_at_utc": "2026-03-29T23:38:43Z",
+  "source_path": "scripts/refresh_imperium_code_bank_surface.py",
+  "summary": {
+    "status_classification": "MONOLITH_RISK",
+    "tracked_code_files_count": 1362,
+    "untracked_code_files_count": 36,
+    "scanned_code_files_count": 1398,
+    "total_loc": 158628,
+    "meaningful_code_loc": 84301,
+    "top_extension_by_loc": ".py",
+    "threshold_counts": {
+      "ge_800": 33,
+      "ge_1200": 21,
+      "ge_2000": 9,
+      "ge_3000": 4
+    },
+    "monolith_pressure_index": 122,
+    "large_step_readiness_hint": "CONSTRAINED"
+  },
+  "by_extension": [
+    {
+      "ext": ".py",
+      "files": 455,
+      "loc": 77993,
+      "primary_code": true
+    },
+    {
+      "ext": ".json",
+      "files": 250,
+      "loc": 45192,
+      "primary_code": false
+    },
+    {
+      "ext": ".md",
+      "files": 658,
+      "loc": 27162,
+      "primary_code": false
+    },
+    {
+      "ext": ".js",
+      "files": 1,
+      "loc": 3279,
+      "primary_code": true
+    },
+    {
+      "ext": ".css",
+      "files": 1,
+      "loc": 2806,
+      "primary_code": true
+    },
+    {
+      "ext": ".ps1",
+      "files": 29,
+      "loc": 1459,
+      "primary_code": false
+    },
+    {
+      "ext": ".yaml",
+      "files": 2,
+      "loc": 497,
+      "primary_code": false
+    },
+    {
+      "ext": ".html",
+      "files": 1,
+      "loc": 223,
+      "primary_code": true
+    },
+    {
+      "ext": ".toml",
+      "files": 1,
+      "loc": 17,
+      "primary_code": false
+    }
+  ],
+  "top_directories_by_loc": [
+    {
+      "dir": "projects/wild_hunt_command_citadel",
+      "loc": 36164
+    },
+    {
+      "dir": "projects/GameRuAI",
+      "loc": 19393
+    },
+    {
+      "dir": "shared_systems/factory_observation_window_v1",
+      "loc": 17652
+    },
+    {
+      "dir": "docs/review_artifacts",
+      "loc": 15579
+    },
+    {
+      "dir": "docs/governance",
+      "loc": 15527
+    },
+    {
+      "dir": "projects/voice_launcher",
+      "loc": 6642
+    },
+    {
+      "dir": "projects/adaptive_trading",
+      "loc": 4528
+    },
+    {
+      "dir": "workspace_config/operator_task_program_registry.json",
+      "loc": 2041
+    },
+    {
+      "dir": "scripts/validation",
+      "loc": 2004
+    },
+    {
+      "dir": "scripts/repo_control_center.py",
+      "loc": 1952
+    },
+    {
+      "dir": "workspace_config/operator_mission_registry.json",
+      "loc": 1699
+    },
+    {
+      "dir": "scripts/imperium_100_truth_live_state_regime.py",
+      "loc": 1653
+    },
+    {
+      "dir": "projects/platform_test_agent",
+      "loc": 1594
+    },
+    {
+      "dir": "workspace_config/SAFE_MIRROR_MANIFEST.json",
+      "loc": 1447
+    },
+    {
+      "dir": "scripts/imperium_wave1_native_organs.py",
+      "loc": 1377
+    },
+    {
+      "dir": "scripts/operator_program_surface.py",
+      "loc": 1095
+    },
+    {
+      "dir": "scripts/operator_command_surface.py",
+      "loc": 1013
+    },
+    {
+      "dir": ".",
+      "loc": 1002
+    },
+    {
+      "dir": "scripts/imperium_block2_systems_acceleration.py",
+      "loc": 957
+    },
+    {
+      "dir": "scripts/operator_task_program_surface.py",
+      "loc": 927
+    },
+    {
+      "dir": "scripts/operator_mission_surface.py",
+      "loc": 858
+    },
+    {
+      "dir": "workspace_config/workspace_manifest.json",
+      "loc": 802
+    },
+    {
+      "dir": "scripts/imperium_wave1_verdict_sync_repair.py",
+      "loc": 761
+    },
+    {
+      "dir": "workspace_config/codex_manifest.json",
+      "loc": 748
+    },
+    {
+      "dir": "scripts/build_chatgpt_deep_audit_bundle_set.py",
+      "loc": 676
+    }
+  ],
+  "top_monoliths": [
+    {
+      "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/ui_screenshots_manifest.json",
+      "ext": ".json",
+      "loc": 6084,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/ui_walkthrough_trace.json",
+      "ext": ".json",
+      "loc": 5551,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "shared_systems/factory_observation_window_v1/app/local_factory_observation_server.py",
+      "ext": ".py",
+      "loc": 5374,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "shared_systems/factory_observation_window_v1/web/app.js",
+      "ext": ".js",
+      "loc": 3279,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "shared_systems/factory_observation_window_v1/web/styles.css",
+      "ext": ".css",
+      "loc": 2806,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "docs/review_artifacts/OPERATOR_TASK_PROGRAM_GOLDEN_PACK_FINAL.json",
+      "ext": ".json",
+      "loc": 2732,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/voice_launcher/voice_launcher.py",
+      "ext": ".py",
+      "loc": 2671,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/ui_main.py",
+      "ext": ".py",
+      "loc": 2109,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "workspace_config/operator_task_program_registry.json",
+      "ext": ".json",
+      "loc": 2041,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "scripts/repo_control_center.py",
+      "ext": ".py",
+      "loc": 1952,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/GameRuAI/app/storage/repositories.py",
+      "ext": ".py",
+      "loc": 1904,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/adaptive_trading/adaptive_trading_bot.py",
+      "ext": ".py",
+      "loc": 1790,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/GameRuAI/app/bootstrap.py",
+      "ext": ".py",
+      "loc": 1755,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "workspace_config/operator_mission_registry.json",
+      "ext": ".json",
+      "loc": 1699,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "scripts/imperium_100_truth_live_state_regime.py",
+      "ext": ".py",
+      "loc": 1653,
+      "tracking_class": "UNTRACKED"
+    },
+    {
+      "path": "workspace_config/SAFE_MIRROR_MANIFEST.json",
+      "ext": ".json",
+      "loc": 1447,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/desktop/pages.py",
+      "ext": ".py",
+      "loc": 1437,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "scripts/imperium_wave1_native_organs.py",
+      "ext": ".py",
+      "loc": 1377,
+      "tracking_class": "UNTRACKED"
+    },
+    {
+      "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/verify.py",
+      "ext": ".py",
+      "loc": 1316,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/GameRuAI/ui_screenshots_manifest.json",
+      "ext": ".json",
+      "loc": 1258,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json",
+      "ext": ".json",
+      "loc": 1237,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/adaptive_trading/adaptive_trading_gui_ultra.py",
+      "ext": ".py",
+      "loc": 1118,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "scripts/operator_program_surface.py",
+      "ext": ".py",
+      "loc": 1095,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "scripts/operator_command_surface.py",
+      "ext": ".py",
+      "loc": 1013,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/desktop/theme.py",
+      "ext": ".py",
+      "loc": 997,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/scripts/ui_doctor.py",
+      "ext": ".py",
+      "loc": 983,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "scripts/imperium_block2_systems_acceleration.py",
+      "ext": ".py",
+      "loc": 957,
+      "tracking_class": "UNTRACKED"
+    },
+    {
+      "path": "scripts/operator_task_program_surface.py",
+      "ext": ".py",
+      "loc": 927,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/external_data/tiktok_automation_snapshot/ui_main.py",
+      "ext": ".py",
+      "loc": 926,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "scripts/operator_mission_surface.py",
+      "ext": ".py",
+      "loc": 858,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/desktop/user_window.py",
+      "ext": ".py",
+      "loc": 855,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "workspace_config/workspace_manifest.json",
+      "ext": ".json",
+      "loc": 802,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "docs/review_artifacts/DIRTY_TREE_GROUND_TRUTH_INVENTORY.json",
+      "ext": ".json",
+      "loc": 800,
+      "tracking_class": "TRACKED"
+    }
+  ],
+  "focus_surfaces": [
+    {
+      "path": "shared_systems/factory_observation_window_v1/app/local_factory_observation_server.py",
+      "ext": ".py",
+      "loc": 5374,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "shared_systems/factory_observation_window_v1/web/app.js",
+      "ext": ".js",
+      "loc": 3279,
+      "tracking_class": "TRACKED"
+    },
+    {
+      "path": "shared_systems/factory_observation_window_v1/web/styles.css",
+      "ext": ".css",
+      "loc": 2806,
+      "tracking_class": "TRACKED"
+    }
+  ],
+  "anomaly_ledger": {
+    "todo_count": 12,
+    "fixme_count": 6,
+    "not_yet_implemented_count": 106,
+    "placeholder_count": 138,
+    "utf8_sig_files_count": 402,
+    "cp1251_suspect_files_count": 0,
+    "utf8_decode_error_files_count": 0,
+    "import_hotspots": [
+      {
+        "path": "projects/GameRuAI/app/bootstrap.py",
+        "import_lines": 87,
+        "loc": 1755
+      }
+    ],
+    "suspicious_growth_candidates": [
+      {
+        "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/ui_screenshots_manifest.json",
+        "loc": 6084,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/ui_walkthrough_trace.json",
+        "loc": 5551,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "shared_systems/factory_observation_window_v1/app/local_factory_observation_server.py",
+        "loc": 5374,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "shared_systems/factory_observation_window_v1/web/app.js",
+        "loc": 3279,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "shared_systems/factory_observation_window_v1/web/styles.css",
+        "loc": 2806,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "docs/review_artifacts/OPERATOR_TASK_PROGRAM_GOLDEN_PACK_FINAL.json",
+        "loc": 2732,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "projects/voice_launcher/voice_launcher.py",
+        "loc": 2671,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/agent/ui_main.py",
+        "loc": 2109,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "workspace_config/operator_task_program_registry.json",
+        "loc": 2041,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "scripts/repo_control_center.py",
+        "loc": 1952,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "projects/GameRuAI/app/storage/repositories.py",
+        "loc": 1904,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "projects/adaptive_trading/adaptive_trading_bot.py",
+        "loc": 1790,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "projects/GameRuAI/app/bootstrap.py",
+        "loc": 1755,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "workspace_config/operator_mission_registry.json",
+        "loc": 1699,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "scripts/imperium_100_truth_live_state_regime.py",
+        "loc": 1653,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "workspace_config/SAFE_MIRROR_MANIFEST.json",
+        "loc": 1447,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/desktop/pages.py",
+        "loc": 1437,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "scripts/imperium_wave1_native_organs.py",
+        "loc": 1377,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/verify.py",
+        "loc": 1316,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "projects/GameRuAI/ui_screenshots_manifest.json",
+        "loc": 1258,
+        "reason": "high_loc_concentration"
+      },
+      {
+        "path": "docs/review_artifacts/OPERATOR_MISSION_GOLDEN_PACK_FINAL.json",
+        "loc": 1237,
+        "reason": "high_loc_concentration"
+      }
+    ]
+  },
+  "hygiene_controls": {
+    "refresh_mode": "manual_script_refresh",
+    "dashboard_binding": "brain_system_health_shell",
+    "warning_policy": "monolith_and_encoding_risks_are_shown_without_masking"
+  },
+  "notes": [
+    "Code-bank metrics include both TRACKED and UNTRACKED code-carrying files.",
+    "Each file row includes tracking_class to avoid tracked/untracked confusion.",
+    "Runtime/generated binary payloads are excluded from code-mass metrics.",
+    "This surface is canonical input for Supreme Brain code-mass visibility."
+  ]
+}

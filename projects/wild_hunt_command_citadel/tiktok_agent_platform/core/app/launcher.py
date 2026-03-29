@@ -6,39 +6,12 @@ import sys
 from typing import Sequence
 
 from .desktop.main import run_user_window
-from .startup_manager import StartupManager
-from .workspace.diagnostics import diag_log
+from .user_mode_orchestrator import UserModeOrchestrator
 
 
 def _run_user_mode(*, skip_gate_check: bool = False) -> int:
-    if not skip_gate_check:
-        verify_code = subprocess.call([sys.executable, "-m", "app.verify"])
-        if verify_code != 0:
-            print("Machine Verification Gate did not return PASS. User mode launch aborted.")
-            return 1
-
-    manager = StartupManager()
-    manager.config.mode = "user"
-    context = manager.initialize_local_runtime()
-    if not context.readiness.get("overall_ready", False):
-        print("User mode startup failed: local readiness is degraded.")
-        print(context.readiness)
-        return 1
-
-    manager.start_internal_backend()
-    ready = manager.wait_backend_ready()
-    if not ready:
-        print("User mode startup failed: internal backend did not reach ready state.")
-        manager.stop_internal_backend()
-        return 1
-
-    api_base = f"http://{manager.config.api_host}:{manager.config.api_port}"
-    diag_log("runtime_logs", "user_mode_window_open", payload={"api_base": api_base})
-    try:
-        code = run_user_window(api_base_url=api_base)
-    finally:
-        manager.stop_internal_backend()
-    return code
+    orchestrator = UserModeOrchestrator(window_runner=run_user_window)
+    return orchestrator.run(skip_gate_check=skip_gate_check)
 
 
 def _run_developer_backend(host: str, port: int) -> int:

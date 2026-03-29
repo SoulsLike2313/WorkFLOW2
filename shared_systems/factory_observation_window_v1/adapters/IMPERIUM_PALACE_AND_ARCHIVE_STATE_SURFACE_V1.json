@@ -1,0 +1,25 @@
+{
+  "surface_id": "IMPERIUM_PALACE_AND_ARCHIVE_STATE_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "docs/governance/IMPERIUM_PALACE_ARCHIVE_AND_NODE_PREP_CANON_V1.md",
+  "palace_state": {
+    "active_palace_mode": "LOCAL_MACHINE_SOVEREIGN",
+    "active_palace_path": "E:\\CVVCODEX",
+    "palace_move_policy": "OWNER_ONLY",
+    "palace_move_state": "NOT_ACTIVE"
+  },
+  "archive_resurrection_state": {
+    "hdd_role": "ARCHIVE_MEMORY_PRODUCTS_BACKUP_RESURRECTION",
+    "hdd_is_authority_source": false,
+    "restore_target": "LAST_CANONICAL_WORKING_STEP",
+    "migration_validation_status": "PLACEHOLDER_NOT_VALIDATED"
+  },
+  "node_prep_state": {
+    "server_form": "COORDINATION_SHELL_FUTURE",
+    "worker_nodes": "FUTURE_EXECUTORS_NOT_DEPLOYED",
+    "bundle_exchange_grammar": "CANONICAL_BUNDLE_EXCHANGE_REQUIRED",
+    "distributed_deployment_status": "NOT_YET_IMPLEMENTED"
+  }
+}

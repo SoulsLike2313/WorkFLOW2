@@ -17,6 +17,10 @@ CANONICAL_BRANCH = "main"
 CANONICAL_REMOTE_REF = f"{CANONICAL_REMOTE}/{CANONICAL_BRANCH}"
 CANONICAL_SAFE_REPO = "WorkFLOW2"
 ACTIVE_PROJECT_SLUG = "platform_test_agent"
+GOLDEN_THRONE_AUTHORITY_ANCHOR_RELATIVE_PATH = "docs/governance/GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json"
+IMPERIUM_REPO_HYGIENE_SURFACE_RELATIVE_PATH = (
+    "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_REPO_HYGIENE_CLASSIFICATION_SURFACE_V1.json"
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RUNTIME_DIR = REPO_ROOT / "runtime" / "repo_control_center"
@@ -231,6 +235,15 @@ def load_json(rel: str) -> dict[str, Any]:
     return json.loads(read_text(rel))
 
 
+def load_json_if_exists(rel: str) -> dict[str, Any]:
+    if not exists(rel):
+        return {}
+    try:
+        return load_json(rel)
+    except Exception:
+        return {}
+
+
 def exists(rel: str) -> bool:
     return (REPO_ROOT / rel).exists()
 
@@ -259,6 +272,46 @@ def build_git_state(fetch: bool) -> GitState:
 
 def missing_paths(paths: list[str]) -> list[str]:
     return [p for p in paths if not exists(p)]
+
+
+def is_sovereign_mode(mode: str) -> bool:
+    return str(mode or "").strip().lower() in {"emperor", "creator"}
+
+
+def is_sync_aligned(verdict: str) -> bool:
+    return str(verdict or "").strip().upper() in {"IN_SYNC", "IN_SYNC_CLASSIFIED"}
+
+
+def build_hygiene_classification_context() -> dict[str, Any]:
+    surface = load_json_if_exists(IMPERIUM_REPO_HYGIENE_SURFACE_RELATIVE_PATH)
+    counts = dict(surface.get("classification_counts", {}) or {})
+    return {
+        "surface_loaded": bool(surface),
+        "source_path": IMPERIUM_REPO_HYGIENE_SURFACE_RELATIVE_PATH,
+        "generated_at_utc": str(surface.get("generated_at_utc", "")),
+        "cleanliness_verdict": str(surface.get("cleanliness_verdict", "UNKNOWN")),
+        "tracked_dirty_count": int(surface.get("tracked_dirty_count", 0) or 0),
+        "untracked_count": int(surface.get("untracked_count", 0) or 0),
+        "classification_counts": {
+            "CANONICAL_MUST_TRACK": int(counts.get("CANONICAL_MUST_TRACK", 0) or 0),
+            "GENERATED_RUNTIME_ONLY": int(counts.get("GENERATED_RUNTIME_ONLY", 0) or 0),
+            "REVIEW_ARTIFACT_RETENTION": int(counts.get("REVIEW_ARTIFACT_RETENTION", 0) or 0),
+            "JUNK_OR_RESIDUE": int(counts.get("JUNK_OR_RESIDUE", 0) or 0),
+            "NEEDS_OWNER_DECISION": int(counts.get("NEEDS_OWNER_DECISION", 0) or 0),
+        },
+    }
+
+
+def is_controlled_classified_dirty(hygiene: dict[str, Any]) -> bool:
+    counts = dict((hygiene or {}).get("classification_counts", {}) or {})
+    return bool(
+        (hygiene or {}).get("surface_loaded")
+        and str((hygiene or {}).get("cleanliness_verdict", "")).upper() == "DIRTY_TRACKED_ONLY"
+        and int((hygiene or {}).get("untracked_count", 0) or 0) == 0
+        and counts.get("NEEDS_OWNER_DECISION", 0) == 0
+        and counts.get("JUNK_OR_RESIDUE", 0) == 0
+        and counts.get("GENERATED_RUNTIME_ONLY", 0) == 0
+    )
 
 
 def parse_numbered_markdown_paths(rel: str) -> list[str]:
@@ -414,14 +467,21 @@ def machine_mode_checks() -> dict[str, Any]:
         evidence["posture_overlay"] = payload.get("operations", {}).get("posture_overlay", {})
         evidence["warnings"] = payload.get("warnings", [])
         evidence["rank_detection_verification_verdict"] = payload.get("rank_detection", {}).get("verification_verdict")
+        evidence["rank_detection"] = payload.get("rank_detection", {})
+        evidence["throne_anchor_path"] = payload.get("rank_detection", {}).get("throne_anchor_path")
+        evidence["emperor_status"] = payload.get("rank_detection", {}).get("emperor_status")
+        evidence["throne_breach"] = payload.get("rank_detection", {}).get("throne_breach")
+        evidence["emperor_status_blocked"] = payload.get("rank_detection", {}).get("emperor_status_blocked")
 
         mode = str(payload.get("machine_mode", "helper"))
         tier = str(payload.get("helper_tier", "") or "")
         detected_rank = str(payload.get("detected_rank", "UNKNOWN"))
         if mode == "helper":
             warnings.append(f"machine is in helper mode (tier={tier or 'unknown'})")
-        if mode == "creator" and detected_rank != "EMPEROR":
-            blockers.append("creator mode derived without EMPEROR rank")
+        if is_sovereign_mode(mode) and detected_rank != "EMPEROR":
+            blockers.append("sovereign mode derived without EMPEROR rank")
+        if mode == "creator":
+            warnings.append("legacy creator mode alias detected; canonical sovereign mode is emperor")
         if payload.get("blockers"):
             blockers.extend([f"detect_machine_mode blocker: {x}" for x in payload.get("blockers", [])])
 
@@ -713,6 +773,7 @@ def governance_checks() -> dict[str, Any]:
 
 def sync_checks(git_state: GitState) -> dict[str, Any]:
     blockers: list[str] = []
+    warnings: list[str] = []
     if git_state.branch != CANONICAL_BRANCH:
         blockers.append(f"branch mismatch: {git_state.branch}")
     if git_state.head != git_state.remote_head:
@@ -722,7 +783,14 @@ def sync_checks(git_state: GitState) -> dict[str, Any]:
     if not git_state.worktree_clean:
         blockers.append("worktree dirty")
 
-    if not blockers:
+    hygiene = build_hygiene_classification_context()
+    classified_dirty_allowed = is_controlled_classified_dirty(hygiene)
+
+    if blockers == ["worktree dirty"] and classified_dirty_allowed:
+        blockers = []
+        warnings.append("worktree dirty but classified under hygiene surface (no owner-decision/junk/runtime blockers)")
+        verdict = "IN_SYNC_CLASSIFIED"
+    elif not blockers:
         verdict = "IN_SYNC"
     elif "branch mismatch" in " ".join(blockers):
         verdict = "BLOCKED"
@@ -740,9 +808,21 @@ def sync_checks(git_state: GitState) -> dict[str, Any]:
             "behind": git_state.behind,
             "worktree_clean": git_state.worktree_clean,
             "status_short": git_state.status_short,
+            "hygiene_classification": hygiene,
+            "classified_dirty_allowed": classified_dirty_allowed,
+            "classified_dirty_controlled": classified_dirty_allowed,
         },
         "blockers": blockers,
-        "next_step": "Run git add/commit/push and resolve divergence/worktree blockers." if blockers else "Maintain parity discipline.",
+        "warnings": warnings,
+        "next_step": (
+            "Run git add/commit/push and resolve divergence/worktree blockers."
+            if blockers
+            else (
+                "Track classified canonical deltas to converge from IN_SYNC_CLASSIFIED toward IN_SYNC."
+                if verdict == "IN_SYNC_CLASSIFIED"
+                else "Maintain parity discipline."
+            )
+        ),
     }
 
 
@@ -929,9 +1009,13 @@ def trust_checks(
 ) -> dict[str, Any]:
     blockers: list[str] = []
     warnings: list[str] = []
+    sync_evidence = dict((sync or {}).get("evidence", {}) or {})
+    sync_controlled_classified = bool(sync_evidence.get("classified_dirty_controlled", False))
 
-    if sync["verdict"] != "IN_SYNC":
+    if not is_sync_aligned(sync["verdict"]):
         blockers.append(f"sync verdict {sync['verdict']}")
+    elif str(sync["verdict"]).upper() == "IN_SYNC_CLASSIFIED" and not sync_controlled_classified:
+        warnings.append("sync is IN_SYNC_CLASSIFIED (classified dirty worktree)")
     if governance["verdict"] == "NON_COMPLIANT":
         blockers.append("governance non-compliant")
     elif governance["verdict"] == "PARTIAL":
@@ -985,6 +1069,7 @@ def trust_checks(
             "bundle_verdict": bundle["verdict"],
             "machine_mode_verdict": machine_mode["verdict"],
             "integration_inbox_verdict": integration_inbox["verdict"],
+            "sync_controlled_classified": sync_controlled_classified,
         },
         "blockers": blockers,
         "warnings": warnings,
@@ -1001,22 +1086,36 @@ def admission_checks(
     machine_mode: dict[str, Any],
 ) -> dict[str, Any]:
     blockers: list[str] = []
+    warnings: list[str] = []
+    sync_evidence = dict((sync or {}).get("evidence", {}) or {})
+    sync_controlled_classified = bool(sync_evidence.get("classified_dirty_controlled", False))
     if trust["verdict"] == "NOT_TRUSTED":
         blockers.append("trust verdict is NOT_TRUSTED")
-    if sync["verdict"] != "IN_SYNC":
-        blockers.append("sync not IN_SYNC")
+    if not is_sync_aligned(sync["verdict"]):
+        blockers.append("sync is not aligned")
+    elif str(sync["verdict"]).upper() == "IN_SYNC_CLASSIFIED" and not sync_controlled_classified:
+        warnings.append("sync classified as IN_SYNC_CLASSIFIED")
     if governance["verdict"] == "NON_COMPLIANT":
         blockers.append("governance NON_COMPLIANT")
     if contradictions["critical_count"] > 0:
         blockers.append("critical contradictions unresolved")
-    if governance_acceptance["verdict"] != "PASS":
+    if governance_acceptance["verdict"] == "FAIL":
         blockers.append("governance acceptance gate not PASS")
-    if machine_mode.get("evidence", {}).get("machine_mode") != "creator":
-        blockers.append("rank-derived machine mode is not creator")
+    elif governance_acceptance["verdict"] == "PARTIAL":
+        warnings.append("governance acceptance gate PARTIAL")
+    if not is_sovereign_mode(str(machine_mode.get("evidence", {}).get("machine_mode", "unknown"))):
+        blockers.append("rank-derived machine mode is not sovereign")
 
     if blockers:
         verdict = "REJECTED"
-    elif trust["verdict"] == "WARNING" or governance["verdict"] == "PARTIAL" or contradictions["major_count"] > 0:
+    elif (
+        trust["verdict"] == "WARNING"
+        or governance["verdict"] == "PARTIAL"
+        or contradictions["major_count"] > 0
+        or (str(sync["verdict"]).upper() == "IN_SYNC_CLASSIFIED" and not sync_controlled_classified)
+        or governance_acceptance["verdict"] == "PARTIAL"
+        or bool(warnings)
+    ):
         verdict = "CONDITIONAL"
     else:
         verdict = "ADMISSIBLE"
@@ -1032,9 +1131,17 @@ def admission_checks(
             "major_contradictions": contradictions["major_count"],
             "governance_acceptance_verdict": governance_acceptance["verdict"],
             "machine_mode": machine_mode.get("evidence", {}).get("machine_mode"),
+            "sync_controlled_classified": sync_controlled_classified,
         },
         "blockers": blockers,
-        "next_step": "Clear blockers to reach ADMISSIBLE." if blockers else "Admission gate is clear.",
+        "warnings": warnings,
+        "next_step": (
+            "Clear blockers to reach ADMISSIBLE."
+            if blockers
+            else "Admission is conditional; clear warnings for ADMISSIBLE."
+            if verdict == "CONDITIONAL"
+            else "Admission gate is clear."
+        ),
     }
 
 
@@ -1051,6 +1158,7 @@ def governance_acceptance_checks(
     git_state: GitState,
 ) -> dict[str, Any]:
     blockers: list[str] = []
+    warnings: list[str] = []
     evidence: dict[str, Any] = {
         "acceptance_doc_exists": exists(GOVERNANCE_ACCEPTANCE_DOC),
         "next_step_doc_exists": exists("docs/NEXT_CANONICAL_STEP.md"),
@@ -1111,10 +1219,17 @@ def governance_acceptance_checks(
     if not has_valid_route:
         blockers.append("NEXT_CANONICAL_STEP missing governance-accepted canonical route")
 
-    if sync["verdict"] != "IN_SYNC":
-        blockers.append("sync gate not IN_SYNC")
-    if trust["verdict"] != "TRUSTED":
+    if not is_sync_aligned(sync["verdict"]):
+        blockers.append("sync gate not aligned")
+    sync_hygiene = dict((sync.get("evidence", {}) or {}).get("hygiene_classification", {}) or {})
+    sync_controlled_classified = bool((sync.get("evidence", {}) or {}).get("classified_dirty_controlled", False))
+    evidence["sync_controlled_classified"] = sync_controlled_classified
+    if str(sync["verdict"]).upper() == "IN_SYNC_CLASSIFIED" and not sync_controlled_classified:
+        warnings.append("sync gate is IN_SYNC_CLASSIFIED")
+    if trust["verdict"] == "NOT_TRUSTED":
         blockers.append("trust gate not TRUSTED")
+    elif trust["verdict"] == "WARNING":
+        warnings.append("trust gate WARNING")
     if governance["verdict"] != "COMPLIANT":
         blockers.append("governance gate not COMPLIANT")
     if bootstrap["verdict"] != "PASS":
@@ -1125,22 +1240,46 @@ def governance_acceptance_checks(
         blockers.append("bundle gate not READY")
     if machine_mode["verdict"] == "BLOCKED":
         blockers.append("machine mode detection blocked")
-    if machine_mode.get("evidence", {}).get("machine_mode") != "creator":
-        blockers.append("rank-derived creator mode required for governance acceptance PASS")
+    if not is_sovereign_mode(str(machine_mode.get("evidence", {}).get("machine_mode", "unknown"))):
+        blockers.append("rank-derived sovereign mode required for governance acceptance PASS")
     if contradictions["critical_count"] > 0:
         blockers.append("critical contradictions unresolved")
     if not git_state.worktree_clean:
-        blockers.append("worktree is dirty")
+        counts = dict(sync_hygiene.get("classification_counts", {}) or {})
+        classified_dirty_safe = bool(
+            counts.get("NEEDS_OWNER_DECISION", 0) == 0
+            and counts.get("JUNK_OR_RESIDUE", 0) == 0
+            and counts.get("GENERATED_RUNTIME_ONLY", 0) == 0
+        )
+        evidence["classified_dirty_safe"] = classified_dirty_safe
+        if sync_controlled_classified and classified_dirty_safe:
+            pass
+        elif str(sync.get("verdict", "")).upper() == "IN_SYNC_CLASSIFIED" and classified_dirty_safe:
+            warnings.append("worktree dirty but classified as safe canonical delta")
+        else:
+            blockers.append("worktree is dirty")
     if git_state.ahead != 0 or git_state.behind != 0:
         blockers.append(f"divergence is not zero: {git_state.ahead}/{git_state.behind}")
 
-    verdict = "PASS" if not blockers else "FAIL"
+    if blockers:
+        verdict = "FAIL"
+    elif warnings:
+        verdict = "PARTIAL"
+    else:
+        verdict = "PASS"
     return {
         "verdict": verdict,
         "basis": "formal governance acceptance gate for transition readiness",
         "evidence": evidence,
         "blockers": blockers,
-        "next_step": "Governance foundation accepted for next-stage consideration." if verdict == "PASS" else "Close governance acceptance blockers.",
+        "warnings": warnings,
+        "next_step": (
+            "Governance foundation accepted for next-stage consideration."
+            if verdict == "PASS"
+            else "Governance acceptance is partial; converge classified dirt and warnings."
+            if verdict == "PARTIAL"
+            else "Close governance acceptance blockers."
+        ),
     }
 
 
@@ -1209,7 +1348,7 @@ def evolution_checks(sync: dict[str, Any], governance: dict[str, Any], contradic
     next_candidate_text = read_text("docs/governance/NEXT_EVOLUTION_CANDIDATE.md") if exists("docs/governance/NEXT_EVOLUTION_CANDIDATE.md") else ""
 
     positive_signals = [
-        ("sync_in_sync", sync["verdict"] == "IN_SYNC", 15),
+        ("sync_in_sync", is_sync_aligned(sync["verdict"]), 15),
         ("worktree_clean", sync["evidence"]["worktree_clean"], 10),
         ("governance_compliant", governance["verdict"] == "COMPLIANT", 15),
         ("brain_stack_complete", len(governance["evidence"]["missing_stack"]) == 0, 10),
@@ -1225,7 +1364,7 @@ def evolution_checks(sync: dict[str, Any], governance: dict[str, Any], contradic
     gained = [name for name, ok, _ in positive_signals if ok]
 
     blocking_signals: list[str] = []
-    if sync["verdict"] != "IN_SYNC":
+    if not is_sync_aligned(sync["verdict"]):
         blocking_signals.append("broken_sync_discipline")
     if contradictions["critical_count"] > 0:
         blocking_signals.append("unresolved_critical_contradiction")
@@ -1407,8 +1546,8 @@ def classify_blocking_reason(
     trust: dict[str, Any],
     machine_mode: dict[str, Any],
 ) -> tuple[str, str]:
-    if sync["verdict"] != "IN_SYNC":
-        detail = "; ".join(sync.get("blockers", [])) or "sync is not IN_SYNC"
+    if not is_sync_aligned(sync["verdict"]):
+        detail = "; ".join(sync.get("blockers", [])) or "sync is not aligned"
         return "SYNC", detail
 
     if machine_mode["verdict"] == "BLOCKED":
@@ -1416,8 +1555,8 @@ def classify_blocking_reason(
         return "AUTHORITY", detail
 
     mode = machine_mode.get("evidence", {}).get("machine_mode", "unknown")
-    if governance_acceptance["verdict"] != "PASS" and mode != "creator":
-        detail = "creator-only governance acceptance unavailable in current rank-derived machine mode"
+    if governance_acceptance["verdict"] != "PASS" and not is_sovereign_mode(str(mode)):
+        detail = "sovereign governance acceptance unavailable in current rank-derived machine mode"
         return "ROLE_AUTHORITY", detail
 
     if governance["verdict"] == "NON_COMPLIANT":
@@ -1454,8 +1593,10 @@ def compute_status_layers(
     workspace_blockers: list[str] = []
     workspace_warnings: list[str] = []
 
-    if sync["verdict"] != "IN_SYNC":
+    if not is_sync_aligned(sync["verdict"]):
         workspace_blockers.append("sync_not_in_sync")
+    elif str(sync["verdict"]).upper() == "IN_SYNC_CLASSIFIED":
+        workspace_warnings.append("sync_classified_dirty")
     if contradictions["critical_count"] > 0:
         workspace_blockers.append("critical_contradictions_present")
     if governance["verdict"] == "NON_COMPLIANT":
@@ -1488,8 +1629,8 @@ def compute_status_layers(
     detected_rank = str(machine_mode.get("evidence", {}).get("detected_rank", "UNKNOWN"))
     if machine_mode["verdict"] == "BLOCKED":
         authority_status = "BLOCKED"
-    elif mode == "creator" and detected_rank == "EMPEROR":
-        authority_status = "CREATOR_FROM_EMPEROR_RANK"
+    elif is_sovereign_mode(str(mode)) and detected_rank == "EMPEROR":
+        authority_status = "EMPEROR_FROM_THRONE_ANCHOR"
     elif mode == "helper" and helper_tier == "high" and detected_rank == "PRIMARCH":
         authority_status = "HELPER_HIGH_FROM_PRIMARCH_RANK"
     elif mode == "helper" and helper_tier == "low" and detected_rank == "ASTARTES":
@@ -1501,7 +1642,7 @@ def compute_status_layers(
         governance_status = "NON_COMPLIANT"
     elif governance_acceptance["verdict"] == "PASS":
         governance_status = "ACCEPTED"
-    elif mode != "creator":
+    elif not is_sovereign_mode(str(mode)):
         governance_status = "ROLE_LIMITED_ACCEPTANCE"
     else:
         governance_status = "GATE_BLOCKED"
@@ -1540,7 +1681,13 @@ def compute_status_layers(
 def one_screen_status_payload(result: dict[str, Any]) -> dict[str, Any]:
     v = result["verdicts"]
     checks = result["checks"]
-    authority_path = os.getenv("CVVCODEX_LOCAL_SOVEREIGN_SUBSTRATE_DIR", "")
+    machine_mode_evidence = dict(v["machine_mode"].get("evidence", {}) or {})
+    rank_detection = dict(machine_mode_evidence.get("rank_detection", {}) or {})
+    authority_path = str(
+        rank_detection.get("throne_anchor_path")
+        or machine_mode_evidence.get("throne_anchor_path")
+        or GOLDEN_THRONE_AUTHORITY_ANCHOR_RELATIVE_PATH
+    )
     legacy_substrate_env_present = bool(os.getenv("CVVCODEX_EMPEROR_PROOF_DIR", ""))
     legacy_creator_env_present = bool(os.getenv("CVVCODEX_CREATOR_AUTHORITY_DIR", ""))
     block_category, block_detail = classify_blocking_reason(
@@ -1558,10 +1705,13 @@ def one_screen_status_payload(result: dict[str, Any]) -> dict[str, Any]:
         "branch": result["repo"]["branch"],
         "head": result["repo"]["head"],
         "safe_mirror_main": result["repo"]["safe_mirror_main"],
-        "machine_mode": v["machine_mode"]["evidence"].get("machine_mode", "unknown"),
+        "machine_mode": machine_mode_evidence.get("machine_mode", "unknown"),
         "machine_mode_verdict": v["machine_mode"]["verdict"],
-        "authority_present": bool(v["machine_mode"]["evidence"].get("authority_present", False)),
+        "authority_present": bool(machine_mode_evidence.get("authority_present", False)),
         "authority_path": authority_path,
+        "throne_breach": bool(rank_detection.get("throne_breach", False)),
+        "emperor_status_blocked": bool(rank_detection.get("emperor_status_blocked", False)),
+        "emperor_status": str(rank_detection.get("emperor_status", "UNKNOWN")),
         "legacy_substrate_env_present": legacy_substrate_env_present,
         "legacy_creator_env_present": legacy_creator_env_present,
         "legacy_envs_ignored_for_authority": True,
@@ -1614,6 +1764,9 @@ def plain_status_markdown(result: dict[str, Any], one_screen: dict[str, Any]) ->
         f"- authority_present: `{one_screen['authority_present']}`",
         f"- authority_status: `{one_screen['authority_status']}`",
         f"- authority_path: `{one_screen['authority_path'] or 'not-set-in-environment'}`",
+        f"- emperor_status: `{one_screen.get('emperor_status', 'UNKNOWN')}`",
+        f"- emperor_status_blocked: `{one_screen.get('emperor_status_blocked', False)}`",
+        f"- throne_breach: `{one_screen.get('throne_breach', False)}`",
         f"- legacy_substrate_env_present: `{one_screen['legacy_substrate_env_present']}`",
         f"- legacy_creator_env_present: `{one_screen['legacy_creator_env_present']}`",
         f"- legacy_envs_ignored_for_authority: `{one_screen['legacy_envs_ignored_for_authority']}`",
@@ -1686,9 +1839,15 @@ def build_results(fetch: bool) -> dict[str, Any]:
     next_canonical_step = parse_next_canonical_step()
 
     drift_status = {
-        "critical": contradictions["critical_count"] > 0 or sync["verdict"] != "IN_SYNC",
-        "major": contradictions["major_count"] > 0 or governance["verdict"] == "PARTIAL",
-        "status": "CRITICAL" if contradictions["critical_count"] > 0 or sync["verdict"] != "IN_SYNC" else "LOW",
+        "critical": contradictions["critical_count"] > 0 or str(sync["verdict"]).upper() in {"DRIFTED", "BLOCKED"},
+        "major": contradictions["major_count"] > 0 or governance["verdict"] == "PARTIAL" or str(sync["verdict"]).upper() == "IN_SYNC_CLASSIFIED",
+        "status": (
+            "CRITICAL"
+            if contradictions["critical_count"] > 0 or str(sync["verdict"]).upper() in {"DRIFTED", "BLOCKED"}
+            else "MAJOR"
+            if contradictions["major_count"] > 0 or governance["verdict"] == "PARTIAL" or str(sync["verdict"]).upper() == "IN_SYNC_CLASSIFIED"
+            else "LOW"
+        ),
     }
 
     return {
@@ -1986,13 +2145,13 @@ def exit_code_for_mode(result: dict[str, Any], mode: str) -> int:
     if mode == "integration":
         return 0 if v["integration_inbox"]["verdict"] in {"PASS", "WARNING"} else 1
     if mode == "sync":
-        return 0 if v["sync"]["verdict"] == "IN_SYNC" else 1
+        return 0 if is_sync_aligned(v["sync"]["verdict"]) else 1
     if mode == "trust":
         return 0 if v["trust"]["verdict"] == "TRUSTED" and v["governance_acceptance"]["verdict"] == "PASS" else 1
     if mode == "evolution":
         return 0 if v["evolution"]["verdict"] not in {"BLOCKED"} else 1
     if mode in {"audit", "full-check"}:
-        return 0 if v["admission"]["verdict"] in {"ADMISSIBLE", "CONDITIONAL"} and v["sync"]["verdict"] == "IN_SYNC" else 1
+        return 0 if v["admission"]["verdict"] in {"ADMISSIBLE", "CONDITIONAL"} and is_sync_aligned(v["sync"]["verdict"]) else 1
     return 0
 
 

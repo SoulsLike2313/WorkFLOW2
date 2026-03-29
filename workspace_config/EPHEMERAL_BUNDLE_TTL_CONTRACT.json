@@ -1,0 +1,78 @@
+{
+  "contract_version": "1.0.0",
+  "contract_kind": "ephemeral_bundle_ttl",
+  "status": "active",
+  "scope_root": "E:\\CVVCODEX",
+  "default_ttl_hours": 24,
+  "dry_run_default": true,
+  "ephemeral_roots": [
+    {
+      "path": "runtime/manual_safe_bundle_staging",
+      "entry_types": [
+        "dir"
+      ],
+      "name_globs": [
+        "*"
+      ],
+      "description": "manual-safe bundle staging workspaces"
+    },
+    {
+      "path": "runtime/chatgpt_bundle_exports",
+      "entry_types": [
+        "file",
+        "dir"
+      ],
+      "name_globs": [
+        "*.zip",
+        "*"
+      ],
+      "description": "generated bundle exports"
+    },
+    {
+      "path": "runtime/chatgpt_bundle_requests",
+      "entry_types": [
+        "file",
+        "dir"
+      ],
+      "name_globs": [
+        "*"
+      ],
+      "description": "ephemeral include/request inputs for bundle assembly"
+    }
+  ],
+  "never_touch_roots": [
+    "docs",
+    "workspace_config",
+    "scripts",
+    "projects",
+    "shared_systems",
+    "integration",
+    "tasks",
+    "runtime/repo_control_center"
+  ],
+  "protection": {
+    "keep_latest_per_root": 1,
+    "protect_name_globs": [
+      "*current*",
+      "*active*"
+    ],
+    "protect_marker_files": [
+      ".ttl_pin",
+      ".keep"
+    ],
+    "pins_file": "workspace_config/ephemeral_bundle_ttl_pins.json"
+  },
+  "safety": {
+    "skip_tracked_git_paths": true,
+    "require_scope_subpath": true
+  },
+  "reporting": {
+    "default_report_root": "runtime/bundle_ttl_janitor"
+  },
+  "anchors": [
+    "docs/governance/EPHEMERAL_BUNDLE_TTL_POLICY_V1.md",
+    "docs/governance/BUNDLE_RETENTION_AND_CLEANUP_MODEL_V1.md",
+    "scripts/ttl_bundle_janitor.py"
+  ]
+}
+

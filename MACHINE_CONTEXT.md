@@ -3,14 +3,76 @@
 ## Canonical State
 
 - Working source of truth: `E:\CVVCODEX`
-- Public safe mirror only: `WorkFLOW2` via `safe_mirror/main`
+- External safe mirror/export: optional manual derivative only (`WorkFLOW2` via `safe_mirror/main`)
 - Public mirror is not full working repository
+- Safe mirror/GitHub is not default canonical execution path.
 - Expected canonical workspace root across nodes: `E:\CVVCODEX` (unless explicit documented exception)
 - Path drift from canonical root narrows authority/rank confidence by fail-closed rule
 - Canonical external reading path: targeted bundles from `scripts/export_chatgpt_bundle.py`
 - Canonical fallback export path for tracked inclusion gaps: `scripts/export_manual_safe_bundle.py` under `docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md`
 - Canonical fallback search/read path for policy-friction zones: `scripts/search_repo_safe.py` under `docs/governance/REPO_SEARCH_ENTRYPOINTS.md`
 - Codex output discipline default: ultra-short chat + bundle-first details (`docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md`, `workspace_config/codex_output_mode_contract.json`)
+- Codex output precedence hardening: `docs/governance/CODEX_OUTPUT_PRECEDENCE_MODEL.md`, `docs/governance/OUTPUT_MODE_HARDENING_V1.md`
+- Canonical truth review bundle law (one primary truth bundle per active step): `docs/governance/CANONICAL_TRUTH_REVIEW_BUNDLE_LAW_V1.md`
+- Permanent limit economy mode law:
+  - `docs/governance/LIMIT_ECONOMY_MODE_LAW_V1.md`
+  - `docs/governance/CORE_DELTA_PROMPT_DISCIPLINE_V1.md`
+  - `docs/governance/SHORT_FIRST_REPLY_LAW_V1.md`
+  - `docs/governance/VNEXT_PROMPT_COMPRESSION_PROFILE_V1.md`
+  - `docs/governance/CHECKPOINT_CAPSULE_CONTEXT_COMPRESSION_LAW_V1.md`
+  - `docs/governance/OWNER_CHATGPT_CODEX_ECONOMY_WORKFLOW_V1.md`
+  - `workspace_config/limit_economy_mode_contract.json`
+- Ephemeral bundle TTL cleanup policy: `docs/governance/EPHEMERAL_BUNDLE_TTL_POLICY_V1.md`, `workspace_config/EPHEMERAL_BUNDLE_TTL_CONTRACT.json`, `scripts/ttl_bundle_janitor.py`
+- Controlled emperor character layer anchors:
+  - `docs/governance/EMPEROR_CHARACTER_LAYER_ARCHITECTURE_DECISION_V1.md`
+  - `docs/governance/EMPEROR_CHARACTER_KERNEL_V1.md`
+  - `docs/governance/OWNER_DRIFT_DETECTION_AND_RECOVERY_PROTOCOL_V1.md`
+  - `docs/governance/CHATGPT_OWNER_MIRROR_PROFILE_V1.md`
+  - `docs/governance/CODEX_OWNER_GUARD_PROFILE_V1.md`
+  - `docs/governance/EMPEROR_CHARACTER_EVOLUTION_LEDGER_V1.md`
+  - `docs/governance/EMPEROR_CHARACTER_LAYER_USAGE_LAW_V1.md`
+- Directed evolution governance layer anchors:
+  - `docs/governance/DIRECTED_EVOLUTION_GOVERNANCE_ARCHITECTURAL_DECISION_V1.md`
+  - `docs/governance/DIRECTED_EVOLUTION_CLUSTER_REGISTRY_V1.md`
+  - `docs/governance/DIRECTED_EVOLUTION_CLUSTER_REGISTRY_V1.json`
+  - `docs/governance/DIRECTED_EVOLUTION_ADMISSION_LAW_V1.md`
+  - `docs/governance/DIRECTED_EVOLUTION_CANDIDATE_LEDGER_V1.md`
+  - `docs/governance/DIRECTED_EVOLUTION_CROSS_CLUSTER_BOUNDARY_RULES_V1.md`
+  - `docs/governance/DIRECTED_EVOLUTION_CANON_INTEGRATION_V1.md`
+- Worldheart and federated role doctrine draft anchors (target architecture, future owner-controlled activation):
+  - `docs/governance/WORLDHEART_CORE_PORTABLE_SOVEREIGN_MODULE_DRAFT_V1.md`
+  - `docs/governance/FEDERATED_ROLE_DOCTRINE_PRIMARCH_ASTARTES_DRAFT_V1.md`
+- system foundation vs mutable canon entrypoint anchors:
+  - `docs/governance/SYSTEM_ENTRYPOINT_V1.md`
+  - `docs/governance/FOUNDATION_VS_MUTABLE_READING_GUIDE_V1.md`
+  - `docs/governance/FOUNDATION_INDEX_V1.md`
+  - `docs/governance/LIVE_SYSTEM_INDEX_V1.md`
+  - `docs/governance/AUTHORITY_OF_CHANGE_MAP_V1.md`
+  - `docs/governance/SYSTEM_ONBOARDING_READING_ORDER_V1.md`
+  - `docs/governance/SYSTEM_CHEAP_ONBOARDING_CONTRACT_V1.md`
+  - `docs/governance/SINGLE_ARTIFACT_ENTRYPOINT_RESPONSE_LAW_V1.md`
+  - `docs/governance/PRIMARY_TRUTH_NAME_AND_SINGLE_ARTIFACT_PATH_RESPONSE_CONTRACT_V1.md`
+- system sovereignty/portability/imperial vector anchors:
+  - `docs/governance/SYSTEM_SOVEREIGNTY_PORTABILITY_AND_IMPERIAL_VECTOR_DOCTRINE_V1.md`
+  - `docs/governance/REPOSITORY_SOVEREIGNTY_EXTERNAL_SURFACE_POLICY_V1.md`
+  - `docs/governance/PORTABLE_EMPEROR_MACHINE_BOOTSTRAP_VECTOR_V1.md`
+  - `docs/governance/TWO_DISK_AND_N_BACKUP_STORAGE_DOCTRINE_V1.md`
+  - `docs/governance/DISASTER_RECOVERY_TO_LAST_CANONICAL_STEP_VECTOR_V1.md`
+  - `docs/governance/IMPERIAL_DASHBOARD_VECTOR_DOCTRINE_V1.md`
+  - `docs/governance/IMPERIUM_EVOLUTION_CHANNEL_CANON_V1.md`
+  - `docs/governance/IMPERIUM_INQUISITION_CANON_V1.md`
+  - `docs/governance/FACTORY_OF_IMPERIUM_PRODUCTION_CANON_V1.md`
+  - `docs/governance/IMPERIUM_EVOLUTION_INQUISITION_DASHBOARD_BINDING_V1.md`
+  - `docs/governance/IMPERIUM_EVENT_FLOW_SPINE_CANON_V1.md`
+  - `docs/governance/IMPERIUM_DIFF_PREVIEW_PIPELINE_CANON_V1.md`
+  - `docs/governance/IMPERIUM_DASHBOARD_NEURO_MORPHOLOGY_CANON_V1.md`
+  - `docs/governance/IMPERIUM_TRUE_FORM_MATRYOSHKA_PREMIUM_VISUAL_CANON_V1.md`
+  - `docs/governance/IMPERIUM_FACTORY_MORPHOLOGY_ASSEMBLY_CANON_V1.md`
+  - `docs/governance/IMPERIUM_GOLDEN_THRONE_DISCOVERABILITY_CANON_V1.md`
+  - `docs/governance/IMPERIUM_LOW_RESOURCE_CHANNEL_DISCIPLINE_V1.md`
+  - `docs/governance/OWNER_DECISION_ESCALATION_DOCTRINE_V1.md`
+  - `docs/governance/OWNER_DECISION_ESCALATION_REGISTRY_V1.md`
+  - `docs/governance/CHAT_TRANSFER_CAPSULE_DOCTRINE_V1.md`
 - Governance brain stack is mandatory for interpretation and execution
 - Active project: `platform_test_agent`
 - Current Federation operational department: `Analytics Department` (implemented by `platform_test_agent`)

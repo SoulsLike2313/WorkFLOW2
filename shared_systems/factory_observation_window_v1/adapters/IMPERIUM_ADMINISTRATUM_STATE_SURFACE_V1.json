@@ -1,0 +1,37 @@
+{
+  "surface_id": "IMPERIUM_ADMINISTRATUM_STATE_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "docs/governance/IMPERIUM_ADMINISTRATUM_CANON_V1.md",
+  "role": "OWNER_INTENT_TO_EXECUTION_CONTRACT_NORMALIZATION",
+  "contract_gate": {
+    "state": "ACTIVE",
+    "required_fields": [
+      "intent",
+      "scope",
+      "must_preserve",
+      "unknowns",
+      "assumptions",
+      "stop_triggers",
+      "acceptance_criteria",
+      "risk_cost_estimate",
+      "escalation_rule"
+    ],
+    "severity_thresholds": {
+      "unknowns_red_threshold": 3,
+      "assumptions_red_threshold": 3
+    },
+    "gate_model": {
+      "green": "all_required_fields_present_and_low_unknown_pressure",
+      "amber": "all_required_fields_present_but_unknown_pressure_elevated",
+      "red_block": "critical_field_missing_or_stop_trigger_reached"
+    },
+    "on_red_block": "STOP_AND_ASK_OWNER",
+    "on_amber": "ALLOW_BOUNDED_LOW_RISK_ONLY"
+  },
+  "source_bindings": {
+    "active_contract_path": "runtime/administratum/IMPERIUM_ACTIVE_MISSION_CONTRACT_V1.json",
+    "contract_law_path": "docs/governance/IMPERIUM_COMMAND_CONTRACT_STOP_AND_ASK_GATE_V1.md"
+  }
+}

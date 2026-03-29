@@ -1,0 +1,163 @@
+{
+  "model_id": "FACTORY_LIVE_EVENT_MODEL_V1",
+  "model_version": "1.0.0",
+  "scope": "emperor_machine_local_only",
+  "required_baseline_fields": [
+    "event_id",
+    "event_type",
+    "occurred_at_utc",
+    "producer",
+    "severity",
+    "product_id",
+    "summary",
+    "source_path",
+    "truth_class"
+  ],
+  "severity_levels": [
+    "info",
+    "warning",
+    "critical"
+  ],
+  "event_types": {
+    "product_opened": {
+      "producer": "intake_or_loader",
+      "consumer": "live_product_focus",
+      "required_payload": [
+        "product_id",
+        "entry_context"
+      ],
+      "severity": "info",
+      "owner_visibility": "high"
+    },
+    "wave_started": {
+      "producer": "execution_planner",
+      "consumer": "live_wave_board",
+      "required_payload": [
+        "wave_id",
+        "planned_tasks"
+      ],
+      "severity": "info",
+      "owner_visibility": "high"
+    },
+    "wave_completed": {
+      "producer": "execution_tracker",
+      "consumer": "live_wave_board",
+      "required_payload": [
+        "wave_id",
+        "completion_state"
+      ],
+      "severity": "info",
+      "owner_visibility": "high"
+    },
+    "task_started": {
+      "producer": "task_runner",
+      "consumer": "live_execution_state",
+      "required_payload": [
+        "task_id",
+        "wave_id"
+      ],
+      "severity": "info",
+      "owner_visibility": "medium"
+    },
+    "task_completed": {
+      "producer": "task_runner",
+      "consumer": "live_execution_state",
+      "required_payload": [
+        "task_id",
+        "result_state"
+      ],
+      "severity": "info",
+      "owner_visibility": "medium"
+    },
+    "gate_opened": {
+      "producer": "gate_detector",
+      "consumer": "live_owner_gates_panel",
+      "required_payload": [
+        "gate_id",
+        "blocking_reason"
+      ],
+      "severity": "warning",
+      "owner_visibility": "critical"
+    },
+    "gate_resolved": {
+      "producer": "owner_gate_resolution",
+      "consumer": "live_owner_gates_panel",
+      "required_payload": [
+        "gate_id",
+        "resolution_ref"
+      ],
+      "severity": "info",
+      "owner_visibility": "high"
+    },
+    "contradiction_opened": {
+      "producer": "contradiction_control",
+      "consumer": "live_contradiction_wall",
+      "required_payload": [
+        "contradiction_id",
+        "severity_reason"
+      ],
+      "severity": "critical",
+      "owner_visibility": "critical"
+    },
+    "contradiction_closed": {
+      "producer": "contradiction_control",
+      "consumer": "live_contradiction_wall",
+      "required_payload": [
+        "contradiction_id",
+        "closure_ref"
+      ],
+      "severity": "info",
+      "owner_visibility": "high"
+    },
+    "preview_updated": {
+      "producer": "preview_generator",
+      "consumer": "live_preview_stream",
+      "required_payload": [
+        "preview_id",
+        "preview_path"
+      ],
+      "severity": "info",
+      "owner_visibility": "high"
+    },
+    "bundle_checkpoint_emitted": {
+      "producer": "checkpoint_exporter",
+      "consumer": "live_change_feed",
+      "required_payload": [
+        "bundle_path",
+        "checkpoint_id"
+      ],
+      "severity": "info",
+      "owner_visibility": "critical"
+    },
+    "verification_changed": {
+      "producer": "verification_chain",
+      "consumer": "live_health_state",
+      "required_payload": [
+        "gate",
+        "new_status"
+      ],
+      "severity": "warning",
+      "owner_visibility": "critical"
+    },
+    "blocker_detected": {
+      "producer": "verification_or_execution",
+      "consumer": "live_factory_overview",
+      "required_payload": [
+        "blocker_id",
+        "blocker_class"
+      ],
+      "severity": "critical",
+      "owner_visibility": "critical"
+    },
+    "blocker_cleared": {
+      "producer": "verification_or_execution",
+      "consumer": "live_factory_overview",
+      "required_payload": [
+        "blocker_id",
+        "clearance_ref"
+      ],
+      "severity": "info",
+      "owner_visibility": "high"
+    }
+  }
+}

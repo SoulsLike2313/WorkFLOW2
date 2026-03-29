@@ -1,0 +1,47 @@
+{
+  "surface_id": "IMPERIUM_FORCE_DOCTRINE_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "docs/governance/IMPERIUM_FORCE_DOCTRINE_CANON_V1.md",
+  "force_dimensions": [
+    "compute_power",
+    "tool_power",
+    "knowledge_power",
+    "authority_power",
+    "clarity_power",
+    "execution_power",
+    "validation_power",
+    "coordination_power"
+  ],
+  "visibility_contract": {
+    "owner_layer_first": true,
+    "metrics_layer_second": true,
+    "missing_force_is_warning": true,
+    "fake_strength_claim_forbidden": true
+  },
+  "mission_cost_templates": [
+    {
+      "mission_class": "bounded_ui_runtime_doctrine_delta",
+      "expected_cost_band": "MEDIUM",
+      "risk_band": "MEDIUM",
+      "validation_band": "MANDATORY"
+    },
+    {
+      "mission_class": "large_refactor_multi_module",
+      "expected_cost_band": "HIGH",
+      "risk_band": "HIGH",
+      "validation_band": "STRICT_MANDATORY"
+    },
+    {
+      "mission_class": "evidence_bundle_collection",
+      "expected_cost_band": "LOW_MEDIUM",
+      "risk_band": "LOW",
+      "validation_band": "MANIFEST_MANDATORY"
+    }
+  ],
+  "source_bindings": {
+    "machine_capability_manifest_path": "runtime/imperium_force/IMPERIUM_MACHINE_CAPABILITY_MANIFEST_V1.json",
+    "organ_strength_surface_path": "runtime/imperium_force/IMPERIUM_ORGAN_STRENGTH_SURFACE_V1.json"
+  }
+}

@@ -1,25 +1,88 @@
 {
-  "contract_version": "1.0.0",
+  "contract_version": "1.2.0",
   "contract_kind": "codex_output_mode",
   "status": "active",
   "scope_root": "E:\\CVVCODEX",
   "default_output_mode": "ultra_short_chat_bundle_first",
+  "economy_mode_default": "permanent_limit_economy",
+  "output_precedence": {
+    "order": [
+      "repo_reality_and_hard_gates",
+      "codex_output_discipline_policy",
+      "codex_output_mode_contract",
+      "task_specific_canonical_contracts",
+      "prompt_level_format_request"
+    ],
+    "prompt_level_override_allowed_only_with_explicit_owner_override": true,
+    "prompt_level_override_must_not_break_repo_hard_law": true
+  },
   "chat_surface": {
     "ultra_short_required_by_default": true,
     "navigation_only": true,
-    "preferred_sections_order": [
-      "STATUS",
-      "WHAT_WAS_CHANGED",
-      "BUNDLES_OR_FILES",
-      "IMPORTANT_LIMIT",
-      "NEXT_STEP"
+    "exact_artifact_paths_required_from_first_reply": true,
+    "receipt_only_default": true,
+    "single_bundle_root_path_only": true,
+    "bounded_result_block_default_for_step_classes": [
+      "fix",
+      "review",
+      "sync",
+      "packaging",
+      "verification"
     ],
+    "preferred_sections_order": [
+      "fixed",
+      "touched",
+      "sync",
+      "path",
+      "essence",
+      "next"
+    ],
+    "large_handoff_receipt_fallback_sections_order": [
+      "BUNDLE_ROOT",
+      "DONE",
+      "NEXT"
+    ],
+    "bounded_result_block_contract": {
+      "fixed": {
+        "max_lines": 2,
+        "summary_only": true
+      },
+      "touched": {
+        "layers_only_default": true,
+        "allow_one_critical_file_exception": true
+      },
+      "sync": {
+        "allowed_values": [
+          "PASS",
+          "FAIL"
+        ],
+        "local_domain_only": true
+      },
+      "path": {
+        "single_entrypoint_only": true,
+        "surrounding_prose_forbidden": true
+      },
+      "essence": {
+        "word_count_min": 2,
+        "word_count_max": 3
+      },
+      "next": {
+        "single_canonical_step_only": true,
+        "allow_single_arrow_chain": true
+      }
+    },
+    "hard_limits": {
+      "max_lines_preferred": 12,
+      "max_chat_chars_preferred": 900
+    },
     "forbidden_verbose_payloads_when_bundle_present": [
       "long_analytic_walkthrough",
       "deep_diff_dump",
       "matrix_dump",
       "inventory_dump",
-      "full_proof_chain_dump"
+      "full_proof_chain_dump",
+      "zip_list_dump",
+      "integration_report_mirror"
     ]
   },
   "bundle_surface": {
@@ -52,7 +115,8 @@
     "bundle_must_include_exclusions_map": true
   },
   "persistence": {
-    "workspace_default_until_explicit_user_override": true
+    "workspace_default_until_explicit_owner_override": true,
+    "limit_economy_mode_permanent_by_default": true
   },
   "completion_semantics": {
     "large_task_without_required_bundle_is_not_done": true,
@@ -61,13 +125,26 @@
       "BLOCKED"
     ]
   },
-  "non_goals": [
-    "bundle_lifecycle_cleanup_policy"
-  ],
+  "lifecycle": {
+    "ephemeral_bundle_ttl_policy_required": true,
+    "ttl_contract_path": "workspace_config/EPHEMERAL_BUNDLE_TTL_CONTRACT.json"
+  },
   "anchors": [
     "docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md",
+    "workspace_config/review_bundle_output_contract.json",
+    "docs/governance/CODEX_OUTPUT_PRECEDENCE_MODEL.md",
+    "docs/governance/OUTPUT_MODE_HARDENING_V1.md",
+    "docs/governance/LIMIT_ECONOMY_MODE_LAW_V1.md",
+    "docs/governance/CORE_DELTA_PROMPT_DISCIPLINE_V1.md",
+    "docs/governance/SHORT_FIRST_REPLY_LAW_V1.md",
+    "docs/governance/PRIMARY_TRUTH_NAME_AND_SINGLE_ARTIFACT_PATH_RESPONSE_CONTRACT_V1.md",
+    "docs/governance/CHECKPOINT_CAPSULE_CONTEXT_COMPRESSION_LAW_V1.md",
+    "docs/governance/OWNER_CHATGPT_CODEX_ECONOMY_WORKFLOW_V1.md",
     "docs/governance/MANUAL_SAFE_BUNDLE_STANDARD.md",
     "workspace_config/bundle_fallback_contract.json",
+    "workspace_config/limit_economy_mode_contract.json",
+    "docs/governance/EPHEMERAL_BUNDLE_TTL_POLICY_V1.md",
+    "workspace_config/EPHEMERAL_BUNDLE_TTL_CONTRACT.json",
     "MACHINE_CONTEXT.md",
     "REPO_MAP.md",
     "docs/INSTRUCTION_INDEX.md"

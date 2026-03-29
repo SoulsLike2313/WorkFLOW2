@@ -1,0 +1,37 @@
+﻿{
+  "surface_id": "IMPERIUM_GOLDEN_THRONE_DISCOVERABILITY_SURFACE_V1",
+  "version": "1.3.0",
+  "status": "SURROGATE_MAPPING_ACTIVE",
+  "source_path": "docs/governance/IMPERIUM_GOLDEN_THRONE_DISCOVERABILITY_CANON_V1.md",
+  "dedicated_named_bundle_exists": false,
+  "discoverability_status": "SURROGATE",
+  "confirmation_role": "machine_imperial_identity_confirmation_surface",
+  "authority_boundary": {
+    "discoverability_is_non_authority_source": true,
+    "authority_source_path": "docs/governance/GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json",
+    "constitution_rank_is_non_authority_source": true
+  },
+  "primary_surrogate_paths": [
+    "runtime/chatgpt_bundle_exports/deep_review_safe10_01_constitution_and_governance_bundle_manual_safe_bundle_20260324T202801Z.zip",
+    "docs/review_artifacts/OPERATOR_COMMAND_GOLDEN_PACK.json",
+    "docs/review_artifacts/operator_golden_response_pack.json",
+    "docs/review_artifacts/OPERATOR_PROGRAM_GOLDEN_PACK.json"
+  ],
+  "discovery_route": [
+    "docs/governance/SYSTEM_ENTRYPOINT_V1.md",
+    "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/02_MUTABLE_ACTIVE_STATE.md",
+    "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/MUTABLE_TRACKER.json"
+  ],
+  "operator_confirmation_hint_ru": "Проверка имперской машины идет через surrogate mapping по существующим repo-visible surface paths.",
+  "discoverability_path_contract_ru": [
+    "Открыть SYSTEM_ENTRYPOINT_V1 и подтвердить текущий имперский контур",
+    "Проверить MUTABLE_ACTIVE_STATE для актуального primary bundle",
+    "Сверить surrogate paths и факт существования файлов"
+  ],
+  "truth_boundary": {
+    "no_fake_named_bundle_creation": true,
+    "surrogate_mapping_must_stay_explicit": true,
+    "mythology_without_file_truth_forbidden": true,
+    "truth_class": "SOURCE_EXACT"
+  }
+}

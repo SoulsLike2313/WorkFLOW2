@@ -12,8 +12,8 @@
   "rank_resolution_rules": {
     "repo_copy_only": "ASTARTES",
     "repo_copy_plus_genome_bundle": "PRIMARCH",
-    "repo_copy_plus_local_sovereign_substrate": "EMPEROR",
-    "repo_copy_plus_genome_plus_local_sovereign_substrate": "EMPEROR"
+    "repo_copy_plus_golden_throne_authority_anchor": "EMPEROR",
+    "repo_copy_plus_genome_plus_golden_throne_authority_anchor": "EMPEROR"
   },
   "rank_resolution_disambiguation": {
     "substrate_decisive_when_present": true,
@@ -22,7 +22,7 @@
   },
   "rank_derived_machine_mode_map": {
     "EMPEROR": {
-      "machine_mode": "creator",
+      "machine_mode": "emperor",
       "helper_tier": null
     },
     "PRIMARCH": {
@@ -59,6 +59,7 @@
   "forbidden_shortcuts": [
     "repo_copy_never_grants_primarch_or_emperor_without_extra_local_layer",
     "creator_authority_never_required_for_emperor_v2",
+    "golden_throne_authority_anchor_is_single_sovereign_source_for_emperor",
     "genome_bundle_never_grants_emperor",
     "legacy_emperor_env_fallback_must_not_be_authority_source",
     "safe_mirror_or_portable_bundle_never_grants_emperor",

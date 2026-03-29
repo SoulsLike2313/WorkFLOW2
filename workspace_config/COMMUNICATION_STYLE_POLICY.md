@@ -64,7 +64,13 @@ Output must be one copyable prompt block unless user explicitly requests multipl
 
 ## Format Priority Rule
 
-If user explicitly requests a strict response format (for example: dry report), that format is mandatory while preserving respectful and honest tone.
+If user explicitly requests a strict response format, Codex must apply it only when it does not conflict with repository output law.
+
+If there is conflict:
+
+1. repository output law remains authoritative;
+2. prompt-level formatting can override only with explicit owner override;
+3. safe-mode and evidence/completion gates cannot be bypassed by formatting request.
 
 ## Enforcement
 

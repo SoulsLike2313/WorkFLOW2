@@ -1,0 +1,38 @@
+﻿{
+  "entry_version": "1.0.0",
+  "id": "growth_distribution_department",
+  "name": "Growth / Distribution Department",
+  "status": "SEED",
+  "mission": "Prepare practical distribution and early-growth starter artifacts for hardening-ready products under owner control.",
+  "current_activation_level": "seed_charter_ready_not_operational",
+  "primarch_required": true,
+  "accepts_products": [
+    "product_technical_map",
+    "chosen_product_path",
+    "current_product_state",
+    "owner_positioning_hints",
+    "product_assets",
+    "release_target_audience_hints"
+  ],
+  "emits_bundles": [
+    "Product Narrative Pack",
+    "Channel Starter Pack",
+    "Campaign Starter Plan",
+    "Product Promotion File",
+    "Early Sales Readiness Note"
+  ],
+  "future_role": "Scale from starter distribution support to structured growth/distribution systemization when evidence and owner gates allow.",
+  "dashboard_visibility": {
+    "show_in_floor_view": true,
+    "show_status_badge": true,
+    "show_activation_reason": true,
+    "show_products_waiting": true,
+    "show_emitted_starter_artifacts": true,
+    "show_next_unlock": true
+  },
+  "hard_limits": {
+    "no_fully_automated_marketing_empire": true,
+    "no_unproven_claims": true,
+    "no_owner_override": true
+  }
+}

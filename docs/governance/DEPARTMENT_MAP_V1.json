@@ -1,0 +1,259 @@
+{
+  "map_version": "1.1.0",
+  "map_kind": "federated_production_department_map",
+  "status": "active_seed_operational_split",
+  "current_stage_model": "one_active_department_plus_seed_departments",
+  "evidence_labels": [
+    "PROVEN",
+    "REUSABLE",
+    "DESIGNED",
+    "NOT_YET_IMPLEMENTED"
+  ],
+  "departments": [
+    {
+      "department_name": "Analytics Department",
+      "state": "ACTIVE",
+      "evidence_status": "PROVEN",
+      "mission": "intake, primary audit, technical mapping, initial roadmap",
+      "inputs": [
+        "idea_seed",
+        "demo_seed",
+        "raw_app_seed",
+        "project_bundle",
+        "message_about_app_creation"
+      ],
+      "outputs": [
+        "Technical Map Bundle",
+        "Gap Map",
+        "Routing Recommendation",
+        "Department Activation Proposal"
+      ],
+      "required_authority": [
+        "PRIMARCH_operational_oversight",
+        "ASTARTES_bounded_execution"
+      ],
+      "must_never_do": [
+        "sovereign_acceptance_claim",
+        "constitutional_mutation",
+        "fake_completion_claim"
+      ],
+      "activation_rule": "default first active department in production flow",
+      "consumes": [
+        "Intake Bundle",
+        "existing_runtime_evidence"
+      ],
+      "emits": [
+        "Technical Map Bundle",
+        "Department Synthesis Bundle",
+        "Handoff Bundle"
+      ]
+    },
+    {
+      "department_name": "Engineering Department",
+      "state": "SEED",
+      "evidence_status": "REUSABLE",
+      "mission": "bounded implementation of approved roadmap",
+      "inputs": [
+        "approved_technical_map",
+        "Task Bundle"
+      ],
+      "outputs": [
+        "implementation_artifacts",
+        "Astartes Result Bundle",
+        "Department Synthesis Bundle"
+      ],
+      "required_authority": [
+        "PRIMARCH_department_command",
+        "ASTARTES_bound_task_slots"
+      ],
+      "must_never_do": [
+        "release_self_approval",
+        "verification_bypass"
+      ],
+      "activation_rule": "activated when wave execution is started by owner-approved checkpoints",
+      "consumes": [
+        "Task Bundle",
+        "Handoff Bundle"
+      ],
+      "emits": [
+        "Astartes Result Bundle",
+        "Department Synthesis Bundle"
+      ]
+    },
+    {
+      "department_name": "Verification Department",
+      "state": "SEED",
+      "evidence_status": "REUSABLE",
+      "mission": "test-backed validation and release risk detection",
+      "inputs": [
+        "engineering_outputs",
+        "verification_targets",
+        "test_plan"
+      ],
+      "outputs": [
+        "verification_report",
+        "Blocker/Incident Bundle",
+        "Completion recommendation"
+      ],
+      "required_authority": [
+        "PRIMARCH_verification_oversight",
+        "ASTARTES_execution_slots"
+      ],
+      "must_never_do": [
+        "pass_without_evidence",
+        "hide_failed_checks"
+      ],
+      "activation_rule": "activated before release decision",
+      "consumes": [
+        "Department Synthesis Bundle",
+        "Task Bundle"
+      ],
+      "emits": [
+        "Blocker/Incident Bundle",
+        "Completion Bundle candidate"
+      ]
+    },
+    {
+      "department_name": "Release & Integration Department",
+      "state": "SEED",
+      "evidence_status": "REUSABLE",
+      "mission": "prepare release package and controlled integration handoff",
+      "inputs": [
+        "verified_candidate",
+        "release_constraints",
+        "integration_requirements"
+      ],
+      "outputs": [
+        "Release Bundle",
+        "release_readiness_report",
+        "integration_handoff"
+      ],
+      "required_authority": [
+        "PRIMARCH_release_control",
+        "EMPEROR_final_signoff_boundary"
+      ],
+      "must_never_do": [
+        "canonical_acceptance_claim_without_gate_chain",
+        "skip_blocker_reporting"
+      ],
+      "activation_rule": "activated after verification pass candidate",
+      "consumes": [
+        "Completion Bundle",
+        "verification_evidence"
+      ],
+      "emits": [
+        "Release Bundle",
+        "Handoff Bundle"
+      ]
+    },
+    {
+      "department_name": "Tooling & Infrastructure Department",
+      "state": "SEED",
+      "evidence_status": "REUSABLE",
+      "mission": "remove recurring delivery friction via deterministic tools",
+      "inputs": [
+        "friction_reports",
+        "execution_bottlenecks",
+        "operational_metrics"
+      ],
+      "outputs": [
+        "tooling_patches",
+        "infra_improvement_plan",
+        "automation_helpers"
+      ],
+      "required_authority": [
+        "PRIMARCH_tooling_direction"
+      ],
+      "must_never_do": [
+        "broad_unapproved_refactor",
+        "silent_policy_change"
+      ],
+      "activation_rule": "activated when repeated friction blocks throughput",
+      "consumes": [
+        "Blocker/Incident Bundle",
+        "metrics_bundle"
+      ],
+      "emits": [
+        "Task Bundle templates",
+        "tooling_synthesis"
+      ]
+    },
+    {
+      "department_name": "Product Intelligence / Research Department",
+      "state": "SEED",
+      "evidence_status": "REUSABLE",
+      "mission": "validate product direction, constraints, and prioritization",
+      "inputs": [
+        "product_goal",
+        "analytics_outputs",
+        "context_constraints"
+      ],
+      "outputs": [
+        "priority_decision_memo",
+        "product_constraint_map",
+        "research_synthesis"
+      ],
+      "required_authority": [
+        "PRIMARCH_research_direction"
+      ],
+      "must_never_do": [
+        "release_readiness_claim",
+        "technical_acceptance_claim_without_validation"
+      ],
+      "activation_rule": "activated when product ambiguity blocks quality decisions",
+      "consumes": [
+        "Intake Bundle",
+        "Technical Map Bundle"
+      ],
+      "emits": [
+        "Department Synthesis Bundle",
+        "Handoff Bundle"
+      ]
+    },
+    {
+      "department_name": "Growth / Distribution Department",
+      "state": "SEED",
+      "evidence_status": "ACTIVE",
+      "mission": "prepare starter distribution and early-sales entry artifacts for hardening-ready products",
+      "inputs": [
+        "product_technical_map",
+        "chosen_product_path",
+        "current_product_state",
+        "owner_approved_positioning_hints",
+        "product_assets"
+      ],
+      "outputs": [
+        "Product Narrative Pack",
+        "Channel Starter Pack",
+        "Campaign Starter Plan",
+        "Product Promotion File",
+        "Early Sales Readiness Note"
+      ],
+      "required_authority": [
+        "PRIMARCH_growth_oversight",
+        "OWNER_gate_control"
+      ],
+      "must_never_do": [
+        "fully_automated_growth_empire_claim",
+        "unproven_marketing_claims",
+        "owner_positioning_override"
+      ],
+      "activation_rule": "seed-active support layer after hardening baseline and owner positioning approval",
+      "consumes": [
+        "Technical Map Bundle",
+        "owner_positioning_hints",
+        "product_asset_pack"
+      ],
+      "emits": [
+        "Channel Starter Pack",
+        "Campaign Starter Plan",
+        "Product Promotion File"
+      ]
+    }
+  ],
+  "hard_boundaries": [
+    "analytics_department_is_current_operational_head",
+    "seed_departments_exist_but_do_not_claim_full_operational_automation",
+    "department_mapping_does_not_grant_sovereign_authority"
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "contract_version": "1.1.0",
+  "contract_kind": "imperium_review_bundle_output",
+  "status": "active",
+  "scope_root": "E:\\CVVCODEX",
+  "review_root_pattern": "docs/review_artifacts/<step_folder>",
+  "required_review_files": [
+    "00_REVIEW_ENTRYPOINT.md",
+    "01_INTEGRATION_REPORT.md",
+    "02_VALIDATION_REPORT.md",
+    "03_TRUTH_CHECK_AND_GAPS.md",
+    "04_CHANGED_SURFACES.md",
+    "05_API_SMOKE.json",
+    "06_BUNDLE_INCLUDE_PATHS.txt",
+    "07_MACHINE_CAPABILITY_MANIFEST_SNAPSHOT.json",
+    "08_ORGAN_STRENGTH_SNAPSHOT.json",
+    "09_NODE_RANK_DETECTION_SNAPSHOT.json",
+    "10_MACHINE_MODE_SNAPSHOT.json",
+    "11_CONSTITUTION_STATUS_SNAPSHOT.json"
+  ],
+  "archive_split_policy": {
+    "enabled": true,
+    "part_size_mb": 10,
+    "part_naming": "<archive>.partNNN"
+  },
+  "chatgpt_transfer_policy": {
+    "enabled": true,
+    "folder_name": "chatgpt_transfer",
+    "layout": "compact_core_layered_visual_optional",
+    "archive_first_required": true,
+    "part_size_mb_target": 32,
+    "part_size_mb_min": 20,
+    "part_size_mb_max": 40,
+    "ideal_parts_min": 1,
+    "ideal_parts_max": 3,
+    "max_parts_per_wave": 15,
+    "max_parts_hard_limit": 15,
+    "max_loose_helper_files": 3,
+    "allowed_outer_helper_files": [
+      "<step_id>__00_CHATGPT_TRANSFER_README.md",
+      "<step_id>__chatgpt_transfer_manifest.json",
+      "<step_id>__chatgpt_transfer_manifest.md"
+    ],
+    "step_id_prefix_required": true,
+    "core_archive_prefix": "core_chatgpt_transfer",
+    "visual_archive_prefix": "visual_chatgpt_transfer",
+    "optional_archive_prefix": "optional_chatgpt_transfer",
+    "part_naming": "<prefix>.partXXofNN",
+    "core_required": true,
+    "include_seed_capsule_root": true,
+    "seed_capsule_root": "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1",
+    "allowed_review_roots_in_core": [
+      "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1"
+    ],
+    "core_max_text_file_mb": 5,
+    "core_text_extensions": [
+      ".md",
+      ".txt",
+      ".json",
+      ".yaml",
+      ".yml",
+      ".toml",
+      ".ini",
+      ".cfg",
+      ".csv",
+      ".tsv",
+      ".xml",
+      ".html",
+      ".htm",
+      ".py",
+      ".js",
+      ".css",
+      ".ps1",
+      ".sh",
+      ".bat"
+    ],
+    "include_paths_files": [
+      "06_BUNDLE_INCLUDE_PATHS.txt",
+      "14_ARCHIVE_INCLUDE_PATHS.txt"
+    ]
+  },
+  "retention_policy": {
+    "ttl_hours": 24,
+    "janitor_script": "scripts/ttl_bundle_janitor.py",
+    "apply_mode_allowed": true,
+    "requires_report": true
+  },
+  "anchors": [
+    "docs/governance/CANONICAL_TRUTH_REVIEW_BUNDLE_LAW_V1.md",
+    "docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md",
+    "docs/governance/EPHEMERAL_BUNDLE_TTL_POLICY_V1.md",
+    "workspace_config/EPHEMERAL_BUNDLE_TTL_CONTRACT.json",
+    "scripts/imperium_bundle_output_enforcer.py",
+    "scripts/ttl_bundle_janitor.py"
+  ]
+}

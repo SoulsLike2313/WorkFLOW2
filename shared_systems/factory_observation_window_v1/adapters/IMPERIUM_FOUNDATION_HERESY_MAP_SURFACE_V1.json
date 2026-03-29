@@ -1,0 +1,67 @@
+{
+  "surface_id": "IMPERIUM_FOUNDATION_HERESY_MAP_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "generated_at_utc": "2026-03-28T08:22:35Z",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "runtime/administratum/IMPERIUM_FOUNDATION_HERESY_MAP_V1.json",
+  "payload": {
+    "surface_id": "IMPERIUM_FOUNDATION_HERESY_MAP_V1",
+    "generated_at_utc": "2026-03-28T08:22:35Z",
+    "truth_class": "SOURCE_EXACT",
+    "status": "PASS",
+    "active_heresy_count": 0,
+    "map": [
+      {
+        "class_id": "stale_or_conflicting_current_point_surface",
+        "location": "seed-facing pointer surfaces",
+        "source_mechanism": "stale regeneration or missing current-point token",
+        "detected": false,
+        "detection_surface": "runtime/administratum/IMPERIUM_TRUTH_SPINE_V1.json",
+        "blocker_surface": "truth_spine_gate",
+        "remediation_path": "refresh seed pointers from mutable authority and re-run truth convergence",
+        "recurrence_risk": "HIGH"
+      },
+      {
+        "class_id": "dashboard_truth_drift",
+        "location": "dashboard/live-state rendering chain",
+        "source_mechanism": "derived display not aligned with authoritative runtime state",
+        "detected": false,
+        "detection_surface": "runtime/administratum/IMPERIUM_DASHBOARD_TRUTH_ENGINE_V1.json",
+        "blocker_surface": "dashboard_truth_engine_gate",
+        "remediation_path": "force dashboard truth checks + visual audit + re-render from truth spine only",
+        "recurrence_risk": "MEDIUM"
+      },
+      {
+        "class_id": "bundle_shell_core_result_mismatch",
+        "location": "transfer layer / bundle transport chain",
+        "source_mechanism": "manifest/core/final divergence",
+        "detected": false,
+        "detection_surface": "runtime/administratum/IMPERIUM_BUNDLE_TRUTH_CHAMBER_V1.json",
+        "blocker_surface": "bundle_truth_chamber_gate",
+        "remediation_path": "rebuild bundle -> self-read -> enforcer until PASS convergence",
+        "recurrence_risk": "HIGH"
+      },
+      {
+        "class_id": "inquisition_bypass_or_soft_hold",
+        "location": "verdict-chain gating",
+        "source_mechanism": "fail-state not held or direct action not armed",
+        "detected": false,
+        "detection_surface": "runtime/administratum/IMPERIUM_INQUISITION_LOOP_V1.json",
+        "blocker_surface": "inquisition_truth_guard_gate",
+        "remediation_path": "enable direct-action hold and block-forward policy",
+        "recurrence_risk": "HIGH"
+      },
+      {
+        "class_id": "worktree_purity_truth_blur",
+        "location": "repo cleanliness + truth representation",
+        "source_mechanism": "impurity masking or unclassified dirty baseline",
+        "detected": false,
+        "detection_surface": "runtime/administratum/IMPERIUM_WORKTREE_PURITY_GATE_V1.json",
+        "blocker_surface": "worktree_purity_gate",
+        "remediation_path": "reclassify baseline + enforce purity gate before progress",
+        "recurrence_risk": "MEDIUM"
+      }
+    ]
+  }
+}

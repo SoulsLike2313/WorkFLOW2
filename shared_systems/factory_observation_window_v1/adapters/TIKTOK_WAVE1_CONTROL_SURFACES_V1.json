@@ -1,0 +1,411 @@
+﻿{
+    "surface_id":  "TIKTOK_WAVE1_CONTROL_SURFACES_V1",
+    "version":  "2.2.0",
+    "product_id":  "tiktok_agent_platform",
+    "wave_id":  "wave_1_must_fix_foundation",
+    "wave_status_surface":  {
+                                "status":  "CLOSED_BY_OWNER",
+                                "claim":  "WAVE_1_CLOSED_BY_OWNER",
+                                "objective":  "must_fix_foundation",
+                                "next_action":  "POST_WAVE1_TRANCHE_B_OWNER_LIVE_SYSTEM_INTEGRATED_ACTIVE",
+                                "active_tranche_id":  "TRANCHE_1_TRUTH_ALIGNMENT_AND_RISK_BASELINE",
+                                "active_tranche_state":  "CLOSED_BY_OWNER",
+                                "current_focus":  "post_wave1_bounded_tranche_b_integrated_owner_live_system_execution",
+                                "closure_artifact":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_MANUAL_CLOSURE_ARTIFACT_V1.md"
+                            },
+    "first_tranche_execution":  {
+                                    "tranche_id":  "TRANCHE_1_TRUTH_ALIGNMENT_AND_RISK_BASELINE",
+                                    "scope":  [
+                                                  "live_state_truth_sync_fix",
+                                                  "owner_window_localhost_live_launch",
+                                                  "trust_ui_verification_reconciliation_start",
+                                                  "product_ui_validation_truth_execution",
+                                                  "wave_control_and_live_milestone_sync",
+                                                  "behavior_level_verification_depth_delta",
+                                                  "release_shape_truth_cleanup_delta",
+                                                  "owner_checkpoint_review_consolidation",
+                                                  "dependency_contract_truth_alignment_delta_v4",
+                                                  "dependency_contract_remainder_closure_delta_v5_execution",
+                                                  "backend_readiness_remainder_closure_delta_v6_execution"
+                                              ],
+                                    "status":  "CLOSED_BY_OWNER",
+                                    "started_at_utc":  "2026-03-22T19:00:00Z",
+                                    "evidence_anchor":  "docs/review_artifacts/TIKTOK_WAVE1_TRANCHE_DELTA_V6_INTEGRATION_REPORT_V1.md",
+                                    "active_workset":  [
+                                                           {
+                                                               "work_id":  "W1-TR1-001",
+                                                               "title":  "owner_window_localhost_live_launch_and_observation",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "docs/review_artifacts/OWNER_WINDOW_LIVE_LAUNCH_REPORT_V1.md",
+                                                                                "docs/review_artifacts/OWNER_WINDOW_VISUAL_REVIEW_REPORT_V1.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-002",
+                                                               "title":  "live_state_canonical_projection_compatibility_fix",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "shared_systems/factory_observation_window_v1/app/local_factory_observation_server.py",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_LIVE_RUN_VALIDATION_REPORT_V1.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-003",
+                                                               "title":  "verification_truth_alignment_foundation_start",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_TRANCHE1_PROGRESS_REPORT_V1.md",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_VERIFICATION_TRUTH_ALIGNMENT_BOARD_V1.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-005",
+                                                               "title":  "ui_validation_truth_reconciliation_execution",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/ui_validation_summary.json",
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260323T074606Z/verification_summary.json",
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/verify.py"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-006",
+                                                               "title":  "wave_control_and_live_product_milestone_sync",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V1.md",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_PREPARATION_REPORT_V1.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-007",
+                                                               "title":  "behavior_and_release_truth_delta_execution",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/ui_validation_summary.json",
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260323T094249Z/readiness_summary.json",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V2.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-008",
+                                                               "title":  "gate_d_checkpoint_packaging_and_remainder_tracking",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_POSTURE_REPORT_V2.md",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_LIVE_FIX_PRODUCT_HISTORY_REMAINING_GAPS_V1.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-009",
+                                                               "title":  "verification_release_shape_remainder_strengthening",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/ui_validation_summary.json",
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260323T103024Z/readiness_summary.json",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V3.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-010",
+                                                               "title":  "gate_d_checkpoint_upgrade_with_delta_03_remainder_tracking",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_PREPARATION_REPORT_V3.md",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_TRANCHE_DELTA_V3_REMAINING_GAPS_V1.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-011",
+                                                               "title":  "owner_checkpoint_review_consolidation_without_premature_pass",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_REVIEW_CONSOLIDATED_STATE_V1.md",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_READINESS_REPORT_V1.md",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_REMAINDER_MAP_V1.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-012",
+                                                               "title":  "dependency_contract_truth_alignment_delta_v4_execution",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/readiness.py",
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/verify.py",
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260323T131855Z/readiness_summary.json",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V4.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-013",
+                                                               "title":  "owner_checkpoint_posture_refresh_after_delta_v4",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_PREPARATION_REPORT_V4.md",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_GATE_CHECKPOINT_SURFACE_V1.md",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_PREPARATION_REPORT_V5.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-014",
+                                                               "title":  "dependency_contract_remainder_closure_delta_v5_execution",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/verify.py",
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260324T163716Z/readiness_summary.json",
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260324T163716Z/verification_summary.json",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V5.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-015",
+                                                               "title":  "backend_readiness_remainder_closure_delta_v6_execution",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/verify.py",
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/startup_manager.py",
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260324T190530Z/verification_summary.json",
+                                                                                "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260324T190530Z/readiness_summary.json",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V6.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-016",
+                                                               "title":  "owner_checkpoint_review_after_delta06_consolidation",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_REVIEW_DELTA06_CONSOLIDATED_STATE_V1.md",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_REVIEW_DELTA06_READINESS_REPORT_V1.md",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_REVIEW_DELTA06_REMAINDER_MAP_V1.md"
+                                                                            ]
+                                                           },
+                                                           {
+                                                               "work_id":  "W1-TR1-017",
+                                                               "title":  "owner_manual_closure_sync",
+                                                               "status":  "PROVEN",
+                                                               "evidence":  [
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_MANUAL_CLOSURE_ARTIFACT_V1.md",
+                                                                                "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CLOSURE_SYNC_INTEGRATION_REPORT_V1.md"
+                                                                            ]
+                                                           }
+                                                       ],
+                                    "closed_at_utc":  "2026-03-24T20:52:00Z"
+                                },
+    "post_wave1_bounded_stage":  {
+                                     "stage_id":  "POST_WAVE1_STAGE_B",
+                                     "status":  "IN_PROGRESS",
+                                     "active_tranche_id":  "POST_WAVE1_TRANCHE_B_OWNER_LIVE_SYSTEM_INTEGRATED",
+                                     "started_at_utc":  "2026-03-25T08:18:37Z",
+                                     "current_focus":  "integrated_agent_runtime_dashboard_brain_prompt_lineage_observability",
+                                     "worksets":  [
+                                                      {
+                                                          "work_id":  "P2-TR1-001",
+                                                          "title":  "user_mode_orchestration_seam_split",
+                                                          "status":  "PROVEN",
+                                                          "evidence":  [
+                                                                           "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/user_mode_orchestrator.py",
+                                                                           "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/launcher.py",
+                                                                           "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/tests_pytest/test_user_mode_orchestrator.py"
+                                                                       ]
+                                                      },
+                                                      {
+                                                          "work_id":  "P2-TR1-002",
+                                                          "title":  "startup_probe_diagnostics_hardening",
+                                                          "status":  "PROVEN",
+                                                          "evidence":  [
+                                                                           "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/startup_manager.py",
+                                                                           "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/verify.py",
+                                                                           "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/tests_pytest/test_startup_manager.py"
+                                                                       ]
+                                                      },
+                                                      {
+                                                          "work_id":  "P2-TR1-003",
+                                                          "title":  "prompt_lineage_observability_surface",
+                                                          "status":  "PROVEN",
+                                                          "evidence":  [
+                                                                           "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/prompt_lineage.py",
+                                                                           "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/workspace/api.py",
+                                                                           "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/tests_pytest/test_prompt_lineage.py"
+                                                                       ]
+                                                      },
+                                                      {
+                                                          "work_id":  "P2-TR2-001",
+                                                          "title":  "integrated_runtime_observability_and_owner_live_projection_hardening",
+                                                          "status":  "PROVEN",
+                                                          "evidence":  [
+                                                                           "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/runtime_observability.py",
+                                                                           "shared_systems/factory_observation_window_v1/app/local_factory_observation_server.py",
+                                                                           "shared_systems/factory_observation_window_v1/web/app.js",
+                                                                           "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/workspace/api.py"
+                                                                       ]
+                                                      }
+                                                  ],
+                                     "claim_boundary":  "NO_WAVE2_COMPLETION_CLAIM"
+                                 },
+    "contradiction_ledger":  {
+                                 "open":  [
+                                              {
+                                                  "id":  "p2-ctr-001",
+                                                  "severity":  "medium",
+                                                  "title":  "post-wave1 runtime seam and observability remainder",
+                                                  "status":  "OPEN_PARTIAL_DELTA_TRANCHE_B",
+                                                  "open_evidence":  "docs/review_artifacts/TIKTOK_OWNER_LIVE_SYSTEM_INTEGRATED_TRANCHE_INTEGRATION_REPORT_V1.md"
+                                              }
+                                          ],
+                                 "closed":  [
+                                                {
+                                                    "id":  "w1-ctr-002",
+                                                    "severity":  "medium",
+                                                    "title":  "live-state known canon fields returned UNKNOWN due shape mismatch",
+                                                    "status":  "CLOSED_BY_TRANCHE_1",
+                                                    "closure_evidence":  "docs/review_artifacts/STATE_SYNC_OWNER_WINDOW_LIVE_LAYER_FIX_VALIDATION_REPORT_V1.md"
+                                                },
+                                                {
+                                                    "id":  "w1-ctr-001",
+                                                    "severity":  "high",
+                                                    "title":  "verification-truth-vs-ui-state mismatch risk",
+                                                    "status":  "CLOSED_BY_OWNER_DECISION_AFTER_DELTA06",
+                                                    "closure_evidence":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_MANUAL_CLOSURE_ARTIFACT_V1.md"
+                                                }
+                                            ],
+                                 "delta":  [
+                                               {
+                                                   "delta_id":  "w1-ctr-001-delta-01",
+                                                   "status":  "PROVEN",
+                                                   "summary":  "Fresh UI validation PASS + verification UI-truth lane integrated; stale mismatch path removed.",
+                                                   "evidence":  [
+                                                                    "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V1.md",
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/ui_validation_summary.json"
+                                                                ]
+                                               },
+                                               {
+                                                   "delta_id":  "w1-ctr-001-delta-02",
+                                                   "status":  "PROVEN",
+                                                   "summary":  "Behavior-level verification depth and release-shape truth cleanup now produce explicit proof payloads in verification lane.",
+                                                   "evidence":  [
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260323T094249Z/readiness_summary.json",
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/verify.py",
+                                                                    "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V2.md"
+                                                                ]
+                                               },
+                                               {
+                                                   "delta_id":  "w1-ctr-001-delta-03",
+                                                   "status":  "PROVEN",
+                                                   "summary":  "Root-vs-latest run alignment and required release-shape state coverage are explicit hard checks in verification lane.",
+                                                   "evidence":  [
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260323T103024Z/readiness_summary.json",
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/scripts/ui_validate.py",
+                                                                    "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V3.md"
+                                                                ]
+                                               },
+                                               {
+                                                   "delta_id":  "w1-ctr-001-delta-04",
+                                                   "status":  "PROVEN",
+                                                   "summary":  "Dependency-contract truth lane is explicit: runtime/readiness and test suites now classify missing dependencies as partial-verification evidence instead of opaque import failure.",
+                                                   "evidence":  [
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/readiness.py",
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/verify.py",
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260323T131855Z/verification_summary.json",
+                                                                    "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V4.md"
+                                                                ]
+                                               },
+                                               {
+                                                   "delta_id":  "w1-ctr-001-delta-05",
+                                                   "status":  "PROVEN",
+                                                   "summary":  "Dependency-contract remainder was closed on canonical machine via verify bootstrap; api smoke and pytest moved to fully verified, while backend readiness remainder remains open.",
+                                                   "evidence":  [
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/verify.py",
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260324T163716Z/verification_summary.json",
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260324T163716Z/readiness_summary.json",
+                                                                    "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V5.md"
+                                                                ]
+                                               },
+                                               {
+                                                   "delta_id":  "w1-ctr-001-delta-06",
+                                                   "status":  "PROVEN",
+                                                   "summary":  "Backend readiness/connectivity remainder was closed in bounded v6 run via proxy-safe localhost checks and safe port fallback discipline.",
+                                                   "evidence":  [
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/verify.py",
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/startup_manager.py",
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260324T190530Z/verification_summary.json",
+                                                                    "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/verification/verify-20260324T190530Z/readiness_summary.json",
+                                                                    "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V6.md"
+                                                                ]
+                                               }
+                                           ],
+                                 "rule":  "history_preserved_owner_closure_recorded"
+                             },
+    "baseline_risk_board":  {
+                                "critical":  0,
+                                "high":  0,
+                                "medium":  2,
+                                "low":  4,
+                                "top_risks":  [
+                                                  "post_wave1_runtime_observability_consistency_drift",
+                                                  "owner_window_truth_sync_must_remain_current",
+                                                  "prompt_lineage_boundary_must_stay_honest",
+                                                  "wave_2_scope_not_started"
+                                              ]
+                            },
+    "verification_truth_alignment_board":  {
+                                               "target":  "verification_and_ui_truth_alignment",
+                                               "current_state":  "POST_WAVE1_TRANCHE_B_INTEGRATED_ACTIVE",
+                                               "required_evidence":  [
+                                                                         "workspace_runtime_observability_endpoint_200",
+                                                                         "runtime_observability_pytest_surface",
+                                                                         "owner_window_live_runtime_projection",
+                                                                         "prompt_lineage_boundary_honesty",
+                                                                         "control_brain_conflict_visibility",
+                                                                         "post_wave1_tranche_b_validation_chain"
+                                                                     ],
+                                               "must_not_claim":  [
+                                                                      "wave_2_done",
+                                                                      "release_grade_auto_claim_without_new_scope"
+                                                                  ]
+                                           },
+    "owner_gate_checkpoint_surface":  {
+                                          "current_checkpoint":  "POST_WAVE1_TRANCHE_B_INTEGRATION_ACTIVE",
+                                          "required_owner_confirmations":  [
+                                                                               "option_b_locked",
+                                                                               "gate_c_visual_direction_locked",
+                                                                               "tranche_1_delta_chain_reviewed",
+                                                                               "w1_ctr001_partial_closure_delta06_reviewed",
+                                                                               "gate_d_owner_decision_pending_acknowledged",
+                                                                               "owner_checkpoint_review_delta06_consolidated",
+                                                                               "owner_manual_gate_d_and_wave1_closure_recorded"
+                                                                           ],
+                                          "next_checkpoint":  "POST_WAVE1_TRANCHE_B_OWNER_REVIEW_REQUIRED"
+                                      },
+    "truth_links":  {
+                        "contradiction_ledger_doc":  "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_LEDGER_V1.md",
+                        "baseline_risk_doc":  "docs/review_artifacts/TIKTOK_WAVE1_BASELINE_RISK_BOARD_V1.md",
+                        "verification_alignment_doc":  "docs/review_artifacts/TIKTOK_WAVE1_VERIFICATION_TRUTH_ALIGNMENT_BOARD_V1.md",
+                        "wave_status_doc":  "docs/review_artifacts/TIKTOK_WAVE1_STATUS_SURFACE_V1.md",
+                        "owner_checkpoint_doc":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_GATE_CHECKPOINT_SURFACE_V1.md",
+                        "checkpoint_consolidated_state_doc":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_REVIEW_DELTA06_CONSOLIDATED_STATE_V1.md",
+                        "checkpoint_readiness_doc":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_REVIEW_DELTA06_READINESS_REPORT_V1.md",
+                        "checkpoint_remainder_doc":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_REVIEW_DELTA06_REMAINDER_MAP_V1.md",
+                        "contradiction_delta_v4_doc":  "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V4.md",
+                        "tranche_delta_v4_integration_doc":  "docs/review_artifacts/TIKTOK_WAVE1_TRANCHE_DELTA_V4_INTEGRATION_REPORT_V1.md",
+                        "tranche_delta_v4_validation_doc":  "docs/review_artifacts/TIKTOK_WAVE1_TRANCHE_DELTA_V4_VALIDATION_REPORT_V1.md",
+                        "tranche_delta_v4_checkpoint_doc":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_PREPARATION_REPORT_V4.md",
+                        "contradiction_delta_v5_doc":  "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V5.md",
+                        "tranche_delta_v5_integration_doc":  "docs/review_artifacts/TIKTOK_WAVE1_TRANCHE_DELTA_V5_INTEGRATION_REPORT_V1.md",
+                        "tranche_delta_v5_validation_doc":  "docs/review_artifacts/TIKTOK_WAVE1_TRANCHE_DELTA_V5_VALIDATION_REPORT_V1.md",
+                        "tranche_delta_v5_checkpoint_doc":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_PREPARATION_REPORT_V5.md",
+                        "contradiction_delta_v6_doc":  "docs/review_artifacts/TIKTOK_WAVE1_CONTRADICTION_DELTA_REPORT_V6.md",
+                        "tranche_delta_v6_integration_doc":  "docs/review_artifacts/TIKTOK_WAVE1_TRANCHE_DELTA_V6_INTEGRATION_REPORT_V1.md",
+                        "tranche_delta_v6_validation_doc":  "docs/review_artifacts/TIKTOK_WAVE1_TRANCHE_DELTA_V6_VALIDATION_REPORT_V1.md",
+                        "tranche_delta_v6_checkpoint_doc":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_PREPARATION_REPORT_V6.md",
+                        "checkpoint_review_delta06_integration_doc":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CHECKPOINT_REVIEW_DELTA06_INTEGRATION_REPORT_V1.md",
+                        "owner_manual_closure_artifact_doc":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_MANUAL_CLOSURE_ARTIFACT_V1.md",
+                        "owner_closure_sync_report_doc":  "docs/review_artifacts/TIKTOK_WAVE1_OWNER_CLOSURE_SYNC_INTEGRATION_REPORT_V1.md",
+                        "post_wave1_tranche_a_integration_doc":  "docs/review_artifacts/TIKTOK_NEXT_STAGE_TRANCHE_A_INTEGRATION_REPORT_V1.md",
+                        "post_wave1_tranche_a_validation_doc":  "docs/review_artifacts/TIKTOK_NEXT_STAGE_TRANCHE_A_VALIDATION_REPORT_V1.md",
+                        "post_wave1_contradiction_delta_doc":  "docs/review_artifacts/TIKTOK_POST_WAVE1_TRANCHE_A_CONTRADICTION_DELTA_REPORT_V1.md",
+                        "post_wave1_tranche_b_integration_doc":  "docs/review_artifacts/TIKTOK_OWNER_LIVE_SYSTEM_INTEGRATED_TRANCHE_INTEGRATION_REPORT_V1.md",
+                        "post_wave1_tranche_b_validation_doc":  "docs/review_artifacts/TIKTOK_OWNER_LIVE_SYSTEM_INTEGRATED_TRANCHE_VALIDATION_REPORT_V1.md",
+                        "post_wave1_tranche_b_remaining_gaps_doc":  "docs/review_artifacts/TIKTOK_OWNER_LIVE_SYSTEM_INTEGRATED_TRANCHE_REMAINING_GAPS_V1.md"
+                    }
+}

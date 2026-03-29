@@ -1,0 +1,105 @@
+﻿{
+  "surface_id": "IMPERIUM_PRODUCT_EVOLUTION_MAP_V1",
+  "version": "1.3.0",
+  "status": "ACTIVE",
+  "map_note": "Current and target evolution points stay explicit without fake maturity claims.",
+  "lines": [
+    {
+      "product_id": "tiktok_agent_platform",
+      "current_point": "POST_WAVE1_FACTORY_REBUILD_HARDENING",
+      "target_point": "VOICE_OF_IMPERIUM_ADVERTISING_DEPARTMENT",
+      "post_release_parallel_path": "enabled_after_release_readiness",
+      "factory_relation": {
+        "current_factory_stage": "rebuild_hardening",
+        "next_factory_stage": "correction_checkpoints",
+        "blocking_focus": "release_shape_truth_and_event_flow_alignment"
+      },
+      "ascent_track": {
+        "current_product_stage_ru": "Продукт проходит сборку и упрочнение внутри фабрики",
+        "future_department_stage_ru": "После release readiness входит в параллельный рост как Voice of Imperium",
+        "activation_boundary": "release_readiness_proof_required",
+        "activation_status": "WAIT",
+        "ascent_lane": [
+          {
+            "phase_id": "factory_proof",
+            "title_ru": "Доказать рабочий продукт в Фабрике",
+            "status": "ACTIVE"
+          },
+          {
+            "phase_id": "release_boundary",
+            "title_ru": "Подтвердить release boundary",
+            "status": "WAIT"
+          },
+          {
+            "phase_id": "voice_department_branch",
+            "title_ru": "Запустить ветку Voice of Imperium",
+            "status": "NOT_YET_IMPLEMENTED"
+          }
+        ],
+        "proof_checkpoints": [
+          "runtime_readiness_checks_verified",
+          "release_shape_truth_alignment",
+          "owner_gate_boundary_respected"
+        ],
+        "current_capabilities": [
+          "runtime_observability",
+          "prompt_lineage_honesty",
+          "control_brain_binding",
+          "release_shape_truth"
+        ],
+        "future_department_capabilities": [
+          "advertising_strategy_orchestration",
+          "campaign_voice_packaging",
+          "distribution_feedback_loop"
+        ]
+      },
+      "truth_class": "SOURCE_EXACT",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/TIKTOK_WAVE1_CONTROL_SURFACES_V1.json"
+    },
+    {
+      "product_id": "voice_launcher",
+      "current_point": "PRODUCT_BASE_SEED",
+      "target_point": "WORKING_PRODUCT_BASE_FOR_FACTORY_LEARNING",
+      "post_release_parallel_path": "not_started",
+      "factory_relation": {
+        "current_factory_stage": "analysis",
+        "next_factory_stage": "disassembly_diagnostics",
+        "blocking_focus": "intake_scope_not_yet_activated"
+      },
+      "truth_class": "DERIVED_CANONICAL",
+      "source_path": "docs/governance/PRODUCT_CLASS_MAP_V1.md"
+    },
+    {
+      "product_id": "trade_bot",
+      "current_point": "PRODUCT_BASE_SEED",
+      "target_point": "WORKING_PRODUCT_BASE_FOR_FACTORY_LEARNING",
+      "post_release_parallel_path": "not_started",
+      "factory_relation": {
+        "current_factory_stage": "analysis",
+        "next_factory_stage": "disassembly_diagnostics",
+        "blocking_focus": "intake_scope_not_yet_activated"
+      },
+      "truth_class": "DERIVED_CANONICAL",
+      "source_path": "docs/governance/PRODUCT_CLASS_MAP_V1.md"
+    },
+    {
+      "product_id": "ai_russifier",
+      "current_point": "PRODUCT_BASE_SEED",
+      "target_point": "WORKING_PRODUCT_BASE_FOR_FACTORY_LEARNING",
+      "post_release_parallel_path": "not_started",
+      "factory_relation": {
+        "current_factory_stage": "analysis",
+        "next_factory_stage": "disassembly_diagnostics",
+        "blocking_focus": "intake_scope_not_yet_activated"
+      },
+      "truth_class": "DERIVED_CANONICAL",
+      "source_path": "docs/governance/PRODUCT_CLASS_MAP_V1.md"
+    }
+  ],
+  "truth_boundaries": {
+    "no_invented_full_prompt_text": true,
+    "no_wave_completion_inference_from_visuals": true,
+    "no_fake_parallel_growth_claim": true,
+    "no_department_claim_before_release_readiness": true
+  }
+}

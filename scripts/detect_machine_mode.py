@@ -85,21 +85,21 @@ def load_mode_contract() -> dict[str, Any]:
     return {
         "schema_version": "2.0.0-fallback",
         "mode_derivation": "rank_model_v2",
-        "supported_modes": ["creator", "helper"],
+        "supported_modes": ["emperor", "helper"],
         "helper_tiers": ["high", "low"],
-        "canonical_acceptance_mode": "creator_only",
+        "canonical_acceptance_mode": "emperor_only",
         "rank_to_mode_map": {
-            "EMPEROR": {"machine_mode": "creator", "helper_tier": None},
+            "EMPEROR": {"machine_mode": "emperor", "helper_tier": None},
             "PRIMARCH": {"machine_mode": "helper", "helper_tier": "high"},
             "ASTARTES": {"machine_mode": "helper", "helper_tier": "low"},
         },
         "integration_posture_overlay": {
             "authority_effect": "none",
-            "allowed_for_modes": ["creator", "helper"],
+            "allowed_for_modes": ["emperor", "helper"],
             "additional_allowed_operations": [],
             "forbidden_operations": [],
         },
-        "creator_mode": {"allowed_operations": [], "forbidden_operations": []},
+        "emperor_mode": {"allowed_operations": [], "forbidden_operations": []},
         "helper_mode_high": {"allowed_operations": [], "forbidden_operations": []},
         "helper_mode_low": {"allowed_operations": [], "forbidden_operations": []},
     }
@@ -171,8 +171,11 @@ def derive_base_mode(
     if helper_tier is not None:
         helper_tier = str(helper_tier).strip().lower()
 
-    if machine_mode == "creator" and rank != "EMPEROR":
-        blockers.append("invalid_mode_map_creator_not_emperor")
+    if machine_mode == "emperor" and rank != "EMPEROR":
+        blockers.append("invalid_mode_map_emperor_not_emperor_rank")
+    if machine_mode == "creator":
+        warnings.append("legacy_creator_mode_alias_detected")
+        machine_mode = "emperor"
     if machine_mode == "helper" and rank == "PRIMARCH" and helper_tier != "high":
         blockers.append("invalid_mode_map_primarch_not_high_helper")
     if machine_mode == "helper" and rank == "ASTARTES" and helper_tier != "low":
@@ -200,8 +203,10 @@ def resolve_operations(
     work_posture: str,
     contract: dict[str, Any],
 ) -> tuple[list[str], list[str], dict[str, Any]]:
-    if machine_mode == "creator":
-        base = contract.get("creator_mode", {})
+    if machine_mode == "emperor":
+        base = contract.get("emperor_mode", contract.get("creator_mode", {}))
+    elif machine_mode == "creator":
+        base = contract.get("creator_mode", contract.get("emperor_mode", {}))
     elif machine_mode == "helper" and helper_tier == "high":
         base = contract.get("helper_mode_high", contract.get("helper_mode", {}))
     else:
@@ -264,15 +269,15 @@ def build_mode_payload(intent: str = "auto") -> dict[str, Any]:
     # Integration is posture-only overlay, never a base authority mode.
     if intent == "integration":
         work_posture = "integration"
-    elif intent in {"creator", "helper"}:
+    elif intent in {"emperor", "creator", "helper"}:
         work_posture = intent
     else:
         work_posture = "standard"
 
-    if intent == "creator" and machine_mode != "creator":
-        warnings.append("creator intent requested but rank-derived mode is helper")
-    if intent == "helper" and machine_mode == "creator":
-        warnings.append("helper intent requested on creator-capable node; authority remains creator")
+    if intent in {"emperor", "creator"} and machine_mode != "emperor":
+        warnings.append("emperor intent requested but rank-derived mode is helper")
+    if intent == "helper" and machine_mode == "emperor":
+        warnings.append("helper intent requested on emperor-capable node; authority remains emperor")
 
     allowed_ops, forbidden_ops, posture_overlay = resolve_operations(
         machine_mode=machine_mode,
@@ -281,7 +286,7 @@ def build_mode_payload(intent: str = "auto") -> dict[str, Any]:
         contract=federation_contract,
     )
 
-    authority_present = machine_mode == "creator"
+    authority_present = machine_mode == "emperor"
     payload = {
         "run_id": f"mode-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}",
         "generated_at": utc_now(),
@@ -294,6 +299,7 @@ def build_mode_payload(intent: str = "auto") -> dict[str, Any]:
         "authority": {
             "source": "rank_model_v2",
             "authority_present": authority_present,
+            "full_system_authority": authority_present,
             "detection_state": f"rank_derived:{detected_rank}",
             "env_var_name": None,
             "marker_filename": None,
@@ -305,12 +311,16 @@ def build_mode_payload(intent: str = "auto") -> dict[str, Any]:
             "verification_verdict": rank_payload.get("verification_verdict", "BLOCKED") if rank_result.get("ok") else "BLOCKED",
             "detected_rank": detected_rank,
             "run_id": rank_payload.get("run_id") if rank_result.get("ok") else None,
+            "emperor_status": rank_payload.get("emperor_status") if rank_result.get("ok") else None,
+            "throne_breach": rank_payload.get("throne_breach") if rank_result.get("ok") else None,
+            "emperor_status_blocked": rank_payload.get("emperor_status_blocked") if rank_result.get("ok") else None,
+            "throne_anchor_path": rank_payload.get("throne_anchor_path") if rank_result.get("ok") else None,
             "proof_summary": {
                 "repo_copy_status": rank_payload.get("proof_status", {}).get("repo_copy", {}).get("status"),
                 "primarch_status": rank_payload.get("proof_status", {}).get("primarch", {}).get("status"),
                 "emperor_status": rank_payload.get("proof_status", {}).get("emperor", {}).get("status"),
                 "emperor_detection_state": rank_payload.get("proof_status", {}).get("emperor", {}).get("details", {}).get("detection_state"),
-                "used_env_var_name": rank_payload.get("proof_status", {}).get("emperor", {}).get("details", {}).get("used_env_var_name"),
+                "throne_anchor_path": rank_payload.get("proof_status", {}).get("emperor", {}).get("details", {}).get("authority_anchor_relative_path"),
             } if rank_result.get("ok") else {},
         },
         "rank_to_mode_derivation": {
@@ -333,12 +343,13 @@ def build_mode_payload(intent: str = "auto") -> dict[str, Any]:
         },
         "warnings": warnings,
         "blockers": blockers,
-        "creator_only_operations": [
+        "emperor_only_operations": [
             "canonical_acceptance",
             "final_completion_claim",
             "governance_protected_layer_edit",
         ],
     }
+    payload["creator_only_operations"] = list(payload["emperor_only_operations"])
     return payload
 
 
@@ -369,9 +380,9 @@ def report_markdown(payload: dict[str, Any]) -> str:
         lines.append(f"- {item}")
     lines += [
         "",
-        "## Creator-Only Operations",
+        "## Emperor-Only Operations",
     ]
-    for item in payload["creator_only_operations"]:
+    for item in payload["emperor_only_operations"]:
         lines.append(f"- {item}")
     if payload["warnings"]:
         lines += ["", "## Warnings"]
@@ -391,7 +402,7 @@ def write_outputs(payload: dict[str, Any]) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Detect machine mode derived from rank model v2 (integration as posture overlay).")
-    parser.add_argument("--intent", choices=["auto", "creator", "helper", "integration"], default="auto")
+    parser.add_argument("--intent", choices=["auto", "emperor", "creator", "helper", "integration"], default="auto")
     parser.add_argument("--json-only", action="store_true", help="Print only JSON payload.")
     parser.add_argument("--no-write", action="store_true", help="Do not write runtime report files.")
     parser.add_argument(
@@ -409,7 +420,7 @@ def main() -> int:
         write_outputs(payload)
     print(json.dumps(payload, ensure_ascii=False, indent=2))
 
-    if args.strict_intent and args.intent == "creator" and payload["machine_mode"] != "creator":
+    if args.strict_intent and args.intent in {"emperor", "creator"} and payload["machine_mode"] != "emperor":
         return 1
     if args.strict_intent and args.intent == "helper" and payload["machine_mode"] != "helper":
         return 1

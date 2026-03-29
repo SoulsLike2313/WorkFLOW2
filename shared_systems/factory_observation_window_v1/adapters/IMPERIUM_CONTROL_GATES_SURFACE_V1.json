@@ -1,0 +1,140 @@
+{
+  "surface_id": "IMPERIUM_CONTROL_GATES_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "docs/governance/IMPERIUM_SUPREME_BRAIN_V2_LAYER_MODEL_V1.md",
+  "gates": [
+    {
+      "gate_id": "throne_proof_control",
+      "title_ru": "Throne Proof Control",
+      "state": "ACTIVE",
+      "source_path": "docs/governance/GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "truth_dominance_chamber",
+      "title_ru": "Truth Dominance Chamber",
+      "state": "ACTIVE",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_TRUTH_DOMINANCE_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "chronology_continuity_guard",
+      "title_ru": "Chronology / Continuity Guard",
+      "state": "ACTIVE",
+      "source_path": "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/MUTABLE_TRACKER.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "review_integrity_gate",
+      "title_ru": "Review Integrity Gate",
+      "state": "ACTIVE",
+      "source_path": "docs/governance/IMPERIUM_SAFE_REVIEW_PIPELINE_CANON_V1.md",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "coverage_authority_control",
+      "title_ru": "Coverage Authority Control",
+      "state": "ACTIVE",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_DASHBOARD_COVERAGE_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "evolution_gate",
+      "title_ru": "Evolution Gate",
+      "state": "ACTIVE",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_EVOLUTION_STATE_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "runtime_claim_gate",
+      "title_ru": "Runtime Claim Gate",
+      "state": "ACTIVE",
+      "source_path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/runtime/runtime_observability_snapshot.json",
+      "truth_class": "DERIVED_CANONICAL"
+    },
+    {
+      "gate_id": "truth_spine_gate",
+      "title_ru": "Truth Spine Gate",
+      "state": "PASS",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_TRUTH_SPINE_STATE_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "dashboard_truth_engine_gate",
+      "title_ru": "Dashboard Truth Engine Gate",
+      "state": "PASS",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_DASHBOARD_TRUTH_ENGINE_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "bundle_truth_chamber_gate",
+      "title_ru": "Bundle Truth Chamber Gate",
+      "state": "PASS",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_BUNDLE_TRUTH_CHAMBER_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "worktree_purity_gate",
+      "title_ru": "Worktree Purity Gate",
+      "state": "PASS",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_WORKTREE_PURITY_GATE_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "address_lattice_gate",
+      "title_ru": "Address Lattice Gate",
+      "state": "PASS",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_ADDRESS_LATTICE_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "inquisition_truth_guard_gate",
+      "title_ru": "Inquisition Truth Guard Gate",
+      "state": "PASS",
+      "source_path": "runtime/administratum/IMPERIUM_INQUISITION_LOOP_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "anti_lie_foundation_gate",
+      "title_ru": "Anti Lie Foundation Gate",
+      "state": "PASS",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_ANTI_LIE_MODEL_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "live_truth_support_loop_gate",
+      "title_ru": "Live Truth Support Loop Gate",
+      "state": "PASS",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_LIVE_TRUTH_SUPPORT_LOOP_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "heresy_early_detection_gate",
+      "title_ru": "Heresy Early Detection Gate",
+      "state": "PASS",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_HERESY_EARLY_DETECTION_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "heresy_containment_gate",
+      "title_ru": "Heresy Containment Gate",
+      "state": "PASS",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_HERESY_CONTAINMENT_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gate_id": "heresy_suppression_gate",
+      "title_ru": "Heresy Suppression Gate",
+      "state": "PASS",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_HERESY_SUPPRESSION_SURFACE_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    }
+  ],
+  "gate_policy": {
+    "missing_gate_handling": "SHOW_AS_UNKNOWN_WITH_REASON",
+    "source_exact_priority": true,
+    "no_fake_green": true
+  }
+}

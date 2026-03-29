@@ -1,0 +1,204 @@
+{
+  "registry_version": "1.0.0",
+  "labels": [
+    "PROVEN",
+    "ACTIVE",
+    "MAPPED",
+    "FROZEN",
+    "NOT_YET_IMPLEMENTED"
+  ],
+  "status_model": [
+    "ACTIVE",
+    "SEED",
+    "MAPPED",
+    "DORMANT",
+    "PLANNED",
+    "NOT_YET_IMPLEMENTED"
+  ],
+  "departments": [
+    {
+      "id": "analytics_department",
+      "name": "Analytics Department",
+      "status": "ACTIVE",
+      "mission": "Primary intake, forensic analysis, product technical mapping, and owner gate preparation.",
+      "current_activation_level": "operational_head_current_stage",
+      "primarch_required": true,
+      "accepts_products": [
+        "idea",
+        "demo",
+        "raw_app",
+        "existing_app_with_debt"
+      ],
+      "emits_bundles": [
+        "Intake Bundle",
+        "Technical Map Bundle",
+        "Owner Gate Bundle",
+        "Department Synthesis Bundle",
+        "Blocker Bundle"
+      ],
+      "future_role": "Analytics-first router for multi-department factory flow.",
+      "dashboard_visibility": {
+        "show_in_floor_view": true,
+        "show_status_badge": true,
+        "show_activation_reason": true,
+        "show_next_unlock": true
+      }
+    },
+    {
+      "id": "engineering_department",
+      "name": "Engineering Department",
+      "status": "SEED",
+      "mission": "Transform approved roadmap into bounded implementation waves with traceable evidence.",
+      "current_activation_level": "seed_charter_ready_not_operational",
+      "primarch_required": true,
+      "accepts_products": [
+        "approved_technical_map",
+        "bounded_task_scope"
+      ],
+      "emits_bundles": [
+        "Task Bundle",
+        "Astartes Result Bundle",
+        "Engineering Synthesis Bundle",
+        "Blocker Bundle"
+      ],
+      "future_role": "Main implementation lane after analytics routing.",
+      "dashboard_visibility": {
+        "show_in_floor_view": true,
+        "show_status_badge": true,
+        "show_activation_reason": true,
+        "show_next_unlock": true
+      }
+    },
+    {
+      "id": "verification_department",
+      "name": "Verification Department",
+      "status": "SEED",
+      "mission": "Verify that hardening is real and prevent false PASS claims.",
+      "current_activation_level": "seed_charter_ready_not_operational",
+      "primarch_required": true,
+      "accepts_products": [
+        "engineering_outputs",
+        "test_targets"
+      ],
+      "emits_bundles": [
+        "Verification Pack",
+        "Test Evidence Bundle",
+        "Blocker/Incident Bundle",
+        "Verification Verdict Bundle"
+      ],
+      "future_role": "Independent quality gate before release decisions.",
+      "dashboard_visibility": {
+        "show_in_floor_view": true,
+        "show_status_badge": true,
+        "show_activation_reason": true,
+        "show_next_unlock": true
+      }
+    },
+    {
+      "id": "release_integration_department",
+      "name": "Release & Integration Department",
+      "status": "SEED",
+      "mission": "Shape release candidate and handoff path with transparent readiness constraints.",
+      "current_activation_level": "seed_charter_ready_not_operational",
+      "primarch_required": true,
+      "accepts_products": [
+        "verification_approved_candidate",
+        "release_target_constraints"
+      ],
+      "emits_bundles": [
+        "Release Bundle",
+        "Handoff Bundle",
+        "Release Readiness Note",
+        "Blocker Bundle"
+      ],
+      "future_role": "Controlled release/distribution lane under owner gates.",
+      "dashboard_visibility": {
+        "show_in_floor_view": true,
+        "show_status_badge": true,
+        "show_activation_reason": true,
+        "show_next_unlock": true
+      }
+    },
+    {
+      "id": "tooling_infrastructure_department",
+      "name": "Tooling & Infrastructure Department",
+      "status": "SEED",
+      "mission": "Reduce factory friction through safe, low-cost, evidence-backed tooling improvements.",
+      "current_activation_level": "seed_charter_ready_not_operational",
+      "primarch_required": true,
+      "accepts_products": [
+        "friction_reports",
+        "automation_candidates"
+      ],
+      "emits_bundles": [
+        "Tooling Proposal Bundle",
+        "Automation Validation Bundle",
+        "Infra Change Bundle",
+        "Blocker Bundle"
+      ],
+      "future_role": "Operational acceleration layer without safety regression.",
+      "dashboard_visibility": {
+        "show_in_floor_view": true,
+        "show_status_badge": true,
+        "show_activation_reason": true,
+        "show_next_unlock": true
+      }
+    },
+    {
+      "id": "product_intelligence_research_department",
+      "name": "Product Intelligence / Research Department",
+      "status": "SEED",
+      "mission": "Convert product uncertainty into bounded owner decision support.",
+      "current_activation_level": "seed_charter_ready_not_operational",
+      "primarch_required": true,
+      "accepts_products": [
+        "product_goals",
+        "analytics_findings",
+        "strategy_constraints"
+      ],
+      "emits_bundles": [
+        "Product Research Bundle",
+        "Decision Support Bundle",
+        "Priority Shift Bundle",
+        "Uncertainty/Blocker Bundle"
+      ],
+      "future_role": "Strategic product intelligence layer for scaling decisions.",
+      "dashboard_visibility": {
+        "show_in_floor_view": true,
+        "show_status_badge": true,
+        "show_activation_reason": true,
+        "show_next_unlock": true
+      }
+    },
+    {
+      "id": "growth_distribution_department",
+      "name": "Growth / Distribution Department",
+      "status": "SEED",
+      "mission": "Prepare practical distribution and early-growth starter artifacts for hardening-ready products under owner control.",
+      "current_activation_level": "seed_charter_ready_not_operational",
+      "primarch_required": true,
+      "accepts_products": [
+        "product_technical_map",
+        "chosen_product_path",
+        "current_product_state",
+        "owner_positioning_hints",
+        "product_assets",
+        "release_target_audience_hints"
+      ],
+      "emits_bundles": [
+        "Product Narrative Pack",
+        "Channel Starter Pack",
+        "Campaign Starter Plan",
+        "Product Promotion File",
+        "Early Sales Readiness Note"
+      ],
+      "future_role": "Grow from starter distribution support into structured growth/distribution systemization after validated signals.",
+      "dashboard_visibility": {
+        "show_in_floor_view": true,
+        "show_status_badge": true,
+        "show_activation_reason": true,
+        "show_next_unlock": true
+      }
+    }
+  ]
+}

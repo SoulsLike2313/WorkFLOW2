@@ -1,0 +1,123 @@
+{
+  "model_id": "LIVE_OBSERVATION_STATE_MODEL_V1",
+  "model_version": "1.0.0",
+  "scope": "emperor_machine_local_only",
+  "cadence_defaults": {
+    "polling_interval_sec": 5,
+    "near_realtime_window_sec": 15,
+    "stale_multiplier": 2
+  },
+  "objects": {
+    "live_factory_state": {
+      "required": [
+        "factory_id",
+        "generated_at_utc",
+        "near_realtime_window_sec",
+        "active_products_count",
+        "active_departments_count",
+        "pending_owner_gates_count",
+        "open_blockers_count"
+      ],
+      "freshness_rule": "stale_if_older_than_2x_window",
+      "truth_class": "DERIVED_CANONICAL"
+    },
+    "live_product_state": {
+      "required": [
+        "product_id",
+        "current_stage",
+        "current_wave",
+        "last_change_at_utc",
+        "last_change_source",
+        "owner_attention_required"
+      ],
+      "truth_class": "SOURCE_EXACT"
+    },
+    "live_wave_state": {
+      "required": [
+        "wave_id",
+        "status",
+        "started_at_utc",
+        "tasks_total",
+        "tasks_done",
+        "blocking_issues"
+      ],
+      "truth_class": "DERIVED_CANONICAL"
+    },
+    "live_gate_state": {
+      "required": [
+        "gate_id",
+        "status",
+        "owner_required",
+        "opened_at_utc",
+        "blocking_reason"
+      ],
+      "truth_class": "SOURCE_EXACT"
+    },
+    "live_health_state": {
+      "required": [
+        "metric_id",
+        "value",
+        "state",
+        "trend",
+        "provisional",
+        "evidence_link"
+      ],
+      "truth_class": "DERIVED_CANONICAL"
+    },
+    "live_change_feed": {
+      "required": [
+        "event_id",
+        "event_type",
+        "occurred_at_utc",
+        "severity",
+        "source_path",
+        "summary"
+      ],
+      "truth_class": "SOURCE_EXACT"
+    },
+    "live_preview_registry": {
+      "required": [
+        "preview_id",
+        "kind",
+        "path",
+        "updated_at_utc",
+        "related_product",
+        "trust_class"
+      ],
+      "truth_class": "SOURCE_EXACT"
+    },
+    "live_contradiction_state": {
+      "required": [
+        "open_count",
+        "critical_count",
+        "last_opened_at_utc",
+        "last_closed_at_utc"
+      ],
+      "truth_class": "DERIVED_CANONICAL"
+    },
+    "live_task_state": {
+      "required": [
+        "active_tasks_count",
+        "completed_tasks_count",
+        "blocked_tasks_count",
+        "last_task_event_at_utc"
+      ],
+      "truth_class": "DERIVED_CANONICAL"
+    },
+    "live_execution_state": {
+      "required": [
+        "execution_mode",
+        "rank",
+        "machine_mode",
+        "last_verification_state",
+        "sync_state"
+      ],
+      "truth_class": "SOURCE_EXACT"
+    }
+  },
+  "authority_boundary": {
+    "live_layer_is_non_canonical": true,
+    "canonical_claims_require_checkpoint_bundle": true,
+    "green_without_evidence_forbidden": true
+  }
+}

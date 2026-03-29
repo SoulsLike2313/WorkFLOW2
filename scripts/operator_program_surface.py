@@ -12,6 +12,14 @@ from pathlib import Path
 from typing import Any
 
 from detect_machine_mode import build_mode_payload
+from operator_surface_common import (
+    normalize_rel as common_normalize_rel,
+    read_json as common_read_json,
+    run_command as common_run_command,
+    utc_now_iso as common_utc_now_iso,
+    write_json as common_write_json,
+    write_markdown as common_write_markdown,
+)
 
 CANONICAL_LOCAL_ROOT = r"E:\CVVCODEX"
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -64,36 +72,27 @@ class ProgramPolicy:
 
 
 def utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return common_utc_now_iso()
 
 
 def normalize_rel(path: str) -> str:
-    value = path.replace("\\", "/").strip()
-    while value.startswith("./"):
-        value = value[2:]
-    return value.strip("/")
+    return common_normalize_rel(path)
 
 
 def load_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8-sig"))
+    return common_read_json(path)
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    common_write_json(path, payload)
 
 
 def write_markdown(path: Path, content: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content.rstrip() + "\n", encoding="utf-8")
+    common_write_markdown(path, content)
 
 
 def run_cmd(args: list[str], *, allow_fail: bool = False) -> subprocess.CompletedProcess[str]:
-    completed = subprocess.run(args, cwd=REPO_ROOT, text=True, capture_output=True, check=False)
-    if completed.returncode != 0 and not allow_fail:
-        err = completed.stderr.strip() or completed.stdout.strip()
-        raise RuntimeError(f"command failed: {' '.join(args)} :: {err}")
-    return completed
+    return common_run_command(args, cwd=REPO_ROOT, allow_fail=allow_fail)
 
 
 def safe_parse_json(raw: str) -> dict[str, Any] | None:
@@ -280,7 +279,8 @@ def validate_preconditions(
     authority_present = bool(authority.get("authority_present", False))
 
     authority_failures: list[str] = []
-    if policy.allowed_modes and machine_mode not in policy.allowed_modes:
+    creator_alias_allowed = machine_mode == "emperor" and ("creator" in policy.allowed_modes)
+    if policy.allowed_modes and machine_mode not in policy.allowed_modes and not creator_alias_allowed:
         authority_failures.append(f"machine_mode '{machine_mode}' not allowed for program '{policy.program_id}'")
     if policy.creator_authority_required and not authority_present:
         authority_failures.append("creator authority required but not present")

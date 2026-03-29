@@ -1,0 +1,74 @@
+﻿{
+  "surface_id": "IMPERIUM_DIFF_PREVIEW_PIPELINE_SURFACE_V1",
+  "version": "1.2.0",
+  "status": "PARTIALLY_IMPLEMENTED",
+  "source_path": "docs/governance/IMPERIUM_DIFF_PREVIEW_PIPELINE_CANON_V1.md",
+  "pipeline_profile": {
+    "pipeline_mode": "BOUNDED_MANUAL_TRIGGER",
+    "auto_preview_pipeline_status": "NOT_YET_IMPLEMENTED",
+    "diff_engine_status": "PARTIALLY_IMPLEMENTED",
+    "resource_profile": "LOW_COST_BOUNDED_RUNS",
+    "truth_class": "SOURCE_EXACT"
+  },
+  "entrypoints": {
+    "capture_loop_script": "scripts/imperial_dashboard_visual_audit_loop.py",
+    "diff_pack_script": "scripts/imperium_diff_preview_pack.py"
+  },
+  "stages": [
+    {
+      "stage_id": "capture",
+      "status": "ACTIVE",
+      "description": "Command/FullVision full-page + major-zone capture with html/json dumps."
+    },
+    {
+      "stage_id": "pairing",
+      "status": "ACTIVE",
+      "description": "Select before/after visual runs and pair matching sectors."
+    },
+    {
+      "stage_id": "changed_sector_focus",
+      "status": "ACTIVE",
+      "description": "Highlight changed sectors first to reduce owner review friction."
+    },
+    {
+      "stage_id": "diff_manifest",
+      "status": "ACTIVE",
+      "description": "Generate changed/unchanged/missing sector manifest with hashes."
+    },
+    {
+      "stage_id": "contact_sheet",
+      "status": "ACTIVE",
+      "description": "Generate review-friendly contact sheet html for before/after sectors."
+    },
+    {
+      "stage_id": "morphology_sector_review",
+      "status": "ACTIVE",
+      "description": "Prioritize factory/assembly/ascent morphology sectors in review output."
+    },
+    {
+      "stage_id": "auto_preview",
+      "status": "NOT_YET_IMPLEMENTED",
+      "description": "Full auto pipeline remains future work."
+    }
+  ],
+  "required_evidence": [
+    "fullpage_command_png",
+    "fullpage_fullvision_png",
+    "major_zone_png_pairs",
+    "paired_html_json_state_dumps",
+    "diff_manifest_json",
+    "contact_sheet_html"
+  ],
+  "known_gaps": [
+    {
+      "id": "auto_preview_pipeline",
+      "status": "NOT_YET_IMPLEMENTED",
+      "unknown_reason": "not_implemented"
+    },
+    {
+      "id": "pixel_level_perceptual_diff_engine",
+      "status": "UNAVAILABLE_IN_STEP_SCOPE",
+      "unknown_reason": "unavailable_in_step_scope"
+    }
+  ]
+}

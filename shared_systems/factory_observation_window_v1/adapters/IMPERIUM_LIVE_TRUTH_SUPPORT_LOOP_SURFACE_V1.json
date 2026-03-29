@@ -1,0 +1,35 @@
+{
+  "surface_id": "IMPERIUM_LIVE_TRUTH_SUPPORT_LOOP_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "generated_at_utc": "2026-03-28T08:22:35Z",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "runtime/administratum/IMPERIUM_LIVE_TRUTH_SUPPORT_LOOP_V1.json",
+  "payload": {
+    "surface_id": "IMPERIUM_LIVE_TRUTH_SUPPORT_LOOP_V1",
+    "generated_at_utc": "2026-03-28T08:22:35Z",
+    "truth_class": "SOURCE_EXACT",
+    "status": "PASS",
+    "mode": "HOLD_TRUTH_AFTER_PASS",
+    "loop_profile": "EVENT_OR_INTERVAL",
+    "check_interval_seconds": 30,
+    "active_drift_count": 0,
+    "session_lifecycle": {
+      "started_at_utc": "2026-03-28T04:32:16Z",
+      "elapsed_seconds": 13811,
+      "elapsed_hours": 3.836,
+      "hour4_warning": false,
+      "hour5_checkpoint_required": false,
+      "auto_sync_prompt_if_no_reply": false,
+      "owner_checkpoint_question": "If active tasks remain, finish current bounded step first, then run full sync and relocate to a new chat. Continue?",
+      "auto_prompt_if_silent": "No owner response at hour 5. Prepare full-system sync package and start new-chat relocation flow."
+    },
+    "truth_retention_checks": {
+      "seed_sync_ok": true,
+      "dashboard_truth_engine": "PASS",
+      "worktree_purity_gate": "PASS",
+      "anti_lie_model": "PASS",
+      "bundle_truth_chamber": "PASS"
+    }
+  }
+}

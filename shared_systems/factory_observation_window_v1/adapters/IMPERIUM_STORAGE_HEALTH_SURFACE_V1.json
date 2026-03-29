@@ -1,0 +1,35 @@
+﻿{
+    "surface_id":  "IMPERIUM_STORAGE_HEALTH_SURFACE_V1",
+    "generated_at_utc":  "2026-03-25T19:54:29.3103959Z",
+    "system_name":  "IMPERIUM",
+    "final_two_camp_model":  true,
+    "classification_counts":  {
+                                  "CANON":  12,
+                                  "TRASH":  8
+                              },
+    "final_canonical_root":  "E:\\CVVCODEX",
+    "final_external_trash_root":  "E:\\IMPERIUM_EXTERNAL_TRASH_WING\\20260325_FINAL_IMPERIUM_CONVERGENCE",
+    "owner_review_camp_status":  "RESOLVED_TO_TWO_CAMP",
+    "owner_review_open_count":  0,
+    "quarantine_status":  {
+                              "moved_count":  10,
+                              "failed_count":  0
+                          },
+    "duplicate_control":  {
+                              "uncontrolled_live_root_count":  0
+                          },
+    "golden_throne_binding":  {
+                                  "status":  "SURROGATE_MULTI_SOURCE_MAPPING",
+                                  "dedicated_named_bundle_exists":  false
+                              },
+    "optimization_status":  {
+                                "pointer_layer_ready":  true,
+                                "migration_readiness":  "PLACEHOLDER_NOT_VALIDATED",
+                                "cold_path_index_ready":  true,
+                                "hot_path_index_ready":  true
+                            },
+    "open_risks":  [
+                       "two-disk migration remains not physically validated",
+                       "surrogate golden-throne mapping remains until dedicated source exists"
+                   ]
+}

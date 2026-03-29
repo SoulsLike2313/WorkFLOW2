@@ -1,0 +1,75 @@
+{
+  "contract_version": "1.0.0",
+  "contract_kind": "limit_economy_mode",
+  "status": "active",
+  "scope_root": "E:\\CVVCODEX",
+  "default_mode": "permanent_limit_economy",
+  "owner_override_allowed": true,
+  "owner_override_requires_explicit_request": true,
+  "hard_precedence": {
+    "truth_and_hard_gates_override_economy": true,
+    "bundle_law_override_economy": true,
+    "economy_never_suppresses_validation_or_gaps": true
+  },
+  "core_delta_prompt_discipline": {
+    "core_must_be_repo_referenced_not_reprinted_by_default": true,
+    "delta_required_fields": [
+      "active_front",
+      "primary_bundle_line",
+      "exact_remainder",
+      "exact_next_move"
+    ],
+    "prompt_shape_required_blocks": [
+      "launch_law_reference",
+      "exact_sources_to_read",
+      "active_bundle_and_companion",
+      "exact_scope_in_out",
+      "hard_pass_fail",
+      "runtime_info_if_relevant"
+    ]
+  },
+  "short_first_reply": {
+    "required": true,
+    "required_fields": [
+      "verdict",
+      "primary_bundle_latest_path",
+      "primary_bundle_immutable_zip_path",
+      "companion_path_if_required",
+      "runtime_url_status_if_relevant",
+      "exact_next_step"
+    ],
+    "details_must_go_to_artifacts": true
+  },
+  "checkpoint_capsule": {
+    "required_after_major_step": true,
+    "required_fields": [
+      "changed",
+      "proven",
+      "open",
+      "current_primary_bundle",
+      "next_step"
+    ],
+    "future_prompt_prefers_capsule_plus_primary_bundle": true
+  },
+  "anti_distortion": {
+    "must_never_compress_away": [
+      "source_disclosure",
+      "validation_truth",
+      "contradiction_remainder",
+      "remaining_gaps",
+      "active_truth_binding",
+      "checkpoint_posture_honesty",
+      "primary_bundle_declaration",
+      "exact_review_paths"
+    ]
+  },
+  "anchors": [
+    "docs/governance/LIMIT_ECONOMY_MODE_LAW_V1.md",
+    "docs/governance/CORE_DELTA_PROMPT_DISCIPLINE_V1.md",
+    "docs/governance/SHORT_FIRST_REPLY_LAW_V1.md",
+    "docs/governance/CHECKPOINT_CAPSULE_CONTEXT_COMPRESSION_LAW_V1.md",
+    "docs/governance/OWNER_CHATGPT_CODEX_ECONOMY_WORKFLOW_V1.md",
+    "docs/governance/CANONICAL_TRUTH_REVIEW_BUNDLE_LAW_V1.md",
+    "docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md"
+  ]
+}

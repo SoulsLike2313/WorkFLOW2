@@ -1,0 +1,77 @@
+﻿{
+  "token_set": "FACTORY_COLOR_AND_MATERIAL_TOKENS_V1",
+  "version": "1.0.0",
+  "status_labels": [
+    "ACTIVE",
+    "RECOMMENDED",
+    "FUTURE",
+    "NOT_YET_IMPLEMENTED",
+    "STYLE_LAYER_ONLY"
+  ],
+  "palette": {
+    "base": {
+      "bg_deep": "#090A14",
+      "bg_shell": "#111325",
+      "bg_panel": "#161936",
+      "bg_card": "#1B1F42"
+    },
+    "metallic_violet": {
+      "accent_primary": "#7B5CFF",
+      "accent_secondary": "#9B7DFF",
+      "accent_soft": "#C2B3FF"
+    },
+    "nebula": {
+      "haze_1": "#2A1D52",
+      "haze_2": "#3C2A6B",
+      "haze_3": "#4F3B88"
+    },
+    "text": {
+      "text_primary": "#E9ECFF",
+      "text_secondary": "#B6BDD9",
+      "text_muted": "#8F97BA"
+    },
+    "status": {
+      "stable": "#3ED38A",
+      "improving": "#73E3B2",
+      "warning": "#F7C65A",
+      "critical": "#FF6B82",
+      "info": "#7AA4FF"
+    }
+  },
+  "materials": {
+    "surface_shell": {
+      "fill": "bg_shell",
+      "noise": "low",
+      "gloss": "low"
+    },
+    "surface_card": {
+      "fill": "bg_card",
+      "border": "#2E3564",
+      "elevation": "mid"
+    },
+    "surface_overlay": {
+      "fill": "#101329CC",
+      "blur": "soft"
+    }
+  },
+  "glow": {
+    "none": {
+      "blur": 0,
+      "alpha": 0
+    },
+    "soft": {
+      "blur": 12,
+      "alpha": 0.25
+    },
+    "state_warning": {
+      "blur": 18,
+      "alpha": 0.35,
+      "color": "#F7C65A"
+    },
+    "state_critical": {
+      "blur": 22,
+      "alpha": 0.42,
+      "color": "#FF6B82"
+    }
+  }
+}

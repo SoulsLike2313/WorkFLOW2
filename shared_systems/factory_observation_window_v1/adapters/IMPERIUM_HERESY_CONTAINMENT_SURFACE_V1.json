@@ -1,0 +1,19 @@
+{
+  "surface_id": "IMPERIUM_HERESY_CONTAINMENT_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "generated_at_utc": "2026-03-28T08:22:35Z",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "runtime/administratum/IMPERIUM_HERESY_CONTAINMENT_V1.json",
+  "payload": {
+    "surface_id": "IMPERIUM_HERESY_CONTAINMENT_V1",
+    "generated_at_utc": "2026-03-28T08:22:35Z",
+    "truth_class": "SOURCE_EXACT",
+    "status": "PASS",
+    "fail_hold_enabled": true,
+    "forward_progress_block_enabled": true,
+    "forced_rerun_enabled": true,
+    "active_blockers": [],
+    "containment_policy": "hold_fail_until_verdict_surfaces_converge"
+  }
+}

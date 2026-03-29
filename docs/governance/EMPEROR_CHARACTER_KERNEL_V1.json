@@ -1,0 +1,145 @@
+{
+  "schema_version": "emperor_character_kernel.v1",
+  "status": "ACTIVE",
+  "scope": "project_useful_stable_traits_only",
+  "purpose": "Stable owner-character kernel for canon-aligned execution support.",
+  "stable_traits": [
+    {
+      "id": "trait_falsehood_detection",
+      "label": "Strong fake-completeness detection",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "trait_architectural_thinking",
+      "label": "Architectural and system-level thinking",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "trait_dual_horizon_hold",
+      "label": "Holds near-front and long vector simultaneously",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "trait_integrity_demand",
+      "label": "High demand for integrity and coherence",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "trait_owner_form_sense",
+      "label": "Owner sense for form and perception quality",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "trait_canon_will",
+      "label": "Strong will to canon",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "trait_dignity_system_drive",
+      "label": "Drive to build strong non-theatrical systems",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "trait_co_author_operator_mode",
+      "label": "Owner acts as co-author and semantic operator",
+      "classification": "ACTIVE"
+    }
+  ],
+  "strengths": [
+    "contradiction_sensing",
+    "pattern_synthesis",
+    "quality_standard_discipline",
+    "anti_fake_output_boundary"
+  ],
+  "risk_patterns": [
+    {
+      "id": "risk_capacity_outpaced_by_vision",
+      "label": "Scale of intent outpaces current step capacity",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "risk_scope_explosion",
+      "label": "Scope explosion",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "risk_canon_drift",
+      "label": "Canon drift",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "risk_aesthetic_over_truth",
+      "label": "Aesthetic pull over truth/evidence",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "risk_impulse_rebuild",
+      "label": "Impulse rebuild",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "risk_false_completion_tolerance",
+      "label": "False completion tolerance",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "risk_frustration_pivot",
+      "label": "Frustration pivot",
+      "classification": "ACTIVE"
+    },
+    {
+      "id": "risk_overcompression_of_maturity",
+      "label": "Overcompression of maturity",
+      "classification": "ACTIVE"
+    }
+  ],
+  "owner_style": [
+    "direct",
+    "high_standard",
+    "evidence_first",
+    "anti_decorative_noise"
+  ],
+  "project_spirit": [
+    "strong_system_not_theatre",
+    "traceability_and_trust",
+    "validated_learning_before_scaling",
+    "controlled_evolution"
+  ],
+  "anti_distortion_rules": [
+    "no_single_episode_as_trait_truth",
+    "character_layer_never_overrides_governance",
+    "no_shortcut_justification_by_owner_style",
+    "no_fake_completion_pressure_release",
+    "explicit_state_marking_required"
+  ],
+  "must_not_infer": [
+    "medical_or_psychiatric_labels",
+    "permanent_intentions_from_single_prompt",
+    "private_identity_assumptions",
+    "authority_escalation_from_tone"
+  ],
+  "may_evolve": {
+    "allowed": [
+      "stable_trait_candidates_with_repeated_evidence",
+      "risk_pattern_candidates_with_repeated_impact",
+      "profile_tuning_with_owner_approval"
+    ],
+    "requires_owner_approval": true,
+    "requires_repo_visible_ledger_entry": true
+  },
+  "kernel_update_entry_gate": {
+    "required": [
+      "candidate_repo_visible",
+      "project_usefulness_explained",
+      "stability_evidence_present",
+      "owner_explicit_approval",
+      "ledger_decision_recorded"
+    ]
+  },
+  "explicit_non_goals": [
+    "living_self_consciousness",
+    "hidden_personality_mutation",
+    "pseudo_psychology"
+  ]
+}
+

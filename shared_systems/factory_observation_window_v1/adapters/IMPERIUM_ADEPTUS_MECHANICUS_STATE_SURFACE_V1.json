@@ -1,0 +1,38 @@
+{
+  "surface_id": "IMPERIUM_ADEPTUS_MECHANICUS_STATE_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "docs/governance/IMPERIUM_ADEPTUS_MECHANICUS_CANON_V1.md",
+  "role": "HEART_OF_CODE_ARCHITECTURE_EXECUTION_CAPACITY",
+  "character_profile": {
+    "default_posture": "ENGINEERED_DISCIPLINE",
+    "capacity_mode": "MEASURED_NOT_ASSUMED",
+    "escalation_style": "STOP_AND_EXPLAIN"
+  },
+  "responsibility_scope": [
+    "machine_capability_visibility",
+    "code_bank_and_architecture_pressure_visibility",
+    "mission_feasibility_and_cost_visibility",
+    "implementation_form_selection",
+    "bottleneck_and_saturation_disclosure"
+  ],
+  "implementation_form_selector": [
+    "generator",
+    "policy",
+    "runtime_adapter",
+    "source_module",
+    "contract_surface",
+    "derived_surface"
+  ],
+  "stop_conditions": {
+    "architecture_readiness_below_threshold": "OWNER_ESCALATION_REQUIRED",
+    "estimated_cost_exceeds_expected_value": "OWNER_ESCALATION_REQUIRED",
+    "critical_dependency_missing": "BLOCK_UNTIL_RESOLVED"
+  },
+  "source_bindings": {
+    "machine_capability_manifest_path": "runtime/imperium_force/IMPERIUM_MACHINE_CAPABILITY_MANIFEST_V1.json",
+    "organ_strength_surface_path": "runtime/imperium_force/IMPERIUM_ORGAN_STRENGTH_SURFACE_V1.json",
+    "code_bank_surface_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_CODE_BANK_STATE_SURFACE_V1.json"
+  }
+}

@@ -1,0 +1,48 @@
+﻿{
+  "surface_id": "IMPERIUM_ADEPTUS_CUSTODES_STATE_SURFACE_V1",
+  "version": "1.1.0",
+  "status": "ACTIVE",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "docs/governance/IMPERIUM_ADEPTUS_CUSTODES_CANON_V1.md",
+  "role": "FOUNDATION_AND_THRONE_GUARDIAN",
+  "guardian_scope": [
+    "canon_foundation_integrity",
+    "golden_throne_authority_anchor",
+    "emperor_machine_status",
+    "mental_integrity_guard",
+    "anti_drift_foundation_watch"
+  ],
+  "throne_anchor_watch": {
+    "anchor_path": "docs/governance/GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json",
+    "watch_mode": "DIRECT_PATH_WATCH",
+    "authority_source": true,
+    "discoverability_is_non_authority": true
+  },
+  "character_profile": {
+    "default_posture": "QUIET_AND_HEAVY",
+    "noise_policy": "NO_NOISE_WITHOUT_FOUNDATION_THREAT",
+    "deception_resistance": "HARD_TO_DECEIVE"
+  },
+  "authority_capabilities": {
+    "foundation_observation": true,
+    "breach_raise": true,
+    "lock_recommendation": true,
+    "lock_assertion_when_policy_allows": true,
+    "owner_ack_demand": true
+  },
+  "foundation_lock_policy": {
+    "default_mode": "ATTESTATION",
+    "escalation_modes": [
+      "ATTESTATION",
+      "LOCK_RECOMMENDED",
+      "LOCK_ASSERTED"
+    ],
+    "owner_ack_on_foundation_threat": true,
+    "policy_note": "Custodes is guardian of top truth; not routine cleanup janitor."
+  },
+  "notes": [
+    "Custodes protects foundation truth and throne authority anchor integrity.",
+    "Custodes remains quiet by default and escalates only on foundation-grade signals.",
+    "Inquisition remains separate remediation/anti-heresy organ."
+  ]
+}

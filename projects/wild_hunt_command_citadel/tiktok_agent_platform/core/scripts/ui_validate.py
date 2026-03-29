@@ -48,6 +48,14 @@ CRITICAL_WALKTHROUGH_ACTIONS = [
     "capture_anomaly_state",
 ]
 
+RELEASE_SHAPE_REQUIRED_STATES = {
+    "dashboard:initial_state",
+    "dashboard:loaded_state",
+    "profiles:no_selection_state",
+    "sessions:no_selection_state",
+    "content:no_selection_state",
+}
+
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -353,6 +361,17 @@ def main() -> int:
                 continue
             warned_checks.append(f"state_not_observed:{screen_name}:{state_name}")
 
+    observed_state_pairs = {
+        f"{screen_name}:{state_name}"
+        for screen_name, states in state_index.items()
+        for state_name in states
+    }
+    missing_release_shape_states = sorted(RELEASE_SHAPE_REQUIRED_STATES - observed_state_pairs)
+    if missing_release_shape_states:
+        warned_checks.append(f"release_shape_state_gaps={len(missing_release_shape_states)}")
+    else:
+        passed_checks.append("release_shape_state_observations_complete")
+
     walkthrough_steps = _safe_list(snapshot_trace.get("steps")) if snapshot_trace else []
     if not walkthrough_steps:
         walkthrough_steps = _safe_list(doctor_trace.get("steps"))
@@ -461,6 +480,19 @@ def main() -> int:
             "skipped": bool(args.skip_snapshots),
         },
         "screen_audit": _safe_dict(doctor_summary.get("issues_by_page")),
+        "behavior_depth_profile": {
+            "required_screens": REQUIRED_SCREENS,
+            "observed_screens": sorted(state_index.keys()),
+            "required_loaded_states": REQUIRED_LOADED_STATES,
+            "critical_walkthrough_actions": CRITICAL_WALKTHROUGH_ACTIONS,
+        },
+        "release_shape_truth": {
+            "required_states": sorted(RELEASE_SHAPE_REQUIRED_STATES),
+            "observed_states": sorted(observed_state_pairs),
+            "missing_required_states": missing_release_shape_states,
+            "ready": not missing_release_shape_states,
+            "claim_boundary": "release-grade-claim-forbidden-until-wave-1-and-gate-d",
+        },
         "artifacts": {
             "root_summary_json": _repo_relative(PROJECT_ROOT / "ui_validation_summary.json"),
             "root_summary_md": _repo_relative(PROJECT_ROOT / "ui_validation_summary.md"),

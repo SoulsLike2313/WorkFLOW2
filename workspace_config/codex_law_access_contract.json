@@ -1,0 +1,45 @@
+{
+  "contract_version": "1.0.0",
+  "contract_kind": "codex_law_access_boundary",
+  "status": "active",
+  "scope_root": "E:\\CVVCODEX",
+  "law_layers": {
+    "front_law": {
+      "readable_by": [
+        "owner",
+        "logos",
+        "codex"
+      ]
+    },
+    "core_law": {
+      "readable_by": [
+        "owner",
+        "logos",
+        "codex"
+      ]
+    },
+    "servitor_canon": {
+      "readable_by": [
+        "owner",
+        "logos",
+        "codex"
+      ]
+    },
+    "logos_canon": {
+      "readable_by": [
+        "owner",
+        "logos"
+      ],
+      "forbidden_for": [
+        "codex"
+      ],
+      "forbidden_paths": [
+        "docs/governance/LOGOS_CANON_V1.md"
+      ]
+    }
+  },
+  "runtime_anchors": [
+    "runtime/administratum/IMPERIUM_LAW_LAYER_REGISTRY_V1.json",
+    "runtime/administratum/IMPERIUM_FRONT_LAW_ACTIVE_V1.json"
+  ]
+}

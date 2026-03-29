@@ -1,0 +1,73 @@
+{
+  "surface_model_id": "SYSTEM_SEMANTIC_STATE_SURFACES_V1",
+  "model_version": "1.1.0",
+  "status": "ACTIVE",
+  "purpose": "Normalized semantic/state surfaces for imperial owner dashboard truth projection",
+  "truth_contract": {
+    "exact_class": "SOURCE_EXACT",
+    "derived_class": "DERIVED_CANONICAL",
+    "gap_classes": [
+      "NOT_YET_IMPLEMENTED",
+      "PLACEHOLDER",
+      "UNKNOWN",
+      "STALE_SOURCE"
+    ],
+    "unknown_reason_taxonomy": [
+      "not_implemented",
+      "not_mapped",
+      "stale_source",
+      "owner_decision_pending",
+      "unavailable_in_step_scope"
+    ],
+    "disclosure_rule": "exact_derived_gap_disclosure must expose unknown_reason_breakdown and unknown_reason_registry",
+    "truth_integrity_rule": "semantic surfaces must include source_integrity and must not expose hardcoded counters as exact truth"
+  },
+  "required_sections": [
+    "constitution_state",
+    "brain_reason_control_state",
+    "memory_chronology_knowledge_state",
+    "product_state_integration",
+    "security_sovereignty_posture_state",
+    "exact_derived_gap_disclosure"
+  ],
+  "required_subsections": {
+    "constitution_state": [
+      "exact_boundaries",
+      "source_integrity"
+    ],
+    "brain_reason_control_state": [
+      "consistency_matrix",
+      "source_integrity"
+    ],
+    "memory_chronology_knowledge_state": [
+      "age_axis",
+      "known_state_integrity"
+    ],
+    "product_state_integration": [
+      "prompt_lineage_honesty",
+      "blocker_recovery_interpretation",
+      "source_integrity"
+    ],
+    "security_sovereignty_posture_state": [
+      "source_integrity"
+    ],
+    "exact_derived_gap_disclosure": [
+      "known_gaps",
+      "unknown_reason_breakdown",
+      "unknown_reason_registry"
+    ]
+  },
+  "section_notes": {
+    "constitution_state": "Constitution posture, canon drift risk, exact canon boundaries, and source integrity.",
+    "brain_reason_control_state": "Mission/task/command consistency, contradiction/trust control health, and consistency matrix.",
+    "memory_chronology_knowledge_state": "Known/open/next map with last working step, chronology nodes, and age axis.",
+    "product_state_integration": "Training-ground product runtime/process/recovery and prompt-lineage honesty boundary.",
+    "security_sovereignty_posture_state": "Local sovereignty, external exposure, visibility restrictions, and recovery doctrine posture.",
+    "exact_derived_gap_disclosure": "Explicit exact/derived/gap disclosure with reasoned UNKNOWN taxonomy."
+  },
+  "visual_binding": {
+    "full_vision_zone": "imperial_semantic_layer",
+    "command_mode_panel": "system_semantic_state",
+    "raw_secondary_rule": "technical inspector is command/debug only, not full vision default"
+  }
+}

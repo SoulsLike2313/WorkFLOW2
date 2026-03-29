@@ -1,0 +1,85 @@
+{
+  "model_version": "1.3.0",
+  "model_id": "factory_state_view_model_v1",
+  "classification": "ACTIVE",
+  "factory_overview": {
+    "products_in_work": [
+      {
+        "product_id": "tiktok_agent_platform",
+        "status": "POST_WAVE1_TRANCHE_A_IN_PROGRESS",
+        "wave": "wave_1_closed_by_owner_post_wave1_stage_active",
+        "current_department": "engineering_department",
+        "next_step": "Complete bounded seam/reliability/lineage tranche evidence package",
+        "selected_option": "OPTION_B",
+        "gate_a_status": "RESOLVED",
+        "gate_b_status": "RESOLVED_OPTION_B",
+        "gate_c_status": "RESOLVED_DEEP_UI_REBUILD_ALLOWED",
+        "gate_d_status": "CLOSED_BY_OWNER",
+        "visual_doctrine": "NEBULA_METALLIC_COMMAND_STYLE_V1",
+        "hardening_worthy": true,
+        "active_tranche": "POST_WAVE1_TRANCHE_A_SEAMS_RELIABILITY_OBSERVABILITY"
+      }
+    ],
+    "active_departments": [
+      "engineering_department",
+      "verification_department"
+    ],
+    "department_status_counts": {
+      "ACTIVE": 2,
+      "SEED": 5,
+      "MAPPED": 0,
+      "DORMANT": 0,
+      "PLANNED": 0,
+      "NOT_YET_IMPLEMENTED": 0
+    },
+    "active_primarchs": [
+      {
+        "id": "primarch_engineering_01",
+        "department": "engineering_department",
+        "state": "active"
+      }
+    ],
+    "active_astartes": [
+      {
+        "id": "astartes_runtime_01",
+        "department": "engineering_department",
+        "state": "active"
+      },
+      {
+        "id": "astartes_verify_01",
+        "department": "verification_department",
+        "state": "active"
+      }
+    ],
+    "owner_gates_waiting": [
+      "Post-wave1 bounded tranche review (no new gate closure claim)"
+    ],
+    "owner_gates_resolved": [
+      "Gate A",
+      "Gate B (OPTION B)",
+      "Gate C (deep UI rebuild allowed)",
+      "Gate D (closed by owner)"
+    ],
+    "blockers": [
+      {
+        "id": "post_wave1_scope_boundary_enforcement",
+        "severity": "medium",
+        "reason": "Bounded tranche must remain narrow; no architecture rebuild allowed."
+      }
+    ],
+    "current_active_waves": [
+      "post_wave1_bounded_tranche_a_in_progress"
+    ],
+    "active_fronts": [
+      "tiktok_runtime_seam_split",
+      "behavior_reliability_checks",
+      "prompt_lineage_observability"
+    ],
+    "growth_distribution_status": "SEED"
+  },
+  "visibility_notes": {
+    "inactive_departments_must_remain_visible": true,
+    "seed_departments_must_show_activation_reason": true,
+    "source": "docs/governance/DEPARTMENT_STATUS_CLASSIFICATION_V1.md"
+  }
+}

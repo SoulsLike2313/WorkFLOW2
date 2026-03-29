@@ -1,0 +1,454 @@
+﻿{
+  "surface_id": "IMPERIUM_FACTORY_PRODUCTION_STATE_V1",
+  "version": "1.3.0",
+  "status": "ACTIVE",
+  "factory_identity": {
+    "name": "Factory of Imperium",
+    "alias_ru": "Завод Империума",
+    "vector_state": "ENGINEERED_CONVEYOR_INTELLIGENCE",
+    "truth_class": "SOURCE_EXACT",
+    "source_path": "docs/governance/FACTORY_OF_IMPERIUM_PRODUCTION_CANON_V1.md"
+  },
+  "production_stages": [
+    "analysis",
+    "disassembly_diagnostics",
+    "rebuild_hardening",
+    "correction_checkpoints",
+    "packaging",
+    "release_readiness",
+    "parallel_growth_split"
+  ],
+  "factory_morphology_profile": {
+    "style_language": "COSMO_NEBULA_PURPLE_METALLIC_INDUSTRIAL_COGNITION",
+    "organ_layout": [
+      "analysis_chamber",
+      "disassembly_corridor",
+      "rebuild_forge",
+      "hardening_grid",
+      "checkpoint_gate_ring",
+      "packaging_vault",
+      "release_split_hub"
+    ],
+    "readability_priority": "OWNER_FIRST_SHORT_BLOCKS",
+    "truth_class": "SOURCE_EXACT"
+  },
+  "conveyor_lanes": [
+    {
+      "lane_id": "factory_lane_tiktok",
+      "title_ru": "Основной конвейер TikTok Agent",
+      "state": "ACTIVE",
+      "stage_route": [
+        "analysis",
+        "disassembly_diagnostics",
+        "rebuild_hardening",
+        "correction_checkpoints",
+        "packaging",
+        "release_readiness",
+        "parallel_growth_split"
+      ],
+      "active_stage": "rebuild_hardening",
+      "blocked_stage": "release_readiness",
+      "proof_focus": "runtime_and_control_seams_hardening"
+    },
+    {
+      "lane_id": "factory_lane_product_bases",
+      "title_ru": "База продуктов обучения фабрики",
+      "state": "WAIT",
+      "stage_route": [
+        "analysis",
+        "disassembly_diagnostics",
+        "rebuild_hardening"
+      ],
+      "active_stage": "analysis",
+      "blocked_stage": "analysis",
+      "proof_focus": "intake_scope_activation"
+    }
+  ],
+  "stage_transition_matrix": [
+    {
+      "from_stage": "analysis",
+      "to_stage": "disassembly_diagnostics",
+      "gate_id": "factory_gate_analysis",
+      "status": "ACTIVE",
+      "proof_signal": "problem_frame_and_intake_quality_confirmed"
+    },
+    {
+      "from_stage": "disassembly_diagnostics",
+      "to_stage": "rebuild_hardening",
+      "gate_id": "factory_gate_rebuild",
+      "status": "ACTIVE",
+      "proof_signal": "seam_map_and_failure_causes_are_visible"
+    },
+    {
+      "from_stage": "rebuild_hardening",
+      "to_stage": "correction_checkpoints",
+      "gate_id": "factory_gate_rebuild",
+      "status": "ACTIVE",
+      "proof_signal": "runtime_and_control_hardening_milestones_arrive"
+    },
+    {
+      "from_stage": "correction_checkpoints",
+      "to_stage": "packaging",
+      "gate_id": "factory_gate_packaging",
+      "status": "PARTIALLY_IMPLEMENTED",
+      "proof_signal": "checkpoint_delta_requires_more_release_truth"
+    },
+    {
+      "from_stage": "packaging",
+      "to_stage": "release_readiness",
+      "gate_id": "factory_gate_packaging",
+      "status": "PARTIALLY_IMPLEMENTED",
+      "proof_signal": "packaging_manifest_and_release_contract"
+    },
+    {
+      "from_stage": "release_readiness",
+      "to_stage": "parallel_growth_split",
+      "gate_id": "factory_gate_release",
+      "status": "NOT_YET_IMPLEMENTED",
+      "proof_signal": "working_release_proven_in_factory"
+    }
+  ],
+  "stage_gates": [
+    {
+      "gate_id": "factory_gate_analysis",
+      "stage": "analysis",
+      "status": "ACTIVE",
+      "note": "problem frame and intake quality are confirmed"
+    },
+    {
+      "gate_id": "factory_gate_rebuild",
+      "stage": "rebuild_hardening",
+      "status": "ACTIVE",
+      "note": "runtime and control seams are being hardened"
+    },
+    {
+      "gate_id": "factory_gate_packaging",
+      "stage": "packaging",
+      "status": "PARTIALLY_IMPLEMENTED",
+      "note": "release packaging exists but remains bounded"
+    },
+    {
+      "gate_id": "factory_gate_release",
+      "stage": "release_readiness",
+      "status": "NOT_YET_IMPLEMENTED",
+      "note": "release readiness is not claimed without full product proof"
+    }
+  ],
+  "quality_checkpoints": [
+    {
+      "checkpoint_id": "truth_parity",
+      "status": "ACTIVE",
+      "note": "visual layer must map exact/derived/gap honestly"
+    },
+    {
+      "checkpoint_id": "owner_gate_alignment",
+      "status": "ACTIVE",
+      "note": "owner-boundary decisions stay explicit"
+    },
+    {
+      "checkpoint_id": "runtime_reliability",
+      "status": "PARTIALLY_IMPLEMENTED",
+      "note": "runtime checks are present, deeper bus remains open"
+    },
+    {
+      "checkpoint_id": "assembly_readiness_truth",
+      "status": "ACTIVE",
+      "note": "module stacks must map to source-backed readiness"
+    }
+  ],
+  "products": [
+    {
+      "product_id": "tiktok_agent_platform",
+      "display_name": "TikTok Agent",
+      "current_stage": "rebuild_hardening",
+      "target_point": "voice_of_imperium_advertising_department",
+      "assembly_modules": [
+        {
+          "module_id": "runtime_core",
+          "state": "ACTIVE",
+          "gate": "runtime_readiness",
+          "truth_class": "SOURCE_EXACT",
+          "readiness_score_label": "HIGH"
+        },
+        {
+          "module_id": "prompt_lineage_surface",
+          "state": "PARTIALLY_IMPLEMENTED",
+          "gate": "lineage_honesty",
+          "truth_class": "DERIVED_CANONICAL",
+          "readiness_score_label": "MEDIUM"
+        },
+        {
+          "module_id": "control_brain_binding",
+          "state": "ACTIVE",
+          "gate": "command_mission_consistency",
+          "truth_class": "DERIVED_CANONICAL",
+          "readiness_score_label": "HIGH"
+        },
+        {
+          "module_id": "release_shape_truth",
+          "state": "PARTIALLY_IMPLEMENTED",
+          "gate": "release_shape_verification",
+          "truth_class": "DERIVED_CANONICAL",
+          "readiness_score_label": "MEDIUM"
+        },
+        {
+          "module_id": "event_flow_spine_binding",
+          "state": "PARTIALLY_IMPLEMENTED",
+          "gate": "event_flow_truth_alignment",
+          "truth_class": "DERIVED_CANONICAL",
+          "readiness_score_label": "MEDIUM"
+        }
+      ],
+      "subsystem_groups": [
+        {
+          "group_id": "runtime_control_group",
+          "title_ru": "Контур runtime + control",
+          "module_ids": [
+            "runtime_core",
+            "control_brain_binding"
+          ],
+          "state": "ACTIVE",
+          "readiness_gate": "runtime_readiness"
+        },
+        {
+          "group_id": "truth_signal_group",
+          "title_ru": "Контур truth + lineage",
+          "module_ids": [
+            "prompt_lineage_surface",
+            "release_shape_truth",
+            "event_flow_spine_binding"
+          ],
+          "state": "PARTIALLY_IMPLEMENTED",
+          "readiness_gate": "release_shape_verification"
+        }
+      ],
+      "exploded_layer_order": [
+        "runtime_core",
+        "control_brain_binding",
+        "prompt_lineage_surface",
+        "release_shape_truth",
+        "event_flow_spine_binding"
+      ],
+      "rebuild_paths": [
+        {
+          "path_id": "runtime_to_release_path",
+          "from_module": "runtime_core",
+          "to_module": "release_shape_truth",
+          "status": "ACTIVE",
+          "latest_focus": "release_shape_truth_and_event_flow_alignment"
+        },
+        {
+          "path_id": "lineage_to_packaging_path",
+          "from_module": "prompt_lineage_surface",
+          "to_module": "event_flow_spine_binding",
+          "status": "PARTIALLY_IMPLEMENTED",
+          "latest_focus": "lineage_honesty_and_operator_disclosure"
+        }
+      ],
+      "readiness_gates": [
+        {
+          "gate_id": "runtime_readiness",
+          "status": "ACTIVE",
+          "proof": "runtime_readiness_checks_verified"
+        },
+        {
+          "gate_id": "release_shape_verification",
+          "status": "PARTIALLY_IMPLEMENTED",
+          "proof": "release_shape_truth_delta_accumulating"
+        },
+        {
+          "gate_id": "voice_ascent_boundary",
+          "status": "WAIT",
+          "proof": "release_readiness_required_before_parallel_growth"
+        }
+      ],
+      "ascent_path_stages": [
+        {
+          "stage_id": "factory_product_proof",
+          "title_ru": "Proof рабочего продукта в Фабрике",
+          "status": "ACTIVE"
+        },
+        {
+          "stage_id": "release_readiness_boundary",
+          "title_ru": "Подтверждение release-readiness",
+          "status": "WAIT"
+        },
+        {
+          "stage_id": "parallel_voice_growth",
+          "title_ru": "Параллельный рост к Voice of Imperium",
+          "status": "NOT_YET_IMPLEMENTED"
+        }
+      ],
+      "assembly_corridors": [
+        {
+          "corridor_id": "runtime_control_corridor",
+          "from_group": "runtime_control_group",
+          "to_group": "truth_signal_group",
+          "status": "ACTIVE"
+        },
+        {
+          "corridor_id": "truth_to_release_corridor",
+          "from_group": "truth_signal_group",
+          "to_group": "release_readiness",
+          "status": "PARTIALLY_IMPLEMENTED"
+        },
+        {
+          "corridor_id": "release_to_voice_corridor",
+          "from_group": "release_readiness",
+          "to_group": "voice_of_imperium_department",
+          "status": "WAIT"
+        }
+      ],
+      "readiness_chambers": [
+        {
+          "chamber_id": "runtime_chamber",
+          "status": "ACTIVE"
+        },
+        {
+          "chamber_id": "verification_chamber",
+          "status": "ACTIVE"
+        },
+        {
+          "chamber_id": "release_chamber",
+          "status": "PARTIALLY_IMPLEMENTED"
+        }
+      ],
+      "packaging_state": {
+        "status": "PARTIALLY_IMPLEMENTED",
+        "note": "packaging lane exists, release proof is still pending"
+      },
+      "quality_gate_visuals": [
+        {
+          "gate_id": "runtime_readiness",
+          "title_ru": "Gate runtime readiness",
+          "status": "ACTIVE"
+        },
+        {
+          "gate_id": "release_shape_verification",
+          "title_ru": "Gate release-shape truth",
+          "status": "PARTIALLY_IMPLEMENTED"
+        },
+        {
+          "gate_id": "voice_ascent_boundary",
+          "title_ru": "Gate ascent boundary",
+          "status": "WAIT"
+        }
+      ],
+      "live_flow_markers": {
+        "active_now": "runtime_control_group",
+        "waiting_on": "voice_ascent_boundary",
+        "blocked_by": "post_wave1_runtime_observability_consistency_drift",
+        "recent_proven": "runtime_readiness_checks_verified"
+      },
+      "blockers": [
+        "post_wave1_runtime_observability_consistency_drift"
+      ],
+      "proof_lane": "docs/review_artifacts/TIKTOK_OWNER_LIVE_SYSTEM_INTEGRATED_TRANCHE_INTEGRATION_REPORT_V1.md",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "product_id": "voice_launcher",
+      "display_name": "Voice Launcher",
+      "current_stage": "analysis",
+      "target_point": "working_product_base",
+      "assembly_modules": [
+        {
+          "module_id": "intake_card",
+          "state": "NOT_YET_IMPLEMENTED",
+          "gate": "factory_intake",
+          "truth_class": "NOT_YET_IMPLEMENTED",
+          "readiness_score_label": "LOW"
+        }
+      ],
+      "exploded_layer_order": [
+        "intake_card"
+      ],
+      "readiness_chambers": [
+        {
+          "chamber_id": "intake_chamber",
+          "status": "NOT_YET_IMPLEMENTED"
+        }
+      ],
+      "blockers": [
+        "unavailable_in_step_scope"
+      ],
+      "proof_lane": "docs/governance/PRODUCT_CLASS_MAP_V1.md",
+      "truth_class": "DERIVED_CANONICAL"
+    },
+    {
+      "product_id": "trade_bot",
+      "display_name": "Trade Bot",
+      "current_stage": "analysis",
+      "target_point": "working_product_base",
+      "assembly_modules": [
+        {
+          "module_id": "intake_card",
+          "state": "NOT_YET_IMPLEMENTED",
+          "gate": "factory_intake",
+          "truth_class": "NOT_YET_IMPLEMENTED",
+          "readiness_score_label": "LOW"
+        }
+      ],
+      "exploded_layer_order": [
+        "intake_card"
+      ],
+      "readiness_chambers": [
+        {
+          "chamber_id": "intake_chamber",
+          "status": "NOT_YET_IMPLEMENTED"
+        }
+      ],
+      "blockers": [
+        "unavailable_in_step_scope"
+      ],
+      "proof_lane": "docs/governance/PRODUCT_CLASS_MAP_V1.md",
+      "truth_class": "DERIVED_CANONICAL"
+    },
+    {
+      "product_id": "ai_russifier",
+      "display_name": "AI Russifier",
+      "current_stage": "analysis",
+      "target_point": "working_product_base",
+      "assembly_modules": [
+        {
+          "module_id": "intake_card",
+          "state": "NOT_YET_IMPLEMENTED",
+          "gate": "factory_intake",
+          "truth_class": "NOT_YET_IMPLEMENTED",
+          "readiness_score_label": "LOW"
+        }
+      ],
+      "exploded_layer_order": [
+        "intake_card"
+      ],
+      "readiness_chambers": [
+        {
+          "chamber_id": "intake_chamber",
+          "status": "NOT_YET_IMPLEMENTED"
+        }
+      ],
+      "blockers": [
+        "unavailable_in_step_scope"
+      ],
+      "proof_lane": "docs/governance/PRODUCT_CLASS_MAP_V1.md",
+      "truth_class": "DERIVED_CANONICAL"
+    }
+  ],
+  "post_release_split": {
+    "status": "PLANNED_AFTER_RELEASE_READINESS",
+    "tiktok_future_branch": "voice_of_imperium_advertising_department",
+    "note": "release readiness and voice evolution are separated by canon"
+  },
+  "living_flow_relations": {
+    "factory_to_dashboard": "ACTIVE",
+    "factory_to_evolution": "PARTIALLY_IMPLEMENTED",
+    "factory_to_inquisition": "PARTIALLY_IMPLEMENTED",
+    "owner_review_bridge": "ACTIVE"
+  },
+  "resource_discipline": {
+    "pseudo_3d_only": true,
+    "heavy_3d_engine_required": false,
+    "machine_efficient_visual_rule": true,
+    "truth_parity_required": true
+  }
+}

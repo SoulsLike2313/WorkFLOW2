@@ -1,0 +1,105 @@
+{
+  "surface_id": "IMPERIUM_INQUISITION_STATE_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "channel_mode": {
+    "default": "SILENT_HEARTBEAT_WATCH",
+    "event_trigger_enabled": true,
+    "deep_inquisition_mode": "OWNER_OR_CRITICAL_TRIGGER_ONLY",
+    "resource_profile": "LOW_COST_SIGNAL_BASED"
+  },
+  "heresy_definition": {
+    "semantic": "canon deviation with evidence-based impact",
+    "non_goal": "emotional disagreement is not heresy",
+    "truth_class": "SOURCE_EXACT",
+    "source_path": "docs/governance/IMPERIUM_INQUISITION_CANON_V1.md"
+  },
+  "heresy_classes": [
+    {
+      "id": "fake_realtime",
+      "severity": "high",
+      "description": "UI claims realtime maturity beyond implemented live channel."
+    },
+    {
+      "id": "fake_completeness",
+      "severity": "high",
+      "description": "Completion/PASS claimed while contradiction lanes remain unresolved."
+    },
+    {
+      "id": "immutable_mutable_confusion",
+      "severity": "high",
+      "description": "Mutable state presented as immutable canon or vice versa."
+    },
+    {
+      "id": "hardcoded_live_confusion",
+      "severity": "medium",
+      "description": "Hardcoded projection displayed as live/source-exact state."
+    },
+    {
+      "id": "multi_home_uncontrolled_truth",
+      "severity": "high",
+      "description": "Conflicting truth homes without canonical source declaration."
+    },
+    {
+      "id": "owner_bypass",
+      "severity": "critical",
+      "description": "Sovereign owner-gate boundary bypassed."
+    },
+    {
+      "id": "non_sovereign_override",
+      "severity": "critical",
+      "description": "Non-sovereign mirror overrides local canonical truth."
+    },
+    {
+      "id": "stylization_masks_truth_absence",
+      "severity": "medium",
+      "description": "Visual styling hides missing evidence/gap boundaries."
+    },
+    {
+      "id": "structural_canon_drift",
+      "severity": "high",
+      "description": "Architecture drifts from declared canon without gate."
+    }
+  ],
+  "current_integrity_state": {
+    "canon_integrity": "GUARDED",
+    "drift_level": "MEDIUM",
+    "last_verified_sectors": [
+      "storage_topology",
+      "bundle_discipline",
+      "dashboard_truth_parity",
+      "prompt_lineage_honesty"
+    ],
+    "truth_class": "DERIVED_CANONICAL"
+  },
+  "active_heresy_alerts": [
+    {
+      "case_id": "inq-case-001",
+      "class_id": "stylization_masks_truth_absence",
+      "status": "OPEN_REVIEW",
+      "summary": "Factory pseudo-3D styling must remain strictly evidence-bound as new zones are added.",
+      "source_path": "shared_systems/factory_observation_window_v1/web/app.js",
+      "truth_class": "DERIVED_CANONICAL"
+    }
+  ],
+  "review_holding_zone": {
+    "policy": "NO_AUTO_DELETE",
+    "root_cause_required": true,
+    "owner_review_required": true,
+    "truth_class": "SOURCE_EXACT"
+  },
+  "exterminatus_candidates": [
+    {
+      "candidate_id": "ext-001",
+      "status": "PROPOSAL_ONLY",
+      "target": "legacy_stale_truth_projection",
+      "reason": "allowed only after owner review and replacement proof"
+    }
+  ],
+  "owner_decision_escalation": {
+    "doctrine_path": "docs/governance/OWNER_DECISION_ESCALATION_DOCTRINE_V1.md",
+    "registry_path": "docs/governance/OWNER_DECISION_ESCALATION_REGISTRY_V1.md",
+    "required": true,
+    "truth_class": "SOURCE_EXACT"
+  }
+}

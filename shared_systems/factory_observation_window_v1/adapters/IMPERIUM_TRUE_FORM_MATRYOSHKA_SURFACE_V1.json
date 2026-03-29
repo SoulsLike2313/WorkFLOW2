@@ -1,0 +1,123 @@
+﻿{
+  "surface_id": "IMPERIUM_TRUE_FORM_MATRYOSHKA_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "docs/governance/IMPERIUM_TRUE_FORM_MATRYOSHKA_PREMIUM_VISUAL_CANON_V1.md",
+  "model_note": "Source-backed owner-readable profiles for true-form matryoshka nested worlds.",
+  "interaction_contract": {
+    "entry_organ": "suspended_core_ring_sector",
+    "descent_route": [
+      "owner_explanation",
+      "proof_layer",
+      "technical_layer"
+    ],
+    "required_reveal_fields": [
+      "state",
+      "risk",
+      "trust",
+      "readiness",
+      "attention_focus"
+    ],
+    "truth_boundary": "no_fake_realtime_no_fake_completeness",
+    "navigation_depth_levels": [
+      "orbit",
+      "sector",
+      "subsector"
+    ],
+    "return_route_contract": "depth_backtrack_required",
+    "owner_readable_priority": "RUSSIAN_EXPLANATION_FIRST_TECHNICAL_SECOND"
+  },
+  "motion_grammar": {
+    "breathing": "soft_low_frequency",
+    "ring_expansion": "focus_driven",
+    "transition_posture": "calm_layered",
+    "forbidden": [
+      "twitch_noise",
+      "fake_live_pulse",
+      "decorative_particle_spam"
+    ],
+    "resource_profile": "LOW_COST_BOUNDED_ANIMATION",
+    "semantic_transition_rule": "motion_guides_navigation_not_decoration"
+  },
+  "world_profiles": {
+    "core_world": {
+      "summary_ru": "Ядро сознания IMPERIUM: конституция, authority-границы и owner-gate решения.",
+      "why_ru": "Ядро связывает миссию, команды и канон, чтобы не допускать ложных проходов.",
+      "trust_ru": "Доверие высокое только при согласии trust-вердикта, mission/task и constitution слоя.",
+      "limit_ru": "Любое фундаментальное изменение требует sovereign owner decision."
+    },
+    "factory_world": {
+      "summary_ru": "Фабрика Империума как промышленный организм: линии, камеры, gate-кольца и контроль качества.",
+      "why_ru": "Стадии и quality checkpoints показывают не только прогресс, но и границу доказанности.",
+      "trust_ru": "Доверие формируется через source-backed stage transitions и quality proof points.",
+      "limit_ru": "Release-readiness и post-release divergence не объявляются полными без прямого proof."
+    },
+    "tiktok_world": {
+      "summary_ru": "TikTok Agent как сборочный мир: модульные слои, readiness-gates, блокеры и ветка восхождения.",
+      "why_ru": "Продукт читается как живой assembly-организм, а не как плоская статус-карточка.",
+      "trust_ru": "Граница доверия строится на runtime/process signals и честной prompt-lineage границе.",
+      "limit_ru": "Future-ветка Voice of Imperium остается будущей до release boundary proof."
+    },
+    "evolution_world": {
+      "summary_ru": "Эволюция: тихий канал инсайтов, кандидатов и owner approval перед переносом в канон.",
+      "why_ru": "Эволюция читает только канонические control surfaces, без expensive всескана.",
+      "trust_ru": "Кандидаты не становятся каноном автоматически; owner approval обязателен.",
+      "limit_ru": "Deep-review включается только по явной авторизации."
+    },
+    "inquisition_world": {
+      "summary_ru": "Инквизиция: drift/heresy watch, holding zone и эскалация без auto-деструкции.",
+      "why_ru": "Отдельный контур нужен, чтобы стиль и уверенные статусы не подменяли правду.",
+      "trust_ru": "Каждый кейс связан с canon-bearing surface и сохраняет review trail.",
+      "limit_ru": "Exterminatus возможен только как proposal для owner review."
+    },
+    "memory_world": {
+      "summary_ru": "Память: хронология, текущая цепочка, age axis и последняя стабильная точка.",
+      "why_ru": "Память снижает cost на повторное вхождение и защищает от bundle-археологии.",
+      "trust_ru": "История считается подтвержденной только при trace к repo-visible evidence.",
+      "limit_ru": "Meta-index остается partial boundary и не маскируется как complete."
+    },
+    "canon_world": {
+      "summary_ru": "Канон: governance-law слой, неизменяемый фундамент и правила изменения.",
+      "why_ru": "Разделение foundation/mutable защищает систему от ложной стабильности и drift.",
+      "trust_ru": "Authority map и source disclosure обязательны для owner-trust.",
+      "limit_ru": "Foundation cannot mutate by operational convenience."
+    },
+    "storage_world": {
+      "summary_ru": "Целостность: storage topology, continuity capsule и readiness к восстановлению.",
+      "why_ru": "Упорядоченное хранение снижает риск потери истины между шагами и машинами.",
+      "trust_ru": "Доверие держится на integrity manifests, canonical root и явной quarantine-логике.",
+      "limit_ru": "Two-disk migration остается подготовленным вектором, не validated фактом."
+    }
+  },
+  "known_gaps": [
+    {
+      "id": "full_event_bus",
+      "status": "NOT_YET_IMPLEMENTED",
+      "unknown_reason": "not_implemented"
+    },
+    {
+      "id": "auto_preview_pipeline",
+      "status": "NOT_YET_IMPLEMENTED",
+      "unknown_reason": "not_implemented"
+    },
+    {
+      "id": "pixel_perceptual_diff",
+      "status": "UNAVAILABLE_IN_STEP_SCOPE",
+      "unknown_reason": "unavailable_in_step_scope"
+    }
+  ],
+  "nested_world_drilldown": {
+    "mode": "MATRYOSHKA_DEPTH_ROUTE_V1",
+    "depth_contract": [
+      "orbit_overview",
+      "sector_focus",
+      "subsector_focus",
+      "proof_layer",
+      "technical_layer"
+    ],
+    "route_visibility_rule": "owner_must_know_where_he_is_and_how_to_return",
+    "factory_tiktok_truth_rule": "factory_and_tiktok_states_stay_source_backed_without_false_maturity",
+    "truth_class": "SOURCE_EXACT"
+  }
+}

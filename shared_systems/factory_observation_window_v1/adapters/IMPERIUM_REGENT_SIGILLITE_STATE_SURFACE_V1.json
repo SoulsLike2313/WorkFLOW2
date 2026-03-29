@@ -1,0 +1,37 @@
+{
+  "surface_id": "IMPERIUM_REGENT_SIGILLITE_STATE_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "truth_class": "SOURCE_EXACT",
+  "generated_at_utc": "2026-03-27T22:16:19Z",
+  "source_path": "docs/governance/IMPERIUM_REGENT_SIGILLITE_CANON_V1.md",
+  "organ_role": "memory_law_transfer_overseer",
+  "posture": {
+    "mode": "QUIET",
+    "discipline": "EXACT",
+    "owner_bypass_allowed": false
+  },
+  "responsibility_axes": [
+    "seed_integrity",
+    "memory_preservation",
+    "law_carry_forward",
+    "law_drift_watch",
+    "transfer_readiness",
+    "machine_context_proof",
+    "historical_continuity",
+    "external_pattern_adaptation_oversight"
+  ],
+  "integrity_checks": {
+    "current_point_sync": "ACTIVE",
+    "line_split_integrity": "ACTIVE",
+    "mutable_tracker_freshness": "ACTIVE",
+    "review_registry_freshness": "ACTIVE",
+    "transfer_package_completeness": "ACTIVE",
+    "law_event_registry_binding": "ACTIVE"
+  },
+  "alerts": [],
+  "notes": [
+    "Regent Sigillite is a control organ personality, not a separate authority palace.",
+    "Organ remains bound to owner sovereignty and constitutional split rules."
+  ]
+}

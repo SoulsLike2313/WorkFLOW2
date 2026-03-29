@@ -95,3 +95,9 @@ projects/__pycache__root_snapshot/
 .vscode/
 Thumbs.db
 .DS_Store
+
+# IMPERIUM REPO HYGIENE NORMALIZATION (generated/review boundaries)
+docs/review_artifacts/**
+!docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/
+!docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/**
+vpn_diag/

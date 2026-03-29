@@ -75,6 +75,23 @@ DEFAULT_SUBSTRATE_FORBIDDEN_TOKENS = {
     "import_bundle",
     "staging",
 }
+DEFAULT_THRONE_ANCHOR_RELATIVE_PATH = "docs/governance/GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json"
+DEFAULT_THRONE_ANCHOR_CANONICAL_PATH = r"E:\CVVCODEX\docs\governance\GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json"
+DEFAULT_THRONE_ANCHOR_REQUIRED_FIELDS = {
+    "anchor_id": "GOLDEN_THRONE_AUTHORITY_ANCHOR_V1",
+    "anchor_class": "golden_throne_authority_anchor",
+    "profile_version": "v1",
+    "authority_root": "emperor_machine",
+    "rank": "EMPEROR",
+    "machine_mode": "emperor",
+}
+DEFAULT_THRONE_ANCHOR_REQUIRED_LITERALS = {
+    "canonical_repo_root": r"E:\CVVCODEX",
+}
+DEFAULT_THRONE_ANCHOR_REQUIRED_BOOLEANS = {
+    "full_system_authority": True,
+    "active": True,
+}
 
 
 def now_utc() -> str:
@@ -197,19 +214,15 @@ def load_genome_contract() -> dict[str, Any]:
 def load_sovereign_contract() -> dict[str, Any]:
     contract: dict[str, Any] = {
         "contract_loaded": False,
-        "substrate_env_var_name": DEFAULT_SUBSTRATE_ENV,
-        "legacy_env_var_names": [],
-        "proof_surface_filename": DEFAULT_SUBSTRATE_MARKER,
-        "legacy_marker_filenames": [],
-        "local_authority_root_marker_filename": "local_authority_root.marker",
-        "required_marker_fields": dict(DEFAULT_SUBSTRATE_REQUIRED_FIELDS),
-        "required_literal_fields": dict(DEFAULT_SUBSTRATE_REQUIRED_LITERALS),
-        "required_boolean_fields": dict(DEFAULT_SUBSTRATE_REQUIRED_BOOLEANS),
-        "root_binding_field": "workspace_slug_binding",
-        "required_root_binding_value": DEFAULT_WORKSPACE_SLUG,
-        "forbidden_origin_tokens": list(DEFAULT_SUBSTRATE_FORBIDDEN_TOKENS),
-        "required_companion_files": [],
-        "must_be_outside_repo_root": True,
+        "authority_anchor_relative_path": DEFAULT_THRONE_ANCHOR_RELATIVE_PATH,
+        "authority_anchor_canonical_path": DEFAULT_THRONE_ANCHOR_CANONICAL_PATH,
+        "required_anchor_fields": dict(DEFAULT_THRONE_ANCHOR_REQUIRED_FIELDS),
+        "required_anchor_literal_fields": dict(DEFAULT_THRONE_ANCHOR_REQUIRED_LITERALS),
+        "required_anchor_boolean_fields": dict(DEFAULT_THRONE_ANCHOR_REQUIRED_BOOLEANS),
+        "expected_rank": "EMPEROR",
+        "expected_machine_mode": "emperor",
+        "expected_full_system_authority": True,
+        "enforce_exact_anchor_path": True,
     }
     if not SOVEREIGN_CONTRACT.exists():
         return contract
@@ -219,36 +232,25 @@ def load_sovereign_contract() -> dict[str, Any]:
         return contract
 
     contract["contract_loaded"] = True
-    contract["substrate_env_var_name"] = str(
-        payload.get("local_sovereign_substrate_env_var_name", payload.get("proof_env_var_name", DEFAULT_SUBSTRATE_ENV))
+    contract["authority_anchor_relative_path"] = str(
+        payload.get("authority_anchor_relative_path", DEFAULT_THRONE_ANCHOR_RELATIVE_PATH)
+    ).replace("\\", "/")
+    contract["authority_anchor_canonical_path"] = str(
+        payload.get("authority_anchor_canonical_path", DEFAULT_THRONE_ANCHOR_CANONICAL_PATH)
     )
-    contract["legacy_env_var_names"] = [
-        str(x).strip() for x in payload.get("legacy_env_var_names", []) if str(x).strip()
-    ]
-    contract["proof_surface_filename"] = str(
-        payload.get("emperor_local_proof_surface_filename", payload.get("proof_marker_filename", DEFAULT_SUBSTRATE_MARKER))
+    contract["required_anchor_fields"] = dict(
+        payload.get("required_anchor_fields", DEFAULT_THRONE_ANCHOR_REQUIRED_FIELDS)
     )
-    contract["local_authority_root_marker_filename"] = str(
-        payload.get("local_authority_root_marker_filename", "local_authority_root.marker")
+    contract["required_anchor_literal_fields"] = dict(
+        payload.get("required_anchor_literal_fields", DEFAULT_THRONE_ANCHOR_REQUIRED_LITERALS)
     )
-    contract["legacy_marker_filenames"] = [
-        str(x).strip() for x in payload.get("legacy_marker_filenames", []) if str(x).strip()
-    ]
-    contract["required_marker_fields"] = dict(payload.get("required_marker_fields", DEFAULT_SUBSTRATE_REQUIRED_FIELDS))
-    contract["required_literal_fields"] = dict(payload.get("required_literal_fields", DEFAULT_SUBSTRATE_REQUIRED_LITERALS))
-    contract["required_boolean_fields"] = dict(payload.get("required_boolean_fields", DEFAULT_SUBSTRATE_REQUIRED_BOOLEANS))
-    contract["root_binding_field"] = str(payload.get("root_binding_field", "workspace_slug_binding"))
-    contract["required_root_binding_value"] = str(payload.get("required_root_binding_value", DEFAULT_WORKSPACE_SLUG))
-    contract["forbidden_origin_tokens"] = [
-        str(x).strip().lower()
-        for x in payload.get("forbidden_origin_tokens", DEFAULT_SUBSTRATE_FORBIDDEN_TOKENS)
-        if str(x).strip()
-    ]
-    contract["required_companion_files"] = [
-        str(x).strip() for x in payload.get("required_companion_files", []) if str(x).strip()
-    ]
-    path_rules = payload.get("path_rules", {})
-    contract["must_be_outside_repo_root"] = bool(path_rules.get("must_be_outside_repo_root", True))
+    contract["required_anchor_boolean_fields"] = dict(
+        payload.get("required_anchor_boolean_fields", DEFAULT_THRONE_ANCHOR_REQUIRED_BOOLEANS)
+    )
+    contract["expected_rank"] = str(payload.get("expected_rank", "EMPEROR"))
+    contract["expected_machine_mode"] = str(payload.get("expected_machine_mode", "emperor"))
+    contract["expected_full_system_authority"] = bool(payload.get("expected_full_system_authority", True))
+    contract["enforce_exact_anchor_path"] = bool(payload.get("enforce_exact_anchor_path", True))
     return contract
 
 
@@ -424,138 +426,128 @@ def check_genome_bundle() -> dict[str, Any]:
 
 def check_local_sovereign_substrate() -> dict[str, Any]:
     contract = load_sovereign_contract()
-    primary_env_var = str(contract.get("substrate_env_var_name", DEFAULT_SUBSTRATE_ENV))
-    legacy_env_vars = [str(x) for x in contract.get("legacy_env_var_names", []) if str(x).strip()]
-    marker_filename = str(contract.get("proof_surface_filename", DEFAULT_SUBSTRATE_MARKER))
-    legacy_markers = [str(x) for x in contract.get("legacy_marker_filenames", []) if str(x).strip()]
-    required_fields = dict(contract.get("required_marker_fields", DEFAULT_SUBSTRATE_REQUIRED_FIELDS))
-    required_literal_fields = dict(contract.get("required_literal_fields", DEFAULT_SUBSTRATE_REQUIRED_LITERALS))
-    required_boolean_fields = dict(contract.get("required_boolean_fields", DEFAULT_SUBSTRATE_REQUIRED_BOOLEANS))
-    local_authority_root_marker_filename = str(
-        contract.get("local_authority_root_marker_filename", "local_authority_root.marker")
+    anchor_relative_path = str(
+        contract.get("authority_anchor_relative_path", DEFAULT_THRONE_ANCHOR_RELATIVE_PATH)
+    ).replace("\\", "/")
+    expected_anchor = (ROOT / anchor_relative_path).resolve()
+    canonical_anchor_path = str(
+        contract.get("authority_anchor_canonical_path", DEFAULT_THRONE_ANCHOR_CANONICAL_PATH)
+    ).strip()
+    required_fields = dict(
+        contract.get("required_anchor_fields", DEFAULT_THRONE_ANCHOR_REQUIRED_FIELDS)
     )
-    root_binding_field = str(contract.get("root_binding_field", "workspace_slug_binding"))
-    required_root_binding_value = str(contract.get("required_root_binding_value", DEFAULT_WORKSPACE_SLUG))
-    forbidden_tokens = [str(x).strip().lower() for x in contract.get("forbidden_origin_tokens", DEFAULT_SUBSTRATE_FORBIDDEN_TOKENS)]
-    required_companion_files = [str(x).strip() for x in contract.get("required_companion_files", []) if str(x).strip()]
-    must_be_outside_repo_root = bool(contract.get("must_be_outside_repo_root", True))
-
-    env_val = os.environ.get(primary_env_var, "")
-    legacy_env_var_values_present = {legacy: bool(os.environ.get(legacy, "")) for legacy in legacy_env_vars}
-    legacy_env_present_any = any(legacy_env_var_values_present.values())
+    required_literal_fields = dict(
+        contract.get("required_anchor_literal_fields", DEFAULT_THRONE_ANCHOR_REQUIRED_LITERALS)
+    )
+    required_boolean_fields = dict(
+        contract.get("required_anchor_boolean_fields", DEFAULT_THRONE_ANCHOR_REQUIRED_BOOLEANS)
+    )
+    expected_rank = str(contract.get("expected_rank", "EMPEROR")).strip().upper()
+    expected_machine_mode = str(contract.get("expected_machine_mode", "emperor")).strip().lower()
+    expected_full_system_authority = bool(contract.get("expected_full_system_authority", True))
+    enforce_exact_anchor_path = bool(contract.get("enforce_exact_anchor_path", True))
+    expected_anchor_match = str(expected_anchor).lower() == canonical_anchor_path.lower()
 
     details: dict[str, Any] = {
         "contract_loaded": bool(contract.get("contract_loaded", False)),
         "contract_path": str(SOVEREIGN_CONTRACT.relative_to(ROOT)),
-        "primary_env_var_name": primary_env_var,
-        "legacy_env_var_names": legacy_env_vars,
-        "used_env_var_name": primary_env_var if env_val else "",
-        "legacy_env_var_values_present": legacy_env_var_values_present,
-        "legacy_env_present_any": legacy_env_present_any,
-        "legacy_env_ignored_for_authority": True,
-        "proof_surface_filename": marker_filename,
-        "legacy_marker_filenames": legacy_markers,
-        "legacy_marker_files_present": [],
-        "legacy_markers_ignored_for_authority": True,
+        "authority_anchor_relative_path": anchor_relative_path,
+        "authority_anchor_canonical_path": canonical_anchor_path,
+        "authority_anchor_expected_abs_path": str(expected_anchor),
+        "authority_anchor_expected_path_match": expected_anchor_match,
+        "enforce_exact_anchor_path": enforce_exact_anchor_path,
         "required_fields": required_fields,
         "required_literal_fields": required_literal_fields,
         "required_boolean_fields": required_boolean_fields,
-        "local_authority_root_marker_filename": local_authority_root_marker_filename,
-        "root_binding_field": root_binding_field,
-        "required_root_binding_value": required_root_binding_value,
-        "required_companion_files": required_companion_files,
-        "forbidden_origin_tokens": forbidden_tokens,
-        "must_be_outside_repo_root": must_be_outside_repo_root,
-        "env_var_set": bool(env_val),
-        "proof_dir": env_val,
-        "proof_dir_exists": False,
-        "proof_dir_under_repo_root": False,
-        "proof_dir_forbidden_origin": False,
+        "expected_rank": expected_rank,
+        "expected_machine_mode": expected_machine_mode,
+        "expected_full_system_authority": expected_full_system_authority,
         "proof_surface_exists": False,
-        "proof_surface_filename_used": "",
         "proof_surface_valid": False,
         "marker_fields_match": False,
         "literal_fields_match": False,
         "boolean_fields_match": False,
-        "root_binding_match": False,
-        "required_companion_files_present": False,
-        "local_authority_root_marker_present": False,
-        "detection_state": "local_sovereign_substrate_env_var_missing",
+        "canonical_path_field_match": False,
+        "rank_match": False,
+        "machine_mode_match": False,
+        "full_system_authority_match": False,
+        "detection_state": "golden_throne_authority_anchor_missing",
+        "throne_breach": True,
+        "emperor_status_blocked": True,
         "local_sovereign_substrate_present": False,
-        "status": "MISSING_OR_INVALID",
+        "status": "EMPEROR_STATUS_BLOCKED",
         "errors": [],
     }
 
-    if not env_val:
-        if legacy_env_present_any:
-            details["detection_state"] = "local_sovereign_substrate_primary_env_missing_legacy_ignored"
-            details["errors"] = ["local_sovereign_substrate_primary_env_missing_legacy_ignored"]
-        else:
-            details["errors"] = ["local_sovereign_substrate_env_var_missing"]
-        return {"status": "MISSING_OR_INVALID", "required_valid": False, "details": details}
+    if enforce_exact_anchor_path and not expected_anchor_match:
+        details["detection_state"] = "golden_throne_anchor_path_mismatch"
+        details["errors"] = [
+            "THRONE_BREACH",
+            "EMPEROR_STATUS_BLOCKED",
+            "golden_throne_anchor_path_mismatch",
+        ]
+        return {"status": "EMPEROR_STATUS_BLOCKED", "required_valid": False, "details": details}
 
-    proof_dir = Path(env_val)
-    details["proof_dir_exists"] = proof_dir.is_dir()
-    details["proof_dir_under_repo_root"] = _path_is_under_repo(proof_dir)
-    details["proof_dir_forbidden_origin"] = _path_contains_forbidden_tokens(proof_dir, forbidden_tokens)
-    if not proof_dir.is_dir():
-        details["detection_state"] = "local_sovereign_substrate_dir_missing"
-        details["errors"] = ["local_sovereign_substrate_dir_missing"]
-        return {"status": "MISSING_OR_INVALID", "required_valid": False, "details": details}
-    if must_be_outside_repo_root and details["proof_dir_under_repo_root"]:
-        details["detection_state"] = "local_sovereign_substrate_inside_repo_forbidden"
-        details["errors"] = ["local_sovereign_substrate_inside_repo_forbidden"]
-        return {"status": "MISSING_OR_INVALID", "required_valid": False, "details": details}
-    if details["proof_dir_forbidden_origin"]:
-        details["detection_state"] = "local_sovereign_substrate_forbidden_origin"
-        details["errors"] = ["local_sovereign_substrate_forbidden_origin"]
-        return {"status": "MISSING_OR_INVALID", "required_valid": False, "details": details}
-
-    marker_path = proof_dir / marker_filename
-    details["proof_surface_exists"] = marker_path.is_file()
-    details["proof_surface_filename_used"] = marker_filename if marker_path.is_file() else ""
-    details["legacy_marker_files_present"] = [x for x in legacy_markers if (proof_dir / x).is_file()]
-
-    if not marker_path.is_file():
-        if details["legacy_marker_files_present"]:
-            details["detection_state"] = "local_sovereign_surface_missing_primary_marker_legacy_ignored"
-            details["errors"] = ["local_sovereign_surface_missing_primary_marker_legacy_ignored"]
-        else:
-            details["detection_state"] = "local_sovereign_surface_missing"
-            details["errors"] = ["local_sovereign_surface_missing"]
-        return {"status": "MISSING_OR_INVALID", "required_valid": False, "details": details}
+    details["proof_surface_exists"] = expected_anchor.is_file()
+    if not expected_anchor.is_file():
+        details["detection_state"] = "golden_throne_authority_anchor_missing"
+        details["errors"] = [
+            "THRONE_BREACH",
+            "EMPEROR_STATUS_BLOCKED",
+            "golden_throne_authority_anchor_missing",
+        ]
+        return {"status": "EMPEROR_STATUS_BLOCKED", "required_valid": False, "details": details}
 
     try:
-        payload = load_json(marker_path)
+        payload = load_json(expected_anchor)
     except Exception:
-        details["detection_state"] = "local_sovereign_surface_parse_error"
-        details["errors"] = ["local_sovereign_surface_parse_error"]
-        return {"status": "MISSING_OR_INVALID", "required_valid": False, "details": details}
+        details["detection_state"] = "golden_throne_authority_anchor_parse_error"
+        details["errors"] = [
+            "THRONE_BREACH",
+            "EMPEROR_STATUS_BLOCKED",
+            "golden_throne_authority_anchor_parse_error",
+        ]
+        return {"status": "EMPEROR_STATUS_BLOCKED", "required_valid": False, "details": details}
 
     details["marker_fields_match"] = _fields_match(payload, required_fields)
     details["literal_fields_match"] = _fields_match(payload, required_literal_fields)
     details["boolean_fields_match"] = _boolean_fields_match(payload, required_boolean_fields)
-    details["root_binding_match"] = str(payload.get(root_binding_field, "")).strip().lower() == required_root_binding_value.lower()
-    details["required_companion_files_present"] = all((proof_dir / rel).exists() for rel in required_companion_files)
-    details["local_authority_root_marker_present"] = (proof_dir / local_authority_root_marker_filename).is_file()
+    details["canonical_path_field_match"] = (
+        str(payload.get("canonical_anchor_path", "")).strip().lower() == canonical_anchor_path.lower()
+    )
+    details["rank_match"] = str(payload.get("rank", "")).strip().upper() == expected_rank
+    details["machine_mode_match"] = (
+        str(payload.get("machine_mode", "")).strip().lower() == expected_machine_mode
+    )
+    details["full_system_authority_match"] = (
+        isinstance(payload.get("full_system_authority"), bool)
+        and bool(payload.get("full_system_authority")) == expected_full_system_authority
+    )
     details["proof_surface_valid"] = (
         details["marker_fields_match"]
         and details["literal_fields_match"]
         and details["boolean_fields_match"]
-        and details["root_binding_match"]
-        and details["required_companion_files_present"]
-        and details["local_authority_root_marker_present"]
+        and details["canonical_path_field_match"]
+        and details["rank_match"]
+        and details["machine_mode_match"]
+        and details["full_system_authority_match"]
     )
     details["local_sovereign_substrate_present"] = details["proof_surface_valid"]
 
     if details["proof_surface_valid"]:
-        details["detection_state"] = "local_sovereign_substrate_valid"
+        details["detection_state"] = "golden_throne_authority_anchor_valid"
         details["status"] = "VALID"
+        details["throne_breach"] = False
+        details["emperor_status_blocked"] = False
         return {"status": "VALID", "required_valid": True, "details": details}
 
-    details["detection_state"] = "local_sovereign_surface_invalid"
-    details["errors"] = ["local_sovereign_surface_invalid"]
-    return {"status": "MISSING_OR_INVALID", "required_valid": False, "details": details}
+    details["detection_state"] = "golden_throne_authority_anchor_invalid"
+    details["errors"] = [
+        "THRONE_BREACH",
+        "EMPEROR_STATUS_BLOCKED",
+        "golden_throne_authority_anchor_invalid",
+    ]
+    return {"status": "EMPEROR_STATUS_BLOCKED", "required_valid": False, "details": details}
 
 
 def parse_args() -> argparse.Namespace:
@@ -591,8 +583,15 @@ def main() -> int:
     if repo_copy["status"] != "VALID":
         fail_closed_reason.append("repo_copy_validation_failed")
 
-    if repo_copy["status"] == "VALID" and emperor["status"] == "VALID":
+    emperor_status = str(emperor.get("status", "MISSING_OR_INVALID"))
+    emperor_blocked = emperor_status == "EMPEROR_STATUS_BLOCKED" or bool(
+        emperor.get("details", {}).get("emperor_status_blocked", False)
+    )
+
+    if repo_copy["status"] == "VALID" and emperor_status == "VALID":
         detected_rank = "EMPEROR"
+    elif repo_copy["status"] == "VALID" and emperor_blocked:
+        detected_rank = "UNKNOWN"
     elif repo_copy["status"] == "VALID" and primarch["status"] == "VALID":
         detected_rank = "PRIMARCH"
     elif repo_copy["status"] == "VALID":
@@ -603,6 +602,13 @@ def main() -> int:
     if detected_rank not in rank_labels:
         fail_closed_reason.append("detected_rank_not_in_shared_taxonomy")
         detected_rank = "ASTARTES" if repo_copy["status"] == "VALID" else "UNKNOWN"
+
+    verification_verdict = "PASS"
+    if emperor_blocked:
+        verification_verdict = "BLOCKED"
+        fail_closed_reason.append("emperor_status_blocked_by_throne_anchor")
+    if fail_closed_reason and verification_verdict == "PASS":
+        verification_verdict = "BLOCKED"
 
     result: dict[str, Any] = {
         "run_id": f"rank-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}",
@@ -615,7 +621,15 @@ def main() -> int:
         "canonical_root_valid": repo_copy["status"] == "VALID",
         "repo_copy_valid": repo_copy["status"] == "VALID",
         "detected_rank": detected_rank,
-        "verification_verdict": "PASS",
+        "verification_verdict": verification_verdict,
+        "emperor_status": emperor_status,
+        "throne_breach": bool(emperor.get("details", {}).get("throne_breach", False)),
+        "emperor_status_blocked": emperor_blocked,
+        "throne_anchor_path": str(
+            emperor.get("details", {}).get(
+                "authority_anchor_relative_path", DEFAULT_THRONE_ANCHOR_RELATIVE_PATH
+            )
+        ),
         "proof_status": {
             "repo_copy": repo_copy,
             "primarch": primarch,
@@ -642,8 +656,9 @@ def main() -> int:
         "shared_rank_labels": sorted(rank_labels),
         "notes": [
             "creator authority remains compatibility surface and is no longer load-bearing for EMPEROR determination",
-            "EMPEROR requires valid repo copy + valid local sovereign substrate",
-            "PRIMARCH requires valid repo copy + valid owner-issued genome bundle",
+            "EMPEROR requires valid repo copy + valid golden throne authority anchor at canonical path",
+            "if throne anchor is missing/invalid/path-mismatch then EMPEROR_STATUS_BLOCKED + THRONE_BREACH is raised without PRIMARCH downgrade",
+            "PRIMARCH requires valid repo copy + valid owner-issued genome bundle only when emperor anchor block is not active",
         ],
     }
 

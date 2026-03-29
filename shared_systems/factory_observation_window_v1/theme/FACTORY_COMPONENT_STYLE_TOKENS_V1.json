@@ -1,0 +1,148 @@
+{
+  "token_set": "FACTORY_COMPONENT_STYLE_TOKENS_V1",
+  "version": "1.0.0",
+  "status_labels": [
+    "ACTIVE",
+    "RECOMMENDED",
+    "FUTURE",
+    "NOT_YET_IMPLEMENTED",
+    "STYLE_LAYER_ONLY"
+  ],
+  "component_tokens": {
+    "layout": {
+      "grid_gap_px": {
+        "compact": 8,
+        "default": 12,
+        "expanded": 16
+      },
+      "panel_padding_px": {
+        "compact": 10,
+        "default": 14,
+        "wide": 18
+      }
+    },
+    "cards": {
+      "radius_px": {
+        "small": 8,
+        "medium": 12,
+        "large": 16
+      },
+      "border_px": 1,
+      "elevation": {
+        "idle": "0 1px 3px rgba(0,0,0,0.28)",
+        "focus": "0 6px 22px rgba(123,92,255,0.22)",
+        "critical": "0 10px 24px rgba(255,107,130,0.26)"
+      }
+    },
+    "typography": {
+      "family": {
+        "ui": "\"IBM Plex Sans\", \"Segoe UI\", sans-serif",
+        "mono": "\"JetBrains Mono\", \"Consolas\", monospace"
+      },
+      "size_px": {
+        "title_l": 28,
+        "title_m": 22,
+        "title_s": 18,
+        "body": 14,
+        "micro": 12
+      },
+      "weight": {
+        "regular": 400,
+        "medium": 500,
+        "semibold": 600
+      }
+    },
+    "status_badges": {
+      "stable": {
+        "bg": "#123A2C",
+        "fg": "#73E3B2",
+        "ring_color": "#3ED38A"
+      },
+      "improving": {
+        "bg": "#1A3D34",
+        "fg": "#8CEACA",
+        "ring_color": "#73E3B2"
+      },
+      "warning": {
+        "bg": "#3B2D12",
+        "fg": "#FFD986",
+        "ring_color": "#F7C65A"
+      },
+      "critical": {
+        "bg": "#431725",
+        "fg": "#FF9DB0",
+        "ring_color": "#FF6B82"
+      }
+    },
+    "vital_signs": {
+      "ring": {
+        "thickness_px": 10,
+        "track_alpha": 0.22
+      },
+      "pulse_bar": {
+        "height_px": 7,
+        "radius_px": 999,
+        "animation_ms": {
+          "stable": 2400,
+          "improving": 1800,
+          "warning": 1300,
+          "critical": 900
+        }
+      },
+      "trend": {
+        "up_icon": "arrow_upward",
+        "down_icon": "arrow_downward",
+        "flat_icon": "drag_handle"
+      }
+    },
+    "motion": {
+      "duration_ms": {
+        "instant": 120,
+        "calm": 260,
+        "emphasis": 420
+      },
+      "easing": {
+        "default": "cubic-bezier(0.22, 0.64, 0.2, 1)",
+        "exit": "cubic-bezier(0.4, 0.0, 1, 1)"
+      },
+      "allowed_patterns": [
+        "fade",
+        "soft_glow_shift",
+        "progress_pulse"
+      ],
+      "forbidden_patterns": [
+        "flash_strobe",
+        "random_jitter",
+        "decorative_spin_without_data"
+      ]
+    },
+    "traceability_affordances": {
+      "source_exact_marker": {
+        "label": "SOURCE_EXACT",
+        "accent": "#7AA4FF",
+        "icon": "shield_check"
+      },
+      "derived_canonical_marker": {
+        "label": "DERIVED_CANONICAL",
+        "accent": "#9B7DFF",
+        "icon": "hub"
+      },
+      "view_only_marker": {
+        "label": "VIEW_ONLY",
+        "accent": "#8F97BA",
+        "icon": "visibility"
+      },
+      "human_interpretation_marker": {
+        "label": "HUMAN_INTERPRETATION",
+        "accent": "#F7C65A",
+        "icon": "psychology"
+      }
+    }
+  },
+  "constraints": {
+    "must_preserve_truth_class_visibility": true,
+    "must_preserve_source_clickability": true,
+    "must_not_recolor_critical_to_green": true,
+    "must_not_hide_blocker_cards_by_theme": true
+  }
+}

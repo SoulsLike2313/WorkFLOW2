@@ -1,47 +1,32 @@
 # Next Canonical Step
 
-- step_id: `next-step-post-constitution-v1-option-selection`
-- effective_date_utc: `2026-03-18`
-- previous_accepted_stage: `constitution-v1-finalized`
+- step_id: `IMPERIUM_FULL_GREEN_FIX_NOW_CLOSURE_DELTA`
+- effective_date_utc: `2026-03-27`
+- previous_accepted_stage: `IMPERIUM_REMEDIATION_CONSOLIDATION_SUPREME_BRAIN_DELTA`
 - current canonical phase: `constitution-v1-finalized`
-- canonical_phase_route_anchor: `constitution-first phase continuity`
+- route_anchor: `phase1_full_green_then_phase2_consolidation`
 
 ## What Do We Do Next
 
 Canonical next execution step is:
 
-`controlled post-constitution option selection`
+`governance acceptance closure -> close FIX_NOW blockers -> pass full-green gate`
 
-This means:
-1. keep Constitution V1 as active law regime;
-2. execute no new brain-level architecture by default;
-3. choose one bounded option from `docs/review_artifacts/POST_CONSTITUTION_V1_OPTIONS.md`;
-4. run within calibrated constitutional gate discipline;
-5. preserve source precedence and narrative consistency across canonical surfaces.
-6. preserve canonical node root expectation (`E:\CVVCODEX`) and do not treat safe mirror as sovereign source.
+## Scope now
 
-## Canonical Goal
+1. keep line split explicit: continuity / handoff / active-live
+2. keep current-point surfaces synchronized
+3. close governance/trust/sync FIX_NOW blockers
+4. close repo hygiene FIX_NOW blocker classes
+5. keep open future-work risks explicit without fake green
 
-Operate from stabilized law, not from uncontrolled expansion:
-1. constitution remains canonical baseline;
-2. mission/program/command/query layers remain governed by V1;
-3. future hardening is incremental and explicit;
-4. no fake completion or scope drift under post-finalization activity.
+## Phase rule
 
-## Canonical Scope
+Phase 2 (seed genome + memory + law base + lexicon + Regent consolidation + adaptation law) is locked until full-green gate passes.
 
-- target:
-  - post-finalization option evaluation and bounded execution
-  - constitutional check cadence via `scripts/validation/run_constitution_checks.py`
-  - consistency of canonical surfaces and manifests
-- forbidden:
-  - spontaneous new brain-layer rollout
-  - heavy hard-gate framework build without explicit approval
-  - federation/factory expansion as default next move
+## Acceptance for transition
 
-## Canonical Acceptance Criteria
-
-1. Constitution V1 remains canonical reference (`WORKFLOW2_CONSTITUTION_V1.md`);
-2. constitutional checks keep explicit severity discipline;
-3. canonical surfaces remain aligned on phase/state/next-step;
-4. post-V1 work is tied to controlled option path, not architectural drift.
+1. full-green gate returns PASS with zero FIX_NOW blockers
+2. acceptance/verification surfaces agree on current point and active line
+3. no stale active-live wording remains in seed-facing surfaces
+4. transition gate explicitly allows entry to Phase 2

@@ -12,11 +12,15 @@
   "sovereign_claim_denial_policy_status": "PASS",
   "inter_node_document_architecture_status": "PASS",
   "inter_node_document_schema_status": "PASS",
+  "emperor_local_proof_contract_status": "PASS",
+  "shared_taxonomy_contract_status": "PASS",
+  "claim_denial_probe_claim_class": "denial_as_expected_claim",
   "node_rank_detection_status": "PASS",
-  "detected_node_rank": "PRIMARCH",
-  "sovereign_proof_status": "MISSING_OR_INVALID",
-  "sovereign_proof_present": "false",
-  "primarch_authority_path_valid": "true",
+  "detected_node_rank": "EMPEROR",
+  "sovereign_proof_status": "VALID",
+  "sovereign_proof_present": "true",
+  "primarch_genome_bundle_valid": "false",
+  "primarch_authority_path_valid": "false",
   "canonical_root_validity": "VALID",
   "sovereign_claim_denial_status": "ALLOW",
   "sovereign_claim_denial_reason": "",
@@ -25,11 +29,13 @@
     "denial_as_expected_claim"
   ],
   "repo_control_status_freshness": "FRESH",
-  "sync_status": "IN_SYNC",
-  "trust_status": "WARNING",
-  "governance_acceptance": "FAIL",
-  "last_checked_at": "2026-03-18T18:39:54.205006+00:00",
-  "notes": [],
+  "sync_status": "IN_SYNC_CLASSIFIED",
+  "trust_status": "TRUSTED",
+  "governance_acceptance": "PASS",
+  "last_checked_at": "2026-03-28T00:05:13.964896+00:00",
+  "notes": [
+    "primarch_authority_path_valid is kept as compatibility alias; status model v2 uses primarch_genome_bundle_valid as load-bearing indicator"
+  ],
   "check_assessment": [
     {
       "check": "constitution_phase",
@@ -104,6 +110,18 @@
       "rationale": "inter-node document schema artifact exists"
     },
     {
+      "check": "emperor_local_proof_contract_status",
+      "status": "PASS",
+      "severity": "INFO",
+      "rationale": "emperor local proof contract artifact exists"
+    },
+    {
+      "check": "shared_taxonomy_contract_status",
+      "status": "PASS",
+      "severity": "INFO",
+      "rationale": "shared taxonomy contract is available"
+    },
+    {
       "check": "node_rank_detection_status",
       "status": "PASS",
       "severity": "INFO",
@@ -117,13 +135,13 @@
     },
     {
       "check": "detected_node_rank",
-      "status": "PRIMARCH",
+      "status": "EMPEROR",
       "severity": "INFO",
       "rationale": "node rank resolved"
     },
     {
       "check": "sovereign_proof_status",
-      "status": "MISSING_OR_INVALID",
+      "status": "VALID",
       "severity": "INFO",
       "rationale": "sovereign proof state recorded"
     },
@@ -141,66 +159,51 @@
     },
     {
       "check": "sync_status",
-      "status": "IN_SYNC",
+      "status": "IN_SYNC_CLASSIFIED",
       "severity": "INFO",
-      "rationale": "sync parity is clean"
+      "rationale": "sync parity is aligned via controlled classified dirty delta"
     },
     {
       "check": "trust_status",
-      "status": "WARNING",
-      "severity": "SOFT_FAIL",
-      "rationale": "trust state requires review/refresh"
+      "status": "TRUSTED",
+      "severity": "INFO",
+      "rationale": "trust chain is green"
     },
     {
       "check": "governance_acceptance",
-      "status": "FAIL",
-      "severity": "HARD_FAIL",
-      "rationale": "governance acceptance gate is closed"
+      "status": "PASS",
+      "severity": "INFO",
+      "rationale": "governance acceptance is open"
     }
   ],
   "unknown_critical_dependencies": [],
   "gate_actions": {
     "completion_claim": {
-      "action": "BLOCK",
-      "reasons": [
-        "governance_acceptance(HARD_FAIL)",
-        "trust_status(SOFT_FAIL)"
-      ]
+      "action": "ALLOW",
+      "reasons": []
     },
     "certification_claim": {
-      "action": "BLOCK",
-      "reasons": [
-        "governance_acceptance(HARD_FAIL)",
-        "trust_status(SOFT_FAIL)"
-      ]
+      "action": "ALLOW",
+      "reasons": []
     },
     "mirror_refresh": {
-      "action": "BLOCK",
-      "reasons": [
-        "governance_acceptance(HARD_FAIL)"
-      ]
+      "action": "ALLOW",
+      "reasons": []
     },
     "phase_transition": {
-      "action": "BLOCK",
-      "reasons": [
-        "governance_acceptance(HARD_FAIL)",
-        "trust_status(SOFT_FAIL)"
-      ]
+      "action": "ALLOW",
+      "reasons": []
     }
   },
   "severity_counts": {
-    "INFO": 19,
+    "INFO": 23,
     "WARNING": 0,
-    "SOFT_FAIL": 1,
-    "HARD_FAIL": 1
+    "SOFT_FAIL": 0,
+    "HARD_FAIL": 0
   },
-  "overall_verdict": "FAIL",
-  "blockers": [
-    "governance_acceptance: FAIL"
-  ],
-  "warnings": [
-    "trust_status: WARNING"
-  ],
+  "overall_verdict": "PASS",
+  "blockers": [],
+  "warnings": [],
   "severity_model_version": "constitution_gate_severity_model.v1.0.0",
   "overall_verdict_logic": {
     "PASS": "no hard-fail, no soft-fail, no warning, no unknown-critical dependency",
@@ -208,7 +211,8 @@
     "FAIL": "one or more hard-fail checks",
     "UNKNOWN": "unknown-critical dependency blocks reliable decision"
   },
-  "schema_version": "constitution_status_surface.v1.1.0",
+  "schema_version": "constitution_status_surface.v1.2.0",
+  "status_surface_write_mode": "write_surfaces",
   "sources": [
     "docs/governance/WORKFLOW2_CONSTITUTION_V1.md",
     "docs/governance/WORKFLOW2_CONSTITUTION_V0.md",
@@ -222,6 +226,8 @@
     "docs/governance/SOVEREIGN_CLAIM_DENIAL_POLICY_V1.md",
     "docs/governance/INTER_NODE_DOCUMENT_ARCHITECTURE_V1.md",
     "docs/governance/INTER_NODE_DOCUMENT_SCHEMA_V1.md",
+    "workspace_config/emperor_local_proof_contract.json",
+    "workspace_config/shared_taxonomy_contract.json",
     "scripts/validation/detect_node_rank.py",
     "scripts/validation/check_sovereign_claim_denial.py",
     "runtime/repo_control_center/validation/canonical_contradiction_scan.json",
@@ -237,9 +243,9 @@
         "runtime\\repo_control_center\\validation\\canonical_contradiction_scan.json"
       ],
       "exit_code": 0,
-      "stdout": "{\n  \"schema_version\": \"canonical_contradiction_scan.v1.0.0\",\n  \"generated_at\": \"2026-03-18T18:39:53.856770+00:00\",\n  \"files_scanned\": [\n    \"docs/CURRENT_PLATFORM_STATE.md\",\n    \"docs/NEXT_CANONICAL_STEP.md\",\n    \"README.md\",\n    \"REPO_MAP.md\",\n    \"MACHINE_CONTEXT.md\",\n    \"docs/INSTRUCTION_INDEX.md\"\n  ],\n  \"claims\": {\n    \"phase_claims_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"constitution-v1-finalized\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"constitution-v1-finalized\",\n      \"README.md\": \"constitution-v1-finalized\",\n      \"REPO_MAP.md\": \"constitution-v1-finalized\",\n      \"MACHINE_CONTEXT.md\": \"constitution-v1-finalized\",\n      \"docs/INSTRUCTION_INDEX.md\": \"constitution-v1-finalized\"\n    },\n    \"next_step_claims_by_file\": {\n      \"docs/NEXT_CANONICAL_STEP.md\": \"next-step-post-constitution-v1-option-selection\"\n    },\n    \"mission_layer_status_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"accepted\",\n      \"REPO_MAP.md\": \"accepted\",\n      \"MACHINE_CONTEXT.md\": \"accepted\",\n      \"docs/INSTRUCTION_INDEX.md\": \"accepted\"\n    },\n    \"stale_phrase_hits\": {}\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  }\n}\n",
+      "stdout": "{\n  \"schema_version\": \"canonical_contradiction_scan.v1.0.0\",\n  \"generated_at\": \"2026-03-28T00:05:13.609748+00:00\",\n  \"files_scanned\": [\n    \"docs/CURRENT_PLATFORM_STATE.md\",\n    \"docs/NEXT_CANONICAL_STEP.md\",\n    \"README.md\",\n    \"REPO_MAP.md\",\n    \"MACHINE_CONTEXT.md\",\n    \"docs/INSTRUCTION_INDEX.md\"\n  ],\n  \"claims\": {\n    \"phase_claims_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"constitution-v1-finalized\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"constitution-v1-finalized\",\n      \"README.md\": \"constitution-v1-finalized\",\n      \"REPO_MAP.md\": \"constitution-v1-finalized\",\n      \"MACHINE_CONTEXT.md\": \"constitution-v1-finalized\",\n      \"docs/INSTRUCTION_INDEX.md\": \"constitution-v1-finalized\"\n    },\n    \"next_step_claims_by_file\": {\n      \"docs/NEXT_CANONICAL_STEP.md\": \"imperium_full_green_fix_now_closure_delta\"\n    },\n    \"mission_layer_status_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"accepted\",\n      \"REPO_MAP.md\": \"accepted\",\n      \"MACHINE_CONTEXT.md\": \"accepted\",\n      \"docs/INSTRUCTION_INDEX.md\": \"accepted\"\n    },\n    \"stale_phrase_hits\": {}\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  }\n}\n",
       "stderr": "",
-      "stdout_tail": "{\n  \"schema_version\": \"canonical_contradiction_scan.v1.0.0\",\n  \"generated_at\": \"2026-03-18T18:39:53.856770+00:00\",\n  \"files_scanned\": [\n    \"docs/CURRENT_PLATFORM_STATE.md\",\n    \"docs/NEXT_CANONICAL_STEP.md\",\n    \"README.md\",\n    \"REPO_MAP.md\",\n    \"MACHINE_CONTEXT.md\",\n    \"docs/INSTRUCTION_INDEX.md\"\n  ],\n  \"claims\": {\n    \"phase_claims_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"constitution-v1-finalized\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"constitution-v1-finalized\",\n      \"README.md\": \"constitution-v1-finalized\",\n      \"REPO_MAP.md\": \"constitution-v1-finalized\",\n      \"MACHINE_CONTEXT.md\": \"constitution-v1-finalized\",\n      \"docs/INSTRUCTION_INDEX.md\": \"constitution-v1-finalized\"\n    },\n    \"next_step_claims_by_file\": {\n      \"docs/NEXT_CANONICAL_STEP.md\": \"next-step-post-constitution-v1-option-selection\"\n    },\n    \"mission_layer_status_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"accepted\",\n      \"REPO_MAP.md\": \"accepted\",\n      \"MACHINE_CONTEXT.md\": \"accepted\",\n      \"docs/INSTRUCTION_INDEX.md\": \"accepted\"\n    },\n    \"stale_phrase_hits\": {}\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  }\n}\n",
+      "stdout_tail": "{\n  \"schema_version\": \"canonical_contradiction_scan.v1.0.0\",\n  \"generated_at\": \"2026-03-28T00:05:13.609748+00:00\",\n  \"files_scanned\": [\n    \"docs/CURRENT_PLATFORM_STATE.md\",\n    \"docs/NEXT_CANONICAL_STEP.md\",\n    \"README.md\",\n    \"REPO_MAP.md\",\n    \"MACHINE_CONTEXT.md\",\n    \"docs/INSTRUCTION_INDEX.md\"\n  ],\n  \"claims\": {\n    \"phase_claims_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"constitution-v1-finalized\",\n      \"docs/NEXT_CANONICAL_STEP.md\": \"constitution-v1-finalized\",\n      \"README.md\": \"constitution-v1-finalized\",\n      \"REPO_MAP.md\": \"constitution-v1-finalized\",\n      \"MACHINE_CONTEXT.md\": \"constitution-v1-finalized\",\n      \"docs/INSTRUCTION_INDEX.md\": \"constitution-v1-finalized\"\n    },\n    \"next_step_claims_by_file\": {\n      \"docs/NEXT_CANONICAL_STEP.md\": \"imperium_full_green_fix_now_closure_delta\"\n    },\n    \"mission_layer_status_by_file\": {\n      \"docs/CURRENT_PLATFORM_STATE.md\": \"accepted\",\n      \"REPO_MAP.md\": \"accepted\",\n      \"MACHINE_CONTEXT.md\": \"accepted\",\n      \"docs/INSTRUCTION_INDEX.md\": \"accepted\"\n    },\n    \"stale_phrase_hits\": {}\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  }\n}\n",
       "stderr_tail": ""
     },
     {
@@ -250,7 +256,7 @@
         "runtime\\repo_control_center\\validation\\registry_doc_drift_report.json"
       ],
       "exit_code": 0,
-      "stdout": "{\n  \"schema_version\": \"registry_doc_drift_guard.v1.0.0\",\n  \"generated_at\": \"2026-03-18T18:39:53.956244+00:00\",\n  \"checks\": {\n    \"registry_doc_alignment\": {\n      \"missing_classes_in_doc\": [],\n      \"missing_mission_ids_in_doc\": [],\n      \"class_count\": 12,\n      \"mission_id_count\": 15\n    },\n    \"manifest_anchor_alignment\": {\n      \"required_anchors\": [\n        \"docs/governance/WORKFLOW2_CONSTITUTION_V1.md\",\n        \"docs/governance/WORKFLOW2_CONSTITUTION_V0.md\",\n        \"docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md\",\n        \"docs/governance/TRUTH_STATE_MODEL_V1.md\",\n        \"workspace_config/schemas/truth_state_schema.json\"\n      ],\n      \"missing_in_workspace_manifest\": [],\n      \"missing_in_codex_manifest\": []\n    },\n    \"mission_id_examples\": {\n      \"scanned_docs\": [\n        \"README.md\",\n        \"docs/governance/OPERATOR_MISSION_REGISTRY.md\",\n        \"docs/governance/OPERATOR_MISSION_CATALOG_WAVE_3A.md\",\n        \"docs/governance/OPERATOR_MISSION_CATALOG_WAVE_3B.md\",\n        \"docs/governance/OPERATOR_MISSION_CATALOG_WAVE_3C.md\",\n        \"docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md\",\n        \"docs/review_artifacts/OPERATOR_MISSION_LAYER_FINAL_SUMMARY.md\",\n        \"docs/NEXT_CANONICAL_STEP.md\"\n      ],\n      \"found_examples_by_doc\": {\n        \"README.md\": [\n          \"mission.wave3a.status_consolidation.complete.v1\"\n        ],\n        \"docs/governance/OPERATOR_MISSION_REGISTRY.md\": [\n          \"mission.wave3a.certification.baseline.v1\",\n          \"mission.wave3a.readiness.next_stage.v1\",\n          \"mission.wave3a.review_prep.package.v1\",\n          \"mission.wave3a.status_consolidation.complete.v1\",\n          \"mission.wave3b.evidence_consolidation.chain.v1\",\n          \"mission.wave3b.external_review.prep.v1\",\n          \"mission.wave3b.handoff_delivery.sequence.v1\",\n          \"mission.wave3b.readiness_transition.next_stage.v1\",\n          \"mission.wave3c.blocked_mutation.creator_gate.v1\",\n          \"mission.wave3c.blocked_mutation.missing_preconditions.v1\",\n          \"mission.wave3c.blocked_mutation.policy.v1\",\n          \"mission.wave3c.controlled_upgrade.allowed.v1\",\n          \"mission.wave3c.controlled_upgrade.policy_blocked.v1\",\n          \"mission.wave3c.creator_only_certification.v1\",\n          \"mission.wave3c.guarded_baseline_transition.v1\"\n        ],\n        \"docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md\": [\n          \"mission.wave3a.status_consolidation.complete.v1\"\n        ]\n      },\n      \"missing_registry_links\": []\n    }\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  },\n  \"coverage_gaps\": [\n    \"No deep semantic markdown parsing beyond direct token checks.\",\n    \"Does not verify every mission-related doc in repo; focuses on high-value canonical surfaces.\"\n  ]\n}\n",
+      "stdout": "{\n  \"schema_version\": \"registry_doc_drift_guard.v1.0.0\",\n  \"generated_at\": \"2026-03-28T00:05:13.710172+00:00\",\n  \"checks\": {\n    \"registry_doc_alignment\": {\n      \"missing_classes_in_doc\": [],\n      \"missing_mission_ids_in_doc\": [],\n      \"class_count\": 12,\n      \"mission_id_count\": 15\n    },\n    \"manifest_anchor_alignment\": {\n      \"required_anchors\": [\n        \"docs/governance/WORKFLOW2_CONSTITUTION_V1.md\",\n        \"docs/governance/WORKFLOW2_CONSTITUTION_V0.md\",\n        \"docs/governance/WORKFLOW2_CANONICAL_VOCABULARY_V1.md\",\n        \"docs/governance/TRUTH_STATE_MODEL_V1.md\",\n        \"workspace_config/schemas/truth_state_schema.json\"\n      ],\n      \"missing_in_workspace_manifest\": [],\n      \"missing_in_codex_manifest\": []\n    },\n    \"mission_id_examples\": {\n      \"scanned_docs\": [\n        \"README.md\",\n        \"docs/governance/OPERATOR_MISSION_REGISTRY.md\",\n        \"docs/governance/OPERATOR_MISSION_CATALOG_WAVE_3A.md\",\n        \"docs/governance/OPERATOR_MISSION_CATALOG_WAVE_3B.md\",\n        \"docs/governance/OPERATOR_MISSION_CATALOG_WAVE_3C.md\",\n        \"docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md\",\n        \"docs/review_artifacts/OPERATOR_MISSION_LAYER_FINAL_SUMMARY.md\",\n        \"docs/NEXT_CANONICAL_STEP.md\"\n      ],\n      \"found_examples_by_doc\": {\n        \"README.md\": [\n          \"mission.wave3a.status_consolidation.complete.v1\"\n        ],\n        \"docs/governance/OPERATOR_MISSION_REGISTRY.md\": [\n          \"mission.wave3a.certification.baseline.v1\",\n          \"mission.wave3a.readiness.next_stage.v1\",\n          \"mission.wave3a.review_prep.package.v1\",\n          \"mission.wave3a.status_consolidation.complete.v1\",\n          \"mission.wave3b.evidence_consolidation.chain.v1\",\n          \"mission.wave3b.external_review.prep.v1\",\n          \"mission.wave3b.handoff_delivery.sequence.v1\",\n          \"mission.wave3b.readiness_transition.next_stage.v1\",\n          \"mission.wave3c.blocked_mutation.creator_gate.v1\",\n          \"mission.wave3c.blocked_mutation.missing_preconditions.v1\",\n          \"mission.wave3c.blocked_mutation.policy.v1\",\n          \"mission.wave3c.controlled_upgrade.allowed.v1\",\n          \"mission.wave3c.controlled_upgrade.policy_blocked.v1\",\n          \"mission.wave3c.creator_only_certification.v1\",\n          \"mission.wave3c.guarded_baseline_transition.v1\"\n        ],\n        \"docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md\": [\n          \"mission.wave3a.status_consolidation.complete.v1\"\n        ]\n      },\n      \"missing_registry_links\": []\n    }\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  },\n  \"coverage_gaps\": [\n    \"No deep semantic markdown parsing beyond direct token checks.\",\n    \"Does not verify every mission-related doc in repo; focuses on high-value canonical surfaces.\"\n  ]\n}\n",
       "stderr": "",
       "stdout_tail": "cs/governance/OPERATOR_MISSION_REGISTRY.md\",\n        \"docs/governance/OPERATOR_MISSION_CATALOG_WAVE_3A.md\",\n        \"docs/governance/OPERATOR_MISSION_CATALOG_WAVE_3B.md\",\n        \"docs/governance/OPERATOR_MISSION_CATALOG_WAVE_3C.md\",\n        \"docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md\",\n        \"docs/review_artifacts/OPERATOR_MISSION_LAYER_FINAL_SUMMARY.md\",\n        \"docs/NEXT_CANONICAL_STEP.md\"\n      ],\n      \"found_examples_by_doc\": {\n        \"README.md\": [\n          \"mission.wave3a.status_consolidation.complete.v1\"\n        ],\n        \"docs/governance/OPERATOR_MISSION_REGISTRY.md\": [\n          \"mission.wave3a.certification.baseline.v1\",\n          \"mission.wave3a.readiness.next_stage.v1\",\n          \"mission.wave3a.review_prep.package.v1\",\n          \"mission.wave3a.status_consolidation.complete.v1\",\n          \"mission.wave3b.evidence_consolidation.chain.v1\",\n          \"mission.wave3b.external_review.prep.v1\",\n          \"mission.wave3b.handoff_delivery.sequence.v1\",\n          \"mission.wave3b.readiness_transition.next_stage.v1\",\n          \"mission.wave3c.blocked_mutation.creator_gate.v1\",\n          \"mission.wave3c.blocked_mutation.missing_preconditions.v1\",\n          \"mission.wave3c.blocked_mutation.policy.v1\",\n          \"mission.wave3c.controlled_upgrade.allowed.v1\",\n          \"mission.wave3c.controlled_upgrade.policy_blocked.v1\",\n          \"mission.wave3c.creator_only_certification.v1\",\n          \"mission.wave3c.guarded_baseline_transition.v1\"\n        ],\n        \"docs/review_artifacts/OPERATOR_MISSION_CERTIFICATION_REPORT.md\": [\n          \"mission.wave3a.status_consolidation.complete.v1\"\n        ]\n      },\n      \"missing_registry_links\": []\n    }\n  },\n  \"findings\": [],\n  \"summary\": {\n    \"fail_count\": 0,\n    \"warning_count\": 0,\n    \"verdict\": \"PASS\"\n  },\n  \"coverage_gaps\": [\n    \"No deep semantic markdown parsing beyond direct token checks.\",\n    \"Does not verify every mission-related doc in repo; focuses on high-value canonical surfaces.\"\n  ]\n}\n",
       "stderr_tail": ""
@@ -265,9 +271,9 @@
         "E:\\CVVCODEX"
       ],
       "exit_code": 0,
-      "stdout": "{\n  \"run_id\": \"rank-20260318T183954Z\",\n  \"generated_at\": \"2026-03-18T18:39:54.049095+00:00\",\n  \"canonical_root_expected\": \"E:\\\\CVVCODEX\",\n  \"canonical_root_current\": \"E:\\\\CVVCODEX\",\n  \"canonical_root_valid\": true,\n  \"detected_rank\": \"PRIMARCH\",\n  \"verification_verdict\": \"PASS\",\n  \"proof_status\": {\n    \"emperor\": {\n      \"status\": \"MISSING_OR_INVALID\",\n      \"required_valid\": false,\n      \"details\": {\n        \"env_var_name\": \"CVVCODEX_EMPEROR_PROOF_DIR\",\n        \"marker_filename\": \"emperor_sovereign_proof.json\",\n        \"required_fields\": {\n          \"proof_class\": \"emperor_local_sovereign\",\n          \"profile_version\": \"v1\",\n          \"issuer_rank\": \"EMPEROR\"\n        },\n        \"required_root_binding\": \"E:\\\\CVVCODEX\",\n        \"env_var_set\": false,\n        \"proof_dir\": \"\",\n        \"proof_dir_exists\": false,\n        \"marker_exists\": false,\n        \"marker_valid\": false,\n        \"marker_fields_match\": false,\n        \"root_binding_match\": false,\n        \"detection_state\": \"emperor_env_var_missing\",\n        \"sovereign_proof_present\": false,\n        \"status\": \"MISSING_OR_INVALID\",\n        \"errors\": [\n          \"emperor_env_var_missing\"\n        ]\n      }\n    },\n    \"primarch\": {\n      \"status\": \"VALID\",\n      \"required_valid\": false,\n      \"details\": {\n        \"contract_loaded\": true,\n        \"env_var_name\": \"CVVCODEX_CREATOR_AUTHORITY_DIR\",\n        \"marker_filename\": \"creator_authority.json\",\n        \"required_fields\": {\n          \"authority_mode\": \"creator\",\n          \"profile_version\": \"v1\",\n          \"machine_role\": \"canonical_creator_machine\"\n        },\n        \"env_var_set\": true,\n        \"authority_dir\": \"E:\\\\CVVCODEX_authority_mock\",\n        \"authority_dir_exists\": true,\n        \"marker_exists\": true,\n        \"marker_valid\": true,\n        \"marker_fields_match\": true,\n        \"authority_present\": true,\n        \"primarch_authority_path_valid\": true,\n        \"detection_state\": \"creator_authority_present\",\n        \"errors\": []\n      }\n    },\n    \"astartes\": {\n      \"status\": \"FALLBACK_ACTIVE\",\n      \"required_valid\": true,\n      \"details\": {\n        \"helper_fallback_reason\": \"creator_authority_present\"\n      }\n    }\n  },\n  \"fail_closed_reason\": [],\n  \"sovereign_proof_present\": false,\n  \"primarch_authority_path_valid\": true,\n  \"helper_fallback_reason\": \"creator_authority_present\",\n  \"portable_residue_detected\": true,\n  \"safe_mirror_presence_non_elevating\": true,\n  \"notes\": []\n}\n",
+      "stdout": "{\n  \"run_id\": \"rank-20260328T000513Z\",\n  \"generated_at\": \"2026-03-28T00:05:13.810460+00:00\",\n  \"status_model_version\": \"v2\",\n  \"status_model_contract_path\": \"workspace_config\\\\status_model_v2_contract.json\",\n  \"legacy_canonical_root_expected\": \"E:\\\\CVVCODEX\",\n  \"canonical_root_current\": \"E:\\\\CVVCODEX\",\n  \"legacy_canonical_root_match\": true,\n  \"canonical_root_valid\": true,\n  \"repo_copy_valid\": true,\n  \"detected_rank\": \"EMPEROR\",\n  \"verification_verdict\": \"PASS\",\n  \"emperor_status\": \"VALID\",\n  \"throne_breach\": false,\n  \"emperor_status_blocked\": false,\n  \"throne_anchor_path\": \"docs/governance/GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json\",\n  \"proof_status\": {\n    \"repo_copy\": {\n      \"status\": \"VALID\",\n      \"required_valid\": true,\n      \"details\": {\n        \"contract_loaded\": true,\n        \"contract_path\": \"workspace_config\\\\status_model_v2_contract.json\",\n        \"required_anchor_files\": [\n          \"README.md\",\n          \"MACHINE_CONTEXT.md\",\n          \"REPO_MAP.md\",\n          \"workspace_config/workspace_manifest.json\",\n          \"docs/governance/WORKFLOW2_CONSTITUTION_V1.md\",\n          \"scripts/validation/detect_node_rank.py\",\n          \"scripts/validation/check_sovereign_claim_denial.py\"\n        ],\n        \"missing_anchor_files\": [],\n        \"workspace_manifest_loaded\": true,\n        \"workspace_slug_expected\": \"workflow\",\n        \"workspace_slug_actual\": \"workflow\",\n        \"workspace_slug_match\": true,\n        \"repo_copy_valid\": true\n      }\n    },\n    \"primarch\": {\n      \"status\": \"MISSING_OR_INVALID\",\n      \"required_valid\": false,\n      \"details\": {\n        \"contract_loaded\": true,\n        \"contract_path\": \"workspace_config\\\\genome_bundle_contract.json\",\n        \"env_var_name\": \"CVVCODEX_PRIMARCH_GENOME_BUNDLE_DIR\",\n        \"marker_filename\": \"primarch_genome_bundle.json\",\n        \"required_fields\": {\n          \"bundle_kind\": \"owner_issued_genome_bundle\",\n          \"profile_version\": \"v2\",\n          \"issuer_rank\": \"EMPEROR\",\n          \"granted_rank\": \"PRIMARCH\"\n        },\n        \"required_literal_fields\": {\n          \"bundle_scope\": \"offline_manual_transfer_only\",\n          \"authority_surface\": \"primarch_grade_non_sovereign\"\n        },\n        \"required_boolean_fields\": {\n          \"non_sovereign_bundle\": true,\n          \"grants_emperor_authority\": false,\n          \"network_transfer_required\": false,\n          \"offline_manual_transfer_only\": true\n        },\n        \"root_binding_field\": \"workspace_slug_binding\",\n        \"required_root_binding_value\": \"workflow\",\n        \"forbidden_origin_tokens\": [\n          \"safe_mirror\",\n          \"portable_session_imports\",\n          \"portable_session_exports\",\n          \"import_bundle\",\n          \"staging\"\n        ],\n        \"must_be_outside_repo_root\": true,\n        \"env_var_set\": false,\n        \"bundle_dir\": \"\",\n        \"bundle_dir_exists\": false,\n        \"bundle_dir_under_repo_root\": false,\n        \"bundle_dir_forbidden_origin\": false,\n        \"marker_exists\": false,\n        \"marker_valid\": false,\n        \"marker_fields_match\": false,\n        \"literal_fields_match\": false,\n        \"boolean_fields_match\": false,\n        \"root_binding_match\": false,\n        \"grants_only_primarch\": false,\n        \"detection_state\": \"genome_bundle_env_var_missing\",\n        \"status\": \"MISSING_OR_INVALID\",\n        \"errors\": [\n          \"genome_bundle_env_var_missing\"\n        ]\n      }\n    },\n    \"emperor\": {\n      \"status\": \"VALID\",\n      \"required_valid\": true,\n      \"details\": {\n        \"contract_loaded\": true,\n        \"contract_path\": \"workspace_config\\\\emperor_local_proof_contract.json\",\n        \"authority_anchor_relative_path\": \"docs/governance/GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json\",\n        \"authority_anchor_canonical_path\": \"E:\\\\CVVCODEX\\\\docs\\\\governance\\\\GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json\",\n        \"authority_anchor_expected_abs_path\": \"E:\\\\CVVCODEX\\\\docs\\\\governance\\\\GOLDEN_THRONE_AUTHORITY_ANCHOR_V1.json\",\n        \"authority_anchor_expected_path_match\": true,\n        \"enforce_exact_anchor_path\": true,\n        \"required_fields\": {\n          \"anchor_id\": \"GOLDEN_THRONE_AUTHORITY_ANCHOR_V1\",\n          \"anchor_class\": \"golden_throne_authority_anchor\",\n          \"profile_version\": \"v1\",\n          \"authority_root\": \"emperor_machine\",\n          \"rank\": \"EMPEROR\",\n          \"machine_mode\": \"emperor\"\n        },\n        \"required_literal_fields\": {\n          \"canonical_repo_root\": \"E:\\\\CVVCODEX\"\n        },\n        \"required_boolean_fields\": {\n          \"full_system_authority\": true,\n          \"active\": true\n        },\n        \"expected_rank\": \"EMPEROR\",\n        \"expected_machine_mode\": \"emperor\",\n        \"expected_full_system_authority\": true,\n        \"proof_surface_exists\": true,\n        \"proof_surface_valid\": true,\n        \"marker_fields_match\": true,\n        \"literal_fields_match\": true,\n        \"boolean_fields_match\": true,\n        \"canonical_path_field_match\": true,\n        \"rank_match\": true,\n        \"machine_mode_match\": true,\n        \"full_system_authority_match\": true,\n        \"detection_state\": \"golden_throne_authority_anchor_valid\",\n        \"throne_breach\": false,\n        \"emperor_status_blocked\": false,\n        \"local_sovereign_substrate_present\": true,\n        \"status\": \"VALID\",\n        \"errors\": []\n      }\n    },\n    \"astartes\": {\n      \"status\": \"REPO_COPY_ONLY\",\n      \"required_valid\": true,\n      \"details\": {\n        \"rank_path\": \"repo_only_fallback\",\n        \"repo_copy_valid\": true\n      }\n    },\n    \"creator_authority_legacy_compatibility\": {\n      \"contract_loaded\": true,\n      \"load_bearing_for_emperor\": false,\n      \"classification\": \"compatibility_only\",\n      \"status\": \"ABSENT_OR_INVALID\",\n      \"env_var_name\": \"CVVCODEX_CREATOR_AUTHORITY_DIR\",\n      \"marker_filename\": \"creator_authority.json\",\n      \"required_marker_fields\": {\n        \"authority_mode\": \"creator\",\n        \"profile_version\": \"v1\",\n        \"machine_role\": \"canonical_creator_machine\"\n      },\n      \"env_var_set\": false,\n      \"authority_dir_exists\": false,\n      \"marker_exists\": false,\n      \"marker_fields_match\": false\n    }\n  },\n  \"fail_closed_reason\": [],\n  \"sovereign_proof_present\": true,\n  \"primarch_genome_bundle_valid\": false,\n  \"primarch_authority_path_valid\": false,\n  \"helper_fallback_reason\": \"genome_bundle_env_var_missing\",\n  \"portable_residue_detected\": true,\n  \"safe_mirror_presence_non_elevating\": true,\n  \"creator_authority_load_bearing_for_emperor\": false,\n  \"shared_rank_taxonomy_loaded\": true,\n  \"shared_rank_labels\": [\n    \"ASTARTES\",\n    \"EMPEROR\",\n    \"PRIMARCH\",\n    \"UNKNOWN\"\n  ],\n  \"notes\": [\n    \"creator authority remains compatibility surface and is no longer load-bearing for EMPEROR determination\",\n    \"EMPEROR requires valid repo copy + valid golden throne authority anchor at canonical path\",\n    \"if throne anchor is missing/invalid/path-mismatch then EMPEROR_STATUS_BLOCKED + THRONE_BREACH is raised without PRIMARCH downgrade\",\n    \"PRIMARCH requires valid repo copy + valid owner-issued genome bundle only when emperor anchor block is not active\"\n  ]\n}\n",
       "stderr": "",
-      "stdout_tail": "var_name\": \"CVVCODEX_EMPEROR_PROOF_DIR\",\n        \"marker_filename\": \"emperor_sovereign_proof.json\",\n        \"required_fields\": {\n          \"proof_class\": \"emperor_local_sovereign\",\n          \"profile_version\": \"v1\",\n          \"issuer_rank\": \"EMPEROR\"\n        },\n        \"required_root_binding\": \"E:\\\\CVVCODEX\",\n        \"env_var_set\": false,\n        \"proof_dir\": \"\",\n        \"proof_dir_exists\": false,\n        \"marker_exists\": false,\n        \"marker_valid\": false,\n        \"marker_fields_match\": false,\n        \"root_binding_match\": false,\n        \"detection_state\": \"emperor_env_var_missing\",\n        \"sovereign_proof_present\": false,\n        \"status\": \"MISSING_OR_INVALID\",\n        \"errors\": [\n          \"emperor_env_var_missing\"\n        ]\n      }\n    },\n    \"primarch\": {\n      \"status\": \"VALID\",\n      \"required_valid\": false,\n      \"details\": {\n        \"contract_loaded\": true,\n        \"env_var_name\": \"CVVCODEX_CREATOR_AUTHORITY_DIR\",\n        \"marker_filename\": \"creator_authority.json\",\n        \"required_fields\": {\n          \"authority_mode\": \"creator\",\n          \"profile_version\": \"v1\",\n          \"machine_role\": \"canonical_creator_machine\"\n        },\n        \"env_var_set\": true,\n        \"authority_dir\": \"E:\\\\CVVCODEX_authority_mock\",\n        \"authority_dir_exists\": true,\n        \"marker_exists\": true,\n        \"marker_valid\": true,\n        \"marker_fields_match\": true,\n        \"authority_present\": true,\n        \"primarch_authority_path_valid\": true,\n        \"detection_state\": \"creator_authority_present\",\n        \"errors\": []\n      }\n    },\n    \"astartes\": {\n      \"status\": \"FALLBACK_ACTIVE\",\n      \"required_valid\": true,\n      \"details\": {\n        \"helper_fallback_reason\": \"creator_authority_present\"\n      }\n    }\n  },\n  \"fail_closed_reason\": [],\n  \"sovereign_proof_present\": false,\n  \"primarch_authority_path_valid\": true,\n  \"helper_fallback_reason\": \"creator_authority_present\",\n  \"portable_residue_detected\": true,\n  \"safe_mirror_presence_non_elevating\": true,\n  \"notes\": []\n}\n",
+      "stdout_tail": "te\": \"golden_throne_authority_anchor_valid\",\n        \"throne_breach\": false,\n        \"emperor_status_blocked\": false,\n        \"local_sovereign_substrate_present\": true,\n        \"status\": \"VALID\",\n        \"errors\": []\n      }\n    },\n    \"astartes\": {\n      \"status\": \"REPO_COPY_ONLY\",\n      \"required_valid\": true,\n      \"details\": {\n        \"rank_path\": \"repo_only_fallback\",\n        \"repo_copy_valid\": true\n      }\n    },\n    \"creator_authority_legacy_compatibility\": {\n      \"contract_loaded\": true,\n      \"load_bearing_for_emperor\": false,\n      \"classification\": \"compatibility_only\",\n      \"status\": \"ABSENT_OR_INVALID\",\n      \"env_var_name\": \"CVVCODEX_CREATOR_AUTHORITY_DIR\",\n      \"marker_filename\": \"creator_authority.json\",\n      \"required_marker_fields\": {\n        \"authority_mode\": \"creator\",\n        \"profile_version\": \"v1\",\n        \"machine_role\": \"canonical_creator_machine\"\n      },\n      \"env_var_set\": false,\n      \"authority_dir_exists\": false,\n      \"marker_exists\": false,\n      \"marker_fields_match\": false\n    }\n  },\n  \"fail_closed_reason\": [],\n  \"sovereign_proof_present\": true,\n  \"primarch_genome_bundle_valid\": false,\n  \"primarch_authority_path_valid\": false,\n  \"helper_fallback_reason\": \"genome_bundle_env_var_missing\",\n  \"portable_residue_detected\": true,\n  \"safe_mirror_presence_non_elevating\": true,\n  \"creator_authority_load_bearing_for_emperor\": false,\n  \"shared_rank_taxonomy_loaded\": true,\n  \"shared_rank_labels\": [\n    \"ASTARTES\",\n    \"EMPEROR\",\n    \"PRIMARCH\",\n    \"UNKNOWN\"\n  ],\n  \"notes\": [\n    \"creator authority remains compatibility surface and is no longer load-bearing for EMPEROR determination\",\n    \"EMPEROR requires valid repo copy + valid golden throne authority anchor at canonical path\",\n    \"if throne anchor is missing/invalid/path-mismatch then EMPEROR_STATUS_BLOCKED + THRONE_BREACH is raised without PRIMARCH downgrade\",\n    \"PRIMARCH requires valid repo copy + valid owner-issued genome bundle only when emperor anchor block is not active\"\n  ]\n}\n",
       "stderr_tail": ""
     },
     {
@@ -277,7 +283,7 @@
         "--json-only",
         "--no-write",
         "--detected-rank",
-        "PRIMARCH",
+        "EMPEROR",
         "--canonical-root-valid",
         "true",
         "--context-surface",
@@ -296,9 +302,9 @@
         "denial_as_expected_claim"
       ],
       "exit_code": 0,
-      "stdout": "{\n  \"run_id\": \"claim-denial-20260318T183954Z\",\n  \"generated_at\": \"2026-03-18T18:39:54.139043+00:00\",\n  \"detected_rank\": \"PRIMARCH\",\n  \"canonical_root_valid\": true,\n  \"context_surface\": \"local_runtime\",\n  \"signature_status\": \"valid\",\n  \"issuer_identity_status\": \"verified\",\n  \"signature_assurance\": \"structurally_bound\",\n  \"warrant_status\": \"not_required\",\n  \"charter_status\": \"not_required\",\n  \"claim_inputs\": [\n    \"denial_as_expected_claim\"\n  ],\n  \"claim_results\": [\n    {\n      \"claim_class\": \"denial_as_expected_claim\",\n      \"allowed\": true,\n      \"denied\": false,\n      \"claim_severity\": \"INFO\",\n      \"denial_reason\": \"\"\n    }\n  ],\n  \"claim_allowed\": true,\n  \"claim_denied\": false,\n  \"denial_reason\": \"\",\n  \"claim_severity\": \"INFO\",\n  \"overall_verdict\": \"ALLOW\",\n  \"notes\": []\n}\n",
+      "stdout": "{\n  \"run_id\": \"claim-denial-20260328T000513Z\",\n  \"generated_at\": \"2026-03-28T00:05:13.906400+00:00\",\n  \"taxonomy_contract_source\": \"shared_plus_claim_taxonomy_contract\",\n  \"shared_taxonomy_contract_loaded\": true,\n  \"claim_taxonomy_contract_loaded\": true,\n  \"rank_labels\": [\n    \"ASTARTES\",\n    \"EMPEROR\",\n    \"PRIMARCH\",\n    \"UNKNOWN\"\n  ],\n  \"detected_rank\": \"EMPEROR\",\n  \"canonical_root_valid\": true,\n  \"context_surface\": \"local_runtime\",\n  \"signature_status\": \"valid\",\n  \"issuer_identity_status\": \"verified\",\n  \"signature_assurance\": \"structurally_bound\",\n  \"warrant_status\": \"not_required\",\n  \"charter_status\": \"not_required\",\n  \"claim_inputs\": [\n    \"denial_as_expected_claim\"\n  ],\n  \"claim_inputs_normalized\": [\n    \"denial_as_expected_claim\"\n  ],\n  \"claim_results\": [\n    {\n      \"claim_class_input\": \"denial_as_expected_claim\",\n      \"claim_class_normalized\": \"denial_as_expected_claim\",\n      \"allowed\": true,\n      \"denied\": false,\n      \"claim_severity\": \"INFO\",\n      \"denial_reason\": \"\"\n    }\n  ],\n  \"claim_allowed\": true,\n  \"claim_denied\": false,\n  \"denial_reason\": \"\",\n  \"claim_severity\": \"INFO\",\n  \"overall_verdict\": \"ALLOW\",\n  \"notes\": []\n}\n",
       "stderr": "",
-      "stdout_tail": "{\n  \"run_id\": \"claim-denial-20260318T183954Z\",\n  \"generated_at\": \"2026-03-18T18:39:54.139043+00:00\",\n  \"detected_rank\": \"PRIMARCH\",\n  \"canonical_root_valid\": true,\n  \"context_surface\": \"local_runtime\",\n  \"signature_status\": \"valid\",\n  \"issuer_identity_status\": \"verified\",\n  \"signature_assurance\": \"structurally_bound\",\n  \"warrant_status\": \"not_required\",\n  \"charter_status\": \"not_required\",\n  \"claim_inputs\": [\n    \"denial_as_expected_claim\"\n  ],\n  \"claim_results\": [\n    {\n      \"claim_class\": \"denial_as_expected_claim\",\n      \"allowed\": true,\n      \"denied\": false,\n      \"claim_severity\": \"INFO\",\n      \"denial_reason\": \"\"\n    }\n  ],\n  \"claim_allowed\": true,\n  \"claim_denied\": false,\n  \"denial_reason\": \"\",\n  \"claim_severity\": \"INFO\",\n  \"overall_verdict\": \"ALLOW\",\n  \"notes\": []\n}\n",
+      "stdout_tail": "{\n  \"run_id\": \"claim-denial-20260328T000513Z\",\n  \"generated_at\": \"2026-03-28T00:05:13.906400+00:00\",\n  \"taxonomy_contract_source\": \"shared_plus_claim_taxonomy_contract\",\n  \"shared_taxonomy_contract_loaded\": true,\n  \"claim_taxonomy_contract_loaded\": true,\n  \"rank_labels\": [\n    \"ASTARTES\",\n    \"EMPEROR\",\n    \"PRIMARCH\",\n    \"UNKNOWN\"\n  ],\n  \"detected_rank\": \"EMPEROR\",\n  \"canonical_root_valid\": true,\n  \"context_surface\": \"local_runtime\",\n  \"signature_status\": \"valid\",\n  \"issuer_identity_status\": \"verified\",\n  \"signature_assurance\": \"structurally_bound\",\n  \"warrant_status\": \"not_required\",\n  \"charter_status\": \"not_required\",\n  \"claim_inputs\": [\n    \"denial_as_expected_claim\"\n  ],\n  \"claim_inputs_normalized\": [\n    \"denial_as_expected_claim\"\n  ],\n  \"claim_results\": [\n    {\n      \"claim_class_input\": \"denial_as_expected_claim\",\n      \"claim_class_normalized\": \"denial_as_expected_claim\",\n      \"allowed\": true,\n      \"denied\": false,\n      \"claim_severity\": \"INFO\",\n      \"denial_reason\": \"\"\n    }\n  ],\n  \"claim_allowed\": true,\n  \"claim_denied\": false,\n  \"denial_reason\": \"\",\n  \"claim_severity\": \"INFO\",\n  \"overall_verdict\": \"ALLOW\",\n  \"notes\": []\n}\n",
       "stderr_tail": ""
     }
   ]

@@ -140,7 +140,7 @@ def build_response(request_class: str, one_screen: dict[str, Any]) -> dict[str, 
         "authority_status": one_screen.get("authority_status"),
         "authority_path": one_screen.get("authority_path", ""),
         "creator_level_acceptance_allowed": bool(
-            one_screen.get("machine_mode") == "creator"
+            one_screen.get("machine_mode") in {"creator", "emperor"}
             and one_screen.get("authority_present")
             and one_screen.get("governance_acceptance_verdict") == "PASS"
             and one_screen.get("admission_verdict") == "ADMISSIBLE"

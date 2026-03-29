@@ -2,17 +2,17 @@
   "schema_version": "2.0.0",
   "mode_derivation": "rank_model_v2",
   "supported_modes": [
-    "creator",
+    "emperor",
     "helper"
   ],
   "helper_tiers": [
     "high",
     "low"
   ],
-  "canonical_acceptance_mode": "creator_only",
+  "canonical_acceptance_mode": "emperor_only",
   "rank_to_mode_map": {
     "EMPEROR": {
-      "machine_mode": "creator",
+      "machine_mode": "emperor",
       "helper_tier": null
     },
     "PRIMARCH": {
@@ -43,7 +43,7 @@
       "automatic_canonical_merge_without_creator_decision"
     ]
   },
-  "creator_mode": {
+  "emperor_mode": {
     "allowed_operations": [
       "canonical_acceptance",
       "integration_review_decision",
@@ -82,7 +82,7 @@
     "creator_authority_external_marker": "compatibility_only_non_load_bearing_for_mode_or_rank"
   },
   "hard_guards": [
-    "only_emperor_rank_maps_to_creator_mode",
+    "only_emperor_rank_maps_to_emperor_mode",
     "primarch_rank_maps_to_helper_high",
     "astartes_rank_maps_to_helper_low",
     "integration_is_posture_overlay_only_not_authority_source"

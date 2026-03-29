@@ -1,0 +1,197 @@
+﻿{
+  "adapter_version": "1.0.0",
+  "adapter_id": "tiktok_bundle_adapter_v1",
+  "target_bundle_name": "tiktok_agent_owner_gate_review_manual_safe_bundle_20260321T202031Z.zip",
+  "panel_registry_path": "shared_systems/factory_observation_window_v1/adapters/TIKTOK_DASHBOARD_PANEL_REGISTRY_V1.json",
+  "truth_classes": [
+    "SOURCE_EXACT",
+    "DERIVED_CANONICAL",
+    "VIEW_ONLY",
+    "HUMAN_INTERPRETATION"
+  ],
+  "panels": [
+    {
+      "panel_id": "product_identity",
+      "title": "Product Identity",
+      "panel_data_class": "SOURCE_EXACT",
+      "sources": [
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_OWNER_GATE_SESSION_MASTER_BUNDLE.md",
+          "source_section": "## 1) Что продукт собой представляет сейчас",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_PRODUCTIZATION_PACKAGE_V1.md",
+          "source_section": "## 1) Intake findings",
+          "data_class": "SOURCE_EXACT"
+        }
+      ]
+    },
+    {
+      "panel_id": "current_state",
+      "title": "Current State",
+      "panel_data_class": "SOURCE_EXACT",
+      "sources": [
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_INTAKE_AND_FORENSIC_REPORT.md",
+          "source_section": "## 14) Intake verdict",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_PRODUCT_TECHNICAL_MAP_V1.md",
+          "source_section": "## 3) Real current state",
+          "data_class": "SOURCE_EXACT"
+        }
+      ]
+    },
+    {
+      "panel_id": "product_health",
+      "title": "Product Health",
+      "panel_data_class": "DERIVED_CANONICAL",
+      "sources": [
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_DEFECT_DISCOVERY_REPORT.md",
+          "source_section": "## 6) Defect verdict",
+          "data_class": "DERIVED_CANONICAL"
+        },
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_FALSE_STABILITY_RISK_REPORT.md",
+          "source_section": "whole_document",
+          "data_class": "DERIVED_CANONICAL"
+        }
+      ]
+    },
+    {
+      "panel_id": "defect_noise_board",
+      "title": "Defect / Noise Board",
+      "panel_data_class": "SOURCE_EXACT",
+      "sources": [
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_DEFECT_DISCOVERY_REPORT.md",
+          "source_section": "## 1) Critical defects",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_NOISE_AND_SLOP_MAP.md",
+          "source_section": "## 1) Noise zones",
+          "data_class": "SOURCE_EXACT"
+        }
+      ]
+    },
+    {
+      "panel_id": "abc_comparison",
+      "title": "A/B/C Comparison",
+      "panel_data_class": "SOURCE_EXACT",
+      "sources": [
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_OPTION_A_EXPLAINED.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_OPTION_B_EXPLAINED.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_OPTION_C_EXPLAINED.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_OPTION_COMPARISON_MATRIX.md",
+          "source_section": "Сравнительная матрица",
+          "data_class": "SOURCE_EXACT"
+        }
+      ]
+    },
+    {
+      "panel_id": "owner_gates",
+      "title": "Owner Gates",
+      "panel_data_class": "SOURCE_EXACT",
+      "sources": [
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_GATE_A_PACKAGE.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_GATE_B_PACKAGE.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_GATE_C_PACKAGE.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_OWNER_DECISION_WORKBOOK.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        }
+      ]
+    },
+    {
+      "panel_id": "recommended_path",
+      "title": "Recommended Path",
+      "panel_data_class": "HUMAN_INTERPRETATION",
+      "sources": [
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_RECOMMENDED_HARDENING_PATH_V1.md",
+          "source_section": "## 1) Recommendation summary",
+          "data_class": "HUMAN_INTERPRETATION"
+        },
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_WAVE_EXECUTION_PREVIEW.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        }
+      ]
+    },
+    {
+      "panel_id": "learning_evolution",
+      "title": "Learning / Evolution",
+      "panel_data_class": "SOURCE_EXACT",
+      "sources": [
+        {
+          "source_path": "docs/review_artifacts/DEPARTMENT_LEARNING_AND_EVOLUTION_MODEL_V1.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/PRODUCT_LEARNING_CAPTURE_PIPELINE_V1.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/VALIDATED_REUSABLE_PATTERN_LIBRARY_MODEL_V1.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/ANTI_DRIFT_LEARNING_GUARDRAILS_V1.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        }
+      ]
+    },
+    {
+      "panel_id": "next_step",
+      "title": "Next Step",
+      "panel_data_class": "SOURCE_EXACT",
+      "sources": [
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_OWNER_DECISION_WORKBOOK.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        },
+        {
+          "source_path": "docs/review_artifacts/TIKTOK_AGENT_NOW_TO_PRODUCT_PATH_EXPLAINED.md",
+          "source_section": "whole_document",
+          "data_class": "SOURCE_EXACT"
+        }
+      ]
+    }
+  ]
+}

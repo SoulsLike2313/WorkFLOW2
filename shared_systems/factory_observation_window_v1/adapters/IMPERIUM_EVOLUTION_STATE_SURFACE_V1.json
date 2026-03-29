@@ -1,0 +1,132 @@
+{
+  "surface_id": "IMPERIUM_EVOLUTION_STATE_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "channel_mode": {
+    "default": "QUIET_HEARTBEAT",
+    "event_trigger_enabled": true,
+    "deep_review_mode": "OWNER_AUTH_REQUIRED",
+    "resource_profile": "LOW_COST_POINTER_BASED"
+  },
+  "read_scope": {
+    "strategy": "CANONICAL_POINTER_SURFACES_ONLY",
+    "inputs": [
+      "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/06_CURRENT_WORK_LADDER_AND_RECENT_CHAIN.md",
+      "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/MUTABLE_TRACKER.json",
+      "runtime/imperium_storage_control/IMPERIUM_STORAGE_HEALTH_SURFACE_V1.json",
+      "shared_systems/factory_observation_window_v1/adapters/SYSTEM_SEMANTIC_STATE_SURFACES_V1.json",
+      "shared_systems/factory_observation_window_v1/adapters/CURRENT_FACTORY_CANON_STATE_V1.json",
+      "shared_systems/factory_observation_window_v1/adapters/TIKTOK_WAVE1_CONTROL_SURFACES_V1.json"
+    ]
+  },
+  "system_stage_map": [
+    {
+      "system_id": "imperium_core",
+      "display_name": "IMPERIUM core",
+      "current_stage": "STORAGE_CONVERGENCE_COMPLETE",
+      "target_stage": "EVOLUTION_INQUISITION_FACTORY_PARALLEL_ACTIVE",
+      "stage_class": "SOURCE_EXACT",
+      "source_path": "docs/governance/SYSTEM_ENTRYPOINT_V1.md"
+    },
+    {
+      "system_id": "imperial_dashboard",
+      "display_name": "Imperial dashboard / system mirror",
+      "current_stage": "VISUAL_AMPLITUDE_CONTINUATION",
+      "target_stage": "COGNITIVE_CONTROL_MIRROR_WITH_EVOLUTION_AND_INQUISITION",
+      "stage_class": "DERIVED_CANONICAL",
+      "source_path": "runtime/chatgpt_bundle_exports/imperial_dashboard_visual_amplitude_delta_continuation_primary_truth_bundle_latest.zip"
+    },
+    {
+      "system_id": "factory_of_imperium",
+      "display_name": "Factory of Imperium",
+      "current_stage": "PRODUCTION_LANGUAGE_BOOTSTRAP",
+      "target_stage": "PARALLEL_PRODUCT_CONVEYOR_INTELLIGENCE",
+      "stage_class": "DERIVED_CANONICAL",
+      "source_path": "docs/governance/FACTORY_OF_IMPERIUM_PRODUCTION_CANON_V1.md"
+    },
+    {
+      "system_id": "tiktok_agent",
+      "display_name": "TikTok Agent",
+      "current_stage": "POST_WAVE1_TRANCHE_B_IN_PROGRESS",
+      "target_stage": "VOICE_OF_IMPERIUM_AD_DEPARTMENT_EVOLUTION",
+      "stage_class": "SOURCE_EXACT",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/TIKTOK_WAVE1_CONTROL_SURFACES_V1.json"
+    },
+    {
+      "system_id": "voice_launcher",
+      "display_name": "Voice Launcher",
+      "current_stage": "PRODUCT_BASE_SEED",
+      "target_stage": "WORKING_PRODUCT_BASE_IN_FACTORY",
+      "stage_class": "DERIVED_CANONICAL",
+      "source_path": "docs/governance/PRODUCT_CLASS_MAP_V1.md"
+    },
+    {
+      "system_id": "trade_bot",
+      "display_name": "Trade Bot",
+      "current_stage": "PRODUCT_BASE_SEED",
+      "target_stage": "WORKING_PRODUCT_BASE_IN_FACTORY",
+      "stage_class": "DERIVED_CANONICAL",
+      "source_path": "docs/governance/PRODUCT_CLASS_MAP_V1.md"
+    },
+    {
+      "system_id": "ai_russifier",
+      "display_name": "AI Russifier",
+      "current_stage": "PRODUCT_BASE_SEED",
+      "target_stage": "WORKING_PRODUCT_BASE_IN_FACTORY",
+      "stage_class": "DERIVED_CANONICAL",
+      "source_path": "docs/governance/PRODUCT_CLASS_MAP_V1.md"
+    }
+  ],
+  "self_question_bank": [
+    "Which active line yields highest transferable gain without scope drift?",
+    "Which open contradiction lane blocks next owner checkpoint confidence?",
+    "Which gap is semantic-only and which is operationally blocking?",
+    "What can be moved from product-local fix to system-wide reusable control?"
+  ],
+  "insight_candidates": [
+    {
+      "candidate_id": "evocand-001",
+      "title": "Runtime diagnostics harmonization across product lines",
+      "status": "CANDIDATE",
+      "priority": "high",
+      "truth_class": "DERIVED_CANONICAL"
+    },
+    {
+      "candidate_id": "evocand-002",
+      "title": "Inquisition-to-dashboard warning lane compaction",
+      "status": "CANDIDATE",
+      "priority": "medium",
+      "truth_class": "DERIVED_CANONICAL"
+    }
+  ],
+  "owner_approval_queue": [
+    {
+      "queue_id": "evo-owner-001",
+      "title": "Promote evolution candidates into active canon law set",
+      "status": "OWNER_DECISION_PENDING",
+      "truth_class": "DERIVED_CANONICAL"
+    }
+  ],
+  "accepted_transfer_gains": [
+    {
+      "gain_id": "gain-001",
+      "title": "one-primary-bundle + short-first contract",
+      "status": "ACCEPTED",
+      "source_path": "docs/governance/SHORT_FIRST_REPLY_LAW_V1.md",
+      "truth_class": "SOURCE_EXACT"
+    },
+    {
+      "gain_id": "gain-002",
+      "title": "unknown-reason taxonomy in semantic surfaces",
+      "status": "ACCEPTED",
+      "source_path": "shared_systems/factory_observation_window_v1/adapters/SYSTEM_SEMANTIC_STATE_SURFACES_V1.json",
+      "truth_class": "SOURCE_EXACT"
+    }
+  ],
+  "truth_boundary": {
+    "no_auto_canon_mutation": true,
+    "owner_gate_required_for_foundation_change": true,
+    "completion_claim_requires_evidence": true,
+    "truth_class": "SOURCE_EXACT"
+  }
+}

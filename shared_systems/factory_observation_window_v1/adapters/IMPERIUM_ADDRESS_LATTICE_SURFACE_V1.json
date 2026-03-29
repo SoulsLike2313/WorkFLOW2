@@ -1,0 +1,29 @@
+{
+  "surface_id": "IMPERIUM_ADDRESS_LATTICE_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "generated_at_utc": "2026-03-28T08:22:27Z",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "runtime/administratum/IMPERIUM_ADDRESS_LATTICE_V1.json",
+  "payload": {
+    "surface_id": "IMPERIUM_ADDRESS_LATTICE_V1",
+    "generated_at_utc": "2026-03-28T08:22:27Z",
+    "truth_class": "SOURCE_EXACT",
+    "status": "PASS",
+    "addresses": {
+      "foundation": "docs/governance",
+      "mutable_tracker": "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/MUTABLE_TRACKER.json",
+      "truth_spine": "runtime/administratum/IMPERIUM_TRUTH_SPINE_V1.json",
+      "dashboard_truth_engine": "runtime/administratum/IMPERIUM_DASHBOARD_TRUTH_ENGINE_V1.json",
+      "bundle_truth_chamber": "runtime/administratum/IMPERIUM_BUNDLE_TRUTH_CHAMBER_V1.json",
+      "worktree_purity_gate": "runtime/administratum/IMPERIUM_WORKTREE_PURITY_GATE_V1.json",
+      "anti_lie_model": "runtime/administratum/IMPERIUM_ANTI_LIE_MODEL_V1.json",
+      "live_truth_support_loop": "runtime/administratum/IMPERIUM_LIVE_TRUTH_SUPPORT_LOOP_V1.json",
+      "watch": "runtime/administratum/IMPERIUM_WATCH_STATE_V1.json",
+      "inquisition": "runtime/administratum/IMPERIUM_INQUISITION_LOOP_V1.json",
+      "astronomican": "runtime/administratum/IMPERIUM_ASTRONOMICAN_ROUTE_REGISTRY_V1.json",
+      "capsule_root": "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1",
+      "review_root": "docs/review_artifacts/imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z"
+    }
+  }
+}

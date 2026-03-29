@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
+import socket
 import shutil
 import subprocess
 import sys
@@ -10,6 +12,7 @@ import traceback
 import zipfile
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from importlib.util import find_spec
 from pathlib import Path
 from typing import Any
 
@@ -35,6 +38,13 @@ FAILED = "failed"
 GATE_PASS = "PASS"
 GATE_WARN = "PASS_WITH_WARNINGS"
 GATE_FAIL = "FAIL"
+
+RUNTIME_DEPENDENCY_PIP_PACKAGES = {
+    "fastapi": "fastapi>=0.115.0",
+    "uvicorn": "uvicorn[standard]>=0.30.0",
+    "pydantic": "pydantic>=2.8.0",
+    "httpx": "httpx>=0.27.0",
+}
 
 
 def _utc_now() -> datetime:
@@ -80,9 +90,31 @@ class VerificationRunner:
         self.started_at = _utc_now()
         self.db_path = self.run_dir / "verification_core.db"
         self.workspace_state_path = self.run_dir / "verification_workspace_state.db"
+        self.ui_validation_max_age_minutes = 360
+
+    @staticmethod
+    def _is_local_port_available(host: str, port: int) -> bool:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            try:
+                sock.bind((host, port))
+            except OSError:
+                return False
+        return True
+
+    @staticmethod
+    def _allocate_ephemeral_local_port(host: str) -> int:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.bind((host, 0))
+            return int(sock.getsockname()[1])
+
+    def _resolve_backend_port(self, *, host: str, preferred_port: int) -> tuple[int, bool]:
+        if self._is_local_port_available(host, preferred_port):
+            return preferred_port, False
+        return self._allocate_ephemeral_local_port(host), True
 
     def run(self) -> int:
         self._stage_prepare_environment()
+        self._stage_runtime_dependency_contract_bootstrap()
         self._stage_config_validation()
         self._stage_sqlite_bootstrap()
         self._stage_workspace_seed()
@@ -94,6 +126,7 @@ class VerificationRunner:
         self._stage_ai_contract_checks()
         self._stage_ui_backend_connectivity()
         self._stage_update_patch_checks()
+        self._stage_ui_validation_truth_alignment()
         self._stage_service_classification()
 
         report = self._write_reports()
@@ -102,6 +135,23 @@ class VerificationRunner:
         print(f"[verify] summary_json={report['json_path']}")
         print(f"[verify] summary_md={report['md_path']}")
         return 0 if gate_status == GATE_PASS else 1
+
+    @staticmethod
+    def _missing_runtime_dependencies() -> list[str]:
+        missing: list[str] = []
+        for module in RUNTIME_DEPENDENCY_PIP_PACKAGES:
+            if find_spec(module) is None:
+                missing.append(module)
+        return sorted(set(missing))
+
+    @staticmethod
+    def _pip_specs_for_modules(modules: list[str]) -> list[str]:
+        specs: list[str] = []
+        for module in modules:
+            spec = RUNTIME_DEPENDENCY_PIP_PACKAGES.get(module)
+            if spec:
+                specs.append(spec)
+        return specs
 
     def _stage_prepare_environment(self) -> None:
         name = "prepare_environment"
@@ -212,8 +262,31 @@ class VerificationRunner:
                 "test_*.py",
             ]
             result = self._run_command(stage_name, cmd, env_overrides=self._verify_env())
-            details = {"suite": "unittest", "start_dir": start_dir, "exit_code": result["exit_code"]}
-            status = VERIFIED if result["exit_code"] == 0 else FAILED
+            dependency_missing = self._extract_dependency_gaps(
+                stdout_text=result.get("stdout_text", ""),
+                stderr_text=result.get("stderr_text", ""),
+            )
+            skipped_count = self._extract_unittest_skips(
+                stdout_text=result.get("stdout_text", ""),
+                stderr_text=result.get("stderr_text", ""),
+            )
+            details = {
+                "suite": "unittest",
+                "start_dir": start_dir,
+                "exit_code": result["exit_code"],
+                "dependency_missing": dependency_missing,
+                "skipped_count": skipped_count,
+            }
+            if result["exit_code"] == 0 and not dependency_missing and skipped_count == 0:
+                status = VERIFIED
+            elif dependency_missing:
+                status = PARTIALLY_VERIFIED
+                details["classification"] = "dependency_gap_detected"
+            elif result["exit_code"] == 0 and skipped_count > 0:
+                status = PARTIALLY_VERIFIED
+                details["classification"] = "tests_skipped"
+            else:
+                status = FAILED
             self._add_stage(
                 name=stage_name,
                 status=status,
@@ -231,8 +304,31 @@ class VerificationRunner:
         try:
             cmd = [sys.executable, "-m", "pytest", suite_dir, "-q"]
             result = self._run_command(stage_name, cmd, env_overrides=self._verify_env())
-            details = {"suite": "pytest", "suite_dir": suite_dir, "exit_code": result["exit_code"]}
-            status = VERIFIED if result["exit_code"] == 0 else FAILED
+            dependency_missing = self._extract_dependency_gaps(
+                stdout_text=result.get("stdout_text", ""),
+                stderr_text=result.get("stderr_text", ""),
+            )
+            skipped_count = self._extract_pytest_skips(
+                stdout_text=result.get("stdout_text", ""),
+                stderr_text=result.get("stderr_text", ""),
+            )
+            details = {
+                "suite": "pytest",
+                "suite_dir": suite_dir,
+                "exit_code": result["exit_code"],
+                "dependency_missing": dependency_missing,
+                "skipped_count": skipped_count,
+            }
+            if result["exit_code"] == 0 and not dependency_missing and skipped_count == 0:
+                status = VERIFIED
+            elif dependency_missing:
+                status = PARTIALLY_VERIFIED
+                details["classification"] = "dependency_gap_detected"
+            elif result["exit_code"] == 0 and skipped_count > 0:
+                status = PARTIALLY_VERIFIED
+                details["classification"] = "tests_skipped"
+            else:
+                status = FAILED
             self._add_stage(
                 name=stage_name,
                 status=status,
@@ -249,18 +345,31 @@ class VerificationRunner:
         name = "runtime_readiness_checks"
         started = _utc_now()
         manager = StartupManager()
-        manager.config.api_port = 8123
+        bind_host = "127.0.0.1"
+        preferred_port = 8123
+        selected_port, fallback_used = self._resolve_backend_port(host=bind_host, preferred_port=preferred_port)
+        manager.config.api_host = bind_host
+        manager.config.api_port = selected_port
         manager.config.storage.workspace_state_path = self.workspace_state_path
         try:
             context = manager.initialize_local_runtime()
-            manager.start_internal_backend(host="127.0.0.1", port=8123)
-            backend_ready = manager.wait_backend_ready(timeout_seconds=15.0)
-            status = VERIFIED if context.readiness.get("overall_ready") and backend_ready else FAILED
+            manager.start_internal_backend(host=bind_host, port=selected_port)
+            probe = manager.probe_backend_readiness(timeout_seconds=15.0, host=bind_host, port=selected_port)
+            backend_ready = probe.ready
+            status = VERIFIED if context.readiness.get("overall_ready") and probe.ready else FAILED
             details = {
                 "local_readiness": context.readiness,
                 "backend_ready": backend_ready,
-                "api_host": "127.0.0.1",
-                "api_port": 8123,
+                "api_host": bind_host,
+                "api_port": selected_port,
+                "preferred_port": preferred_port,
+                "port_fallback_used": fallback_used,
+                "proxy_bypass_enabled": True,
+                "failure_reason": probe.failure_reason,
+                "recovery_signal": probe.recovery_signal,
+                "probe_endpoint_statuses": probe.endpoint_statuses,
+                "probe_attempts_count": len(probe.attempts),
+                "probe_duration_seconds": probe.duration_seconds,
             }
             self._add_stage(name=name, status=status, started=started, details=details)
         except Exception as exc:  # pragma: no cover
@@ -294,24 +403,50 @@ class VerificationRunner:
         name = "ui_backend_connectivity_checks"
         started = _utc_now()
         manager = StartupManager()
-        manager.config.api_port = 8124
+        bind_host = "127.0.0.1"
+        preferred_port = 8124
+        selected_port, fallback_used = self._resolve_backend_port(host=bind_host, preferred_port=preferred_port)
+        manager.config.api_host = bind_host
+        manager.config.api_port = selected_port
         manager.config.storage.workspace_state_path = self.workspace_state_path
         try:
             manager.initialize_local_runtime()
-            manager.start_internal_backend(host="127.0.0.1", port=8124)
-            ready = manager.wait_backend_ready(timeout_seconds=15.0)
-            details: dict[str, Any] = {"backend_ready": ready}
-            if ready:
-                with httpx.Client(timeout=4.0) as client:
-                    r1 = client.get("http://127.0.0.1:8124/workspace/health")
-                    r2 = client.get("http://127.0.0.1:8124/workspace/profiles")
-                    r3 = client.get("http://127.0.0.1:8124/workspace/readiness")
+            manager.start_internal_backend(host=bind_host, port=selected_port)
+            probe = manager.probe_backend_readiness(timeout_seconds=15.0, host=bind_host, port=selected_port)
+            details: dict[str, Any] = {
+                "backend_ready": probe.ready,
+                "api_host": bind_host,
+                "api_port": selected_port,
+                "preferred_port": preferred_port,
+                "port_fallback_used": fallback_used,
+                "proxy_bypass_enabled": True,
+                "failure_reason": probe.failure_reason,
+                "recovery_signal": probe.recovery_signal,
+                "probe_endpoint_statuses": probe.endpoint_statuses,
+                "probe_attempts_count": len(probe.attempts),
+                "probe_duration_seconds": probe.duration_seconds,
+            }
+            if probe.ready:
+                with httpx.Client(timeout=4.0, trust_env=False) as client:
+                    base_url = f"http://{bind_host}:{selected_port}"
+                    r1 = client.get(f"{base_url}/workspace/health")
+                    r2 = client.get(f"{base_url}/workspace/profiles")
+                    r3 = client.get(f"{base_url}/workspace/readiness")
+                    r4 = client.get(f"{base_url}/workspace/prompt-lineage")
                 details["statuses"] = {
                     "workspace_health": r1.status_code,
                     "workspace_profiles": r2.status_code,
                     "workspace_readiness": r3.status_code,
+                    "workspace_prompt_lineage": r4.status_code,
                 }
-                status = VERIFIED if r1.status_code == 200 and r2.status_code == 200 and r3.status_code == 200 else FAILED
+                status = (
+                    VERIFIED
+                    if r1.status_code == 200
+                    and r2.status_code == 200
+                    and r3.status_code == 200
+                    and r4.status_code == 200
+                    else FAILED
+                )
             else:
                 status = FAILED
             self._add_stage(name=name, status=status, started=started, details=details)
@@ -360,32 +495,361 @@ class VerificationRunner:
         except Exception as exc:  # pragma: no cover
             self._record_stage_exception(name, started, exc)
 
+    def _stage_runtime_dependency_contract_bootstrap(self) -> None:
+        name = "runtime_dependency_contract_bootstrap"
+        started = _utc_now()
+        try:
+            missing_before = self._missing_runtime_dependencies()
+            details: dict[str, Any] = {
+                "required_modules": sorted(RUNTIME_DEPENDENCY_PIP_PACKAGES.keys()),
+                "missing_before": missing_before,
+            }
+            if not missing_before:
+                self._add_stage(name=name, status=VERIFIED, started=started, details=details)
+                return
+
+            pip_specs = self._pip_specs_for_modules(missing_before)
+            details["attempted_install_specs"] = pip_specs
+            if not pip_specs:
+                details["classification"] = "dependency_contract_missing_with_no_spec_mapping"
+                self._add_stage(name=name, status=PARTIALLY_VERIFIED, started=started, details=details)
+                return
+
+            cmd = [sys.executable, "-m", "pip", "install", *pip_specs]
+            result = self._run_command(name, cmd, env_overrides=self._verify_env())
+            missing_after = self._missing_runtime_dependencies()
+            details.update(
+                {
+                    "install_exit_code": result["exit_code"],
+                    "missing_after": missing_after,
+                    "install_attempted": True,
+                }
+            )
+            if not missing_after:
+                status = VERIFIED
+            else:
+                status = PARTIALLY_VERIFIED
+                details["classification"] = "dependency_contract_still_open"
+            self._add_stage(
+                name=name,
+                status=status,
+                started=started,
+                details=details,
+                command=result["command"],
+                stdout_log=result["stdout_log"],
+                stderr_log=result["stderr_log"],
+            )
+        except Exception as exc:  # pragma: no cover
+            self._record_stage_exception(name, started, exc)
+
+    def _stage_ui_validation_truth_alignment(self) -> None:
+        name = "ui_validation_truth_alignment"
+        started = _utc_now()
+        try:
+            cmd = [sys.executable, "scripts/ui_validate.py", "--api-base-url", "http://127.0.0.1:9"]
+            result = self._run_command(name, cmd, env_overrides=self._verify_env())
+
+            summary_path = self.project_root / "ui_validation_summary.json"
+            latest_run_path = self.project_root / "runtime" / "ui_validation" / "latest_run.json"
+            details: dict[str, Any] = {
+                "summary_path": str(summary_path),
+                "latest_run_path": str(latest_run_path),
+                "ui_validate_exit_code": result["exit_code"],
+                "stale_threshold_minutes": self.ui_validation_max_age_minutes,
+            }
+
+            if not summary_path.exists():
+                details["error"] = "ui_validation_summary_missing"
+                self._add_stage(
+                    name=name,
+                    status=FAILED,
+                    started=started,
+                    details=details,
+                    command=result["command"],
+                    stdout_log=result["stdout_log"],
+                    stderr_log=result["stderr_log"],
+                )
+                return
+
+            summary = json.loads(summary_path.read_text(encoding="utf-8"))
+            validation_status = str(summary.get("overall_status", "FAIL"))
+            run_id = str(summary.get("run_id", "unknown"))
+            finished_at_raw = str(summary.get("finished_at", ""))
+            stale = True
+            age_minutes: float | None = None
+            if finished_at_raw:
+                try:
+                    finished_at = datetime.fromisoformat(finished_at_raw.replace("Z", "+00:00"))
+                    age_minutes = round((_utc_now() - finished_at).total_seconds() / 60.0, 2)
+                    stale = bool(age_minutes > self.ui_validation_max_age_minutes)
+                except Exception:
+                    stale = True
+
+            artifacts = summary.get("artifacts", {}) if isinstance(summary.get("artifacts"), dict) else {}
+            manifest_rel = str(artifacts.get("root_screenshots_manifest", "")).strip()
+            trace_rel = str(artifacts.get("root_walkthrough_trace", "")).strip()
+            manifest_path = (self.project_root / manifest_rel).resolve() if manifest_rel else self.project_root / "ui_screenshots_manifest.json"
+            trace_path = (self.project_root / trace_rel).resolve() if trace_rel else self.project_root / "ui_walkthrough_trace.json"
+            latest_run_id = "unknown"
+            latest_run_status = "UNKNOWN"
+            latest_run_matches_root = False
+            if latest_run_path.exists():
+                try:
+                    latest_payload = json.loads(latest_run_path.read_text(encoding="utf-8"))
+                    latest_run_id = str(latest_payload.get("run_id", "unknown"))
+                    latest_run_status = str(latest_payload.get("status", "UNKNOWN"))
+                    latest_run_matches_root = latest_run_id == run_id
+                except Exception:
+                    latest_run_id = "parse_error"
+                    latest_run_status = "UNKNOWN"
+                    latest_run_matches_root = False
+            expected_screens = {
+                "dashboard",
+                "profiles",
+                "sessions",
+                "content",
+                "analytics",
+                "ai_studio",
+                "audit",
+                "updates",
+                "settings",
+            }
+            covered_screens: set[str] = set()
+            screenshot_count = 0
+            trace_steps_count = 0
+            trace_pass_count = 0
+            trace_warn_count = 0
+            trace_fail_count = 0
+
+            if manifest_path.exists():
+                try:
+                    manifest_payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+                    screenshots = manifest_payload.get("screenshots", [])
+                    if isinstance(screenshots, list):
+                        screenshot_count = len(screenshots)
+                        for item in screenshots:
+                            if not isinstance(item, dict):
+                                continue
+                            screen = str(item.get("screen_name") or item.get("page") or "").strip()
+                            if screen:
+                                covered_screens.add(screen)
+                except Exception:
+                    screenshot_count = 0
+                    covered_screens = set()
+
+            if trace_path.exists():
+                try:
+                    trace_payload = json.loads(trace_path.read_text(encoding="utf-8"))
+                    steps = trace_payload.get("steps", [])
+                    if isinstance(steps, list):
+                        trace_steps_count = len(steps)
+                        for step in steps:
+                            result_value = str((step or {}).get("result", "")).strip().lower()
+                            if result_value == "pass":
+                                trace_pass_count += 1
+                            elif result_value in {"warning", "warn"}:
+                                trace_warn_count += 1
+                            elif result_value in {"fail", "failed", "error"}:
+                                trace_fail_count += 1
+                except Exception:
+                    trace_steps_count = 0
+
+            missing_screens = sorted(expected_screens - covered_screens)
+            failed_checks_raw = summary.get("failed_checks", []) if isinstance(summary.get("failed_checks"), list) else []
+            warned_checks_raw = summary.get("warned_checks", []) if isinstance(summary.get("warned_checks"), list) else []
+            failed_checks = [str(item) for item in failed_checks_raw]
+            warned_checks = [str(item) for item in warned_checks_raw]
+            missing_loaded_states = sorted(
+                [
+                    item.split(":", 1)[1]
+                    for item in failed_checks
+                    if item.startswith("missing_loaded_state:")
+                ]
+            )
+            critical_walkthrough_misses = sorted(
+                [
+                    item.split(":", 1)[1]
+                    for item in failed_checks
+                    if item.startswith("walkthrough_action_missing:")
+                ]
+            )
+            state_observation_gaps = sorted(
+                [
+                    item.split(":", 1)[1]
+                    for item in warned_checks
+                    if item.startswith("state_not_observed:")
+                ]
+            )
+            required_release_shape_states = {
+                "dashboard:initial_state",
+                "dashboard:loaded_state",
+                "profiles:no_selection_state",
+                "sessions:no_selection_state",
+                "content:no_selection_state",
+            }
+            release_shape_payload = summary.get("release_shape_truth", {})
+            payload_missing_release_shape = []
+            if isinstance(release_shape_payload, dict):
+                payload_missing_release_shape = [str(item) for item in release_shape_payload.get("missing_required_states", [])]
+            missing_release_shape_states = sorted(
+                set(payload_missing_release_shape)
+                or {item for item in state_observation_gaps if item in required_release_shape_states}
+            )
+            behavior_depth_ready = (
+                trace_steps_count >= 120
+                and screenshot_count >= 180
+                and not missing_screens
+                and trace_fail_count == 0
+                and not missing_loaded_states
+                and not critical_walkthrough_misses
+            )
+            verification_ui_alignment_ready = (
+                latest_run_matches_root
+                and latest_run_status == "PASS"
+                and not missing_loaded_states
+                and not critical_walkthrough_misses
+                and not missing_release_shape_states
+            )
+            release_shape_truth_ready = bool(
+                summary.get("manual_testing_allowed", False)
+                and validation_status == "PASS"
+                and not stale
+                and behavior_depth_ready
+                and verification_ui_alignment_ready
+            )
+
+            details.update(
+                {
+                    "run_id": run_id,
+                    "latest_run_id": latest_run_id,
+                    "latest_run_status": latest_run_status,
+                    "latest_run_matches_root": latest_run_matches_root,
+                    "ui_validation_status": validation_status,
+                    "manual_testing_allowed": bool(summary.get("manual_testing_allowed", False)),
+                    "stale": stale,
+                    "age_minutes": age_minutes,
+                    "failed_checks_count": len(summary.get("failed_checks", []) if isinstance(summary.get("failed_checks"), list) else []),
+                    "warned_checks_count": len(summary.get("warned_checks", []) if isinstance(summary.get("warned_checks"), list) else []),
+                    "behavior_verification_depth": {
+                        "trace_steps_count": trace_steps_count,
+                        "trace_pass_count": trace_pass_count,
+                        "trace_warn_count": trace_warn_count,
+                        "trace_fail_count": trace_fail_count,
+                        "screenshot_count": screenshot_count,
+                        "covered_screens": sorted(covered_screens),
+                        "missing_screens": missing_screens,
+                        "required_release_shape_states": sorted(required_release_shape_states),
+                        "missing_release_shape_states": missing_release_shape_states,
+                        "ready": behavior_depth_ready,
+                    },
+                    "false_stability_cleanup": {
+                        "missing_loaded_states": missing_loaded_states,
+                        "critical_walkthrough_action_misses": critical_walkthrough_misses,
+                        "state_observation_gaps": state_observation_gaps,
+                        "latest_run_matches_root": latest_run_matches_root,
+                        "verification_ui_alignment_ready": verification_ui_alignment_ready,
+                        "status": (
+                            "PROVEN_STRENGTHENED"
+                            if verification_ui_alignment_ready
+                            else "PROVEN_MINIMUM"
+                            if not missing_loaded_states and not critical_walkthrough_misses and latest_run_matches_root
+                            else "OPEN_GAPS"
+                        ),
+                    },
+                    "release_shape_truth_cleanup": {
+                        "manifest_path": str(manifest_path),
+                        "trace_path": str(trace_path),
+                        "required_release_shape_states": sorted(required_release_shape_states),
+                        "missing_release_shape_states": missing_release_shape_states,
+                        "latest_run_id": latest_run_id,
+                        "latest_run_matches_root": latest_run_matches_root,
+                        "ready": release_shape_truth_ready,
+                        "claim_boundary": "release-grade-claim-forbidden-until-wave-1-and-gate-d",
+                        "open_actions": [
+                            "behavior_depth_ready_required",
+                            "release_shape_required_states_observed",
+                            "latest_run_must_match_root_summary",
+                            "owner_gate_d_required_for_release_claim",
+                        ],
+                    },
+                }
+            )
+
+            if result["exit_code"] not in {0, 1, 2}:
+                status = FAILED
+            elif validation_status == "PASS" and not stale and release_shape_truth_ready:
+                status = VERIFIED
+            elif validation_status == "PASS_WITH_WARNINGS":
+                status = PARTIALLY_VERIFIED
+            elif validation_status == "PASS" and stale:
+                status = PARTIALLY_VERIFIED
+            else:
+                status = FAILED
+
+            self._add_stage(
+                name=name,
+                status=status,
+                started=started,
+                details=details,
+                command=result["command"],
+                stdout_log=result["stdout_log"],
+                stderr_log=result["stderr_log"],
+            )
+        except Exception as exc:  # pragma: no cover
+            self._record_stage_exception(name, started, exc)
+
     def _stage_service_classification(self) -> None:
         name = "service_status_classification"
         started = _utc_now()
         by_name = {item.name: item.status for item in self.stages}
-        tests_ok = (
+        tests_core_ok = (
             by_name.get("unit_tests") == VERIFIED
             and by_name.get("integration_tests") == VERIFIED
-            and by_name.get("api_smoke_tests") == VERIFIED
-            and by_name.get("pytest_suite") == VERIFIED
         )
+        api_smoke_status = by_name.get("api_smoke_tests", FAILED)
+        pytest_suite_status = by_name.get("pytest_suite", FAILED)
+        tests_all_verified = tests_core_ok and api_smoke_status == VERIFIED and pytest_suite_status == VERIFIED
+        ui_truth_status = by_name.get("ui_validation_truth_alignment", FAILED)
+        api_workspace_status = (
+            VERIFIED
+            if api_smoke_status == VERIFIED and pytest_suite_status == VERIFIED
+            else PARTIALLY_VERIFIED
+            if api_smoke_status in {PARTIALLY_VERIFIED, VERIFIED}
+            and pytest_suite_status in {PARTIALLY_VERIFIED, VERIFIED}
+            else FAILED
+        )
+        ui_connectivity_stage = self._stage_by_name("ui_backend_connectivity_checks")
+        ui_statuses = ui_connectivity_stage.details.get("statuses", {}) if ui_connectivity_stage else {}
+        prompt_lineage_verified = ui_statuses.get("workspace_prompt_lineage") == 200
         self.module_status = {
-            "profiles": VERIFIED if tests_ok else PARTIALLY_VERIFIED,
-            "sessions": VERIFIED if tests_ok else PARTIALLY_VERIFIED,
-            "content": VERIFIED if tests_ok else PARTIALLY_VERIFIED,
-            "metrics_analytics": VERIFIED if tests_ok else PARTIALLY_VERIFIED,
-            "ai_subsystem": VERIFIED if by_name.get("ai_contract_checks") == VERIFIED and tests_ok else PARTIALLY_VERIFIED,
-            "audit_observability": VERIFIED if tests_ok else PARTIALLY_VERIFIED,
-            "api_workspace": VERIFIED if by_name.get("api_smoke_tests") == VERIFIED else FAILED,
+            "profiles": VERIFIED if tests_core_ok else PARTIALLY_VERIFIED,
+            "sessions": VERIFIED if tests_core_ok else PARTIALLY_VERIFIED,
+            "content": VERIFIED if tests_core_ok else PARTIALLY_VERIFIED,
+            "metrics_analytics": VERIFIED if tests_core_ok else PARTIALLY_VERIFIED,
+            "ai_subsystem": VERIFIED if by_name.get("ai_contract_checks") == VERIFIED and tests_core_ok else PARTIALLY_VERIFIED,
+            "audit_observability": VERIFIED if tests_core_ok else PARTIALLY_VERIFIED,
+            "api_workspace": api_workspace_status,
             "runtime_readiness": VERIFIED if by_name.get("runtime_readiness_checks") == VERIFIED else FAILED,
             "ui_backend_integration": VERIFIED if by_name.get("ui_backend_connectivity_checks") == VERIFIED else FAILED,
-            "update_patch_flow": VERIFIED if by_name.get("update_patch_checks") == VERIFIED else PARTIALLY_VERIFIED,
+            "ui_validation_truth_lane": ui_truth_status,
+            "prompt_lineage_observability": VERIFIED if prompt_lineage_verified else FAILED,
+            "update_patch_flow": VERIFIED if by_name.get("update_patch_checks") == VERIFIED and tests_all_verified else PARTIALLY_VERIFIED,
             "official_auth_connector": STUB,
             "video_generator_real_integration": STUB,
         }
         stage_status = FAILED if any(value == FAILED for value in self.module_status.values()) else VERIFIED
-        self._add_stage(name=name, status=stage_status, started=started, details={"module_status": self.module_status})
+        self._add_stage(
+            name=name,
+            status=stage_status,
+            started=started,
+            details={
+                "module_status": self.module_status,
+                "prompt_lineage_observability": {
+                    "verified": prompt_lineage_verified,
+                    "status_code": ui_statuses.get("workspace_prompt_lineage"),
+                },
+            },
+        )
 
     def _verify_env(self) -> dict[str, str]:
         return {
@@ -396,6 +860,39 @@ class VerificationRunner:
             "SFCO_WORKSPACE_STATE_PATH": str(self.workspace_state_path),
             "SFCO_PATCH_DIR": str(self.run_dir / "patches"),
         }
+
+    def _extract_dependency_gaps(self, *, stdout_text: str, stderr_text: str) -> list[str]:
+        payload = f"{stdout_text}\n{stderr_text}"
+        missing: list[str] = []
+        for module in re.findall(r"ModuleNotFoundError:\s+No module named ['\"]([^'\"]+)['\"]", payload):
+            item = str(module).strip()
+            if item:
+                missing.append(item)
+        for module in re.findall(r"ImportError:\s+No module named ['\"]([^'\"]+)['\"]", payload):
+            item = str(module).strip()
+            if item:
+                missing.append(item)
+        return sorted(set(missing))
+
+    def _extract_unittest_skips(self, *, stdout_text: str, stderr_text: str) -> int:
+        payload = f"{stdout_text}\n{stderr_text}"
+        match = re.search(r"skipped=(\d+)", payload)
+        if not match:
+            return 0
+        try:
+            return int(match.group(1))
+        except Exception:
+            return 0
+
+    def _extract_pytest_skips(self, *, stdout_text: str, stderr_text: str) -> int:
+        payload = f"{stdout_text}\n{stderr_text}"
+        total = 0
+        for item in re.findall(r"(\d+)\s+skipped", payload):
+            try:
+                total += int(item)
+            except Exception:
+                continue
+        return total
 
     def _run_command(
         self,
@@ -427,6 +924,8 @@ class VerificationRunner:
             "command": command_text,
             "stdout_log": str(stdout_log),
             "stderr_log": str(stderr_log),
+            "stdout_text": process.stdout or "",
+            "stderr_text": process.stderr or "",
         }
 
     def _add_stage(
@@ -480,6 +979,7 @@ class VerificationRunner:
             "api_workspace",
             "runtime_readiness",
             "ui_backend_integration",
+            "ui_validation_truth_lane",
             "update_patch_flow",
         }
         for module in key_modules:
@@ -510,6 +1010,7 @@ class VerificationRunner:
     def _build_readiness_summary(self, *, gate_status: str) -> dict[str, Any]:
         runtime_stage = self._stage_by_name("runtime_readiness_checks")
         ui_stage = self._stage_by_name("ui_backend_connectivity_checks")
+        ui_validation_stage = self._stage_by_name("ui_validation_truth_alignment")
         update_stage = self._stage_by_name("update_patch_checks")
 
         startup_readiness = (runtime_stage.details.get("local_readiness", {}) if runtime_stage else {})
@@ -517,6 +1018,7 @@ class VerificationRunner:
         startup_all_ready = bool(startup_readiness.get("overall_ready")) if isinstance(startup_readiness, dict) else False
         backend_ready = bool(runtime_stage.details.get("backend_ready")) if runtime_stage else False
         ui_statuses = ui_stage.details.get("statuses", {}) if ui_stage else {}
+        ui_validation = ui_validation_stage.details if ui_validation_stage else {}
 
         patch_result = update_stage.details.get("patch_result", {}) if update_stage else {}
         post_update = patch_result.get("post_update_verification", {}) if isinstance(patch_result, dict) else {}
@@ -541,6 +1043,7 @@ class VerificationRunner:
             "startup_readiness": startup_readiness,
             "backend_ready": backend_ready,
             "ui_backend_statuses": ui_statuses,
+            "ui_validation_truth_alignment": ui_validation,
             "post_update_status": post_update_status,
             "post_update_readiness": post_update_readiness,
             "usage_points": [

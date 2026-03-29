@@ -1,0 +1,18 @@
+{
+  "surface_id": "IMPERIUM_HERESY_SUPPRESSION_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "generated_at_utc": "2026-03-28T08:22:35Z",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "runtime/administratum/IMPERIUM_HERESY_SUPPRESSION_V1.json",
+  "payload": {
+    "surface_id": "IMPERIUM_HERESY_SUPPRESSION_V1",
+    "generated_at_utc": "2026-03-28T08:22:35Z",
+    "truth_class": "SOURCE_EXACT",
+    "status": "PASS",
+    "suppression_loop": "detect -> hold -> rerun -> reread -> verify -> converge",
+    "active_heresy_count": 0,
+    "suppressed_in_this_pass": 5,
+    "suppression_ready": true
+  }
+}

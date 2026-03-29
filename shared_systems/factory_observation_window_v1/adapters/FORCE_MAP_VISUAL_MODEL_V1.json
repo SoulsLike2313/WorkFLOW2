@@ -1,0 +1,52 @@
+﻿{
+  "model_version": "1.1.0",
+  "model_id": "force_map_visual_model_v1",
+  "force_map": {
+    "emperor": {
+      "id": "emperor_local_owner",
+      "rank": "EMPEROR",
+      "state": "active",
+      "machine_mode": "creator",
+      "load_state": "high"
+    },
+    "primarchs": [
+      {
+        "id": "primarch_engineering_01",
+        "rank": "PRIMARCH",
+        "department": "engineering_department",
+        "state": "active",
+        "load_state": "high"
+      },
+      {
+        "id": "primarch_verification_01",
+        "rank": "PRIMARCH",
+        "department": "verification_department",
+        "state": "active",
+        "load_state": "medium"
+      }
+    ],
+    "astartes": [
+      {
+        "id": "astartes_runtime_01",
+        "rank": "ASTARTES",
+        "department": "engineering_department",
+        "state": "active",
+        "load_state": "medium",
+        "attachment": "post_wave1_tranche_a_execution"
+      },
+      {
+        "id": "astartes_verify_01",
+        "rank": "ASTARTES",
+        "department": "verification_department",
+        "state": "active",
+        "load_state": "low",
+        "attachment": "post_wave1_tranche_a_validation"
+      }
+    ],
+    "states_legend": [
+      "idle",
+      "active",
+      "blocked"
+    ]
+  }
+}

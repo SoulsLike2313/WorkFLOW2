@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
 
 from .errors import LimitExceededError, NotFoundError, PolicyDeniedError, ValidationError, WorkspaceError
+from ..prompt_lineage import build_prompt_lineage_snapshot
+from ..runtime_observability import build_runtime_observability_snapshot
 from .models import (
     ContentItem,
     ContentMetricsSnapshot,
@@ -58,6 +61,7 @@ def _raise_http(error: Exception) -> None:
 
 def build_workspace_router(runtime: WorkspaceRuntime) -> APIRouter:
     router = APIRouter(prefix="/workspace", tags=["workspace"])
+    project_root = Path(__file__).resolve().parents[2]
 
     @router.get("/health")
     def workspace_health() -> dict[str, Any]:
@@ -83,6 +87,14 @@ def build_workspace_router(runtime: WorkspaceRuntime) -> APIRouter:
             "items": items,
             "persistence": persistence_health,
         }
+
+    @router.get("/prompt-lineage")
+    def workspace_prompt_lineage() -> dict[str, Any]:
+        return build_prompt_lineage_snapshot(project_root=project_root)
+
+    @router.get("/runtime-observability")
+    def workspace_runtime_observability() -> dict[str, Any]:
+        return build_runtime_observability_snapshot(project_root=project_root)
 
     # Profiles
     @router.post("/profiles")

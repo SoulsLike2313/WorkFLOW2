@@ -2,13 +2,24 @@ from __future__ import annotations
 
 import unittest
 
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
+try:
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+except ModuleNotFoundError:
+    FastAPI = None
+    TestClient = None
 
-from app.workspace.api import build_workspace_router
+if FastAPI is not None and TestClient is not None:
+    from app.workspace.api import build_workspace_router
+else:
+    build_workspace_router = None
 from app.workspace.runtime import build_workspace_runtime
 
 
+@unittest.skipUnless(
+    FastAPI is not None and TestClient is not None and build_workspace_router is not None,
+    "fastapi runtime dependency is required for API smoke tests",
+)
 class WorkspaceAPISmokeTests(unittest.TestCase):
     def setUp(self) -> None:
         runtime = build_workspace_runtime(debug_logs=True)
@@ -19,6 +30,12 @@ class WorkspaceAPISmokeTests(unittest.TestCase):
     def test_workspace_profile_session_content_analytics_flow(self) -> None:
         health = self.client.get("/workspace/health")
         self.assertEqual(health.status_code, 200)
+        prompt_lineage = self.client.get("/workspace/prompt-lineage")
+        self.assertEqual(prompt_lineage.status_code, 200)
+        self.assertIn("lineage_id", prompt_lineage.json())
+        runtime_observability = self.client.get("/workspace/runtime-observability")
+        self.assertEqual(runtime_observability.status_code, 200)
+        self.assertIn("process_state", runtime_observability.json())
 
         profile_resp = self.client.post(
             "/workspace/profiles",
@@ -226,4 +243,3 @@ class WorkspaceAPISmokeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

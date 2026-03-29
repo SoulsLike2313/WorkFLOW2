@@ -1,0 +1,62 @@
+{
+  "schema_version": "transfer_capsule.mutable_tracker.v3",
+  "tracker_class": "mutable_live_state",
+  "source_of_truth": "E:/CVVCODEX",
+  "last_refreshed_utc": "2026-03-28T08:21:49Z",
+  "entry_mode": "entry_briefing",
+  "continuity_status": "ACTIVE",
+  "continuity_root": "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/",
+  "continuity_step_primary_truth": {
+    "role": "continuity_sync_step_output",
+    "path": "runtime/chatgpt_bundle_exports/ultimate_transfer_capsule_current_point_sync_delta_primary_truth_bundle_latest.zip"
+  },
+  "handoff_step_primary_truth_input": {
+    "role": "context_restore_input",
+    "path": "runtime/chatgpt_bundle_exports/repo_context_pack_for_canonical_system_mirror_primary_truth_bundle_latest.zip"
+  },
+  "active_live_primary_line": {
+    "role": "current_system_primary_line",
+    "path": "runtime/chatgpt_bundle_exports/imperium_remediation_consolidation_supreme_brain_delta_primary_truth_bundle_latest.zip"
+  },
+  "supporting_dashboard_primary_line": {
+    "role": "supporting_dashboard_line",
+    "path": "runtime/chatgpt_bundle_exports/imperial_dashboard_visual_amplitude_delta_continuation_primary_truth_bundle_latest.zip"
+  },
+  "current_companion_bundles": [
+    {
+      "path": "runtime/chatgpt_bundle_exports/tiktok_agent_owner_gate_review_manual_safe_bundle_20260321T202031Z.zip",
+      "applies_to": "active_live_primary_line"
+    }
+  ],
+  "current_active_vertex": {
+    "id": "IMPERIUM_REMEDIATION_CONSOLIDATION_SUPREME_BRAIN_DELTA",
+    "focus": "owner redirect: full system slice + cleanup/hardening + full-green gate before phase-2 seed/memory/law/lexicon consolidation",
+    "last_major_step_completed": "IMPERIUM_REMEDIATION_CONSOLIDATION_SUPREME_BRAIN_DELTA"
+  },
+  "current_work_ladder_file": "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/06_CURRENT_WORK_LADDER_AND_RECENT_CHAIN.md",
+  "owner_use_flow_file": "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/07_OWNER_USE_FLOW.md",
+  "current_point_verification_file": "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/08_CURRENT_POINT_VERIFICATION.md",
+  "seed_review_registry_file": "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/09_SEED_REVIEW_REGISTRY.md",
+  "seed_refresh_protocol_file": "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/03_CAPSULE_UPDATE_PROTOCOL.md",
+  "seed_refresh_command": "python scripts/refresh_imperium_seed_capsule.py --capsule-root docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1",
+  "latest_review_root": "docs/review_artifacts/imperium_wave1_native_organs_zero_drift_internal_first_delta_20260328T082128Z",
+  "latest_safe_review_set_review_root": "docs/review_artifacts/imperium_safe_review_pipeline_set_20260327T200851Z",
+  "latest_safe_review_set_export_root": "runtime/chatgpt_bundle_exports/imperium_safe_review_pipeline_set_20260327T200851Z",
+  "runtime_bundle_policy": "pointer_based_manual_safe",
+  "two_disk_migration_status": {
+    "state": "PLACEHOLDER_NOT_VALIDATED",
+    "note": "prepared for future portability; not physically validated in this step"
+  },
+  "open_risks": [
+    "full_event_bus_not_yet_implemented",
+    "auto_preview_pipeline_not_yet_implemented",
+    "pixel_level_perceptual_diff_unavailable_in_scope",
+    "two_disk_migration_not_physically_validated"
+  ],
+  "continuity_system_name": "IMPERIUM",
+  "branch_split": {
+    "main_restore_line": "active_live_primary_line",
+    "execution_node_companion": "docs/review_artifacts/ULTIMATE_TRANSFER_CAPSULE_SYSTEM_V1/EXECUTION_NODE_TEST_V1",
+    "execution_node_is_not_main_restore": true
+  }
+}

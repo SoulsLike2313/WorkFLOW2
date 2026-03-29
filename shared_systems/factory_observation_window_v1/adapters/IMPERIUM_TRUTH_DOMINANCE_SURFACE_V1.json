@@ -1,0 +1,149 @@
+{
+  "surface_id": "IMPERIUM_TRUTH_DOMINANCE_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "docs/governance/IMPERIUM_TRUTH_DOMINANCE_POLICY_V1.md",
+  "policy_note": "Stale/superseded surfaces never dominate current dashboard truth without explicit warning.",
+  "dominance_rules": [
+    {
+      "rule_id": "control_sync_lane",
+      "description": "Control sync/trust lane must prefer one_screen + repo_control over stale mirrors.",
+      "stale_after_minutes": 360,
+      "candidates": [
+        {
+          "surface_id": "one_screen_status",
+          "source_path": "runtime/repo_control_center/one_screen_status.json",
+          "authority_tier": "PRIMARY",
+          "truth_class": "SOURCE_EXACT",
+          "winner_priority": 100,
+          "freshness_class": "AUTO_EVALUATED"
+        },
+        {
+          "surface_id": "repo_control_status",
+          "source_path": "runtime/repo_control_center/repo_control_status.json",
+          "authority_tier": "PRIMARY",
+          "truth_class": "SOURCE_EXACT",
+          "winner_priority": 90,
+          "freshness_class": "AUTO_EVALUATED"
+        },
+        {
+          "surface_id": "plain_status_fallback",
+          "source_path": "runtime/repo_control_center/plain_status.md",
+          "authority_tier": "FALLBACK",
+          "truth_class": "POINTER_ONLY",
+          "winner_priority": 80,
+          "freshness_class": "AUTO_EVALUATED"
+        }
+      ],
+      "winner_rule": "freshness_then_authority_then_priority",
+      "stale_behavior": "warn_and_demote"
+    },
+    {
+      "rule_id": "command_mission_task_lane",
+      "description": "Mission/task/command consistency lane keeps command surface non-stale.",
+      "stale_after_minutes": 1440,
+      "candidates": [
+        {
+          "surface_id": "operator_command_surface_status",
+          "source_path": "runtime/operator_command_layer/command_surface_status.json",
+          "authority_tier": "PRIMARY",
+          "truth_class": "SOURCE_EXACT",
+          "winner_priority": 100,
+          "freshness_class": "AUTO_EVALUATED"
+        },
+        {
+          "surface_id": "operator_mission_consistency",
+          "source_path": "runtime/repo_control_center/operator_mission_consistency.json",
+          "authority_tier": "PRIMARY",
+          "truth_class": "SOURCE_EXACT",
+          "winner_priority": 90,
+          "freshness_class": "AUTO_EVALUATED"
+        },
+        {
+          "surface_id": "operator_task_program_consistency",
+          "source_path": "runtime/repo_control_center/operator_task_program_consistency.json",
+          "authority_tier": "PRIMARY",
+          "truth_class": "SOURCE_EXACT",
+          "winner_priority": 80,
+          "freshness_class": "AUTO_EVALUATED"
+        }
+      ],
+      "winner_rule": "freshness_then_authority_then_priority",
+      "stale_behavior": "warn_and_demote"
+    },
+    {
+      "rule_id": "contradiction_and_owner_gate_lane",
+      "description": "Wave/control contradiction lane prefers explicit control surfaces over free-form summaries.",
+      "stale_after_minutes": 10080,
+      "candidates": [
+        {
+          "surface_id": "wave1_control_surfaces",
+          "source_path": "shared_systems/factory_observation_window_v1/adapters/TIKTOK_WAVE1_CONTROL_SURFACES_V1.json",
+          "authority_tier": "PRIMARY",
+          "truth_class": "SOURCE_EXACT",
+          "winner_priority": 100,
+          "freshness_class": "AUTO_EVALUATED"
+        },
+        {
+          "surface_id": "canon_state_sync",
+          "source_path": "shared_systems/factory_observation_window_v1/adapters/CURRENT_FACTORY_CANON_STATE_V1.json",
+          "authority_tier": "PRIMARY",
+          "truth_class": "SOURCE_EXACT",
+          "winner_priority": 90,
+          "freshness_class": "AUTO_EVALUATED"
+        },
+        {
+          "surface_id": "owner_gate_doc",
+          "source_path": "docs/review_artifacts/TIKTOK_WAVE1_OWNER_GATE_CHECKPOINT_SURFACE_V1.md",
+          "authority_tier": "FALLBACK",
+          "truth_class": "POINTER_ONLY",
+          "winner_priority": 80,
+          "freshness_class": "AUTO_EVALUATED"
+        }
+      ],
+      "winner_rule": "freshness_then_authority_then_priority",
+      "stale_behavior": "warn_and_demote"
+    },
+    {
+      "rule_id": "event_preview_lane",
+      "description": "Event/diff lane must warn when auto-pipeline remains partial.",
+      "stale_after_minutes": 4320,
+      "candidates": [
+        {
+          "surface_id": "event_flow_spine",
+          "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_EVENT_FLOW_SPINE_SURFACE_V1.json",
+          "authority_tier": "PRIMARY",
+          "truth_class": "SOURCE_EXACT",
+          "winner_priority": 100,
+          "freshness_class": "AUTO_EVALUATED"
+        },
+        {
+          "surface_id": "diff_preview_pipeline",
+          "source_path": "shared_systems/factory_observation_window_v1/adapters/IMPERIUM_DIFF_PREVIEW_PIPELINE_SURFACE_V1.json",
+          "authority_tier": "PRIMARY",
+          "truth_class": "DERIVED_CANONICAL",
+          "winner_priority": 90,
+          "freshness_class": "AUTO_EVALUATED"
+        },
+        {
+          "surface_id": "visual_evidence_pointer",
+          "source_path": "docs/review_artifacts/visual_evidence",
+          "authority_tier": "FALLBACK",
+          "truth_class": "POINTER_ONLY",
+          "winner_priority": 80,
+          "freshness_class": "AUTO_EVALUATED"
+        }
+      ],
+      "winner_rule": "freshness_then_authority_then_priority",
+      "stale_behavior": "warn_and_demote"
+    }
+  ],
+  "generated_at_utc": "2026-03-27T06:58:37Z",
+  "dominance_policy": {
+    "winner_strategy": "freshness_then_authority_then_priority",
+    "stale_behavior": "warn_and_demote",
+    "superseded_behavior": "never_present_without_warning",
+    "ui_guard": "stale_or_pointer_only_never_masked_as_live"
+  }
+}

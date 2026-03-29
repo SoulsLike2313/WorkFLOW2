@@ -1,0 +1,221 @@
+{
+  "surface_id": "IMPERIUM_LIVE_WORK_VISIBILITY_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "truth_class": "SOURCE_EXACT",
+  "generated_at_utc": "2026-03-28T02:11:59Z",
+  "source_path": "scripts/refresh_imperium_live_work_surface.py",
+  "live_stream_mode": {
+    "status": "PARTIALLY_IMPLEMENTED",
+    "class": "DERIVED_CANONICAL",
+    "event_bus_status": "NOT_YET_IMPLEMENTED",
+    "update_method": "git_status_plus_runtime_surfaces"
+  },
+  "current_active_step": {
+    "step_id": "IMPERIUM_CONSTITUTION_GREEN_CHAIN_REPO_HYGIENE_COVERAGE_AND_LIVE_WORK_VISIBILITY_DELTA",
+    "scope_class": "bounded_canonical_step",
+    "owner_visibility": "EXPLICIT"
+  },
+  "current_phase": {
+    "phase_id": "PHASE_5_LIVE_WORK_VISIBILITY",
+    "phase_index": 5,
+    "phase_total": 6,
+    "progress_ratio": 0.833
+  },
+  "current_operation": {
+    "operation_class": "PATCH",
+    "operation_class_ru": "правка",
+    "transport": "derived_live_lane"
+  },
+  "progress_markers": {
+    "tracked_dirty_changes": 300,
+    "untracked_changes": 13,
+    "changed_groups_count": 10,
+    "coverage_verdict": "PARTIAL_COVERAGE",
+    "pointer_only_count": 0,
+    "code_bank_status": "MONOLITH_RISK",
+    "stale_dominance_rules_count": 0,
+    "sync_status": "IN_SYNC_CLASSIFIED",
+    "trust_status": "TRUSTED",
+    "governance_acceptance": "PASS"
+  },
+  "touched_surface_groups": [
+    {
+      "group_id": "docs/governance",
+      "changes_count": 151
+    },
+    {
+      "group_id": "shared_systems/factory_observation_window_v1",
+      "changes_count": 56
+    },
+    {
+      "group_id": "docs/review_artifacts",
+      "changes_count": 29
+    },
+    {
+      "group_id": "projects/wild_hunt_command_citadel",
+      "changes_count": 20
+    },
+    {
+      "group_id": "\"docs/review_artifacts",
+      "changes_count": 11
+    },
+    {
+      "group_id": "runtime/repo_control_center",
+      "changes_count": 2
+    },
+    {
+      "group_id": "scripts/validation",
+      "changes_count": 2
+    },
+    {
+      "group_id": "gitignore",
+      "changes_count": 1
+    },
+    {
+      "group_id": "CHAT_TRANSFER_CAPSULE_V1.md",
+      "changes_count": 1
+    },
+    {
+      "group_id": "MACHINE_CONTEXT.md",
+      "changes_count": 1
+    }
+  ],
+  "recent_changes": [
+    {
+      "status_code": "M ",
+      "change_type": "MODIFIED",
+      "path": "gitignore"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "CHAT_TRANSFER_CAPSULE_V1.md"
+    },
+    {
+      "status_code": " M",
+      "change_type": "MODIFIED",
+      "path": "MACHINE_CONTEXT.md"
+    },
+    {
+      "status_code": " M",
+      "change_type": "MODIFIED",
+      "path": "README.md"
+    },
+    {
+      "status_code": " M",
+      "change_type": "MODIFIED",
+      "path": "REPO_MAP.md"
+    },
+    {
+      "status_code": " M",
+      "change_type": "MODIFIED",
+      "path": "docs/INSTRUCTION_INDEX.md"
+    },
+    {
+      "status_code": " M",
+      "change_type": "MODIFIED",
+      "path": "docs/NEXT_CANONICAL_STEP.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/AI_DEPENDENCY_POLICY_V1.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/ANALYTICS_DEPARTMENT_OPERATING_PACK_V1.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/ANALYTICS_DEPARTMENT_SEED_V1.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/ASTARTES_DEPARTMENT_BINDING_MODEL_V1.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/ASTARTES_ENTRY_MANIFEST_SPEC.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/AUTHORITY_OF_CHANGE_MAP_V1.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/BUNDLE_RETENTION_AND_CLEANUP_MODEL_V1.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/CAMPAIGN_STARTER_PLAN_TEMPLATE_V1.md"
+    },
+    {
+      "status_code": "AM",
+      "change_type": "ADDED",
+      "path": "docs/governance/CANONICAL_TRUTH_REVIEW_BUNDLE_LAW_V1.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/CHANNEL_STARTER_PACK_TEMPLATE_V1.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/CHATGPT_OWNER_MIRROR_PROFILE_V1.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/CHAT_TRANSFER_CAPSULE_DOCTRINE_V1.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/CHEAPEST_VIABLE_FEDERATED_EXECUTION_MODEL_V1.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/CHECKPOINT_CAPSULE_CONTEXT_COMPRESSION_LAW_V1.md"
+    },
+    {
+      "status_code": " M",
+      "change_type": "MODIFIED",
+      "path": "docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md"
+    },
+    {
+      "status_code": "AM",
+      "change_type": "ADDED",
+      "path": "docs/governance/CODEX_OUTPUT_PRECEDENCE_MODEL.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/CODEX_OWNER_GUARD_PROFILE_V1.md"
+    },
+    {
+      "status_code": "A ",
+      "change_type": "ADDED",
+      "path": "docs/governance/CODEX_RESULT_BLOCK_OUTPUT_LAW_V1.md"
+    }
+  ],
+  "blocker_or_wait": {
+    "category": "NONE",
+    "reason_ru": "no blocking reason",
+    "operator_action_required": false
+  },
+  "notes": [
+    "No fake full realtime: lane is derived from git/runtime surfaces.",
+    "Event bus remains explicitly NOT_YET_IMPLEMENTED.",
+    "Owner-readable fields are primary; technical feed is secondary."
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "contract_version": "1.0.0",
+  "checks": [
+    {
+      "id": "bind_localhost_only_default",
+      "expected": true
+    },
+    {
+      "id": "bundle_path_exists_or_explicit_missing_state",
+      "expected": true
+    },
+    {
+      "id": "panel_has_truth_class",
+      "expected": true
+    },
+    {
+      "id": "panel_has_source_trace",
+      "expected": true
+    }
+  ]
+}
+

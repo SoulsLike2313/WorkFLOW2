@@ -1,0 +1,22 @@
+{
+  "surface_id": "IMPERIUM_HERESY_EARLY_DETECTION_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "generated_at_utc": "2026-03-28T08:22:35Z",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "runtime/administratum/IMPERIUM_HERESY_EARLY_DETECTION_V1.json",
+  "payload": {
+    "surface_id": "IMPERIUM_HERESY_EARLY_DETECTION_V1",
+    "generated_at_utc": "2026-03-28T08:22:35Z",
+    "truth_class": "SOURCE_EXACT",
+    "status": "PASS",
+    "checks": {
+      "seed_sync_authority_check": true,
+      "dashboard_truth_chain_check": true,
+      "bundle_transport_chain_check": true,
+      "inquisition_direct_action_ready": true,
+      "worktree_purity_check": true
+    },
+    "trigger_policy": "any_failed_check_is_immediate_alert"
+  }
+}

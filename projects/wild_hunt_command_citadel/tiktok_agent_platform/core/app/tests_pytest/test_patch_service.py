@@ -21,7 +21,8 @@ def test_patch_application_validation(tmp_path: Path):
     service = UpdateService(config)
     bundle = PatchBundle(bundle_path=zip_path, target_version="0.4.1")
     result = service.apply_local_patch(bundle)
-    assert result.status in {PatchStatus.APPLIED, PatchStatus.FAILED}
+    # Runtime dependency contract may trigger rollback when post-verify cannot pass.
+    assert result.status in {PatchStatus.APPLIED, PatchStatus.FAILED, PatchStatus.ROLLED_BACK}
     assert result.patch_id == bundle.bundle_id
 
 

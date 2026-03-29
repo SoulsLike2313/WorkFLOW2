@@ -1,0 +1,61 @@
+{
+  "surface_id": "IMPERIUM_TRUTH_SPINE_STATE_SURFACE_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "generated_at_utc": "2026-03-28T08:22:35Z",
+  "truth_class": "SOURCE_EXACT",
+  "source_path": "runtime/administratum/IMPERIUM_TRUTH_SPINE_V1.json",
+  "payload": {
+    "surface_id": "IMPERIUM_TRUTH_SPINE_V1",
+    "generated_at_utc": "2026-03-28T08:22:35Z",
+    "truth_class": "SOURCE_EXACT",
+    "status": "PASS",
+    "full_truth_claim": true,
+    "authoritative_current_point": {
+      "continuity_line": "runtime/chatgpt_bundle_exports/ultimate_transfer_capsule_current_point_sync_delta_primary_truth_bundle_latest.zip",
+      "handoff_line": "runtime/chatgpt_bundle_exports/repo_context_pack_for_canonical_system_mirror_primary_truth_bundle_latest.zip",
+      "active_line": "runtime/chatgpt_bundle_exports/imperium_remediation_consolidation_supreme_brain_delta_primary_truth_bundle_latest.zip",
+      "active_vertex": "IMPERIUM_REMEDIATION_CONSOLIDATION_SUPREME_BRAIN_DELTA"
+    },
+    "sync_model": {
+      "dimensions": {
+        "seed_sync": 1,
+        "truth_schema_engine": 1,
+        "law_gate": 1,
+        "provenance_seal": 1,
+        "dashboard_truth_engine": 1,
+        "bundle_truth_chamber": 1,
+        "transport_truth": 1,
+        "worktree_purity_support": 1,
+        "anti_lie_model": 1,
+        "live_truth_support_loop": 1,
+        "heresy_early_detection": 1,
+        "heresy_containment": 1,
+        "heresy_suppression": 1
+      },
+      "critical_dimensions": [
+        "seed_sync",
+        "truth_schema_engine",
+        "law_gate",
+        "provenance_seal",
+        "dashboard_truth_engine",
+        "bundle_truth_chamber",
+        "transport_truth",
+        "worktree_purity_support",
+        "anti_lie_model",
+        "live_truth_support_loop",
+        "heresy_early_detection",
+        "heresy_containment",
+        "heresy_suppression"
+      ],
+      "critical_ok": true,
+      "sync_percentage": 100.0
+    },
+    "partial_truth_classes": [],
+    "seed_sync_mismatches": [],
+    "seed_stale_hits": [],
+    "transport_authority_source": "docs/review_artifacts/imperium_truth_everywhere_hold_line_stability_drill_dashboard_authoritative_mirror_delta_20260328T080200Z/12_BUNDLE_OUTPUT_ENFORCEMENT_REPORT.json::chatgpt_transfer.transport_integrity",
+    "transport_status": "PASS",
+    "bundle_truth_status": "PASS"
+  }
+}
