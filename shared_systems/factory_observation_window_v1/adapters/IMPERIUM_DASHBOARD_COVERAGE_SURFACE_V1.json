@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "status": "ACTIVE",
   "truth_class": "SOURCE_EXACT",
-  "generated_at_utc": "2026-03-29T23:38:43Z",
+  "generated_at_utc": "2026-03-29T23:57:49Z",
   "source_path": "scripts/refresh_imperium_dashboard_coverage_surface.py",
   "coverage_verdict": "PARTIAL_COVERAGE",
   "full_coverage_claimable": false,
@@ -23,7 +23,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 6043,
+      "source_age_minutes": 6062,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -37,7 +37,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "FRESH",
-      "source_age_minutes": 3,
+      "source_age_minutes": 23,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -51,7 +51,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 2356,
+      "source_age_minutes": 2376,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -66,7 +66,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 2356,
+      "source_age_minutes": 2376,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -80,7 +80,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 6672,
+      "source_age_minutes": 6691,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -94,7 +94,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 6672,
+      "source_age_minutes": 6691,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -108,7 +108,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 6673,
+      "source_age_minutes": 6692,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -122,7 +122,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 5983,
+      "source_age_minutes": 6003,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -192,7 +192,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 10433,
+      "source_age_minutes": 10452,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -206,7 +206,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 5784,
+      "source_age_minutes": 5803,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -220,7 +220,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 5784,
+      "source_age_minutes": 5803,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -234,7 +234,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 5955,
+      "source_age_minutes": 5974,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -248,7 +248,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 5947,
+      "source_age_minutes": 5967,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -262,7 +262,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 3824,
+      "source_age_minutes": 3843,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -276,7 +276,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 3775,
+      "source_age_minutes": 3794,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -290,7 +290,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 3774,
+      "source_age_minutes": 3793,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -304,7 +304,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 2961,
+      "source_age_minutes": 2981,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -318,7 +318,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 3774,
+      "source_age_minutes": 3793,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -332,7 +332,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 3774,
+      "source_age_minutes": 3793,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -346,7 +346,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 2325,
+      "source_age_minutes": 2344,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -360,7 +360,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 3775,
+      "source_age_minutes": 3794,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -374,7 +374,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 3824,
+      "source_age_minutes": 3843,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -388,7 +388,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 3832,
+      "source_age_minutes": 3851,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -402,7 +402,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 3870,
+      "source_age_minutes": 3889,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -416,7 +416,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 5784,
+      "source_age_minutes": 5803,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -430,7 +430,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 5783,
+      "source_age_minutes": 5803,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -444,7 +444,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 2726,
+      "source_age_minutes": 2745,
       "confidence": 0.95,
       "blind_spot_note": ""
     },
@@ -458,7 +458,7 @@
       "represented_in_dashboard": false,
       "representation_status": "PARTIAL",
       "freshness_class": "STALE",
-      "source_age_minutes": 5784,
+      "source_age_minutes": 5803,
       "confidence": 0.65,
       "blind_spot_note": "Representation is incomplete or source path missing."
     },
@@ -472,7 +472,7 @@
       "represented_in_dashboard": true,
       "representation_status": "FULL",
       "freshness_class": "STALE",
-      "source_age_minutes": 2726,
+      "source_age_minutes": 2745,
       "confidence": 0.95,
       "blind_spot_note": ""
     }

@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "status": "ACTIVE",
   "truth_class": "SOURCE_EXACT",
-  "generated_at_utc": "2026-03-29T23:38:43Z",
+  "generated_at_utc": "2026-03-29T23:57:49Z",
   "source_path": "scripts/refresh_imperium_code_bank_surface.py",
   "summary": {
     "status_classification": "MONOLITH_RISK",
-    "tracked_code_files_count": 1362,
-    "untracked_code_files_count": 36,
+    "tracked_code_files_count": 1398,
+    "untracked_code_files_count": 0,
     "scanned_code_files_count": 1398,
-    "total_loc": 158628,
+    "total_loc": 158629,
     "meaningful_code_loc": 84301,
     "top_extension_by_loc": ".py",
     "threshold_counts": {
@@ -32,7 +32,7 @@
     {
       "ext": ".json",
       "files": 250,
-      "loc": 45192,
+      "loc": 45193,
       "primary_code": false
     },
     {
@@ -89,7 +89,7 @@
     },
     {
       "dir": "shared_systems/factory_observation_window_v1",
-      "loc": 17652
+      "loc": 17653
     },
     {
       "dir": "docs/review_artifacts",
@@ -269,7 +269,7 @@
       "path": "scripts/imperium_100_truth_live_state_regime.py",
       "ext": ".py",
       "loc": 1653,
-      "tracking_class": "UNTRACKED"
+      "tracking_class": "TRACKED"
     },
     {
       "path": "workspace_config/SAFE_MIRROR_MANIFEST.json",
@@ -287,7 +287,7 @@
       "path": "scripts/imperium_wave1_native_organs.py",
       "ext": ".py",
       "loc": 1377,
-      "tracking_class": "UNTRACKED"
+      "tracking_class": "TRACKED"
     },
     {
       "path": "projects/wild_hunt_command_citadel/tiktok_agent_platform/core/app/verify.py",
@@ -341,7 +341,7 @@
       "path": "scripts/imperium_block2_systems_acceleration.py",
       "ext": ".py",
       "loc": 957,
-      "tracking_class": "UNTRACKED"
+      "tracking_class": "TRACKED"
     },
     {
       "path": "scripts/operator_task_program_surface.py",
