@@ -119,3 +119,38 @@ Machine continuity log for governance evolution events.
   - validate creator mode with external mock marker
   - validate helper fallback without marker
   - validate task-id -> handoff -> inbox review decision chain
+
+### Entry: imperium-mode1-policy-gate-closure-20260330
+
+- run_id: `imperium-mode1-policy-gate-closure-20260330`
+- date_utc: `2026-03-30`
+- baseline_head: `de1bcabb8dba8d463c3ccdd0e89225839414547b`
+- evidence_basis:
+  - repo_control_center full-check/sync baseline reported:
+    - sync verdict: `DRIFTED` (`ahead 2 / behind 0`)
+    - trust verdict: `NOT_TRUSTED`
+    - governance_acceptance verdict: `FAIL`
+    - admission verdict: `REJECTED`
+    - mirror verdict: `WARNING` (`safe mirror evidence stale`)
+- detected_issue_or_gap:
+  - policy trust chain blocked by safe_mirror divergence and stale mirror evidence contract
+- policy_change_proposed:
+  - restore safe_mirror parity (`HEAD == safe_mirror/main`)
+  - refresh SAFE_MIRROR manifest/report evidence contract to current execution cycle
+  - rerun full RCC chain for trust/admission proof
+- decision: `APPROVED`
+- implemented_files:
+  - `workspace_config/SAFE_MIRROR_MANIFEST.json`
+  - `docs/review_artifacts/SAFE_MIRROR_BUILD_REPORT.md`
+  - `docs/governance/POLICY_EVOLUTION_LOG.md`
+- impact_assessment:
+  - drift reduction evidence recorded:
+    - sync: `DRIFTED -> IN_SYNC`
+    - trust: `NOT_TRUSTED -> TRUSTED`
+    - governance_acceptance: `FAIL -> PASS`
+    - admission: `REJECTED -> ADMISSIBLE`
+    - full-check exit: `1 -> 0`
+  - failure reduction evidence recorded:
+    - mirror freshness blocker removed (`WARNING -> PASS`)
+- next_check:
+  - continue observation-window accumulation to satisfy promotion threshold cycles
