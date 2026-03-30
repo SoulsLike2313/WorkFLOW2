@@ -1463,6 +1463,7 @@ def foundation_law_lock_checks() -> dict[str, Any]:
         if len(files) > 1 and any(x != LAW_LOCK_CANON_REL for x in files)
     }
     if cross_file_duplicates:
+        blockers.append("cross_file_law_duplication_detected")
         warnings.append("cross_file_law_duplication_detected")
 
     one_truth_center_ok = not exists("scripts/imperium_gate_implementation.py")
