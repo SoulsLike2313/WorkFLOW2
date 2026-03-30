@@ -100,6 +100,17 @@ body {
   margin-top: 8px;
 }
 
+.eye-link {
+  color: #cbb7ff;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(203, 183, 255, 0.8);
+}
+
+.eye-link:hover {
+  color: #e8dcff;
+  border-bottom-color: #e8dcff;
+}
+
 .topbar h1 {
   margin: 0 0 6px 0;
   font-size: 24px;

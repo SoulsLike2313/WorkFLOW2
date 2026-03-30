@@ -1,0 +1,447 @@
+:root {
+  --bg-0: #090714;
+  --bg-1: #120a22;
+  --bg-2: #1a1233;
+  --amethyst-1: #a270ff;
+  --amethyst-2: #7f56d9;
+  --amethyst-3: #5c3ab1;
+  --metal: #b7c0d9;
+  --edge: rgba(171, 139, 255, 0.42);
+  --surface: rgba(17, 15, 34, 0.76);
+  --surface-strong: rgba(21, 18, 40, 0.88);
+  --text: #f5f1ff;
+  --text-muted: #c6b9e6;
+  --ok: #66f7c2;
+  --warn: #ffd166;
+  --fail: #ff708e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: radial-gradient(circle at 20% 0%, #2a1950 0%, #120a22 32%, #090714 72%);
+  color: var(--text);
+  font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+.eye-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--edge);
+  background: linear-gradient(180deg, rgba(10, 8, 21, 0.94), rgba(10, 8, 21, 0.66));
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+
+.eye-topbar h1 {
+  margin: 0;
+  font-size: 24px;
+  letter-spacing: 0.03em;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.subtitle a {
+  color: #d8c7ff;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  border: 1px solid var(--edge);
+  padding: 6px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(60, 39, 120, 0.32);
+}
+
+.tag-muted {
+  color: var(--text-muted);
+}
+
+.refresh-btn,
+.ghost-btn,
+.layer-btn {
+  border: 1px solid var(--edge);
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(40, 24, 82, 0.94), rgba(19, 14, 42, 0.94));
+  color: var(--text);
+  cursor: pointer;
+}
+
+.refresh-btn {
+  padding: 7px 12px;
+  font-size: 12px;
+}
+
+.eye-layout {
+  display: grid;
+  grid-template-columns: 1fr 370px;
+  gap: 18px;
+  padding: 18px;
+}
+
+.world-shell {
+  position: relative;
+  min-height: calc(100vh - 124px);
+  border: 1px solid var(--edge);
+  border-radius: 18px;
+  overflow: hidden;
+  background: radial-gradient(circle at 42% 38%, #25154b 0%, #160d2c 42%, #0b0819 100%);
+}
+
+.world-shell.dive-active .brain-core {
+  transform: translate(-50%, -50%) scale(0.78);
+}
+
+.nebula-layer,
+.dust-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.nebula-layer {
+  background:
+    radial-gradient(circle at 24% 30%, rgba(168, 102, 255, 0.32), transparent 56%),
+    radial-gradient(circle at 78% 21%, rgba(120, 78, 227, 0.28), transparent 50%),
+    radial-gradient(circle at 66% 74%, rgba(79, 46, 164, 0.24), transparent 56%);
+  animation: nebulaPulse 12s ease-in-out infinite alternate;
+}
+
+.dust-layer {
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px),
+    radial-gradient(circle, rgba(191, 162, 255, 0.12) 0 1px, transparent 1px);
+  background-size: 170px 170px, 130px 130px;
+  background-position: 0 0, 50px 80px;
+  opacity: 0.22;
+}
+
+.ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba(171, 139, 255, 0.36);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.ring-1 {
+  width: 360px;
+  height: 360px;
+  animation: orbit 30s linear infinite;
+}
+
+.ring-2 {
+  width: 540px;
+  height: 540px;
+  border-style: dashed;
+  animation: orbit 48s linear infinite reverse;
+}
+
+.ring-3 {
+  width: 730px;
+  height: 730px;
+  opacity: 0.5;
+  animation: orbit 72s linear infinite;
+}
+
+.brain-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 2px solid rgba(180, 149, 255, 0.72);
+  background:
+    radial-gradient(circle at 48% 42%, rgba(247, 240, 255, 0.96) 0, rgba(148, 104, 255, 0.7) 22%, rgba(31, 19, 71, 0.7) 56%, rgba(14, 10, 31, 0.9) 100%);
+  box-shadow:
+    0 0 60px rgba(169, 128, 255, 0.4),
+    inset 0 0 40px rgba(255, 255, 255, 0.12);
+  transition: transform 420ms ease;
+}
+
+.brain-core::before,
+.brain-core::after {
+  content: "";
+  position: absolute;
+  inset: -24px;
+  border-radius: 50%;
+  border: 1px solid rgba(183, 160, 255, 0.35);
+  animation: pulseRing 4.4s ease-out infinite;
+}
+
+.brain-core::after {
+  inset: -38px;
+  animation-delay: 1.6s;
+}
+
+.brain-core-inner {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.brain-title {
+  display: block;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.brain-status {
+  display: block;
+  font-size: 13px;
+  margin-top: 4px;
+  color: #fff;
+}
+
+.zone-orbit {
+  position: absolute;
+  inset: 0;
+}
+
+.zone-node {
+  position: absolute;
+  width: 176px;
+  border: 1px solid rgba(174, 140, 255, 0.42);
+  border-radius: 14px;
+  padding: 10px 11px;
+  background: linear-gradient(165deg, rgba(34, 21, 67, 0.82), rgba(15, 11, 32, 0.86));
+  box-shadow: 0 6px 24px rgba(12, 8, 28, 0.5);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: transform 260ms ease, border-color 260ms ease;
+}
+
+.zone-node:hover {
+  transform: translate(-50%, -50%) scale(1.03);
+  border-color: rgba(210, 185, 255, 0.8);
+}
+
+.zone-node.active {
+  border-color: rgba(218, 199, 255, 0.92);
+  box-shadow: 0 0 0 1px rgba(218, 199, 255, 0.5), 0 8px 28px rgba(35, 20, 70, 0.8);
+}
+
+.zone-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.zone-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.truth-bound {
+  color: var(--ok);
+}
+
+.display-only {
+  color: var(--warn);
+}
+
+.world-footer {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(157, 129, 231, 0.34);
+  background: rgba(14, 12, 30, 0.72);
+}
+
+.ghost-btn {
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.ghost-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.dive-state {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.zone-panel {
+  border: 1px solid var(--edge);
+  border-radius: 18px;
+  background: var(--surface);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: calc(100vh - 124px);
+}
+
+.panel-block {
+  border: 1px solid rgba(176, 145, 255, 0.3);
+  border-radius: 12px;
+  background: var(--surface-strong);
+  padding: 12px;
+}
+
+.panel-block h2 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.status-chip {
+  border: 1px solid rgba(183, 151, 255, 0.36);
+  border-radius: 9px;
+  padding: 8px;
+  font-size: 12px;
+  background: rgba(20, 16, 38, 0.76);
+}
+
+.status-chip.ok {
+  border-color: rgba(102, 247, 194, 0.5);
+}
+
+.status-chip.fail {
+  border-color: rgba(255, 112, 142, 0.55);
+}
+
+.zone-header {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.sublayer-switch {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.layer-btn {
+  font-size: 11px;
+  padding: 5px 8px;
+}
+
+.layer-btn.active {
+  border-color: rgba(216, 196, 255, 0.9);
+  background: linear-gradient(145deg, rgba(58, 34, 112, 0.96), rgba(25, 17, 55, 0.98));
+}
+
+.zone-content {
+  font-size: 12px;
+  line-height: 1.48;
+  color: #e9dcff;
+}
+
+.zone-content pre {
+  margin: 0;
+  max-height: 280px;
+  overflow: auto;
+  font-size: 11px;
+  border: 1px solid rgba(181, 152, 255, 0.28);
+  border-radius: 9px;
+  padding: 8px;
+  background: rgba(13, 10, 29, 0.76);
+}
+
+.boundary-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+@keyframes orbit {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes nebulaPulse {
+  from {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0.95;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.16);
+  }
+}
+
+@media (max-width: 1240px) {
+  .eye-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .zone-panel {
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nebula-layer,
+  .ring,
+  .brain-core::before,
+  .brain-core::after {
+    animation: none !important;
+  }
+}

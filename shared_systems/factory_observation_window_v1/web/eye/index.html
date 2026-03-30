@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Eye of the Emperor / Visual V1</title>
+  <link rel="stylesheet" href="/eye/eye.css" />
+</head>
+<body>
+  <header class="eye-topbar">
+    <div>
+      <h1>Eye of the Emperor / Visual V1</h1>
+      <p class="subtitle">Immersive shell: truth-bound display layer. Control plane lives at <a href="/">/</a>.</p>
+    </div>
+    <div class="topbar-right">
+      <span class="tag">Truth Center: repo + gates</span>
+      <span id="syncBadge" class="tag tag-muted">sync: loading...</span>
+      <button id="refreshBtn" class="refresh-btn" type="button">Обновить</button>
+    </div>
+  </header>
+
+  <main class="eye-layout">
+    <section id="worldShell" class="world-shell">
+      <div class="nebula-layer"></div>
+      <div class="dust-layer"></div>
+      <div class="ring ring-1"></div>
+      <div class="ring ring-2"></div>
+      <div class="ring ring-3"></div>
+
+      <div id="brainCore" class="brain-core">
+        <div class="brain-core-inner">
+          <span class="brain-title">Brain Core</span>
+          <span id="brainStatus" class="brain-status">UNKNOWN</span>
+        </div>
+      </div>
+
+      <div id="zoneOrbit" class="zone-orbit"></div>
+
+      <div class="world-footer">
+        <button id="backToWorldBtn" class="ghost-btn" type="button" disabled>Назад к мировой карте</button>
+        <span id="diveState" class="dive-state">Слой: WORLD OVERVIEW</span>
+      </div>
+    </section>
+
+    <aside class="zone-panel">
+      <section class="panel-block">
+        <h2>Global Truth Status</h2>
+        <div id="globalStatus"></div>
+      </section>
+
+      <section class="panel-block">
+        <h2>Selected Zone</h2>
+        <div id="zoneHeader" class="zone-header">Выберите зону на карте.</div>
+        <div class="sublayer-switch">
+          <button id="ownerLayerBtn" class="layer-btn active" type="button" data-layer="owner">Owner</button>
+          <button id="proofLayerBtn" class="layer-btn" type="button" data-layer="proof">Proof</button>
+          <button id="technicalLayerBtn" class="layer-btn" type="button" data-layer="technical">Technical</button>
+        </div>
+        <div id="zoneContent" class="zone-content">Нет выбранной зоны.</div>
+      </section>
+
+      <section class="panel-block">
+        <h2>Visual Truth Boundary</h2>
+        <ul class="boundary-list">
+          <li>display-only, no authority-write</li>
+          <li>no synthetic truth / fake green</li>
+          <li>source + evidence + provenance required</li>
+          <li>unbound critical organs forbidden</li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <script src="/eye/eye.js"></script>
+</body>
+</html>

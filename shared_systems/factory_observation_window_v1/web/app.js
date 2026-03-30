@@ -413,6 +413,10 @@ function modeFromQuery() {
 
 function setMode(mode, persist = true) {
   const m = mode === MODE_FULL ? MODE_FULL : MODE_COMMAND;
+  if (m === MODE_FULL) {
+    window.location.href = "/eye/";
+    return;
+  }
   document.body.dataset.mode = m;
   E("modeCommandBtn")?.classList.toggle("active", m === MODE_COMMAND);
   E("modeFullVisionBtn")?.classList.toggle("active", m === MODE_FULL);
