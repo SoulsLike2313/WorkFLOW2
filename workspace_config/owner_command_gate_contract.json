@@ -1,0 +1,29 @@
+{
+  "surface_id": "OWNER_COMMAND_GATE_CONTRACT_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "owner_commit_phrase": "Закрепи в Империуме",
+  "command_collection_key": "commands",
+  "required_fields": [
+    "command_id",
+    "intent",
+    "scope",
+    "must_preserve",
+    "unknowns",
+    "assumptions",
+    "stop_triggers",
+    "acceptance_criteria",
+    "risk_cost_estimate",
+    "escalation_rule",
+    "ambiguity_status"
+  ],
+  "reject_on_ambiguity": true,
+  "ambiguity_status_denied": [
+    "",
+    "UNSET",
+    "UNKNOWN",
+    "AMBIGUOUS"
+  ],
+  "allow_if_owner_clarified": true,
+  "owner_clarification_flag": "owner_clarified"
+}

@@ -44,6 +44,8 @@ Single index for system-wide immutable canon.
 3. `docs/governance/CONTRADICTION_CONTROL_POLICY.md`
 4. `docs/governance/VERIFICATION_DEPTH_POLICY.md`
 5. `docs/governance/PROMOTION_THRESHOLD_POLICY.md`
+6. `docs/governance/IMPERIUM_CANONICAL_PATH_UNIFICATION_AND_LAW_LOCK_V1.md`
+7. `docs/governance/IMPERIUM_FOUNDATION_LAW_LOCK_REGISTRY_V1.json`
 
 ## F6 Bundle/Output/Economy Law
 

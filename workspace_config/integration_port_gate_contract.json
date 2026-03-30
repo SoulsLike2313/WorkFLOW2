@@ -1,0 +1,33 @@
+{
+  "surface_id": "INTEGRATION_PORT_GATE_CONTRACT_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "port_name": "canonical_integration_port_v1",
+  "deny_without_port": true,
+  "apply_to_classes": [
+    "LAW",
+    "ORDER",
+    "GATE",
+    "REGISTRY_SURFACE",
+    "ZONE"
+  ],
+  "required_integration_fields": [
+    "integration_port_id",
+    "address",
+    "owner",
+    "class",
+    "birth_basis",
+    "change_basis",
+    "place_in_system",
+    "system_links",
+    "acceptance_criteria_ref",
+    "value_confirmation",
+    "operability_confirmation",
+    "soft_integration_confirmation"
+  ],
+  "acceptance_policy": {
+    "require_non_empty": true,
+    "require_soft_integration_confirmation": true,
+    "require_operability_confirmation": true
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "surface_id": "IMPERIUM_FOUNDATION_LAW_LOCK_REGISTRY_V1",
+  "version": "1.0.0",
+  "status": "ACTIVE",
+  "generated_at_utc": "2026-03-30T00:00:00Z",
+  "canonical_law_source": "docs/governance/IMPERIUM_CANONICAL_PATH_UNIFICATION_AND_LAW_LOCK_V1.md",
+  "laws": [
+    {
+      "law_id": "LAW-FOUNDATION-NO-DUPLICATE-LAWS",
+      "title": "No unresolved duplicate laws",
+      "origin_class": "owner_ratified",
+      "scope": "foundation_governance",
+      "status": "ACTIVE",
+      "ratification_need": "already_ratified",
+      "enforcement_surfaces": [
+        "scripts/repo_control_center.py",
+        "runtime/administratum/IMPERIUM_DUPLICATE_LAW_SCAN_V1.json"
+      ],
+      "duplicate_resolution_policy": [
+        "DESTROY_DUPLICATE",
+        "MERGE_INTO_CANONICAL",
+        "SPLIT_SCOPE_AND_READDRESS"
+      ]
+    },
+    {
+      "law_id": "LAW-FOUNDATION-IMPERIUM-COMMIT-PHRASE",
+      "title": "Owner commit phrase activation",
+      "origin_class": "owner_ratified",
+      "scope": "owner_command_lifecycle",
+      "status": "ACTIVE",
+      "ratification_need": "already_ratified",
+      "enforcement_surfaces": [
+        "workspace_config/owner_command_gate_contract.json",
+        "scripts/repo_control_center.py"
+      ]
+    },
+    {
+      "law_id": "LAW-FOUNDATION-SINGLE-THREAD-COMPLETION",
+      "title": "Single thread completion duty",
+      "origin_class": "owner_ratified",
+      "scope": "execution_discipline",
+      "status": "ACTIVE",
+      "ratification_need": "already_ratified",
+      "enforcement_surfaces": [
+        "scripts/repo_control_center.py",
+        "docs/review_artifacts/*/11_FIX_LOG_AND_REMEDIATION_ACTIONS.md"
+      ]
+    },
+    {
+      "law_id": "LAW-FOUNDATION-FULL-EXECUTION-DUTY",
+      "title": "Full execution duty for mechanical gaps",
+      "origin_class": "owner_ratified",
+      "scope": "execution_discipline",
+      "status": "ACTIVE",
+      "ratification_need": "already_ratified",
+      "enforcement_surfaces": [
+        "scripts/repo_control_center.py",
+        "docs/review_artifacts/*/13_FINAL_STATUS_DELTA.md"
+      ]
+    },
+    {
+      "law_id": "LAW-FOUNDATION-SERVITOR-FIDELITY",
+      "title": "Servitor fidelity to requested end state",
+      "origin_class": "owner_ratified",
+      "scope": "execution_quality",
+      "status": "ACTIVE",
+      "ratification_need": "already_ratified",
+      "enforcement_surfaces": [
+        "scripts/repo_control_center.py",
+        "docs/review_artifacts/*/00_EXECUTIVE_VERDICT.md"
+      ]
+    },
+    {
+      "law_id": "LAW-FOUNDATION-PORT-GATED-INTEGRATION",
+      "title": "Port-gated integration required",
+      "origin_class": "owner_ratified",
+      "scope": "integration_admission",
+      "status": "ACTIVE",
+      "ratification_need": "already_ratified",
+      "enforcement_surfaces": [
+        "workspace_config/integration_port_gate_contract.json",
+        "scripts/repo_control_center.py",
+        "runtime/administratum/IMPERIUM_PORT_INTEGRATION_GATE_STATUS_V1.json"
+      ]
+    },
+    {
+      "law_id": "LAW-FOUNDATION-ONE-TRUTH-CENTER",
+      "title": "One tracked enforcement truth center",
+      "origin_class": "owner_ratified",
+      "scope": "enforcement_path",
+      "status": "ACTIVE",
+      "ratification_need": "already_ratified",
+      "enforcement_surfaces": [
+        "scripts/repo_control_center.py",
+        "runtime/administratum/IMPERIUM_FOUNDATION_LAW_LOCK_STATUS_V1.json"
+      ]
+    },
+    {
+      "law_id": "LAW-FOUNDATION-AMBIGUOUS-OWNER-COMMAND-HARD-GATE",
+      "title": "Ambiguous owner command hard gate",
+      "origin_class": "owner_ratified",
+      "scope": "owner_command_execution",
+      "status": "ACTIVE",
+      "ratification_need": "already_ratified",
+      "enforcement_surfaces": [
+        "workspace_config/owner_command_gate_contract.json",
+        "scripts/repo_control_center.py",
+        "runtime/administratum/IMPERIUM_AMBIGUOUS_COMMAND_HARD_GATE_STATUS_V1.json"
+      ]
+    },
+    {
+      "law_id": "LAW-FOUNDATION-CODEX-RESPONSE-FORMAT",
+      "title": "Codex short response default",
+      "origin_class": "owner_ratified",
+      "scope": "response_surface",
+      "status": "ACTIVE",
+      "ratification_need": "already_ratified",
+      "enforcement_surfaces": [
+        "docs/governance/CODEX_OUTPUT_DISCIPLINE_V1.md",
+        "docs/governance/IMPERIUM_CANONICAL_PATH_UNIFICATION_AND_LAW_LOCK_V1.md"
+      ]
+    }
+  ]
+}

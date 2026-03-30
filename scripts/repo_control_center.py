@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 from __future__ import annotations
 
 import argparse
@@ -25,6 +25,36 @@ IMPERIUM_REPO_HYGIENE_SURFACE_RELATIVE_PATH = (
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RUNTIME_DIR = REPO_ROOT / "runtime" / "repo_control_center"
 OBSERVATION_CYCLE_STATE_PATH = RUNTIME_DIR / "promotion_observation_cycles.json"
+ADMIN_RUNTIME_DIR = REPO_ROOT / "runtime" / "administratum"
+
+GATE_POLICY_REL = "runtime/administratum/IMPERIUM_GATE_POLICY_V1.json"
+OWNER_OVERRIDE_REL = "runtime/administratum/IMPERIUM_OWNER_OVERRIDE_GATE_V1.json"
+ENTITY_REGISTRY_REL = "runtime/administratum/IMPERIUM_ENTITY_REGISTRY_V1.json"
+ZONE_CLASS_POLICY_REL = "runtime/administratum/IMPERIUM_ZONE_CLASS_POLICY_V1.json"
+ZONE_TRANSITION_POLICY_REL = "runtime/administratum/IMPERIUM_ZONE_TRANSITION_POLICY_V1.json"
+ZONE_TRANSITION_LEDGER_REL = "runtime/administratum/IMPERIUM_ZONE_TRANSITION_LEDGER_V1.json"
+DASHBOARD_SIGNAL_REGISTRY_REL = "runtime/administratum/IMPERIUM_DASHBOARD_SIGNAL_REGISTRY_V1.json"
+TOMB_REGISTRY_REL = "runtime/administratum/IMPERIUM_TOMB_REGISTRY_V1.json"
+REIMPORT_REQUESTS_REL = "runtime/administratum/IMPERIUM_REIMPORT_REQUESTS_V1.json"
+
+GATE_SUMMARY_REL = "runtime/administratum/IMPERIUM_GATE_EXECUTION_SUMMARY_V1.json"
+GATE_AUDIT_LOG_REL = "runtime/administratum/IMPERIUM_GATE_AUDIT_LOG_V1.jsonl"
+CANONICAL_WRITE_STATE_REL = "runtime/administratum/IMPERIUM_CANONICAL_WRITE_GATE_STATE_V1.json"
+REGISTRY_VALIDATION_STATE_REL = "runtime/administratum/IMPERIUM_REGISTRY_VALIDATION_GATE_STATE_V1.json"
+ZONE_TRANSITION_STATE_REL = "runtime/administratum/IMPERIUM_ZONE_TRANSITION_GATE_STATE_V1.json"
+DASHBOARD_TRUTH_STATE_REL = "runtime/administratum/IMPERIUM_DASHBOARD_TRUTH_VALIDATOR_STATE_V1.json"
+TOMB_REIMPORT_STATE_REL = "runtime/administratum/IMPERIUM_TOMB_REIMPORT_BLOCKER_STATE_V1.json"
+
+LAW_LOCK_CANON_REL = "docs/governance/IMPERIUM_CANONICAL_PATH_UNIFICATION_AND_LAW_LOCK_V1.md"
+LAW_LOCK_REGISTRY_REL = "docs/governance/IMPERIUM_FOUNDATION_LAW_LOCK_REGISTRY_V1.json"
+OWNER_COMMAND_GATE_CONTRACT_REL = "workspace_config/owner_command_gate_contract.json"
+INTEGRATION_PORT_GATE_CONTRACT_REL = "workspace_config/integration_port_gate_contract.json"
+OWNER_COMMAND_INBOX_REL = "runtime/administratum/IMPERIUM_OWNER_COMMAND_INBOX_V1.json"
+LAW_LOCK_STATUS_REL = "runtime/administratum/IMPERIUM_FOUNDATION_LAW_LOCK_STATUS_V1.json"
+DUPLICATE_LAW_SCAN_REL = "runtime/administratum/IMPERIUM_DUPLICATE_LAW_SCAN_V1.json"
+AMBIGUOUS_COMMAND_GATE_STATUS_REL = "runtime/administratum/IMPERIUM_AMBIGUOUS_COMMAND_HARD_GATE_STATUS_V1.json"
+OWNER_COMMAND_GATE_RUNTIME_STATE_REL = "runtime/administratum/IMPERIUM_OWNER_COMMAND_GATE_RUNTIME_STATE_V1.json"
+PORT_INTEGRATION_GATE_STATUS_REL = "runtime/administratum/IMPERIUM_PORT_INTEGRATION_GATE_STATUS_V1.json"
 
 CORE_DOCS = [
     "README.md",
@@ -232,6 +262,16 @@ def read_text(rel: str) -> str:
     return (REPO_ROOT / rel).read_text(encoding="utf-8-sig")
 
 
+def read_text_loose(rel: str) -> str:
+    raw = (REPO_ROOT / rel).read_bytes()
+    for encoding in ("utf-8-sig", "utf-8", "cp1251", "latin-1"):
+        try:
+            return raw.decode(encoding)
+        except Exception:
+            continue
+    return raw.decode("utf-8", errors="ignore")
+
+
 def load_json(rel: str) -> dict[str, Any]:
     return json.loads(read_text(rel))
 
@@ -247,6 +287,55 @@ def load_json_if_exists(rel: str) -> dict[str, Any]:
 
 def exists(rel: str) -> bool:
     return (REPO_ROOT / rel).exists()
+
+
+def write_json_rel(rel: str, payload: dict[str, Any]) -> None:
+    path = REPO_ROOT / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def parse_iso_ts(raw: Any) -> datetime | None:
+    text = str(raw or "").strip()
+    if not text:
+        return None
+    try:
+        return datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
+def path_is_git_tracked(rel: str) -> bool:
+    if not str(rel).strip():
+        return False
+    proc = subprocess.run(
+        ["git", "ls-files", "--error-unmatch", "--", rel],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    return proc.returncode == 0
+
+
+def append_jsonl_rel(rel: str, payload: dict[str, Any]) -> None:
+    path = REPO_ROOT / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+
+
+def normalize_semantic_token(value: str) -> str:
+    return "".join(ch for ch in str(value).lower() if ch.isalnum())
+
+
+def contains_failure_signal(value: Any) -> bool:
+    fail_tokens = {"FAIL", "BLOCKED", "NOT_TRUSTED", "REJECTED"}
+    if isinstance(value, dict):
+        return any(contains_failure_signal(v) for v in value.values())
+    if isinstance(value, list):
+        return any(contains_failure_signal(v) for v in value)
+    return str(value).strip().upper() in fail_tokens
 
 
 def build_git_state(fetch: bool) -> GitState:
@@ -983,6 +1072,521 @@ def sync_checks(git_state: GitState) -> dict[str, Any]:
     }
 
 
+def gate_runtime_checks(git_state: GitState) -> dict[str, Any]:
+    now = datetime.now(timezone.utc)
+    policy = load_json_if_exists(GATE_POLICY_REL)
+    owner_override = load_json_if_exists(OWNER_OVERRIDE_REL)
+    registry = load_json_if_exists(ENTITY_REGISTRY_REL)
+    zone_class_policy = load_json_if_exists(ZONE_CLASS_POLICY_REL)
+    zone_transition_policy = load_json_if_exists(ZONE_TRANSITION_POLICY_REL)
+    zone_transition_ledger = load_json_if_exists(ZONE_TRANSITION_LEDGER_REL)
+    dashboard_registry = load_json_if_exists(DASHBOARD_SIGNAL_REGISTRY_REL)
+    tomb_registry = load_json_if_exists(TOMB_REGISTRY_REL)
+    reimport_requests = load_json_if_exists(REIMPORT_REQUESTS_REL)
+    integration_port_contract = load_json_if_exists(INTEGRATION_PORT_GATE_CONTRACT_REL)
+
+    status_lines = run_cmd(["git", "status", "--porcelain=v1"], allow_fail=True).splitlines()
+    changed_paths: list[str] = []
+    for raw in status_lines:
+        line = str(raw or "").strip()
+        if not line:
+            continue
+        payload = line[3:].strip() if len(line) >= 3 else line
+        if " -> " in payload:
+            payload = payload.split(" -> ", 1)[1].strip()
+        changed_paths.append(payload.replace("\\", "/"))
+
+    gate_results: list[dict[str, Any]] = []
+
+    canonical_prefixes = list(policy.get("canonical_write_gate", {}).get("protected_prefixes", []) or ["docs/governance/"])
+    allowed_canon_paths = set(policy.get("canonical_write_gate", {}).get("allowed_canon_mutation_paths", []) or [])
+    canon_changes = [p for p in changed_paths if any(p.startswith(prefix) for prefix in canonical_prefixes)]
+    unauthorized_canon_changes = [p for p in canon_changes if p not in allowed_canon_paths]
+    canonical_override = bool(owner_override.get("canonical_write_override", False))
+    canonical_pass = len(unauthorized_canon_changes) == 0 or canonical_override
+    canonical_gate = {
+        "gate_id": "canonical_write_gate",
+        "status": "PASS" if canonical_pass else "FAIL",
+        "pass": canonical_pass,
+        "implemented": True,
+        "summary": "No unauthorized canonical write path detected." if canonical_pass else "Unauthorized canonical write detected.",
+        "evidence": {
+            "changed_paths_count": len(changed_paths),
+            "canon_changes": canon_changes,
+            "unauthorized_canon_changes": unauthorized_canon_changes,
+            "owner_override": canonical_override,
+        },
+        "audit_path": GATE_AUDIT_LOG_REL,
+    }
+    gate_results.append(canonical_gate)
+
+    records = list(registry.get("records", []) or [])
+    allowed_zone_by_class = dict(zone_class_policy.get("allowed_zone_by_class", {}) or {})
+    required_fields = [
+        "entity_id",
+        "canonical_name",
+        "address",
+        "class",
+        "zone",
+        "order",
+        "owner",
+        "mandate",
+        "state",
+        "birth_basis",
+        "change_basis",
+        "provenance_link",
+        "last_review",
+        "visibility_class",
+        "dashboard_exposure_class",
+    ]
+    registry_failures: list[dict[str, Any]] = []
+    registry_warnings: list[dict[str, Any]] = []
+    integration_failures: list[dict[str, Any]] = []
+    seen_entity: set[str] = set()
+    seen_address: set[str] = set()
+    seen_semantic_name: dict[str, str] = {}
+    integration_required_fields = list(integration_port_contract.get("required_integration_fields", []) or [])
+    integration_apply_to_classes = set(integration_port_contract.get("apply_to_classes", []) or [])
+    integration_hard_gate = bool(integration_port_contract.get("deny_without_port", False))
+    for record in records:
+        entity_id = str(record.get("entity_id", "")).strip() or "UNKNOWN"
+        address = str(record.get("address", "")).strip()
+        canonical_name = str(record.get("canonical_name", "")).strip()
+        for field in required_fields:
+            if str(record.get(field, "")).strip() == "":
+                registry_failures.append({"entity_id": entity_id, "issue": f"missing_field:{field}"})
+        if entity_id in seen_entity:
+            registry_failures.append({"entity_id": entity_id, "issue": "duplicate_entity_id"})
+        seen_entity.add(entity_id)
+        if address:
+            if address in seen_address:
+                registry_failures.append({"entity_id": entity_id, "issue": "duplicate_address"})
+            seen_address.add(address)
+        semantic_name = normalize_semantic_token(canonical_name)
+        if semantic_name:
+            prior = seen_semantic_name.get(semantic_name)
+            if prior and prior != entity_id:
+                registry_failures.append(
+                    {
+                        "entity_id": entity_id,
+                        "issue": f"semantic_name_collision:{canonical_name}",
+                        "with_entity": prior,
+                    }
+                )
+            seen_semantic_name[semantic_name] = entity_id
+        class_name = str(record.get("class", "")).strip()
+        zone_name = str(record.get("zone", "")).strip()
+        if class_name not in allowed_zone_by_class:
+            registry_failures.append({"entity_id": entity_id, "issue": f"class_policy_missing:{class_name}"})
+        elif zone_name not in list(allowed_zone_by_class.get(class_name, []) or []):
+            registry_failures.append({"entity_id": entity_id, "issue": f"class_zone_mismatch:{class_name}->{zone_name}"})
+        provenance_rel = str(record.get("provenance_link", "")).strip().replace("\\", "/")
+        if provenance_rel:
+            provenance_path = REPO_ROOT / provenance_rel
+            if not provenance_path.exists():
+                registry_failures.append({"entity_id": entity_id, "issue": "missing_provenance_path"})
+            elif not path_is_git_tracked(provenance_rel):
+                if provenance_rel.startswith("runtime/") or provenance_rel.startswith("docs/review_artifacts/"):
+                    registry_warnings.append({"entity_id": entity_id, "issue": "untracked_provenance_generated_zone"})
+                else:
+                    registry_failures.append({"entity_id": entity_id, "issue": "untracked_provenance_path"})
+        if integration_hard_gate and (not integration_apply_to_classes or class_name in integration_apply_to_classes):
+            for field in integration_required_fields:
+                value = record.get(field)
+                missing_value = False
+                if isinstance(value, list):
+                    missing_value = len(value) == 0
+                elif isinstance(value, dict):
+                    missing_value = len(value.keys()) == 0
+                else:
+                    missing_value = str(value if value is not None else "").strip() == ""
+                if missing_value:
+                    integration_failures.append({"entity_id": entity_id, "issue": f"integration_port_missing_field:{field}"})
+    if integration_failures:
+        registry_failures.extend(integration_failures)
+    registry_pass = len(registry_failures) == 0
+    registry_gate = {
+        "gate_id": "registry_validation_gate",
+        "status": "PASS" if registry_pass else "FAIL",
+        "pass": registry_pass,
+        "implemented": True,
+        "summary": "Registry records satisfy required schema and class-zone policy." if registry_pass else "Registry validation failures detected.",
+        "evidence": {
+            "records_total": len(records),
+            "failures": registry_failures,
+            "warnings": registry_warnings,
+            "schema_fields_required": required_fields,
+            "policy_path": ZONE_CLASS_POLICY_REL,
+            "integration_hard_gate": integration_hard_gate,
+            "integration_required_fields": integration_required_fields,
+            "integration_apply_to_classes": sorted(integration_apply_to_classes),
+        },
+        "audit_path": GATE_AUDIT_LOG_REL,
+    }
+    gate_results.append(registry_gate)
+
+    allowed_transitions = {
+        (str(x.get("from_zone", "")).strip(), str(x.get("to_zone", "")).strip())
+        for x in list(zone_transition_policy.get("allowed_transitions", []) or [])
+    }
+    transition_entries = list(zone_transition_ledger.get("entries", []) or [])
+    transition_failures: list[dict[str, Any]] = []
+    for entry in transition_entries:
+        entry_id = str(entry.get("entry_id", "UNKNOWN")).strip()
+        from_zone = str(entry.get("from_zone", "")).strip()
+        to_zone = str(entry.get("to_zone", "")).strip()
+        for field in ["subject_id", "from_zone", "to_zone", "authority_basis", "evidence_ref"]:
+            if str(entry.get(field, "")).strip() == "":
+                transition_failures.append({"entry_id": entry_id, "issue": f"missing_field:{field}"})
+        if (from_zone, to_zone) not in allowed_transitions:
+            transition_failures.append({"entry_id": entry_id, "issue": f"forbidden_transition:{from_zone}->{to_zone}"})
+        if from_zone == "Officium Runtime Nodorum" and to_zone == "Sanctum Canonis":
+            transition_failures.append({"entry_id": entry_id, "issue": "runtime_direct_to_canon_forbidden"})
+    transition_pass = len(transition_failures) == 0
+    transition_gate = {
+        "gate_id": "zone_transition_gate",
+        "status": "PASS" if transition_pass else "FAIL",
+        "pass": transition_pass,
+        "implemented": True,
+        "summary": "Zone transitions comply with allowed movement policy." if transition_pass else "Zone transition policy violations detected.",
+        "evidence": {
+            "entries_total": len(transition_entries),
+            "allowed_transitions_total": len(allowed_transitions),
+            "failures": transition_failures,
+        },
+        "audit_path": GATE_AUDIT_LOG_REL,
+    }
+    gate_results.append(transition_gate)
+
+    signal_entries = list(dashboard_registry.get("signals", []) or [])
+    signal_failures: list[dict[str, Any]] = []
+    required_signal_fields = [
+        "signal_id",
+        "source_path",
+        "owner",
+        "freshness_max_minutes",
+        "last_observed_utc",
+        "evidence_link",
+        "provenance_link",
+        "status",
+    ]
+    allowed_statuses = {"GREEN", "YELLOW", "RED", "UNKNOWN", "ERROR", "BLOCKED"}
+    for signal in signal_entries:
+        signal_id = str(signal.get("signal_id", "UNKNOWN"))
+        for field in required_signal_fields:
+            if str(signal.get(field, "")).strip() == "":
+                signal_failures.append({"signal_id": signal_id, "issue": f"missing_field:{field}"})
+        source_rel = str(signal.get("source_path", "")).replace("\\", "/").strip()
+        source_path = REPO_ROOT / source_rel
+        if not source_path.exists():
+            signal_failures.append({"signal_id": signal_id, "issue": "missing_source_path"})
+            continue
+        obs_ts = parse_iso_ts(signal.get("last_observed_utc"))
+        age_minutes = (now - obs_ts).total_seconds() / 60.0 if obs_ts else 10**9
+        freshness_limit = float(signal.get("freshness_max_minutes", 0) or 0)
+        if age_minutes > freshness_limit:
+            signal_failures.append({"signal_id": signal_id, "issue": f"stale_signal:{int(age_minutes)}m>{int(freshness_limit)}m"})
+        source_data = load_json_if_exists(source_rel)
+        source_ts = (
+            parse_iso_ts(source_data.get("generated_at_utc"))
+            or parse_iso_ts(source_data.get("generated_at"))
+            or parse_iso_ts(source_data.get("timestamp_utc"))
+        )
+        if source_ts:
+            source_age = (now - source_ts).total_seconds() / 60.0
+            if source_age > freshness_limit:
+                signal_failures.append({"signal_id": signal_id, "issue": f"stale_source:{int(source_age)}m>{int(freshness_limit)}m"})
+        status = str(signal.get("status", "")).strip().upper()
+        if status not in allowed_statuses:
+            signal_failures.append({"signal_id": signal_id, "issue": f"invalid_signal_status:{status or 'EMPTY'}"})
+        if status == "GREEN" and contains_failure_signal(source_data):
+            signal_failures.append({"signal_id": signal_id, "issue": "green_with_failure_source"})
+    dashboard_pass = len(signal_failures) == 0
+    dashboard_gate = {
+        "gate_id": "dashboard_truth_validator",
+        "status": "PASS" if dashboard_pass else "FAIL",
+        "pass": dashboard_pass,
+        "implemented": True,
+        "summary": "Dashboard signal metadata and truth-state validation passed." if dashboard_pass else "Dashboard signal validation failures detected.",
+        "evidence": {
+            "signals_total": len(signal_entries),
+            "failures": signal_failures,
+            "registry_path": DASHBOARD_SIGNAL_REGISTRY_REL,
+        },
+        "audit_path": GATE_AUDIT_LOG_REL,
+    }
+    gate_results.append(dashboard_gate)
+
+    tomb_entries = {
+        str(x.get("subject_id", "")).strip(): str(x.get("status", "")).strip().upper()
+        for x in list(tomb_registry.get("entries", []) or [])
+    }
+    requests = list(reimport_requests.get("requests", []) or [])
+    reimport_blocked: list[dict[str, Any]] = []
+    for req in requests:
+        req_id = str(req.get("request_id", "UNKNOWN"))
+        subject_id = str(req.get("subject_id", "")).strip()
+        subject_status = tomb_entries.get(subject_id, "")
+        if subject_status in {"TOMBED", "QUARANTINED"}:
+            if str(req.get("restoration_act_id", "")).strip() == "" or not bool(req.get("owner_approved", False)):
+                reimport_blocked.append(
+                    {
+                        "request_id": req_id,
+                        "subject_id": subject_id,
+                        "issue": "reimport_blocked_missing_restoration_or_owner_approval",
+                    }
+                )
+    tomb_pass = len(reimport_blocked) == 0
+    tomb_gate = {
+        "gate_id": "tomb_reimport_blocker",
+        "status": "PASS" if tomb_pass else "FAIL",
+        "pass": tomb_pass,
+        "implemented": True,
+        "summary": "Tomb reimport attempts are lawfully controlled." if tomb_pass else "Blocked/illegal tomb reimport attempt detected.",
+        "evidence": {
+            "requests_total": len(requests),
+            "blocked_attempts": reimport_blocked,
+            "tomb_entries_total": len(tomb_entries),
+        },
+        "audit_path": GATE_AUDIT_LOG_REL,
+    }
+    gate_results.append(tomb_gate)
+
+    for gate in gate_results:
+        event = {
+            "timestamp_utc": utc_now(),
+            "gate_id": gate.get("gate_id", "unknown"),
+            "status": gate.get("status", "UNKNOWN"),
+            "pass": bool(gate.get("pass", False)),
+            "summary": gate.get("summary", ""),
+        }
+        append_jsonl_rel(GATE_AUDIT_LOG_REL, event)
+
+    write_json_rel(CANONICAL_WRITE_STATE_REL, canonical_gate)
+    write_json_rel(REGISTRY_VALIDATION_STATE_REL, registry_gate)
+    write_json_rel(ZONE_TRANSITION_STATE_REL, transition_gate)
+    write_json_rel(DASHBOARD_TRUTH_STATE_REL, dashboard_gate)
+    write_json_rel(TOMB_REIMPORT_STATE_REL, tomb_gate)
+
+    overall_pass = all(bool(g.get("pass", False)) for g in gate_results)
+    summary = {
+        "surface_id": "IMPERIUM_GATE_EXECUTION_SUMMARY_V1",
+        "generated_at_utc": utc_now(),
+        "overall_status": "PASS" if overall_pass else "FAIL",
+        "overall_pass": overall_pass,
+        "gates": gate_results,
+    }
+    write_json_rel(GATE_SUMMARY_REL, summary)
+
+    blockers = [f"gate_fail:{g['gate_id']}" for g in gate_results if not g.get("pass", False)]
+    warnings = []
+    if registry_warnings:
+        warnings.append("registry_generated_zone_provenance_warnings")
+    return {
+        "verdict": "PASS" if overall_pass else "FAIL",
+        "basis": "canonical tracked gate runtime checks via repo_control_center",
+        "evidence": summary,
+        "blockers": blockers,
+        "warnings": warnings,
+        "next_step": "Resolve gate_fail blockers." if blockers else "Maintain gate runtime integrity.",
+    }
+
+
+def foundation_law_lock_checks() -> dict[str, Any]:
+    required_law_ids = [
+        "LAW-FOUNDATION-NO-DUPLICATE-LAWS",
+        "LAW-FOUNDATION-IMPERIUM-COMMIT-PHRASE",
+        "LAW-FOUNDATION-SINGLE-THREAD-COMPLETION",
+        "LAW-FOUNDATION-FULL-EXECUTION-DUTY",
+        "LAW-FOUNDATION-SERVITOR-FIDELITY",
+        "LAW-FOUNDATION-PORT-GATED-INTEGRATION",
+        "LAW-FOUNDATION-ONE-TRUTH-CENTER",
+        "LAW-FOUNDATION-AMBIGUOUS-OWNER-COMMAND-HARD-GATE",
+        "LAW-FOUNDATION-CODEX-RESPONSE-FORMAT",
+    ]
+
+    blockers: list[str] = []
+    warnings: list[str] = []
+
+    law_doc_exists = exists(LAW_LOCK_CANON_REL)
+    law_registry = load_json_if_exists(LAW_LOCK_REGISTRY_REL)
+    law_doc_text = read_text(LAW_LOCK_CANON_REL) if law_doc_exists else ""
+    registry_laws = list(law_registry.get("laws", []) or [])
+    registry_ids = [str(x.get("law_id", "")).strip() for x in registry_laws if str(x.get("law_id", "")).strip()]
+    missing_in_registry = [law_id for law_id in required_law_ids if law_id not in registry_ids]
+    if not law_doc_exists:
+        blockers.append("missing_law_lock_canon_doc")
+    if missing_in_registry:
+        blockers.append("missing_required_foundation_laws")
+
+    for law_id in required_law_ids:
+        if law_doc_text and law_id not in law_doc_text:
+            blockers.append(f"law_id_missing_in_doc:{law_id}")
+
+    duplicate_id_map: dict[str, list[str]] = {}
+    for row in registry_laws:
+        law_id = str(row.get("law_id", "")).strip()
+        if law_id:
+            duplicate_id_map.setdefault(law_id, []).append(str(row.get("title", "")).strip())
+    duplicate_law_ids = sorted([law_id for law_id, titles in duplicate_id_map.items() if len(titles) > 1])
+
+    semantic_index: dict[str, str] = {}
+    semantic_collisions: list[dict[str, str]] = []
+    for row in registry_laws:
+        law_id = str(row.get("law_id", "")).strip()
+        title = str(row.get("title", "")).strip()
+        token = normalize_semantic_token(title)
+        if not token:
+            continue
+        prior = semantic_index.get(token)
+        if prior and prior != law_id:
+            semantic_collisions.append({"law_id": law_id, "collides_with": prior, "title": title})
+        semantic_index[token] = law_id
+    if duplicate_law_ids:
+        blockers.append("duplicate_law_id_detected")
+    if semantic_collisions:
+        blockers.append("semantic_duplicate_law_detected")
+
+    governance_files = run_cmd(["git", "ls-files", "docs/governance/*.md"], allow_fail=True).splitlines()
+    law_occurrence_map: dict[str, list[str]] = {law_id: [] for law_id in required_law_ids}
+    for rel in governance_files:
+        rel_clean = str(rel).strip()
+        if not rel_clean:
+            continue
+        text = read_text_loose(rel_clean)
+        for law_id in required_law_ids:
+            if law_id in text:
+                law_occurrence_map[law_id].append(rel_clean)
+    cross_file_duplicates = {
+        law_id: files
+        for law_id, files in law_occurrence_map.items()
+        if len(files) > 1 and any(x != LAW_LOCK_CANON_REL for x in files)
+    }
+    if cross_file_duplicates:
+        warnings.append("cross_file_law_duplication_detected")
+
+    one_truth_center_ok = not exists("scripts/imperium_gate_implementation.py")
+    if not one_truth_center_ok:
+        blockers.append("second_enforcement_path_detected")
+
+    owner_command_contract = load_json_if_exists(OWNER_COMMAND_GATE_CONTRACT_REL)
+    command_required_fields = list(owner_command_contract.get("required_fields", []) or [])
+    reject_policy = bool(owner_command_contract.get("reject_on_ambiguity", False))
+    owner_phrase = str(owner_command_contract.get("owner_commit_phrase", "")).strip()
+    command_collection_key = str(owner_command_contract.get("command_collection_key", "commands")).strip() or "commands"
+    denied_ambiguity_statuses = {
+        str(x).strip().upper() for x in list(owner_command_contract.get("ambiguity_status_denied", []) or [])
+    }
+    command_contract_ok = bool(command_required_fields) and reject_policy and owner_phrase == "Закрепи в Империуме"
+    if not command_contract_ok:
+        blockers.append("ambiguous_command_hard_gate_contract_invalid")
+
+    owner_command_inbox = load_json_if_exists(OWNER_COMMAND_INBOX_REL)
+    owner_commands = list(owner_command_inbox.get(command_collection_key, []) or [])
+    ambiguous_command_failures: list[dict[str, Any]] = []
+    for row in owner_commands:
+        command_id = str(row.get("command_id", "")).strip() or "UNKNOWN"
+        missing_fields = [
+            field for field in command_required_fields if str(row.get(field, "")).strip() == ""
+        ]
+        if missing_fields:
+            ambiguous_command_failures.append(
+                {
+                    "command_id": command_id,
+                    "issue": "missing_required_fields",
+                    "fields": missing_fields,
+                }
+            )
+        ambiguity_status = str(row.get("ambiguity_status", "")).strip().upper()
+        owner_clarified = bool(row.get("owner_clarified", False))
+        if reject_policy and ambiguity_status in denied_ambiguity_statuses and not owner_clarified:
+            ambiguous_command_failures.append(
+                {
+                    "command_id": command_id,
+                    "issue": "ambiguous_status_rejected",
+                    "ambiguity_status": ambiguity_status or "EMPTY",
+                }
+            )
+    if ambiguous_command_failures:
+        blockers.append("ambiguous_owner_command_detected")
+
+    port_contract = load_json_if_exists(INTEGRATION_PORT_GATE_CONTRACT_REL)
+    port_required = list(port_contract.get("required_integration_fields", []) or [])
+    port_policy_ok = bool(port_required) and bool(port_contract.get("deny_without_port", False))
+    if not port_policy_ok:
+        blockers.append("port_gated_integration_contract_invalid")
+
+    codex_format_law_ok = "LAW-FOUNDATION-CODEX-RESPONSE-FORMAT" in law_doc_text and "3-4" in law_doc_text
+    if not codex_format_law_ok:
+        blockers.append("codex_response_format_law_not_enforced")
+
+    duplicate_scan_payload = {
+        "surface_id": "IMPERIUM_DUPLICATE_LAW_SCAN_V1",
+        "generated_at_utc": utc_now(),
+        "required_law_ids": required_law_ids,
+        "registry_ids": sorted(set(registry_ids)),
+        "missing_in_registry": missing_in_registry,
+        "duplicate_law_ids": duplicate_law_ids,
+        "semantic_collisions": semantic_collisions,
+        "cross_file_duplicates": cross_file_duplicates,
+    }
+    write_json_rel(DUPLICATE_LAW_SCAN_REL, duplicate_scan_payload)
+
+    ambiguous_gate_payload = {
+        "surface_id": "IMPERIUM_AMBIGUOUS_COMMAND_HARD_GATE_STATUS_V1",
+        "generated_at_utc": utc_now(),
+        "status": "PASS" if command_contract_ok and not ambiguous_command_failures else "FAIL",
+        "owner_commit_phrase": owner_phrase,
+        "required_fields": command_required_fields,
+        "reject_on_ambiguity": reject_policy,
+        "command_collection_key": command_collection_key,
+        "commands_total": len(owner_commands),
+        "ambiguity_status_denied": sorted(denied_ambiguity_statuses),
+        "ambiguity_failures": ambiguous_command_failures,
+        "source_path": OWNER_COMMAND_INBOX_REL,
+    }
+    write_json_rel(AMBIGUOUS_COMMAND_GATE_STATUS_REL, ambiguous_gate_payload)
+    write_json_rel(OWNER_COMMAND_GATE_RUNTIME_STATE_REL, ambiguous_gate_payload)
+
+    port_gate_payload = {
+        "surface_id": "IMPERIUM_PORT_INTEGRATION_GATE_STATUS_V1",
+        "generated_at_utc": utc_now(),
+        "status": "PASS" if port_policy_ok else "FAIL",
+        "deny_without_port": bool(port_contract.get("deny_without_port", False)),
+        "required_integration_fields": port_required,
+        "port_name": str(port_contract.get("port_name", "")).strip(),
+    }
+    write_json_rel(PORT_INTEGRATION_GATE_STATUS_REL, port_gate_payload)
+
+    law_lock_payload = {
+        "surface_id": "IMPERIUM_FOUNDATION_LAW_LOCK_STATUS_V1",
+        "generated_at_utc": utc_now(),
+        "status": "PASS" if not blockers else "FAIL",
+        "required_law_ids": required_law_ids,
+        "blockers": blockers,
+        "warnings": warnings,
+        "one_truth_center_ok": one_truth_center_ok,
+        "law_doc_exists": law_doc_exists,
+        "law_registry_path": LAW_LOCK_REGISTRY_REL,
+        "law_doc_path": LAW_LOCK_CANON_REL,
+    }
+    write_json_rel(LAW_LOCK_STATUS_REL, law_lock_payload)
+
+    return {
+        "verdict": "PASS" if not blockers else "FAIL",
+        "basis": "foundation law lock, duplicate-law control, command ambiguity gate, and integration port gate",
+        "evidence": {
+            "law_lock": law_lock_payload,
+            "duplicate_scan": duplicate_scan_payload,
+            "ambiguous_command_gate": ambiguous_gate_payload,
+            "port_integration_gate": port_gate_payload,
+        },
+        "blockers": blockers,
+        "warnings": warnings,
+        "next_step": "Resolve law lock blockers." if blockers else "Maintain law lock and duplicate-law hygiene.",
+    }
+
+
 def mirror_checks(git_state: GitState) -> dict[str, Any]:
     missing = missing_paths(SAFE_STATE_FILES)
     blockers: list[str] = []
@@ -1163,6 +1767,8 @@ def trust_checks(
     bootstrap: dict[str, Any],
     machine_mode: dict[str, Any],
     integration_inbox: dict[str, Any],
+    gate_runtime: dict[str, Any],
+    law_lock: dict[str, Any],
 ) -> dict[str, Any]:
     blockers: list[str] = []
     warnings: list[str] = []
@@ -1206,6 +1812,11 @@ def trust_checks(
     elif integration_inbox["verdict"] == "WARNING":
         warnings.append("integration inbox flow warning")
 
+    if gate_runtime["verdict"] != "PASS":
+        blockers.append("gate runtime checks failed")
+    if law_lock["verdict"] != "PASS":
+        blockers.append("foundation law lock failed")
+
     if blockers:
         verdict = "NOT_TRUSTED"
     elif warnings:
@@ -1226,6 +1837,8 @@ def trust_checks(
             "bundle_verdict": bundle["verdict"],
             "machine_mode_verdict": machine_mode["verdict"],
             "integration_inbox_verdict": integration_inbox["verdict"],
+            "gate_runtime_verdict": gate_runtime["verdict"],
+            "law_lock_verdict": law_lock["verdict"],
             "sync_controlled_classified": sync_controlled_classified,
         },
         "blockers": blockers,
@@ -1312,6 +1925,8 @@ def governance_acceptance_checks(
     bundle: dict[str, Any],
     bootstrap: dict[str, Any],
     machine_mode: dict[str, Any],
+    gate_runtime: dict[str, Any],
+    law_lock: dict[str, Any],
     git_state: GitState,
 ) -> dict[str, Any]:
     blockers: list[str] = []
@@ -1326,6 +1941,8 @@ def governance_acceptance_checks(
         "mirror_verdict": mirror["verdict"],
         "bundle_verdict": bundle["verdict"],
         "machine_mode_verdict": machine_mode["verdict"],
+        "gate_runtime_verdict": gate_runtime["verdict"],
+        "law_lock_verdict": law_lock["verdict"],
         "machine_mode": machine_mode.get("evidence", {}).get("machine_mode"),
         "critical_contradictions": contradictions["critical_count"],
         "worktree_clean": git_state.worktree_clean,
@@ -1395,6 +2012,10 @@ def governance_acceptance_checks(
         blockers.append("safe mirror evidence gate not PASS")
     if bundle["verdict"] != "READY":
         blockers.append("bundle gate not READY")
+    if gate_runtime["verdict"] != "PASS":
+        blockers.append("gate runtime not PASS")
+    if law_lock["verdict"] != "PASS":
+        blockers.append("foundation law lock not PASS")
     if machine_mode["verdict"] == "BLOCKED":
         blockers.append("machine mode detection blocked")
     if not is_sovereign_mode(str(machine_mode.get("evidence", {}).get("machine_mode", "unknown"))):
@@ -1970,9 +2591,11 @@ def build_results(fetch: bool, mode_for_cycles: str = "") -> dict[str, Any]:
     integration_inbox = integration_inbox_checks()
     governance = governance_checks()
     sync = sync_checks(git_state)
+    gate_runtime = gate_runtime_checks(git_state)
+    law_lock = foundation_law_lock_checks()
     mirror = mirror_checks(git_state)
     bundle = bundle_checks()
-    trust = trust_checks(sync, governance, contradictions, mirror, bundle, bootstrap, machine_mode, integration_inbox)
+    trust = trust_checks(sync, governance, contradictions, mirror, bundle, bootstrap, machine_mode, integration_inbox, gate_runtime, law_lock)
     governance_acceptance = governance_acceptance_checks(
         sync=sync,
         trust=trust,
@@ -1982,6 +2605,8 @@ def build_results(fetch: bool, mode_for_cycles: str = "") -> dict[str, Any]:
         bundle=bundle,
         bootstrap=bootstrap,
         machine_mode=machine_mode,
+        gate_runtime=gate_runtime,
+        law_lock=law_lock,
         git_state=git_state,
     )
     admission = admission_checks(trust, sync, governance, contradictions, governance_acceptance, machine_mode)
@@ -2070,6 +2695,8 @@ def build_results(fetch: bool, mode_for_cycles: str = "") -> dict[str, Any]:
             "bootstrap": bootstrap,
             "machine_mode": machine_mode,
             "integration_inbox": integration_inbox,
+            "gate_runtime": gate_runtime,
+            "law_lock": law_lock,
             "mirror": mirror,
             "bundle": bundle,
             "governance_acceptance": governance_acceptance,
@@ -2093,6 +2720,8 @@ def build_results(fetch: bool, mode_for_cycles: str = "") -> dict[str, Any]:
                 "warnings": machine_mode["warnings"],
                 "next_step": machine_mode["next_step"],
             },
+            "gate_runtime": gate_runtime,
+            "law_lock": law_lock,
             "integration_inbox": {
                 "verdict": integration_inbox["verdict"],
                 "basis": integration_inbox["basis"],
@@ -2135,6 +2764,8 @@ def markdown_report(result: dict[str, Any]) -> str:
         f"- ADMISSION VERDICT: `{v['admission']['verdict']}`",
         f"- EVOLUTION VERDICT: `{v['evolution']['verdict']}`",
         f"- MACHINE MODE VERDICT: `{v['machine_mode']['verdict']}`",
+        f"- GATE RUNTIME VERDICT: `{v['gate_runtime']['verdict']}`",
+        f"- LAW LOCK VERDICT: `{v['law_lock']['verdict']}`",
         f"- INTEGRATION INBOX VERDICT: `{v['integration_inbox']['verdict']}`",
         "",
         "## Contradictions",
@@ -2303,6 +2934,8 @@ def summarize_for_mode(result: dict[str, Any], mode: str) -> dict[str, Any]:
             "governance_verdict": v["governance"]["verdict"],
             "governance_acceptance_verdict": v["governance_acceptance"]["verdict"],
             "machine_mode_verdict": v["machine_mode"]["verdict"],
+            "gate_runtime_verdict": v["gate_runtime"]["verdict"],
+            "law_lock_verdict": v["law_lock"]["verdict"],
             "integration_inbox_verdict": v["integration_inbox"]["verdict"],
             "admission_verdict": v["admission"]["verdict"],
             "evolution_verdict": v["evolution"]["verdict"],
@@ -2314,6 +2947,8 @@ def summarize_for_mode(result: dict[str, Any], mode: str) -> dict[str, Any]:
         base["integration_inbox"] = v["integration_inbox"]
     elif mode == "trust":
         base["trust"] = v["trust"]
+        base["gate_runtime"] = v["gate_runtime"]
+        base["law_lock"] = v["law_lock"]
         base["governance"] = v["governance"]
         base["governance_acceptance"] = v["governance_acceptance"]
         base["admission"] = v["admission"]
@@ -2365,3 +3000,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

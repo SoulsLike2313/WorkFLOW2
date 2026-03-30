@@ -102,6 +102,10 @@ Expected documents:
 - `docs/governance/OPERATOR_PROGRAM_INTENT_ROUTING.md`
 - `workspace_config/operator_program_registry.json`
 - `scripts/operator_program_surface.py`
+- `docs/governance/IMPERIUM_CANONICAL_PATH_UNIFICATION_AND_LAW_LOCK_V1.md`
+- `docs/governance/IMPERIUM_FOUNDATION_LAW_LOCK_REGISTRY_V1.json`
+- `workspace_config/owner_command_gate_contract.json`
+- `workspace_config/integration_port_gate_contract.json`
 
 Conflict resolution rule:
 
