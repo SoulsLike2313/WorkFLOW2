@@ -24,6 +24,7 @@ IMPERIUM_REPO_HYGIENE_SURFACE_RELATIVE_PATH = (
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RUNTIME_DIR = REPO_ROOT / "runtime" / "repo_control_center"
+OBSERVATION_CYCLE_STATE_PATH = RUNTIME_DIR / "promotion_observation_cycles.json"
 
 CORE_DOCS = [
     "README.md",
@@ -282,23 +283,89 @@ def is_sync_aligned(verdict: str) -> bool:
     return str(verdict or "").strip().upper() in {"IN_SYNC", "IN_SYNC_CLASSIFIED"}
 
 
-def build_hygiene_classification_context() -> dict[str, Any]:
+def parse_live_worktree_counts() -> dict[str, Any]:
+    raw = run_cmd(["git", "status", "--porcelain=v1"], allow_fail=True)
+    tracked_dirty_count = 0
+    untracked_count = 0
+    for line in str(raw or "").splitlines():
+        row = str(line or "")
+        if row.startswith("?? "):
+            untracked_count += 1
+            continue
+        if len(row) < 2:
+            continue
+        x = row[0]
+        y = row[1]
+        if x not in {" ", "?"} or y not in {" ", "?"}:
+            tracked_dirty_count += 1
+    if tracked_dirty_count == 0 and untracked_count == 0:
+        cleanliness_verdict = "CLEAN"
+    elif tracked_dirty_count > 0 and untracked_count == 0:
+        cleanliness_verdict = "DIRTY_TRACKED_ONLY"
+    elif tracked_dirty_count == 0 and untracked_count > 0:
+        cleanliness_verdict = "DIRTY_UNTRACKED_ONLY"
+    else:
+        cleanliness_verdict = "DIRTY_MIXED"
+    return {
+        "cleanliness_verdict": cleanliness_verdict,
+        "tracked_dirty_count": tracked_dirty_count,
+        "untracked_count": untracked_count,
+    }
+
+
+def build_hygiene_classification_context(git_state: GitState | None = None) -> dict[str, Any]:
     surface = load_json_if_exists(IMPERIUM_REPO_HYGIENE_SURFACE_RELATIVE_PATH)
     counts = dict(surface.get("classification_counts", {}) or {})
+    live = parse_live_worktree_counts()
+    live_cleanliness = str(live.get("cleanliness_verdict", "UNKNOWN"))
+    live_tracked = int(live.get("tracked_dirty_count", 0) or 0)
+    live_untracked = int(live.get("untracked_count", 0) or 0)
+    if git_state and bool(git_state.worktree_clean):
+        live_cleanliness = "CLEAN"
+        live_tracked = 0
+        live_untracked = 0
+
+    surface_cleanliness = str(surface.get("cleanliness_verdict", "UNKNOWN"))
+    surface_tracked = int(surface.get("tracked_dirty_count", 0) or 0)
+    surface_untracked = int(surface.get("untracked_count", 0) or 0)
+    surface_stale_against_live = bool(
+        surface
+        and (
+            surface_cleanliness != live_cleanliness
+            or surface_tracked != live_tracked
+            or surface_untracked != live_untracked
+        )
+    )
+
+    classification_counts = {
+        "CANONICAL_MUST_TRACK": int(counts.get("CANONICAL_MUST_TRACK", 0) or 0),
+        "GENERATED_RUNTIME_ONLY": int(counts.get("GENERATED_RUNTIME_ONLY", 0) or 0),
+        "REVIEW_ARTIFACT_RETENTION": int(counts.get("REVIEW_ARTIFACT_RETENTION", 0) or 0),
+        "JUNK_OR_RESIDUE": int(counts.get("JUNK_OR_RESIDUE", 0) or 0),
+        "NEEDS_OWNER_DECISION": int(counts.get("NEEDS_OWNER_DECISION", 0) or 0),
+    }
+    if live_cleanliness == "CLEAN":
+        classification_counts = {
+            "CANONICAL_MUST_TRACK": 0,
+            "GENERATED_RUNTIME_ONLY": 0,
+            "REVIEW_ARTIFACT_RETENTION": 0,
+            "JUNK_OR_RESIDUE": 0,
+            "NEEDS_OWNER_DECISION": 0,
+        }
+
     return {
         "surface_loaded": bool(surface),
         "source_path": IMPERIUM_REPO_HYGIENE_SURFACE_RELATIVE_PATH,
         "generated_at_utc": str(surface.get("generated_at_utc", "")),
-        "cleanliness_verdict": str(surface.get("cleanliness_verdict", "UNKNOWN")),
-        "tracked_dirty_count": int(surface.get("tracked_dirty_count", 0) or 0),
-        "untracked_count": int(surface.get("untracked_count", 0) or 0),
-        "classification_counts": {
-            "CANONICAL_MUST_TRACK": int(counts.get("CANONICAL_MUST_TRACK", 0) or 0),
-            "GENERATED_RUNTIME_ONLY": int(counts.get("GENERATED_RUNTIME_ONLY", 0) or 0),
-            "REVIEW_ARTIFACT_RETENTION": int(counts.get("REVIEW_ARTIFACT_RETENTION", 0) or 0),
-            "JUNK_OR_RESIDUE": int(counts.get("JUNK_OR_RESIDUE", 0) or 0),
-            "NEEDS_OWNER_DECISION": int(counts.get("NEEDS_OWNER_DECISION", 0) or 0),
-        },
+        "cleanliness_verdict": live_cleanliness,
+        "tracked_dirty_count": live_tracked,
+        "untracked_count": live_untracked,
+        "classification_counts": classification_counts,
+        "live_git_snapshot": live,
+        "surface_stale_against_live": surface_stale_against_live,
+        "surface_cleanliness_verdict": surface_cleanliness,
+        "surface_tracked_dirty_count": surface_tracked,
+        "surface_untracked_count": surface_untracked,
     }
 
 
@@ -312,6 +379,96 @@ def is_controlled_classified_dirty(hygiene: dict[str, Any]) -> bool:
         and counts.get("JUNK_OR_RESIDUE", 0) == 0
         and counts.get("GENERATED_RUNTIME_ONLY", 0) == 0
     )
+
+
+def load_observation_cycle_state() -> dict[str, Any]:
+    if not OBSERVATION_CYCLE_STATE_PATH.exists():
+        return {
+            "schema_version": "promotion_observation_cycles.v1",
+            "generated_at_utc": utc_now(),
+            "cycles": [],
+            "observed_clean_cycles": 0,
+        }
+    try:
+        payload = json.loads(OBSERVATION_CYCLE_STATE_PATH.read_text(encoding="utf-8-sig"))
+    except Exception:
+        payload = {}
+    cycles = list(payload.get("cycles", []) or [])
+    return {
+        "schema_version": "promotion_observation_cycles.v1",
+        "generated_at_utc": str(payload.get("generated_at_utc", "")),
+        "cycles": cycles,
+        "observed_clean_cycles": int(payload.get("observed_clean_cycles", 0) or 0),
+    }
+
+
+def persist_observation_cycle_state(
+    *,
+    run_id: str,
+    git_state: GitState,
+    sync: dict[str, Any],
+    trust: dict[str, Any],
+    mirror: dict[str, Any],
+    governance_acceptance: dict[str, Any],
+    admission: dict[str, Any],
+    contradictions: dict[str, Any],
+) -> dict[str, Any]:
+    current_cycle_clean = (
+        sync["verdict"] == "IN_SYNC"
+        and git_state.worktree_clean
+        and git_state.ahead == 0
+        and git_state.behind == 0
+        and contradictions["critical_count"] == 0
+        and trust["verdict"] == "TRUSTED"
+        and mirror["verdict"] == "PASS"
+        and governance_acceptance["verdict"] == "PASS"
+        and admission["verdict"] == "ADMISSIBLE"
+    )
+
+    state = load_observation_cycle_state()
+    cycles = list(state.get("cycles", []) or [])
+    cycles.append(
+        {
+            "run_id": run_id,
+            "generated_at_utc": utc_now(),
+            "head": git_state.head,
+            "safe_mirror_main": git_state.remote_head,
+            "sync_verdict": sync["verdict"],
+            "trust_verdict": trust["verdict"],
+            "mirror_verdict": mirror["verdict"],
+            "governance_acceptance_verdict": governance_acceptance["verdict"],
+            "admission_verdict": admission["verdict"],
+            "critical_contradictions": contradictions["critical_count"],
+            "worktree_clean": git_state.worktree_clean,
+            "clean_cycle": bool(current_cycle_clean),
+        }
+    )
+    cycles = cycles[-200:]
+
+    observed_clean_cycles = 0
+    for item in reversed(cycles):
+        if bool(item.get("clean_cycle", False)):
+            observed_clean_cycles += 1
+        else:
+            break
+
+    payload = {
+        "schema_version": "promotion_observation_cycles.v1",
+        "generated_at_utc": utc_now(),
+        "cycles": cycles,
+        "observed_clean_cycles": observed_clean_cycles,
+    }
+    OBSERVATION_CYCLE_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    OBSERVATION_CYCLE_STATE_PATH.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return {
+        "path": str(OBSERVATION_CYCLE_STATE_PATH.relative_to(REPO_ROOT)).replace("\\", "/"),
+        "entries_total": len(cycles),
+        "observed_clean_cycles": observed_clean_cycles,
+        "current_cycle_clean": bool(current_cycle_clean),
+    }
 
 
 def parse_numbered_markdown_paths(rel: str) -> list[str]:
@@ -783,7 +940,7 @@ def sync_checks(git_state: GitState) -> dict[str, Any]:
     if not git_state.worktree_clean:
         blockers.append("worktree dirty")
 
-    hygiene = build_hygiene_classification_context()
+    hygiene = build_hygiene_classification_context(git_state)
     classified_dirty_allowed = is_controlled_classified_dirty(hygiene)
 
     if blockers == ["worktree dirty"] and classified_dirty_allowed:
@@ -1340,7 +1497,16 @@ def parse_promotion_threshold_policy() -> dict[str, Any]:
     return parsed
 
 
-def evolution_checks(sync: dict[str, Any], governance: dict[str, Any], contradictions: dict[str, Any], trust: dict[str, Any], admission: dict[str, Any], mirror: dict[str, Any], bundle: dict[str, Any]) -> dict[str, Any]:
+def evolution_checks(
+    sync: dict[str, Any],
+    governance: dict[str, Any],
+    contradictions: dict[str, Any],
+    trust: dict[str, Any],
+    admission: dict[str, Any],
+    mirror: dict[str, Any],
+    bundle: dict[str, Any],
+    observation_cycles: dict[str, Any],
+) -> dict[str, Any]:
     candidate_context = parse_candidate_context()
     current_level = candidate_context["current_level"]
     threshold_policy = parse_promotion_threshold_policy()
@@ -1371,15 +1537,8 @@ def evolution_checks(sync: dict[str, Any], governance: dict[str, Any], contradic
     if trust["verdict"] == "NOT_TRUSTED":
         blocking_signals.append("hidden_blocker_or_failed_trust")
 
-    current_cycle_clean = (
-        sync["verdict"] == "IN_SYNC"
-        and sync["evidence"]["worktree_clean"]
-        and sync["evidence"]["ahead"] == 0
-        and sync["evidence"]["behind"] == 0
-        and contradictions["critical_count"] == 0
-        and trust["verdict"] != "NOT_TRUSTED"
-    )
-    observed_clean_cycles = 1 if current_cycle_clean else 0
+    current_cycle_clean = bool(observation_cycles.get("current_cycle_clean", False))
+    observed_clean_cycles = int(observation_cycles.get("observed_clean_cycles", 0) or 0)
 
     approved_hardening_events = policy_log_text.count("decision: `APPROVED`")
     governance_hardening_evidence = approved_hardening_events > 0
@@ -1493,6 +1652,9 @@ def evolution_checks(sync: dict[str, Any], governance: dict[str, Any], contradic
             "current_level": current_level,
             "candidate_level": candidate_level,
             "readiness": readiness,
+            "current_cycle_clean": current_cycle_clean,
+            "observation_cycle_source_path": str(observation_cycles.get("path", "")),
+            "observation_cycle_entries_total": int(observation_cycles.get("entries_total", 0) or 0),
             "threshold_policy": threshold_policy,
             "observed_clean_cycles": observed_clean_cycles,
             "observation_window_complete": observation_window_complete,
@@ -1799,7 +1961,8 @@ def plain_status_markdown(result: dict[str, Any], one_screen: dict[str, Any]) ->
     return "\n".join(lines) + "\n"
 
 
-def build_results(fetch: bool) -> dict[str, Any]:
+def build_results(fetch: bool, mode_for_cycles: str = "") -> dict[str, Any]:
+    run_id = f"rcc-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
     git_state = build_git_state(fetch=fetch)
     contradictions = contradiction_checks(git_state)
     bootstrap = bootstrap_enforcement_checks()
@@ -1822,7 +1985,36 @@ def build_results(fetch: bool) -> dict[str, Any]:
         git_state=git_state,
     )
     admission = admission_checks(trust, sync, governance, contradictions, governance_acceptance, machine_mode)
-    evolution = evolution_checks(sync, governance, contradictions, trust, admission, mirror, bundle)
+    if str(mode_for_cycles).strip().lower() in {"full-check", "audit"}:
+        observation_cycles = persist_observation_cycle_state(
+            run_id=run_id,
+            git_state=git_state,
+            sync=sync,
+            trust=trust,
+            mirror=mirror,
+            governance_acceptance=governance_acceptance,
+            admission=admission,
+            contradictions=contradictions,
+        )
+    else:
+        state = load_observation_cycle_state()
+        cycles = list(state.get("cycles", []) or [])
+        observation_cycles = {
+            "path": str(OBSERVATION_CYCLE_STATE_PATH.relative_to(REPO_ROOT)).replace("\\", "/"),
+            "entries_total": len(cycles),
+            "observed_clean_cycles": int(state.get("observed_clean_cycles", 0) or 0),
+            "current_cycle_clean": bool(cycles[-1].get("clean_cycle", False)) if cycles else False,
+        }
+    evolution = evolution_checks(
+        sync,
+        governance,
+        contradictions,
+        trust,
+        admission,
+        mirror,
+        bundle,
+        observation_cycles,
+    )
 
     status_layers = compute_status_layers(
         sync=sync,
@@ -1851,7 +2043,7 @@ def build_results(fetch: bool) -> dict[str, Any]:
     }
 
     return {
-        "run_id": f"rcc-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}",
+        "run_id": run_id,
         "generated_at": utc_now(),
         "canonical": {
             "local_root": CANONICAL_LOCAL_ROOT,
@@ -2164,7 +2356,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = build_parser().parse_args()
-    result = build_results(fetch=not args.no_fetch)
+    result = build_results(fetch=not args.no_fetch, mode_for_cycles=args.mode)
     write_runtime_reports(result)
     payload = summarize_for_mode(result, args.mode)
     print(json.dumps(payload, ensure_ascii=False, indent=2))

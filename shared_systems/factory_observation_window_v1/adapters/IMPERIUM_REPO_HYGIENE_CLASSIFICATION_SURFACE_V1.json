@@ -2,10 +2,10 @@
   "surface_id": "IMPERIUM_REPO_HYGIENE_CLASSIFICATION_SURFACE_V1",
   "version": "1.0.0",
   "status": "ACTIVE",
-  "generated_at_utc": "2026-03-29T23:57:50Z",
+  "generated_at_utc": "2026-03-30T00:42:14Z",
   "truth_class": "SOURCE_EXACT",
-  "cleanliness_verdict": "DIRTY_TRACKED_ONLY",
-  "tracked_dirty_count": 2,
+  "cleanliness_verdict": "CLEAN",
+  "tracked_dirty_count": 0,
   "untracked_count": 0,
   "classification_counts": {
     "CANONICAL_MUST_TRACK": 0,
